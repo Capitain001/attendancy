@@ -5,7 +5,7 @@ import { getAuthorization } from '@/services/auth/authorization'
 import { ERRORS } from '@/config'
 import { createProgramTrackSchema, createProgramSchema, addUEToProgramSchema } from '../validation'
 import type { CreateProgramTrackInput, CreateProgramInput, AddUEToProgramInput } from '../validation'
-import { createProgramTrack, createProgram, addUEToProgram, removeUEFromProgram } from '../database'
+import { createProgramTrack, createProgram, addUEToProgram, deleteUEFromProgram } from '../database'
 
 export async function createProgramTrackAction(input: CreateProgramTrackInput) {
   try {
@@ -55,7 +55,7 @@ export async function addUEToProgramAction(input: AddUEToProgramInput) {
   }
 }
 
-export async function removeUEFromProgramAction(programUEId: string) {
+export async function deleteUEFromProgramAction(programUEId: string) {
   try {
     const user = await getUserInfo()
     if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
@@ -64,7 +64,7 @@ export async function removeUEFromProgramAction(programUEId: string) {
     const auth = getAuthorization(user, 'DIRECTION')
     if (!auth.success) return { error: auth.error }
 
-    await removeUEFromProgram(programUEId, orgId)
+    await deleteUEFromProgram(programUEId, orgId)
     return { data: { id: programUEId } }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }

@@ -22,12 +22,12 @@ export async function updateWeeklyTemplate(
   return template
 }
 
-export async function deleteWeeklyTemplate(id: string, orgId: string) {
+export async function removeWeeklyTemplate(id: string, orgId: string) {
   await prisma.weeklyTemplate.update({
     where: { id },
     data:  { deletedAt: new Date(), isActive: false },
   })
-  await invalidateEvent('WEEKLY_TEMPLATE_DELETED', orgId)
+  await invalidateEvent('WEEKLY_TEMPLATE_REMOVED', orgId)
 }
 
 // ── WeeklySlot mutations ──────────────────────────────────────────────────────
@@ -51,7 +51,7 @@ export async function createWeeklySlot(
   return slot
 }
 
-export async function deleteWeeklySlot(slotId: string, orgId: string) {
+export async function removeWeeklySlot(slotId: string, orgId: string) {
   await prisma.weeklySlot.update({
     where: { id: slotId },
     data:  { deletedAt: new Date(), isActive: false },

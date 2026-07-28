@@ -48,10 +48,10 @@ export async function updateEvent(eventId: string, orgId: string, data: UpdateEv
   return record
 }
 
-export async function deleteEventDb(eventId: string, orgId: string) {
+export async function removeEventDb(eventId: string, orgId: string) {
   await prisma.event.update({
     where: { id: eventId, orgId },
     data:  { deletedAt: new Date() },
   })
-  invalidateEvent('EVENT_DELETED', orgId, eventId)
+  invalidateEvent('EVENT_REMOVED', orgId, eventId)
 }

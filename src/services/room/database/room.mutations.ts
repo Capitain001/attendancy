@@ -23,7 +23,7 @@ export async function createRoom(data: {
   return result
 }
 
-export async function softDeleteRoom(id: string, orgId: string) {
+export async function removeRoom(id: string, orgId: string) {
   const room = await prisma.room.findFirst({ where: { id, orgId, deletedAt: null } })
   if (!room) throw new Error('Salle introuvable')
 
@@ -32,7 +32,7 @@ export async function softDeleteRoom(id: string, orgId: string) {
     data: { deletedAt: new Date() },
     select: { id: true },
   })
-  await invalidateEvent('ROOM_DELETED', orgId)
+  await invalidateEvent('ROOM_REMOVED', orgId)
   return result
 }
 

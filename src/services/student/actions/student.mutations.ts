@@ -5,7 +5,7 @@ import { getAuthorization } from '@/services/auth/authorization'
 import { ERRORS } from '@/config'
 import { enrollStudentSchema, assignStudentGroupSchema } from '../validation'
 import type { EnrollStudentInput, AssignStudentGroupInput } from '../validation'
-import { enrollStudent, removeEnrollment, assignStudentGroup, removeStudentGroup } from '../database'
+import { enrollStudent, removeEnrollment, assignStudentGroup, deleteStudentGroup } from '../database'
 import { prisma } from '@/lib/db'
 import type { UserStatus } from '@/generated/prisma/client'
 
@@ -75,7 +75,7 @@ export async function bulkSetStudentStatusAction(studentIds: string[], status: U
   }
 }
 
-export async function removeStudentGroupAction(studentGroupId: string) {
+export async function deleteStudentGroupAction(studentGroupId: string) {
   try {
     const user = await getUserInfo()
     if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
@@ -84,7 +84,7 @@ export async function removeStudentGroupAction(studentGroupId: string) {
     const auth = getAuthorization(user, 'DIRECTION')
     if (!auth.success) return { error: auth.error }
 
-    return { data: await removeStudentGroup(studentGroupId, orgId) }
+    return { data: await deleteStudentGroup(studentGroupId, orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

@@ -38,7 +38,7 @@
 //       select: { id: true },
 //     })
 //   )
-//   await invalidateEvent('ENTITY_DELETED', orgId, entityId)
+//   await invalidateEvent('ENTITY_REMOVED', orgId, entityId)
 //   return result
 // }
 

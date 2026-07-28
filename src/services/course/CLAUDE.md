@@ -14,18 +14,18 @@ Gère les cours d'une classe (`Course`) et leurs affectations enseignant (`Cours
 | Fichier | Rôle |
 |---------|------|
 | `database/course.queries.ts` | `getCoursesByClass(classId, orgId)` avec teachers |
-| `database/course.mutations.ts` | `createCourse`, `assignTeacher`, `removeTeacherFromCourse` |
+| `database/course.mutations.ts` | `createCourse`, `assignTeacher`, `deleteTeacherFromCourse` |
 | `cache.ts` | `COURSE_GRAPH` — invalide COURSE + CLASS (count affiché dans détail) |
 | `validation.ts` | `createCourseSchema`, `assignTeacherSchema` |
 | `actions/course.queries.ts` | `getCoursesAction(classId)` |
-| `actions/course.mutations.ts` | `createCourseAction`, `assignTeacherAction`, `removeTeacherAction` |
+| `actions/course.mutations.ts` | `createCourseAction`, `assignTeacherAction`, `deleteTeacherAction` (alias: `unassignCourseTeacherAction`) |
 
 ## Invariants
 
 - `createCourse` : findFirst ownership check sur Class + UECourse avant création
 - Partial unique check manuel : `findFirst({ where: { classId, ueCourseId, deletedAt: null } })`
 - `CourseTeacher_teacherId_courseId_key` → CONSTRAINT_ERROR à ajouter si besoin
-- `removeTeacherFromCourse` : findFirst ownership avant delete (CourseTeacher sans orgId direct)
+- `deleteTeacherFromCourse` : hard delete (CourseTeacher) — findFirst ownership avant delete (CourseTeacher sans orgId direct)
 
 ## Points d'extension (⚠)
 

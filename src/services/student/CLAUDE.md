@@ -14,7 +14,7 @@ et affectations aux groupes (`StudentGroup`).
 | Fichier | Rôle |
 |---------|------|
 | `database/student.queries.ts` | `getEnrolledStudents(classId, orgId)` — liste avec groupes |
-| `database/student.mutations.ts` | `enrollStudent`, `removeEnrollment`, `assignStudentGroup`, `removeStudentGroup` |
+| `database/student.mutations.ts` | `enrollStudent`, `removeEnrollment`, `assignStudentGroup`, `deleteStudentGroup` |
 | `cache.ts` | `STUDENT_GRAPH` — invalide STUDENT + CLASS (counts) |
 | `validation.ts` | `enrollStudentSchema`, `assignStudentGroupSchema` |
 | `actions/student.queries.ts` | `getEnrolledStudentsAction(classId)` |
@@ -25,7 +25,7 @@ et affectations aux groupes (`StudentGroup`).
 - `@@unique([studentId, classId])` → `StudentEnrollment_studentId_classId_key`
 - `@@unique([enrollmentId, groupId])` → `StudentGroup_enrollmentId_groupId_key`
 - `removeEnrollment` → soft delete (`endedAt: new Date()`) pour préserver historique présences
-- `removeStudentGroup` → hard delete (pas d'historique lié à la relation directe)
+- `deleteStudentGroup` → hard delete (pas d'historique lié à la relation directe)
 - Trigger `validate_student_class_group` garantit cohérence enrollment↔group côté DB
 
 ## Points d'extension (⚠)

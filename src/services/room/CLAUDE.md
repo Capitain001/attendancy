@@ -9,10 +9,10 @@ Salle = ressource physique réservable pour les séances planifiées.
 
 | Fichier | Rôle |
 |---|---|
-| `actions/room.mutations.ts` | `createRoomAction`, `deleteRoomAction`, `createLocationAction`, `toggleLocationActiveAction` |
+| `actions/room.mutations.ts` | `createRoomAction`, `removeRoomAction`, `updateRoomAction`, `createLocationAction`, `toggleLocationActiveAction` |
 | `actions/room.queries.ts` | `getRoomsAction`, `getRoomAction`, `getLocationsAction` |
-| `database/room.mutations.ts` | Prisma — create/softDelete room + create/toggle location |
-| `database/room.queries.ts` | Prisma — listRooms, getRoomById, listLocations |
+| `database/room.mutations.ts` | Prisma — `createRoom`, `removeRoom` (soft delete) + `createLocation`, `toggleLocationActive` |
+| `database/room.queries.ts` | Prisma — `getRooms`, `getRoomById`, `getLocations` |
 | `cache.ts` | `ROOM_GRAPH` → invalide `CACHE.ROOM(orgId)` |
 | `validation.ts` | `createRoomSchema`, `createLocationSchema` + InferInput/Output |
 | `types.ts` | DTOs |

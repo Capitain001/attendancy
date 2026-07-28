@@ -38,7 +38,7 @@ export async function addUEToProgram(data: AddUEToProgramOutput & { orgId: strin
   return result
 }
 
-export async function removeUEFromProgramByComposite(programId: string, ueId: string, orgId: string) {
+export async function deleteUEFromProgramByComposite(programId: string, ueId: string, orgId: string) {
   const program = await prisma.program.findFirst({
     where: { id: programId, orgId },
     select: { programTrackId: true },
@@ -52,7 +52,7 @@ export async function removeUEFromProgramByComposite(programId: string, ueId: st
   return { count }
 }
 
-export async function removeUEFromProgram(programUEId: string, orgId: string) {
+export async function deleteUEFromProgram(programUEId: string, orgId: string) {
   // findFirst to verify org ownership (ProgramUE has no direct orgId)
   const pue = await prisma.programUE.findFirst({
     where: { id: programUEId },

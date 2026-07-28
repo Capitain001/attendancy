@@ -5,7 +5,7 @@ import { getAuthorization } from '@/services/auth/authorization'
 import { ERRORS } from '@/config'
 import { createCourseSchema, assignTeacherSchema } from '../validation'
 import type { CreateCourseInput, AssignTeacherInput } from '../validation'
-import { createCourse, assignTeacher, removeTeacherFromCourse } from '../database'
+import { createCourse, assignTeacher, deleteTeacherFromCourse } from '../database'
 
 export async function createCourseAction(input: CreateCourseInput) {
   try {
@@ -39,7 +39,7 @@ export async function assignTeacherAction(input: AssignTeacherInput) {
   }
 }
 
-export async function removeTeacherAction(courseTeacherId: string) {
+export async function deleteTeacherAction(courseTeacherId: string) {
   try {
     const user = await getUserInfo()
     if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
@@ -48,11 +48,11 @@ export async function removeTeacherAction(courseTeacherId: string) {
     const auth = getAuthorization(user, 'DIRECTION')
     if (!auth.success) return { error: auth.error }
 
-    return { data: await removeTeacherFromCourse(courseTeacherId, orgId) }
+    return { data: await deleteTeacherFromCourse(courseTeacherId, orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
 export { assignTeacherAction as assignCourseTeacherAction }
-export { removeTeacherAction as unassignCourseTeacherAction }
+export { deleteTeacherAction as unassignCourseTeacherAction }

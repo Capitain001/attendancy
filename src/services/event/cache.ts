@@ -9,7 +9,7 @@ export const EVENT_GRAPH = {
     CACHE.EVENT(orgId),
     CACHE.EVENT(orgId, eventId),
   ],
-  EVENT_DELETED: (orgId: string, eventId: string) => [
+  EVENT_REMOVED: (orgId: string, eventId: string) => [
     CACHE.EVENT(orgId),
     CACHE.EVENT(orgId, eventId),
   ],

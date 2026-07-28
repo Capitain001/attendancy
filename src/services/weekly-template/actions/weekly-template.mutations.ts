@@ -6,9 +6,9 @@ import { ERRORS } from '@/config'
 import {
   createWeeklyTemplate,
   updateWeeklyTemplate,
-  deleteWeeklyTemplate,
+  removeWeeklyTemplate,
   createWeeklySlot,
-  deleteWeeklySlot,
+  removeWeeklySlot,
   applyWeeklyTemplate,
 } from '../database'
 import {
@@ -27,15 +27,11 @@ export async function createWeeklyTemplateAction(input: unknown) {
   const auth = getAuthorization(user, 'DIRECTION')
   if (!auth.success) return { error: auth.error }
 
-  let parsed
-  try { parsed = v.parse(createWeeklyTemplateSchema, input) }
-  catch (e) {
-    const msg = e instanceof v.ValiError ? e.issues[0]?.message : 'Données invalides'
-    return { error: msg ?? 'Données invalides' }
-  }
+  const result = v.safeParse(createWeeklyTemplateSchema, input)
+  if (!result.success) return { error: result.issues[0]?.message ?? 'Données invalides' }
 
   try {
-    const data = await createWeeklyTemplate(orgId, parsed.name)
+    const data = await createWeeklyTemplate(orgId, result.output.name)
     return { data }
   } catch {
     return { error: ERRORS.SERVER }
@@ -51,22 +47,18 @@ export async function updateWeeklyTemplateAction(id: string, input: unknown) {
   const auth = getAuthorization(user, 'DIRECTION')
   if (!auth.success) return { error: auth.error }
 
-  let parsed
-  try { parsed = v.parse(updateWeeklyTemplateSchema, input) }
-  catch (e) {
-    const msg = e instanceof v.ValiError ? e.issues[0]?.message : 'Données invalides'
-    return { error: msg ?? 'Données invalides' }
-  }
+  const result = v.safeParse(updateWeeklyTemplateSchema, input)
+  if (!result.success) return { error: result.issues[0]?.message ?? 'Données invalides' }
 
   try {
-    const data = await updateWeeklyTemplate(id, orgId, parsed)
+    const data = await updateWeeklyTemplate(id, orgId, result.output)
     return { data }
   } catch {
     return { error: ERRORS.SERVER }
   }
 }
 
-export async function deleteWeeklyTemplateAction(id: string) {
+export async function removeWeeklyTemplateAction(id: string) {
   const user = await getUserInfo()
   if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
   const orgId = user.organization?.id
@@ -76,7 +68,7 @@ export async function deleteWeeklyTemplateAction(id: string) {
   if (!auth.success) return { error: auth.error }
 
   try {
-    await deleteWeeklyTemplate(id, orgId)
+    await removeWeeklyTemplate(id, orgId)
     return { data: { id } }
   } catch {
     return { error: ERRORS.SERVER }
@@ -92,15 +84,11 @@ export async function addWeeklySlotAction(templateId: string, input: unknown) {
   const auth = getAuthorization(user, 'DIRECTION')
   if (!auth.success) return { error: auth.error }
 
-  let parsed
-  try { parsed = v.parse(createWeeklySlotSchema, input) }
-  catch (e) {
-    const msg = e instanceof v.ValiError ? e.issues[0]?.message : 'Données invalides'
-    return { error: msg ?? 'Données invalides' }
-  }
+  const result = v.safeParse(createWeeklySlotSchema, input)
+  if (!result.success) return { error: result.issues[0]?.message ?? 'Données invalides' }
 
   try {
-    const data = await createWeeklySlot(templateId, orgId, parsed)
+    const data = await createWeeklySlot(templateId, orgId, result.output)
     return { data }
   } catch {
     return { error: ERRORS.SERVER }
@@ -117,7 +105,7 @@ export async function removeWeeklySlotAction(slotId: string) {
   if (!auth.success) return { error: auth.error }
 
   try {
-    await deleteWeeklySlot(slotId, orgId)
+    await removeWeeklySlot(slotId, orgId)
     return { data: { slotId } }
   } catch {
     return { error: ERRORS.SERVER }
@@ -133,15 +121,11 @@ export async function applyWeeklyTemplateAction(input: unknown) {
   const auth = getAuthorization(user, 'DIRECTION')
   if (!auth.success) return { error: auth.error }
 
-  let parsed
-  try { parsed = v.parse(applyTemplateSchema, input) }
-  catch (e) {
-    const msg = e instanceof v.ValiError ? e.issues[0]?.message : 'Données invalides'
-    return { error: msg ?? 'Données invalides' }
-  }
+  const result = v.safeParse(applyTemplateSchema, input)
+  if (!result.success) return { error: result.issues[0]?.message ?? 'Données invalides' }
 
   try {
-    const data = await applyWeeklyTemplate({ ...parsed, orgId })
+    const data = await applyWeeklyTemplate({ ...result.output, orgId })
     return { data }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }

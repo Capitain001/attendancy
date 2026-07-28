@@ -66,7 +66,7 @@ export async function assignStudentGroup(data: AssignStudentGroupOutput & { orgI
   return result
 }
 
-export async function removeStudentGroup(studentGroupId: string, orgId: string) {
+export async function deleteStudentGroup(studentGroupId: string, orgId: string) {
   const sg = await prisma.studentGroup.findFirst({
     where: {
       id: studentGroupId,

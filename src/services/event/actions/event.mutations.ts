@@ -5,7 +5,7 @@ import { getAuthorization } from '@/services/auth/authorization'
 import { ERRORS } from '@/config'
 import { createEventSchema, updateEventSchema } from '../validation'
 import type { CreateEventInput, UpdateEventInput } from '../validation'
-import { createEvent, updateEvent, deleteEventDb } from '../database'
+import { createEvent, updateEvent, removeEventDb } from '../database'
 
 export async function createEventAction(input: CreateEventInput) {
   try {
@@ -39,7 +39,7 @@ export async function updateEventAction(eventId: string, input: UpdateEventInput
   }
 }
 
-export async function deleteEventAction(eventId: string) {
+export async function removeEventAction(eventId: string) {
   try {
     const user = await getUserInfo()
     if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
@@ -48,7 +48,7 @@ export async function deleteEventAction(eventId: string) {
     const auth = getAuthorization(user, 'DIRECTION')
     if (!auth.success) return { error: auth.error }
 
-    await deleteEventDb(eventId, orgId)
+    await removeEventDb(eventId, orgId)
     return { data: { id: eventId } }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }

@@ -17,7 +17,7 @@ d'une filière. Les séparer créerait des services avec une seule mutation sans
 | `database/program-track.queries.ts` | `getProgramTracks` — liste avec compteurs |
 | `database/program-track.mutations.ts` | `createProgramTrack` |
 | `database/program.queries.ts` | `getProgramsByTrack` — maquettes + UEs par semestre |
-| `database/program.mutations.ts` | `createProgram`, `addUEToProgram`, `removeUEFromProgram` |
+| `database/program.mutations.ts` | `createProgram`, `addUEToProgram`, `deleteUEFromProgram`, `deleteUEFromProgramByComposite` |
 | `cache.ts` | `PROGRAM_TRACK_GRAPH` — invalidation liste + détail par `programTrackId` |
 | `validation.ts` | createProgramTrackSchema, createProgramSchema, addUEToProgramSchema |
 | `actions/program-track.mutations.ts` | 4 actions DIRECTION-only |
@@ -29,7 +29,7 @@ d'une filière. Les séparer créerait des services avec une seule mutation sans
 - @@unique([name, programTrackId]) sur Program
 - @@unique([programId, ueId]) sur ProgramUE
 - `Program.deletedAt` = soft delete — `where: { deletedAt: null }` dans les queries
-- `removeUEFromProgram` : findFirst ownership check avant delete (ProgramUE sans orgId direct)
+- `deleteUEFromProgram` / `deleteUEFromProgramByComposite` : hard delete (liaison ProgramUE) — findFirst ownership check avant delete (ProgramUE sans orgId direct)
 - Guard UE archivée (TODO) : vérifier `UE.deletedAt` avant `addUEToProgram` — nécessite appel vers `ue/` service
 
 ## Points d'extension (⚠)

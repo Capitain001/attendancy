@@ -63,7 +63,7 @@ export async function assignTeacher(data: AssignTeacherOutput & { orgId: string 
   return result
 }
 
-export async function removeTeacherFromCourse(courseTeacherId: string, orgId: string) {
+export async function deleteTeacherFromCourse(courseTeacherId: string, orgId: string) {
   await tryConstraint(prisma.courseTeacher.delete({
     where: { id: courseTeacherId },
   }))

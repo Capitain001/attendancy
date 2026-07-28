@@ -5,7 +5,7 @@ import { getUserInfo } from '@/services/user/userInfo'
 import { ERRORS } from '@/config'
 import { createRoomSchema, createLocationSchema } from '../validation'
 import type { CreateRoomInput, CreateLocationInput } from '../validation'
-import { createRoom, softDeleteRoom, createLocation, toggleLocationActive } from '../database'
+import { createRoom, removeRoom, createLocation, toggleLocationActive } from '../database'
 import { prisma } from '@/lib/db'
 import { invalidateEvent } from '@/cache/server/key'
 
@@ -30,17 +30,17 @@ export async function createRoomAction(input: CreateRoomInput) {
   }
 }
 
-export async function deleteRoomAction(roomId: string) {
+export async function removeRoomAction(roomId: string): Promise<{ success: boolean; error?: string }> {
   try {
     const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
+    if (!user?.id) return { success: false, error: ERRORS.AUTH.UNAUTHORIZED }
     const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+    if (!orgId) return { success: false, error: ERRORS.ORG.NOT_FOUND }
 
-    const result = await softDeleteRoom(roomId, orgId)
-    return { data: result }
+    await removeRoom(roomId, orgId)
+    return { success: true }
   } catch (error) {
-    return { error: error instanceof Error ? error.message : ERRORS.SERVER }
+    return { success: false, error: error instanceof Error ? error.message : ERRORS.SERVER }
   }
 }
 
@@ -63,12 +63,6 @@ export async function updateRoomAction(roomId: string, data: { name?: string; ca
   } catch (error) {
     return { error: error instanceof Error ? error.message : ERRORS.SERVER }
   }
-}
-
-export async function removeRoomAction(roomId: string): Promise<{ success: boolean; error?: string }> {
-  const result = await deleteRoomAction(roomId)
-  if ('error' in result) return { success: false, error: result.error }
-  return { success: true }
 }
 
 export async function createLocationAction(input: CreateLocationInput) {
