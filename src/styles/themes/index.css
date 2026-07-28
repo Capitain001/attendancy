@@ -1,0 +1,10 @@
+/* ─── styles/themes/index.css ─── */
+
+/* Export centralisé de tous les thèmes */
+@import "./claude.css";
+@import "./lime.css";
+
+/* Ajouter d'autres thèmes ici au fur et à mesure */
+/* @import "./rose.css"; */
+/* @import "./ocean.css"; */
+/* @import "./sunset.css"; */

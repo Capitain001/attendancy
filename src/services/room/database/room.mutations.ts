@@ -1,0 +1,72 @@
+// src/services/room/database/room.mutations.ts
+import { prisma } from '@/lib/db'
+import { invalidateEvent } from '@/cache/server/key'
+
+export async function createRoom(data: {
+  name: string
+  capacity?: number
+  locationId?: string
+  equipment?: string[]
+  orgId: string
+}) {
+  const result = await prisma.room.create({
+    data: {
+      name: data.name,
+      capacity: data.capacity ?? null,
+      locationId: data.locationId ?? null,
+      equipment: data.equipment ?? [],
+      orgId: data.orgId,
+    },
+    select: { id: true, name: true, capacity: true, equipment: true, locationId: true, location: { select: { id: true, name: true } } },
+  })
+  await invalidateEvent('ROOM_CREATED', data.orgId)
+  return result
+}
+
+export async function softDeleteRoom(id: string, orgId: string) {
+  const room = await prisma.room.findFirst({ where: { id, orgId, deletedAt: null } })
+  if (!room) throw new Error('Salle introuvable')
+
+  const result = await prisma.room.update({
+    where: { id },
+    data: { deletedAt: new Date() },
+    select: { id: true },
+  })
+  await invalidateEvent('ROOM_DELETED', orgId)
+  return result
+}
+
+export async function createLocation(data: {
+  name: string
+  address: string
+  latitude: number
+  longitude: number
+  radius?: number
+  orgId: string
+}) {
+  const result = await prisma.location.create({
+    data: {
+      name: data.name,
+      address: data.address,
+      latitude: data.latitude,
+      longitude: data.longitude,
+      radius: data.radius ?? 50,
+      orgId: data.orgId,
+    },
+    select: { id: true, name: true, address: true },
+  })
+  await invalidateEvent('ROOM_CREATED', data.orgId)
+  return result
+}
+
+export async function toggleLocationActive(id: string, orgId: string) {
+  const loc = await prisma.location.findFirst({ where: { id, orgId } })
+  if (!loc) throw new Error('Site introuvable')
+  const result = await prisma.location.update({
+    where: { id },
+    data: { active: !loc.active },
+    select: { id: true, active: true },
+  })
+  await invalidateEvent('ROOM_CREATED', orgId)
+  return result
+}

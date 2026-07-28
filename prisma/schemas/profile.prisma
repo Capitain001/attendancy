@@ -1,0 +1,114 @@
+// ─── Profils par rôle ────────────────────────────────────────────────────────
+// Un User global peut porter un profil PAR organisation et PAR rôle
+// (@@unique([userId, orgId])) : le même compte est prof à l'université A et
+// parent à l'université B. Les FK métier (Schedule.teacherId,
+// Attendance.studentId…) pointent sur le PROFIL, pas sur User : l'historique
+// est scopé org par construction.
+//
+// deletedAt sur les profils = désactivation dans l'org. Réintégration =
+// pattern RESTORE (réveil de la ligne, deletedAt: null), jamais re-create :
+// l'historique (cours, présences) reste rattaché au même id.
+// Cascade depuis User : un profil n'existe pas sans son compte.
+
+// Profil opérateur interne (back-office produit) — 1-1 avec User, hors org.
+model Admin {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String    @unique @db.Uuid
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@schema("public")
+}
+
+model Teacher {
+  id           String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String          @db.Uuid
+  orgId        String          @db.Uuid
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  deletedAt    DateTime?
+  departmentId String?         @db.Uuid
+  courses      CourseTeacher[]
+  schedules    Schedule[]
+    unavailabilities TeacherUnavailability[]
+  department   Department?     @relation(fields: [departmentId], references: [id])
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  weeklySlots  WeeklySlot[]
+
+  @@unique([userId, orgId])
+  @@index([orgId])
+  @@schema("public")
+}
+
+model Student {
+  id                 String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId             String              @db.Uuid
+  orgId              String              @db.Uuid
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  deletedAt          DateTime?
+  attendances        Attendance[]
+  evaluations        Evaluation[]
+  justifications     Justification[]
+  optionalUEs        OptionalUE[]
+  childrenRelations  ParentRelation[]    @relation("StudentToParent")
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  studentEnrollments StudentEnrollment[]
+
+  @@unique([userId, orgId])
+  @@index([orgId])
+  @@schema("public")
+}
+
+model Parent {
+  id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId          String           @db.Uuid
+  orgId           String           @db.Uuid
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  deletedAt       DateTime?
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parentRelations ParentRelation[] @relation("ParentToStudent")
+
+  @@unique([userId, orgId])
+  @@index([orgId])
+  @@schema("public")
+}
+
+model Direction {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String    @db.Uuid
+  orgId     String    @db.Uuid
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, orgId])
+  @@index([orgId])
+  @@schema("public")
+}
+
+// Lien Parent ↔ Student — table de liaison SANS soft delete : rien ne la
+// référence, rien de coûteux à reconstruire ; le délien = hard delete + trace
+// AuditLog (qui avait accès aux données de quel enfant, sur quelle période).
+// relation = nature du lien ("père", "tuteur"…), texte libre.
+model ParentRelation {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parentId  String   @db.Uuid
+  studentId String   @db.Uuid
+  orgId     String   @db.Uuid
+  relation  String
+  createdAt DateTime @default(now())
+
+  organization Organization @relation(fields: [orgId], references: [id])
+  parent       Parent       @relation("ParentToStudent", fields: [parentId], references: [id])
+  student      Student      @relation("StudentToParent", fields: [studentId], references: [id])
+
+  @@unique([parentId, studentId])
+  @@index([orgId])
+  @@schema("public")
+}

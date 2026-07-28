@@ -1,0 +1,30 @@
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+next-env.d.ts
+
+# production
+/build
+
+# env
+.env
+.env*.local
+
+# prisma — client généré (recréé par `prisma generate`)
+/src/generated/
+
+# misc
+.DS_Store
+*.pem
+*.tsbuildinfo
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# tests
+coverage/

@@ -1,0 +1,41 @@
+// ─── Évaluation ──────────────────────────────────────────────────────────────
+// Fait immuable (pas de soft delete) : correction = UPDATE + trace AuditLog.
+// Le bulletin se partitionne STRUCTURELLEMENT (Course → UECourse → UE →
+// ProgramUE.semester) ; Term ne fait que dater/clôturer les périodes — pas
+// de termId ici tant qu'aucune UE ne court sur plusieurs semestres.
+// La clôture d'un Term (lockedAt) fige les évaluations de ses cours (garde
+// applicative dans le service).
+
+model Evaluation {
+  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  courseId     String         @db.Uuid
+  studentId    String         @db.Uuid
+  type         EvaluationType
+  score        Float
+  maxScore     Float          @default(20)
+  comment      String?
+  datedAt      DateTime       @default(now())
+  createdAt    DateTime       @default(now())
+  classId      String         @db.Uuid
+  // orgId dénormalisé : table chaude, requêtes org-wide sans join Course.
+  orgId        String         @db.Uuid
+  class        Class          @relation(fields: [classId], references: [id])
+  course       Course         @relation(fields: [courseId], references: [id])
+  student      Student        @relation(fields: [studentId], references: [id])
+  organization Organization   @relation(fields: [orgId], references: [id])
+
+  @@index([studentId])
+  @@index([courseId])
+  @@index([classId])
+  @@index([orgId, datedAt])
+  @@schema("public")
+}
+
+enum EvaluationType {
+  DEVOIR
+  EXAMEN
+  PARTICIPATION
+  PROJET
+
+  @@schema("public")
+}

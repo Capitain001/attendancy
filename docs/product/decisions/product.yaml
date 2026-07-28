@@ -1,0 +1,107 @@
+name: product-decisions
+
+purpose: >
+  Registre des décisions produit d'Attendancy.
+  Chaque décision décrit un problème métier, les solutions envisagées
+  et, lorsqu'elle est validée, la solution retenue.
+  Une décision est conservée au même endroit durant tout son cycle de vie.
+
+status:
+  pending: Décision à prendre.
+  discussion: En cours de discussion.
+  accepted: Décision validée.
+  rejected: Proposition abandonnée.
+  deprecated: Décision remplacée.
+
+template:
+  id: P-XX
+  title: Titre court
+  status: pending
+
+  problem: >
+    Situation métier à résoudre.
+
+  question: >
+    Décision attendue.
+
+  constraints:
+    - Contraintes à respecter.
+
+  proposals:
+    - id: A
+      title: Proposition A
+
+    - id: B
+      title: Proposition B
+
+  decision: null
+
+  rationale: null
+
+  consequences: []
+
+  tags: []
+
+decisions:
+
+  - id: PROD-002
+    decision: "roomId obligatoire pour Schedule — salle requise à la création."
+
+  - id: PROD-003
+    decision: "Setup académique en wizard séquentiel guidé (année → département → filière → classe)."
+
+  - id: PROD-004
+    decision: "Subscription TRIALING illimitée créée à l'org-setup. Autres offres visibles mais non sélectionnables."
+
+  - id: PROD-005
+    decision: "GPS check-in : avertir l'enseignant, bloquer si hors rayon tant que Location.active=true."
+
+  - id: P-01
+
+    title: Propriétaire d'une organisation
+
+    status: accepted
+
+    problem: >
+      Une organisation doit avoir un responsable capable
+      d'administrer l'établissement et son abonnement.
+
+    question: >
+      Quel rôle porte cette responsabilité ?
+
+    constraints:
+      - Une organisation possède un seul propriétaire.
+      - Le propriétaire peut être remplacé.
+      - Les responsabilités académiques restent indépendantes.
+
+    proposals:
+
+      - id: A
+        title: Direction propriétaire
+
+      - id: B
+        title: Administrateur propriétaire
+
+      - id: C
+        title: Nouveau rôle Owner
+
+    decision: >
+      A:La Direction est le propriétaire de l'organisation.
+
+    rationale: >
+      La Direction représente naturellement l'établissement.
+      Les administrateurs restent des opérateurs techniques
+      pouvant être remplacés sans modifier la gouvernance.
+
+    consequences:
+
+      - La création d'une organisation crée une Direction propriétaire.
+
+      - Le transfert de propriété consiste à changer la Direction propriétaire.
+
+      - Les permissions administratives restent indépendantes de la propriété.
+
+    tags:
+      - organization
+      - permissions
+      - governance

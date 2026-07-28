@@ -1,0 +1,6 @@
+questions:
+
+  - id: PROD-001
+    title: "Rôle Admin en MVP"
+    question: "Direction gère-t-elle aussi la config technique (structure académique) ou faut-il un rôle Admin distinct dès la Phase 1 ?"
+    impacts: [permissions, invite-flow, UI]

@@ -1,0 +1,179 @@
+// ─── Communication ───────────────────────────────────────────────────────────
+// Channels ORG/CLASS/GROUP auto-provisionnés par triggers DB (création +
+// memberships à l'inscription) — voir apply.sql. Cascade partout depuis
+// Channel : les messages meurent avec leur canal, le canal avec sa cible.
+
+// NB : les @@unique([classId, type]) / [groupId, type] ne bornent pas les
+// canaux ORG (classId et groupId NULL — NULLs distincts) ; les fonctions
+// chat_get_*_channel_id tolèrent le doublon (ORDER BY createdAt LIMIT 1).
+model Channel {
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  type          ChannelType
+  name          String?
+  isPrivate     Boolean         @default(false)
+  orgId         String          @db.Uuid
+  classId       String?         @db.Uuid
+  groupId       String?         @db.Uuid
+  createdAt     DateTime        @default(now())
+  deletedAt     DateTime?
+  class         Class?          @relation(fields: [classId], references: [id], onDelete: Cascade)
+  group         Group?          @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  organization  Organization    @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  members       ChannelMember[]
+  messages      Message[]
+  realtimeItems RealtimeItem[]
+
+  @@unique([classId, type])
+  @@unique([groupId, type])
+  @@index([orgId])
+  @@schema("public")
+}
+
+// lastReadAt = curseur de lecture (badge non-lus calculé côté requête).
+model ChannelMember {
+  id         String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String          @db.Uuid
+  channelId  String          @db.Uuid
+  role       ParticipantRole @default(MEMBER)
+  joinedAt   DateTime        @default(now())
+  lastReadAt DateTime?
+  channel    Channel         @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  user       User            @relation(fields: [userId], references: [id])
+
+  @@unique([channelId, userId])
+  @@index([userId])
+  @@index([channelId])
+  @@schema("public")
+}
+
+// Soft delete : un message supprimé s'affiche "supprimé" sans trouer les
+// fils de réponses (parentId).
+model Message {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  content   String
+  createdAt DateTime  @default(now())
+  userId    String    @db.Uuid
+  deletedAt DateTime?
+  channelId String    @db.Uuid
+  parentId  String?   @db.Uuid
+  updatedAt DateTime  @updatedAt
+  channel   Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  parent    Message?  @relation("MessageReplies", fields: [parentId], references: [id])
+  replies   Message[] @relation("MessageReplies")
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@index([channelId, createdAt])
+  @@index([userId])
+  @@index([parentId])
+  @@schema("public")
+}
+
+// État partagé temps réel d'un canal (positions d'objets collaboratifs) —
+// upsert par (itemId, channelId), pas d'historique.
+model RealtimeItem {
+  itemId    String
+  x         Float
+  y         Float
+  updatedAt DateTime @updatedAt
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  channelId String   @db.Uuid
+  channel   Channel  @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  @@unique([itemId, channelId])
+  @@schema("public")
+}
+
+// Commentaire polymorphique (targetId + resource) — même pattern d'intégrité
+// applicative que Document : vérifier targetId ∈ org à l'écriture.
+// deletedBy distinct de l'auteur = modération tracée.
+model Comment {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  content       String
+  userId        String       @db.Uuid
+  targetId      String
+  resource      Resource
+  parentId      String?      @db.Uuid
+  deletedAt     DateTime?
+  deletedBy     String?      @db.Uuid
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  orgId         String       @db.Uuid
+  deletedByUser User?        @relation("CommentDeletedBy", fields: [deletedBy], references: [id])
+  organization  Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  parent        Comment?     @relation("CommentReplies", fields: [parentId], references: [id])
+  replies       Comment[]    @relation("CommentReplies")
+  user          User         @relation("CommentAuthor", fields: [userId], references: [id])
+
+  @@index([targetId, resource, deletedAt])
+  @@index([userId])
+  @@index([orgId])
+  @@index([parentId])
+  @@schema("public")
+}
+
+// Notification in-app. Cycle de vie porté par read — pas de soft delete.
+// scheduleId : lien direct vers la séance concernée (absence, changement).
+model Notification {
+  id         String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String           @db.Uuid
+  message    String
+  type       NotificationType @default(GENERAL)
+  read       Boolean          @default(false)
+  scheduleId String?          @db.Uuid
+  metadata   Json?
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  user       User             @relation(fields: [userId], references: [id])
+  schedule   Schedule?        @relation(fields: [scheduleId], references: [id])
+
+  @@index([userId])
+  @@index([scheduleId])
+  @@schema("public")
+}
+
+// Abonnement Web Push d'un appareil (clés VAPID côté client).
+model PushSubscription {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String    @db.Uuid
+  endpoint  String    @unique
+  p256dh    String
+  auth      String
+  userAgent String?
+  deviceId  String?
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([endpoint, userId])
+  @@index([userId])
+  @@schema("public")
+}
+
+enum ChannelType {
+  CLASS
+  GROUP
+  ORG
+  DM
+
+  @@schema("public")
+}
+
+enum ParticipantRole {
+  OWNER
+  MEMBER
+
+  @@schema("public")
+}
+
+enum NotificationType {
+  ABSENCE
+  COURSE_CHANGE
+  NEW_COURSE
+  SCHEDULE_UPDATE
+  GENERAL
+  MESSAGE
+  INVITATION
+
+  @@schema("public")
+}

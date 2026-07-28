@@ -1,0 +1,191 @@
+// ─── Présence ────────────────────────────────────────────────────────────────
+// Le flux : le prof ouvre une Session sur un Schedule (check-in vérifié
+// GPS/QR via teacher_check_in côté DB, atomique), les étudiants pointent
+// (SessionToken rotatif → QRScan → Attendance). Session = fait historique,
+// pas de soft delete.
+
+// Session de cours réelle (1-1 avec Schedule). "En cours" = status ACTIVE ;
+// le Schedule reste PENDING (ONGOING est UI-only). position = point GPS du
+// prof au check-in (PostGIS, écrite par teacher_check_in).
+model Session {
+  id                 String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  scheduleId         String                    @unique @db.Uuid
+  status             SessionStatus             @default(ACTIVE)
+  isLate             Boolean                   @default(false)
+  checkIn            DateTime?
+  checkOut           DateTime?
+  checkInMethod      VerificationMethod?
+  checkOutMethod     VerificationMethod?
+  durationMinutes    Int?
+  endedAutomatically Boolean                   @default(false)
+  locationId         String?                   @db.Uuid
+  createdAt          DateTime                  @default(now())
+  updatedAt          DateTime                  @updatedAt
+  position           Unsupported("geography")?
+
+  qrScans            QRScan[]
+  location           Location?                 @relation(fields: [locationId], references: [id])
+  schedule           Schedule                  @relation(fields: [scheduleId], references: [id])
+  tokens             SessionToken[]
+
+  @@index([locationId])
+  @@schema("public")
+}
+
+// Jeton rotatif d'émargement (QR affiché en cours, TTL court). Généré et
+// invalidé par create_session_token côté DB — un seul token actif par
+// session. Cascade : les tokens meurent avec la session.
+model SessionToken {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sessionId String   @db.Uuid
+  token     String   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([token, expiresAt])
+  @@index([sessionId])
+  @@schema("public")
+}
+
+// Fait de présence — IMMUABLE (pas de soft delete) : une erreur se corrige
+// par UPDATE + trace AuditLog. Double FK studentId + enrollmentId : le
+// student pour les requêtes transverses (parcours de l'étudiant), l'
+// enrollment pour l'ancrage classe/année. Restrict sur enrollment : dès la
+// première présence, l'inscription devient insupprimable (historique).
+// orgId dénormalisé : table chaude, requêtes org-wide des analytics de
+// risque sans join Schedule.
+model Attendance {
+  id           String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  scheduleId   String            @db.Uuid
+  studentId    String            @db.Uuid
+  enrollmentId String            @db.Uuid
+  status       AttendanceStatus  @default(PENDING)
+  recordedAt   DateTime          @default(now())
+  details      Json?
+  notes        String?
+  orgId        String            @db.Uuid
+  schedule     Schedule          @relation(fields: [scheduleId], references: [id])
+  student      Student           @relation(fields: [studentId], references: [id])
+  enrollment   StudentEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Restrict)
+  organization   Organization      @relation(fields: [orgId], references: [id])
+
+  @@unique([scheduleId, studentId])
+  @@index([studentId])
+  @@index([enrollmentId])
+  @@index([scheduleId, status])
+  @@index([orgId, recordedAt])
+  @@schema("public")
+}
+
+// QR statique d'une salle (émargement par scan de salle). Cycle de vie porté
+// par active + expiresAt — pas de soft delete.
+model QRCode {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code        String    @unique
+  roomId      String    @db.Uuid
+  expiresAt   DateTime?
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  room        Room      @relation(fields: [roomId], references: [id])
+  scanHistory QRScan[]
+
+  @@index([roomId])
+  @@schema("public")
+}
+
+// Trace brute d'un scan (preuve d'émargement) — journal, jamais modifié.
+model QRScan {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  qrCodeId  String   @db.Uuid
+  userId    String   @db.Uuid
+  sessionId String?  @db.Uuid
+  timestamp DateTime @default(now())
+  ipAddress String?
+  userAgent String?
+  qrCode    QRCode   @relation(fields: [qrCodeId], references: [id])
+  session   Session? @relation(fields: [sessionId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([sessionId])
+  @@index([qrCodeId])
+  @@schema("public")
+}
+
+// Demande de justification d'absence — amont (avant la séance) ou a
+// posteriori (absence constatée) : même cycle de vie.
+// Le WORKFLOW vit ici (PENDING → verdict) ; le FAIT vit dans Attendance :
+// APPROVED → upsert Attendance(scheduleId, studentId) en EXCUSED (+ AuditLog)
+// — création si la séance n'a pas eu lieu, passage ABSENT→EXCUSED sinon.
+// Pas de FK vers Attendance : le lien est structurel par la clé naturelle
+// (scheduleId, studentId) — @@unique côté Attendance — et l'Attendance peut
+// ne pas encore exister en phase amont. Lookup par cette clé.
+// Garde applicative : une seule PENDING par (scheduleId, studentId).
+// Pièces via Document(resourceType: JUSTIFICATION, resourceId: id).
+// Pas de soft delete : le cycle de vie EST le statut (retrait = CANCELED).
+model Justification {
+  id            String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  studentId     String              @db.Uuid
+  orgId         String              @db.Uuid
+  scheduleId    String              @db.Uuid
+  declaredById  String              @db.Uuid // parent, étudiant, ou staff (saisie guichet)
+  reason        String?
+  status        JustificationStatus @default(PENDING)
+  reviewedById  String?             @db.Uuid
+  reviewedAt    DateTime?
+  reviewComment String?
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  student      Student      @relation(fields: [studentId], references: [id])
+  organization Organization @relation(fields: [orgId], references: [id])
+  schedule     Schedule     @relation(fields: [scheduleId], references: [id])
+  declaredBy   User         @relation("JustificationDeclaredBy", fields: [declaredById], references: [id])
+  reviewedBy   User?        @relation("JustificationReviewedBy", fields: [reviewedById], references: [id])
+
+  @@index([orgId, status])
+  @@index([scheduleId, studentId]) // clé naturelle du lien vers Attendance
+  @@index([studentId])
+  @@index([declaredById])
+  @@schema("public")
+}
+
+enum JustificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELED   // status d une justification retirée par le déclarant avant traitement
+
+  @@schema("public")
+}
+
+enum SessionStatus {
+  ACTIVE
+  CANCELED
+  COMPLETED
+
+  @@schema("public")
+}
+
+enum VerificationMethod {
+  QR
+  GPS
+  ADMIN_OVERRIDE
+  WIFI
+  FACE_RECOGNITION
+
+  @@schema("public")
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+  PENDING
+
+  @@schema("public")
+}

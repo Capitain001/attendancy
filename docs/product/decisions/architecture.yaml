@@ -1,0 +1,92 @@
+name: architecture-decisions
+
+purpose: >
+  Registre des décisions d'architecture.
+  Chaque décision décrit un problème technique, les solutions
+  étudiées et la solution retenue.
+
+status:
+  pending: Décision à prendre.
+  discussion: En cours de discussion.
+  accepted: Décision validée.
+  rejected: Proposition abandonnée.
+  deprecated: Décision remplacée.
+
+template:
+  id: A-XX
+  title: Titre court
+  status: pending
+
+  problem: >
+    Problème technique.
+
+  question: >
+    Décision attendue.
+
+  constraints:
+    - Contraintes techniques.
+
+  proposals:
+    - id: A
+      title: Proposition A
+
+    - id: B
+      title: Proposition B
+
+  decision: null
+
+  rationale: null
+
+  consequences: []
+
+  tags: []
+
+decisions:
+
+  - id: A-01
+
+    title: Profils métiers scopés par organisation
+
+    status: accepted
+
+    problem: >
+      Un même utilisateur peut appartenir à plusieurs organisations
+      avec des rôles et des informations différentes.
+
+    question: >
+      Comment représenter les profils métier dans le modèle de données ?
+
+    constraints:
+      - Un utilisateur peut appartenir à plusieurs organisations.
+      - Chaque profil métier est propre à une organisation.
+      - Les requêtes doivent toujours être contextualisées par l'organisation.
+
+    proposals:
+
+      - id: A
+        title: Profil global par utilisateur
+
+      - id: B
+        title: Profil par organisation
+
+    decision: >
+      Les profils métier sont spécifiques à une organisation.
+
+    rationale: >
+      Cette approche permet à un même utilisateur d'exercer des
+      fonctions différentes selon l'établissement tout en conservant
+      une isolation claire des données.
+
+    consequences:
+
+      - Les profils utilisent le couple (userId, orgId).
+
+      - Les relations User → Teacher/Student/Parent deviennent 1-N.
+
+      - Toute recherche de profil utilise userId et orgId.
+
+    tags:
+      - database
+      - prisma
+      - profiles
+      - multi-tenant
