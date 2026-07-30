@@ -5,7 +5,7 @@ import { getAuthorization } from '@/services/auth/authorization'
 import { ERRORS } from '@/config'
 import { createCourseSchema, assignTeacherSchema } from '../validation'
 import type { CreateCourseInput, AssignTeacherInput } from '../validation'
-import { createCourse, assignTeacher, deleteTeacherFromCourse } from '../database'
+import { createCourse, assignTeacher, deleteTeacherFromCourse, removeCourse } from '../database'
 
 export async function createCourseAction(input: CreateCourseInput) {
   try {
@@ -49,6 +49,21 @@ export async function deleteTeacherAction(courseTeacherId: string) {
     if (!auth.success) return { error: auth.error }
 
     return { data: await deleteTeacherFromCourse(courseTeacherId, orgId) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+
+export async function removeCourseAction(courseId: string) {
+  try {
+    const user = await getUserInfo()
+    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
+    const orgId = user.organization?.id
+    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+    const auth = getAuthorization(user, 'DIRECTION')
+    if (!auth.success) return { error: auth.error }
+    await removeCourse(courseId, orgId)
+    return { data: true }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

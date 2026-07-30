@@ -1,10 +1,10 @@
 //src/hooks/notification/usePushNotifications.ts
 "use client"
 import { useState, useEffect, useCallback } from 'react'
-import { checkBrowserSupport, validateHTTPS, getCurrentPermission } from '@/services/notification/validation'
+import { checkBrowserSupport, validateHTTPS, getCurrentPermission, urlBase64ToUint8Array, serializeSubscription } from '@/services/notification/utils'
 import { requestNotificationPermission } from '@/services/notification/permission'
-import { subscribeToPush, unsubscribeFromPush, sendPushMessage, sendMessageToUser } from '@/services/notification/subscription'
-import { getCurrentSubscription } from '@/services/notification/service-worker'
+import { subscribeUser, unsubscribeUser, sendNotificationToUser } from '@/services/notification/user'
+import { getServiceWorkerRegistration, getCurrentSubscription } from '@/services/notification/service-worker'
 
 interface NotificationState {
   isSupported: boolean
@@ -44,6 +44,7 @@ export function usePushNotifications() {
     if (isSupported) {
       checkSubscription()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const checkSubscription = useCallback(async () => {
@@ -57,22 +58,31 @@ export function usePushNotifications() {
 
   const requestPermission = useCallback(async (): Promise<boolean> => {
     if (!state.isSupported) return false
-
     const permission = await requestNotificationPermission()
     const isGranted = permission === 'granted'
-
     setState(prev => ({ ...prev, permission, isGranted }))
     return isGranted
   }, [state.isSupported])
 
   const subscribe = useCallback(async (): Promise<boolean> => {
     if (!state.isSupported || !state.isGranted) return false
-
     setIsLoading(true)
     try {
-      const success = await subscribeToPush()
-      if (success) await checkSubscription()
-      return success
+      const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
+      if (!vapidKey) return false
+      const reg = await getServiceWorkerRegistration()
+      const pushSub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(vapidKey),
+      })
+      const serialized = serializeSubscription(pushSub)
+      const result = await subscribeUser(serialized, navigator.userAgent)
+      if ('error' in result) {
+        console.error('Erreur abonnement:', result.error)
+        return false
+      }
+      await checkSubscription()
+      return true
     } catch (error) {
       console.error('Erreur abonnement:', error)
       return false
@@ -84,9 +94,15 @@ export function usePushNotifications() {
   const unsubscribe = useCallback(async (): Promise<boolean> => {
     setIsLoading(true)
     try {
-      const success = await unsubscribeFromPush()
-      if (success) setState(prev => ({ ...prev, subscription: null }))
-      return success
+      const pushSub = await getCurrentSubscription()
+      if (pushSub) await pushSub.unsubscribe()
+      const result = await unsubscribeUser()
+      if ('error' in result) {
+        console.error('Erreur désabonnement:', result.error)
+        return false
+      }
+      setState(prev => ({ ...prev, subscription: null }))
+      return true
     } catch (error) {
       console.error('Erreur désabonnement:', error)
       return false
@@ -96,10 +112,9 @@ export function usePushNotifications() {
   }, [])
 
   const sendNotification = useCallback(async (message: string): Promise<boolean> => {
-    return await sendPushMessage(message)
+    const result = await sendNotificationToUser({ message })
+    return result.success
   }, [])
-
-
 
   return {
     state,
@@ -109,7 +124,6 @@ export function usePushNotifications() {
       subscribe,
       unsubscribe,
       sendNotification,
-
     }
   }
 }

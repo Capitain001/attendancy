@@ -1,0 +1,8 @@
+{
+  "name": "getSchedulesByClass",
+  "file": "src/services/schedule/database/schedule.queries.ts",
+  "sig": "(classId: string, orgId: string, rangeStart: Date, rangeEnd: Date) => Promise<({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { id: string; user: { firstName: string | null; lastName: string | null; avatar_url: string | null; }; }; } & { ...; })[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

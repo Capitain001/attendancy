@@ -2,7 +2,7 @@
 import { ERRORS } from '@/config'
 import { getUserInfo } from '@/services/user/userInfo'
 import { getAuthorization } from '@/services/auth/authorization'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 
 export async function confirmAttendanceAction({ attendanceId }: { attendanceId: string }) {
   try {

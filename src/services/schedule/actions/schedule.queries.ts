@@ -75,11 +75,13 @@ export async function getClassScheduleOptionsAction(classId: string) {
         courses: courses.map((c) => ({
           id:      c.id,
           name:    c.name,
-          teachers: c.teachers.map((ct) => ({
-            id:     ct.teacher.id,
-            name:   [ct.teacher.user.firstName, ct.teacher.user.lastName].filter(Boolean).join(' '),
-            isMain: ct.isMain,
-          })),
+          teachers: c.teachers
+            .filter((ct): ct is typeof ct & { teacher: NonNullable<typeof ct.teacher> } => ct.teacher !== null)
+            .map((ct) => ({
+              id:     ct.teacher.id,
+              name:   [ct.teacher.user.firstName, ct.teacher.user.lastName].filter(Boolean).join(' '),
+              isMain: ct.isMain,
+            })),
         })),
         rooms:  rooms.map((r) => ({ id: r.id, name: r.name })),
         groups: groups.map((g) => ({ id: g.id, name: g.name })),

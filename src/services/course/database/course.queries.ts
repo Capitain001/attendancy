@@ -1,6 +1,6 @@
 // src/services/course/database/course.queries.ts
 import { cacheTag, cacheLife } from 'next/cache'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { CACHE } from '@/cache/server/key'
 
 export async function getCourses(orgId: string) {
@@ -33,6 +33,32 @@ export async function getCourseTeachersIds(courseId: string, orgId: string) {
   return prisma.courseTeacher.findMany({
     where: { course: { id: courseId, orgId, deletedAt: null } },
     select: { id: true, teacherId: true, isMain: true },
+  })
+}
+
+export async function getCourse(courseId: string, orgId: string) {
+  'use cache'
+  cacheTag(CACHE.COURSE(orgId))
+  cacheTag(CACHE.COURSE(orgId, courseId))
+  cacheLife(CACHE.COURSE.life)
+  return prisma.course.findFirst({
+    where: { id: courseId, orgId, deletedAt: null },
+    select: {
+      id: true, name: true, credits: true, durationDone: true, durationTotal: true,
+      classId: true, termId: true,
+      ueCourse: { select: { id: true, name: true, code: true } },
+      teachers: {
+        select: {
+          id: true, isMain: true, hours: true,
+          teacher: {
+            select: {
+              id: true,
+              user: { select: { firstName: true, lastName: true } },
+            },
+          },
+        },
+      },
+    },
   })
 }
 

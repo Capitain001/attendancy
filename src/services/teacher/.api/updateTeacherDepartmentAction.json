@@ -1,0 +1,11 @@
+{
+  "name": "updateTeacherDepartmentAction",
+  "file": "src/services/teacher/actions/teacher.mutations.ts",
+  "sig": "(input: UpdateTeacherDepartmentInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; departmentId: string | null; }; error?: undefined; }>",
+  "calls": [
+    "updateTeacherDepartment"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

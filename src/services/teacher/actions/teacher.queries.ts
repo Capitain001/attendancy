@@ -1,7 +1,7 @@
 'use server'
 import { getUserInfo } from '@/services/user/userInfo'
 import { ERRORS } from '@/config'
-import { getTeachers, getTeacher, getTeacherTodaySchedules, getTeacherSchedules, getTeacherCourses, getTeacherStats } from '../database'
+import { getTeachers, getTeacher, getTeacherTodaySchedules, getTeacherSchedules, getTeacherCourses, getTeacherStats, getTeacherOrganizationStats } from '../database'
 
 export async function getCurrentTeacherId(): Promise<string | null> {
   const user = await getUserInfo()
@@ -74,6 +74,17 @@ export async function getTeacherAction(teacherId: string) {
     const orgId = user?.organization?.id
     if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
     return { data: await getTeacher(teacherId, orgId) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+
+export async function getTeacherOrganizationStatsAction() {
+  try {
+    const user = await getUserInfo()
+    const orgId = user?.organization?.id
+    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+    return { data: await getTeacherOrganizationStats(orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

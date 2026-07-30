@@ -30,8 +30,6 @@ export async function createRoleSpecificEntity(
       return tx.direction.create({ data: { userId, orgId } })
 
     case 'ADMIN':
-    case 'SUPER_ADMIN':
-      // Admin reste global — pas de scope org sur ce profil.
       return tx.admin.create({ data: { userId } })
 
     default:

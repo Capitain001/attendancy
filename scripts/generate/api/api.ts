@@ -1,31 +1,31 @@
-﻿/**
+/**
  * //scripts/generate/api/api.ts
- * api.ts  â€”  RÃ©gime B du skill service-api-index.
+ * api.ts — Régime B du skill service-api-index.
  *
  * Usage : tsx scripts/generate/api/api.ts <service-path> [<service-path2> ...]
  * Exemple: tsx scripts/generate/api/api.ts users/profile
  *          tsx scripts/generate/api/api.ts entity
  *
- * Le chemin de service est relatif Ã  src/services/.
- * GÃ©nÃ¨re src/services/<service>/.api/index.json + une fiche par fn exportÃ©e.
- * PrÃ©serve les champs manuels (rules, why_ref, auth) s'ils existent dÃ©jÃ .
+ * Le chemin de service est relatif à src/services/.
+ * Génère src/services/<service>/.api/index.json + une fiche par fn exportée.
+ * Préserve les champs manuels (rules, why_ref, auth) s'ils existent déjà.
  */
 
 import * as ts from "typescript";
 import * as fs from "fs";
 import * as path from "path";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 import { execSync } from "child_process";
 import { ORG_ID_CHECK, PROJECT_LAYOUT } from "./config.js";
 
-// â”€â”€ Chemins â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Chemins ───────────────────────────────────────────────────────────────────
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // api.ts vit maintenant sous scripts/generate/api/ (3 niveaux sous la racine).
 const ROOT = path.resolve(__dirname, "../../..");
 
-// â”€â”€ Types internes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Types internes ────────────────────────────────────────────────────────────
 
 interface CacheMeta {
   strategy: "unstable_cache";
@@ -48,13 +48,13 @@ interface ExtractedFn {
   kind: "query" | "mutation" | "server-action";
   composes: string[];
   calls: string[];
-  // depsMap : fn cross-service â†’ service propriÃ©taire (relatif Ã  src/services/)
+  // depsMap : fn cross-service → service propriétaire (relatif à src/services/)
   depsMap: Record<string, string>;
   cache?: CacheMeta;
   orgIdIssues: OrgIdIssue[];
 }
 
-// â”€â”€ Utilitaires â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Utilitaires ───────────────────────────────────────────────────────────────
 
 function relPath(abs: string): string {
   return path.relative(ROOT, abs).replace(/\\/g, "/");
@@ -64,9 +64,9 @@ function normalizeSpace(s: string): string {
   return (
     s
       .replace(/\s+/g, " ")
-      // trailing commas before } or ) : `{ a, b, }` â†’ `{ a, b }`
+      // trailing commas before } or ) : `{ a, b, }` → `{ a, b }`
       .replace(/,(\s*[})])/g, "$1")
-      // trailing semicolons before } in type literals : `string; }` â†’ `string }`
+      // trailing semicolons before } in type literals : `string; }` → `string }`
       .replace(/;(\s*})/g, "$1")
       .trim()
   );
@@ -104,7 +104,7 @@ function isExemptFn(fnName: string, fileRel: string): boolean {
   return false;
 }
 
-// DÃ©rivÃ©s de PROJECT_LAYOUT â€” seul config.ts connaÃ®t les noms rÃ©els des dossiers.
+// Dérivés de PROJECT_LAYOUT — seul config.ts connaît les noms réels des dossiers.
 const DB_DIR = PROJECT_LAYOUT.dirNames.db;
 const ACTIONS_DIR = PROJECT_LAYOUT.dirNames.actions;
 const SERVICES_ROOT = PROJECT_LAYOUT.servicesRoot;
@@ -117,7 +117,7 @@ const servicePathRe = new RegExp(
   `/${SERVICES_ROOT.replace(/\//g, "\\/")}\\/(.+?)\\/(${DB_DIR}\\/|${DB_DIR}\\.ts|${ACTIONS_DIR}\\/|${ACTIONS_DIR}\\.ts)`,
 );
 
-/** Extrait le chemin de service (relatif Ã  src/services/) depuis le fichier dÃ©clarÃ© d'une fn. */
+/** Extrait le chemin de service (relatif à src/services/) depuis le fichier déclaré d'une fn. */
 function declFileToServicePath(declFile: string): string | null {
   const n = declFile.replace(/\\/g, "/");
   const m = n.match(servicePathRe);
@@ -136,20 +136,20 @@ function isActionsFile(absOrRel: string): boolean {
   return actionsDirRe.test(n) || n.endsWith(`/${ACTIONS_DIR}.ts`);
 }
 
-// â”€â”€ CrÃ©ation du programme TypeScript â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Création du programme TypeScript ─────────────────────────────────────────
 
 function makeProgram(rootFiles: string[]): ts.Program {
   const opts: ts.CompilerOptions = {
     target: ts.ScriptTarget.ES2017,
     module: ts.ModuleKind.CommonJS,
-    // Node10 = rÃ©solution classique Node â€” compatible standalone, gÃ¨re baseUrl+paths
+    // Node10 = résolution classique Node — compatible standalone, gère baseUrl+paths
     moduleResolution: ts.ModuleResolutionKind.Node10,
     strict: true,
     esModuleInterop: true,
     resolveJsonModule: true,
     baseUrl: path.resolve(ROOT, PROJECT_LAYOUT.pathAlias.baseUrl),
-    // PROJECT_LAYOUT est `as const` (tuples readonly) â€” ts.CompilerOptions.paths
-    // attend des string[] mutables, d'oÃ¹ la recopie explicite par alias.
+    // PROJECT_LAYOUT est `as const` (tuples readonly) — ts.CompilerOptions.paths
+    // attend des string[] mutables, d'où la recopie explicite par alias.
     paths: Object.fromEntries(
       Object.entries(PROJECT_LAYOUT.pathAlias.paths).map(([alias, targets]) => [
         alias,
@@ -164,7 +164,7 @@ function makeProgram(rootFiles: string[]): ts.Program {
   return ts.createProgram(rootFiles, opts);
 }
 
-// â”€â”€ Extraction de signature â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Extraction de signature ───────────────────────────────────────────────────
 
 function extractSig(
   node: ts.FunctionDeclaration,
@@ -179,7 +179,7 @@ function extractSig(
   if (node.type) {
     ret = normalizeSpace(node.type.getText(sf));
   } else {
-    // InfÃ©rÃ© : utiliser le type checker
+    // Inféré : utiliser le type checker
     const type = checker.getTypeAtLocation(node);
     const sigs = checker.getSignaturesOfType(type, ts.SignatureKind.Call);
     if (sigs.length > 0) {
@@ -193,7 +193,7 @@ function extractSig(
   return `(${params}) => ${ret}`;
 }
 
-// â”€â”€ DÃ©tection unstable_cache â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Détection unstable_cache ──────────────────────────────────────────────────
 
 function extractCache(body: ts.Block, sf: ts.SourceFile): CacheMeta | undefined {
   let found: CacheMeta | undefined;
@@ -217,7 +217,7 @@ function extractCache(body: ts.Block, sf: ts.SourceFile): CacheMeta | undefined 
 
         if (ts.isArrayLiteralExpression(keysArg)) {
           for (const el of keysArg.elements) {
-            // Garder la reprÃ©sentation brute (variables, strings)
+            // Garder la représentation brute (variables, strings)
             keys.push(normalizeSpace(el.getText(sf)).replace(/^["']|["']$/g, ""));
           }
         }
@@ -245,7 +245,7 @@ function extractCache(body: ts.Block, sf: ts.SourceFile): CacheMeta | undefined 
   return found;
 }
 
-// â”€â”€ RÃ©solution des noms exportÃ©s d'un fichier â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Résolution des noms exportés d'un fichier ────────────────────────────────
 
 function exportedNames(sf: ts.SourceFile): Set<string> {
   const names = new Set<string>();
@@ -265,11 +265,11 @@ function exportedNames(sf: ts.SourceFile): Set<string> {
   return names;
 }
 
-// â”€â”€ Collecte des appels sortants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Collecte des appels sortants ──────────────────────────────────────────────
 
 interface OutgoingRef {
   name: string;
-  ownerService: string | null; // null = mÃªme service ou inconnu
+  ownerService: string | null; // null = même service ou inconnu
 }
 
 function collectOutgoing(
@@ -280,7 +280,7 @@ function collectOutgoing(
   localExported: Set<string>,
   currentServicePath: string
 ): OutgoingRef[] {
-  const calls = new Map<string, OutgoingRef>(); // dÃ©doublonnage par name
+  const calls = new Map<string, OutgoingRef>(); // dédoublonnage par name
   const currentFile = sf.fileName.replace(/\\/g, "/");
 
   function resolveCall(expr: ts.Expression): OutgoingRef | null {
@@ -298,7 +298,7 @@ function collectOutgoing(
     if (declFile.includes("/node_modules/")) return null;
     if (!declFile.includes(`/${SERVICES_ROOT}/`)) return null;
 
-    // Helper local non exportÃ© â†’ exclure (Â§6)
+    // Helper local non exporté → exclure (§6)
     if (declFile === currentFile && !localExported.has(sym.getName())) return null;
 
     if (layer === "db") {
@@ -309,7 +309,7 @@ function collectOutgoing(
 
     const name = sym.getName();
     const ownerService = declFileToServicePath(declFile);
-    // Null si mÃªme service ou non dÃ©ductible
+    // Null si même service ou non déductible
     const isSameService = ownerService === currentServicePath;
     return { name, ownerService: isSameService ? null : ownerService };
   }
@@ -328,7 +328,7 @@ function collectOutgoing(
           ts.isIdentifier(obj.expression) &&
           obj.expression.text === "prisma"
         ) {
-          // prisma call â€” skip
+          // prisma call — skip
         } else {
           const ref = resolveCall(expr.name);
           if (ref && !calls.has(ref.name)) calls.set(ref.name, ref);
@@ -342,7 +342,7 @@ function collectOutgoing(
   return [...calls.values()];
 }
 
-// â”€â”€ Assertion orgId â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Assertion orgId ───────────────────────────────────────────────────────────
 
 const PRISMA_READ_METHODS = new Set([
   "findMany",
@@ -356,7 +356,7 @@ const PRISMA_READ_METHODS = new Set([
 ]);
 
 function findOrgIdAnywhere(node: ts.Node): boolean {
-  // Chercher un identifiant ou une propriÃ©tÃ© nommÃ©e d'aprÃ¨s ORG_ID_FIELD
+  // Chercher un identifiant ou une propriété nommée d'après ORG_ID_FIELD
   if (ts.isIdentifier(node) && node.text === ORG_ID_FIELD) return true;
   let found = false;
   ts.forEachChild(node, (c) => { if (!found) found = findOrgIdAnywhere(c); });
@@ -381,7 +381,7 @@ function whereOrgIdStatus(
   const whereVal = whereProp.initializer;
   if (!ts.isObjectLiteralExpression(whereVal)) return "absent";
 
-  // Champ de scope en racine ? â€” gÃ©rer les deux formes : `orgId: x`
+  // Champ de scope en racine ? — gérer les deux formes : `orgId: x`
   // (PropertyAssignment) et `{ orgId }` shorthand (ShorthandPropertyAssignment)
   const atRoot = whereVal.properties.some(
     (p) =>
@@ -421,7 +421,7 @@ function checkOrgId(
         ) {
           const model = modelAccess.name.text;
 
-          // Exempter les modÃ¨les globaux (User, etc.)
+          // Exempter les modèles globaux (User, etc.)
           if ((ORG_ID_CHECK.globalModels as readonly string[]).includes(model)) {
             ts.forEachChild(node, visit);
             return;
@@ -457,7 +457,7 @@ function checkOrgId(
   return issues;
 }
 
-// â”€â”€ Extraction des fns d'un fichier â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Extraction des fns d'un fichier ──────────────────────────────────────────
 
 function extractFile(
   sf: ts.SourceFile,
@@ -491,7 +491,7 @@ function extractFile(
 
     // Noms seuls pour les champs JSON
     const outgoingNames = outgoing.map((r) => r.name);
-    // depsMap : fn cross-service â†’ service propriÃ©taire (ownerService non null)
+    // depsMap : fn cross-service → service propriétaire (ownerService non null)
     const depsMap: Record<string, string> = {};
     for (const ref of outgoing) {
       if (ref.ownerService) depsMap[ref.name] = ref.ownerService;
@@ -514,7 +514,7 @@ function extractFile(
   return results;
 }
 
-// â”€â”€ Collecte des fichiers d'un service â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Collecte des fichiers d'un service ───────────────────────────────────────
 
 interface ServiceFiles {
   serviceAbs: string;
@@ -523,13 +523,13 @@ interface ServiceFiles {
   actionFileSet: Set<string>;
 }
 
-/** Collecte les fichiers db/actions d'un service (sans crÃ©er de programme TS). */
+/** Collecte les fichiers db/actions d'un service (sans créer de programme TS). */
 function collectServiceFiles(servicePath: string): ServiceFiles | null {
   const serviceAbs = path.join(ROOT, SERVICES_ROOT, servicePath);
   const apiDir = path.join(serviceAbs, ".api");
 
   if (!fs.existsSync(serviceAbs)) {
-    console.error(`  âœ— Service introuvable : ${serviceAbs}`);
+    console.error(`  ✗ Service introuvable : ${serviceAbs}`);
     return null;
   }
 
@@ -547,11 +547,11 @@ function collectServiceFiles(servicePath: string): ServiceFiles | null {
       .filter(isSourceFile)
       .forEach((f) => rootFiles.push(path.join(dbDir, f)));
   }
-  // Fallback : <DB_DIR>.ts directement dans le rÃ©pertoire service
+  // Fallback : <DB_DIR>.ts directement dans le répertoire service
   const dbTs = path.join(serviceAbs, `${DB_DIR}.ts`);
   if (!rootFiles.length && fs.existsSync(dbTs)) rootFiles.push(dbTs);
 
-  // Couche action : dossier actions/ (barrel, symÃ©trique Ã  database/) OU actions.ts.
+  // Couche action : dossier actions/ (barrel, symétrique à database/) OU actions.ts.
   const actionFileSet = new Set<string>();
   const actionsDir = path.join(serviceAbs, ACTIONS_DIR);
   if (fs.existsSync(actionsDir) && fs.statSync(actionsDir).isDirectory()) {
@@ -573,12 +573,12 @@ function collectServiceFiles(servicePath: string): ServiceFiles | null {
   return { serviceAbs, apiDir, rootFiles, actionFileSet };
 }
 
-// â”€â”€ GÃ©nÃ©ration d'un service (programme TS PARTAGÃ‰) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Génération d'un service (programme TS PARTAGÉ) ────────────────────────────
 
 /**
- * GÃ©nÃ¨re les index .api/ d'un service Ã  partir d'un `ts.Program` **partagÃ©** par
- * tous les services touchÃ©s. Crucial pour la perf : les libs (lib.es*.d.ts) et
- * `@prisma/client` ne sont parsÃ©es/type-checkÃ©es qu'une seule fois, au lieu d'un
+ * Génère les index .api/ d'un service à partir d'un `ts.Program` **partagé** par
+ * tous les services touchés. Crucial pour la perf : les libs (lib.es*.d.ts) et
+ * `@prisma/client` ne sont parsées/type-checkées qu'une seule fois, au lieu d'un
  * Program (et donc d'un re-parse complet) par service.
  */
 function generateServiceFromProgram(
@@ -590,7 +590,7 @@ function generateServiceFromProgram(
 ): boolean {
   const { apiDir, rootFiles, actionFileSet } = files;
 
-  console.log(`\nâ”€â”€ ${servicePath} â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€`);
+  console.log(`\n── ${servicePath} ──────────────────────────`);
   console.log(`  Fichiers : ${rootFiles.map(relPath).join(", ")}`);
 
   // Extraire toutes les fns
@@ -600,7 +600,7 @@ function generateServiceFromProgram(
 
   for (const f of rootFiles) {
     const sf = program.getSourceFile(f);
-    if (!sf) { console.warn(`  âš  Impossible de lire : ${relPath(f)}`); continue; }
+    if (!sf) { console.warn(`  ⚠ Impossible de lire : ${relPath(f)}`); continue; }
     const layer: "db" | "action" = actionFileSet.has(f) ? "action" : "db";
     const fns = extractFile(sf, checker, layer, servicePath);
     allFns.push(...fns);
@@ -614,10 +614,10 @@ function generateServiceFromProgram(
   // Afficher tous les avertissements orgId (non bloquants)
   const allIssues = [...warns, ...errors];
   for (const w of allIssues) {
-    console.warn(`  âš  WARN [${w.fn}] ${w.message}`);
+    console.warn(`  ⚠ WARN [${w.fn}] ${w.message}`);
   }
 
-  // Construire edges par inversion des arÃªtes sortantes
+  // Construire edges par inversion des arêtes sortantes
   const edges: Record<string, string[]> = {};
   for (const fn of allFns) edges[fn.name] = [];
   for (const fn of allFns) {
@@ -628,13 +628,13 @@ function generateServiceFromProgram(
     }
   }
 
-  // AgrÃ©ger deps cross-service (fn â†’ service propriÃ©taire)
+  // Agréger deps cross-service (fn → service propriétaire)
   const deps: Record<string, string> = {};
   for (const fn of allFns) {
     Object.assign(deps, fn.depsMap);
   }
 
-  // Ã‰crire index.json
+  // Écrire index.json
   const fns: Record<string, { f: string; layer: string; kind: string }> = {};
   for (const fn of allFns) {
     fns[fn.name] = { f: `.api/${fn.name}.json`, layer: fn.layer, kind: fn.kind };
@@ -648,16 +648,16 @@ function generateServiceFromProgram(
     utils_dir: null,
     fns,
     edges,
-    deps, // fn cross-service â†’ service propriÃ©taire, pour --check
+    deps, // fn cross-service → service propriétaire, pour --check
   });
-  console.log(`  âœ“ index.json  (${allFns.length} fns)`);
+  console.log(`  ✓ index.json  (${allFns.length} fns)`);
 
-  // Ã‰crire les fiches individuelles
+  // Écrire les fiches individuelles
   for (const fn of allFns) {
     const fichePath = path.join(apiDir, `${fn.name}.json`);
     const existing = readJsonIfExists<Record<string, unknown>>(fichePath);
 
-    // Champs dÃ©rivÃ©s
+    // Champs dérivés
     const derived: Record<string, unknown> = {
       name: fn.name,
       file: fn.fileRel,
@@ -670,7 +670,7 @@ function generateServiceFromProgram(
       derived.calls = fn.calls;
     }
 
-    // Champs manuels : prÃ©server si existants, initialiser vides sinon
+    // Champs manuels : préserver si existants, initialiser vides sinon
     const manual: Record<string, unknown> =
       fn.layer === "db"
         ? {
@@ -684,19 +684,19 @@ function generateServiceFromProgram(
           };
 
     writeJson(fichePath, { ...derived, ...manual });
-    console.log(`  âœ“ ${fn.name}.json`);
+    console.log(`  ✓ ${fn.name}.json`);
   }
 
   return true;
 }
 
-// â”€â”€ Check cross-service â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Check cross-service ───────────────────────────────────────────────────────
 
 interface IndexJson {
   service: string;
   fns: Record<string, { f: string; layer: string; kind: string }>;
   edges: Record<string, string[]>;
-  deps?: Record<string, string>; // fn cross-service â†’ service propriÃ©taire
+  deps?: Record<string, string>; // fn cross-service → service propriétaire
 }
 
 interface FicheJson {
@@ -705,7 +705,7 @@ interface FicheJson {
   calls?: string[];
 }
 
-/** Trouve rÃ©cursivement tous les index.json sous src/services/ */
+/** Trouve récursivement tous les index.json sous src/services/ */
 function findAllIndexFiles(
   servicesDir: string
 ): Array<{ servicePath: string; indexPath: string; index: IndexJson }> {
@@ -746,16 +746,16 @@ type EdgeState =
   | { status: "unverified"; service: string; fn: string; ownerService: string }
   | { status: "dead_reference"; service: string; context: string; fn: string; ownerService: string };
 
-async function checkCrossService(): Promise<boolean> {
+export async function checkCrossService(): Promise<boolean> {
   const servicesDir = path.join(ROOT, SERVICES_ROOT);
   const all = findAllIndexFiles(servicesDir);
 
   if (!all.length) {
-    console.log("  Aucun index .api/ trouvÃ©.");
+    console.log("  Aucun index .api/ trouvé.");
     return true;
   }
 
-  // Table : servicePath â†’ Set<fnName> (uniquement services indexÃ©s)
+  // Table : servicePath → Set<fnName> (uniquement services indexés)
   const indexedServices = new Map<string, Set<string>>();
   for (const { servicePath, index } of all) {
     indexedServices.set(servicePath, new Set(Object.keys(index.fns)));
@@ -773,16 +773,16 @@ async function checkCrossService(): Promise<boolean> {
       const ownerFns = indexedServices.get(ownerService);
 
       if (!ownerFns) {
-        // Owner non indexÃ© â†’ unverified, non bloquant
+        // Owner non indexé → unverified, non bloquant
         unverified.push({ status: "unverified", service: servicePath, fn: fnName, ownerService });
         continue;
       }
 
       if (ownerFns.has(fnName)) {
-        // Owner indexÃ© + fn prÃ©sente â†’ validated
+        // Owner indexé + fn présente → validated
         validated.push({ status: "validated", service: servicePath, fn: fnName, ownerService });
       } else {
-        // Owner indexÃ© + fn absente â†’ dead_reference, bloquant
+        // Owner indexé + fn absente → dead_reference, bloquant
         let context = "deps";
         for (const [caller, entry] of Object.entries(index.fns)) {
           const fichePath = path.join(apiDir, path.basename(entry.f));
@@ -800,38 +800,38 @@ async function checkCrossService(): Promise<boolean> {
 
   // Afficher unverified (non bloquant)
   if (unverified.length) {
-    console.log(`\n  âš  ${unverified.length} arÃªte(s) non vÃ©rifiable(s) (service cible non indexÃ©) :`);
+    console.log(`\n  ⚠ ${unverified.length} arête(s) non vérifiable(s) (service cible non indexé) :`);
     for (const u of unverified) {
-      console.log(`    [${u.service}] "${u.fn}" â†’ ${u.ownerService} (unverified â€” skip)`);
+      console.log(`    [${u.service}] "${u.fn}" → ${u.ownerService} (unverified — skip)`);
     }
   }
 
   if (dead.length) {
-    console.error(`\nâœ— ${dead.length} rÃ©fÃ©rence(s) cross-service morte(s) :\n`);
+    console.error(`\n✗ ${dead.length} référence(s) cross-service morte(s) :\n`);
     for (const d of dead) {
       if (d.status !== "dead_reference") continue;
-      console.error(`  [${d.service}] ${d.context} â†’ "${d.fn}" (service: ${d.ownerService})`);
-      console.error(`    â†’ "${d.fn}" introuvable dans ${d.ownerService}/.api/index.json`);
-      console.error(`    â†’ RÃ©gÃ©nÃ©rer: tsx scripts/generate/api/api.ts ${d.service}`);
+      console.error(`  [${d.service}] ${d.context} → "${d.fn}" (service: ${d.ownerService})`);
+      console.error(`    → "${d.fn}" introuvable dans ${d.ownerService}/.api/index.json`);
+      console.error(`    → Régénérer: tsx scripts/generate/api/api.ts ${d.service}`);
     }
     return false;
   }
 
   const totalFns = [...indexedServices.values()].reduce((s, v) => s + v.size, 0);
   console.log(
-    `\nâœ“ check cross-service : graphe cohÃ©rent` +
-    ` (${totalFns} fns, ${all.length} services indexÃ©s` +
+    `\n✓ check cross-service : graphe cohérent` +
+    ` (${totalFns} fns, ${all.length} services indexés` +
     ` | ${validated.length} validated, ${unverified.length} unverified)`
   );
   return true;
 }
 
-// â”€â”€ Point d'entrÃ©e â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Point d'entrée ────────────────────────────────────────────────────────────
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
 
-  // Mode --check : valide la cohÃ©rence cross-service, ne gÃ©nÃ¨re rien
+  // Mode --check : valide la cohérence cross-service, ne génère rien
   if (args[0] === "--check") {
     console.log("\napi --check");
     const ok = await checkCrossService();
@@ -840,7 +840,7 @@ async function main(): Promise<void> {
 
   if (!args.length) {
     console.error("Usage:");
-    console.error("  tsx scripts/generate/api/api.ts <service-path> [...]   # gÃ©nÃ©rer");
+    console.error("  tsx scripts/generate/api/api.ts <service-path> [...]   # générer");
     console.error("  tsx scripts/generate/api/api.ts --check                 # valider le graphe");
     process.exit(1);
   }
@@ -848,9 +848,9 @@ async function main(): Promise<void> {
   const sha = getGitSha();
   console.log(`\napi  derived_at=${sha}`);
 
-  // Collecter les fichiers de TOUS les services AVANT de crÃ©er le programme :
-  // on ne crÃ©e qu'UN SEUL ts.Program partagÃ© â†’ libs + @prisma/client parsÃ©es une
-  // seule fois (le re-parse par service Ã©tait le gros coÃ»t).
+  // Collecter les fichiers de TOUS les services AVANT de créer le programme :
+  // on ne crée qu'UN SEUL ts.Program partagé → libs + @prisma/client parsées une
+  // seule fois (le re-parse par service était le gros coût).
   const planned: Array<{ svc: string; files: ServiceFiles }> = [];
   const allRootFiles = new Set<string>();
 
@@ -858,8 +858,8 @@ async function main(): Promise<void> {
     const files = collectServiceFiles(svc);
     if (!files) process.exit(1);
     if (!files.rootFiles.length) {
-      console.warn(`\nâ”€â”€ ${svc} â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€`);
-      console.warn(`  âš  Aucun fichier trouvÃ© pour ${svc}`);
+      console.warn(`\n── ${svc} ──────────────────────────`);
+      console.warn(`  ⚠ Aucun fichier trouvé pour ${svc}`);
       continue;
     }
     planned.push({ svc, files });
@@ -867,7 +867,7 @@ async function main(): Promise<void> {
   }
 
   if (!planned.length) {
-    console.log("\nâœ“ GÃ©nÃ©ration terminÃ©e (rien Ã  indexer)");
+    console.log("\n✓ Génération terminée (rien à indexer)");
     return;
   }
 
@@ -879,10 +879,12 @@ async function main(): Promise<void> {
     if (!ok) process.exit(1);
   }
 
-  console.log("\nâœ“ GÃ©nÃ©ration terminÃ©e");
+  console.log("\n✓ Génération terminée");
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

@@ -1,0 +1,8 @@
+{
+  "name": "getOrganizationNotificationStats",
+  "file": "src/services/notification/database/notification.queries.ts",
+  "sig": "(orgId: string) => Promise<{ total: number; unread: number; read: number; byType: Record<string, number>; uniqueUsers: number; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

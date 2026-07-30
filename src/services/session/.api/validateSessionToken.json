@@ -1,0 +1,8 @@
+{
+  "name": "validateSessionToken",
+  "file": "src/services/session/database/token.mutations.ts",
+  "sig": "(token: string) => Promise<{ sessionId: string; scheduleId: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

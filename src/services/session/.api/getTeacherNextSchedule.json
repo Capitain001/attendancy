@@ -1,0 +1,8 @@
+{
+  "name": "getTeacherNextSchedule",
+  "file": "src/services/session/database/session.queries.ts",
+  "sig": "(teacherId: string, orgId: string) => Promise<{ class: { level: Level; _count: { studentEnrollments: number; }; name: string; }; course: { name: string; ueCourse: { code: string | null; }; }; group: { _count: { studentGroups: number; }; name: string; } | null; ... 7 more ...; notes: string | null; } | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

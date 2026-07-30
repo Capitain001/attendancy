@@ -1,0 +1,9 @@
+{
+  "name": "createTeacherAction",
+  "file": "src/services/teacher/actions/teacher.mutations.ts",
+  "sig": "(_input: CreateTeacherInput) => Promise<{ readonly error: \"Les enseignants sont créés via le flux invitation\"; }>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

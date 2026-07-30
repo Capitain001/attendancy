@@ -14,4 +14,10 @@ export const COURSE_GRAPH = {
     CACHE.COURSE(orgId, classId),
     CACHE.CLASS(orgId, classId),
   ],
+  COURSE_REMOVED: (orgId: string, classId: string) => [
+    CACHE.COURSE(orgId),
+    CACHE.COURSE(orgId, classId),
+    CACHE.CLASS(orgId),
+    CACHE.CLASS(orgId, classId),
+  ],
 } as const

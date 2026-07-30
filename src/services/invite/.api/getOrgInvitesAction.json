@@ -1,0 +1,11 @@
+{
+  "name": "getOrgInvitesAction",
+  "file": "src/services/invite/actions/invite.queries.ts",
+  "sig": "() => Promise<{ data: { id: string; email: string; createdAt: Date; expiresAt: Date | null; usedAt: Date | null; details: JsonValue; }[]; error?: undefined; } | { error: string; data?: undefined; }>",
+  "calls": [
+    "getOrgInvites"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

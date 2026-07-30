@@ -4,8 +4,9 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { ThemeProvider } from '@/providers/theme-provider'
 import { ErudaProvider } from '@/providers/eruda-provider'
 import ReactQueryProvider from '@/providers/react-query-provider'
-import Header from '@/components/layout/Header/Header'
-import { getUserInfo } from '@/services/user/userInfo'
+import { Suspense } from 'react'
+import { AsyncHeader } from '@/components/layout/Header/AsyncHeader'
+import { HeaderSkeleton } from '@/components/layout/Header/HeaderSkeleton'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -13,11 +14,9 @@ export const metadata: Metadata = {
   description: 'Gestion des présences et du planning académique',
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const user = await getUserInfo()
-
   return (
     <html lang="fr" suppressHydrationWarning>
       <body className="antialiased" suppressHydrationWarning>
@@ -25,9 +24,13 @@ export default async function RootLayout({
           <ReactQueryProvider>
             <NuqsAdapter>
               <div className="flex h-screen flex-col">
-                <Header user={user ?? undefined} />
+                <Suspense fallback={<HeaderSkeleton />}>
+                  <AsyncHeader />
+                </Suspense>
                 <main className="flex-1 overflow-y-auto">
-                  {children}
+                  <Suspense fallback={null}>
+                    {children}
+                  </Suspense>
                 </main>
               </div>
               <ErudaProvider />

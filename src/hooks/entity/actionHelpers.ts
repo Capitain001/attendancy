@@ -16,7 +16,10 @@
 // Convention V2 : { data: T } | { error: string }
 export type ActionResponse<T> = { data: T } | { error: string };
 export type ActionArrayResponse<T> = { data: T[] } | { error: string };
+// Ancien pattern (V1) — conservé pour rétrocompatibilité avec les hooks existants
 export type ActionSuccessResponse = { success: boolean; error?: string };
+// Pattern suppression V2 : { data: boolean } | { error: string }
+export type ActionDeleteResponse = ActionResponse<boolean> | ActionSuccessResponse;
 
 // Extrait T depuis { data: T } | { error: string } sans déclencher l'inférence distributive
 type ExtractData<R> = R extends { data: infer T } ? T : never;
@@ -67,13 +70,12 @@ export function toUpdateFn<TId, TInput, TResponse extends ActionResponse<any>>(
  * const delete = toDeleteFn(removeCourseAction);
  */
 export function toDeleteFn<TId>(
-  action: (id: TId) => Promise<ActionSuccessResponse>
+  action: (id: TId) => Promise<ActionDeleteResponse>
 ): (id: TId) => Promise<void> {
   return async (id: TId) => {
     const response = await action(id);
-    if (!response.success || response.error) {
-      throw new Error(response.error || "Erreur lors de la suppression");
-    }
+    if ('error' in response && response.error) throw new Error(response.error)
+    if ('success' in response && !response.success) throw new Error('Erreur lors de la suppression')
   };
 }
 
@@ -101,7 +103,7 @@ export function createActionWrappers<
   fetch: (...args: TFetchInput) => Promise<TFetchResponse>;
   create: (data: TCreateInput) => Promise<TCreateResponse>;
   update: (id: TUpdateId, data: TUpdateInput) => Promise<TUpdateResponse>;
-  delete: (id: TDeleteId) => Promise<ActionSuccessResponse>;
+  delete: (id: TDeleteId) => Promise<ActionDeleteResponse>;
 }, fetchArgs: TFetchInput) {
   return {
     fetchFn: toFetchFn(actions.fetch, ...fetchArgs),

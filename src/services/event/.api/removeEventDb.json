@@ -1,0 +1,8 @@
+{
+  "name": "removeEventDb",
+  "file": "src/services/event/database/event.mutations.ts",
+  "sig": "(eventId: string, orgId: string) => Promise<void>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

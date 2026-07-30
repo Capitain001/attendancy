@@ -1,10 +1,10 @@
 // utils/authorization.ts
-import type { UserInfo, Role, FunctionName } from "@/services/user/types";
+import type { UserInfo, Role, Functions } from "@/services/user/types";
 import type { Permission, PermissionAction, PermissionResource, AuthorizationResult } from "./types";
 import { getUserInfo } from "@/services/user";
 import { ROLE_HIERARCHY } from "./config";
 
-type Functions = FunctionName;
+type FunctionName = Functions;
 
 
 

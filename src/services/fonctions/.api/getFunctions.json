@@ -1,0 +1,8 @@
+{
+  "name": "getFunctions",
+  "file": "src/services/fonctions/database/fonctions.queries.ts",
+  "sig": "({ orgId, isMain }: { orgId: string; isMain?: boolean }) => Promise<{ id: string; name: string; description: string | null; isMain: boolean; createdAt: Date; updatedAt: Date; icon: string | null; orgId: string; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

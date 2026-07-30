@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { buildSessionUrl } from '@/config/url'
 
 const TOKEN_DURATION_MINUTES = 15

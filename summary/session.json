@@ -1,0 +1,206 @@
+{
+  "service": "session",
+  "path": "src/services/session/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "87fd0c8",
+  "generated_at": "2026-07-29T12:17:29.402Z",
+  "fns": {
+    "startSession": {
+      "name": "startSession",
+      "file": "src/services/session/database/session.mutations.ts",
+      "sig": "(scheduleId: string, coords: { lat: number; lng: number } | null) => Promise<{ sessionId: string; checkIn: Date; isLate: boolean; locationId: string | null; checkInMethod: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "endSession": {
+      "name": "endSession",
+      "file": "src/services/session/database/session.mutations.ts",
+      "sig": "(scheduleId: string, tx: Prisma.TransactionClient = prisma) => Promise<{ sessionId: string; checkOut: Date; durationMinutes: number; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "finalizeSession": {
+      "name": "finalizeSession",
+      "file": "src/services/session/database/session.mutations.ts",
+      "sig": "(scheduleId: string) => Promise<{ absentUserIds: string[]; absentStudentIds: string[]; audience: number; sessionId: string; checkOut: Date; durationMinutes: number; }>",
+      "composes": [
+        "endSession",
+        "markScheduleAbsences"
+      ],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getActiveSessions": {
+      "name": "getActiveSessions",
+      "file": "src/services/session/database/session.queries.ts",
+      "sig": "(orgId: string) => Promise<{ id: string; schedule: { id: string; course: { name: string; }; teacher: { id: string; user: { avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; room: { name: string; }; groupId: string | null; startTime: Date; endTime: Date; classId: string; }; status: SessionStatus; check...",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrgDaySchedulesWithSession": {
+      "name": "getOrgDaySchedulesWithSession",
+      "file": "src/services/session/database/session.queries.ts",
+      "sig": "(orgId: string, rangeStart: Date, rangeEnd: Date) => Promise<{ id: string; class: { name: string; id: string; _count: { studentEnrollments: number; }; }; course: { name: string; id: string; }; group: { name: string; id: string; _count: { studentGroups: number; }; } | null; ... 7 more ...; endTime: Date; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getTeacherNextSchedule": {
+      "name": "getTeacherNextSchedule",
+      "file": "src/services/session/database/session.queries.ts",
+      "sig": "(teacherId: string, orgId: string) => Promise<{ id: string; class: { level: Level; name: string; _count: { studentEnrollments: number; }; }; course: { name: string; ueCourse: { code: string | null; }; }; group: { name: string; _count: { studentGroups: number; }; } | null; ... 6 more ...; confirmed: boolean; } | null>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createSessionToken": {
+      "name": "createSessionToken",
+      "file": "src/services/session/database/token.mutations.ts",
+      "sig": "(sessionId: string) => Promise<{ token: string; expiresAt: Date; url: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "validateSessionToken": {
+      "name": "validateSessionToken",
+      "file": "src/services/session/database/token.mutations.ts",
+      "sig": "(token: string) => Promise<{ sessionId: string; scheduleId: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "startSessionAction": {
+      "name": "startSessionAction",
+      "file": "src/services/session/actions/session.mutations.ts",
+      "sig": "(scheduleId: string, coords: { lat: number; lng: number } | null) => Promise<{ error: string; data?: undefined; } | { data: { sessionId: string; checkIn: Date; isLate: boolean; locationId: string | null; checkInMethod: string; }; error?: undefined; }>",
+      "calls": [
+        "startSession"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "completeSessionAction": {
+      "name": "completeSessionAction",
+      "file": "src/services/session/actions/session.mutations.ts",
+      "sig": "(scheduleId: string) => Promise<{ error: string; data?: undefined; } | { data: { absentUserIds: string[]; absentStudentIds: string[]; audience: number; sessionId: string; checkOut: Date; durationMinutes: number; }; error?: undefined; }>",
+      "calls": [
+        "finalizeSession"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getActiveSessionsAction": {
+      "name": "getActiveSessionsAction",
+      "file": "src/services/session/actions/session.queries.ts",
+      "sig": "() => Promise<{ data: { id: string; schedule: { id: string; course: { name: string; }; teacher: { id: string; user: { avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; room: { name: string; }; groupId: string | null; startTime: Date; endTime: Date; classId: string; }; status: SessionStatu...",
+      "calls": [
+        "getActiveSessions"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getDirectionSessionsAction": {
+      "name": "getDirectionSessionsAction",
+      "file": "src/services/session/actions/session.queries.ts",
+      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { id: string; class: { name: string; id: string; _count: { studentEnrollments: number; }; }; course: { name: string; id: string; }; group: { name: string; id: string; _count: { ...; }; } | null; ... 7 more ...; endTime: Date; }[]; error?: undefined; }>",
+      "calls": [
+        "getOrgDaySchedulesWithSession"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getTeacherNextScheduleAction": {
+      "name": "getTeacherNextScheduleAction",
+      "file": "src/services/session/actions/session.queries.ts",
+      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { id: string; class: { level: Level; name: string; _count: { studentEnrollments: number; }; }; course: { name: string; ueCourse: { code: string | null; }; }; ... 7 more ...; confirmed: boolean; } | null; error?: undefined; }>",
+      "calls": [
+        "getTeacherNextSchedule"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "generateTokenAction": {
+      "name": "generateTokenAction",
+      "file": "src/services/session/actions/token.actions.ts",
+      "sig": "(sessionId: string) => Promise<{ error: string; data?: undefined; } | { data: { token: string; expiresAt: Date; url: string; }; error?: undefined; }>",
+      "calls": [
+        "createSessionToken"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "startSession": [
+      "startSessionAction"
+    ],
+    "endSession": [
+      "finalizeSession"
+    ],
+    "finalizeSession": [
+      "completeSessionAction"
+    ],
+    "getActiveSessions": [
+      "getActiveSessionsAction"
+    ],
+    "getOrgDaySchedulesWithSession": [
+      "getDirectionSessionsAction"
+    ],
+    "getTeacherNextSchedule": [
+      "getTeacherNextScheduleAction"
+    ],
+    "createSessionToken": [
+      "generateTokenAction"
+    ],
+    "validateSessionToken": [],
+    "startSessionAction": [],
+    "completeSessionAction": [],
+    "getActiveSessionsAction": [],
+    "getDirectionSessionsAction": [],
+    "getTeacherNextScheduleAction": [],
+    "generateTokenAction": [],
+    "markScheduleAbsences": [
+      "finalizeSession"
+    ]
+  },
+  "deps": {
+    "markScheduleAbsences": "attendance"
+  }
+}

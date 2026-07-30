@@ -1,0 +1,11 @@
+{
+  "name": "createWeeklyUnavailabilityAction",
+  "file": "src/services/teacher-unavailability/actions/teacher-unavailability.mutations.ts",
+  "sig": "(input: CreateWeeklyUnavailabilityInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "calls": [
+    "createWeeklyUnavailability"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

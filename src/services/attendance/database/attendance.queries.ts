@@ -1,6 +1,6 @@
 import { startOfDay, endOfDay } from 'date-fns'
 // import type { Prisma } from '@/generated/prisma'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { activeEnrollmentWhere, activeGroupMemberWhere } from './filter'
 import { Prisma } from '@/generated/prisma/client'
 
@@ -9,7 +9,6 @@ export async function getOrgTodayAbsences(orgId: string) {
   return prisma.attendance.findMany({
     where: {
       status: 'ABSENT',
-      deletedAt: null,
       schedule: {
         orgId,
         deletedAt: null,
@@ -34,8 +33,6 @@ export async function getOrgTodayAbsences(orgId: string) {
     take: 50,
   })
 }
-
-export type OrgTodayAbsenceItem = Awaited<ReturnType<typeof getOrgTodayAbsences>>[number]
 
 export async function getScheduleAttendances(scheduleId: string) {
   return prisma.attendance.findMany({

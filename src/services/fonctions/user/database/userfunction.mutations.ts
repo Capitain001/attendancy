@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 
 export async function assignFunction(userId: string, functionId: string, assignedBy: string) {
   return prisma.userFunction.create({

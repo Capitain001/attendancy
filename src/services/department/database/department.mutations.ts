@@ -1,5 +1,5 @@
 // src/services/department/database/department.mutations.ts
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
 import { invalidateEvent } from '@/cache/server/key'
 import type { CreateDepartmentOutput, UpdateDepartmentOutput } from '../validation'

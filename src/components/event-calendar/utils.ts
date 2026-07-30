@@ -121,12 +121,12 @@ export function isMultiDayEvent(event: ScheduleEvent): boolean {
   const eventStart = new Date(event.start);
   const eventEnd = new Date(event.end);
   // Determine if all-day by checking if start is at 00:00:00 and end is at 23:59:59
-  const isAllDay =
-    eventStart.getHours() === 0 &&
-    eventStart.getMinutes() === 0 &&
+  const isAllDay = 
+    eventStart.getHours() === 0 && 
+    eventStart.getMinutes() === 0 && 
     eventStart.getSeconds() === 0 &&
-    eventEnd.getHours() === 23 &&
-    eventEnd.getMinutes() === 59 &&
+    eventEnd.getHours() === 23 && 
+    eventEnd.getMinutes() === 59 && 
     eventEnd.getSeconds() === 59;
   return isAllDay || eventStart.getDate() !== eventEnd.getDate();
 }
@@ -138,11 +138,11 @@ export function isAllDayEvent(event: ScheduleEvent): boolean {
   const eventStart = new Date(event.start);
   const eventEnd = new Date(event.end);
   return (
-    eventStart.getHours() === 0 &&
-    eventStart.getMinutes() === 0 &&
+    eventStart.getHours() === 0 && 
+    eventStart.getMinutes() === 0 && 
     eventStart.getSeconds() === 0 &&
-    eventEnd.getHours() === 23 &&
-    eventEnd.getMinutes() === 59 &&
+    eventEnd.getHours() === 23 && 
+    eventEnd.getMinutes() === 59 && 
     eventEnd.getSeconds() === 59
   );
 }

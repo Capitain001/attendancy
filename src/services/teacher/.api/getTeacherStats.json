@@ -1,0 +1,8 @@
+{
+  "name": "getTeacherStats",
+  "file": "src/services/teacher/database/teacher.queries.ts",
+  "sig": "(teacherId: string, orgId: string) => Promise<{ courses: number; assiduite: number; ponctualite: number; annulations: number; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

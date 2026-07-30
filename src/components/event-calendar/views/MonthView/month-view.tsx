@@ -29,7 +29,7 @@ interface MonthViewProps {
 
 /**
  * Composant principal pour l'affichage mensuel du calendrier
- *
+ * 
  * Ce composant gère :
  * - L'affichage du mois complet avec les jours des mois précédent/suivant
  * - La répartition des événements sur les différents jours

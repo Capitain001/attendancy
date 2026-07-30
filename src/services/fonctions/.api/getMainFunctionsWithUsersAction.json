@@ -1,0 +1,11 @@
+{
+  "name": "getMainFunctionsWithUsersAction",
+  "file": "src/services/fonctions/actions/fonctions.queries.ts",
+  "sig": "() => Promise<{ data: { id: string; name: string; description: string | null; isMain: boolean; createdAt: Date; updatedAt: Date; icon: string | null; users: { assignedAt: Date; assignedBy: string | null; user: { ...; }; }[]; }[]; error?: undefined; } | { ...; }>",
+  "calls": [
+    "getMainFunctionsUser"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,8 @@
+{
+  "name": "createUE",
+  "file": "src/services/ue/database/ue.mutations.ts",
+  "sig": "(data: CreateUEOutput & { orgId: string }) => Promise<{ name: string; id: string; code: string | null; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

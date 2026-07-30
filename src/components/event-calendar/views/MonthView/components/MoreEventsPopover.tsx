@@ -28,7 +28,7 @@ interface MoreEventsPopoverProps {
 
 /**
  * Composant popover affichant les événements supplémentaires
- *
+ * 
  * Ce composant gère :
  * - L'affichage d'un bouton "+ X more" quand il y a trop d'événements
  * - Un popover contenant tous les événements du jour
@@ -62,7 +62,7 @@ export function MoreEventsPopover({
           </span>
         </button>
       </PopoverTrigger>
-
+      
       <PopoverContent
         align="center"
         className="max-w-52 p-3"
@@ -77,7 +77,7 @@ export function MoreEventsPopover({
           <div className="text-sm font-medium">
             {format(day, "EEE d")}
           </div>
-
+          
           {/* Liste de tous les événements du jour */}
           <div className="space-y-1">
             {sortEvents(allEvents).map((event) => {

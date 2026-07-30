@@ -1,0 +1,8 @@
+{
+  "name": "updateUE",
+  "file": "src/services/ue/database/ue.mutations.ts",
+  "sig": "(ueId: string, orgId: string, data: UpdateUEData) => Promise<{ name: string; id: string; code: string | null; description: string | null; departmentId: string | null; isOptional: boolean; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,8 @@
+{
+  "name": "upsertPushSubscription",
+  "file": "src/services/notification/database/push.mutations.ts",
+  "sig": "(params: { userId: string endpoint: string p256dh: string auth: string userAgent?: string deviceId?: string }) => Promise<{ id: string; createdAt: Date; endpoint: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,8 @@
+{
+  "name": "createWeeklyUnavailability",
+  "file": "src/services/teacher-unavailability/database/teacher-unavailability.mutations.ts",
+  "sig": "(orgId: string, data: Omit<CreateWeeklyUnavailabilityInput, 'teacherId'> & { teacherId: string }) => Promise<{ id: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

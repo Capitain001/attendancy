@@ -1,0 +1,11 @@
+{
+  "name": "addProgramAction",
+  "file": "src/services/program/actions.ts",
+  "sig": "(data: AddProgramData) => Promise<{ error: string; data?: undefined; } | { data: { id: string; name: string; description: string | null; classes: { id: string; name: string; academicYear: { id: string; name: string; }; }[]; programTrack: { ...; }; }; error?: undefined; }>",
+  "calls": [
+    "createProgram"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

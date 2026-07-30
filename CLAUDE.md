@@ -4,6 +4,8 @@
 
 - `src/services/**` → lire `docs/skills/service-module-pattern/SKILL.md` puis le
   `CLAUDE.md` du service concerné. Réflexion domaine : `src/services/SERVICE_CONTEXT.md`.
+- `src/app/**` (pages RSC, layouts) → lire `docs/skills/nextjs-ppr/SKILL.md` (règle
+  `connection()` / Suspense — contrainte PPR `cacheComponents: true`).
 - `src/hooks/data/**` → lire `src/hooks/data/DATA_CONTEXT.md` + `src/hooks/entity/USAGE.md`.
 - `src/store/**` → lire `src/store/STORE_CONTEXT.md` (quand un store vs React Query vs RSC).
 - `docs/**` → lire `docs/DOCS_CONTEXT.md` (quel document va dans quel dossier).
@@ -60,10 +62,16 @@ Après chaque session sur `src/services/**` — lancer avant le commit :
 
 ```
 npx tsx scripts/generate/naming/check.ts <service>
+npx tsx scripts/generate/types/check.ts <service>
+npx tsx scripts/generate/api/api.ts <service>
 ```
 
-Corrige tous les `⚠` avant de committer. Le script ne bloque pas (exit 0),
-mais ses warnings signalent de vraies violations de convention.
+- `naming/check.ts` : corrige tous les `⚠` de convention (exit 0, non bloquant,
+  mais violations réelles).
+- `types/check.ts` : vérifie que les `Awaited<ReturnType<...>>` sont dans `types.ts`
+  et non dans `database.ts`, `actions.ts` ou autre (exit 0, non bloquant).
+- `api.ts` : met à jour l'index API du service — obligatoire après toute
+  mutation d'action (ajout, renommage, suppression).
 
 ## Propriété des modèles
 

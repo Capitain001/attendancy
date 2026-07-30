@@ -1,0 +1,82 @@
+{
+  "service": "event",
+  "path": "src/services/event/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "87fd0c8",
+  "utils_dir": null,
+  "fns": {
+    "createEvent": {
+      "f": ".api/createEvent.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateEvent": {
+      "f": ".api/updateEvent.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "removeEventDb": {
+      "f": ".api/removeEventDb.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getEvents": {
+      "f": ".api/getEvents.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getEvent": {
+      "f": ".api/getEvent.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createEventAction": {
+      "f": ".api/createEventAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateEventAction": {
+      "f": ".api/updateEventAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeEventAction": {
+      "f": ".api/removeEventAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getEventsAction": {
+      "f": ".api/getEventsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getEventAction": {
+      "f": ".api/getEventAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createEvent": [
+      "createEventAction"
+    ],
+    "updateEvent": [
+      "updateEventAction"
+    ],
+    "removeEventDb": [
+      "removeEventAction"
+    ],
+    "getEvents": [
+      "getEventsAction"
+    ],
+    "getEvent": [
+      "getEventAction"
+    ],
+    "createEventAction": [],
+    "updateEventAction": [],
+    "removeEventAction": [],
+    "getEventsAction": [],
+    "getEventAction": []
+  },
+  "deps": {}
+}

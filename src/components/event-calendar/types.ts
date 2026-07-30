@@ -28,6 +28,7 @@ export type ScheduleEvent = {
 
 
 
+
 export type EventColor =
   | "sky"
   | "amber"
@@ -39,4 +40,4 @@ export type EventColor =
   | "red"
   | "blue"
   | "gray"
-
+  

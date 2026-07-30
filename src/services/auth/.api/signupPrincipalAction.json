@@ -1,0 +1,11 @@
+{
+  "name": "signupPrincipalAction",
+  "file": "src/services/auth/actions.ts",
+  "sig": "(input: SignupInput) => Promise<{ error: string; data?: undefined; } | { data: { userId: string; }; error?: undefined; }>",
+  "calls": [
+    "createUserRecord"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

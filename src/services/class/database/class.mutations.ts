@@ -1,5 +1,5 @@
 // src/services/class/database/class.mutations.ts
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
 import { invalidateEvent } from '@/cache/server/key'
 import { getCurrentYear } from '@/services/academic-year/database'

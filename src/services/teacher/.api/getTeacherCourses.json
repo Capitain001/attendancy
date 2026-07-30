@@ -1,0 +1,8 @@
+{
+  "name": "getTeacherCourses",
+  "file": "src/services/teacher/database/teacher.queries.ts",
+  "sig": "(teacherId: string, orgId: string) => Promise<{ id: string; course: { name: string; id: string; class: { name: string; id: string; }; }; isMain: boolean; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -6,7 +6,7 @@ import { ERRORS } from '@/config'
 import { enrollStudentSchema, assignStudentGroupSchema } from '../validation'
 import type { EnrollStudentInput, AssignStudentGroupInput } from '../validation'
 import { enrollStudent, removeEnrollment, assignStudentGroup, deleteStudentGroup } from '../database'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import type { UserStatus } from '@/generated/prisma/client'
 
 export async function enrollStudentAction(input: EnrollStudentInput) {
@@ -65,8 +65,8 @@ export async function bulkSetStudentStatusAction(studentIds: string[], status: U
     const auth = getAuthorization(user, 'DIRECTION')
     if (!auth.success) return { error: auth.error }
 
-    const result = await prisma.student.updateMany({
-      where: { id: { in: studentIds }, orgId },
+    const result = await prisma.user.updateMany({
+      where: { student: { some: { id: { in: studentIds }, orgId } } },
       data: { status },
     })
     return { data: { count: result.count } }

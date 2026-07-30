@@ -1,0 +1,11 @@
+{
+  "name": "createCourseAction",
+  "file": "src/services/course/actions/course.mutations.ts",
+  "sig": "(input: CreateCourseInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; credits: number; }; error?: undefined; }>",
+  "calls": [
+    "createCourse"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,8 @@
+{
+  "name": "removeSchedule",
+  "file": "src/services/schedule/database/schedule.mutations.ts",
+  "sig": "(scheduleId: string, orgId: string) => Promise<void>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

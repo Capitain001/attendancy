@@ -1,0 +1,11 @@
+{
+  "name": "finalizeSession",
+  "file": "src/services/session/database/session.mutations.ts",
+  "sig": "(scheduleId: string) => Promise<{ absentUserIds: string[]; absentStudentIds: string[]; audience: number; sessionId: string; checkOut: Date; durationMinutes: number; }>",
+  "composes": [
+    "endSession",
+    "markScheduleAbsences"
+  ],
+  "rules": [],
+  "why_ref": ""
+}

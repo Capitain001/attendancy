@@ -1,0 +1,11 @@
+{
+  "name": "getDirectionMemberByUserIdAction",
+  "file": "src/services/direction/actions/direction.queries.ts",
+  "sig": "(userId: string) => Promise<{ data: NonNullable<Awaited<ReturnType<typeof getDirectionMemberByUserId>>> } | { error: string }>",
+  "calls": [
+    "getDirectionMemberByUserId"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,8 @@
+{
+  "name": "removeMessage",
+  "file": "src/services/chat/database/message.mutations.ts",
+  "sig": "(messageId: string, userId: string) => Promise<{ id: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

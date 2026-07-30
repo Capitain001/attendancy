@@ -37,11 +37,7 @@ export function useDirectionMembers({
   } = useQuery<DirectionMemberDto[]>({
     queryKey,
     queryFn: async () => {
-      const result = await getDirectionMembersAction({
-        orgId,
-        includeDeleted,
-        functionId,
-      });
+      const result = await getDirectionMembersAction({ functionId });
       if ("error" in result) {
         throw new Error(result.error);
       }

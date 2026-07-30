@@ -1,0 +1,11 @@
+{
+  "name": "getProgramsByTrackAction",
+  "file": "src/services/program-track/actions/program-track.queries.ts",
+  "sig": "(programTrackId: string) => Promise<{ data: { name: string; id: string; programUEs: { id: string; ue: { name: string; id: string; code: string | null; }; isOptional: boolean; semester: number; order: number | null; }[]; }[]; error?: undefined; } | { ...; }>",
+  "calls": [
+    "getProgramsByTrack"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

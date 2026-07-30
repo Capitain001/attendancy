@@ -1,0 +1,11 @@
+{
+  "name": "removeClassAction",
+  "file": "src/services/class/actions/class.mutations.ts",
+  "sig": "(classId: string) => Promise<{ error: string; data?: undefined; } | { data: { level: Level; name: string; id: string; createdAt: Date; updatedAt: Date; deletedAt: Date | null; programTrackId: string; programId: string | null; academicYearId: string; }; error?: undefined; }>",
+  "calls": [
+    "removeClass"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

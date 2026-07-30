@@ -2,7 +2,7 @@
 import { getUserInfo } from '@/services/user/userInfo'
 import { getAuthorization } from '@/services/auth/authorization'
 import { ERRORS } from '@/config'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { invalidateEvent } from '@/cache/server/key'
 
 type GroupRow = {
@@ -50,7 +50,13 @@ export async function getGroupEligibleStudentsAction(input: { classId: string; g
       },
       select: {
         id: true,
-        student: { select: { id: true, firstName: true, lastName: true, userId: true } },
+        student: {
+          select: {
+            id: true,
+            userId: true,
+            user: { select: { firstName: true, lastName: true } },
+          },
+        },
       },
     })
 
@@ -114,7 +120,7 @@ export async function deleteClassGroupAction(input: { classId: string; groupId: 
       where: { id: input.groupId, classId: input.classId },
       data: { deletedAt: new Date() },
     })
-    await invalidateEvent('GROUP_DELETED', orgId, input.classId)
+    await invalidateEvent('GROUP_REMOVED', orgId, input.classId)
     return { data: true as const }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }

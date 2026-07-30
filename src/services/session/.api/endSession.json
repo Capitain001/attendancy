@@ -1,0 +1,8 @@
+{
+  "name": "endSession",
+  "file": "src/services/session/database/session.mutations.ts",
+  "sig": "(scheduleId: string, tx: Prisma.TransactionClient = prisma) => Promise<{ sessionId: string; checkOut: Date; durationMinutes: number; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

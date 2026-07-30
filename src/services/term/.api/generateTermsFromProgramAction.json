@@ -1,0 +1,11 @@
+{
+  "name": "generateTermsFromProgramAction",
+  "file": "src/services/term/actions/term.mutations.ts",
+  "sig": "(classId: string) => Promise<{ data: { id: string; order: number; name: string; }[]; error?: undefined; } | { error: string; data?: undefined; }>",
+  "calls": [
+    "generateTermsFromProgram"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

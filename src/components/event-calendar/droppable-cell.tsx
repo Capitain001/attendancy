@@ -54,7 +54,7 @@ export function DroppableCell({
       )}
       title={formattedTime ? `${formattedTime}` : undefined}
       data-dragging={isOver && activeEvent ? true : undefined}
-
+      
     >
       {children}
     </div>

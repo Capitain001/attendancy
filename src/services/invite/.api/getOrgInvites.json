@@ -1,0 +1,8 @@
+{
+  "name": "getOrgInvites",
+  "file": "src/services/invite/database/invite.queries.ts",
+  "sig": "(orgId: string) => Promise<{ id: string; email: string; createdAt: Date; expiresAt: Date | null; usedAt: Date | null; details: JsonValue; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

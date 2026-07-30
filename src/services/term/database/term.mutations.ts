@@ -1,6 +1,6 @@
 // src/services/term/database/term.mutations.ts
 // Génération automatique des semestres d'une classe depuis son programme.
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { invalidateEvent } from '@/cache/server/key'
 
 export async function generateTermsFromProgram(classId: string, orgId: string) {

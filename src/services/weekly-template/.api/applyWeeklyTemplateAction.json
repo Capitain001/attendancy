@@ -1,0 +1,11 @@
+{
+  "name": "applyWeeklyTemplateAction",
+  "file": "src/services/weekly-template/actions/weekly-template.mutations.ts",
+  "sig": "(input: unknown) => Promise<{ error: string; data?: undefined; } | { data: { recurrenceId: string; schedulesCreated: number; }; error?: undefined; }>",
+  "calls": [
+    "applyWeeklyTemplate"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

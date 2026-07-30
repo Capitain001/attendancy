@@ -1,0 +1,11 @@
+{
+  "name": "getOrgUsageAction",
+  "file": "src/services/org/actions/org.mutations.ts",
+  "sig": "() => Promise<{ data: { updatedAt: Date; currentUsers: number; usedStorage: bigint; activeCourses: number; activeRooms: number; } | null; error?: undefined; } | { error: string; data?: undefined; }>",
+  "calls": [
+    "getOrgUsage"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

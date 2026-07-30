@@ -15,17 +15,18 @@ export async function createUEAction(input: {
   semester?: number
   order?: number
 }) {
+  const user = await getUserInfo()
+  if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
+  const orgId = user.organization?.id
+  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+  const auth = getAuthorization(user, 'DIRECTION')
+  if (!auth.success) return { error: auth.error }
+
+  const result = v.safeParse(createUESchema, input.data)
+  if (!result.success) return { error: result.issues[0]?.message ?? 'Données invalides' }
+
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
-
-    const parsed = v.parse(createUESchema, input.data)
-    const ue = await createUE({ ...parsed, orgId })
-
+    const ue = await createUE({ ...result.output, orgId })
     if (input.programId) {
       await addUEToProgram({
         programId: input.programId,
@@ -34,10 +35,8 @@ export async function createUEAction(input: {
         orgId,
       })
     }
-
     return { data: ue }
   } catch (e) {
-    if (e instanceof v.ValiError) return { error: e.issues[0]?.message ?? 'Données invalides' }
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
@@ -78,24 +77,25 @@ export async function addUEToProgramAction(input: {
   semester?: number
   order?: number
 }) {
-  try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
+  const user = await getUserInfo()
+  if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
+  const orgId = user.organization?.id
+  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+  const auth = getAuthorization(user, 'DIRECTION')
+  if (!auth.success) return { error: auth.error }
 
-    const parsed = v.parse(linkUESchema, input)
-    const result = await addUEToProgram({
-      programId: parsed.programId,
-      ueId:      parsed.ueId,
-      semester:  parsed.semester ?? 1,
+  const result = v.safeParse(linkUESchema, input)
+  if (!result.success) return { error: result.issues[0]?.message ?? 'Données invalides' }
+
+  try {
+    const data = await addUEToProgram({
+      programId: result.output.programId,
+      ueId:      result.output.ueId,
+      semester:  result.output.semester ?? 1,
       orgId,
     })
-    return { data: result }
+    return { data }
   } catch (e) {
-    if (e instanceof v.ValiError) return { error: e.issues[0]?.message ?? 'Données invalides' }
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }

@@ -1,0 +1,213 @@
+{
+  "service": "room",
+  "path": "src/services/room/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "87fd0c8",
+  "generated_at": "2026-07-29T12:17:29.379Z",
+  "fns": {
+    "createRoom": {
+      "name": "createRoom",
+      "file": "src/services/room/database/room.mutations.ts",
+      "sig": "(data: { name: string capacity?: number locationId?: string equipment?: string[] orgId: string }) => Promise<{ name: string; id: string; location: { name: string; id: string; } | null; capacity: number | null; locationId: string | null; equipment: string[]; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "removeRoom": {
+      "name": "removeRoom",
+      "file": "src/services/room/database/room.mutations.ts",
+      "sig": "(id: string, orgId: string) => Promise<{ id: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "createLocation": {
+      "name": "createLocation",
+      "file": "src/services/room/database/room.mutations.ts",
+      "sig": "(data: { name: string address: string latitude: number longitude: number radius?: number orgId: string }) => Promise<{ name: string; id: string; address: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "toggleLocationActive": {
+      "name": "toggleLocationActive",
+      "file": "src/services/room/database/room.mutations.ts",
+      "sig": "(id: string, orgId: string) => Promise<{ id: string; active: boolean; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getRooms": {
+      "name": "getRooms",
+      "file": "src/services/room/database/room.queries.ts",
+      "sig": "(orgId: string) => Promise<{ name: string; id: string; location: { name: string; id: string; } | null; capacity: number | null; locationId: string | null; equipment: string[]; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getRoomById": {
+      "name": "getRoomById",
+      "file": "src/services/room/database/room.queries.ts",
+      "sig": "(id: string, orgId: string) => Promise<{ name: string; id: string; location: { name: string; id: string; address: string; } | null; capacity: number | null; locationId: string | null; equipment: string[]; } | null>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getLocations": {
+      "name": "getLocations",
+      "file": "src/services/room/database/room.queries.ts",
+      "sig": "(orgId: string) => Promise<{ name: string; id: string; address: string; radius: number; active: boolean; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createRoomAction": {
+      "name": "createRoomAction",
+      "file": "src/services/room/actions/room.mutations.ts",
+      "sig": "(input: CreateRoomInput) => Promise<{ data: { name: string; id: string; location: { name: string; id: string; } | null; capacity: number | null; locationId: string | null; equipment: string[]; }; error?: undefined; } | { error: string; data?: undefined; }>",
+      "calls": [
+        "createRoom"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeRoomAction": {
+      "name": "removeRoomAction",
+      "file": "src/services/room/actions/room.mutations.ts",
+      "sig": "(roomId: string) => Promise<{ success: boolean; error?: string }>",
+      "calls": [
+        "removeRoom"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateRoomAction": {
+      "name": "updateRoomAction",
+      "file": "src/services/room/actions/room.mutations.ts",
+      "sig": "(roomId: string, data: { name?: string; capacity?: number; locationId?: string; equipment?: string[] }) => Promise<{ data: { name: string; id: string; location: { name: string; id: string; } | null; capacity: number | null; locationId: string | null; equipment: string[]; }; error?: undefined; } | { error: string; data?: undefined; }>",
+      "calls": [],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "createLocationAction": {
+      "name": "createLocationAction",
+      "file": "src/services/room/actions/room.mutations.ts",
+      "sig": "(input: CreateLocationInput) => Promise<{ data: { name: string; id: string; address: string; }; error?: undefined; } | { error: string; data?: undefined; }>",
+      "calls": [
+        "createLocation"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "toggleLocationActiveAction": {
+      "name": "toggleLocationActiveAction",
+      "file": "src/services/room/actions/room.mutations.ts",
+      "sig": "(locationId: string) => Promise<{ data: { id: string; active: boolean; }; error?: undefined; } | { error: string; data?: undefined; }>",
+      "calls": [
+        "toggleLocationActive"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getRoomsAction": {
+      "name": "getRoomsAction",
+      "file": "src/services/room/actions/room.queries.ts",
+      "sig": "() => Promise<{ data: { name: string; id: string; location: { name: string; id: string; } | null; capacity: number | null; locationId: string | null; equipment: string[]; }[]; error?: undefined; } | { error: string; data?: undefined; }>",
+      "calls": [
+        "getRooms"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getRoomAction": {
+      "name": "getRoomAction",
+      "file": "src/services/room/actions/room.queries.ts",
+      "sig": "(roomId: string) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; location: { name: string; id: string; address: string; } | null; capacity: number | null; locationId: string | null; equipment: string[]; }; error?: undefined; }>",
+      "calls": [
+        "getRoomById"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getLocationsAction": {
+      "name": "getLocationsAction",
+      "file": "src/services/room/actions/room.queries.ts",
+      "sig": "() => Promise<{ data: { name: string; id: string; address: string; radius: number; active: boolean; }[]; error?: undefined; } | { error: string; data?: undefined; }>",
+      "calls": [
+        "getLocations"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createRoom": [
+      "createRoomAction"
+    ],
+    "removeRoom": [
+      "removeRoomAction"
+    ],
+    "createLocation": [
+      "createLocationAction"
+    ],
+    "toggleLocationActive": [
+      "toggleLocationActiveAction"
+    ],
+    "getRooms": [
+      "getRoomsAction"
+    ],
+    "getRoomById": [
+      "getRoomAction"
+    ],
+    "getLocations": [
+      "getLocationsAction"
+    ],
+    "createRoomAction": [],
+    "removeRoomAction": [],
+    "updateRoomAction": [],
+    "createLocationAction": [],
+    "toggleLocationActiveAction": [],
+    "getRoomsAction": [],
+    "getRoomAction": [],
+    "getLocationsAction": []
+  },
+  "deps": {}
+}

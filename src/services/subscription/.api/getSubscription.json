@@ -1,0 +1,8 @@
+{
+  "name": "getSubscription",
+  "file": "src/services/subscription/database/subscription.queries.ts",
+  "sig": "(orgId: string) => Promise<{ id: string; status: SubscriptionStatus; trialEndsAt: Date | null; currentPeriodStart: Date | null; currentPeriodEnd: Date | null; canceledAt: Date | null; plan: { ...; }; } | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { getExpectedAttendees } from './attendance.queries'
 import { Prisma } from '@/generated/prisma/client'
 

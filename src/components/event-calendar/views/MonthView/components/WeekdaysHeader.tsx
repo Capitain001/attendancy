@@ -11,7 +11,7 @@ interface WeekdaysHeaderProps {
 
 /**
  * Composant d'en-tête affichant les noms des jours de la semaine
- *
+ * 
  * Ce composant est responsable de :
  * - Afficher les noms des jours de la semaine en format court (Lun, Mar, etc.)
  * - Maintenir un style cohérent pour l'en-tête du calendrier

@@ -1,5 +1,5 @@
 // src/services/invite/database/invite.queries.ts
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 
 export async function getInviteByToken(token: string) {
   return prisma.invitation.findUnique({

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { RiCalendarLine, RiDeleteBinLine } from "react-icons/ri";
+import { RiCalendarLine, RiDeleteBinLine } from "@remixicon/react";
 import { format, isBefore } from "date-fns";
 
 import type { ScheduleEvent, EventColor } from "@/components/event-calendar";
@@ -129,7 +129,7 @@ export function EventDialog({
     end.setHours(endHours, endMinutes, 0);
 
     if (isBefore(end, start)) {
-      setError("L'heure de fin ne peut pas précéder le début.");
+      setError("L’heure de fin ne peut pas précéder le début.");
       return;
     }
 
@@ -169,7 +169,7 @@ export function EventDialog({
               : "Add a new event to your calendar"}
           </DialogDescription>
         </DialogHeader>
-
+        
         {error && (
           <div className="rounded-md bg-destructive/15 px-3 py-2 text-sm text-destructive">
             {error}

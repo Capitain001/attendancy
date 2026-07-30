@@ -1,5 +1,5 @@
 import type { Prisma } from '@/generated/prisma/client'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { markScheduleAbsences } from '@/services/attendance/database/attendance.mutations'
 
 type CheckInRPCResult = {

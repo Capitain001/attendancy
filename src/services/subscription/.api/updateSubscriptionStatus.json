@@ -1,0 +1,8 @@
+{
+  "name": "updateSubscriptionStatus",
+  "file": "src/services/subscription/database/subscription.mutations.ts",
+  "sig": "(subscriptionId: string, orgId: string, status: SubscriptionStatus) => Promise<{ id: string; status: SubscriptionStatus; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,8 @@
+{
+  "name": "revokeFunctionsFromMember",
+  "file": "src/services/direction/database/direction.mutations.ts",
+  "sig": "(params: { userId: string orgId: string functionIds: string[] }) => Promise<void>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

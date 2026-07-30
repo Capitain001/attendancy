@@ -1,0 +1,11 @@
+{
+  "enabledPlugins": {
+    "por-dev@por-marketplace": true
+  },
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    }
+  }
+}

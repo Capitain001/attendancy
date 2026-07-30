@@ -1,0 +1,11 @@
+{
+  "name": "updateProgramAction",
+  "file": "src/services/program/actions.ts",
+  "sig": "(programId: string, data: UpdateProgramData) => Promise<{ error: string; data?: undefined; } | { data: { id: string; name: string; description: string | null; classes: { id: string; name: string; academicYear: { id: string; name: string; }; }[]; programTrack: { ...; }; }; error?: undefined; }>",
+  "calls": [
+    "updateProgram"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

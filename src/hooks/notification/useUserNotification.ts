@@ -2,7 +2,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from 'react'
-import { checkBrowserSupport, validateHTTPS, getCurrentPermission } from '@/services/notification/validation'
+import { checkBrowserSupport, validateHTTPS, getCurrentPermission } from '@/services/notification/utils'
 import { requestNotificationPermission } from '@/services/notification/permission'
 import { serializeSubscription } from '@/services/notification/utils'
 import { getServiceWorkerRegistration, getCurrentSubscription } from '@/services/notification/service-worker'
@@ -266,8 +266,8 @@ export function useUserNotification() {
 
       // Désabonner de tous les appareils côté serveur
       const result = await unsubscribeUser()
-      
-      if (!result.success) {
+
+      if ('error' in result) {
         setError(result.error || 'Erreur lors du désabonnement')
         return false
       }
@@ -292,8 +292,8 @@ export function useUserNotification() {
     
     try {
       const result = await unsubscribeUserDevice(endpoint)
-      
-      if (!result.success) {
+
+      if ('error' in result) {
         setError(result.error || 'Erreur lors du désabonnement de l\'appareil')
         return false
       }

@@ -1,4 +1,4 @@
-import type { FunctionName } from "@/services/user/types";
+import type { Functions as FunctionName } from "@/services/user/types";
 
 
 export const RESOURCE_EVENTS = {

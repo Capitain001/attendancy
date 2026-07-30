@@ -1,0 +1,150 @@
+{
+  "service": "teacher",
+  "path": "src/services/teacher/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "87fd0c8",
+  "utils_dir": null,
+  "fns": {
+    "updateTeacherDepartment": {
+      "f": ".api/updateTeacherDepartment.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getTeachers": {
+      "f": ".api/getTeachers.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getTeacherTodaySchedules": {
+      "f": ".api/getTeacherTodaySchedules.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getTeacherCourses": {
+      "f": ".api/getTeacherCourses.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getTeacherSchedules": {
+      "f": ".api/getTeacherSchedules.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getTeacherStats": {
+      "f": ".api/getTeacherStats.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getTeacherOrganizationStats": {
+      "f": ".api/getTeacherOrganizationStats.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getTeacher": {
+      "f": ".api/getTeacher.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createTeacherAction": {
+      "f": ".api/createTeacherAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateTeacherAction": {
+      "f": ".api/updateTeacherAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "deleteTeacherAction": {
+      "f": ".api/deleteTeacherAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateTeacherDepartmentAction": {
+      "f": ".api/updateTeacherDepartmentAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getCurrentTeacherId": {
+      "f": ".api/getCurrentTeacherId.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getTeacherSchedulesAction": {
+      "f": ".api/getTeacherSchedulesAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getTeacherTodaySchedulesAction": {
+      "f": ".api/getTeacherTodaySchedulesAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getTeacherCoursesAction": {
+      "f": ".api/getTeacherCoursesAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getTeacherStatsAction": {
+      "f": ".api/getTeacherStatsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getTeachersAction": {
+      "f": ".api/getTeachersAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getTeacherAction": {
+      "f": ".api/getTeacherAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getTeacherOrganizationStatsAction": {
+      "f": ".api/getTeacherOrganizationStatsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "updateTeacherDepartment": [
+      "updateTeacherDepartmentAction"
+    ],
+    "getTeachers": [
+      "getTeachersAction"
+    ],
+    "getTeacherTodaySchedules": [
+      "getTeacherTodaySchedulesAction"
+    ],
+    "getTeacherCourses": [
+      "getTeacherCoursesAction"
+    ],
+    "getTeacherSchedules": [
+      "getTeacherSchedulesAction"
+    ],
+    "getTeacherStats": [
+      "getTeacherStatsAction"
+    ],
+    "getTeacherOrganizationStats": [
+      "getTeacherOrganizationStatsAction"
+    ],
+    "getTeacher": [
+      "getTeacherAction"
+    ],
+    "createTeacherAction": [],
+    "updateTeacherAction": [],
+    "deleteTeacherAction": [],
+    "updateTeacherDepartmentAction": [
+      "updateTeacherAction"
+    ],
+    "getCurrentTeacherId": [],
+    "getTeacherSchedulesAction": [],
+    "getTeacherTodaySchedulesAction": [],
+    "getTeacherCoursesAction": [],
+    "getTeacherStatsAction": [],
+    "getTeachersAction": [],
+    "getTeacherAction": [],
+    "getTeacherOrganizationStatsAction": []
+  },
+  "deps": {}
+}

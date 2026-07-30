@@ -1,0 +1,8 @@
+{
+  "name": "getEnrolledStudents",
+  "file": "src/services/student/database/student.queries.ts",
+  "sig": "(classId: string, orgId: string) => Promise<{ id: string; studentId: string; student: { id: string; user: { firstName: string | null; lastName: string | null; email: string; avatar_url: string | null; }; }; studentGroups: { id: string; group: { ...; }; }[]; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,11 @@
+{
+  "name": "getRoomParticipantsAction",
+  "file": "src/services/chat/actions/message.queries.ts",
+  "sig": "(channelId: string) => Promise<{ data: { user: { id: string; firstName: string | null; lastName: string | null; avatar_url: string | null; }; userId: string; role: ParticipantRole; joinedAt: Date; }[]; error?: undefined; } | { ...; }>",
+  "calls": [
+    "getRoomParticipants"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 
 export async function getUserFunctions(userId: string) {
   return prisma.userFunction.findMany({

@@ -1,0 +1,10 @@
+{
+  "name": "markScheduleAbsences",
+  "file": "src/services/attendance/database/attendance.mutations.ts",
+  "sig": "(scheduleId: string, tx: Prisma.TransactionClient = prisma) => Promise<{ absentUserIds: string[]; absentStudentIds: string[]; audience: number; }>",
+  "composes": [
+    "getExpectedAttendees"
+  ],
+  "rules": [],
+  "why_ref": ""
+}

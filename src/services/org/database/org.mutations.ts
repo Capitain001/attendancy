@@ -1,6 +1,6 @@
 // src/services/org/database/org.mutations.ts
 // Écritures Prisma du service org — Prisma pur, AUCUNE auth ici.
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { invalidateEvent } from '@/cache/server/key'
 import { updateUserMetadata } from '@/services/user/update'
 import type { OrgDetails } from '../types'

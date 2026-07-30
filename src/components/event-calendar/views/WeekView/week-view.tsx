@@ -83,7 +83,7 @@ export function WeekView({
     onEventSelect(event)
   }
 
-
+  
     // Gérer le clic sur un jour
     const handleDayClick = (date: Date) => {
       onDateChange?.(date);

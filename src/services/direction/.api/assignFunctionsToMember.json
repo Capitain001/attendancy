@@ -1,0 +1,8 @@
+{
+  "name": "assignFunctionsToMember",
+  "file": "src/services/direction/database/direction.mutations.ts",
+  "sig": "(params: { userId: string orgId: string functionNames: string[] assignedBy?: string }) => Promise<void>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

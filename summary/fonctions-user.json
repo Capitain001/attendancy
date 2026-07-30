@@ -1,0 +1,120 @@
+{
+  "service": "fonctions/user",
+  "path": "src/services/fonctions/user/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "87fd0c8",
+  "generated_at": "2026-07-29T12:17:29.302Z",
+  "fns": {
+    "assignFunction": {
+      "name": "assignFunction",
+      "file": "src/services/fonctions/user/database/userfunction.mutations.ts",
+      "sig": "(userId: string, functionId: string, assignedBy: string) => Promise<{ id: string; userId: string; functionId: string; assignedAt: Date; assignedBy: string | null; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "unassignFunction": {
+      "name": "unassignFunction",
+      "file": "src/services/fonctions/user/database/userfunction.mutations.ts",
+      "sig": "(userId: string, functionId: string) => Promise<BatchPayload>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getUserFunctions": {
+      "name": "getUserFunctions",
+      "file": "src/services/fonctions/user/database/userfunction.queries.ts",
+      "sig": "(userId: string) => Promise<({ function: { name: string; id: string; description: string | null; icon: string | null; }; } & { id: string; userId: string; functionId: string; assignedAt: Date; assignedBy: string | null; })[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getUsersByFunction": {
+      "name": "getUsersByFunction",
+      "file": "src/services/fonctions/user/database/userfunction.queries.ts",
+      "sig": "(functionId: string) => Promise<({ user: { id: string; email: string; firstName: string | null; lastName: string | null; }; } & { id: string; userId: string; functionId: string; assignedAt: Date; assignedBy: string | null; })[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "assignFunctionAction": {
+      "name": "assignFunctionAction",
+      "file": "src/services/fonctions/user/actions/userfunction.ts",
+      "sig": "(input: AssignFunctionInput) => Promise<{ success: true; error?: undefined; } | { success: false; error: string; }>",
+      "calls": [
+        "assignFunction"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeFunctionAction": {
+      "name": "removeFunctionAction",
+      "file": "src/services/fonctions/user/actions/userfunction.ts",
+      "sig": "(input: AssignFunctionInput) => Promise<{ success: true; error?: undefined; } | { success: false; error: string; }>",
+      "calls": [
+        "unassignFunction"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getUserFunctionsAction": {
+      "name": "getUserFunctionsAction",
+      "file": "src/services/fonctions/user/actions/userfunction.ts",
+      "sig": "(userId: string) => Promise<{ data: ({ function: { name: string; id: string; description: string | null; icon: string | null; }; } & { id: string; userId: string; functionId: string; assignedAt: Date; assignedBy: string | null; })[]; error?: undefined; } | { ...; }>",
+      "calls": [
+        "getUserFunctions"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getUsersByFunctionAction": {
+      "name": "getUsersByFunctionAction",
+      "file": "src/services/fonctions/user/actions/userfunction.ts",
+      "sig": "(functionId: string) => Promise<{ data: ({ user: { id: string; email: string; firstName: string | null; lastName: string | null; }; } & { id: string; userId: string; functionId: string; assignedAt: Date; assignedBy: string | null; })[]; error?: undefined; } | { ...; }>",
+      "calls": [
+        "getUsersByFunction"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "assignFunction": [
+      "assignFunctionAction"
+    ],
+    "unassignFunction": [
+      "removeFunctionAction"
+    ],
+    "getUserFunctions": [
+      "getUserFunctionsAction"
+    ],
+    "getUsersByFunction": [
+      "getUsersByFunctionAction"
+    ],
+    "assignFunctionAction": [],
+    "removeFunctionAction": [],
+    "getUserFunctionsAction": [],
+    "getUsersByFunctionAction": []
+  },
+  "deps": {}
+}

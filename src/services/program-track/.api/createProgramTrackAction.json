@@ -1,0 +1,11 @@
+{
+  "name": "createProgramTrackAction",
+  "file": "src/services/program-track/actions/program-track.mutations.ts",
+  "sig": "(input: CreateProgramTrackInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; }; error?: undefined; }>",
+  "calls": [
+    "createProgramTrack"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

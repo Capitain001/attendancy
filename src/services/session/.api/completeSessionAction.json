@@ -1,0 +1,11 @@
+{
+  "name": "completeSessionAction",
+  "file": "src/services/session/actions/session.mutations.ts",
+  "sig": "(scheduleId: string) => Promise<{ error: string; data?: undefined; } | { data: { absentUserIds: string[]; absentStudentIds: string[]; audience: number; sessionId: string; checkOut: Date; durationMinutes: number; }; error?: undefined; }>",
+  "calls": [
+    "finalizeSession"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

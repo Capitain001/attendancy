@@ -1,0 +1,8 @@
+{
+  "name": "completeInvite",
+  "file": "src/services/invite/database/invite.mutations.ts",
+  "sig": "(params: CompleteInviteParams) => Promise<{ profileId: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

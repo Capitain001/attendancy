@@ -11,8 +11,8 @@ const ROOT = path.resolve(__dirname, "../../..");
 const SERVICES_DIR = path.join(ROOT, "src/services");
 
 /**
- * Un service est Ã©ligible s'il contient au moins un fichier
- * database.ts, database/, ou actions.ts â€” sinon rien Ã  indexer.
+ * Un service est éligible s'il contient au moins un fichier
+ * database.ts, database/, ou actions.ts — sinon rien à indexer.
  */
 function isEligibleService(serviceDir: string): boolean {
   return (
@@ -23,8 +23,8 @@ function isEligibleService(serviceDir: string): boolean {
 }
 
 /**
- * Collecte rÃ©cursivement tous les chemins de service Ã©ligibles
- * relatifs Ã  src/services/ (ex: "entity", "resource", "users/profile").
+ * Collecte récursivement tous les chemins de service éligibles
+ * relatifs à src/services/ (ex: "entity", "resource", "users/profile").
  */
 function collectServices(dir: string, base = ""): string[] {
   const results: string[] = [];
@@ -52,12 +52,12 @@ function main() {
   const services = collectServices(SERVICES_DIR);
 
   if (!services.length) {
-    console.error("Aucun service Ã©ligible trouvÃ©.");
+    console.error("Aucun service éligible trouvé.");
     process.exit(1);
   }
 
-  console.log(`\n sync-api â€” ${services.length} services dÃ©tectÃ©s\n`);
-  services.forEach((s) => console.log(`  Â· ${s}`));
+  console.log(`\n sync-api — ${services.length} services détectés\n`);
+  services.forEach((s) => console.log(`  · ${s}`));
   console.log();
 
   execSync(

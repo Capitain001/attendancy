@@ -1,0 +1,8 @@
+{
+  "name": "removeDirectionMember",
+  "file": "src/services/direction/database/direction.mutations.ts",
+  "sig": "(directionId: string, orgId: string) => Promise<void>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

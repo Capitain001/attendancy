@@ -1,39 +1,32 @@
 // src/services/user/types.ts
-// Types utilisateur — la STRUCTURE est architecturale et commune à tous les
-// projets ; seuls les points marqués ⚠ portent du vocabulaire projet.
-//
-// Source de vérité : Supabase user_metadata. getUserInfo() lit ces métadonnées
-// et les expose sous forme de UserInfo — aucun aller-retour DB sur le chemin
-// chaud de l'auth.
+import { FUNCTIONS } from "@/config/data";
+import { UserStatus as DBUserStatus } from "@/generated/prisma"
 
-// ── Rôles ─────────────────────────────────────────────────────────────────────
-// Aligné sur l'enum Role du schéma Prisma.
-// ⚠ À AJUSTER PAR PROJET si les rôles diffèrent.
-export type Role =
-  | 'ADMIN'
-  | 'SUPER_ADMIN'
-  | 'DIRECTION'
-  | 'TEACHER'
-  | 'STUDENT'
-  | 'PARENT'
-  | 'MEMBER'
+
+export const UserRoles = {
+  ADMIN: "ADMIN",
+  TEACHER: "TEACHER",
+  STUDENT: "STUDENT",
+  PARENT: "PARENT",
+  GUEST: "GUEST",
+  DIRECTION: "DIRECTION"
+} as const;
+
+
+export type Role = typeof UserRoles[keyof typeof UserRoles];
 
 // ── Fonctions (RBAC fin, orthogonal au rôle) ─────────────────────────────────
-// 'SUPER_ADMIN' est architectural — court-circuite toutes les vérifications.
-// ⚠ À ÉTENDRE PAR PROJET — ajouter les fonctions métier (ex: 'PRINCIPAL', 'SCOLARITE').
-export type FunctionName = 'SUPER_ADMIN' | (string & {})
 
-// ── Statut ────────────────────────────────────────────────────────────────────
-// Cycle de vie du compte. NEW/INVITED = états pré-activation (avant que le
-// modèle Prisma User n'existe ou ne soit complété).
+export const Functions = FUNCTIONS;
+
+export type Functions = typeof Functions[keyof typeof Functions];
+
 export const UserStatus = {
-  ACTIVE: 'ACTIVE',
-  INACTIVE: 'INACTIVE',
-  SUSPENDED: 'SUSPENDED',
-  PENDING: 'PENDING',
-  NEW: 'NEW',
-  INVITED: 'INVITED',
-} as const
+  ...DBUserStatus,
+  NEW: "NEW",           // Nouveau compte
+  INVITED: "INVITED",   // Invitation envoyée mais non acceptée
+} as const;
+
 
 export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
 
@@ -47,14 +40,25 @@ export interface Organization {
   logo?: string
   responsable?: boolean
   permissions?: string[]
-  // IDs des profils métier scopés par organisation.
-  // Injectés dans les metadata Supabase après création de l'entité (syncUserOrganizationProfile).
-  // ⚠ À ÉTENDRE PAR PROJET — une entrée par rôle qui porte un profil DB.
+
   teacherId?:   string
   studentId?:   string
   parentId?:    string
   directionId?: string
 }
+
+export type PresenceUser = Pick<
+  UserInfo,
+  | 'id'
+  | 'name'
+  | 'email'
+  | 'avatar_url'
+  | 'role'
+  | 'function'
+  | 'status'
+  | 'organization'
+  | 'online_at'
+>
 
 export interface InvitedBy {
   id: string
@@ -65,69 +69,88 @@ export interface InvitedBy {
 // ── UserInfo ─────────────────────────────────────────────────────────────────
 // Source de vérité user — retourné par getUserInfo().
 export interface UserInfo {
-  id?: string
-  email?: string
-  role?: Role
-  name?: string
-  avatar_url?: string
-  phone?: string
-  email_verified?: boolean
-  phone_verified?: boolean
-  function?: FunctionName
-  organization?: Organization
-  organizations?: Organization[]
-  status?: UserStatus
-  invitationToken?: string
-  invitationType?: string
-  invited_by?: Partial<InvitedBy>
-  isConnected?: boolean
-  online_at?: string
+  id?: string;
+  email?: string;
+  role?: Role;
+  name?: string;
+  avatar_url?: string;
+  phone?: string;
+  email_verified?: boolean;
+  phone_verified?: boolean;
+  function?: Functions;
+  organization?: Organization;
+  organizations?: Organization[];
+  invited_by?: Partial<InvitedBy>;
+  status?: UserStatus;
+  invitationToken?: string;
+  invitationType?: string;
+  isConnected?: boolean;
+  online_at?: string;
 }
 
-// Ce qui va dans Supabase user_metadata — dérivé de UserInfo
-export type UserMetadata = Pick<
-  UserInfo,
-  | 'role'
-  | 'name'
-  | 'avatar_url'
-  | 'function'
-  | 'organization'
-  | 'organizations'
-  | 'status'
-  | 'invitationToken'
-  | 'invitationType'
-  | 'invited_by'
-  | 'isConnected'
->
 
-// Contexte org injecté dans les Server Actions — orgId depuis token serveur
-// UNIQUEMENT, jamais depuis body/query/headers.
+
+//  Typage spécifique aux métadonnées Supabase (aligné avec UserInfo)
+export type UserMetadata = Pick<UserInfo,
+  | "role"
+  | "name"
+  | "avatar_url"
+  | "phone"
+  | "email_verified"
+  | "phone_verified"
+  | "function"
+  | "organization"
+  | "organizations"
+  | "invited_by"
+  | "status"
+  | "invitationToken"
+  | "invitationType"
+  | "isConnected"
+>;
+
+
+
 export type OrgContext = {
   userId: string
   orgId: string
   role: Role
-  function: FunctionName
+  function: Functions
 }
 
-/*
-Exemple de user_metadata Supabase (référence de forme — vocabulaire neutre) :
 
+/* 
+###structure json ###
 {
   "role": "ADMIN",
-  "name": "Jane Doe",
-  "avatar_url": "https://…/avatar.png",
+  "name": "Pirates Stuart ",
+  "avatar_url": "https://kyitmnunzsqyhqbkzekk.supabase.co/storage/v1/object/public/avatars/713ca158-ba30-4761-abdb-cb365343f011/avatar.png",
   "function": "SUPER_ADMIN",
-  "status": "ACTIVE",
-  "isConnected": true,
   "organization": {
-    "id": "6f0e…",
-    "name": "Acme",
-    "slug": "acme",
-    "responsable": true,
-    "permissions": ["CREATE:ENTITY", "DELETE:ENTITY"]
+    "id": "2f9867e8-99f8-4b30-8883-8b992cc107c4",
+    "name": "havard",
+    "slug": "havard-1",
+    "logo": "https://kyitmnunzsqyhqbkzekk.supabase.co/storage/v1/object/public/logos/organizations/2f9867e8-99f8-4b30-8883-8b992cc107c4/logo.png",
+    "permissions": [ "READ:COURSE", "UPDATE:STUDENT", "DELETE:STUDENT"] // peut etre adapter 
   },
   "organizations": [
-    { "id": "6f0e…", "name": "Acme", "slug": "acme" }
-  ]
+    {
+      "id": "2f9867e8-99f8-4b30-8883-8b992cc107c4",
+      "name": "havard",
+      "slug": "havard-1",
+      "logo": "https://kyitmnunzsqyhqbkzekk.supabase.co/storage/v1/object/public/logos/organizations/2f9867e8-99f8-4b30-8883-8b992cc107c4/logo.png",
+      "permissions": []
+    }
+  ],
+  "invited_by": {
+    "id": "713ca158-ba30-4761-abdb-cb365343f011",
+    "name": "Pirates Stuart ",
+    "email": "piratestuart@gmail.com"
+  },
+  "status": "PENDING",
+  "invitationToken": "dba3f42d-f071-429f-8186-b3863eea88eb",
+  "invitationType": "INVITE_ONLY",
+  "email_verified": true,
+  "phone_verified": false
 }
+
 */

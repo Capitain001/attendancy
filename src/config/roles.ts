@@ -9,24 +9,23 @@ import type { GetInviteByTokenDto } from '@/services/invite/types'
 // Segment d'URL par rôle — /<slug>/<segment>
 // Source de vérité : importer depuis ici, pas redéfinir localement.
 export const ROLE_PATHS: Record<Role, string> = {
-  SUPER_ADMIN: 'admin',
   ADMIN:       'admin',
   DIRECTION:   'direction',
   TEACHER:     'teacher',
   STUDENT:     'student',
   PARENT:      'parent',
-  MEMBER:      'app',
+  GUEST:      'inviter',
 }
 
 // Labels UI en français — pour affichage dans l'UI (invitations, profil…).
 export const ROLE_LABELS: Record<string, string> = {
-  SUPER_ADMIN: 'Super Admin',
+  // SUPER_ADMIN: 'Super Admin',
   ADMIN:       'Administrateur',
   DIRECTION:   'Direction',
   TEACHER:     'Enseignant',
   STUDENT:     'Étudiant',
   PARENT:      'Parent',
-  MEMBER:      'Membre',
+  // MEMBER:      'Membre',
 }
 
 /** Segment d'URL pour un rôle donné. Retourne '' si le rôle est inconnu. */

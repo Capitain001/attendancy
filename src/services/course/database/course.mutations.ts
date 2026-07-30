@@ -1,5 +1,5 @@
 // src/services/course/database/course.mutations.ts
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
 import { invalidateEvent } from '@/cache/server/key'
 import type { CreateCourseOutput, AssignTeacherOutput } from '../validation'
@@ -64,9 +64,29 @@ export async function assignTeacher(data: AssignTeacherOutput & { orgId: string 
 }
 
 export async function deleteTeacherFromCourse(courseTeacherId: string, orgId: string) {
+  const ct = await prisma.courseTeacher.findFirst({
+    where: { id: courseTeacherId, course: { orgId } },
+    select: { course: { select: { classId: true } } },
+  })
+  if (!ct) throw new Error('Affectation introuvable')
+
   await tryConstraint(prisma.courseTeacher.delete({
     where: { id: courseTeacherId },
   }))
-  await invalidateEvent('COURSE_UPDATED', orgId, courseTeacherId)
+  await invalidateEvent('COURSE_UPDATED', orgId, ct.course.classId)
   return { id: courseTeacherId }
+}
+
+export async function removeCourse(courseId: string, orgId: string) {
+  const course = await prisma.course.findFirst({
+    where: { id: courseId, orgId, deletedAt: null },
+    select: { classId: true },
+  })
+  if (!course) throw new Error('Cours introuvable')
+
+  await prisma.course.update({
+    where: { id: courseId },
+    data: { deletedAt: new Date() },
+  })
+  await invalidateEvent('COURSE_REMOVED', orgId, course.classId)
 }

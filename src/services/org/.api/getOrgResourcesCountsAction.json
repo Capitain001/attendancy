@@ -1,0 +1,11 @@
+{
+  "name": "getOrgResourcesCountsAction",
+  "file": "src/services/org/actions/org.mutations.ts",
+  "sig": "() => Promise<{ data: { courses: number; classes: number; rooms: number; teachers: number; students: number; }; error?: undefined; } | { error: string; data?: undefined; }>",
+  "calls": [
+    "getOrgResourcesCounts"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

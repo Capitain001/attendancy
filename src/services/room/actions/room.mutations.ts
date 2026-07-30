@@ -5,9 +5,7 @@ import { getUserInfo } from '@/services/user/userInfo'
 import { ERRORS } from '@/config'
 import { createRoomSchema, createLocationSchema } from '../validation'
 import type { CreateRoomInput, CreateLocationInput } from '../validation'
-import { createRoom, removeRoom, createLocation, toggleLocationActive } from '../database'
-import { prisma } from '@/lib/db'
-import { invalidateEvent } from '@/cache/server/key'
+import { createRoom, removeRoom, updateRoom, createLocation, toggleLocationActive } from '../database'
 
 export async function createRoomAction(input: CreateRoomInput) {
   try {
@@ -30,17 +28,17 @@ export async function createRoomAction(input: CreateRoomInput) {
   }
 }
 
-export async function removeRoomAction(roomId: string): Promise<{ success: boolean; error?: string }> {
+export async function removeRoomAction(roomId: string) {
   try {
     const user = await getUserInfo()
-    if (!user?.id) return { success: false, error: ERRORS.AUTH.UNAUTHORIZED }
+    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
     const orgId = user.organization?.id
-    if (!orgId) return { success: false, error: ERRORS.ORG.NOT_FOUND }
+    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
 
     await removeRoom(roomId, orgId)
-    return { success: true }
+    return { data: true }
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : ERRORS.SERVER }
+    return { error: error instanceof Error ? error.message : ERRORS.SERVER }
   }
 }
 
@@ -52,14 +50,7 @@ export async function updateRoomAction(roomId: string, data: { name?: string; ca
     if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
     const orgId = user.organization?.id
     if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-
-    const room = await prisma.room.update({
-      where: { id: roomId, orgId },
-      data: { ...(data.name !== undefined && { name: data.name }), ...(data.capacity !== undefined && { capacity: data.capacity }), ...(data.locationId !== undefined && { locationId: data.locationId }), ...(data.equipment !== undefined && { equipment: data.equipment }) },
-      select: { id: true, name: true, capacity: true, equipment: true, locationId: true, location: { select: { id: true, name: true } } },
-    })
-    await invalidateEvent('ROOM_UPDATED', orgId)
-    return { data: room }
+    return { data: await updateRoom(roomId, orgId, data) }
   } catch (error) {
     return { error: error instanceof Error ? error.message : ERRORS.SERVER }
   }

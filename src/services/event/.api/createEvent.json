@@ -1,0 +1,8 @@
+{
+  "name": "createEvent",
+  "file": "src/services/event/database/event.mutations.ts",
+  "sig": "(orgId: string, userId: string, data: CreateEventInput) => Promise<{ id: string; title: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

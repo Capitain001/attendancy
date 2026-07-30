@@ -1,15 +1,13 @@
-export async function subscribeToPush(): Promise<boolean> {
-  return false
-}
-
-export async function unsubscribeFromPush(): Promise<boolean> {
-  return false
-}
-
-export async function sendPushMessage(_message: string): Promise<boolean> {
-  return false
-}
-
-export async function sendMessageToUser(_userId: string, _message: string): Promise<boolean> {
-  return false
-}
+// Ré-export vers la couche DB structurée — conservé pour compatibilité des imports existants
+export {
+  upsertPushSubscription,
+  unsubscribeDevice,
+  unsubscribeAllDevices,
+  markSubscriptionExpired,
+  cleanupExpiredSubscriptions,
+} from './database/push.mutations'
+export {
+  getPushSubscriptionsByUserId,
+  getActivePushSubscriptionsByUserId,
+  getSubscriptionStats,
+} from './database/push.queries'

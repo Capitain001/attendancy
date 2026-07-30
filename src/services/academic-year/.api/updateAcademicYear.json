@@ -1,0 +1,8 @@
+{
+  "name": "updateAcademicYear",
+  "file": "src/services/academic-year/database/academic-year.mutations.ts",
+  "sig": "(academicYearId: string, orgId: string, data: UpdateAcademicYearData) => Promise<{ name: string; id: string; startDate: Date; endDate: Date; isCurrent: boolean; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,10 @@
+{
+  "service": "notification",
+  "path": "src/services/notification/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "87fd0c8",
+  "generated_at": "2026-07-29T12:17:29.320Z",
+  "fns": {},
+  "edges": {},
+  "deps": {}
+}

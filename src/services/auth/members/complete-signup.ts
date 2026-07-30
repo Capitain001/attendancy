@@ -1,10 +1,5 @@
 'use server'
-// src/services/auth/members/complete-signup.ts
-// Transaction de finalisation d'inscription via lien d'invitation.
-// Séquence : validate invitation → create User + UserOrganization + RoleEntity
-//            → assign Functions → (PARENT) create ParentRelation
-//            → mark invitation used → sync metadata Supabase → audit (async)
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import type { Role } from '@/generated/prisma'
 import { getUserInfo } from '@/services/user/userInfo'
 import { syncUserOrganizationProfile } from '@/services/user/update'
@@ -15,7 +10,8 @@ import {
   assignMultipleFunctionsToUser,
 } from './utils'
 
-// ── Types invitation ──────────────────────────────────────────────────────────
+// ── Types ─────────────────────────────────────────────────────────────────────
+
 // ⚠ À ALIGNER PAR PROJET — structure du champ `details` JSON de Invitation.
 interface InvitationDetails {
   role?: string
@@ -26,6 +22,9 @@ interface InvitationDetails {
   invited_by?: { id: string; name: string; email: string }
   parentLink?: { studentId: string; relation: string }
 }
+
+type TransactionClient = Parameters<Parameters<typeof prisma.$transaction>[0]>[0]
+type InvitationRecord = Awaited<ReturnType<typeof fetchAndValidateInvitation>>
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -44,7 +43,7 @@ async function fetchAndValidateInvitation(token: string) {
   return invitation
 }
 
-function extractContext(invitation: Awaited<ReturnType<typeof fetchAndValidateInvitation>>) {
+function extractInvitationContext(invitation: InvitationRecord) {
   const details = invitation.details as InvitationDetails
   return {
     details,
@@ -54,6 +53,96 @@ function extractContext(invitation: Awaited<ReturnType<typeof fetchAndValidateIn
     lastName: details.name?.split(' ').slice(1).join(' ') || '',
     departmentId: details.organization?.departmentId,
   }
+}
+
+async function createUserInOrganization(
+  tx: TransactionClient,
+  params: {
+    userId: string
+    email: string
+    firstName: string
+    lastName: string
+    orgId: string
+    role: Role
+    departmentId?: string
+  }
+) {
+  const createdUser = await tx.user.upsert({
+    where: { id: params.userId },
+    create: {
+      id: params.userId,
+      email: params.email,
+      firstName: params.firstName,
+      lastName: params.lastName,
+      status: 'ACTIVE',
+    },
+    update: {},
+  })
+
+  await tx.userOrganization.create({
+    data: {
+      userId: createdUser.id,
+      orgId: params.orgId,
+      role: params.role,
+      isMainOrg: false,
+      isResponsable: false,
+    },
+  })
+
+  const profile = await createRoleSpecificEntity(
+    tx,
+    createdUser.id,
+    params.role,
+    params.orgId,
+    params.departmentId
+  )
+
+  return { createdUser, profile }
+}
+
+async function assignUserFunctions(
+  tx: TransactionClient,
+  params: { userId: string; orgId: string; details: InvitationDetails }
+) {
+  await assignFunctionToUser(tx, params.userId, params.orgId, params.details.function, params.details.invited_by?.id)
+
+  if (
+    params.details.role === 'DIRECTION' &&
+    Array.isArray(params.details.additionalFunctions) &&
+    params.details.additionalFunctions.length > 0
+  ) {
+    await assignMultipleFunctionsToUser(
+      tx,
+      params.userId,
+      params.orgId,
+      params.details.additionalFunctions,
+      params.details.invited_by?.id
+    )
+  }
+}
+
+function logSignupAudit(params: {
+  userId: string
+  invitationId: string
+  orgId: string
+  details: InvitationDetails
+  departmentId?: string
+}) {
+  logAuditAsync({
+    userId: params.userId,
+    action: 'CREATE',
+    resource: 'USER',
+    resourceId: params.invitationId,
+    orgId: params.orgId,
+    details: {
+      role: params.details.role,
+      function: params.details.function,
+      departmentId: params.departmentId,
+      invited_by: params.details.invited_by,
+      invitationId: params.invitationId,
+      action_type: 'ACCEPT_INVITATION',
+    },
+  })
 }
 
 // ── Action principale ─────────────────────────────────────────────────────────
@@ -68,44 +157,22 @@ export async function completeSignup(): Promise<
 
     const userId = user.id
     const invitation = await fetchAndValidateInvitation(user.invitationToken)
-    const { details, orgId, role, firstName, lastName, departmentId } = extractContext(invitation)
+    const { details, orgId, role, firstName, lastName, departmentId } = extractInvitationContext(invitation)
 
     const { profileId, createdUserId } = await prisma.$transaction(async (tx) => {
-      // 1. Créer/retrouver l'utilisateur
-      const createdUser = await tx.user.upsert({
-        where: { id: userId },
-        create: {
-          id: userId,
-          email: invitation.email,
-          firstName,
-          lastName,
-          status: 'ACTIVE',
-        },
-        update: {},
+      const { createdUser, profile } = await createUserInOrganization(tx, {
+        userId,
+        email: invitation.email,
+        firstName,
+        lastName,
+        orgId,
+        role,
+        departmentId,
       })
 
-      // 2. Rattacher à l'organisation
-      await tx.userOrganization.create({
-        data: {
-          userId: createdUser.id,
-          orgId,
-          role,
-          isMainOrg: false,
-          isResponsable: false,
-        },
-      })
+      await assignUserFunctions(tx, { userId: createdUser.id, orgId, details })
 
-      // 3. Entité profil selon le rôle
-      const profile = await createRoleSpecificEntity(tx, createdUser.id, role, orgId, departmentId)
-
-      // 4. Fonctions
-      await assignFunctionToUser(tx, createdUser.id, orgId, details.function, details.invited_by?.id)
-
-      if (role === 'DIRECTION' && Array.isArray(details.additionalFunctions) && details.additionalFunctions.length > 0) {
-        await assignMultipleFunctionsToUser(tx, createdUser.id, orgId, details.additionalFunctions, details.invited_by?.id)
-      }
-
-      // 5. Lien parent→étudiant (rôle PARENT externe)
+      // Lien parent→étudiant (rôle PARENT externe)
       if (role === 'PARENT' && details.parentLink?.studentId && profile?.id) {
         await tx.parentRelation.create({
           data: {
@@ -117,7 +184,6 @@ export async function completeSignup(): Promise<
         })
       }
 
-      // 6. Marquer l'invitation utilisée
       await tx.invitation.update({
         where: { id: invitation.id },
         data: { usedAt: new Date(), userId: createdUser.id },
@@ -128,19 +194,7 @@ export async function completeSignup(): Promise<
 
     await syncUserOrganizationProfile({ orgId, role, profileId, status: 'ACTIVE' })
 
-    logAuditAsync({
-      userId: createdUserId,
-      action: 'CREATE',
-      resource: 'USER',
-      resourceId: invitation.id,
-      orgId,
-      details: {
-        role,
-        function: details.function,
-        invitationId: invitation.id,
-        invited_by: details.invited_by,
-      },
-    })
+    logSignupAudit({ userId: createdUserId, invitationId: invitation.id, orgId, details, departmentId })
 
     return { data: { userId: createdUserId, profileId } }
   } catch (error) {

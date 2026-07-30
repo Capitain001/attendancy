@@ -3,7 +3,7 @@
 // Exception documentée dans CLAUDE.md — séparés en services distincts si Program acquiert
 // une page propre ou des mutations indépendantes de ProgramTrack.
 import { cacheTag, cacheLife } from 'next/cache'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { CACHE } from '@/cache/server/key'
 
 export async function getProgramsByTrack(programTrackId: string, orgId: string) {

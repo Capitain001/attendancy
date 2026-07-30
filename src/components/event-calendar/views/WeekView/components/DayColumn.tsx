@@ -47,7 +47,7 @@ export function DayColumn({
       }`}
       data-today={isToday(day) || undefined}
     >
-
+     
       {/* Événements positionnés */}
       {(positionedEvents ?? []).map((positionedEvent) => (
         <div
@@ -87,7 +87,7 @@ export function DayColumn({
             key={hour.toString()}
             className="relative min-h-[var(--week-cells-height)] last:border-b-0 border-y border-dashed border-0.5 border-gray-300/40"
           >
-
+         
             {[0, 1, 2, 3].map((quarter) => {
               const quarterHourTime = hourValue + quarter * 0.25;
               const startTime = new Date(day);

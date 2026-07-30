@@ -1,6 +1,6 @@
 // src/services/student/database/student.queries.ts
 import { cacheTag, cacheLife } from 'next/cache'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { CACHE } from '@/cache/server/key'
 
 /** Profil étudiant courant — classId + groupIds pour filtrer les schedules. */
@@ -9,7 +9,7 @@ export async function getStudentProfile(studentId: string, orgId: string) {
   cacheTag(CACHE.STUDENT(orgId, studentId))
   cacheLife(CACHE.STUDENT.life)
   const enrollment = await prisma.studentEnrollment.findFirst({
-    where: { studentId, deletedAt: null, class: { programTrack: { orgId } } },
+    where: { studentId, endedAt: null, class: { programTrack: { orgId } } },
     orderBy: { createdAt: 'desc' },
     select: {
       classId: true,
@@ -70,11 +70,15 @@ export async function getStudentSchedules(
   })
 }
 
-/** Stats assiduité étudiant : taux de présence + totaux. */
+/** Stats assiduité + notes étudiant. */
 export async function getStudentStats(params: {
   studentId: string; orgId: string; classId: string; groupIds: string[];
 }) {
-  const [total, present, coursesCount] = await Promise.all([
+  const now = new Date()
+  const start = new Date(now); start.setHours(0, 0, 0, 0)
+  const end   = new Date(now); end.setHours(23, 59, 59, 999)
+
+  const [total, present, coursesCount, todayCount, evaluations] = await Promise.all([
     prisma.attendance.count({
       where: { studentId: params.studentId, orgId: params.orgId },
     }),
@@ -84,26 +88,32 @@ export async function getStudentStats(params: {
     prisma.courseTeacher.count({
       where: { course: { classId: params.classId, orgId: params.orgId, deletedAt: null } },
     }),
+    prisma.schedule.count({
+      where: {
+        classId: params.classId, orgId: params.orgId, deletedAt: null,
+        startTime: { gte: start, lte: end },
+        OR: [
+          { groupId: null },
+          ...(params.groupIds.length > 0 ? [{ groupId: { in: params.groupIds } }] : []),
+        ],
+      },
+    }),
+    prisma.evaluation.findMany({
+      where: { studentId: params.studentId, orgId: params.orgId },
+      select: { score: true, maxScore: true },
+    }),
   ])
 
-  const now = new Date()
-  const start = new Date(now); start.setHours(0, 0, 0, 0)
-  const end   = new Date(now); end.setHours(23, 59, 59, 999)
-  const todayCount = await prisma.schedule.count({
-    where: {
-      classId: params.classId, orgId: params.orgId, deletedAt: null,
-      startTime: { gte: start, lte: end },
-      OR: [
-        { groupId: null },
-        ...(params.groupIds.length > 0 ? [{ groupId: { in: params.groupIds } }] : []),
-      ],
-    },
-  })
+  let totalScore = 0
+  let totalMaxScore = 0
+  for (const e of evaluations) { totalScore += e.score; totalMaxScore += e.maxScore }
 
   return {
-    attendanceRate: total > 0 ? Math.round((present / total) * 100) : 100,
-    totalCourses:   coursesCount,
+    attendanceRate:   total > 0 ? Math.round((present / total) * 100) : 100,
+    totalCourses:     coursesCount,
     todayCount,
+    averageGrade:     totalMaxScore > 0 ? Math.round((totalScore / totalMaxScore) * 100 * 100) / 100 : 0,
+    totalEvaluations: evaluations.length,
   }
 }
 
@@ -114,7 +124,7 @@ export async function getEnrolledStudents(classId: string, orgId: string) {
   return prisma.studentEnrollment.findMany({
     where: {
       classId,
-      deletedAt: null,
+      endedAt: null,
       class: { programTrack: { orgId } },
       student: { deletedAt: null },
     },

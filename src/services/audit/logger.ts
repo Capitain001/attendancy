@@ -3,7 +3,7 @@
 // resource en String (pas l'enum) : historique durable, modules futurs libres.
 // AuditResource offre l'autocomplete sur les valeurs connues de l'enum Resource
 // tout en acceptant des strings pour les ressources non encore dans l'enum.
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import type { Action, Resource } from '@/generated/prisma'
 
 export type AuditResource = Resource | (string & {})

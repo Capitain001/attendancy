@@ -1,0 +1,8 @@
+{
+  "name": "removeEnrollment",
+  "file": "src/services/student/database/student.mutations.ts",
+  "sig": "(enrollmentId: string, orgId: string) => Promise<{ id: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

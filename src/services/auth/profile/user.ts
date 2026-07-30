@@ -3,7 +3,7 @@
 import type { Role } from "@/generated/prisma/client"
 
 import { ERRORS } from "@/config"
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 import { createClient } from "@/utils/supabase/server"
 import type { UserMetadata } from "@/services/user/types"
 import { getRoleProfileKey } from "@/services/user/profile"

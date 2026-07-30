@@ -42,19 +42,19 @@ import {
       format(addDays(weekStart, i), "EEE", { locale: CALENDAR_LOCALE }),
     );
   }
-
+  
   /**
    * Organise une liste de jours en semaines
-   *
+   * 
    * @param days - Array des jours à organiser
    * @returns Array de semaines, chaque semaine contenant 7 jours
-   *
+   * 
    * Divise la liste des jours en chunks de 7 pour créer les rangées du calendrier.
    */
   export function groupDaysIntoWeeks(days: Date[]): Date[][] {
     const result = [];
     let week = [];
-
+  
     for (let i = 0; i < days.length; i++) {
       week.push(days[i]);
       if (week.length === 7 || i === days.length - 1) {
@@ -62,25 +62,25 @@ import {
         week = [];
       }
     }
-
+  
     return result;
   }
-
+  
   /**
    * Crée un identifiant unique pour une cellule de calendrier
-   *
+   * 
    * @param day - La date de la cellule
    * @returns String - Identifiant unique basé sur la date ISO
-   *
+   * 
    * Utilisé pour les fonctionnalités de drag & drop et l'accessibilité.
    */
   export function getCellId(day: Date): string {
     return `month-cell-${day.toISOString()}`;
   }
-
+  
   /**
    * Calcule les statistiques de visibilité des événements
-   *
+   * 
    * @param totalEvents - Nombre total d'événements
    * @param visibleCount - Nombre d'événements visibles
    * @returns Objet contenant les informations de visibilité
@@ -97,35 +97,35 @@ import {
         canShow: false,
       };
     }
-
+  
     // Calcule si il y a plus d'événements que la limite visible
     const hasMore = totalEvents > visibleCount;
-
+    
     // Calcule le nombre d'événements restants
     const remainingCount = hasMore ? totalEvents - visibleCount : 0;
-
+  
     return {
       hasMore,
       remainingCount,
       canShow: true,
     };
   }
-
+  
   /**
    * Détermine si un jour est dans le mois courant
-   *
+   * 
    * @param day - Le jour à vérifier
    * @param currentDate - La date de référence du mois courant
    * @returns Boolean indiquant si le jour appartient au mois courant
    */
   export function isDayInCurrentMonth(day: Date, currentDate: Date): boolean {
-    return day.getMonth() === currentDate.getMonth() &&
+    return day.getMonth() === currentDate.getMonth() && 
            day.getFullYear() === currentDate.getFullYear();
   }
-
+  
   /**
    * Crée une date de début par défaut pour un nouvel événement
-   *
+   * 
    * @param day - Le jour sélectionné
    * @param defaultHour - L'heure de début par défaut (optionnel, défaut: 9)
    * @returns Date avec l'heure définie
@@ -135,10 +135,10 @@ import {
     startTime.setHours(defaultHour, 0, 0, 0);
     return startTime;
   }
-
+  
   /**
    * Classe CSS conditionnelle pour les jours hors du mois courant
-   *
+   * 
    * @param isCurrentMonth - Boolean indiquant si c'est le mois courant
    * @returns String des classes CSS à appliquer
    */
@@ -146,6 +146,6 @@ import {
     const baseClasses = "group border-b border-r border-border/70 last:border-r-0";
     const todayClasses = isToday ? "data-today" : "";
     const outsideClasses = !isCurrentMonth ? "data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70" : "";
-
+    
     return [baseClasses, todayClasses, outsideClasses].filter(Boolean).join(" ");
   }

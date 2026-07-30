@@ -43,6 +43,10 @@ import { SESSION_GRAPH } from "@/services/session/cache";
 import { WEEKLY_TEMPLATE_GRAPH } from "@/services/weekly-template/cache";
 import { TEACHER_UNAVAILABILITY_GRAPH } from "@/services/teacher-unavailability/cache";
 import { EVENT_GRAPH } from "@/services/event/cache";
+import { SUBSCRIPTION_GRAPH } from "@/services/subscription/cache";
+import { FUNCTION_GRAPH } from "@/services/function/cache";
+import { NOTIFICATION_GRAPH } from "@/services/notification/cache";
+import { DIRECTION_GRAPH } from "@/services/direction/cache";
 // ⚠ À ÉTENDRE PAR PROJET — un import par service à données cachées :
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -66,6 +70,11 @@ export const CACHE = {
   WEEKLY_TEMPLATE: key("weekly-template"),
   TEACHER_UNAVAILABILITY: key("teacher-unavailability"),
   EVENT: key("event"),
+  SUBSCRIPTION: key("subscription"),
+  PLAN: key("plan"),
+  FUNCTION: key("function"),
+  NOTIFICATION: key("notification"),
+  DIRECTION: key("direction"),
   // ⚠ À ÉTENDRE PAR PROJET — une entrée par entité cachée :
   // ENTITY: key("entity"),
   // RESOURCE: key("resource", CACHE_LIFE.SHORT),
@@ -93,6 +102,10 @@ export const CACHE_GRAPH = {
   ...WEEKLY_TEMPLATE_GRAPH,
   ...TEACHER_UNAVAILABILITY_GRAPH,
   ...EVENT_GRAPH,
+  ...SUBSCRIPTION_GRAPH,
+  ...FUNCTION_GRAPH,
+  ...NOTIFICATION_GRAPH,
+  ...DIRECTION_GRAPH,
   // ⚠ À ÉTENDRE PAR PROJET — spreader chaque <SERVICE>_GRAPH importé :
 } as const;
 

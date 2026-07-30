@@ -1,0 +1,120 @@
+{
+  "service": "ue-course",
+  "path": "src/services/ue-course/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "87fd0c8",
+  "generated_at": "2026-07-29T12:17:29.457Z",
+  "fns": {
+    "createUECourse": {
+      "name": "createUECourse",
+      "file": "src/services/ue-course/database/ue-course.mutations.ts",
+      "sig": "(data: CreateUECourseOutput & { orgId: string }) => Promise<{ name: string; id: string; ueId: string; code: string | null; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateUECourse": {
+      "name": "updateUECourse",
+      "file": "src/services/ue-course/database/ue-course.mutations.ts",
+      "sig": "(ueCourseId: string, orgId: string, data: UpdateUECourseData) => Promise<{ name: string; id: string; ueId: string; code: string | null; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "removeUECourse": {
+      "name": "removeUECourse",
+      "file": "src/services/ue-course/database/ue-course.mutations.ts",
+      "sig": "(ueCourseId: string, orgId: string) => Promise<{ id: string; ueId: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getUECoursesByUE": {
+      "name": "getUECoursesByUE",
+      "file": "src/services/ue-course/database/ue-course.queries.ts",
+      "sig": "(ueId: string, orgId: string) => Promise<{ name: string; id: string; credits: number; description: string | null; duration: number; code: string | null; order: number | null; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createUECourseAction": {
+      "name": "createUECourseAction",
+      "file": "src/services/ue-course/actions/ue-course.mutations.ts",
+      "sig": "(input: CreateUECourseInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; ueId: string; code: string | null; }; error?: undefined; }>",
+      "calls": [
+        "createUECourse"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateUECourseAction": {
+      "name": "updateUECourseAction",
+      "file": "src/services/ue-course/actions/ue-course.mutations.ts",
+      "sig": "(ueCourseId: string, data: UpdateUECourseData) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; ueId: string; code: string | null; }; error?: undefined; }>",
+      "calls": [
+        "updateUECourse"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeUECourseAction": {
+      "name": "removeUECourseAction",
+      "file": "src/services/ue-course/actions/ue-course.mutations.ts",
+      "sig": "(ueCourseId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; ueId: string; }; error?: undefined; }>",
+      "calls": [
+        "removeUECourse"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getUECoursesAction": {
+      "name": "getUECoursesAction",
+      "file": "src/services/ue-course/actions/ue-course.queries.ts",
+      "sig": "(ueId: string) => Promise<{ data: { name: string; id: string; credits: number; description: string | null; duration: number; code: string | null; order: number | null; }[]; error?: undefined; } | { error: string; data?: undefined; }>",
+      "calls": [
+        "getUECoursesByUE"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createUECourse": [
+      "createUECourseAction"
+    ],
+    "updateUECourse": [
+      "updateUECourseAction"
+    ],
+    "removeUECourse": [
+      "removeUECourseAction"
+    ],
+    "getUECoursesByUE": [
+      "getUECoursesAction"
+    ],
+    "createUECourseAction": [],
+    "updateUECourseAction": [],
+    "removeUECourseAction": [],
+    "getUECoursesAction": []
+  },
+  "deps": {}
+}

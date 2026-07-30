@@ -1,7 +1,7 @@
 // src/services/invite/database/invite.mutations.ts
 // Prisma pur — AUCUNE auth ici.
-import { Role } from '@/generated/prisma/enums'
-import { prisma } from '@/lib/db'
+import { Role, Resource } from '@/generated/prisma/enums'
+import { prisma } from '@/lib/prisma'
 
 
 export type CreateInvitationParams = {
@@ -9,6 +9,9 @@ export type CreateInvitationParams = {
   orgId: string
   role: Role
   expiresAt: Date
+  details?: Record<string, unknown>
+  resourceId?: string
+  resourceType?: Resource
 }
 
 export async function createInvitation(token: string, params: CreateInvitationParams) {
@@ -17,9 +20,11 @@ export async function createInvitation(token: string, params: CreateInvitationPa
       token,
       email: params.email,
       orgId: params.orgId,
-      details: { role: params.role },
+      details: { role: params.role, ...params.details },
       expiresAt: params.expiresAt,
       invitationType: 'INVITE_ONLY',
+      ...(params.resourceId ? { resourceId: params.resourceId } : {}),
+      ...(params.resourceType ? { resourceType: params.resourceType } : {}),
     },
     select: { id: true, token: true },
   })
@@ -33,6 +38,8 @@ export type CompleteInviteParams = {
   invitationId: string
   orgId: string
   role: Role
+  // Champs optionnels lus depuis invitation.details pour le rôle DIRECTION
+  functionDetails?: { function?: string; additionalFunctions?: string[] }
 }
 
 export async function completeInvite(params: CompleteInviteParams) {
@@ -66,6 +73,26 @@ export async function completeInvite(params: CompleteInviteParams) {
     })
 
     const profile = await createRoleProfile(tx, params.userId, params.orgId, params.role)
+
+    // Assign functions for DIRECTION — ownership futur : services/function/database/
+    if (params.role === 'DIRECTION' && params.functionDetails) {
+      const fnsToAssign = [
+        ...(params.functionDetails.function ? [params.functionDetails.function] : []),
+        ...(params.functionDetails.additionalFunctions ?? []),
+      ]
+      for (const fnName of fnsToAssign) {
+        const fn = await tx.function.findUnique({
+          where: { name_orgId: { name: fnName, orgId: params.orgId } },
+          select: { id: true },
+        })
+        if (!fn) continue
+        await tx.userFunction.upsert({
+          where: { userId_functionId: { userId: params.userId, functionId: fn.id } },
+          create: { userId: params.userId, functionId: fn.id },
+          update: {},
+        })
+      }
+    }
 
     await tx.invitation.update({
       where: { id: params.invitationId },
@@ -129,7 +156,14 @@ async function createRoleProfile(
         update: { deletedAt: null },
         select: { id: true },
       })
+    case 'DIRECTION':
+      return tx.direction.upsert({
+        where: { userId_orgId: { userId, orgId } },
+        create: { userId, orgId },
+        update: { deletedAt: null },
+        select: { id: true },
+      })
     default:
-      throw new Error(`Rôle non invitable : ${role}`)
+      throw new Error(`Rôle non géré dans createRoleProfile : ${role}`)
   }
 }

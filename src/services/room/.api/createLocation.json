@@ -1,0 +1,8 @@
+{
+  "name": "createLocation",
+  "file": "src/services/room/database/room.mutations.ts",
+  "sig": "(data: { name: string address: string latitude: number longitude: number radius?: number orgId: string }) => Promise<{ id: string; name: string; address: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

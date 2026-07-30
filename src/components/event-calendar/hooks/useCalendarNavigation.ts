@@ -74,4 +74,4 @@ export const useCalendarNavigation = (
   };
 
   return { currentDate, setCurrentDate, navigate };
-};
+}; 

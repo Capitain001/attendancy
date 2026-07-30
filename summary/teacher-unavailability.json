@@ -1,0 +1,120 @@
+{
+  "service": "teacher-unavailability",
+  "path": "src/services/teacher-unavailability/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "87fd0c8",
+  "generated_at": "2026-07-29T12:17:29.436Z",
+  "fns": {
+    "createWeeklyUnavailability": {
+      "name": "createWeeklyUnavailability",
+      "file": "src/services/teacher-unavailability/database/teacher-unavailability.mutations.ts",
+      "sig": "(orgId: string, data: Omit<CreateWeeklyUnavailabilityInput, 'teacherId'> & { teacherId: string }) => Promise<{ id: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "createDateRangeUnavailability": {
+      "name": "createDateRangeUnavailability",
+      "file": "src/services/teacher-unavailability/database/teacher-unavailability.mutations.ts",
+      "sig": "(orgId: string, data: Omit<CreateDateRangeUnavailabilityInput, 'teacherId'> & { teacherId: string }) => Promise<{ id: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "deleteTeacherUnavailability": {
+      "name": "deleteTeacherUnavailability",
+      "file": "src/services/teacher-unavailability/database/teacher-unavailability.mutations.ts",
+      "sig": "(id: string, orgId: string) => Promise<void>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getTeacherUnavailabilities": {
+      "name": "getTeacherUnavailabilities",
+      "file": "src/services/teacher-unavailability/database/teacher-unavailability.queries.ts",
+      "sig": "(teacherId: string, orgId: string) => Promise<{ id: string; startDate: Date | null; endDate: Date | null; type: UnavailabilityType; createdAt: Date; startTime: string | null; endTime: string | null; dayOfWeek: number | null; reason: string | null; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createWeeklyUnavailabilityAction": {
+      "name": "createWeeklyUnavailabilityAction",
+      "file": "src/services/teacher-unavailability/actions/teacher-unavailability.mutations.ts",
+      "sig": "(input: CreateWeeklyUnavailabilityInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "calls": [
+        "createWeeklyUnavailability"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "createDateRangeUnavailabilityAction": {
+      "name": "createDateRangeUnavailabilityAction",
+      "file": "src/services/teacher-unavailability/actions/teacher-unavailability.mutations.ts",
+      "sig": "(input: CreateDateRangeUnavailabilityInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "calls": [
+        "createDateRangeUnavailability"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "deleteTeacherUnavailabilityAction": {
+      "name": "deleteTeacherUnavailabilityAction",
+      "file": "src/services/teacher-unavailability/actions/teacher-unavailability.mutations.ts",
+      "sig": "(id: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "calls": [
+        "deleteTeacherUnavailability"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getTeacherUnavailabilitiesAction": {
+      "name": "getTeacherUnavailabilitiesAction",
+      "file": "src/services/teacher-unavailability/actions/teacher-unavailability.queries.ts",
+      "sig": "(teacherId: string) => Promise<{ data: { id: string; startDate: Date | null; endDate: Date | null; type: UnavailabilityType; createdAt: Date; startTime: string | null; endTime: string | null; dayOfWeek: number | null; reason: string | null; }[]; error?: undefined; } | { ...; }>",
+      "calls": [
+        "getTeacherUnavailabilities"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createWeeklyUnavailability": [
+      "createWeeklyUnavailabilityAction"
+    ],
+    "createDateRangeUnavailability": [
+      "createDateRangeUnavailabilityAction"
+    ],
+    "deleteTeacherUnavailability": [
+      "deleteTeacherUnavailabilityAction"
+    ],
+    "getTeacherUnavailabilities": [
+      "getTeacherUnavailabilitiesAction"
+    ],
+    "createWeeklyUnavailabilityAction": [],
+    "createDateRangeUnavailabilityAction": [],
+    "deleteTeacherUnavailabilityAction": [],
+    "getTeacherUnavailabilitiesAction": []
+  },
+  "deps": {}
+}

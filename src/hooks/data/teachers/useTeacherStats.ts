@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { getTeacherStatsAction } from "@/services/teacher/actions";
-import type { TeacherStats } from "@/services/teacher/stats.database";
+import type { GetTeacherStatsDto } from "@/services/teacher/types";
 
 /**
  * Hook pour récupérer les statistiques d'un enseignant
@@ -21,7 +21,7 @@ export function useTeacherStats({
   teacherId?: string;
   enabled?: boolean;
 }) {
-  const { data, isLoading, error, isError } = useQuery<TeacherStats>({
+  const { data, isLoading, error, isError } = useQuery<GetTeacherStatsDto>({
     queryKey: ["teacher-stats", teacherId],
     queryFn: async () => {
       if (!teacherId) {

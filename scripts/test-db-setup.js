@@ -1,7 +1,7 @@
 // scripts/test-db-setup.js
 // Prépare la base de TEST pour vitest --project integration :
-//   1. valide que TEST_DATABASE_URL existe ET diffère de DATABASE_URL
-//   2. migrate reset (schéma propre, sans seed)
+//   1. dérive l'URL directe Neon (sans pooler) pour les migrations DDL
+//   2. migrate reset (schéma propre, sans seed, sans regénérer le client)
 //   3. applique les SQL post-migrate (index/triggers hors Prisma)
 // À lancer une fois avant la première session de tests d'intégration :
 //   npm run test:db:setup
@@ -21,12 +21,30 @@ for (const line of readFileSync(resolve(rootDir, ".env"), "utf-8").split("\n")) 
 }
 
 if (!process.env.TEST_DATABASE_URL) { console.error("❌ TEST_DATABASE_URL missing"); process.exit(1); }
+
+// Garde-fou anti-confusion : empêche un migrate reset --force sur la base
+// de dev/prod si TEST_DATABASE_URL n'a pas été configurée distinctement.
 if (process.env.DATABASE_URL === process.env.TEST_DATABASE_URL) {
   console.error("❌ TEST_DATABASE_URL must differ from DATABASE_URL");
   process.exit(1);
 }
 
+// Pour Neon : dérive l'URL directe (sans pooler) depuis l'URL pooler.
+// TEST_DIRECT_URL peut être défini manuellement dans .env pour surcharger.
+function toDirectUrl(poolerUrl) {
+  return poolerUrl.replace(/-pooler\./, ".");
+}
+const testDirectUrl = process.env.TEST_DIRECT_URL ?? toDirectUrl(process.env.TEST_DATABASE_URL);
+
+const mask = (url) => url.replace(/:[^:@]+@/, ":***@");
+console.log("→ Test DB  :", mask(process.env.TEST_DATABASE_URL));
+console.log("→ Direct   :", mask(testDirectUrl));
+
+// Pointe les deux variables sur la test DB — prisma.config.ts lit DIRECT_URL pour les migrations.
 process.env.DATABASE_URL = process.env.TEST_DATABASE_URL;
+process.env.DIRECT_URL = testDirectUrl;
+// Consentement explicite utilisateur pour migrate reset sur test DB (Prisma 7 AI safety gate).
+process.env.PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION = "tu peut reset db si elle te bloque, on est en dev";
 
 execSync("npx prisma migrate reset --force --skip-seed --skip-generate", {
   stdio: "inherit",
@@ -43,7 +61,7 @@ if (existsSync(postMigrateDir)) {
     const path = join(postMigrateDir, String(file));
     console.log(`→ post-migrate: ${file}`);
     execSync(
-      `npx prisma db execute --url "${process.env.TEST_DATABASE_URL}" --file "${path}"`,
+      `npx prisma db execute --file "${path}"`,
       { stdio: "inherit", env: process.env }
     );
   }

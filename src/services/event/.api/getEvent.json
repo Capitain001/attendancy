@@ -1,0 +1,8 @@
+{
+  "name": "getEvent",
+  "file": "src/services/event/database/event.queries.ts",
+  "sig": "(eventId: string, orgId: string) => Promise<{ id: string; title: string; description: string | null; startTime: Date | null; endTime: Date | null; location: string | null; targetRoles: Role[]; color: string | null; ... 6 more ...; _count: { ...; }; } | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

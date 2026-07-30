@@ -1,0 +1,11 @@
+{
+  "name": "getAcademicYearsAction",
+  "file": "src/services/academic-year/actions/academic-year.queries.ts",
+  "sig": "() => Promise<{ data: { name: string; id: string; startDate: Date; endDate: Date; isCurrent: boolean; }[]; error?: undefined; } | { error: string; data?: undefined; }>",
+  "calls": [
+    "getAcademicYears"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

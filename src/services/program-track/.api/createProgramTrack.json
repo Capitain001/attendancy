@@ -1,0 +1,8 @@
+{
+  "name": "createProgramTrack",
+  "file": "src/services/program-track/database/program-track.mutations.ts",
+  "sig": "(data: CreateProgramTrackOutput & { orgId: string }) => Promise<{ name: string; id: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

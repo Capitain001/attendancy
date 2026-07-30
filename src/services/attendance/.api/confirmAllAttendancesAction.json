@@ -1,0 +1,9 @@
+{
+  "name": "confirmAllAttendancesAction",
+  "file": "src/services/attendance/actions/attendance.mutations.ts",
+  "sig": "({ scheduleId }: { scheduleId: string }) => Promise<{ error: string; data?: undefined; } | { data: { confirmed: number; }; error?: undefined; }>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

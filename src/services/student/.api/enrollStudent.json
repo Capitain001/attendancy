@@ -1,0 +1,8 @@
+{
+  "name": "enrollStudent",
+  "file": "src/services/student/database/student.mutations.ts",
+  "sig": "(data: EnrollStudentOutput & { orgId: string }) => Promise<{ id: string; studentId: string; classId: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

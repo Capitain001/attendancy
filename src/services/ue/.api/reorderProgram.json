@@ -1,0 +1,8 @@
+{
+  "name": "reorderProgram",
+  "file": "src/services/ue/database/ue.mutations.ts",
+  "sig": "(programId: string, orgId: string, ueOrders: UEOrder[], courseOrders: CourseOrder[]) => Promise<void>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

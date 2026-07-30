@@ -4,7 +4,7 @@
 //   1. Rôle (hiérarchie)          — getAuthorization(user, requiredRole)
 //   2. Fonction (RBAC fin)        — getAuthorization(user, role, requiredFunction)
 //   3. Permission (action:resource) — userHasPermission / authorize
-import type { Role, FunctionName, UserInfo } from '@/services/user/types'
+import type { Role, Functions as FunctionName, UserInfo } from '@/services/user/types'
 
 export type AuthorizationResult =
   | { success: true }
@@ -23,13 +23,12 @@ export interface Permission {
 // ⚠ À CONFIGURER PAR PROJET — une entrée par rôle du projet.
 // Lecture : TEACHER: ['TEACHER', 'ADMIN'] = « TEACHER requis : un TEACHER ou un ADMIN passe ».
 const ROLE_HIERARCHY: Record<Role, Role[]> = {
-  ADMIN:       ['ADMIN'],
-  SUPER_ADMIN: ['SUPER_ADMIN', 'ADMIN'],
-  DIRECTION:   ['DIRECTION', 'ADMIN'],
-  TEACHER:     ['TEACHER', 'ADMIN'],
-  STUDENT:     ['STUDENT', 'ADMIN'],
-  PARENT:      ['PARENT', 'ADMIN'],
-  MEMBER:      ['MEMBER', 'ADMIN'],
+  ADMIN:     ['ADMIN'],
+  DIRECTION: ['DIRECTION', 'ADMIN'],
+  TEACHER:   ['TEACHER', 'ADMIN'],
+  STUDENT:   ['STUDENT', 'ADMIN'],
+  PARENT:    ['PARENT', 'ADMIN'],
+  GUEST:     ['GUEST', 'ADMIN'],
 }
 
 // Vérifie rôle (hiérarchie) puis fonction (égalité stricte, sauf ADMIN).

@@ -1,0 +1,8 @@
+{
+  "name": "getAcademicYears",
+  "file": "src/services/academic-year/database/academic-year.queries.ts",
+  "sig": "(orgId: string) => Promise<{ name: string; id: string; startDate: Date; endDate: Date; isCurrent: boolean; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

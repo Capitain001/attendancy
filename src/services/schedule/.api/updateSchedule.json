@@ -1,0 +1,8 @@
+{
+  "name": "updateSchedule",
+  "file": "src/services/schedule/database/schedule.mutations.ts",
+  "sig": "(scheduleId: string, orgId: string, data: { roomId?: string teacherId?: string startTime?: string endTime?: string notes?: string confirmed?: boolean status?: 'PENDING' | 'COMPLETED' | 'CANCELED' | 'MISSED' }) => Promise<{ id: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

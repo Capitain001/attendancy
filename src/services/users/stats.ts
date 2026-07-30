@@ -1,7 +1,5 @@
-export type UserRoleStats = {
-  total: number
-  direction: number
-  teachers: number
-  students: number
-  others: number
-}
+import { getUserRoleStats as _getUserRoleStats } from './database'
+
+export type UserRoleStats = Awaited<ReturnType<typeof _getUserRoleStats>>
+
+export { _getUserRoleStats as getUserRoleStats }

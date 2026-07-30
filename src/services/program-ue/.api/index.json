@@ -1,0 +1,23 @@
+{
+  "service": "program-ue",
+  "path": "src/services/program-ue/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "87fd0c8",
+  "utils_dir": null,
+  "fns": {
+    "deleteUEFromProgramAction": {
+      "f": ".api/deleteUEFromProgramAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "deleteUEFromProgramAction": [],
+    "deleteUEFromProgramByComposite": [
+      "deleteUEFromProgramAction"
+    ]
+  },
+  "deps": {
+    "deleteUEFromProgramByComposite": "program-track"
+  }
+}

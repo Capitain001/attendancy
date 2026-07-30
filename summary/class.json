@@ -1,0 +1,199 @@
+{
+  "service": "class",
+  "path": "src/services/class/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "87fd0c8",
+  "generated_at": "2026-07-29T12:17:29.246Z",
+  "fns": {
+    "createClass": {
+      "name": "createClass",
+      "file": "src/services/class/database/class.mutations.ts",
+      "sig": "(data: CreateClassOutput & { orgId: string }) => Promise<{ level: Level; name: string; id: string; academicYearId: string; programTrackId: string; }>",
+      "composes": [
+        "getCurrentYear"
+      ],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "removeClass": {
+      "name": "removeClass",
+      "file": "src/services/class/database/class.mutations.ts",
+      "sig": "(classId: string, orgId: string) => Promise<{ level: Level; name: string; id: string; academicYearId: string; createdAt: Date; updatedAt: Date; deletedAt: Date | null; programTrackId: string; programId: string | null; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getClasses": {
+      "name": "getClasses",
+      "file": "src/services/class/database/class.queries.ts",
+      "sig": "(orgId: string, yearId?: string) => Promise<{ level: Level; name: string; academicYear: { name: string; id: string; }; id: string; _count: { studentEnrollments: number; courses: number; }; programTrack: { name: string; id: string; }; academicYearId: string; programTrackId: string; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getClass": {
+      "name": "getClass",
+      "file": "src/services/class/database/class.queries.ts",
+      "sig": "(classId: string, orgId: string) => Promise<{ level: Level; name: string; academicYear: { name: string; id: string; isCurrent: boolean; }; id: string; _count: { studentEnrollments: number; courses: number; groups: number; }; programTrack: { ...; }; programId: string | null; } | null>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getClassGroupsAction": {
+      "name": "getClassGroupsAction",
+      "file": "src/services/class/actions/class.group-actions.ts",
+      "sig": "(input: { classId: string }) => Promise<{ data: { groups: { name: string; id: string; _count: { studentGroups: number; }; description: string | null; }[]; class: { name: string; id: string; } | null; }; error?: undefined; } | { error: string; data?: undefined; }>",
+      "calls": [],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getGroupEligibleStudentsAction": {
+      "name": "getGroupEligibleStudentsAction",
+      "file": "src/services/class/actions/class.group-actions.ts",
+      "sig": "(input: { classId: string; groupId: string }) => Promise<{ data: { students: { id: string; student: { id: string; user: { firstName: string | null; lastName: string | null; }; userId: string; }; }[]; }; error?: undefined; } | { error: string; data?: undefined; }>",
+      "calls": [],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "createClassGroupAction": {
+      "name": "createClassGroupAction",
+      "file": "src/services/class/actions/class.group-actions.ts",
+      "sig": "(input: { classId: string; name: string; description?: string }) => Promise<{ error: string; data?: undefined; } | { data: GroupRow; error?: undefined; }>",
+      "calls": [],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateClassGroupAction": {
+      "name": "updateClassGroupAction",
+      "file": "src/services/class/actions/class.group-actions.ts",
+      "sig": "(input: { classId: string; groupId: string; name?: string; description?: string | null }) => Promise<{ error: string; data?: undefined; } | { data: GroupRow; error?: undefined; }>",
+      "calls": [],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "deleteClassGroupAction": {
+      "name": "deleteClassGroupAction",
+      "file": "src/services/class/actions/class.group-actions.ts",
+      "sig": "(input: { classId: string; groupId: string }) => Promise<{ error: string; data?: undefined; } | { data: true; error?: undefined; }>",
+      "calls": [],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "setGroupStudentsAction": {
+      "name": "setGroupStudentsAction",
+      "file": "src/services/class/actions/class.group-actions.ts",
+      "sig": "(input: { classId: string; groupId: string; enrollmentIds: string[] }) => Promise<{ error: string; data?: undefined; } | { data: true; error?: undefined; }>",
+      "calls": [],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "createClassAction": {
+      "name": "createClassAction",
+      "file": "src/services/class/actions/class.mutations.ts",
+      "sig": "(input: CreateClassInput) => Promise<{ error: string; data?: undefined; } | { data: { level: Level; name: string; id: string; academicYearId: string; programTrackId: string; }; error?: undefined; }>",
+      "calls": [
+        "createClass"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeClassAction": {
+      "name": "removeClassAction",
+      "file": "src/services/class/actions/class.mutations.ts",
+      "sig": "(classId: string) => Promise<{ error: string; data?: undefined; } | { data: { level: Level; name: string; id: string; academicYearId: string; createdAt: Date; updatedAt: Date; deletedAt: Date | null; programTrackId: string; programId: string | null; }; error?: undefined; }>",
+      "calls": [
+        "removeClass"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getClassesAction": {
+      "name": "getClassesAction",
+      "file": "src/services/class/actions/class.queries.ts",
+      "sig": "(yearId?: string) => Promise<{ data: { level: Level; name: string; academicYear: { name: string; id: string; }; id: string; _count: { studentEnrollments: number; courses: number; }; programTrack: { name: string; id: string; }; academicYearId: string; programTrackId: string; }[]; error?: undefined; } | { ...; }>",
+      "calls": [
+        "getClasses"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getClassAction": {
+      "name": "getClassAction",
+      "file": "src/services/class/actions/class.queries.ts",
+      "sig": "(classId: string) => Promise<{ data: { level: Level; name: string; academicYear: { name: string; id: string; isCurrent: boolean; }; id: string; _count: { studentEnrollments: number; courses: number; groups: number; }; programTrack: { ...; }; programId: string | null; } | null; error?: undefined; } | { ...; }>",
+      "calls": [
+        "getClass"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createClass": [
+      "createClassAction"
+    ],
+    "removeClass": [
+      "removeClassAction"
+    ],
+    "getClasses": [
+      "getClassesAction"
+    ],
+    "getClass": [
+      "getClassAction"
+    ],
+    "getClassGroupsAction": [],
+    "getGroupEligibleStudentsAction": [],
+    "createClassGroupAction": [],
+    "updateClassGroupAction": [],
+    "deleteClassGroupAction": [],
+    "setGroupStudentsAction": [],
+    "createClassAction": [],
+    "removeClassAction": [],
+    "getClassesAction": [],
+    "getClassAction": [],
+    "getCurrentYear": [
+      "createClass"
+    ]
+  },
+  "deps": {
+    "getCurrentYear": "academic-year"
+  }
+}

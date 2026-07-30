@@ -1,0 +1,11 @@
+{
+  "name": "removeDepartmentAction",
+  "file": "src/services/department/actions/department.mutations.ts",
+  "sig": "(departmentId: string) => Promise<{ success: boolean; error?: string }>",
+  "calls": [
+    "deleteDepartmentAction"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

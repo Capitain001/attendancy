@@ -1,0 +1,8 @@
+{
+  "name": "createAcademicYear",
+  "file": "src/services/academic-year/database/academic-year.mutations.ts",
+  "sig": "(data: CreateAcademicYearOutput & { orgId: string }) => Promise<{ name: string; id: string; startDate: Date; endDate: Date; isCurrent: boolean; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,9 @@
+{
+  "name": "filterAvailabilityAction",
+  "file": "src/services/planning/conflict/actions.ts",
+  "sig": "(params: FilterAvailabilityActionParams) => Promise<{ data: FilterAvailabilityResponse } | { error: string }>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

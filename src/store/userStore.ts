@@ -1,17 +1,14 @@
-// src/store/userStore.ts
-// Store Zustand persisté du user courant — pattern de référence.
-// Quand utiliser un store vs React Query vs RSC : voir STORE_CONTEXT.md.
-'use client'
+"use client"
 
-import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware'
-import type { UserInfo } from '@/services/user/types'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
+import type { UserInfo } from "@/services/user/types"
 
 interface UserState {
-  user: Partial<UserInfo> | null
+  user: UserInfo | null
   isLoading: boolean
   error: string | null
-
+  
   setUser: (user: Partial<UserInfo> | null) => void
   setLoading: (loading: boolean) => void
   setError: (error: string | null) => void
@@ -24,15 +21,30 @@ export const useUserStore = create<UserState>()(
       user: null,
       isLoading: false,
       error: null,
+      //@ts-ignore
       setUser: (user) => set({ user }),
       setLoading: (isLoading) => set({ isLoading }),
       setError: (error) => set({ error }),
-      clear: () => set({ user: null, error: null, isLoading: false }),
+      clear: () => set({ 
+        user: null, 
+        error: null, 
+        isLoading: false 
+      }),
     }),
     {
-      name: 'user-storage',
-      // localStorage : persiste entre sessions navigateur.
-      storage: createJSONStorage(() => localStorage),
+      name: "user-storage",
+      storage: {
+        getItem: (name) => {
+          const str = localStorage.getItem(name) // ← localStorage pour persistance longue
+          return str ? JSON.parse(str) : null
+        },
+        setItem: (name, value) => {
+          localStorage.setItem(name, JSON.stringify(value))
+        },
+        removeItem: (name) => {
+          localStorage.removeItem(name)
+        },
+      },
     }
   )
 )

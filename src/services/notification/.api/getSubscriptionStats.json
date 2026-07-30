@@ -1,0 +1,8 @@
+{
+  "name": "getSubscriptionStats",
+  "file": "src/services/notification/database/push.queries.ts",
+  "sig": "() => Promise<{ totalSubscriptions: number; activeSubscriptions: number; expiredSubscriptions: number; uniqueUsers: number; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

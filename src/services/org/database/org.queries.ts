@@ -1,6 +1,6 @@
 // src/services/org/database/org.queries.ts
 // Lectures Prisma du service org — Prisma pur, AUCUNE auth ici.
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import type { OrgDetails } from '../types'
 
 export async function getOrganizationById(id: string) {
@@ -46,7 +46,7 @@ export async function getOrgDailyMetrics(orgId: string) {
 
   const [activeSessions, todaySchedules, todayAbsences, completedSchedules] = await Promise.all([
     prisma.session.count({
-      where: { status: 'ACTIVE', deletedAt: null, schedule: { orgId, deletedAt: null } },
+      where: { status: 'ACTIVE', schedule: { orgId, deletedAt: null } },
     }),
     prisma.schedule.count({
       where: { orgId, deletedAt: null, startTime: { gte: dayStart, lte: dayEnd } },
@@ -54,7 +54,6 @@ export async function getOrgDailyMetrics(orgId: string) {
     prisma.attendance.count({
       where: {
         status: 'ABSENT',
-        deletedAt: null,
         schedule: { orgId, deletedAt: null, startTime: { gte: dayStart, lte: dayEnd } },
       },
     }),
@@ -89,7 +88,7 @@ export async function getOrgResourcesCounts(orgId: string) {
       where: {
         deletedAt: null,
         studentEnrollments: {
-          some: { deletedAt: null, class: { academicYear: { orgId } } },
+          some: { endedAt: null, class: { academicYear: { orgId } } },
         },
       },
     }),

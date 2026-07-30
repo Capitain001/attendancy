@@ -1,0 +1,8 @@
+{
+  "name": "getExpectedAttendees",
+  "file": "src/services/attendance/database/attendance.queries.ts",
+  "sig": "(scheduleId: string, tx: Prisma.TransactionClient = prisma) => Promise<{ studentId: string; enrollmentId: string; userId: string; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

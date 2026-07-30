@@ -1,0 +1,8 @@
+{
+  "name": "getDepartments",
+  "file": "src/services/department/database/department.queries.ts",
+  "sig": "(orgId: string) => Promise<{ name: string; id: string; _count: { programTracks: number; teachers: number; ues: number; }; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

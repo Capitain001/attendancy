@@ -1,0 +1,11 @@
+{
+  "name": "getTeachersAction",
+  "file": "src/services/teacher/actions/teacher.queries.ts",
+  "sig": "(departmentId?: string) => Promise<{ data: { id: string; departmentId: string | null; department: { name: string; id: string; } | null; user: { id: string; firstName: string | null; lastName: string | null; email: string; avatar_url: string | null; status: UserStatus; }; _count: { ...; }; }[]; error?: undefined; } | { ...; }>",
+  "calls": [
+    "getTeachers"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

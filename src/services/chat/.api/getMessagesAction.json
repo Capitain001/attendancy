@@ -1,0 +1,11 @@
+{
+  "name": "getMessagesAction",
+  "file": "src/services/chat/actions/message.queries.ts",
+  "sig": "(channelId: string) => Promise<{ data: { id: string; content: string; createdAt: Date; updatedAt: Date; user: { id: string; firstName: string | null; lastName: string | null; avatar_url: string | null; } | null; channelId: string; parentId: string | null; }[]; error?: undefined; } | { ...; }>",
+  "calls": [
+    "getMessages"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -38,12 +38,12 @@ export function useDirectionActions({ organizationId, onSuccess }: UseDirectionA
       return { previousMembers };
     },
     onSuccess: (result) => {
-      if (result.success) {
-        toast.success(result.message || "Fonctions assignées avec succès");
+      if ('error' in result) {
+        toast.error(result.error || "Erreur lors de l'assignation des fonctions");
+      } else {
+        toast.success("Fonctions assignées avec succès");
         queryClient.invalidateQueries({ queryKey });
         onSuccess?.();
-      } else {
-        toast.error(result.error || "Erreur lors de l'assignation des fonctions");
       }
     },
     onError: (error, params, context) => {
@@ -68,12 +68,12 @@ export function useDirectionActions({ organizationId, onSuccess }: UseDirectionA
       return { previousMembers };
     },
     onSuccess: (result) => {
-      if (result.success) {
-        toast.success(result.message || "Fonctions révoquées avec succès");
+      if ('error' in result) {
+        toast.error(result.error || "Erreur lors de la révocation des fonctions");
+      } else {
+        toast.success("Fonctions révoquées avec succès");
         queryClient.invalidateQueries({ queryKey });
         onSuccess?.();
-      } else {
-        toast.error(result.error || "Erreur lors de la révocation des fonctions");
       }
     },
     onError: (error, params, context) => {
@@ -97,12 +97,12 @@ export function useDirectionActions({ organizationId, onSuccess }: UseDirectionA
       return { previousMembers };
     },
     onSuccess: (result) => {
-      if (result.success) {
-        toast.success(result.message || "Fonctions mises à jour avec succès");
+      if ('error' in result) {
+        toast.error(result.error || "Erreur lors de la mise à jour des fonctions");
+      } else {
+        toast.success("Fonctions mises à jour avec succès");
         queryClient.invalidateQueries({ queryKey });
         onSuccess?.();
-      } else {
-        toast.error(result.error || "Erreur lors de la mise à jour des fonctions");
       }
     },
     onError: (error, params, context) => {
@@ -130,12 +130,12 @@ export function useDirectionActions({ organizationId, onSuccess }: UseDirectionA
       return { previousMembers };
     },
     onSuccess: (result) => {
-      if (result.success) {
-        toast.success(result.message || "Membre supprimé avec succès");
+      if ('error' in result) {
+        toast.error(result.error || "Erreur lors de la suppression");
+      } else {
+        toast.success("Membre supprimé avec succès");
         queryClient.invalidateQueries({ queryKey });
         onSuccess?.();
-      } else {
-        toast.error(result.error || "Erreur lors de la suppression");
       }
     },
     onError: (error, directionId, context) => {

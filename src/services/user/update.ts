@@ -1,8 +1,5 @@
 // src/services/user/update.ts
-// Utilitaires de mise à jour des métadonnées Supabase de l'utilisateur courant.
-// Ces fonctions s'exécutent côté serveur (Server Actions / Route Handlers).
-// Toute écriture dans user_metadata DOIT passer ici pour garantir l'invalidation
-// du cache LRU après la mutation.
+
 import { createClient, createAdminClient } from '@/utils/supabase/server'
 import type { UserMetadata, Role, UserStatus } from './types'
 import { getUserInfo } from './userInfo'
@@ -10,6 +7,7 @@ import { removeUser } from './lru-cache'
 import { updateOrganizationsProfile } from './profile'
 
 // ── Primitives ────────────────────────────────────────────────────────────────
+
 
 // Merge partiel — seuls les champs fournis sont mis à jour, les autres préservés.
 // C'est la fonction de base pour toutes les mutations de session.
@@ -29,8 +27,12 @@ export async function cleanUserMetadata(userId: string, user_metadata: UserMetad
   const { data, error } = await supabase.auth.admin.updateUserById(userId, { user_metadata })
   if (error) return { error: error.message }
   removeUser(userId)
+  
+
   return { data: { user: data.user } }
 }
+
+
 
 // Mise à jour best-effort des metadata d'un utilisateur tiers (hors transaction).
 // Échec loggé sans throw — ne pas bloquer une mutation principale pour ça.
@@ -61,34 +63,52 @@ export async function setCurrentOrganization(orgId: string) {
   return targetOrg
 }
 
-// ── Synchronisation du profil de rôle ────────────────────────────────────────
+/* =========================
+   SYNCHRONISATION DU PROFIL DE RÔLE
+========================= */
 
-// Injecte l'ID du profil métier (teacherId, studentId…) dans les metadata Supabase
-// après la création d'une entité de rôle.
-// Appelé depuis completeSignup et toute action qui crée un profil métier.
+/**
+ * Met à jour les metadata Supabase après la création d'une entité métier
+ * (Teacher, Student, Parent, Direction) pour y injecter l'ID du profil.
+ *
+ * Met à jour simultanément :
+ * - `organizations` : le tableau complet avec le bon profileId injecté
+ * - `organization`  : l'organisation courante synchronisée
+ * - `status`        : optionnel, ex: "ACTIVE" après acceptance d'invitation
+ *
+ * Cas d'usage : completeSignup, création admin, réassignation de rôle,
+ * migration de metadata, switch d'organisation avec changement de rôle.
+ * @example
+ * await syncUserOrganizationProfile({
+ *   orgId: "org-uuid",
+ *   role: "TEACHER",
+ *   profileId: teacher.id,
+ *   status: "ACTIVE",
+ * })
+ */
 export async function syncUserOrganizationProfile({
   orgId,
   role,
   profileId,
   status,
 }: {
-  orgId: string
-  role: Role
-  profileId?: string
-  status?: string
+  orgId: string;
+  role: Role;
+  profileId?: string;
+  status?: UserStatus;
 }) {
-  const user = await getUserInfo()
+  const currentUser = await getUserInfo();
 
   const updatedOrgs = updateOrganizationsProfile(
-    user?.organizations ?? [],
+    currentUser?.organizations ?? [],
     orgId,
     role,
     profileId
-  )
+  );
 
   await setUserInfo({
-    ...(status ? { status: status as UserStatus } : {}),
+    ...(status && { status }),
     organizations: updatedOrgs,
-    organization: updatedOrgs.find((o) => o.id === orgId),
-  })
+    organization: updatedOrgs.find((org) => org.id === orgId),
+  });
 }

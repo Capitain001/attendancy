@@ -1,6 +1,6 @@
 // src/services/program/database/index.ts
 import { cacheTag, cacheLife } from 'next/cache'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { CACHE, invalidateEvent } from '@/cache/server/key'
 import { tryConstraint } from '@/utils/server/prisma'
 

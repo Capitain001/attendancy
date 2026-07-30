@@ -1,0 +1,11 @@
+{
+  "name": "getTeacherUnavailabilitiesAction",
+  "file": "src/services/teacher-unavailability/actions/teacher-unavailability.queries.ts",
+  "sig": "(teacherId: string) => Promise<{ data: { id: string; type: UnavailabilityType; dayOfWeek: number | null; startTime: string | null; endTime: string | null; startDate: Date | null; endDate: Date | null; reason: string | null; createdAt: Date; }[]; error?: undefined; } | { ...; }>",
+  "calls": [
+    "getTeacherUnavailabilities"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

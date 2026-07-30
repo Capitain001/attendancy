@@ -1,0 +1,11 @@
+{
+  "name": "getOrganizationBySlug",
+  "file": "src/services/org/actions/org.mutations.ts",
+  "sig": "(slug: string) => Promise<{ organization: { id: string; name: string; email: string | null; slug: string | null; logo: string | null; domain: string | null; } | null; }>",
+  "calls": [
+    "getOrgBySlug"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

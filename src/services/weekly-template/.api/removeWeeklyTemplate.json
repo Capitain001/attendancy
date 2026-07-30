@@ -1,0 +1,8 @@
+{
+  "name": "removeWeeklyTemplate",
+  "file": "src/services/weekly-template/database/weekly-template.mutations.ts",
+  "sig": "(id: string, orgId: string) => Promise<void>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

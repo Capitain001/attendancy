@@ -1,0 +1,8 @@
+{
+  "name": "getTeacherSchedules",
+  "file": "src/services/teacher/database/teacher.queries.ts",
+  "sig": "(teacherId: string, orgId: string, rangeStart: Date, rangeEnd: Date) => Promise<{ id: string; status: ScheduleStatus; room: { name: string; id: string; }; class: { name: string; id: string; }; group: { name: string; id: string; } | null; course: { name: string; id: string; }; startTime: Date; endTime: Date; notes: string | null; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

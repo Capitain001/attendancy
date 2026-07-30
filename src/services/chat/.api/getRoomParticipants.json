@@ -1,0 +1,8 @@
+{
+  "name": "getRoomParticipants",
+  "file": "src/services/chat/database/message.queries.ts",
+  "sig": "(channelId: string) => Promise<{ user: { id: string; firstName: string | null; lastName: string | null; avatar_url: string | null; }; userId: string; role: ParticipantRole; joinedAt: Date; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

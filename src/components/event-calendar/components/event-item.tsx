@@ -92,7 +92,7 @@ interface EventItemProps {
   isDragging?: boolean;
   onClick?: (e: React.MouseEvent) => void;
   showTime?: boolean;
-  currentTime?: Date;
+  currentTime?: Date; 
   isFirstDay?: boolean;
   isLastDay?: boolean;
   children?: React.ReactNode;

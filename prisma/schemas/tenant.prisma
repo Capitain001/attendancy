@@ -55,6 +55,7 @@ model User {
   qrScans             QRScan[]
   student             Student[]
   teacher             Teacher[]
+  assignedFunctions   UserFunction[]     @relation("UserFunctionAssigner")
   functions           UserFunction[]
   userOrganizations   UserOrganization[]
 
@@ -161,7 +162,7 @@ model UserOrganization {
   updatedAt     DateTime     @updatedAt
   isResponsable Boolean      @default(false)
   departmentId  String?      @db.Uuid
-  department    Department?  @relation(fields: [departmentId], references: [id])
+  department    Department?  @relation(fields: [departmentId], references: [id], onDelete: SetNull)
   organization  Organization @relation(fields: [orgId], references: [id])
   user          User         @relation(fields: [userId], references: [id])
 
@@ -195,10 +196,11 @@ model UserFunction {
   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId     String   @db.Uuid
   functionId String   @db.Uuid
-  assignedAt DateTime @default(now())
-  assignedBy String?  @db.Uuid
-  function   Function @relation(fields: [functionId], references: [id], onDelete: Cascade)
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignedAt     DateTime  @default(now())
+  assignedBy     String?   @db.Uuid
+  function       Function  @relation(fields: [functionId], references: [id], onDelete: Cascade)
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignedByUser User?     @relation("UserFunctionAssigner", fields: [assignedBy], references: [id], onDelete: SetNull)
 
   @@unique([userId, functionId])
   @@schema("public")
@@ -221,9 +223,9 @@ model Permission {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   orgId        String?       @db.Uuid
-  assignedBy   User?         @relation("PermissionAssigner", fields: [assignedById], references: [id])
+  assignedBy   User?         @relation("PermissionAssigner", fields: [assignedById], references: [id], onDelete: Cascade)
   function     Function?     @relation(fields: [functionId], references: [id])
-  organization Organization? @relation(fields: [orgId], references: [id])
+  organization Organization? @relation(fields: [orgId], references: [id], onDelete: Cascade)
   user         User?         @relation("PermissionReceiver", fields: [userId], references: [id])
 
   // Unicités gérées par index UNIQUE NULLS NOT DISTINCT (PG15+) en post-migrate
@@ -256,7 +258,7 @@ model Invitation {
   resourceId     String?        @db.Uuid
   resourceType   Resource?
   organization   Organization   @relation(fields: [orgId], references: [id])
-  user           User?          @relation(fields: [userId], references: [id])
+  user           User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([orgId])
   @@index([resourceId])
@@ -284,7 +286,7 @@ model Document {
   deletedAt    DateTime?
 
   organization Organization @relation(fields: [orgId], references: [id])
-  uploadedBy   User?        @relation("DocumentUploader", fields: [uploadedById], references: [id])
+  uploadedBy   User?        @relation("DocumentUploader", fields: [uploadedById], references: [id], onDelete: SetNull)
 
   @@index([orgId])
   @@index([resourceType, resourceId])
@@ -294,9 +296,11 @@ model Document {
 // Journal immuable de traçabilité métier (≠ analytics produit, externalisées).
 // resource en String : historique durable, modules futurs libres sans toucher
 // l'enum. Typage applicatif : AuditResource = Resource | (string & {}).
+// userId nullable + SetNull : la ligne d'audit survit à la suppression du user
+// (RGPD / erasure), seule l'identité de l'acteur est dissociée.
 model AuditLog {
   id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId       String        @db.Uuid
+  userId       String?       @db.Uuid
   action       Action
   resource     String? // "STUDENT", "COURSE", "GRADE"…
   resourceId   String?
@@ -305,8 +309,8 @@ model AuditLog {
   userAgent    String?
   createdAt    DateTime      @default(now())
   orgId        String?       @db.Uuid
-  organization Organization? @relation(fields: [orgId], references: [id])
-  user         User          @relation(fields: [userId], references: [id])
+  organization Organization? @relation(fields: [orgId], references: [id], onDelete: SetNull)
+  user         User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([resource, resourceId])
@@ -341,7 +345,7 @@ model ApprovalRequest {
 
   organization Organization @relation(fields: [orgId], references: [id])
   requestedBy  User         @relation("ApprovalRequestedBy", fields: [requestedById], references: [id])
-  reviewedBy   User?        @relation("ApprovalReviewedBy", fields: [reviewedById], references: [id])
+  reviewedBy   User?        @relation("ApprovalReviewedBy", fields: [reviewedById], references: [id], onDelete: SetNull)
 
   @@index([orgId, status])
   @@index([resourceType, resourceId])
@@ -373,7 +377,6 @@ enum UserStatus {
 enum Role {
   ADMIN
   TEACHER
-  SUPER_ADMIN
   STUDENT
   PARENT
   DIRECTION
@@ -415,7 +418,7 @@ enum Resource {
 enum InvitationType {
   DIRECT_CREATE
   INVITE_ONLY
-  STUDENT
+  
 
   @@schema("public")
 }

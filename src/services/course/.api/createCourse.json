@@ -1,0 +1,8 @@
+{
+  "name": "createCourse",
+  "file": "src/services/course/database/course.mutations.ts",
+  "sig": "(data: CreateCourseOutput & { orgId: string }) => Promise<{ name: string; id: string; credits: number; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,172 @@
+{
+  "service": "org",
+  "path": "src/services/org/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "87fd0c8",
+  "utils_dir": null,
+  "fns": {
+    "createOrgWithDefaults": {
+      "f": ".api/createOrgWithDefaults.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateOrganization": {
+      "f": ".api/updateOrganization.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "setOrgDetails": {
+      "f": ".api/setOrgDetails.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateOrgLogo": {
+      "f": ".api/updateOrgLogo.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "setMemberStatusWithAudit": {
+      "f": ".api/setMemberStatusWithAudit.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getOrganizationById": {
+      "f": ".api/getOrganizationById.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrgIdentity": {
+      "f": ".api/getOrgIdentity.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrgUsage": {
+      "f": ".api/getOrgUsage.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrgDetails": {
+      "f": ".api/getOrgDetails.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrgDailyMetrics": {
+      "f": ".api/getOrgDailyMetrics.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrgBySlug": {
+      "f": ".api/getOrgBySlug.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrgResourcesCounts": {
+      "f": ".api/getOrgResourcesCounts.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createOrgAction": {
+      "f": ".api/createOrgAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateOrgIdentityAction": {
+      "f": ".api/updateOrgIdentityAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "setOrgDetailsAction": {
+      "f": ".api/setOrgDetailsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "setMemberStatusAction": {
+      "f": ".api/setMemberStatusAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getOrgIdentityAction": {
+      "f": ".api/getOrgIdentityAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getOrgUsageAction": {
+      "f": ".api/getOrgUsageAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getOrgDetailsAction": {
+      "f": ".api/getOrgDetailsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getOrgDailyMetricsAction": {
+      "f": ".api/getOrgDailyMetricsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getOrganizationBySlug": {
+      "f": ".api/getOrganizationBySlug.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateOrganizationLogo": {
+      "f": ".api/updateOrganizationLogo.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getOrgResourcesCountsAction": {
+      "f": ".api/getOrgResourcesCountsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createOrgWithDefaults": [
+      "createOrgAction"
+    ],
+    "updateOrganization": [
+      "updateOrgIdentityAction"
+    ],
+    "setOrgDetails": [
+      "setOrgDetailsAction"
+    ],
+    "updateOrgLogo": [
+      "updateOrganizationLogo"
+    ],
+    "setMemberStatusWithAudit": [
+      "setMemberStatusAction"
+    ],
+    "getOrganizationById": [],
+    "getOrgIdentity": [
+      "getOrgIdentityAction"
+    ],
+    "getOrgUsage": [
+      "getOrgUsageAction"
+    ],
+    "getOrgDetails": [
+      "getOrgDetailsAction"
+    ],
+    "getOrgDailyMetrics": [
+      "getOrgDailyMetricsAction"
+    ],
+    "getOrgBySlug": [
+      "getOrganizationBySlug"
+    ],
+    "getOrgResourcesCounts": [
+      "getOrgResourcesCountsAction"
+    ],
+    "createOrgAction": [],
+    "updateOrgIdentityAction": [],
+    "setOrgDetailsAction": [],
+    "setMemberStatusAction": [],
+    "getOrgIdentityAction": [],
+    "getOrgUsageAction": [],
+    "getOrgDetailsAction": [],
+    "getOrgDailyMetricsAction": [],
+    "getOrganizationBySlug": [],
+    "updateOrganizationLogo": [],
+    "getOrgResourcesCountsAction": []
+  },
+  "deps": {}
+}

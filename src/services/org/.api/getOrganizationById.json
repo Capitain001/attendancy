@@ -1,0 +1,8 @@
+{
+  "name": "getOrganizationById",
+  "file": "src/services/org/database/org.queries.ts",
+  "sig": "(id: string) => Promise<({ settings: { id: string; updatedAt: Date; settings: JsonValue; orgId: string; maxUsers: number; storageLimit: bigint; maxCourses: number | null; maxRooms: number | null; ... 7 more ...; breakDuration: number; } | null; usage: { ...; } | null; } & { ...; }) | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

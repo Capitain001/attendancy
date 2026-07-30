@@ -28,7 +28,7 @@ interface CalendarWeekProps {
 
 /**
  * Composant représentant une semaine complète dans le calendrier mensuel
- *
+ * 
  * Ce composant gère :
  * - L'affichage d'une rangée de 7 jours
  * - La transmission des props nécessaires à chaque jour

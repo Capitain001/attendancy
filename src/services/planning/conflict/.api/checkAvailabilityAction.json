@@ -1,0 +1,9 @@
+{
+  "name": "checkAvailabilityAction",
+  "file": "src/services/planning/conflict/actions.ts",
+  "sig": "(params: CheckAvailabilityActionParams) => Promise<{ data: NonNullable<CheckAvailabilityResult['data']> } | { error: string }>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

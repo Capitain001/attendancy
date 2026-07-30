@@ -1,0 +1,8 @@
+{
+  "name": "removeFunctionFromUser",
+  "file": "src/services/function/database/function.mutations.ts",
+  "sig": "(params: { userId: string functionId: string orgId: string }) => Promise<void>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,48 @@
+{
+  "service": "planning/conflict",
+  "path": "src/services/planning/conflict/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "87fd0c8",
+  "generated_at": "2026-07-29T12:17:29.346Z",
+  "fns": {
+    "checkAvailabilityAction": {
+      "name": "checkAvailabilityAction",
+      "file": "src/services/planning/conflict/actions.ts",
+      "sig": "(params: CheckAvailabilityActionParams) => Promise<{ data: NonNullable<CheckAvailabilityResult['data']> } | { error: string }>",
+      "calls": [],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "checkConflictsAction": {
+      "name": "checkConflictsAction",
+      "file": "src/services/planning/conflict/actions.ts",
+      "sig": "(params: CheckConflictsActionParams) => Promise<{ data: ConflictReportDto; error?: undefined; } | { error: string; data?: undefined; }>",
+      "calls": [],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "filterAvailabilityAction": {
+      "name": "filterAvailabilityAction",
+      "file": "src/services/planning/conflict/actions.ts",
+      "sig": "(params: FilterAvailabilityActionParams) => Promise<{ data: FilterAvailabilityResponse } | { error: string }>",
+      "calls": [],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "checkAvailabilityAction": [],
+    "checkConflictsAction": [],
+    "filterAvailabilityAction": []
+  },
+  "deps": {}
+}

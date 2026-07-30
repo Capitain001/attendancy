@@ -1,0 +1,8 @@
+{
+  "name": "toggleLocationActive",
+  "file": "src/services/room/database/room.mutations.ts",
+  "sig": "(id: string, orgId: string) => Promise<{ id: string; active: boolean; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

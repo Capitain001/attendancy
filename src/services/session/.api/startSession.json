@@ -1,0 +1,8 @@
+{
+  "name": "startSession",
+  "file": "src/services/session/database/session.mutations.ts",
+  "sig": "(scheduleId: string, coords: { lat: number; lng: number } | null) => Promise<{ sessionId: string; checkIn: Date; isLate: boolean; locationId: string | null; checkInMethod: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

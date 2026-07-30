@@ -1,0 +1,8 @@
+{
+  "name": "removeUECourse",
+  "file": "src/services/ue-course/database/ue-course.mutations.ts",
+  "sig": "(ueCourseId: string, orgId: string) => Promise<{ id: string; ueId: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

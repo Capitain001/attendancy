@@ -3,10 +3,10 @@
 
 import { getUserInfo } from "@/services/user";
 import { getAuthorization } from "./autorization";
-import type { UserInfo, Role, FunctionName } from "@/services/user/types";
+import type { UserInfo, Role, Functions } from "@/services/user/types";
 import { ERRORS } from "@/config";
 
-type Functions = FunctionName;
+type FunctionName = Functions;
 
 const AUTH_ERROR = ERRORS.AUTH.UNAUTHORIZED;
 

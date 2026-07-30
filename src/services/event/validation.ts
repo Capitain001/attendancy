@@ -1,7 +1,7 @@
 import * as v from 'valibot'
 
 const EventTypeEnum = v.picklist(['MEETING', 'EXAM', 'COURSE', 'GENERAL', 'ADMINISTRATIVE'])
-const RoleEnum = v.picklist(['ADMIN', 'DIRECTION', 'TEACHER', 'STUDENT', 'PARENT', 'SUPER_ADMIN'])
+const RoleEnum = v.picklist(['ADMIN', 'DIRECTION', 'TEACHER', 'STUDENT', 'PARENT'])
 
 export const createEventSchema = v.object({
   title:       v.pipe(v.string(), v.trim(), v.minLength(1, 'Titre requis'), v.maxLength(200)),

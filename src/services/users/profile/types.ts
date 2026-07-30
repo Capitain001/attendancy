@@ -1,28 +1,5 @@
-export interface FunctionProfile {
-  id: string
-  userId: string
-  functionId: string
-  user: {
-    id: string
-    firstName: string | null
-    lastName: string | null
-    email: string
-    avatar_url: string | null
-  }
-  function: {
-    id: string
-    name: string
-    description: string | null
-    icon: string | null
-  }
-  assignedAt: Date
-}
+import type { getUserProfile, getUsersByRoles, getFunctionProfiles } from '../database'
 
-export interface UserProfile {
-  id: string
-  firstName: string | null
-  lastName: string | null
-  email: string
-  avatar_url: string | null
-  functions: FunctionProfile[]
-}
+export type UserProfile      = NonNullable<Awaited<ReturnType<typeof getUserProfile>>>
+export type UserProfileList  = Awaited<ReturnType<typeof getUsersByRoles>>
+export type FunctionProfile  = Awaited<ReturnType<typeof getFunctionProfiles>>[number]

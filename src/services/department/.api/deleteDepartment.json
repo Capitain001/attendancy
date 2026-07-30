@@ -1,0 +1,8 @@
+{
+  "name": "deleteDepartment",
+  "file": "src/services/department/database/department.mutations.ts",
+  "sig": "(departmentId: string, orgId: string) => Promise<void>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

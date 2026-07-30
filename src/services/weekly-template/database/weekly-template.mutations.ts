@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { invalidateEvent } from '@/cache/server/key'
 
 export async function createWeeklyTemplate(orgId: string, name: string) {

@@ -1,0 +1,8 @@
+{
+  "name": "unassignFunction",
+  "file": "src/services/fonctions/user/database/userfunction.mutations.ts",
+  "sig": "(userId: string, functionId: string) => Promise<BatchPayload>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

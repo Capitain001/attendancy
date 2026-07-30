@@ -1,0 +1,8 @@
+{
+  "name": "getMainFunctionsUser",
+  "file": "src/services/fonctions/database/fonctions.queries.ts",
+  "sig": "(orgId: string) => Promise<{ id: string; name: string; description: string | null; isMain: boolean; createdAt: Date; updatedAt: Date; icon: string | null; users: { assignedAt: Date; assignedBy: string | null; user: { ...; }; }[]; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

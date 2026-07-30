@@ -1,5 +1,5 @@
 // src/services/schedule/database/schedule.mutations.ts
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
 import { invalidateEvent } from '@/cache/server/key'
 import type { CreateScheduleOutput } from '../validation'
@@ -99,4 +99,26 @@ export async function removeSchedule(scheduleId: string, orgId: string) {
     data:  { deletedAt: new Date() },
   })
   await invalidateEvent('SCHEDULE_REMOVED', orgId, existing.classId)
+}
+
+export async function restoreSchedule(scheduleId: string, orgId: string) {
+  const existing = await prisma.schedule.findFirst({
+    where: { id: scheduleId, orgId },
+    select: {
+      classId: true,
+      course:   { select: { id: true, name: true } },
+      room:     { select: { id: true, name: true } },
+      class:    { select: { id: true, name: true } },
+      group:    { select: { id: true, name: true } },
+      teacher:  { select: { id: true, user: { select: { firstName: true, lastName: true, avatar_url: true } } } },
+    },
+  })
+  if (!existing) throw new Error('Séance introuvable')
+
+  await prisma.schedule.update({
+    where: { id: scheduleId },
+    data:  { deletedAt: null },
+  })
+  await invalidateEvent('SCHEDULE_CREATED', orgId, existing.classId)
+  return existing
 }

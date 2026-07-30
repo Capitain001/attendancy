@@ -1,0 +1,8 @@
+{
+  "name": "getCoursesByClass",
+  "file": "src/services/course/database/course.queries.ts",
+  "sig": "(classId: string, orgId: string) => Promise<{ name: string; id: string; durationDone: number; durationTotal: number; credits: number; termId: string | null; ueCourse: { name: string; id: string; code: string | null; }; teachers: { id: string; isMain: boolean; hours: number | null; teacher: { ...; } | null; }[]; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

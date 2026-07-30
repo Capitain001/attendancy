@@ -1,5 +1,7 @@
 import type { SerializedPushSubscription } from './user'
 
+// ─── Conversions VAPID ────────────────────────────────────────────────────────
+
 export function urlBase64ToUint8Array(base64String: string): Uint8Array {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
   const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
@@ -17,4 +19,28 @@ export function serializeSubscription(subscription: PushSubscription): Serialize
     },
     expirationTime: subscription.expirationTime,
   }
+}
+
+// ─── Détection navigateur ─────────────────────────────────────────────────────
+
+export function checkBrowserSupport(): boolean {
+  return (
+    typeof window !== 'undefined' &&
+    'Notification' in window &&
+    'serviceWorker' in navigator &&
+    'PushManager' in window
+  )
+}
+
+export function validateHTTPS(): boolean {
+  return (
+    typeof window === 'undefined' ||
+    window.location.protocol === 'https:' ||
+    window.location.hostname === 'localhost'
+  )
+}
+
+export function getCurrentPermission(): NotificationPermission {
+  if (typeof window === 'undefined' || !('Notification' in window)) return 'default'
+  return Notification.permission
 }

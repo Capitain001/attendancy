@@ -1,0 +1,11 @@
+{
+  "name": "updateEventAction",
+  "file": "src/services/event/actions/event.mutations.ts",
+  "sig": "(eventId: string, input: UpdateEventInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "calls": [
+    "updateEvent"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

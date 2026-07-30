@@ -1,0 +1,9 @@
+{
+  "name": "generateMagicLinkAction",
+  "file": "src/services/invite/actions/invite.mutations.ts",
+  "sig": "(invitation: { id: string; email: string }) => Promise<InvitationActionResult>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

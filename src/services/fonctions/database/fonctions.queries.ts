@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 
 export async function getFunctions({ orgId, isMain }: { orgId: string; isMain?: boolean }) {
   return prisma.function.findMany({

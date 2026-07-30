@@ -1,0 +1,11 @@
+{
+  "name": "getUsersByFunctionAction",
+  "file": "src/services/fonctions/user/actions/userfunction.ts",
+  "sig": "(functionId: string) => Promise<{ data: ({ user: { id: string; firstName: string | null; lastName: string | null; email: string; }; } & { id: string; assignedAt: Date; userId: string; functionId: string; assignedBy: string | null; })[]; error?: undefined; } | { ...; }>",
+  "calls": [
+    "getUsersByFunction"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

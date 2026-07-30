@@ -6,7 +6,7 @@ import type { ScheduleStatus } from '@/generated/prisma'
 import { CACHE_KEYS, QUERY_PRESETS } from '@/cache/client/key'
 import { getPlanningRange } from './utils'
 import { getOrgPlanningResourcesAction } from './actions'
-import type { OrgPlanningResources } from './database'
+import type { OrgPlanningResources } from './types'
 
 export interface PlanningScheduleFilters {
   date:       string | null

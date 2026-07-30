@@ -1,0 +1,8 @@
+{
+  "name": "getPlans",
+  "file": "src/services/subscription/database/subscription.queries.ts",
+  "sig": "() => Promise<{ name: string; id: string; code: string; priceMonthly: Decimal | null; currency: string; features: JsonValue; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

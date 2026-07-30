@@ -1,0 +1,11 @@
+{
+  "name": "getFunctionAction",
+  "file": "src/services/function/actions/function.queries.ts",
+  "sig": "(name: string) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; description: string | null; isMain: boolean; icon: string | null; }; error?: undefined; }>",
+  "calls": [
+    "getFunctionByName"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

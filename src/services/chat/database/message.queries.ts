@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 
 export async function getMessages(channelId: string, limit = 50) {
   return prisma.message.findMany({

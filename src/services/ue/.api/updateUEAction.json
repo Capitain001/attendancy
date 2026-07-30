@@ -1,0 +1,11 @@
+{
+  "name": "updateUEAction",
+  "file": "src/services/ue/actions/ue.mutations.ts",
+  "sig": "({ ueId, data }: { ueId: string; data: UpdateUEData }) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; code: string | null; description: string | null; departmentId: string | null; isOptional: boolean; }; error?: undefined; }>",
+  "calls": [
+    "updateUE"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

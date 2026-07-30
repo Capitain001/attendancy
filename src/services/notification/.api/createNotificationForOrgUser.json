@@ -1,0 +1,8 @@
+{
+  "name": "createNotificationForOrgUser",
+  "file": "src/services/notification/database/notification.mutations.ts",
+  "sig": "(params: { orgId: string userId: string data: CreateNotificationOutput }) => Promise<{ id: string; message: string; type: NotificationType; read: boolean; metadata: JsonValue; createdAt: Date; updatedAt: Date; scheduleId: string | null; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

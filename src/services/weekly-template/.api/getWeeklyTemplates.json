@@ -1,0 +1,8 @@
+{
+  "name": "getWeeklyTemplates",
+  "file": "src/services/weekly-template/database/weekly-template.queries.ts",
+  "sig": "(orgId: string) => Promise<{ id: string; name: string; isActive: boolean; createdAt: Date; _count: { slots: number; }; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

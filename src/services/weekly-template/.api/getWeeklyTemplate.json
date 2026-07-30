@@ -1,0 +1,8 @@
+{
+  "name": "getWeeklyTemplate",
+  "file": "src/services/weekly-template/database/weekly-template.queries.ts",
+  "sig": "(id: string, orgId: string) => Promise<({ slots: ({ course: { id: string; name: string; }; room: { id: string; name: string; }; teacher: { id: string; user: { firstName: string | null; lastName: string | null; }; }; } & { id: string; isActive: boolean; ... 9 more ...; roomId: string; })[]; } & { ...; }) | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,8 @@
+{
+  "name": "getFunctionByName",
+  "file": "src/services/function/database/function.queries.ts",
+  "sig": "(name: string, orgId: string) => Promise<{ name: string; id: string; description: string | null; isMain: boolean; icon: string | null; } | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

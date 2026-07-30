@@ -123,7 +123,7 @@ model UE {
   isOptional   Boolean      @default(false)
   optionalUEs  OptionalUE[]
   programUEs   ProgramUE[]
-  department   Department?  @relation(fields: [departmentId], references: [id])
+  department   Department?  @relation(fields: [departmentId], references: [id], onDelete: SetNull)
   organization Organization @relation(fields: [orgId], references: [id])
   ueCourses    UECourse[]
 
@@ -179,7 +179,7 @@ model Class {
   academicYearId     String              @db.Uuid
   channels           Channel[]
   academicYear       AcademicYear        @relation(fields: [academicYearId], references: [id])
-  program            Program?            @relation(fields: [programId], references: [id])
+  program            Program?            @relation(fields: [programId], references: [id], onDelete: SetNull)
   programTrack       ProgramTrack        @relation(fields: [programTrackId], references: [id])
   courses            Course[]
   evaluations        Evaluation[]
@@ -245,7 +245,7 @@ model Course {
   termId        String?         @db.Uuid
   class         Class           @relation(fields: [classId], references: [id], onDelete: Cascade)
   organization  Organization    @relation(fields: [orgId], references: [id])
-  term          Term?           @relation(fields: [termId], references: [id])
+  term          Term?           @relation(fields: [termId], references: [id], onDelete: SetNull)
   ueCourse      UECourse        @relation(fields: [ueCourseId], references: [id])
   teachers      CourseTeacher[]
   evaluations   Evaluation[]
@@ -267,14 +267,14 @@ model Course {
 // (co-enseignement) ; isMain désigne le responsable.
 model CourseTeacher {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  teacherId String   @db.Uuid
+  teacherId String?  @db.Uuid
   isMain    Boolean  @default(false)
   courseId  String   @db.Uuid
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   hours     Int?
   course    Course   @relation(fields: [courseId], references: [id])
-  teacher   Teacher  @relation(fields: [teacherId], references: [id])
+  teacher   Teacher? @relation(fields: [teacherId], references: [id], onDelete: SetNull)
 
   @@unique([teacherId, courseId])
   @@index([courseId])

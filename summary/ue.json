@@ -1,0 +1,211 @@
+{
+  "service": "ue",
+  "path": "src/services/ue/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "87fd0c8",
+  "generated_at": "2026-07-29T12:17:29.450Z",
+  "fns": {
+    "createUE": {
+      "name": "createUE",
+      "file": "src/services/ue/database/ue.mutations.ts",
+      "sig": "(data: CreateUEOutput & { orgId: string }) => Promise<{ name: string; id: string; code: string | null; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateUE": {
+      "name": "updateUE",
+      "file": "src/services/ue/database/ue.mutations.ts",
+      "sig": "(ueId: string, orgId: string, data: UpdateUEData) => Promise<{ name: string; id: string; description: string | null; departmentId: string | null; code: string | null; isOptional: boolean; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "reorderProgram": {
+      "name": "reorderProgram",
+      "file": "src/services/ue/database/ue.mutations.ts",
+      "sig": "(programId: string, orgId: string, ueOrders: UEOrder[], courseOrders: CourseOrder[]) => Promise<void>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "removeUE": {
+      "name": "removeUE",
+      "file": "src/services/ue/database/ue.mutations.ts",
+      "sig": "(ueId: string, orgId: string) => Promise<{ id: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getUEs": {
+      "name": "getUEs",
+      "file": "src/services/ue/database/ue.queries.ts",
+      "sig": "(orgId: string, departmentId?: string) => Promise<{ name: string; id: string; department: { name: string; id: string; } | null; departmentId: string | null; code: string | null; isOptional: boolean; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getProgramUEs": {
+      "name": "getProgramUEs",
+      "file": "src/services/ue/database/ue.queries.ts",
+      "sig": "(programId: string, orgId: string) => Promise<{ id: string; ue: { name: string; id: string; department: { name: string; id: string; } | null; description: string | null; departmentId: string | null; imageUrl: string | null; code: string | null; ueCourses: { ...; }[]; }; order: number | null; semester: number; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createUEAction": {
+      "name": "createUEAction",
+      "file": "src/services/ue/actions/ue.mutations.ts",
+      "sig": "(input: { data: CreateUEInput programId?: string semester?: number order?: number }) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; code: string | null; }; error?: undefined; }>",
+      "calls": [
+        "createUE",
+        "addUEToProgram"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "archiveUEAction": {
+      "name": "archiveUEAction",
+      "file": "src/services/ue/actions/ue.mutations.ts",
+      "sig": "(ueId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "calls": [
+        "removeUE"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateUEAction": {
+      "name": "updateUEAction",
+      "file": "src/services/ue/actions/ue.mutations.ts",
+      "sig": "({ ueId, data }: { ueId: string; data: UpdateUEData }) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; description: string | null; departmentId: string | null; code: string | null; isOptional: boolean; }; error?: undefined; }>",
+      "calls": [
+        "updateUE"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "addUEToProgramAction": {
+      "name": "addUEToProgramAction",
+      "file": "src/services/ue/actions/ue.mutations.ts",
+      "sig": "(input: { ueId: string programId: string semester?: number order?: number }) => Promise<{ error: string; data?: undefined; } | { data: { id: string; order: number | null; semester: number; }; error?: undefined; }>",
+      "calls": [
+        "addUEToProgram"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "reorderProgramAction": {
+      "name": "reorderProgramAction",
+      "file": "src/services/ue/actions/ue.mutations.ts",
+      "sig": "({ programId, ueOrders, courseOrders }: ReorderProgramPayload) => Promise<{ error: string; data?: undefined; } | { data: boolean; error?: undefined; }>",
+      "calls": [
+        "reorderProgram"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getUEsAction": {
+      "name": "getUEsAction",
+      "file": "src/services/ue/actions/ue.queries.ts",
+      "sig": "(departmentId?: string) => Promise<{ data: { name: string; id: string; department: { name: string; id: string; } | null; departmentId: string | null; code: string | null; isOptional: boolean; }[]; error?: undefined; } | { error: string; data?: undefined; }>",
+      "calls": [
+        "getUEs"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getProgramUEsAction": {
+      "name": "getProgramUEsAction",
+      "file": "src/services/ue/actions/ue.queries.ts",
+      "sig": "({ programId }: { programId: string }) => Promise<{ data: { id: string; ue: { name: string; id: string; department: { name: string; id: string; } | null; description: string | null; departmentId: string | null; imageUrl: string | null; code: string | null; ueCourses: { ...; }[]; }; order: number | null; semester: number; }[]; error?: undefined; } | { ...; }>",
+      "calls": [
+        "getProgramUEs"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getProgramUEsTableAction": {
+      "name": "getProgramUEsTableAction",
+      "file": "src/services/ue/actions/ue.queries.ts",
+      "sig": "({ programId }: { programId: string }) => Promise<{ data: { id: string; ue: { name: string; id: string; department: { name: string; id: string; } | null; description: string | null; departmentId: string | null; imageUrl: string | null; code: string | null; ueCourses: { ...; }[]; }; order: number | null; semester: number; }[]; error?: undefined; } | { ...; }...",
+      "calls": [
+        "getProgramUEsAction"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createUE": [
+      "createUEAction"
+    ],
+    "updateUE": [
+      "updateUEAction"
+    ],
+    "reorderProgram": [
+      "reorderProgramAction"
+    ],
+    "removeUE": [
+      "archiveUEAction"
+    ],
+    "getUEs": [
+      "getUEsAction"
+    ],
+    "getProgramUEs": [
+      "getProgramUEsAction"
+    ],
+    "createUEAction": [],
+    "archiveUEAction": [],
+    "updateUEAction": [],
+    "addUEToProgramAction": [],
+    "reorderProgramAction": [],
+    "getUEsAction": [],
+    "getProgramUEsAction": [
+      "getProgramUEsTableAction"
+    ],
+    "getProgramUEsTableAction": [],
+    "addUEToProgram": [
+      "createUEAction",
+      "addUEToProgramAction"
+    ]
+  },
+  "deps": {
+    "addUEToProgram": "program-track"
+  }
+}

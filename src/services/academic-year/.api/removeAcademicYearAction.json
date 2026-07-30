@@ -1,0 +1,11 @@
+{
+  "name": "removeAcademicYearAction",
+  "file": "src/services/academic-year/actions/academic-year.mutations.ts",
+  "sig": "(academicYearId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "calls": [
+    "removeAcademicYear"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

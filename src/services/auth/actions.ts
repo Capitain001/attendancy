@@ -8,7 +8,7 @@
 // Convention de retour : { data } / { error: string } — comme partout.
 'use server'
 
-import { parse, ValiError } from 'valibot'
+import { safeParse } from 'valibot'
 import { redirect } from 'next/navigation'
 import { signupSchema, loginSchema } from './validation'
 import type { SignupInput, LoginInput } from './validation'
@@ -16,7 +16,6 @@ import { signUpPrincipal, signUpResponsable, loginWithPassword, logout } from '.
 import { createUserRecord, createOrgResponsableDB } from './database/user.mutations'
 import { getUserInfo } from '@/services/user/userInfo'
 import { redirectUser } from '@/config/redirects'
-import { safeParse } from 'valibot'
 
 // SignupInput = InferInput<signupSchema> — typage UI (avant transformations)
 
@@ -42,18 +41,13 @@ export async function signupPrincipalAction(input: SignupInput) {
 
 // Signature compatible useActionState : (prevState, formData).
 export async function loginAction(_prevState: unknown, formData: FormData) {
-  let parsed
-  try {
-    parsed = parse(loginSchema, {
-      email: formData.get('email'),
-      password: formData.get('password'),
-    })
-  } catch (e) {
-    const msg = e instanceof ValiError ? e.issues[0]?.message ?? 'Validation échouée' : 'Entrée invalide'
-    return { error: msg }
-  }
+  const result = safeParse(loginSchema, {
+    email: formData.get('email'),
+    password: formData.get('password'),
+  })
+  if (!result.success) return { error: result.issues[0]?.message ?? 'Validation échouée' }
 
-  const { error } = await loginWithPassword(parsed.email, parsed.password)
+  const { error } = await loginWithPassword(result.output.email, result.output.password)
 
   if (error) {
     return { error: error.message }
@@ -81,15 +75,10 @@ export async function logoutAction() {
 // Responsable nommé par la plateforme (admin global, sans org au signup).
 // La ligne User doit exister avant /auth/org-setup (FK userId → User.id).
 export async function createOrgResponsableAction(input: SignupInput) {
-  let parsed
-  try {
-    parsed = parse(signupSchema, input)
-  } catch (e) {
-    const msg = e instanceof ValiError ? e.issues[0]?.message ?? 'Validation échouée' : 'Entrée invalide'
-    return { error: msg }
-  }
+  const result = safeParse(signupSchema, input)
+  if (!result.success) return { error: result.issues[0]?.message ?? 'Validation échouée' }
 
-  const { data, error } = await signUpResponsable(parsed.email, parsed.password)
+  const { data, error } = await signUpResponsable(result.output.email, result.output.password)
 
   if (error || !data.user) {
     return { error: error?.message ?? 'Inscription échouée' }
@@ -97,7 +86,7 @@ export async function createOrgResponsableAction(input: SignupInput) {
 
   await createOrgResponsableDB({
     id: data.user.id,
-    email: parsed.email,
+    email: result.output.email,
     firstName: '',
     lastName: '',
   })

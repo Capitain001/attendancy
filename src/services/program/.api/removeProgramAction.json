@@ -1,0 +1,11 @@
+{
+  "name": "removeProgramAction",
+  "file": "src/services/program/actions.ts",
+  "sig": "(programId: string) => Promise<{ success: boolean; error?: string }>",
+  "calls": [
+    "deleteProgram"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,8 @@
+{
+  "name": "createMessage",
+  "file": "src/services/chat/database/message.mutations.ts",
+  "sig": "(data: AddMessageData) => Promise<{ id: string; content: string; createdAt: Date; updatedAt: Date; user: { id: string; firstName: string | null; lastName: string | null; avatar_url: string | null; } | null; channelId: string; parentId: string | null; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

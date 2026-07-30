@@ -1,0 +1,11 @@
+{
+  "name": "addUEToProgramAction",
+  "file": "src/services/ue/actions/ue.mutations.ts",
+  "sig": "(input: { ueId: string programId: string semester?: number order?: number }) => Promise<{ error: string; data?: undefined; } | { data: { id: string; semester: number; order: number | null; }; error?: undefined; }>",
+  "calls": [
+    "addUEToProgram"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

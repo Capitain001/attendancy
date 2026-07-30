@@ -1,0 +1,9 @@
+{
+  "name": "getCurrentStudentId",
+  "file": "src/services/student/actions/student.queries.ts",
+  "sig": "() => Promise<string | null>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

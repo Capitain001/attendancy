@@ -1,0 +1,68 @@
+{
+  "service": "fonctions/user",
+  "path": "src/services/fonctions/user/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "87fd0c8",
+  "utils_dir": null,
+  "fns": {
+    "assignFunction": {
+      "f": ".api/assignFunction.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "unassignFunction": {
+      "f": ".api/unassignFunction.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getUserFunctions": {
+      "f": ".api/getUserFunctions.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getUsersByFunction": {
+      "f": ".api/getUsersByFunction.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "assignFunctionAction": {
+      "f": ".api/assignFunctionAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeFunctionAction": {
+      "f": ".api/removeFunctionAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getUserFunctionsAction": {
+      "f": ".api/getUserFunctionsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getUsersByFunctionAction": {
+      "f": ".api/getUsersByFunctionAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "assignFunction": [
+      "assignFunctionAction"
+    ],
+    "unassignFunction": [
+      "removeFunctionAction"
+    ],
+    "getUserFunctions": [
+      "getUserFunctionsAction"
+    ],
+    "getUsersByFunction": [
+      "getUsersByFunctionAction"
+    ],
+    "assignFunctionAction": [],
+    "removeFunctionAction": [],
+    "getUserFunctionsAction": [],
+    "getUsersByFunctionAction": []
+  },
+  "deps": {}
+}

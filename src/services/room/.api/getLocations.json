@@ -1,0 +1,8 @@
+{
+  "name": "getLocations",
+  "file": "src/services/room/database/room.queries.ts",
+  "sig": "(orgId: string) => Promise<{ id: string; name: string; address: string; radius: number; active: boolean; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

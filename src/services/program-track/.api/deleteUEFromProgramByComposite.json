@@ -1,0 +1,8 @@
+{
+  "name": "deleteUEFromProgramByComposite",
+  "file": "src/services/program-track/database/program.mutations.ts",
+  "sig": "(programId: string, ueId: string, orgId: string) => Promise<{ count: number; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

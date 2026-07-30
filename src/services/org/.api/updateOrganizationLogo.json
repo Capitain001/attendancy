@@ -1,0 +1,11 @@
+{
+  "name": "updateOrganizationLogo",
+  "file": "src/services/org/actions/org.mutations.ts",
+  "sig": "(organizationId: string, logoUrl: string) => Promise<{ success: boolean; error: string; } | { success: boolean; error?: undefined; }>",
+  "calls": [
+    "updateOrgLogo"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,121 +1,217 @@
 'use server'
+
+import { Prisma }     from '@/generated/prisma/client'
+import * as v         from 'valibot'
 import { getUserInfo } from '@/services/user/userInfo'
-import { ERRORS } from '@/config'
+import { ERRORS }     from '@/config'
+import { prisma }     from '@/lib/prisma'
 
-export interface CheckAvailabilityActionParams {
-  start: Date
-  end: Date
-  rooms?: { id: string }[]
-  teachers?: { id: string }[]
-  classes?: { id: string }[]
-  groups?: { id: string }[]
-  excludeScheduleId?: string
-}
+import { checkAvailability }        from './check'
+import { checkConflicts }           from './check/conflicts'
+import { checkConflictsParamsSchema, uidSchema } from './validation'
 
-export interface AvailabilityCheckResult {
-  rooms: { id: string; available: boolean }[]
-  teachers: { id: string; available: boolean }[]
-  classes: { id: string; available: boolean }[]
-  groups: { id: string; available: boolean }[]
-}
+import type { CheckAvailabilityParams, CheckAvailabilityResult } from './check'
+import type { ConflictReport, Occurrence }                       from './check/conflicts'
+
+// ── checkAvailabilityAction ───────────────────────────────────────────────────
+
+export type CheckAvailabilityActionParams = Omit<CheckAvailabilityParams, 'orgId' | 'prismaClient'>
 
 export async function checkAvailabilityAction(
-  _params: CheckAvailabilityActionParams
-): Promise<{ data: AvailabilityCheckResult } | { error: string }> {
+  params: CheckAvailabilityActionParams,
+): Promise<{ data: NonNullable<CheckAvailabilityResult['data']> } | { error: string }> {
+  const user  = await getUserInfo()
+  if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
+  const orgId = user.organization?.id
+  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    return {
-      data: {
-        rooms: (_params.rooms ?? []).map((r) => ({ ...r, available: true })),
-        teachers: (_params.teachers ?? []).map((t) => ({ ...t, available: true })),
-        classes: (_params.classes ?? []).map((c) => ({ ...c, available: true })),
-        groups: (_params.groups ?? []).map((g) => ({ ...g, available: true })),
-      },
-    }
+    const result = await checkAvailability({ ...params, orgId, prismaClient: prisma })
+    if (result.error) return { error: result.error }
+    return { data: result.data! }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
-export interface ConflictCheckInput {
-  date: string
-  startTime: string
-  endTime: string
-  teacherId?: string
-  roomId?: string
-  classId?: string
-  groupId?: string
+// ── checkConflictsAction ──────────────────────────────────────────────────────
+
+export type ConflictReportDto = {
+  isValid:  boolean
+  total:    number
+  skipped:  number
+  checked:  number
+  conflicts: {
+    startTime:    string
+    endTime:      string
+    roomId:       string
+    teacherId:    string
+    classId:      string
+    groupId?:     string
+    reason:       ConflictReport['conflicts'][number]['reason']
+    message:      string
+    dbConstraint: string
+    conflictsWith: {
+      id:        string
+      startTime: string
+      endTime:   string
+      roomId:    string
+      teacherId: string
+      courseId:  string
+      classId:   string
+      groupId:   string | null
+    } | null
+  }[]
+}
+
+type OccurrenceInput = Omit<Occurrence, 'orgId'>
+
+export type CheckConflictsActionParams = {
+  occurrences:        OccurrenceInput[]
+  weekRecurrenceId?:  string
   excludeScheduleId?: string
 }
 
-export interface ConflictResult {
-  hasConflict: boolean
-  conflicts: Array<{
-    type: 'teacher' | 'room' | 'class' | 'group'
-    scheduleId: string
-    description: string
-  }>
+function serializeConflictReport(report: ConflictReport): ConflictReportDto {
+  return {
+    isValid: report.isValid,
+    total:   report.total,
+    skipped: report.skipped,
+    checked: report.checked,
+    conflicts: report.conflicts.map((c) => ({
+      startTime:    c.startTime.toISOString(),
+      endTime:      c.endTime.toISOString(),
+      roomId:       c.roomId,
+      teacherId:    c.teacherId,
+      classId:      c.classId,
+      groupId:      c.groupId,
+      reason:       c.reason,
+      message:      c.message,
+      dbConstraint: c.dbConstraint,
+      conflictsWith: c.conflictsWith
+        ? {
+            id:        c.conflictsWith.id,
+            startTime: c.conflictsWith.startTime.toISOString(),
+            endTime:   c.conflictsWith.endTime.toISOString(),
+            roomId:    c.conflictsWith.roomId,
+            teacherId: c.conflictsWith.teacherId,
+            courseId:  c.conflictsWith.courseId,
+            classId:   c.conflictsWith.classId,
+            groupId:   c.conflictsWith.groupId,
+          }
+        : null,
+    })),
+  }
 }
 
-export async function checkConflictsAction(
-  _input: ConflictCheckInput
-): Promise<{ data: ConflictResult } | { error: string }> {
+export async function checkConflictsAction(params: CheckConflictsActionParams) {
+  const user  = await getUserInfo()
+  if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
+  const orgId = user.organization?.id
+  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+
+  const parsed = v.safeParse(checkConflictsParamsSchema, params)
+  if (!parsed.success) return { error: 'Paramètres invalides.' as const }
+
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    return { data: { hasConflict: false, conflicts: [] } }
+    const occurrences: Occurrence[] = parsed.output.occurrences.map((o) => ({
+      ...o,
+      orgId,
+    }))
+
+    const report = await checkConflicts({
+      weekRecurrenceId:  parsed.output.weekRecurrenceId,
+      occurrences,
+      excludeScheduleId: parsed.output.excludeScheduleId,
+    })
+
+    return { data: serializeConflictReport(report) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
-export async function getAvailableTeachersAction(_input: ConflictCheckInput): Promise<{ data: string[] } | { error: string }> {
-  try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    return { data: [] }
-  } catch (e) {
-    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
-  }
+// ── filterAvailabilityAction ──────────────────────────────────────────────────
+
+export type AvailableItem = { id: string; available: boolean }
+
+export type FilterAvailabilityResponse = {
+  availableRooms:    AvailableItem[]
+  availableCourses:  AvailableItem[]
+  availableTeachers: AvailableItem[]
 }
 
-export async function getAvailableRoomsAction(_input: ConflictCheckInput): Promise<{ data: string[] } | { error: string }> {
-  try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    return { data: [] }
-  } catch (e) {
-    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
-  }
-}
-
-export interface FilterAvailabilityInput {
-  start: Date
-  end: Date
+export interface FilterAvailabilityActionParams {
+  start:              Date
+  end:                Date
+  rooms:              { id: string }[]
+  courses:            { id: string }[]
+  teachers:           { id: string }[]
   excludeScheduleId?: string
-  rooms: Array<{ id: string; name: string }>
-  courses: Array<{ id: string; name: string }>
-  teachers: Array<{ id: string }>
 }
 
-export interface FilterAvailabilityResult {
-  availableRooms: Array<{ id: string; name: string; available: boolean }>
-  availableCourses: Array<{ id: string; name: string; available: boolean }>
-  availableTeachers: Array<{ id: string; available: boolean }>
-}
+const MAX_ITEMS = 200
 
 export async function filterAvailabilityAction(
-  _input: FilterAvailabilityInput
-): Promise<{ data: FilterAvailabilityResult } | { error: string }> {
+  params: FilterAvailabilityActionParams,
+): Promise<{ data: FilterAvailabilityResponse } | { error: string }> {
+  const user  = await getUserInfo()
+  if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
+  const orgId = user.organization?.id
+  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+
+  const { start, end, excludeScheduleId, rooms, courses, teachers } = params
+
+  // ── Validation ────────────────────────────────────────────
+  if (start >= end) {
+    return { error: "L'heure de fin doit être après l'heure de début." }
+  }
+
+  if (rooms.length > MAX_ITEMS || courses.length > MAX_ITEMS || teachers.length > MAX_ITEMS) {
+    return { error: "Trop d'éléments transmis." }
+  }
+
+  if (excludeScheduleId) {
+    const result = v.safeParse(uidSchema, excludeScheduleId)
+    if (!result.success) return { error: 'excludeScheduleId invalide.' }
+  }
+
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
+    // ── Schedules en conflit sur le créneau ───────────────────
+    const overlapping = await prisma.$queryRaw<Array<{ roomId: string; teacherId: string | null }>>`
+      SELECT "roomId", "teacherId"
+      FROM   "Schedule"
+      WHERE  "orgId"     = ${orgId}::uuid
+        AND  "deletedAt" IS NULL
+        AND  status NOT IN ('CANCELED', 'MISSED')
+        AND (
+              during && tstzrange(
+                ${start.toISOString()}::timestamptz,
+                ${end.toISOString()}::timestamptz,
+                '[)'
+              )
+              OR (
+                during IS NULL
+                AND "startTime" < ${end.toISOString()}::timestamptz
+                AND "endTime"   > ${start.toISOString()}::timestamptz
+              )
+            )
+        ${excludeScheduleId
+          ? Prisma.sql`AND id != ${excludeScheduleId}::uuid`
+          : Prisma.empty}
+    `
+
+    // ── Sets de ressources occupées — lookup O(1) ─────────────
+    const busyRoomIds    = new Set(overlapping.map((s) => s.roomId))
+    const busyTeacherIds = new Set(
+      overlapping.map((s) => s.teacherId).filter((id): id is string => id !== null),
+    )
+
     return {
       data: {
-        availableRooms: _input.rooms.map((r) => ({ ...r, available: true })),
-        availableCourses: _input.courses.map((c) => ({ ...c, available: true })),
-        availableTeachers: _input.teachers.map((t) => ({ ...t, available: true })),
+        availableRooms:    rooms.map((r)    => ({ id: r.id, available: !busyRoomIds.has(r.id) })),
+        availableCourses:  courses.map((c)  => ({ id: c.id, available: true })),
+        availableTeachers: teachers.map((t) => ({ id: t.id, available: !busyTeacherIds.has(t.id) })),
       },
     }
   } catch (e) {

@@ -45,7 +45,7 @@ model Schedule {
   organization     Organization              @relation(fields: [orgId], references: [id])
   room             Room                      @relation(fields: [roomId], references: [id])
   teacher          Teacher                   @relation(fields: [teacherId], references: [id])
-  weekRecurence    WeekRecurence?            @relation(fields: [weekRecurrenceId], references: [id])
+  weekRecurence    WeekRecurence?            @relation(fields: [weekRecurrenceId], references: [id], onDelete: SetNull)
   session          Session?
   justifications   Justification[]
   notifications    Notification[]
@@ -168,7 +168,7 @@ model Room {
   updatedAt    DateTime     @updatedAt
   deletedAt    DateTime?
   qrCodes      QRCode[]
-  location     Location?    @relation(fields: [locationId], references: [id])
+  location     Location?    @relation(fields: [locationId], references: [id], onDelete: SetNull)
   organization Organization @relation(fields: [orgId], references: [id])
   schedules    Schedule[]
   weeklySlots  WeeklySlot[]
@@ -191,14 +191,14 @@ model Event {
   color        String?
   type         EventType          @default(GENERAL)
   isRecurring  Boolean            @default(false)
-  createdById  String             @db.Uuid
+  createdById  String?            @db.Uuid
   createdAt    DateTime           @default(now())
   updatedAt    DateTime           @updatedAt
   deletedAt    DateTime?
   orgId        String             @db.Uuid
   status       EventStatus        @default(PENDING)
   isPublic     Boolean            @default(false)
-  createdBy    User               @relation("CreatedEvents", fields: [createdById], references: [id])
+  createdBy    User?              @relation("CreatedEvents", fields: [createdById], references: [id], onDelete: SetNull)
   organization Organization       @relation(fields: [orgId], references: [id])
   participants EventParticipant[]
 
@@ -214,7 +214,7 @@ model EventParticipant {
   status   EventStatus     @default(PENDING)
   joinedAt DateTime        @default(now())
   event    Event           @relation(fields: [eventId], references: [id])
-  user     User            @relation(fields: [userId], references: [id])
+  user     User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([eventId, userId])
   @@index([userId])

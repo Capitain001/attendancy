@@ -1,7 +1,18 @@
 'use server'
 import { getUserInfo } from '@/services/user/userInfo'
 import { ERRORS } from '@/config'
-import { getCourses, getCoursesByClass, getCourseTeachers, getCourseTeachersIds } from '../database'
+import { getCourse, getCourses, getCoursesByClass, getCourseTeachers, getCourseTeachersIds } from '../database'
+
+export async function getCourseAction(courseId: string) {
+  try {
+    const user = await getUserInfo()
+    const orgId = user?.organization?.id
+    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+    return { data: await getCourse(courseId, orgId) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
 
 export async function getAllCoursesAction() {
   try {

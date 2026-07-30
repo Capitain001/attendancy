@@ -1,0 +1,116 @@
+{
+  "service": "attendance",
+  "path": "src/services/attendance/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "87fd0c8",
+  "generated_at": "2026-07-29T12:17:29.215Z",
+  "fns": {
+    "markScheduleAbsences": {
+      "name": "markScheduleAbsences",
+      "file": "src/services/attendance/database/attendance.mutations.ts",
+      "sig": "(scheduleId: string, tx: Prisma.TransactionClient = prisma) => Promise<{ absentUserIds: string[]; absentStudentIds: string[]; audience: number; }>",
+      "composes": [
+        "getExpectedAttendees"
+      ],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getOrgTodayAbsences": {
+      "name": "getOrgTodayAbsences",
+      "file": "src/services/attendance/database/attendance.queries.ts",
+      "sig": "(orgId: string) => Promise<{ id: string; student: { user: { firstName: string | null; lastName: string | null; }; }; schedule: { class: { name: string; }; course: { name: string; }; group: { name: string; } | null; startTime: Date; }; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getScheduleAttendances": {
+      "name": "getScheduleAttendances",
+      "file": "src/services/attendance/database/attendance.queries.ts",
+      "sig": "(scheduleId: string) => Promise<{ id: string; student: { user: { id: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; status: AttendanceStatus; recordedAt: Date; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getExpectedAttendees": {
+      "name": "getExpectedAttendees",
+      "file": "src/services/attendance/database/attendance.queries.ts",
+      "sig": "(scheduleId: string, tx: Prisma.TransactionClient = prisma) => Promise<{ studentId: string; enrollmentId: string; userId: string; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "confirmAttendanceAction": {
+      "name": "confirmAttendanceAction",
+      "file": "src/services/attendance/actions/attendance.mutations.ts",
+      "sig": "({ attendanceId }: { attendanceId: string }) => Promise<{ error: string; data?: undefined; } | { data: { id: string; status: AttendanceStatus; confirmed: boolean; }; error?: undefined; }>",
+      "calls": [],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "confirmAllAttendancesAction": {
+      "name": "confirmAllAttendancesAction",
+      "file": "src/services/attendance/actions/attendance.mutations.ts",
+      "sig": "({ scheduleId }: { scheduleId: string }) => Promise<{ error: string; data?: undefined; } | { data: { confirmed: number; }; error?: undefined; }>",
+      "calls": [],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getOrgTodayAbsencesAction": {
+      "name": "getOrgTodayAbsencesAction",
+      "file": "src/services/attendance/actions/attendance.queries.ts",
+      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { id: string; student: { user: { firstName: string | null; lastName: string | null; }; }; schedule: { class: { name: string; }; course: { name: string; }; group: { ...; } | null; startTime: Date; }; }[]; error?: undefined; }>",
+      "calls": [
+        "getOrgTodayAbsences"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getScheduleAttendancesAction": {
+      "name": "getScheduleAttendancesAction",
+      "file": "src/services/attendance/actions/attendance.queries.ts",
+      "sig": "({ scheduleId }: { scheduleId: string }) => Promise<{ error: string; data?: undefined; } | { data: { id: string; student: { user: { id: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; status: AttendanceStatus; recordedAt: Date; }[]; error?: undefined; }>",
+      "calls": [
+        "getScheduleAttendances"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "markScheduleAbsences": [],
+    "getOrgTodayAbsences": [
+      "getOrgTodayAbsencesAction"
+    ],
+    "getScheduleAttendances": [
+      "getScheduleAttendancesAction"
+    ],
+    "getExpectedAttendees": [
+      "markScheduleAbsences"
+    ],
+    "confirmAttendanceAction": [],
+    "confirmAllAttendancesAction": [],
+    "getOrgTodayAbsencesAction": [],
+    "getScheduleAttendancesAction": []
+  },
+  "deps": {}
+}

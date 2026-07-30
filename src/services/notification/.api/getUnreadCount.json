@@ -1,0 +1,11 @@
+{
+  "name": "getUnreadCount",
+  "file": "src/services/notification/actions/notification.queries.ts",
+  "sig": "() => Promise<{ data: number; error?: undefined; } | { error: string; data?: undefined; }>",
+  "calls": [
+    "getUnreadCountForUser"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

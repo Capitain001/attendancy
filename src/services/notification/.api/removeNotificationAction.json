@@ -1,0 +1,11 @@
+{
+  "name": "removeNotificationAction",
+  "file": "src/services/notification/actions/notification.mutations.ts",
+  "sig": "(notificationId: string) => Promise<{ data: true; error?: undefined; } | { error: string; data?: undefined; }>",
+  "calls": [
+    "removeNotification"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

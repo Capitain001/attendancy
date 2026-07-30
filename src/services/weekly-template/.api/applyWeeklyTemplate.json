@@ -1,0 +1,8 @@
+{
+  "name": "applyWeeklyTemplate",
+  "file": "src/services/weekly-template/database/weekly-template.mutations.ts",
+  "sig": "(opts: { templateId: string orgId: string classId: string startDate: Date endDate: Date interval: number excludedDates: Date[] }) => Promise<{ recurrenceId: string; schedulesCreated: number; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,6 +1,6 @@
 // src/services/class/database/class.queries.ts
 import { cacheTag, cacheLife } from 'next/cache'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { CACHE } from '@/cache/server/key'
 
 export async function getClasses(orgId: string, yearId?: string) {

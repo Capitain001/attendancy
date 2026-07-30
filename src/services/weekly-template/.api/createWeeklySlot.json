@@ -1,0 +1,8 @@
+{
+  "name": "createWeeklySlot",
+  "file": "src/services/weekly-template/database/weekly-template.mutations.ts",
+  "sig": "(templateId: string, orgId: string, data: { dayOfWeek: number startTime: string endTime: string courseId: string teacherId: string roomId: string }) => Promise<{ id: string; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; dayOfWeek: number; startTime: string; endTime: string; templateId: string; courseId: string; teacherId: string; roomId: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

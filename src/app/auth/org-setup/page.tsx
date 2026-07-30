@@ -19,6 +19,7 @@ export default async function OrgSetupPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center p-4">
+      
       <OrgSetupForm />
     </main>
   )

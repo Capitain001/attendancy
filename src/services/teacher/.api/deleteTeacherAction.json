@@ -1,0 +1,9 @@
+{
+  "name": "deleteTeacherAction",
+  "file": "src/services/teacher/actions/teacher.mutations.ts",
+  "sig": "(_teacherId: string) => Promise<{ readonly error: \"La suppression directe des enseignants n'est pas supportée\"; }>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

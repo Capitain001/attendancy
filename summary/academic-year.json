@@ -1,0 +1,174 @@
+{
+  "service": "academic-year",
+  "path": "src/services/academic-year/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "87fd0c8",
+  "generated_at": "2026-07-29T12:17:29.204Z",
+  "fns": {
+    "createAcademicYear": {
+      "name": "createAcademicYear",
+      "file": "src/services/academic-year/database/academic-year.mutations.ts",
+      "sig": "(data: CreateAcademicYearOutput & { orgId: string }) => Promise<{ name: string; id: string; startDate: Date; endDate: Date; isCurrent: boolean; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "setCurrentYear": {
+      "name": "setCurrentYear",
+      "file": "src/services/academic-year/database/academic-year.mutations.ts",
+      "sig": "(academicYearId: string, orgId: string) => Promise<{ name: string; id: string; isCurrent: boolean; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateAcademicYear": {
+      "name": "updateAcademicYear",
+      "file": "src/services/academic-year/database/academic-year.mutations.ts",
+      "sig": "(academicYearId: string, orgId: string, data: UpdateAcademicYearData) => Promise<{ name: string; id: string; startDate: Date; endDate: Date; isCurrent: boolean; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "removeAcademicYear": {
+      "name": "removeAcademicYear",
+      "file": "src/services/academic-year/database/academic-year.mutations.ts",
+      "sig": "(academicYearId: string, orgId: string) => Promise<{ id: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getAcademicYears": {
+      "name": "getAcademicYears",
+      "file": "src/services/academic-year/database/academic-year.queries.ts",
+      "sig": "(orgId: string) => Promise<{ name: string; id: string; startDate: Date; endDate: Date; isCurrent: boolean; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getCurrentYear": {
+      "name": "getCurrentYear",
+      "file": "src/services/academic-year/database/academic-year.queries.ts",
+      "sig": "(orgId: string) => Promise<{ name: string; id: string; startDate: Date; endDate: Date; } | null>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createAcademicYearAction": {
+      "name": "createAcademicYearAction",
+      "file": "src/services/academic-year/actions/academic-year.mutations.ts",
+      "sig": "(input: CreateAcademicYearInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; startDate: Date; endDate: Date; isCurrent: boolean; }; error?: undefined; }>",
+      "calls": [
+        "createAcademicYear"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "setCurrentYearAction": {
+      "name": "setCurrentYearAction",
+      "file": "src/services/academic-year/actions/academic-year.mutations.ts",
+      "sig": "(input: SetCurrentYearInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; isCurrent: boolean; }; error?: undefined; }>",
+      "calls": [
+        "setCurrentYear"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateAcademicYearAction": {
+      "name": "updateAcademicYearAction",
+      "file": "src/services/academic-year/actions/academic-year.mutations.ts",
+      "sig": "(academicYearId: string, data: UpdateAcademicYearData) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; startDate: Date; endDate: Date; isCurrent: boolean; }; error?: undefined; }>",
+      "calls": [
+        "updateAcademicYear"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeAcademicYearAction": {
+      "name": "removeAcademicYearAction",
+      "file": "src/services/academic-year/actions/academic-year.mutations.ts",
+      "sig": "(academicYearId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "calls": [
+        "removeAcademicYear"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getAcademicYearsAction": {
+      "name": "getAcademicYearsAction",
+      "file": "src/services/academic-year/actions/academic-year.queries.ts",
+      "sig": "() => Promise<{ data: { name: string; id: string; startDate: Date; endDate: Date; isCurrent: boolean; }[]; error?: undefined; } | { error: string; data?: undefined; }>",
+      "calls": [
+        "getAcademicYears"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getCurrentYearAction": {
+      "name": "getCurrentYearAction",
+      "file": "src/services/academic-year/actions/academic-year.queries.ts",
+      "sig": "() => Promise<{ data: { name: string; id: string; startDate: Date; endDate: Date; } | null; error?: undefined; } | { error: string; data?: undefined; }>",
+      "calls": [
+        "getCurrentYear"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createAcademicYear": [
+      "createAcademicYearAction"
+    ],
+    "setCurrentYear": [
+      "setCurrentYearAction"
+    ],
+    "updateAcademicYear": [
+      "updateAcademicYearAction"
+    ],
+    "removeAcademicYear": [
+      "removeAcademicYearAction"
+    ],
+    "getAcademicYears": [
+      "getAcademicYearsAction"
+    ],
+    "getCurrentYear": [
+      "getCurrentYearAction"
+    ],
+    "createAcademicYearAction": [],
+    "setCurrentYearAction": [],
+    "updateAcademicYearAction": [],
+    "removeAcademicYearAction": [],
+    "getAcademicYearsAction": [],
+    "getCurrentYearAction": []
+  },
+  "deps": {}
+}

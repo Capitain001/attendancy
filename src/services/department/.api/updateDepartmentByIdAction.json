@@ -1,0 +1,11 @@
+{
+  "name": "updateDepartmentByIdAction",
+  "file": "src/services/department/actions/department.mutations.ts",
+  "sig": "(departmentId: string, data: { name: string }) => ReturnType<typeof updateDepartmentAction>",
+  "calls": [
+    "updateDepartmentAction"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

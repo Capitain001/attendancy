@@ -1,0 +1,11 @@
+{
+  "name": "deleteScheduleAction",
+  "file": "src/services/schedule/actions/schedule.mutations.ts",
+  "sig": "(scheduleId: string) => Promise<{ error: string; data?: undefined; } | { data: boolean; error?: undefined; }>",
+  "calls": [
+    "removeScheduleAction"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

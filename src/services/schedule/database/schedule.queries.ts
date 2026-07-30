@@ -1,7 +1,7 @@
 // src/services/schedule/database/schedule.queries.ts
 import { cacheTag, cacheLife } from 'next/cache'
 import { startOfMonth, endOfMonth } from 'date-fns'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { CACHE } from '@/cache/server/key'
 
 const scheduleInclude = {

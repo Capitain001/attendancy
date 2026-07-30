@@ -1,0 +1,8 @@
+{
+  "name": "unsubscribeDevice",
+  "file": "src/services/notification/database/push.mutations.ts",
+  "sig": "(params: { userId: string; endpoint: string }) => Promise<{ id: string; createdAt: Date; updatedAt: Date; userId: string; endpoint: string; p256dh: string; auth: string; userAgent: string | null; deviceId: string | null; expiresAt: Date | null; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

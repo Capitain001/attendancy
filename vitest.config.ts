@@ -21,9 +21,20 @@ if (!process.env.TEST_DATABASE_URL) {
     }
   }
 }
-process.env.DATABASE_URL = process.env.TEST_DATABASE_URL ?? "";
+// Les transactions interactives Prisma ($transaction avec callback) nécessitent
+// une connexion directe — le pooler Neon (PgBouncer transaction mode) ne les
+// supporte pas (P2028). On dérive l'URL directe en retirant "-pooler" du host.
+const testDirectUrl =
+  process.env.TEST_DIRECT_URL ??
+  (process.env.TEST_DATABASE_URL ?? "").replace(/-pooler\./, ".");
+process.env.DATABASE_URL = testDirectUrl;
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, './src'),
+    },
+  },
   test: {
     pool: "forks",
 
@@ -43,7 +54,8 @@ export default defineConfig({
           name: "integration",
           environment: "node",
           include: ["src/**/*.integration.test.ts"],
-          testTimeout: 15_000,
+          testTimeout: 30_000,
+          hookTimeout: 60_000,
         },
       },
     ],

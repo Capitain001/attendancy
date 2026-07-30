@@ -1,0 +1,8 @@
+{
+  "name": "getOrgDailyMetrics",
+  "file": "src/services/org/database/org.queries.ts",
+  "sig": "(orgId: string) => Promise<{ activeSessions: number; todaySchedules: number; todayAbsences: number; completedSchedules: number; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

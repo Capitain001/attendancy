@@ -1,0 +1,11 @@
+{
+  "name": "getTeacherNextScheduleAction",
+  "file": "src/services/schedule/actions/schedule.teacher.ts",
+  "sig": "({ teacherId }: { teacherId: string }) => Promise<{ data: { id: string; startTime: Date; endTime: Date; status: ScheduleStatus; confirmed: boolean; notes: string | null; class: { level: Level; name: string; _count: { ...; }; }; course: { ...; }; group: { ...; } | null; room: { ...; }; session: { ...; } | null; } | null; error?: undefined; } | { ...; }>",
+  "calls": [
+    "getTeacherNextSchedule"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

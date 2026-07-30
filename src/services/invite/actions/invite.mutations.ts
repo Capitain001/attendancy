@@ -3,16 +3,17 @@
 import * as v from 'valibot'
 import { getUserInfo } from '@/services/user/userInfo'
 import { setUserInfo } from '@/services/user/update'
-import { createAdminClient } from '@/utils/supabase/server'
 import { ERRORS } from '@/config'
-import { INVITE_URL } from '@/config/url'
 import { ROLE_PATHS } from '@/config/roles'
 import { sendInviteSchema, acceptInviteSchema } from '../validation'
 import type { SendInviteInput, AcceptInviteInput } from '../validation'
 import { createInvitation, completeInvite, getInviteByToken, resendInvite, deleteInvitation } from '../database'
+import { generateInviteToken, sendSupabaseInviteEmail } from '../core'
+import { createAdminClient } from '@/utils/supabase/server'
 import type { Role } from '@/generated/prisma'
 import type { Organization, Role as UserRole } from '@/services/user/types'
 import type { InviteDetails } from '../types'
+import { prisma } from '@/lib/prisma'
 
 export async function sendInviteAction(input: SendInviteInput) {
   const user = await getUserInfo()
@@ -25,8 +26,8 @@ export async function sendInviteAction(input: SendInviteInput) {
 
   const parsed = v.parse(sendInviteSchema, input)
 
-  const token = crypto.randomUUID()
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+  const { token, expiresAt } = generateInviteToken(parsed.expiresInDays)
+  const invitedBy = { id: user.id, name: user.name ?? '', email: user.email ?? '' }
 
   let invitation
   try {
@@ -35,6 +36,7 @@ export async function sendInviteAction(input: SendInviteInput) {
       orgId,
       role: parsed.role as Role,
       expiresAt,
+      details: { invited_by: invitedBy },
     })
   } catch (e) {
     const isUnique = e instanceof Error && (e.message.includes('Unique constraint') || e.message.includes('P2002'))
@@ -45,11 +47,8 @@ export async function sendInviteAction(input: SendInviteInput) {
     }
   }
 
-  const admin = await createAdminClient()
-  const redirectTo = `${INVITE_URL}?token=${token}`
-  const { error: inviteError } = await admin.auth.admin.inviteUserByEmail(parsed.email, { redirectTo })
-
-  if (inviteError) return { error: `Email non envoyé : ${inviteError.message}` }
+  const inviteError = await sendSupabaseInviteEmail(parsed.email, token)
+  if (inviteError) return { error: `Email non envoyé : ${inviteError}` }
 
   return { data: { invitationId: invitation.id } }
 }
@@ -73,14 +72,26 @@ export async function acceptInviteAction(input: AcceptInviteInput) {
   const details = invitation.details as InviteDetails
   const role = details.role as Role
 
+  // Fallback sur details.name si le formulaire n'a pas fourni firstName/lastName
+  const detailsName = (invitation.details as Record<string, unknown>)?.name as string | undefined
+  const firstNameResolved = parsed.firstName || detailsName?.split(' ')[0]
+  const lastNameResolved = parsed.lastName || detailsName?.split(' ').slice(1).join(' ') || undefined
+
+  // Extraire les détails de fonctions pour DIRECTION
+  const dirDetails = role === 'DIRECTION' ? (details as Extract<InviteDetails, { role: 'DIRECTION' }>) : undefined
+  const functionDetails = dirDetails
+    ? { function: dirDetails.function, additionalFunctions: dirDetails.additionalFunctions }
+    : undefined
+
   const { profileId } = await completeInvite({
     userId: user.id,
     email: user.email,
-    firstName: parsed.firstName,
-    lastName: parsed.lastName,
+    firstName: firstNameResolved,
+    lastName: lastNameResolved,
     invitationId: invitation.id,
     orgId: invitation.orgId,
     role,
+    functionDetails,
   })
 
   const roleKey = roleToProfileKey(role)
@@ -103,16 +114,20 @@ export type InvitationActionResult =
   | { success: true; message?: string; link?: string }
   | { success: false; error: string }
 
-export async function resendInvitationAction(invitation: { id: string; email: string }): Promise<InvitationActionResult> {
+export async function resendInvitationAction(
+  invitation: { id: string; email: string },
+  expiresInDays?: 1 | 3 | 7 | 14 | 30
+): Promise<InvitationActionResult> {
   const user = await getUserInfo()
   if (!user?.id) return { success: false, error: ERRORS.AUTH.UNAUTHORIZED }
   const orgId = user.organization?.id
   if (!orgId) return { success: false, error: ERRORS.ORG.NOT_FOUND }
   try {
-    const newExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-    await resendInvite(invitation.id, newExpiry)
+    const { expiresAt } = generateInviteToken(expiresInDays ?? 7)
+    await resendInvite(invitation.id, expiresAt)
     const admin = await createAdminClient()
-    await admin.auth.admin.inviteUserByEmail(invitation.email)
+    const { error } = await admin.auth.admin.inviteUserByEmail(invitation.email)
+    if (error) return { success: false, error: `Email non envoyé : ${error.message}` }
     return { success: true, message: 'Invitation renvoyée' }
   } catch (e) {
     return { success: false, error: e instanceof Error ? e.message : ERRORS.SERVER }
@@ -138,6 +153,16 @@ export async function deleteInvitationUserAction(invitation: { id: string }): Pr
   const orgId = user.organization?.id
   if (!orgId) return { success: false, error: ERRORS.ORG.NOT_FOUND }
   try {
+    const record = await prisma.invitation.findUnique({
+      where: { id: invitation.id },
+      select: { userId: true },
+    })
+    if (record?.userId) {
+      const active = await prisma.userOrganization.findFirst({
+        where: { userId: record.userId, orgId },
+      })
+      if (active) return { success: false, error: 'Utilisateur actif — supprimer via la gestion des membres' }
+    }
     await deleteInvitation(invitation.id)
     return { success: true, message: 'Invitation supprimée' }
   } catch (e) {

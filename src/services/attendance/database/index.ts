@@ -2,7 +2,7 @@ export * from './attendance.queries'
 export * from './attendance.mutations'
 export * from './filter'
 
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 
 export async function getOrgStudentAttendanceRates(orgId: string) {
   const records = await prisma.attendance.groupBy({

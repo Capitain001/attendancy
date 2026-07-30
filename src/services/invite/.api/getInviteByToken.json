@@ -1,0 +1,8 @@
+{
+  "name": "getInviteByToken",
+  "file": "src/services/invite/database/invite.queries.ts",
+  "sig": "(token: string) => Promise<{ id: string; token: string; email: string; expiresAt: Date | null; usedAt: Date | null; details: JsonValue; invitationType: InvitationType; organization: { ...; }; orgId: string; } | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

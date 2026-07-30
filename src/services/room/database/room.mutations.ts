@@ -1,5 +1,5 @@
 // src/services/room/database/room.mutations.ts
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { invalidateEvent } from '@/cache/server/key'
 
 export async function createRoom(data: {
@@ -56,6 +56,28 @@ export async function createLocation(data: {
     select: { id: true, name: true, address: true },
   })
   await invalidateEvent('ROOM_CREATED', data.orgId)
+  return result
+}
+
+export async function updateRoom(
+  id: string,
+  orgId: string,
+  data: { name?: string; capacity?: number; locationId?: string; equipment?: string[] },
+) {
+  const existing = await prisma.room.findFirst({ where: { id, orgId, deletedAt: null } })
+  if (!existing) throw new Error('Salle introuvable')
+
+  const result = await prisma.room.update({
+    where: { id },
+    data: {
+      ...(data.name       !== undefined && { name:       data.name }),
+      ...(data.capacity   !== undefined && { capacity:   data.capacity }),
+      ...(data.locationId !== undefined && { locationId: data.locationId }),
+      ...(data.equipment  !== undefined && { equipment:  data.equipment }),
+    },
+    select: { id: true, name: true, capacity: true, equipment: true, locationId: true, location: { select: { id: true, name: true } } },
+  })
+  await invalidateEvent('ROOM_UPDATED', orgId)
   return result
 }
 

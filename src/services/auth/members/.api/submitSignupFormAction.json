@@ -1,0 +1,9 @@
+{
+  "name": "submitSignupFormAction",
+  "file": "src/services/auth/members/actions.ts",
+  "sig": "(data: { password: string confirmPassword: string }) => Promise<{ error: string; data?: undefined; } | { data: { userId: string; }; error?: undefined; }>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

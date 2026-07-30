@@ -1,0 +1,147 @@
+{
+  "service": "fonctions",
+  "path": "src/services/fonctions/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "87fd0c8",
+  "generated_at": "2026-07-29T12:17:29.294Z",
+  "fns": {
+    "createFunction": {
+      "name": "createFunction",
+      "file": "src/services/fonctions/database/fonctions.mutations.ts",
+      "sig": "(data: AddFunctionData) => Promise<{ name: string; id: string; orgId: string; createdAt: Date; updatedAt: Date; description: string | null; isMain: boolean; icon: string | null; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateFunction": {
+      "name": "updateFunction",
+      "file": "src/services/fonctions/database/fonctions.mutations.ts",
+      "sig": "(functionId: string, data: UpdateFunctionData) => Promise<{ name: string; id: string; orgId: string; createdAt: Date; updatedAt: Date; description: string | null; isMain: boolean; icon: string | null; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "deleteFunction": {
+      "name": "deleteFunction",
+      "file": "src/services/fonctions/database/fonctions.mutations.ts",
+      "sig": "(functionId: string) => Promise<void>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getFunctions": {
+      "name": "getFunctions",
+      "file": "src/services/fonctions/database/fonctions.queries.ts",
+      "sig": "({ orgId, isMain }: { orgId: string; isMain?: boolean }) => Promise<{ name: string; id: string; orgId: string; createdAt: Date; updatedAt: Date; description: string | null; isMain: boolean; icon: string | null; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getMainFunctionsUser": {
+      "name": "getMainFunctionsUser",
+      "file": "src/services/fonctions/database/fonctions.queries.ts",
+      "sig": "(orgId: string) => Promise<{ name: string; id: string; createdAt: Date; updatedAt: Date; description: string | null; isMain: boolean; icon: string | null; users: { user: { id: string; email: string; avatar_url: string | null; status: UserStatus; firstName: string | null; lastName: string | null; }; assignedAt: Date; assignedBy: string...",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "addFunctionAction": {
+      "name": "addFunctionAction",
+      "file": "src/services/fonctions/actions/fonctions.mutations.ts",
+      "sig": "(input: Omit<AddFunctionData, 'orgId'>) => Promise<{ data: { name: string; id: string; orgId: string; createdAt: Date; updatedAt: Date; description: string | null; isMain: boolean; icon: string | null; }; error?: undefined; } | { ...; }>",
+      "calls": [
+        "createFunction"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateFunctionAction": {
+      "name": "updateFunctionAction",
+      "file": "src/services/fonctions/actions/fonctions.mutations.ts",
+      "sig": "({ id, data }: { id: string; data: UpdateFunctionData }) => Promise<{ data: { name: string; id: string; orgId: string; createdAt: Date; updatedAt: Date; description: string | null; isMain: boolean; icon: string | null; }; error?: undefined; } | { ...; }>",
+      "calls": [
+        "updateFunction"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeFunctionAction": {
+      "name": "removeFunctionAction",
+      "file": "src/services/fonctions/actions/fonctions.mutations.ts",
+      "sig": "(id: string) => Promise<{ data: boolean; error?: undefined; } | { error: string; data?: undefined; }>",
+      "calls": [
+        "deleteFunction"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getFunctionsAction": {
+      "name": "getFunctionsAction",
+      "file": "src/services/fonctions/actions/fonctions.queries.ts",
+      "sig": "(params: { isMain?: boolean } = {}) => Promise<{ data: { name: string; id: string; orgId: string; createdAt: Date; updatedAt: Date; description: string | null; isMain: boolean; icon: string | null; }[]; error?: undefined; } | { ...; }>",
+      "calls": [
+        "getFunctions"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getMainFunctionsWithUsersAction": {
+      "name": "getMainFunctionsWithUsersAction",
+      "file": "src/services/fonctions/actions/fonctions.queries.ts",
+      "sig": "() => Promise<{ data: { name: string; id: string; createdAt: Date; updatedAt: Date; description: string | null; isMain: boolean; icon: string | null; users: { user: { id: string; email: string; avatar_url: string | null; status: UserStatus; firstName: string | null; lastName: string | null; }; assignedAt: Date; assignedBy...",
+      "calls": [
+        "getMainFunctionsUser"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createFunction": [
+      "addFunctionAction"
+    ],
+    "updateFunction": [
+      "updateFunctionAction"
+    ],
+    "deleteFunction": [
+      "removeFunctionAction"
+    ],
+    "getFunctions": [
+      "getFunctionsAction"
+    ],
+    "getMainFunctionsUser": [
+      "getMainFunctionsWithUsersAction"
+    ],
+    "addFunctionAction": [],
+    "updateFunctionAction": [],
+    "removeFunctionAction": [],
+    "getFunctionsAction": [],
+    "getMainFunctionsWithUsersAction": []
+  },
+  "deps": {}
+}

@@ -1,0 +1,8 @@
+{
+  "name": "createSessionToken",
+  "file": "src/services/session/database/token.mutations.ts",
+  "sig": "(sessionId: string) => Promise<{ token: string; expiresAt: Date; url: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -44,4 +44,4 @@ export const useCalendarDragAndDrop = (
     handleEventDrop,
     handleEventResize,
   };
-};
+}; 

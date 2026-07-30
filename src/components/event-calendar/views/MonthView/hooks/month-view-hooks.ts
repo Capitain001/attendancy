@@ -5,10 +5,10 @@ import { getEventVisibilityStats, getMonthViewDays, getWeekdayNames, groupDaysIn
 
 /**
  * Hook personnalisé pour gérer les données du calendrier mensuel
- *
+ * 
  * @param currentDate - La date courante du calendrier
  * @returns Objet contenant les données calculées du calendrier
- *
+ * 
  * Ce hook centralise tous les calculs liés à l'affichage du mois :
  * - Calcul des jours à afficher
  * - Génération des noms des jours de la semaine
@@ -16,9 +16,9 @@ import { getEventVisibilityStats, getMonthViewDays, getWeekdayNames, groupDaysIn
  */
 export function useMonthViewData(currentDate: Date) {
   const days = useMemo(() => getMonthViewDays(currentDate), [currentDate]);
-
+  
   const weekdays = useMemo(() => getWeekdayNames(), []);
-
+  
   const weeks = useMemo(() => groupDaysIntoWeeks(days), [days]);
 
   return {
@@ -30,9 +30,9 @@ export function useMonthViewData(currentDate: Date) {
 
 /**
  * Hook pour gérer l'état de montage du composant
- *
+ * 
  * @returns Boolean indiquant si le composant est monté
- *
+ * 
  * Utilisé pour éviter les problèmes d'hydratation SSR et s'assurer
  * que les calculs côté client sont cohérents.
  */
@@ -48,10 +48,10 @@ export function useMountedState() {
 
 /**
  * Hook pour gérer les interactions avec les événements
- *
+ * 
  * @param onEventSelect - Callback original pour la sélection d'événement
  * @returns Objet contenant les handlers d'événements
- *
+ * 
  * Ce hook encapsule la logique de gestion des clics sur les événements,
  * notamment la prévention de la propagation.
  */
@@ -73,7 +73,7 @@ export function useEventHandlers(
 
 /**
  * Hook pour gérer la logique de visibilité des événements d'un jour
- *
+ * 
  * @param allDayEvents - Événements du jour (all-day + spanning)
  * @param allEvents - Tous les événements du jour
  * @param getVisibleEventCount - Fonction de calcul de visibilité
@@ -87,10 +87,10 @@ export function useDayEventVisibility(
   isMounted: boolean
 ) {
   const visibilityData = useMemo(() => {
-    const visibleCount = isMounted
-      ? getVisibleEventCount(allDayEvents.length)
+    const visibleCount = isMounted 
+      ? getVisibleEventCount(allDayEvents.length) 
       : undefined;
-
+    
     return getEventVisibilityStats(allDayEvents.length, visibleCount);
   }, [allDayEvents.length, getVisibleEventCount, isMounted]);
 
@@ -104,7 +104,7 @@ export function useDayEventVisibility(
 
 /**
  * Hook pour gérer la création d'événements
- *
+ * 
  * @param onEventCreate - Callback original pour la création d'événement
  * @returns Fonction de création d'événement avec heure par défaut
  */

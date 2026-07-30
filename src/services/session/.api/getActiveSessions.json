@@ -1,0 +1,8 @@
+{
+  "name": "getActiveSessions",
+  "file": "src/services/session/database/session.queries.ts",
+  "sig": "(orgId: string) => Promise<{ schedule: { course: { name: string; }; teacher: { user: { firstName: string | null; lastName: string | null; avatar_url: string | null; }; id: string; }; room: { name: string; }; id: string; startTime: Date; endTime: Date; classId: string; groupId: string | null; }; id: string; status: SessionStatus; check...",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

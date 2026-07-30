@@ -1,0 +1,8 @@
+{
+  "name": "updateTeacherDepartment",
+  "file": "src/services/teacher/database/teacher.mutations.ts",
+  "sig": "(teacherId: string, departmentId: string | null | undefined, orgId: string) => Promise<{ id: string; departmentId: string | null; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

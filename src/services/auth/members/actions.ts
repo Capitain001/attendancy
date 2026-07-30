@@ -3,7 +3,7 @@
 // Action de finalisation du signup pour les membres invités.
 // L'utilisateur arrive via un lien d'invitation (token Supabase), définit son
 // mot de passe ici. completeSignup() crée les enregistrements DB en background.
-import { parse, ValiError } from 'valibot'
+import { safeParse } from 'valibot'
 import { createClient } from '@/utils/supabase/server'
 import { memberSignupSchema } from './validation'
 import { completeSignup } from './complete-signup'
@@ -12,21 +12,16 @@ export async function submitSignupFormAction(data: {
   password: string
   confirmPassword: string
 }) {
-  let parsed
-  try {
-    parsed = parse(memberSignupSchema, data)
-  } catch (e) {
-    const msg = e instanceof ValiError ? e.issues[0]?.message ?? 'Validation échouée' : 'Entrée invalide'
-    return { error: msg }
-  }
+  const result = safeParse(memberSignupSchema, data)
+  if (!result.success) return { error: result.issues[0]?.message ?? 'Validation échouée' }
 
-  if (parsed.password !== parsed.confirmPassword) {
+  if (result.output.password !== result.output.confirmPassword) {
     return { error: 'Les mots de passe ne correspondent pas' }
   }
 
   const supabase = await createClient()
   const { data: userData, error } = await supabase.auth.updateUser({
-    password: parsed.password,
+    password: result.output.password,
   })
 
   if (error) return { error: error.message }

@@ -1,8 +1,6 @@
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { cacheTag, cacheLife } from 'next/cache'
 import { CACHE } from '@/cache/server/key'
-
-export type OrgPlanningResources = Awaited<ReturnType<typeof getOrgPlanningResources>>
 
 /**
  * Ressources planning à l'échelle de l'organisation.

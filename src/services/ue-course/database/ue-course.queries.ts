@@ -1,6 +1,6 @@
 // src/services/ue-course/database/ue-course.queries.ts
 import { cacheTag, cacheLife } from 'next/cache'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { CACHE } from '@/cache/server/key'
 
 export async function getUECoursesByUE(ueId: string, orgId: string) {

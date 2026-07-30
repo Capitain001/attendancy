@@ -1,6 +1,6 @@
 // src/services/teacher/database/teacher.queries.ts
 import { cacheTag, cacheLife } from 'next/cache'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { CACHE } from '@/cache/server/key'
 
 export async function getTeachers(orgId: string, departmentId?: string) {
@@ -92,28 +92,34 @@ export async function getTeacherSchedules(
 }
 
 export async function getTeacherStats(teacherId: string, orgId: string) {
-  const total = await prisma.schedule.count({
-    where: { teacherId, orgId, deletedAt: null },
-  })
-  const completed = await prisma.schedule.count({
-    where: { teacherId, orgId, deletedAt: null, status: 'COMPLETED' },
-  })
-  const cancelled = await prisma.schedule.count({
-    where: { teacherId, orgId, deletedAt: null, status: 'CANCELED' },
-  })
-  const missed = await prisma.schedule.count({
-    where: { teacherId, orgId, deletedAt: null, status: 'MISSED' },
-  })
-  const courseCount = await prisma.courseTeacher.count({
-    where: { teacherId, course: { orgId, deletedAt: null } },
-  })
+  const [completed, cancelled, missed, courseCount, sessions] = await Promise.all([
+    prisma.schedule.count({ where: { teacherId, orgId, deletedAt: null, status: 'COMPLETED' } }),
+    prisma.schedule.count({ where: { teacherId, orgId, deletedAt: null, status: 'CANCELED' } }),
+    prisma.schedule.count({ where: { teacherId, orgId, deletedAt: null, status: 'MISSED' } }),
+    prisma.courseTeacher.count({ where: { teacherId, course: { orgId, deletedAt: null } } }),
+    prisma.session.findMany({
+      where: { schedule: { teacherId, orgId, deletedAt: null } },
+      select: { isLate: true },
+    }),
+  ])
   const done = completed + missed
+  const ponctuelCount = sessions.filter(s => !s.isLate).length
   return {
     courses:     courseCount,
     assiduite:   done > 0 ? Math.round((completed / done) * 100) : 100,
-    ponctualite: 100,
+    ponctualite: sessions.length > 0 ? Math.round((ponctuelCount / sessions.length) * 100) : 100,
     annulations: cancelled,
   }
+}
+
+export async function getTeacherOrganizationStats(orgId: string) {
+  const [total, active, inactive, withCourses] = await Promise.all([
+    prisma.teacher.count({ where: { orgId, deletedAt: null } }),
+    prisma.teacher.count({ where: { orgId, deletedAt: null, user: { status: 'ACTIVE' } } }),
+    prisma.teacher.count({ where: { orgId, deletedAt: null, user: { status: 'INACTIVE' } } }),
+    prisma.teacher.count({ where: { orgId, deletedAt: null, courses: { some: {} } } }),
+  ])
+  return { total, active, inactive, withCourses }
 }
 
 export async function getTeacher(teacherId: string, orgId: string) {

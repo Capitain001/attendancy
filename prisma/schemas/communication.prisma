@@ -38,7 +38,7 @@ model ChannelMember {
   joinedAt   DateTime        @default(now())
   lastReadAt DateTime?
   channel    Channel         @relation(fields: [channelId], references: [id], onDelete: Cascade)
-  user       User            @relation(fields: [userId], references: [id])
+  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([channelId, userId])
   @@index([userId])
@@ -52,7 +52,7 @@ model Message {
   id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   content   String
   createdAt DateTime  @default(now())
-  userId    String    @db.Uuid
+  userId    String?   @db.Uuid
   deletedAt DateTime?
   channelId String    @db.Uuid
   parentId  String?   @db.Uuid
@@ -60,7 +60,7 @@ model Message {
   channel   Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
   parent    Message?  @relation("MessageReplies", fields: [parentId], references: [id])
   replies   Message[] @relation("MessageReplies")
-  user      User      @relation(fields: [userId], references: [id])
+  user      User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([channelId, createdAt])
   @@index([userId])
@@ -89,7 +89,7 @@ model RealtimeItem {
 model Comment {
   id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   content       String
-  userId        String       @db.Uuid
+  userId        String?      @db.Uuid
   targetId      String
   resource      Resource
   parentId      String?      @db.Uuid
@@ -98,11 +98,11 @@ model Comment {
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
   orgId         String       @db.Uuid
-  deletedByUser User?        @relation("CommentDeletedBy", fields: [deletedBy], references: [id])
+  deletedByUser User?        @relation("CommentDeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
   organization  Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
   parent        Comment?     @relation("CommentReplies", fields: [parentId], references: [id])
   replies       Comment[]    @relation("CommentReplies")
-  user          User         @relation("CommentAuthor", fields: [userId], references: [id])
+  user          User?        @relation("CommentAuthor", fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([targetId, resource, deletedAt])
   @@index([userId])
@@ -123,8 +123,8 @@ model Notification {
   metadata   Json?
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @updatedAt
-  user       User             @relation(fields: [userId], references: [id])
-  schedule   Schedule?        @relation(fields: [scheduleId], references: [id])
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  schedule   Schedule?        @relation(fields: [scheduleId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([scheduleId])

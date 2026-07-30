@@ -1,0 +1,8 @@
+{
+  "name": "assignTeacher",
+  "file": "src/services/course/database/course.mutations.ts",
+  "sig": "(data: AssignTeacherOutput & { orgId: string }) => Promise<{ id: string; isMain: boolean; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

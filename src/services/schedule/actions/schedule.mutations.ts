@@ -3,49 +3,50 @@ import * as v from 'valibot'
 import { getUserInfo } from '@/services/user/userInfo'
 import { getAuthorization } from '@/services/auth/authorization'
 import { ERRORS } from '@/config'
-import { createSchedule, updateSchedule, removeSchedule } from '../database'
+import { createSchedule, updateSchedule, removeSchedule, restoreSchedule } from '../database'
 import { createScheduleSchema, updateScheduleSchema } from '../validation'
 
 export async function createScheduleAction(input: unknown) {
+  const user = await getUserInfo()
+  const orgId = user?.organization?.id
+  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+  const auth = getAuthorization(user, 'DIRECTION')
+  if (!auth.success) return { error: auth.error }
+
+  const parsed = v.safeParse(createScheduleSchema, input)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+
+  if (new Date(parsed.output.endTime) <= new Date(parsed.output.startTime)) {
+    return { error: 'L\'heure de fin doit être après l\'heure de début' }
+  }
+
   try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
-
-    const data = v.parse(createScheduleSchema, input)
-
-    if (new Date(data.endTime) <= new Date(data.startTime)) {
-      return { error: 'L\'heure de fin doit être après l\'heure de début' }
-    }
-
-    const schedule = await createSchedule({ ...data, orgId })
+    const schedule = await createSchedule({ ...parsed.output, orgId })
     return { data: schedule }
   } catch (e) {
-    if (e instanceof v.ValiError) return { error: e.issues[0]?.message ?? 'Données invalides' }
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
 export async function updateScheduleAction(scheduleId: string, input: unknown) {
+  const user = await getUserInfo()
+  const orgId = user?.organization?.id
+  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+  const auth = getAuthorization(user, 'DIRECTION')
+  if (!auth.success) return { error: auth.error }
+
+  const parsed = v.safeParse(updateScheduleSchema, input)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+
+  const data = {
+    ...parsed.output,
+    confirmed: parsed.output.confirmed === 'true' ? true : parsed.output.confirmed === undefined ? undefined : false,
+  }
+
   try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
-
-    const raw = v.parse(updateScheduleSchema, input)
-    const data = {
-      ...raw,
-      confirmed: raw.confirmed === 'true' ? true : raw.confirmed === undefined ? undefined : false,
-    }
-
     await updateSchedule(scheduleId, orgId, data)
     return { data: { id: scheduleId } }
   } catch (e) {
-    if (e instanceof v.ValiError) return { error: e.issues[0]?.message ?? 'Données invalides' }
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
@@ -76,28 +77,7 @@ export async function restoreScheduleAction(scheduleId: string) {
     if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
     const auth = getAuthorization(user, 'DIRECTION')
     if (!auth.success) return { error: auth.error }
-
-    // Re-read the schedule first (including soft-deleted)
-    const { prisma } = await import('@/lib/db')
-    const schedule = await prisma.schedule.findFirst({
-      where: { id: scheduleId, orgId },
-      include: {
-        course:  { select: { id: true, name: true } },
-        room:    { select: { id: true, name: true } },
-        class:   { select: { id: true, name: true } },
-        group:   { select: { id: true, name: true } },
-        teacher: { select: { id: true, user: { select: { firstName: true, lastName: true, avatar_url: true } } } },
-      },
-    })
-    if (!schedule) return { error: 'Séance introuvable' }
-
-    await prisma.schedule.update({
-      where: { id: scheduleId },
-      data: { deletedAt: null },
-    })
-    const { invalidateEvent } = await import('@/cache/server/key')
-    await invalidateEvent('SCHEDULE_CREATED', orgId, schedule.classId)
-    return { data: schedule }
+    return { data: await restoreSchedule(scheduleId, orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

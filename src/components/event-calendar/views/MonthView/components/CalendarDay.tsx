@@ -37,7 +37,7 @@ interface CalendarDayProps {
 
 /**
  * Composant représentant un jour individuel dans le calendrier mensuel
- *
+ * 
  * Ce composant gère :
  * - L'affichage du numéro du jour avec les styles appropriés
  * - La liste des événements du jour
@@ -85,7 +85,7 @@ export function CalendarDay({
 
   return (
 <div
-  className="group border hover:bg-accent/75
+  className="group border hover:bg-accent/75 
              data-outside-cell:bg-muted/50
              data-outside-cell:text-muted-foreground/60
              data-today:bg-primary/10"

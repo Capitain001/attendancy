@@ -1,0 +1,8 @@
+{
+  "name": "getPushSubscriptionsByUserId",
+  "file": "src/services/notification/database/push.queries.ts",
+  "sig": "(userId: string) => Promise<{ id: string; createdAt: Date; endpoint: string; p256dh: string; auth: string; userAgent: string | null; deviceId: string | null; expiresAt: Date | null; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

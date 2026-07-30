@@ -1,0 +1,12 @@
+{
+  "name": "acceptInviteAction",
+  "file": "src/services/invite/actions/invite.mutations.ts",
+  "sig": "(input: AcceptInviteInput) => Promise<{ error: string; data?: undefined; } | { data: { redirectPath: string; }; error?: undefined; }>",
+  "calls": [
+    "getInviteByToken",
+    "completeInvite"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

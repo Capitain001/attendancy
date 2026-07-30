@@ -1,0 +1,11 @@
+{
+  "name": "getStudentScheduleAction",
+  "file": "src/services/student/actions/student.queries.ts",
+  "sig": "(params: { classId: string groupIds: string[] rangeStart: Date rangeEnd: Date }) => Promise<{ data: { id: string; status: ScheduleStatus; teacher: { id: string; user: { firstName: string | null; lastName: string | null; }; }; room: { name: string; id: string; }; course: { ...; }; startTime: Date; endTime: Date; notes: string | null; }[]; error?: undefined; } | { ...; }>",
+  "calls": [
+    "getStudentSchedules"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

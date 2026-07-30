@@ -26,7 +26,7 @@ interface EventListProps {
 
 /**
  * Composant gérant l'affichage de la liste des événements d'un jour
- *
+ * 
  * Ce composant gère :
  * - Le tri et l'affichage des événements
  * - La distinction entre événements qui commencent ce jour et ceux qui s'étendent

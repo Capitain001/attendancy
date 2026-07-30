@@ -1,0 +1,8 @@
+{
+  "name": "getTeacherOrganizationStats",
+  "file": "src/services/teacher/database/teacher.queries.ts",
+  "sig": "(orgId: string) => Promise<{ total: number; active: number; inactive: number; withCourses: number; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,11 @@
+{
+  "name": "getDirectionMembersAction",
+  "file": "src/services/direction/actions/direction.queries.ts",
+  "sig": "(params?: { functionId?: string }) => Promise<{ data: DirectionMemberDto[] } | { error: string }>",
+  "calls": [
+    "getDirectionMembers"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

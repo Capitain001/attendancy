@@ -2,7 +2,7 @@
 // Création du record User applicatif après le signup Supabase.
 // L'id Supabase Auth est la source de vérité — jamais généré côté appli.
 import { UserStatus } from  '@/prisma'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 
 
 // Idempotent — re-signup ou état partiel ne lève pas de violation d'unicité.

@@ -1,0 +1,117 @@
+{
+  "service": "function",
+  "path": "src/services/function/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "87fd0c8",
+  "utils_dir": null,
+  "fns": {
+    "createFunction": {
+      "f": ".api/createFunction.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateFunction": {
+      "f": ".api/updateFunction.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "deleteFunction": {
+      "f": ".api/deleteFunction.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "assignFunctionToUser": {
+      "f": ".api/assignFunctionToUser.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "removeFunctionFromUser": {
+      "f": ".api/removeFunctionFromUser.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getFunctions": {
+      "f": ".api/getFunctions.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getFunctionByName": {
+      "f": ".api/getFunctionByName.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getFunctionsByNames": {
+      "f": ".api/getFunctionsByNames.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createFunctionAction": {
+      "f": ".api/createFunctionAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateFunctionAction": {
+      "f": ".api/updateFunctionAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "deleteFunctionAction": {
+      "f": ".api/deleteFunctionAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "assignFunctionToUserAction": {
+      "f": ".api/assignFunctionToUserAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeFunctionFromUserAction": {
+      "f": ".api/removeFunctionFromUserAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getFunctionsAction": {
+      "f": ".api/getFunctionsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getFunctionAction": {
+      "f": ".api/getFunctionAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createFunction": [
+      "createFunctionAction"
+    ],
+    "updateFunction": [
+      "updateFunctionAction"
+    ],
+    "deleteFunction": [
+      "deleteFunctionAction"
+    ],
+    "assignFunctionToUser": [
+      "assignFunctionToUserAction"
+    ],
+    "removeFunctionFromUser": [
+      "removeFunctionFromUserAction"
+    ],
+    "getFunctions": [
+      "getFunctionsAction"
+    ],
+    "getFunctionByName": [
+      "assignFunctionToUserAction",
+      "getFunctionAction"
+    ],
+    "getFunctionsByNames": [],
+    "createFunctionAction": [],
+    "updateFunctionAction": [],
+    "deleteFunctionAction": [],
+    "assignFunctionToUserAction": [],
+    "removeFunctionFromUserAction": [],
+    "getFunctionsAction": [],
+    "getFunctionAction": []
+  },
+  "deps": {}
+}

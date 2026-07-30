@@ -1,0 +1,11 @@
+{
+  "name": "removeEventAction",
+  "file": "src/services/event/actions/event.mutations.ts",
+  "sig": "(eventId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "calls": [
+    "removeEventDb"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

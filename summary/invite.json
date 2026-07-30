@@ -1,0 +1,188 @@
+{
+  "service": "invite",
+  "path": "src/services/invite/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "87fd0c8",
+  "generated_at": "2026-07-29T12:17:29.318Z",
+  "fns": {
+    "createInvitation": {
+      "name": "createInvitation",
+      "file": "src/services/invite/database/invite.mutations.ts",
+      "sig": "(token: string, params: CreateInvitationParams) => Promise<{ id: string; token: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "completeInvite": {
+      "name": "completeInvite",
+      "file": "src/services/invite/database/invite.mutations.ts",
+      "sig": "(params: CompleteInviteParams) => Promise<{ profileId: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "resendInvite": {
+      "name": "resendInvite",
+      "file": "src/services/invite/database/invite.mutations.ts",
+      "sig": "(invitationId: string, newExpiry: Date) => Promise<{ id: string; email: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "deleteInvitation": {
+      "name": "deleteInvitation",
+      "file": "src/services/invite/database/invite.mutations.ts",
+      "sig": "(invitationId: string) => Promise<{ id: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getInviteByToken": {
+      "name": "getInviteByToken",
+      "file": "src/services/invite/database/invite.queries.ts",
+      "sig": "(token: string) => Promise<{ id: string; orgId: string; organization: { name: string; id: string; slug: string | null; }; email: string; invitationType: InvitationType; details: JsonValue; token: string; expiresAt: Date | null; usedAt: Date | null; } | null>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrgInvites": {
+      "name": "getOrgInvites",
+      "file": "src/services/invite/database/invite.queries.ts",
+      "sig": "(orgId: string) => Promise<{ id: string; email: string; details: JsonValue; createdAt: Date; expiresAt: Date | null; usedAt: Date | null; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "sendInviteAction": {
+      "name": "sendInviteAction",
+      "file": "src/services/invite/actions/invite.mutations.ts",
+      "sig": "(input: SendInviteInput) => Promise<{ error: string; data?: undefined; } | { data: { invitationId: string; }; error?: undefined; }>",
+      "calls": [
+        "createInvitation"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "acceptInviteAction": {
+      "name": "acceptInviteAction",
+      "file": "src/services/invite/actions/invite.mutations.ts",
+      "sig": "(input: AcceptInviteInput) => Promise<{ error: string; data?: undefined; } | { data: { redirectPath: string; }; error?: undefined; }>",
+      "calls": [
+        "getInviteByToken",
+        "completeInvite"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "resendInvitationAction": {
+      "name": "resendInvitationAction",
+      "file": "src/services/invite/actions/invite.mutations.ts",
+      "sig": "(invitation: { id: string; email: string }) => Promise<InvitationActionResult>",
+      "calls": [
+        "resendInvite"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "generateMagicLinkAction": {
+      "name": "generateMagicLinkAction",
+      "file": "src/services/invite/actions/invite.mutations.ts",
+      "sig": "(invitation: { id: string; email: string }) => Promise<InvitationActionResult>",
+      "calls": [],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "deleteInvitationUserAction": {
+      "name": "deleteInvitationUserAction",
+      "file": "src/services/invite/actions/invite.mutations.ts",
+      "sig": "(invitation: { id: string }) => Promise<InvitationActionResult>",
+      "calls": [
+        "deleteInvitation"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getInviteByTokenAction": {
+      "name": "getInviteByTokenAction",
+      "file": "src/services/invite/actions/invite.queries.ts",
+      "sig": "(token: string) => Promise<{ data: { id: string; orgId: string; organization: { name: string; id: string; slug: string | null; }; email: string; invitationType: InvitationType; details: JsonValue; token: string; expiresAt: Date | null; usedAt: Date | null; } | null; error?: undefined; } | { ...; }>",
+      "calls": [
+        "getInviteByToken"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getOrgInvitesAction": {
+      "name": "getOrgInvitesAction",
+      "file": "src/services/invite/actions/invite.queries.ts",
+      "sig": "() => Promise<{ data: { id: string; email: string; details: JsonValue; createdAt: Date; expiresAt: Date | null; usedAt: Date | null; }[]; error?: undefined; } | { error: string; data?: undefined; }>",
+      "calls": [
+        "getOrgInvites"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createInvitation": [
+      "sendInviteAction"
+    ],
+    "completeInvite": [
+      "acceptInviteAction"
+    ],
+    "resendInvite": [
+      "resendInvitationAction"
+    ],
+    "deleteInvitation": [
+      "deleteInvitationUserAction"
+    ],
+    "getInviteByToken": [
+      "acceptInviteAction",
+      "getInviteByTokenAction"
+    ],
+    "getOrgInvites": [
+      "getOrgInvitesAction"
+    ],
+    "sendInviteAction": [],
+    "acceptInviteAction": [],
+    "resendInvitationAction": [],
+    "generateMagicLinkAction": [],
+    "deleteInvitationUserAction": [],
+    "getInviteByTokenAction": [],
+    "getOrgInvitesAction": []
+  },
+  "deps": {}
+}

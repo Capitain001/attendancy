@@ -1,0 +1,8 @@
+{
+  "name": "removeGroup",
+  "file": "src/services/group/database/group.mutations.ts",
+  "sig": "(groupId: string, orgId: string) => Promise<{ id: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

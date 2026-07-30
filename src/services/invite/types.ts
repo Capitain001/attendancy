@@ -3,7 +3,13 @@ import type { getInviteByToken, getOrgInvites } from './database'
 
 export type { SendInviteInput, AcceptInviteInput, InvitableRole }
 
-export type InviteDetails = { role: InvitableRole }
+export type InvitedBy = { id: string; name: string; email: string }
+
+export type InviteDetails =
+  | { role: 'TEACHER'; invited_by?: InvitedBy }
+  | { role: 'STUDENT'; enrollment?: { classId: string; groupIds?: string[]; parentEmail?: string }; invited_by?: InvitedBy }
+  | { role: 'PARENT'; parentLink: { studentId: string; relation: string }; invited_by?: InvitedBy }
+  | { role: 'DIRECTION'; function?: string; additionalFunctions?: string[]; invited_by?: InvitedBy }
 
 export type GetInviteByTokenDto = Awaited<ReturnType<typeof getInviteByToken>>
 export type GetOrgInvitesDto    = Awaited<ReturnType<typeof getOrgInvites>>

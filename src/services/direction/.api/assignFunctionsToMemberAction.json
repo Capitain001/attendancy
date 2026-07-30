@@ -1,0 +1,11 @@
+{
+  "name": "assignFunctionsToMemberAction",
+  "file": "src/services/direction/actions/direction.mutations.ts",
+  "sig": "(params: AssignFunctionsParams) => Promise<{ data: true } | { error: string }>",
+  "calls": [
+    "assignFunctionsToMember"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

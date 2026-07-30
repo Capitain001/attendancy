@@ -1,0 +1,152 @@
+{
+  "service": "department",
+  "path": "src/services/department/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "87fd0c8",
+  "generated_at": "2026-07-29T12:17:29.267Z",
+  "fns": {
+    "createDepartment": {
+      "name": "createDepartment",
+      "file": "src/services/department/database/department.mutations.ts",
+      "sig": "(data: CreateDepartmentOutput & { orgId: string }) => Promise<{ name: string; id: string; _count: { teachers: number; programTracks: number; ues: number; }; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateDepartment": {
+      "name": "updateDepartment",
+      "file": "src/services/department/database/department.mutations.ts",
+      "sig": "({ departmentId, orgId, name }: UpdateDepartmentOutput & { orgId: string }) => Promise<{ name: string; id: string; _count: { teachers: number; programTracks: number; ues: number; }; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "deleteDepartment": {
+      "name": "deleteDepartment",
+      "file": "src/services/department/database/department.mutations.ts",
+      "sig": "(departmentId: string, orgId: string) => Promise<void>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getDepartments": {
+      "name": "getDepartments",
+      "file": "src/services/department/database/department.queries.ts",
+      "sig": "(orgId: string) => Promise<{ name: string; id: string; _count: { teachers: number; programTracks: number; ues: number; }; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createDepartmentAction": {
+      "name": "createDepartmentAction",
+      "file": "src/services/department/actions/department.mutations.ts",
+      "sig": "(input: CreateDepartmentInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; _count: { teachers: number; programTracks: number; ues: number; }; }; error?: undefined; }>",
+      "calls": [
+        "createDepartment"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateDepartmentAction": {
+      "name": "updateDepartmentAction",
+      "file": "src/services/department/actions/department.mutations.ts",
+      "sig": "(input: UpdateDepartmentInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; _count: { teachers: number; programTracks: number; ues: number; }; }; error?: undefined; }>",
+      "calls": [
+        "updateDepartment"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "deleteDepartmentAction": {
+      "name": "deleteDepartmentAction",
+      "file": "src/services/department/actions/department.mutations.ts",
+      "sig": "(departmentId: string) => Promise<{ error: string; data?: undefined; } | { data: void; error?: undefined; }>",
+      "calls": [
+        "deleteDepartment"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeDepartmentAction": {
+      "name": "removeDepartmentAction",
+      "file": "src/services/department/actions/department.mutations.ts",
+      "sig": "(departmentId: string) => Promise<{ success: boolean; error?: string }>",
+      "calls": [
+        "deleteDepartmentAction"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateDepartmentByIdAction": {
+      "name": "updateDepartmentByIdAction",
+      "file": "src/services/department/actions/department.mutations.ts",
+      "sig": "(departmentId: string, data: { name: string }) => ReturnType<typeof updateDepartmentAction>",
+      "calls": [
+        "updateDepartmentAction"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getDepartmentsAction": {
+      "name": "getDepartmentsAction",
+      "file": "src/services/department/actions/department.queries.ts",
+      "sig": "() => Promise<{ data: { name: string; id: string; _count: { teachers: number; programTracks: number; ues: number; }; }[]; error?: undefined; } | { error: string; data?: undefined; }>",
+      "calls": [
+        "getDepartments"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createDepartment": [
+      "createDepartmentAction"
+    ],
+    "updateDepartment": [
+      "updateDepartmentAction"
+    ],
+    "deleteDepartment": [
+      "deleteDepartmentAction"
+    ],
+    "getDepartments": [
+      "getDepartmentsAction"
+    ],
+    "createDepartmentAction": [],
+    "updateDepartmentAction": [
+      "updateDepartmentByIdAction"
+    ],
+    "deleteDepartmentAction": [
+      "removeDepartmentAction"
+    ],
+    "removeDepartmentAction": [],
+    "updateDepartmentByIdAction": [],
+    "getDepartmentsAction": []
+  },
+  "deps": {}
+}

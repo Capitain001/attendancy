@@ -1,0 +1,11 @@
+{
+  "name": "getOrgDailyMetricsAction",
+  "file": "src/services/org/actions/org.mutations.ts",
+  "sig": "() => Promise<{ data: { activeSessions: number; todaySchedules: number; todayAbsences: number; completedSchedules: number; }; error?: undefined; } | { error: string; data?: undefined; }>",
+  "calls": [
+    "getOrgDailyMetrics"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

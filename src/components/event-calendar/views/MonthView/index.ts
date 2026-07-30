@@ -1,6 +1,6 @@
 /**
  * Point d'entrée principal pour le module MonthView
- *
+ * 
  * Ce fichier exporte tous les composants, hooks, types et utilitaires
  * nécessaires à l'utilisation du calendrier mensuel.
  */

@@ -1,0 +1,11 @@
+{
+  "name": "removeFunctionFromUserAction",
+  "file": "src/services/function/actions/function.mutations.ts",
+  "sig": "(params: { userId: string functionId: string }) => Promise<{ error: string; data?: undefined; } | { data: { userId: string; functionId: string; }; error?: undefined; }>",
+  "calls": [
+    "removeFunctionFromUser"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,8 @@
+{
+  "name": "cleanupExpiredSubscriptions",
+  "file": "src/services/notification/database/push.mutations.ts",
+  "sig": "() => Promise<BatchPayload>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

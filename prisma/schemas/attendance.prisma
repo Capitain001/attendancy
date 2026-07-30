@@ -24,7 +24,7 @@ model Session {
   position           Unsupported("geography")?
 
   qrScans            QRScan[]
-  location           Location?                 @relation(fields: [locationId], references: [id])
+  location           Location?                 @relation(fields: [locationId], references: [id], onDelete: SetNull)
   schedule           Schedule                  @relation(fields: [scheduleId], references: [id])
   tokens             SessionToken[]
 
@@ -100,14 +100,14 @@ model QRCode {
 model QRScan {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   qrCodeId  String   @db.Uuid
-  userId    String   @db.Uuid
+  userId    String?  @db.Uuid
   sessionId String?  @db.Uuid
   timestamp DateTime @default(now())
   ipAddress String?
   userAgent String?
   qrCode    QRCode   @relation(fields: [qrCodeId], references: [id])
-  session   Session? @relation(fields: [sessionId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  session   Session? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([sessionId])
@@ -131,7 +131,7 @@ model Justification {
   studentId     String              @db.Uuid
   orgId         String              @db.Uuid
   scheduleId    String              @db.Uuid
-  declaredById  String              @db.Uuid // parent, étudiant, ou staff (saisie guichet)
+  declaredById  String?             @db.Uuid // parent, étudiant, ou staff (saisie guichet)
   reason        String?
   status        JustificationStatus @default(PENDING)
   reviewedById  String?             @db.Uuid
@@ -143,8 +143,8 @@ model Justification {
   student      Student      @relation(fields: [studentId], references: [id])
   organization Organization @relation(fields: [orgId], references: [id])
   schedule     Schedule     @relation(fields: [scheduleId], references: [id])
-  declaredBy   User         @relation("JustificationDeclaredBy", fields: [declaredById], references: [id])
-  reviewedBy   User?        @relation("JustificationReviewedBy", fields: [reviewedById], references: [id])
+  declaredBy   User?        @relation("JustificationDeclaredBy", fields: [declaredById], references: [id], onDelete: SetNull)
+  reviewedBy   User?        @relation("JustificationReviewedBy", fields: [reviewedById], references: [id], onDelete: SetNull)
 
   @@index([orgId, status])
   @@index([scheduleId, studentId]) // clé naturelle du lien vers Attendance

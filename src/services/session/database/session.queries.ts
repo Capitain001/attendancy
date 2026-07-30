@@ -1,5 +1,5 @@
 import { cacheTag, cacheLife } from 'next/cache'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { CACHE } from '@/cache/server/key'
 
 const activeSessionSelect = {
@@ -38,8 +38,6 @@ export async function getActiveSessions(orgId: string) {
     orderBy: { schedule: { startTime: 'asc' } },
   })
 }
-
-export type ActiveSessionItem = Awaited<ReturnType<typeof getActiveSessions>>[number]
 
 export async function getOrgDaySchedulesWithSession(
   orgId: string,
@@ -98,8 +96,6 @@ export async function getOrgDaySchedulesWithSession(
   })
 }
 
-export type OrgDaySessionRow = Awaited<ReturnType<typeof getOrgDaySchedulesWithSession>>[number]
-
 export async function getTeacherNextSchedule(teacherId: string, orgId: string) {
   'use cache'
   cacheTag(CACHE.SCHEDULE(orgId))
@@ -129,7 +125,7 @@ export async function getTeacherNextSchedule(teacherId: string, orgId: string) {
           _count: {
             select: {
               studentEnrollments: {
-                where: { deletedAt: null, student: { deletedAt: null } },
+                where: { endedAt: null, student: { deletedAt: null } },
               },
             },
           },
@@ -141,7 +137,7 @@ export async function getTeacherNextSchedule(teacherId: string, orgId: string) {
           _count: {
             select: {
               studentGroups: {
-                where: { enrollment: { deletedAt: null, student: { deletedAt: null } } },
+                where: { enrollment: { endedAt: null, student: { deletedAt: null } } },
               },
             },
           },
