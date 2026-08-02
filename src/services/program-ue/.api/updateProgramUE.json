@@ -1,0 +1,8 @@
+{
+  "name": "updateProgramUE",
+  "file": "src/services/program-ue/database/program-ue.mutations.ts",
+  "sig": "({ programId, ueId, data }: { programId: string; ueId: string; data: { semester?: number; order?: number; isOptional?: boolean; isCompleted?: boolean } }) => Promise<BatchPayload>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

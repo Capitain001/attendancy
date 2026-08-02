@@ -1,0 +1,11 @@
+{
+  "name": "deleteProgramTrackAction",
+  "file": "src/services/program-track/actions/programTrack.mutations.ts",
+  "sig": "(programTrackId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "calls": [
+    "deleteProgramTrack"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

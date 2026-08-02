@@ -1,0 +1,11 @@
+{
+  "name": "linkProgramToClassAction",
+  "file": "src/services/program/actions/program.mutations.ts",
+  "sig": "({ classId, programId }: { classId: string programId: string }) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; programTrackId: string; classes: { name: string; id: string; programTrack: { name: string; id: string; }; academicYear: { ...; }; }[]; programTrack: { ...; }; }; error?: undefined; }>",
+  "calls": [
+    "updateProgram"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

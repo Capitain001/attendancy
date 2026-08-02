@@ -1,0 +1,166 @@
+{
+  "service": "organization",
+  "path": "src/services/organization/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "7a0ca2e",
+  "utils_dir": null,
+  "fns": {
+    "createOrgWithDefaults": {
+      "f": ".api/createOrgWithDefaults.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateOrganization": {
+      "f": ".api/updateOrganization.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "setOrgDetails": {
+      "f": ".api/setOrgDetails.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateOrgLogo": {
+      "f": ".api/updateOrgLogo.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "setMemberStatusWithAudit": {
+      "f": ".api/setMemberStatusWithAudit.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getOrgIdentity": {
+      "f": ".api/getOrgIdentity.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrgUsage": {
+      "f": ".api/getOrgUsage.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrgDetails": {
+      "f": ".api/getOrgDetails.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrgDailyMetrics": {
+      "f": ".api/getOrgDailyMetrics.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrgBySlug": {
+      "f": ".api/getOrgBySlug.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrgResourcesCounts": {
+      "f": ".api/getOrgResourcesCounts.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createOrgAction": {
+      "f": ".api/createOrgAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateOrgIdentityAction": {
+      "f": ".api/updateOrgIdentityAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "setOrgDetailsAction": {
+      "f": ".api/setOrgDetailsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateOrgLogoAction": {
+      "f": ".api/updateOrgLogoAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "setMemberStatusAction": {
+      "f": ".api/setMemberStatusAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getOrgIdentityAction": {
+      "f": ".api/getOrgIdentityAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getOrgUsageAction": {
+      "f": ".api/getOrgUsageAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getOrgDetailsAction": {
+      "f": ".api/getOrgDetailsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getOrgDailyMetricsAction": {
+      "f": ".api/getOrgDailyMetricsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getOrgResourcesCountsAction": {
+      "f": ".api/getOrgResourcesCountsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getOrgBySlugAction": {
+      "f": ".api/getOrgBySlugAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createOrgWithDefaults": [
+      "createOrgAction"
+    ],
+    "updateOrganization": [
+      "updateOrgIdentityAction"
+    ],
+    "setOrgDetails": [
+      "setOrgDetailsAction"
+    ],
+    "updateOrgLogo": [
+      "updateOrgLogoAction"
+    ],
+    "setMemberStatusWithAudit": [
+      "setMemberStatusAction"
+    ],
+    "getOrgIdentity": [
+      "getOrgIdentityAction"
+    ],
+    "getOrgUsage": [
+      "getOrgUsageAction"
+    ],
+    "getOrgDetails": [
+      "getOrgDetailsAction"
+    ],
+    "getOrgDailyMetrics": [
+      "getOrgDailyMetricsAction"
+    ],
+    "getOrgBySlug": [
+      "getOrgBySlugAction"
+    ],
+    "getOrgResourcesCounts": [
+      "getOrgResourcesCountsAction"
+    ],
+    "createOrgAction": [],
+    "updateOrgIdentityAction": [],
+    "setOrgDetailsAction": [],
+    "updateOrgLogoAction": [],
+    "setMemberStatusAction": [],
+    "getOrgIdentityAction": [],
+    "getOrgUsageAction": [],
+    "getOrgDetailsAction": [],
+    "getOrgDailyMetricsAction": [],
+    "getOrgResourcesCountsAction": [],
+    "getOrgBySlugAction": []
+  },
+  "deps": {}
+}

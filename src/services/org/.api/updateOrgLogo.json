@@ -1,8 +1,0 @@
-{
-  "name": "updateOrgLogo",
-  "file": "src/services/org/database/org.mutations.ts",
-  "sig": "(orgId: string, logo: string) => Promise<{ id: string; logo: string | null; }>",
-  "composes": [],
-  "rules": [],
-  "why_ref": ""
-}

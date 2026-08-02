@@ -1,8 +1,0 @@
-{
-  "name": "createUserRecord",
-  "file": "src/services/auth/database/user.mutations.ts",
-  "sig": "(params: { id: string; email: string }) => Promise<{ id: string; email: string; phone: string | null; firstName: string | null; lastName: string | null; sex: Sex; avatar_url: string | null; dateOfBirth: Date | null; isConnected: boolean; ... 4 more ...; deletedAt: Date | null; }>",
-  "composes": [],
-  "rules": [],
-  "why_ref": ""
-}

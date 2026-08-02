@@ -1,0 +1,9 @@
+{
+  "name": "logOutUser",
+  "file": "src/services/auth/actions/auth.mutations.ts",
+  "sig": "({ userId }: { userId?: string }) => Promise<never>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

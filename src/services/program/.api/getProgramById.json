@@ -1,0 +1,8 @@
+{
+  "name": "getProgramById",
+  "file": "src/services/program/database/program.queries.ts",
+  "sig": "({ orgId, programId }: { orgId: string programId: string }) => Promise<{ name: string; id: string; description: string | null; classes: { level: Level; name: string; id: string; academicYear: { name: string; id: string; }; }[]; programTrack: { name: string; id: string; department: { ...; }; }; } | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,9 +1,0 @@
-{
-  "name": "updateAvatar",
-  "file": "src/services/user/actions.ts",
-  "sig": "(avatarUrl: string) => Promise<{ data: true; error?: undefined; } | { error: string; data?: undefined; }>",
-  "calls": [],
-  "auth": {},
-  "rules": [],
-  "why_ref": ""
-}

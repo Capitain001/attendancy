@@ -1,0 +1,11 @@
+{
+  "name": "getCourseScheduleAction",
+  "file": "src/services/schedule/actions/schedule.queries.ts",
+  "sig": "(courseId: string) => Promise<{ error: any; data?: undefined; } | { data: ({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { ...; }; } & { ...; })[]; error?: undefined; }>",
+  "calls": [
+    "getSchedulesByCourse"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

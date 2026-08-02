@@ -1,0 +1,44 @@
+{
+  "service": "auth",
+  "path": "src/services/auth/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "1b2995e",
+  "utils_dir": null,
+  "fns": {
+    "createOrgResponsableDB": {
+      "f": ".api/createOrgResponsableDB.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "logoutAction": {
+      "f": ".api/logoutAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "logOutUser": {
+      "f": ".api/logOutUser.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "logOutUserForm": {
+      "f": ".api/logOutUserForm.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "login": {
+      "f": ".api/login.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createOrgResponsableDB": [],
+    "logoutAction": [],
+    "logOutUser": [
+      "logOutUserForm"
+    ],
+    "logOutUserForm": [],
+    "login": []
+  },
+  "deps": {}
+}

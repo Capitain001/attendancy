@@ -1,0 +1,11 @@
+{
+  "name": "getOrgIdentityAction",
+  "file": "src/services/organization/actions/organization.queries.ts",
+  "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; email: string | null; slug: string | null; logo: string | null; domain: string | null; } | null; error?: undefined; }>",
+  "calls": [
+    "getOrgIdentity"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

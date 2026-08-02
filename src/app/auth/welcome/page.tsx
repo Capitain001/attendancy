@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { getUserInfo } from '@/services/user/userInfo'
+import { getUserInfo } from '@/modules/user'
 import { getInviteByTokenAction } from '@/services/invite'
 import { AcceptInviteForm } from '@/components/auth/AcceptInviteForm'
 import { roleToPath, validateInvitation } from '@/config/roles'

@@ -1,0 +1,8 @@
+{
+  "name": "confirmAllAttendances",
+  "file": "src/services/attendance/database/attendance.mutations.ts",
+  "sig": "(scheduleId: string) => Promise<{ confirmed: number; userIds: string[]; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

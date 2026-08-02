@@ -6,8 +6,10 @@ import { ERRORS } from '@/config'
 import { createUESchema, linkUESchema } from '../validation'
 import type { CreateUEInput, ReorderProgramPayload } from '../validation'
 import type { UpdateUEData } from '../database'
-import { createUE, removeUE, updateUE, reorderProgram } from '../database'
-import { addUEToProgram } from '@/services/program-track/database'
+// Fix : addUEToProgram importé depuis ../database (propre couche du service),
+// plus depuis '@/services/program-track/database' (violation de la règle d'or
+// du SKILL.md service-module-pattern).
+import { createUE, removeUE, updateUE, reorderProgram, addUEToProgram } from '../database'
 
 export async function createUEAction(input: {
   data: CreateUEInput

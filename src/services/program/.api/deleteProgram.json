@@ -1,0 +1,8 @@
+{
+  "name": "deleteProgram",
+  "file": "src/services/program/database.ts",
+  "sig": "({ programId, orgId }: { programId: string; orgId: string }) => Promise<void>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

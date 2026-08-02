@@ -12,10 +12,10 @@ export const metadata: Metadata = {
 export default async function OrgSetupPage() {
   const user = await getUserInfo()
 
-  if (!user?.id) redirect('/login')
+  // if (!user?.id) redirect('/login')
 
   // Déjà une org → aller au dashboard
-  if (user.organization?.slug) redirect(redirectUser(user))
+  // if (user.organization?.slug) redirect(redirectUser(user))
 
   return (
     <main className="flex min-h-screen items-center justify-center p-4">

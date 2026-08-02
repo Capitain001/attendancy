@@ -1,0 +1,9 @@
+{
+  "name": "login",
+  "file": "src/services/auth/actions/auth.mutations.ts",
+  "sig": "(formData: FormData) => Promise<void>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

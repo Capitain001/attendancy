@@ -1,2 +1,2 @@
-export * from './program-track.queries'
-export * from './program-track.mutations'
+export * from "./programTrack.queries";
+export * from "./programTrack.mutations";

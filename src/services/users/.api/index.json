@@ -2,7 +2,7 @@
   "service": "users",
   "path": "src/services/users/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
+  "derived_at": "7a0ca2e",
   "utils_dir": null,
   "fns": {
     "getUserRoleStats": {
@@ -32,9 +32,7 @@
     }
   },
   "edges": {
-    "getUserRoleStats": [
-      "getUserRoleStatsAction"
-    ],
+    "getUserRoleStats": [],
     "getUserProfile": [],
     "getUsersByRoles": [],
     "getFunctionProfiles": [],

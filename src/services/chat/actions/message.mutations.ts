@@ -1,5 +1,5 @@
 'use server'
-import { getUserInfo } from '@/services/user/userInfo'
+import { getUserInfo } from '@/modules/user/userInfo'
 import { ERRORS } from '@/config'
 import { createMessage, updateMessage, removeMessage } from '../database'
 import type { AddMessageData, UpdateMessageData } from '../database'

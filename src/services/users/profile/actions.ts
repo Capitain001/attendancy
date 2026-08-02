@@ -3,7 +3,7 @@ import * as v from 'valibot'
 import { Role } from '@/generated/prisma'
 import { getUserInfo } from '@/services/user/userInfo'
 import { ERRORS } from '@/config'
-import { getUserProfile, getUsersByRoles, getFunctionProfiles } from '../database'
+import { getUserProfile, getUsersByRoles, getFunctionProfiles } from './database'
 import { userIdSchema, rolesSchema, functionIdSchema } from './validation'
 import type { FunctionProfile, UserProfile, UserProfileList } from './types'
 

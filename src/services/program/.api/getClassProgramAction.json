@@ -1,0 +1,11 @@
+{
+  "name": "getClassProgramAction",
+  "file": "src/services/program/actions/program.queries.ts",
+  "sig": "(classId: string) => Promise<{ error: any; data?: undefined; } | { data: { level: Level; name: string; program: { name: string; id: string; description: string | null; } | null; programTrack: { name: string; id: string; }; academicYear: { ...; }; } | null; error?: undefined; }>",
+  "calls": [
+    "getClassProgram"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

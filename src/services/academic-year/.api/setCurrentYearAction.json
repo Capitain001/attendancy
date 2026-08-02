@@ -1,7 +1,7 @@
 {
   "name": "setCurrentYearAction",
   "file": "src/services/academic-year/actions/academic-year.mutations.ts",
-  "sig": "(input: SetCurrentYearInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; isCurrent: boolean; }; error?: undefined; }>",
+  "sig": "(input: SetCurrentYearInput) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; isCurrent: boolean; }; error?: undefined; }>",
   "calls": [
     "setCurrentYear"
   ],

@@ -7,6 +7,8 @@ import type { ScheduleStatus } from "@/generated/prisma/client";
 import { SCHEDULE_STATUS_VALUES } from "./constants";
 
 export { SCHEDULE_STATUS_VALUES } from "./constants";
+export { FilterShell } from "./FilterShell";
+export { matchesPlanningFilters } from "./matchSchedule";
 
 export const SCHEDULE_STATUS_OPTIONS: { value: ScheduleStatus; label: string; dot: string }[] = [
   { value: "PENDING",   label: "En attente",  dot: "bg-yellow-400" },

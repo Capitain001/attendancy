@@ -1,0 +1,8 @@
+{
+  "name": "createAttendance",
+  "file": "src/services/attendance/database/attendance.mutations.ts",
+  "sig": "(scheduleId: string, studentId: string, enrollmentId: string, orgId: string, status: AttendanceStatus = \"PENDING\") => Promise<{ id: string; status: AttendanceStatus; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

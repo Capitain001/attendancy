@@ -112,29 +112,17 @@ L'objectif est d'avoir un module direction fonctionnel en V2 avec : planning glo
 
 ---
 
-## Clarification Needed
+## Clarification Needed — Résolues
 
-1. **`getYearsAction` / `getAcademicYears`** — V1 utilise `services/years/action`. En V2 le service s'appelle `academic-year`. L'action équivalente est-elle `getAcademicYearsAction` ?
-   - A) Oui, `getAcademicYearsAction` depuis `services/academic-year`
-   - B) Il existe un alias ou re-export à localiser
-   - C) Autre
+1. **`getYearsAction`** → **`getAcademicYearsAction`** depuis `services/academic-year` ✅
 
-2. **`validateUUID`** — V1 importe depuis `utils/server/validation`. Équivalent V2 ?
-   - A) Même chemin `utils/server/validation` existe en V2
-   - B) Intégré dans Valibot directement dans la page
-   - C) Absent, à recréer
+2. **`validateUUID`** → **À recréer** dans `utils/server/validation.ts` (supprimer après si doublon trouvé) ✅
 
-3. **`lib/cache/react-query` / `getQueryClient`** — utilisé par `DirectionPlanning` (planning global) pour le prefetch React Query. Existe en V2 ?
-   - A) Oui, même chemin
-   - B) V2 utilise un autre mécanisme (RSC direct sans prefetch)
+3. **`lib/cache/react-query`** → **Même chemin existe en V2**, conserver le pattern `HydrationBoundary` + `getQueryClient` ✅
 
-4. **Filtre planning sidebar** — `PlanningFilters` dans `registry.ts` est commenté. Faut-il l'activer dans cette migration ?
-   - A) Oui, activer `PlanningFilters` avec le composant V1 porté
-   - B) Laisser commenté pour l'instant, le filtre viendra dans une tâche séparée
+4. **Filtre planning sidebar** → **Activer `PlanningFilters`** dans `registry.ts` dans cette migration ✅
 
-5. **Tâche secondaire (réorganisation dossiers)** — À traiter dans cette branche ou PR séparée ?
-   - A) Même branche, après que tout fonctionne
-   - B) PR séparée après merge
+5. **Réorganisation dossiers** → **Même branche**, après que tout compile ✅
 
 ---
 

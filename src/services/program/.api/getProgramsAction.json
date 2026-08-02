@@ -1,7 +1,7 @@
 {
   "name": "getProgramsAction",
-  "file": "src/services/program/actions.ts",
-  "sig": "({ classId, programTrackId }: { classId?: string programTrackId?: string } = {}) => Promise<{ data: { id: string; name: string; description: string | null; classes: { id: string; name: string; academicYear: { id: string; name: string; }; }[]; programTrack: { id: string; name: string; department: { ...; }; }; }[]; error?: undefined; } | { ...; }>",
+  "file": "src/services/program/actions/program.queries.ts",
+  "sig": "({ classId, programTrackId }: { classId?: string programTrackId?: string }) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; classes: { name: string; id: string; academicYear: { name: string; id: string; }; }[]; programTrack: { name: string; id: string; department: { ...; }; }; }[]; error?: undefined; }>",
   "calls": [
     "getPrograms"
   ],

@@ -1,0 +1,8 @@
+{
+  "name": "deleteProgramTrack",
+  "file": "src/services/program-track/database/programTrack.mutations.ts",
+  "sig": "({ programTrackId, orgId }: { programTrackId: string; orgId: string }) => Promise<void>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

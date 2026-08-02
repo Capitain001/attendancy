@@ -1,8 +1,0 @@
-{
-  "name": "markAllNotificationsRead",
-  "file": "src/services/notification/database/notification.mutations.ts",
-  "sig": "(userId: string) => Promise<BatchPayload>",
-  "composes": [],
-  "rules": [],
-  "why_ref": ""
-}

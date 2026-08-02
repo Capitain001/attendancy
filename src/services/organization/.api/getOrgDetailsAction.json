@@ -1,0 +1,11 @@
+{
+  "name": "getOrgDetailsAction",
+  "file": "src/services/organization/actions/organization.queries.ts",
+  "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { details: OrgDetails; id?: string | undefined; name?: string | undefined; slug?: string | undefined; logo?: string | undefined; permissions?: string[] | undefined; ... 5 more ...; directionId?: string | undefined; }; error?: undefined; }>",
+  "calls": [
+    "getOrgDetails"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

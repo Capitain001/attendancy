@@ -1,0 +1,11 @@
+{
+  "name": "updateOrgIdentityAction",
+  "file": "src/services/organization/actions/organization.mutations.ts",
+  "sig": "(input: UpdateOrgIdentityInput) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; slug: string | null; }; error?: undefined; }>",
+  "calls": [
+    "updateOrganization"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

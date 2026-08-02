@@ -1,7 +1,7 @@
 {
   "name": "getProgramTracksAction",
-  "file": "src/services/program-track/actions/program-track.queries.ts",
-  "sig": "() => Promise<{ data: { name: string; id: string; description: string | null; departmentId: string; department: { name: string; id: string; }; _count: { classes: number; programs: number; }; }[]; error?: undefined; } | { ...; }>",
+  "file": "src/services/program-track/actions/programTrack.queries.ts",
+  "sig": "({ departmentId }: { departmentId?: string }) => Promise<{ data: { id: string; name: string; description: string | null; department: { id: string; name: string; }; _count: { classes: number; }; }[]; error?: undefined; } | { error: string; data?: undefined; }>",
   "calls": [
     "getProgramTracks"
   ],

@@ -1,8 +1,0 @@
-{
-  "name": "createOrgWithDefaults",
-  "file": "src/services/org/database/org.mutations.ts",
-  "sig": "(params: CreateOrgParams) => Promise<CreateOrgData>",
-  "composes": [],
-  "rules": [],
-  "why_ref": ""
-}

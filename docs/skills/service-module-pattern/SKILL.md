@@ -43,23 +43,24 @@ src/services/<module>/
 ### `actions/<model>.queries.ts` — lectures exposées au frontend
 
 - `"use server"` en tête de fichier.
-- Fait : `getUserInfo` (auth) → `orgId` depuis token UNIQUEMENT → appel `database/`
-  → retour `{ data }` / `{ error: string }`.
+- Fait : auth (via `authAccess` par défaut) → `orgId` depuis token UNIQUEMENT
+  → appel `database/` → retour `{ data }` / `{ error: string }`.
 - Préfixe **`get`** (jamais `list`), suffixe **`Action`** : `getEntitiesAction`.
 - Les ids métier (`entityId`…) arrivent en paramètre — l'action ne résout
   jamais son propre contexte métier (SERVICE_CONTEXT §5-6).
 
 ```ts
 'use server'
-import { getUserInfo } from '@/services/user/userInfo'
+import { authAccess } from '@/modules/auth'
 import { ERRORS } from '@/config'
 import { getEntities } from '../database'
 
 export async function getEntitiesAction() {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
     return { data: await getEntities(orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
@@ -70,9 +71,38 @@ export async function getEntitiesAction() {
 ### `actions/<model>.mutations.ts` — écritures
 
 - Même directive, même retour `{ data }` / `{ error }`.
-- Ordre : auth → orgId → `getAuthorization` (rôle) → `v.parse` (Valibot) →
-  `database/` → audit si critique.
+- Ordre : auth (via `authAccess` par défaut, ou `getUserInfo` +
+  `getAuthorization` composés à la main si le cas le justifie) →
+  `v.safeParse` (Valibot) → `database/` → audit si critique.
 - Pas de Prisma direct. Pas de logique métier — orchestre seulement.
+
+### `authAccess` — helper d'auth pour le cas courant
+
+Couvre le cas standard : auth + `orgId` + rôle/fonction requis en un appel.
+À privilégier par défaut dans `actions/` — évite de recomposer
+`getUserInfo` + `getAuthorization` à chaque fois.
+
+```ts
+import { authAccess } from '@/services/auth'
+
+const auth = await authAccess({ requiredRole: 'DIRECTION', requiredFunction: 'PRINCIPAL' })
+if (!auth.data) return { error: auth.error }
+const { user, orgId } = auth.data // user: AuthenticatedUser, orgId: string
+```
+
+- Toujours discriminer avec `if (!auth.data)` — jamais `if (auth.error)`.
+- Sans `requiredRole`/`requiredFunction` : vérifie uniquement auth + orgId.
+- `auth.data.user` est un `AuthenticatedUser` (id/role/function/name/email
+  garantis non-`undefined`) — pas besoin de `?.` dessus.
+
+**Quand ne pas l'utiliser** — composer `getUserInfo` + `getAuthorization`
+directement si :
+- l'action n'exige pas d'`orgId` (rare, ex. auth simple sans scope org) —
+  `authAccess` échoue toujours si `orgId` est absent ;
+- la logique d'autorisation ne suit pas le schéma
+  `auth → orgId → rôle` (ex. checks conditionnels, plusieurs rôles
+  évalués séparément selon le flux) ;
+- un besoin ponctuel de contrôle fin sur l'ordre des vérifications.
 
 ### Audit log — actions critiques
 
@@ -127,20 +157,30 @@ export const CreateEntitySchema = v.object({
 })
 
 // Input  = ce que l'UI envoie (avant transformations — ex. trim, coerce)
-// Output = ce que le service reçoit après v.parse() (valeurs transformées)
+// Output = ce que le service reçoit après v.safeParse() (valeurs transformées)
 export type CreateEntityInput  = v.InferInput<typeof CreateEntitySchema>
 export type CreateEntityOutput = v.InferOutput<typeof CreateEntitySchema>
 ```
 
 - L'action accepte `Input` comme paramètre — le formulaire est typé côté UI.
-- Après `v.parse()` la valeur locale est typée `Output` — plus précis que `Input`.
-- **Jamais `input: unknown`** sur une action ��� toujours le type `Input` du schéma.
+- Après `v.safeParse()` réussi, la valeur locale est typée `Output` — plus précis que `Input`.
+- **Jamais `input: unknown`** sur une action — toujours le type `Input` du schéma.
+- **`v.safeParse` uniquement** — jamais `v.parse`, qui lève une exception au
+  lieu de retourner `{ success, issues }` exploitable dans le flux normal.
 
 ```ts
 // ✅ correct
 export async function createEntityAction(input: CreateEntityInput) {
-  const parsed = v.parse(CreateEntitySchema, input) // parsed: CreateEntityOutput
-  ...
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
+  const parsed = v.safeParse(CreateEntitySchema, input)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+  // parsed.output: CreateEntityOutput
+
+  const entity = await createEntity({ ...parsed.output, orgId })
+  return { data: entity }
 }
 
 // ❌ à éviter
@@ -153,6 +193,35 @@ export async function createEntityAction(input: unknown) { ... }
 - `Awaited<ReturnType<typeof fn>>` — inféré depuis la query, aligné sur le `select`.
 - Générable : `npx tsx scripts/generate/types/types.ts <service>`.
 
+
+### `/src/types/<feature>.ts` — types manuels dérivés (hors des services)
+ 
+les types du services sont auto-généré  et décrivent toujours la forme **complète** retournée par une query.
+
+donc les types ecris manuelement (non auto-generer) sont a ecrire dans un dossier ``src/types/*``
+ 
+```ts
+// src/types/program-ue.ts
+import type { GetProgramsByTrackDto } from '@/services/program-track'
+ 
+export type ProgramUEType = GetProgramsByTrackDto['programUEs'][number]
+```
+
+```ts
+//src/types/program-track.ts
+import { DepartmentDto } from "@/services/department";
+import { ProgramTracksDto } from "@/services/program-track";
+
+
+export type ProgramTrackDto = ProgramTracksDto[number]
+
+export type ProgramTrackByDepartmentType = {
+  department:DepartmentDto;
+  tracks: ProgramTracksDto;
+};
+
+
+```
 ### `CLAUDE.md`
 
 - Rôle, table des fichiers, points d'extension (⚠), invariants.
@@ -214,3 +283,5 @@ export * from './types'
 - Import de `database/` en dehors du service.
 - `actions.ts` à la racine d'un service à modèle.
 - Service sans `CLAUDE.md` ou avec un `CLAUDE.md` obsolète.
+- `v.parse` dans une action (préférer `v.safeParse` pour un retour d'erreur explicite).
+- `if (auth.error)` au lieu de `if (!auth.data)` pour discriminer le retour de `authAccess`.

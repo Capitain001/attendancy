@@ -5,6 +5,11 @@ import { invalidateEvent } from '@/cache/server/key'
 import type { CreateUEOutput } from '../validation'
 import type { UEOrder, CourseOrder } from '../validation'
 
+// Ré-export depuis la couche database de program-track (jamais depuis actions/,
+// voir SKILL.md service-module-pattern — "un service peut importer les fonctions
+// database/ d'un autre service, mais uniquement depuis sa propre couche database/").
+export { addUEToProgram } from '@/services/program-track/database'
+
 export type UpdateUEData = {
   name?: string
   code?: string
@@ -39,7 +44,8 @@ export async function updateUE(ueId: string, orgId: string, data: UpdateUEData) 
       select: { id: true, name: true, code: true, description: true, departmentId: true, isOptional: true },
     })
   )
-  await invalidateEvent('UE_CREATED', orgId)
+  // Fix : c'était 'UE_CREATED' — event dédié UE_UPDATED (ajouté dans cache.ts)
+  await invalidateEvent('UE_UPDATED', orgId)
   return result
 }
 

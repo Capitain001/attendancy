@@ -1,0 +1,11 @@
+{
+  "name": "getStudentAttendanceSummaryAction",
+  "file": "src/services/attendance/actions/attendance.queries.ts",
+  "sig": "(studentId: string) => Promise<{ error: any; data?: undefined; } | { data: { rate: number | null; absences: number; recentAbsences: { id: string; status: AttendanceStatus; recordedAt: Date; schedule: { ...; }; }[]; }; error?: undefined; }>",
+  "calls": [
+    "getStudentAttendanceSummary"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -3,6 +3,8 @@ import { useActionState, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createOrgAction } from '@/services/org'
 import type { CreateOrgResult } from '@/services/org/types'
+import { input } from "@/styles/input";
+import { cn } from "@/lib/utils";
 
 function toSlug(value: string): string {
   return value
@@ -43,76 +45,78 @@ export function OrgSetupForm() {
   }, [name, slugManual])
 
   return (
-    <div className="w-full max-w-lg space-y-6">
-      <div className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight">Configurer votre établissement</h1>
-        <p className="text-sm text-muted-foreground">
-          Ces informations identifient votre établissement sur Attendancy.
-        </p>
-      </div>
 
-      <form action={formAction} className="space-y-4">
-        <div className="space-y-2">
-          <label htmlFor="name" className="text-sm font-medium">
-            Nom de l&apos;établissement *
-          </label>
-          <input
-            id="name"
-            name="name"
-            type="text"
-            required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            autoComplete="organization"
-            placeholder="Université de Lomé"
-            className="w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-          />
-        </div>
 
-        <div className="space-y-2">
-          <label htmlFor="slug" className="text-sm font-medium">Identifiant URL *</label>
-          <input
-            id="slug"
-            name="slug"
-            type="text"
-            required
-            value={slug}
-            onChange={(e) => { setSlug(e.target.value); setSlugManual(true) }}
-            placeholder="universite-de-lome"
-            className="w-full rounded-md border bg-background px-3 py-2 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-          />
-          <p className="text-xs text-muted-foreground">
-            Minuscules, chiffres et tirets. URL :{' '}
-            <span className="font-mono">/{slug || 'identifiant'}/direction</span>
-          </p>
-        </div>
+<div className="w-full max-w-lg space-y-6">
+  <div className="space-y-1">
+    <h1 className="text-2xl font-semibold tracking-tight">Configurer votre établissement</h1>
+    <p className="text-sm text-muted-foreground">
+      Ces informations identifient votre établissement sur Attendancy.
+    </p>
+  </div>
 
-        <div className="space-y-2">
-          <label htmlFor="email" className="text-sm font-medium">
-            Email officiel <span className="text-muted-foreground">(optionnel)</span>
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            placeholder="contact@etablissement.sn"
-            className="w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-          />
-        </div>
-
-        {state && 'error' in state && (
-          <p role="alert" className="text-sm text-destructive">{state.error}</p>
-        )}
-
-        <button
-          type="submit"
-          disabled={isPending || !name || !slug}
-          className="w-full rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
-        >
-          {isPending ? 'Création en cours…' : "Créer l'établissement"}
-        </button>
-      </form>
+  <form action={formAction} className="space-y-4">
+    <div className="space-y-2">
+      <label htmlFor="name" className={input.label}>
+        Nom de l&apos;établissement *
+      </label>
+      <input
+        id="name"
+        name="name"
+        type="text"
+        required
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        autoComplete="organization"
+        placeholder="Université de Lomé"
+        className={input.base}
+      />
     </div>
+
+    <div className="space-y-2">
+      <label htmlFor="slug" className={input.label}>Identifiant URL *</label>
+      <input
+        id="slug"
+        name="slug"
+        type="text"
+        required
+        value={slug}
+        onChange={(e) => { setSlug(e.target.value); setSlugManual(true) }}
+        placeholder="universite-de-lome"
+        className={cn(input.base, "font-mono")}
+      />
+      <p className="text-xs text-muted-foreground">
+        Minuscules, chiffres et tirets. URL :{' '}
+        <span className="font-mono">/{slug || 'identifiant'}/direction</span>
+      </p>
+    </div>
+
+    <div className="space-y-2">
+      <label htmlFor="email" className={input.label}>
+        Email officiel <span className="text-muted-foreground">(optionnel)</span>
+      </label>
+      <input
+        id="email"
+        name="email"
+        type="email"
+        autoComplete="email"
+        placeholder="contact@etablissement.sn"
+        className={input.base}
+      />
+    </div>
+
+    {state && 'error' in state && (
+      <p role="alert" className="text-sm text-destructive">{state.error}</p>
+    )}
+
+    <button
+      type="submit"
+      disabled={isPending || !name || !slug}
+      className="w-full rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+    >
+      {isPending ? 'Création en cours…' : "Créer l'établissement"}
+    </button>
+  </form>
+</div>
   )
 }

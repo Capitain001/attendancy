@@ -1,0 +1,8 @@
+{
+  "name": "recordAttendance",
+  "file": "src/services/attendance/database/attendance.mutations.ts",
+  "sig": "(scheduleId: string, studentId: string, coords?: { lat: number; lng: number }) => Promise<{ id: string; status: AttendanceStatus; } | { id: string; status: AttendanceStatus; alreadyRecorded: boolean; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

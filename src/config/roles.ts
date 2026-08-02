@@ -13,7 +13,7 @@ export const ROLE_PATHS: Record<Role, string> = {
   DIRECTION:   'direction',
   TEACHER:     'teacher',
   STUDENT:     'student',
-  PARENT:      'parent',
+PARENT:      'parent',
   GUEST:      'inviter',
 }
 

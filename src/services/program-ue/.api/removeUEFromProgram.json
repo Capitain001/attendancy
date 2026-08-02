@@ -1,0 +1,8 @@
+{
+  "name": "removeUEFromProgram",
+  "file": "src/services/program-ue/database/program-ue.mutations.ts",
+  "sig": "({ programUEId, programId, ueId }: { programUEId?: string; programId: string; ueId?: string }) => Promise<BatchPayload>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,9 +1,9 @@
 {
   "name": "removeProgramAction",
-  "file": "src/services/program/actions.ts",
-  "sig": "(programId: string) => Promise<{ success: boolean; error?: string }>",
+  "file": "src/services/program/actions/program.mutations.ts",
+  "sig": "(programId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
   "calls": [
-    "deleteProgram"
+    "removeProgram"
   ],
   "auth": {},
   "rules": [],

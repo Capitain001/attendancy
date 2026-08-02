@@ -1,0 +1,8 @@
+{
+  "name": "setOrgDetails",
+  "file": "src/services/organization/database/organization.mutations.ts",
+  "sig": "(orgId: string, details: OrgDetails) => Promise<OrgDetails | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

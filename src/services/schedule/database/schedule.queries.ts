@@ -69,6 +69,17 @@ export async function getSchedules(
   })
 }
 
+export async function getSchedulesByCourse(courseId: string, orgId: string) {
+  'use cache'
+  cacheTag(CACHE.SCHEDULE(orgId))
+  cacheLife(CACHE.SCHEDULE.life)
+  return prisma.schedule.findMany({
+    where: { courseId, orgId, deletedAt: null },
+    include: scheduleInclude,
+    orderBy: { startTime: 'asc' },
+  })
+}
+
 export async function getScheduleDays(orgId: string, month: string) {
   'use cache'
   cacheTag(CACHE.SCHEDULE(orgId))

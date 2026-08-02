@@ -2,7 +2,7 @@
   "service": "schedule",
   "path": "src/services/schedule/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
+  "derived_at": "7a0ca2e",
   "utils_dir": null,
   "fns": {
     "createSchedule": {
@@ -32,6 +32,11 @@
     },
     "getSchedules": {
       "f": ".api/getSchedules.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getSchedulesByCourse": {
+      "f": ".api/getSchedulesByCourse.json",
       "layer": "db",
       "kind": "query"
     },
@@ -80,6 +85,11 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "getCourseScheduleAction": {
+      "f": ".api/getCourseScheduleAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "getScheduleDaysAction": {
       "f": ".api/getScheduleDaysAction.json",
       "layer": "action",
@@ -116,6 +126,9 @@
     "getSchedules": [
       "getSchedulesAction"
     ],
+    "getSchedulesByCourse": [
+      "getCourseScheduleAction"
+    ],
     "getScheduleDays": [
       "getScheduleDaysAction"
     ],
@@ -129,6 +142,7 @@
     "cancelScheduleAction": [],
     "getClassSchedulesAction": [],
     "getSchedulesAction": [],
+    "getCourseScheduleAction": [],
     "getScheduleDaysAction": [],
     "getClassScheduleOptionsAction": [],
     "getTeacherNextScheduleAction": [],

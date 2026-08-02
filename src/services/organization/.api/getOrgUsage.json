@@ -1,0 +1,8 @@
+{
+  "name": "getOrgUsage",
+  "file": "src/services/organization/database/organization.queries.ts",
+  "sig": "(orgId: string) => Promise<{ updatedAt: Date; currentUsers: number; usedStorage: bigint; activeCourses: number; activeRooms: number; } | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,8 @@
+{
+  "name": "getOrgResourcesCounts",
+  "file": "src/services/organization/database/organization.queries.ts",
+  "sig": "(orgId: string) => Promise<{ courses: number; classes: number; rooms: number; teachers: number; students: number; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

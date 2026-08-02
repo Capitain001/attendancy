@@ -2,7 +2,7 @@
   "service": "users/profile",
   "path": "src/services/users/profile/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
+  "derived_at": "7a0ca2e",
   "utils_dir": null,
   "fns": {
     "getUserProfileAction": {
@@ -24,20 +24,7 @@
   "edges": {
     "getUserProfileAction": [],
     "getUsersByRolesAction": [],
-    "getFunctionProfilesAction": [],
-    "getUserProfile": [
-      "getUserProfileAction"
-    ],
-    "getUsersByRoles": [
-      "getUsersByRolesAction"
-    ],
-    "getFunctionProfiles": [
-      "getFunctionProfilesAction"
-    ]
+    "getFunctionProfilesAction": []
   },
-  "deps": {
-    "getUserProfile": "users",
-    "getUsersByRoles": "users",
-    "getFunctionProfiles": "users"
-  }
+  "deps": {}
 }

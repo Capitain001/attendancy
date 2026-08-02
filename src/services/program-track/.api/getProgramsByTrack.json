@@ -1,8 +1,0 @@
-{
-  "name": "getProgramsByTrack",
-  "file": "src/services/program-track/database/program.queries.ts",
-  "sig": "(programTrackId: string, orgId: string) => Promise<{ name: string; id: string; programUEs: { id: string; ue: { name: string; id: string; code: string | null; }; isOptional: boolean; semester: number; order: number | null; }[]; }[]>",
-  "composes": [],
-  "rules": [],
-  "why_ref": ""
-}

@@ -1,0 +1,8 @@
+{
+  "name": "getUserAttendance",
+  "file": "src/services/attendance/database/attendance.queries.ts",
+  "sig": "(studentId: string, scheduleId: string, orgId: string) => Promise<{ id: string; status: AttendanceStatus; recordedAt: Date; details: JsonValue; notes: string | null; } | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

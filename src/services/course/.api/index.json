@@ -2,7 +2,7 @@
   "service": "course",
   "path": "src/services/course/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
+  "derived_at": "7a0ca2e",
   "utils_dir": null,
   "fns": {
     "createCourse": {

@@ -1,8 +1,0 @@
-{
-  "name": "setMemberStatusWithAudit",
-  "file": "src/services/org/database/org.mutations.ts",
-  "sig": "(params: { orgId: string userId: string role: 'STUDENT' | 'TEACHER' status: Extract<UserStatus, 'ACTIVE' | 'INACTIVE'> actorUserId: string profileId?: string }) => Promise<{ userId: string; status: UserStatus }>",
-  "composes": [],
-  "rules": [],
-  "why_ref": ""
-}

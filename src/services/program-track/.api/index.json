@@ -2,11 +2,21 @@
   "service": "program-track",
   "path": "src/services/program-track/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
+  "derived_at": "7a0ca2e",
   "utils_dir": null,
   "fns": {
     "createProgramTrack": {
       "f": ".api/createProgramTrack.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateProgramTrack": {
+      "f": ".api/updateProgramTrack.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "deleteProgramTrack": {
+      "f": ".api/deleteProgramTrack.json",
       "layer": "db",
       "kind": "mutation"
     },
@@ -15,28 +25,13 @@
       "layer": "db",
       "kind": "query"
     },
-    "createProgram": {
-      "f": ".api/createProgram.json",
+    "getProgramTracksBasic": {
+      "f": ".api/getProgramTracksBasic.json",
       "layer": "db",
-      "kind": "mutation"
+      "kind": "query"
     },
-    "addUEToProgram": {
-      "f": ".api/addUEToProgram.json",
-      "layer": "db",
-      "kind": "mutation"
-    },
-    "deleteUEFromProgramByComposite": {
-      "f": ".api/deleteUEFromProgramByComposite.json",
-      "layer": "db",
-      "kind": "mutation"
-    },
-    "deleteUEFromProgram": {
-      "f": ".api/deleteUEFromProgram.json",
-      "layer": "db",
-      "kind": "mutation"
-    },
-    "getProgramsByTrack": {
-      "f": ".api/getProgramsByTrack.json",
+    "getProgramTrack": {
+      "f": ".api/getProgramTrack.json",
       "layer": "db",
       "kind": "query"
     },
@@ -45,18 +40,13 @@
       "layer": "action",
       "kind": "server-action"
     },
-    "createProgramAction": {
-      "f": ".api/createProgramAction.json",
+    "updateProgramTrackAction": {
+      "f": ".api/updateProgramTrackAction.json",
       "layer": "action",
       "kind": "server-action"
     },
-    "addUEToProgramAction": {
-      "f": ".api/addUEToProgramAction.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "deleteUEFromProgramAction": {
-      "f": ".api/deleteUEFromProgramAction.json",
+    "deleteProgramTrackAction": {
+      "f": ".api/deleteProgramTrackAction.json",
       "layer": "action",
       "kind": "server-action"
     },
@@ -65,8 +55,18 @@
       "layer": "action",
       "kind": "server-action"
     },
-    "getProgramsByTrackAction": {
-      "f": ".api/getProgramsByTrackAction.json",
+    "getProgramTracksBasicAction": {
+      "f": ".api/getProgramTracksBasicAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getProgramTracksByDepartmentAction": {
+      "f": ".api/getProgramTracksByDepartmentAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getProgramTrackAction": {
+      "f": ".api/getProgramTrackAction.json",
       "layer": "action",
       "kind": "server-action"
     }
@@ -75,28 +75,30 @@
     "createProgramTrack": [
       "createProgramTrackAction"
     ],
+    "updateProgramTrack": [
+      "updateProgramTrackAction"
+    ],
+    "deleteProgramTrack": [
+      "deleteProgramTrackAction"
+    ],
     "getProgramTracks": [
       "getProgramTracksAction"
     ],
-    "createProgram": [
-      "createProgramAction"
+    "getProgramTracksBasic": [
+      "getProgramTracksBasicAction"
     ],
-    "addUEToProgram": [
-      "addUEToProgramAction"
-    ],
-    "deleteUEFromProgramByComposite": [],
-    "deleteUEFromProgram": [
-      "deleteUEFromProgramAction"
-    ],
-    "getProgramsByTrack": [
-      "getProgramsByTrackAction"
+    "getProgramTrack": [
+      "getProgramTrackAction"
     ],
     "createProgramTrackAction": [],
-    "createProgramAction": [],
-    "addUEToProgramAction": [],
-    "deleteUEFromProgramAction": [],
-    "getProgramTracksAction": [],
-    "getProgramsByTrackAction": []
+    "updateProgramTrackAction": [],
+    "deleteProgramTrackAction": [],
+    "getProgramTracksAction": [
+      "getProgramTracksByDepartmentAction"
+    ],
+    "getProgramTracksBasicAction": [],
+    "getProgramTracksByDepartmentAction": [],
+    "getProgramTrackAction": []
   },
   "deps": {}
 }

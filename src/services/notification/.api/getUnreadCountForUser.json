@@ -1,8 +1,0 @@
-{
-  "name": "getUnreadCountForUser",
-  "file": "src/services/notification/database/notification.queries.ts",
-  "sig": "(userId: string) => Promise<number>",
-  "composes": [],
-  "rules": [],
-  "why_ref": ""
-}

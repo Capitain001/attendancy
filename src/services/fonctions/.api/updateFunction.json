@@ -1,8 +1,0 @@
-{
-  "name": "updateFunction",
-  "file": "src/services/fonctions/database/fonctions.mutations.ts",
-  "sig": "(functionId: string, data: UpdateFunctionData) => Promise<{ id: string; name: string; description: string | null; isMain: boolean; createdAt: Date; updatedAt: Date; icon: string | null; orgId: string; }>",
-  "composes": [],
-  "rules": [],
-  "why_ref": ""
-}

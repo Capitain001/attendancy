@@ -2,9 +2,7 @@
   "name": "getUsersByRolesAction",
   "file": "src/services/users/profile/actions.ts",
   "sig": "(roles: Role[]) => Promise<{ data: UserProfileList } | { error: string }>",
-  "calls": [
-    "getUsersByRoles"
-  ],
+  "calls": [],
   "auth": {},
   "rules": [],
   "why_ref": ""

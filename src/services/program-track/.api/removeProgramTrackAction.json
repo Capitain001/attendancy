@@ -1,0 +1,11 @@
+{
+  "name": "removeProgramTrackAction",
+  "file": "src/services/program-track/actions.ts",
+  "sig": "(programTrackId: string) => Promise<{ success: boolean; error?: undefined; } | { success: boolean; error: string; }>",
+  "calls": [
+    "deleteProgramTrack"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

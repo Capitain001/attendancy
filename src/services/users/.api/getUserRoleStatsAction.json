@@ -2,9 +2,7 @@
   "name": "getUserRoleStatsAction",
   "file": "src/services/users/actions.ts",
   "sig": "() => Promise<{ data: UserRoleStats } | { error: string }>",
-  "calls": [
-    "getUserRoleStats"
-  ],
+  "calls": [],
   "auth": {},
   "rules": [],
   "why_ref": ""

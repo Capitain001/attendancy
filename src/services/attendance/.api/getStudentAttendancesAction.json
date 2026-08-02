@@ -1,0 +1,11 @@
+{
+  "name": "getStudentAttendancesAction",
+  "file": "src/services/attendance/actions/attendance.queries.ts",
+  "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { id: string; status: AttendanceStatus; recordedAt: Date; schedule: { id: string; startTime: Date; endTime: Date; course: { ...; }; }; }[]; error?: undefined; }>",
+  "calls": [
+    "getStudentAttendances"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

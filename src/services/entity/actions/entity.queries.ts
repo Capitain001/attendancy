@@ -1,43 +1,56 @@
 // src/services/entity/actions/entity.queries.ts
-// ═══════════════════════════════════════════════════════════════════════════
-// RÉFÉRENCE COMMENTÉE — voir database/entity.queries.ts pour le mode d'emploi.
-// ═══════════════════════════════════════════════════════════════════════════
+// =============================================================================
+// REFERENCE COMMENTEE - voir database/entity.queries.ts pour le mode d'emploi.
+// =============================================================================
 //
-// Query actions = la SEULE porte d'entrée du frontend (pages RSC incluses)
-// vers les données. Pattern :
-//   'use server' en tête de fichier
-//   getUserInfo() → orgId depuis le token UNIQUEMENT
-//   retour { data } / { error: string } — jamais de throw vers le client
-//   suffixe Action, préfixe get (jamais list)
+// Query actions = la SEULE porte d'entree du frontend (pages RSC incluses)
+// vers les donnees. Pattern :
+//   'use server' en tete de fichier
+//   authAccess() -> orgId depuis le token UNIQUEMENT
+//   retour { data } / { error: string } - jamais de throw vers le client
+//   suffixe Action, prefixe get (jamais list)
 //
-// Les données MÉTIER (entityId…) arrivent en paramètre depuis l'appelant —
-// une action ne résout jamais son propre contexte métier en interne
-// (voir SERVICE_CONTEXT.md §4-5).
+// Les donnees METIER (entityId...) arrivent en parametre depuis l'appelant.
+// Une action ne resout jamais son propre contexte metier en interne
+// (voir SERVICE_CONTEXT.md sections 4-5).
+//
+// Ordre des opérations pour les queries :
+//   1. Authentification et autorisation
+//   2. Opération métier (dans try/catch)
+//
+// Note : Pas de validation pour les queries car les paramètres sont
+// typés et proviennent de l'appelant (pas de saisie utilisateur directe).
 //
 // 'use server'
-// import { getUserInfo } from '@/services/user/userInfo'
+// import { authAccess } from '@/modules/auth'
 // import { ERRORS } from '@/config'
 // import { getEntities, getEntity } from '../database'
 //
 // export async function getEntitiesAction() {
+//   // 1. Authentification et autorisation
+//   const auth = await authAccess()
+//   if (!auth.data) return { error: auth.error }
+//   const { orgId } = auth.data
+//
+//   // 2. Opération métier (dans try/catch)
 //   try {
-//     const user = await getUserInfo()
-//     const orgId = user?.organization?.id
-//     if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
 //     return { data: await getEntities(orgId) }
-//   } catch (e) {
-//     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+//   } catch (error) {
+//     return { error: error instanceof Error ? error.message : ERRORS.SERVER }
 //   }
 // }
 //
 // export async function getEntityAction(entityId: string) {
+//   // 1. Authentification et autorisation
+//   const auth = await authAccess()
+//   if (!auth.data) return { error: auth.error }
+//   const { orgId } = auth.data
+//
+//   // 2. Opération métier (dans try/catch)
 //   try {
-//     const user = await getUserInfo()
-//     const orgId = user?.organization?.id
-//     if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
 //     return { data: await getEntity(entityId, orgId) }
-//   } catch (e) {
-//     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+//   } catch (error) {
+//     return { error: error instanceof Error ? error.message : ERRORS.SERVER }
 //   }
 // }
 

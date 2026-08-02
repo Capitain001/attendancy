@@ -7,100 +7,103 @@ export const directionRoutes: Route[] = [
     icon: "LayoutDashboard",
     link: "/direction",
   },
-  // Chat hors-MVP : masqué de la navigation jusqu'au pilote (code conservé).
-  // {
-  //   id: "chat",
-  //   title: "Chat",
-  //   icon: "MessagesSquare",
-  //   link: "/chat",
-  // },
   {
-    id: "ressources",
+    id: "academic",
     title: "Ressources",
     icon: "FolderOpen",
-    link: "/direction/program-track",
+    link: "/direction/academic/classes",
     subs: [
       {
-        title: "Années",
-        icon: "School",
-        link: "/direction/years",
+        title: "Classes",
+        icon: "BookOpen",
+        link: "/direction/academic/classes",
       },
       {
         title: "Filières",
         icon: "School",
-        link: "/direction/program-track",
+        link: "/direction/academic/programs",
       },
       {
-        title: "Programmes",
+        title: "Départements",
+        icon: "Building2",
+        link: "/direction/academic/departments",
+      },
+      {
+        title: "Cours",
         icon: "LibraryBig",
-        link: "/direction/program",
-      },
-      // {
-      //   title: "Cours",
-      //   icon: "LibraryBig",
-      //   link: "/direction/courses",
-      // },
-      // {
-      //   title: "Classes",
-      //   icon: "BookOpen",
-      //   link: "/direction/classes",
-      // },
-      {
-        title: "Salles",
-        icon: "Container",
-        link: "/direction/rooms",
+        link: "/direction/academic/courses",
       },
     ],
   },
   {
-    id: "functions",
-    title: "Fonctions",
-    icon: "FunctionSquare",
-    link: "/direction/functions",
-  },
-  {
-    id: "personnel",
+    id: "people",
     title: "Personnel",
     icon: "Users",
-    // Page agrégée `/direction/personnel` = stub → le parent pointe vers Enseignants
-    // (sous-pages réelles). Masquage du non-prêt, cohérent avec Chat.
-    link: "/direction/teachers",
+    link: "/direction/people/teachers",
     subs: [
       {
         title: "Enseignants",
         icon: "UserSearch",
-        link: "/direction/teachers",
+        link: "/direction/people/teachers",
       },
       {
         title: "Étudiants",
         icon: "GraduationCap",
-        link: "/direction/students",
+        link: "/direction/people/students",
+      },
+      {
+        title: "Parents",
+        icon: "UsersRound",
+        link: "/direction/people/parents",
       },
     ],
   },
   {
-    id: "planning",
-    title: "Planning",
-    icon: "CalendarDays",
-    link: "/direction/planning",
+    id: "attendance",
+    title: "Présences",
+    icon: "ClipboardCheck",
+    link: "/direction/attendance/sessions",
     subs: [
       {
-        title: "Vue calendrier",
-        icon: "CalendarDays",
-        link: "/direction/planning",
+        title: "Sessions",
+        icon: "Radio",
+        link: "/direction/attendance/sessions",
       },
       {
-        title: "Séances du jour",
-        icon: "ClipboardCheck",
-        link: "/direction/schedule",
+        title: "Rapports",
+        icon: "BarChart3",
+        link: "/direction/attendance/reports",
       },
     ],
   },
   {
-    id: "sessions",
-    title: "Sessions",
-    icon: "Radio",
-    link: "/direction/sessions",
+    id: "schedule",
+    title: "Planning",
+    icon: "CalendarDays",
+    link: "/direction/schedule/calendar",
+    subs: [
+      {
+        title: "Calendrier",
+        icon: "CalendarDays",
+        link: "/direction/schedule/calendar",
+      },
+      {
+        title: "Salles",
+        icon: "Container",
+        link: "/direction/schedule/rooms",
+      },
+      {
+        title: "Événements",
+        icon: "CalendarCheck2",
+        link: "/direction/schedule/events",
+      },
+    ],
+  },
+  {
+    id: "evaluation",
+    title: "Évaluations",
+    icon: "ClipboardList",
+    link: "/direction/evaluation",
   },
   {
     id: "invitations",
@@ -122,23 +125,28 @@ export const directionRoutes: Route[] = [
         title: "Planning",
         link: "/direction/notifications/schedules",
       },
-      // Paramètres de notifications = stub → masqué de la nav jusqu'à implémentation
-      // (cohérent avec Chat). Route + page conservées.
     ],
   },
   {
-    id: "settings",
+    id: "administration",
     title: "Paramètres",
     icon: "Settings",
-    link: "/direction/settings",
+    link: "/direction/administration/settings",
     subs: [
       {
         title: "Général",
-        link: "/direction/settings",
+        icon: "Settings",
+        link: "/direction/administration/settings",
       },
       {
-        title: "Informations",
-        link: "/direction/settings/info",
+        title: "Fonctions",
+        icon: "FunctionSquare",
+        link: "/direction/functions",
+      },
+      {
+        title: "Journal d'audit",
+        icon: "ScrollText",
+        link: "/direction/administration/audit",
       },
     ],
   },

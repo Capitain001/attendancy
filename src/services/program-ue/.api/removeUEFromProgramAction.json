@@ -1,0 +1,11 @@
+{
+  "name": "removeUEFromProgramAction",
+  "file": "src/services/program-ue/actions/program-ue.mutations.ts",
+  "sig": "({ programUEId, programId, ueId }: { programUEId?: string; programId: string; ueId?: string }) => Promise<{ error: any; data?: undefined; } | { data: BatchPayload; error?: undefined; }>",
+  "calls": [
+    "removeUEFromProgram"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

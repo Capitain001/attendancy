@@ -1,9 +1,0 @@
-{
-  "name": "logoutAction",
-  "file": "src/services/auth/actions.ts",
-  "sig": "() => Promise<void>",
-  "calls": [],
-  "auth": {},
-  "rules": [],
-  "why_ref": ""
-}

@@ -1,8 +1,0 @@
-{
-  "name": "getUserFunctions",
-  "file": "src/services/fonctions/user/database/userfunction.queries.ts",
-  "sig": "(userId: string) => Promise<({ function: { id: string; name: string; description: string | null; icon: string | null; }; } & { id: string; assignedAt: Date; userId: string; functionId: string; assignedBy: string | null; })[]>",
-  "composes": [],
-  "rules": [],
-  "why_ref": ""
-}

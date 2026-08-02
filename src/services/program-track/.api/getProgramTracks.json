@@ -1,7 +1,19 @@
 {
   "name": "getProgramTracks",
-  "file": "src/services/program-track/database/program-track.queries.ts",
-  "sig": "(orgId: string) => Promise<{ name: string; id: string; description: string | null; departmentId: string; department: { name: string; id: string; }; _count: { classes: number; programs: number; }; }[]>",
+  "file": "src/services/program-track/database/programTrack.queries.ts",
+  "sig": "({ orgId, departmentId }: { orgId: string; departmentId?: string }) => Promise<{ id: string; name: string; description: string | null; department: { id: string; name: string; }; _count: { classes: number; }; }[]>",
+  "cache": {
+    "strategy": "unstable_cache",
+    "keys": [
+      "programTrack",
+      "orgId",
+      "departmentId || \"all"
+    ],
+    "tags": [
+      "CACHE.PROGRAM_TRACK(orgId)"
+    ],
+    "revalidate": "300"
+  },
   "composes": [],
   "rules": [],
   "why_ref": ""

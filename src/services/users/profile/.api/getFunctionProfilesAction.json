@@ -2,9 +2,7 @@
   "name": "getFunctionProfilesAction",
   "file": "src/services/users/profile/actions.ts",
   "sig": "(functionId: string) => Promise<{ data: FunctionProfile[] } | { error: string }>",
-  "calls": [
-    "getFunctionProfiles"
-  ],
+  "calls": [],
   "auth": {},
   "rules": [],
   "why_ref": ""

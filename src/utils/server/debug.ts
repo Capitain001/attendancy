@@ -24,7 +24,7 @@ export async function debugPrismaError(error: unknown): Promise<PrismaDebugPaylo
       : (meta?.target as string | undefined) ??
         (/unique constraint "([^"]+)"/.exec(
           (driverCause?.originalMessage as string | undefined) ?? ""
-        )?.[1] ?? null) ??
+        )?.[1]) ??
         ((driverCause?.constraint as { index?: string } | undefined)?.index ?? null);
 
   const payload: PrismaDebugPayload = {

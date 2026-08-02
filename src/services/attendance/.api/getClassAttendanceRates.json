@@ -1,0 +1,8 @@
+{
+  "name": "getClassAttendanceRates",
+  "file": "src/services/attendance/database/analytics.ts",
+  "sig": "(classId: string, orgId: string, courseId?: string) => Promise<Map<string, number>>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

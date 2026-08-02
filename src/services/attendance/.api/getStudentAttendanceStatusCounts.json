@@ -1,0 +1,8 @@
+{
+  "name": "getStudentAttendanceStatusCounts",
+  "file": "src/services/attendance/database/attendance.queries.ts",
+  "sig": "(studentId: string, orgId: string, range?: { start: Date; end: Date }) => Promise<Record<AttendanceStatus, number>>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

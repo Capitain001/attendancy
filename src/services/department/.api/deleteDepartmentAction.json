@@ -1,7 +1,7 @@
 {
   "name": "deleteDepartmentAction",
   "file": "src/services/department/actions/department.mutations.ts",
-  "sig": "(departmentId: string) => Promise<{ error: string; data?: undefined; } | { data: void; error?: undefined; }>",
+  "sig": "(departmentId: string) => Promise<{ error: any; data?: undefined; } | { data: void; error?: undefined; }>",
   "calls": [
     "deleteDepartment"
   ],

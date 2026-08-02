@@ -2,21 +2,71 @@
   "service": "attendance",
   "path": "src/services/attendance/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
+  "derived_at": "7a0ca2e",
   "utils_dir": null,
   "fns": {
-    "markScheduleAbsences": {
-      "f": ".api/markScheduleAbsences.json",
-      "layer": "db",
-      "kind": "mutation"
-    },
     "getOrgTodayAbsences": {
       "f": ".api/getOrgTodayAbsences.json",
       "layer": "db",
       "kind": "query"
     },
+    "getClassAttendanceRates": {
+      "f": ".api/getClassAttendanceRates.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "recordAttendance": {
+      "f": ".api/recordAttendance.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "createAttendance": {
+      "f": ".api/createAttendance.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "confirmAttendance": {
+      "f": ".api/confirmAttendance.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "confirmAllAttendances": {
+      "f": ".api/confirmAllAttendances.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "markScheduleAbsences": {
+      "f": ".api/markScheduleAbsences.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
     "getScheduleAttendances": {
       "f": ".api/getScheduleAttendances.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getStudentAttendances": {
+      "f": ".api/getStudentAttendances.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getUserAttendance": {
+      "f": ".api/getUserAttendance.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getStudentAttendanceStatusCounts": {
+      "f": ".api/getStudentAttendanceStatusCounts.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrgStudentAttendanceRates": {
+      "f": ".api/getOrgStudentAttendanceRates.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getStudentAttendanceSummary": {
+      "f": ".api/getStudentAttendanceSummary.json",
       "layer": "db",
       "kind": "query"
     },
@@ -24,6 +74,21 @@
       "f": ".api/getExpectedAttendees.json",
       "layer": "db",
       "kind": "query"
+    },
+    "getClassAttendanceRatesAction": {
+      "f": ".api/getClassAttendanceRatesAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getOrgTodayAbsencesAction": {
+      "f": ".api/getOrgTodayAbsencesAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "createAttendanceAction": {
+      "f": ".api/createAttendanceAction.json",
+      "layer": "action",
+      "kind": "server-action"
     },
     "confirmAttendanceAction": {
       "f": ".api/confirmAttendanceAction.json",
@@ -35,8 +100,23 @@
       "layer": "action",
       "kind": "server-action"
     },
-    "getOrgTodayAbsencesAction": {
-      "f": ".api/getOrgTodayAbsencesAction.json",
+    "recordAttendanceAction": {
+      "f": ".api/recordAttendanceAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getStudentAttendancesAction": {
+      "f": ".api/getStudentAttendancesAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getStudentAttendanceSummaryAction": {
+      "f": ".api/getStudentAttendanceSummaryAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getOrgStudentAttendanceRatesAction": {
+      "f": ".api/getOrgStudentAttendanceRatesAction.json",
       "layer": "action",
       "kind": "server-action"
     },
@@ -47,20 +127,60 @@
     }
   },
   "edges": {
-    "markScheduleAbsences": [],
     "getOrgTodayAbsences": [
       "getOrgTodayAbsencesAction"
     ],
+    "getClassAttendanceRates": [
+      "getClassAttendanceRatesAction"
+    ],
+    "recordAttendance": [
+      "recordAttendanceAction"
+    ],
+    "createAttendance": [
+      "createAttendanceAction"
+    ],
+    "confirmAttendance": [
+      "confirmAttendanceAction"
+    ],
+    "confirmAllAttendances": [
+      "confirmAllAttendancesAction"
+    ],
+    "markScheduleAbsences": [],
     "getScheduleAttendances": [
       "getScheduleAttendancesAction"
+    ],
+    "getStudentAttendances": [
+      "getStudentAttendanceSummary",
+      "getStudentAttendancesAction"
+    ],
+    "getUserAttendance": [],
+    "getStudentAttendanceStatusCounts": [
+      "getStudentAttendanceSummary"
+    ],
+    "getOrgStudentAttendanceRates": [
+      "getOrgStudentAttendanceRatesAction"
+    ],
+    "getStudentAttendanceSummary": [
+      "getStudentAttendanceSummaryAction"
     ],
     "getExpectedAttendees": [
       "markScheduleAbsences"
     ],
+    "getClassAttendanceRatesAction": [],
+    "getOrgTodayAbsencesAction": [],
+    "createAttendanceAction": [],
     "confirmAttendanceAction": [],
     "confirmAllAttendancesAction": [],
-    "getOrgTodayAbsencesAction": [],
-    "getScheduleAttendancesAction": []
+    "recordAttendanceAction": [],
+    "getStudentAttendancesAction": [],
+    "getStudentAttendanceSummaryAction": [],
+    "getOrgStudentAttendanceRatesAction": [],
+    "getScheduleAttendancesAction": [],
+    "validateSessionToken": [
+      "recordAttendanceAction"
+    ]
   },
-  "deps": {}
+  "deps": {
+    "validateSessionToken": "session"
+  }
 }

@@ -1,8 +1,0 @@
-{
-  "name": "getOrgDetails",
-  "file": "src/services/org/database/org.queries.ts",
-  "sig": "(orgId: string) => Promise<OrgDetails>",
-  "composes": [],
-  "rules": [],
-  "why_ref": ""
-}

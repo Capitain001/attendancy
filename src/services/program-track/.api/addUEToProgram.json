@@ -1,8 +1,0 @@
-{
-  "name": "addUEToProgram",
-  "file": "src/services/program-track/database/program.mutations.ts",
-  "sig": "(data: AddUEToProgramOutput & { orgId: string }) => Promise<{ id: string; semester: number; order: number | null; }>",
-  "composes": [],
-  "rules": [],
-  "why_ref": ""
-}

@@ -1,7 +1,7 @@
 {
   "name": "reorderProgramAction",
   "file": "src/services/ue/actions/ue.mutations.ts",
-  "sig": "({ programId, ueOrders, courseOrders }: ReorderProgramPayload) => Promise<{ error: string; data?: undefined; } | { data: boolean; error?: undefined; }>",
+  "sig": "({ programId, ueOrders, courseOrders }: ReorderProgramPayload) => Promise<{ error: any; data?: undefined; } | { data: boolean; error?: undefined; }>",
   "calls": [
     "reorderProgram"
   ],

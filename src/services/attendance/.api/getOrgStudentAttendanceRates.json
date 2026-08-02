@@ -1,0 +1,8 @@
+{
+  "name": "getOrgStudentAttendanceRates",
+  "file": "src/services/attendance/database/attendance.queries.ts",
+  "sig": "(orgId: string) => Promise<Record<string, { rate: number | null; absences: number; denominator: number }>>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

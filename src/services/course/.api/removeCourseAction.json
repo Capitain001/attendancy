@@ -1,7 +1,7 @@
 {
   "name": "removeCourseAction",
   "file": "src/services/course/actions/course.mutations.ts",
-  "sig": "(courseId: string) => Promise<{ error: string; data?: undefined; } | { data: boolean; error?: undefined; }>",
+  "sig": "(courseId: string) => Promise<{ error: any; data?: undefined; } | { data: boolean; error?: undefined; }>",
   "calls": [
     "removeCourse"
   ],

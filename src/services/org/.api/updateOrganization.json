@@ -1,8 +1,0 @@
-{
-  "name": "updateOrganization",
-  "file": "src/services/org/database/org.mutations.ts",
-  "sig": "(orgId: string, data: UpdateOrgIdentityInput) => Promise<{ id: string; name: string; slug: string | null; }>",
-  "composes": [],
-  "rules": [],
-  "why_ref": ""
-}

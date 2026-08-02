@@ -1,9 +1,0 @@
-{
-  "name": "sendAdminPushNotification",
-  "file": "src/services/notification/actions/notification.mutations.ts",
-  "sig": "(userId: string, input: { message: string; type?: string; scheduleId?: string; metadata?: Record<string, unknown> }) => Promise<{ error: string; data?: undefined; } | { data: { success: boolean; error?: string | undefined; }; error?: undefined; }>",
-  "calls": [],
-  "auth": {},
-  "rules": [],
-  "why_ref": ""
-}
