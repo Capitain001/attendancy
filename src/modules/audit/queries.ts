@@ -102,3 +102,45 @@ export async function getTeacherAuditLog(params: {
     },
   });
 }
+
+/**
+ * Journal d'audit global de l'org — vue direction.
+ * Filtrable par resource et action. Paginé via cursor (id).
+ */
+export async function getOrgAuditLogs(params: {
+  orgId: string;
+  resource?: string;
+  action?: string;
+  limit?: number;
+  cursor?: string;
+}) {
+  const { orgId, resource, action, limit = 50, cursor } = params;
+
+  const rows = await prisma.auditLog.findMany({
+    where: {
+      orgId,
+      ...(resource ? { resource } : {}),
+      ...(action   ? { action   } : {}),
+    },
+    orderBy: { createdAt: "desc" },
+    take: limit + 1,
+    ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+    select: {
+      id:         true,
+      action:     true,
+      resource:   true,
+      resourceId: true,
+      details:    true,
+      createdAt:  true,
+      userId:     true,
+      user: { select: { firstName: true, lastName: true } },
+    },
+  });
+
+  const hasNext = rows.length > limit;
+  return {
+    items:      hasNext ? rows.slice(0, limit) : rows,
+    hasNext,
+    nextCursor: hasNext ? rows[limit - 1]?.id : null,
+  };
+}
