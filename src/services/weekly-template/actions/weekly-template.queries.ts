@@ -1,13 +1,12 @@
 'use server'
-import { getUserInfo } from '@/services/user/userInfo'
+import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import { getWeeklyTemplates, getWeeklyTemplate } from '../database'
 
 export async function getWeeklyTemplatesAction() {
-  const user = await getUserInfo()
-  if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-  const orgId = user.organization?.id
-  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
   try {
     const data = await getWeeklyTemplates(orgId)
@@ -18,10 +17,9 @@ export async function getWeeklyTemplatesAction() {
 }
 
 export async function getWeeklyTemplateAction(id: string) {
-  const user = await getUserInfo()
-  if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-  const orgId = user.organization?.id
-  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
   try {
     const data = await getWeeklyTemplate(id, orgId)

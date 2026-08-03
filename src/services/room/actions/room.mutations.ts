@@ -1,7 +1,7 @@
 // src/services/room/actions/room.mutations.ts
 'use server'
 import * as v from 'valibot'
-import { getUserInfo } from '@/services/user/userInfo'
+import { getUserInfo } from '@/modules/user'
 import { ERRORS } from '@/config'
 import { createRoomSchema, createLocationSchema } from '../validation'
 import type { CreateRoomInput, CreateLocationInput } from '../validation'

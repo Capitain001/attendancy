@@ -1,7 +1,7 @@
 {
   "name": "removeUECourseAction",
   "file": "src/services/ue-course/actions/ue-course.mutations.ts",
-  "sig": "(ueCourseId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; ueId: string; }; error?: undefined; }>",
+  "sig": "(ueCourseId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; ueId: string; }; error?: undefined; }>",
   "calls": [
     "removeUECourse"
   ],

@@ -1,7 +1,7 @@
 {
   "name": "setGroupStudentsAction",
   "file": "src/services/class/actions/class.group-actions.ts",
-  "sig": "(input: { classId: string; groupId: string; enrollmentIds: string[] }) => Promise<{ error: string; data?: undefined; } | { data: true; error?: undefined; }>",
+  "sig": "(input: { classId: string; groupId: string; enrollmentIds: string[] }) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
   "calls": [],
   "auth": {},
   "rules": [],

@@ -1,8 +1,0 @@
-{
-  "name": "getUserRoleStats",
-  "file": "src/services/users/database/users.queries.ts",
-  "sig": "(orgId: string) => Promise<{ total: number; direction: number; teachers: number; students: number; others: number; }>",
-  "composes": [],
-  "rules": [],
-  "why_ref": ""
-}

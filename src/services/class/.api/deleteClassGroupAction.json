@@ -1,7 +1,7 @@
 {
   "name": "deleteClassGroupAction",
   "file": "src/services/class/actions/class.group-actions.ts",
-  "sig": "(input: { classId: string; groupId: string }) => Promise<{ error: string; data?: undefined; } | { data: true; error?: undefined; }>",
+  "sig": "(input: { classId: string; groupId: string }) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
   "calls": [],
   "auth": {},
   "rules": [],

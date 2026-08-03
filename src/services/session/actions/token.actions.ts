@@ -1,7 +1,7 @@
 'use server'
 import { ERRORS } from '@/config'
-import { getUserInfo } from '@/services/user/userInfo'
-import { getAuthorization } from '@/services/auth/authorization'
+import { getUserInfo } from '@/modules/user'
+import { getAuthorization } from '@/modules/auth'
 import { createSessionToken } from '../database/token.mutations'
 
 export async function generateTokenAction(sessionId: string) {

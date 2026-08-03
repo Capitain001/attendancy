@@ -1,7 +1,7 @@
 {
   "name": "removeWeeklySlotAction",
   "file": "src/services/weekly-template/actions/weekly-template.mutations.ts",
-  "sig": "(slotId: string) => Promise<{ error: string; data?: undefined; } | { data: { slotId: string; }; error?: undefined; }>",
+  "sig": "(slotId: string) => Promise<{ error: any; data?: undefined; } | { data: { slotId: string; }; error?: undefined; }>",
   "calls": [
     "removeWeeklySlot"
   ],

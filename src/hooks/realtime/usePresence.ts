@@ -1,7 +1,7 @@
 // hooks/realtime/usePresence.ts
 'use client'
 
-import { generateUserInfo } from '@/services/user/utils'
+import { generateUserInfo } from '@/modules/user'
 import { UserInfo } from '@/types'
 import { supabase } from '@/utils/supabase/client'
 import { REALTIME_SUBSCRIBE_STATES } from '@supabase/supabase-js'

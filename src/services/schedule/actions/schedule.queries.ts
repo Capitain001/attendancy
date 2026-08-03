@@ -1,6 +1,6 @@
 'use server'
-import { getUserInfo } from '@/services/user/userInfo'
-import { getAuthorization } from '@/services/auth/authorization'
+import { getUserInfo } from '@/modules/user'
+import { getAuthorization } from '@/modules/auth'
 import { ERRORS } from '@/config'
 import { getSchedulesByClass, getSchedules, getScheduleDays, getSchedulesByCourse } from '../database'
 import { getCoursesByClass } from '@/services/course/database'

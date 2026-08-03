@@ -1,7 +1,7 @@
 {
   "name": "getTeacherCoursesAction",
   "file": "src/services/teacher/actions/teacher.queries.ts",
-  "sig": "(teacherId: string) => Promise<{ id: string; name: string; class: { name: string; id: string; }; }[] | { error: \"Organisation introuvable\"; }>",
+  "sig": "(teacherId: string) => Promise<{ id: string; name: string; class: { name: string; id: string; }; }[] | { error: any; }>",
   "calls": [
     "getTeacherCourses"
   ],

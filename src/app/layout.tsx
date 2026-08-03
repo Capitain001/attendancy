@@ -6,7 +6,6 @@ import { ErudaProvider } from '@/providers/eruda-provider'
 import ReactQueryProvider from '@/providers/react-query-provider'
 import { Suspense } from 'react'
 import { AsyncHeader } from '@/components/layout/Header/AsyncHeader'
-import { HeaderSkeleton } from '@/components/layout/Header/HeaderSkeleton'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -24,9 +23,7 @@ export default function RootLayout({
           <ReactQueryProvider>
             <NuqsAdapter>
               <div className="flex h-screen flex-col">
-                <Suspense fallback={<HeaderSkeleton />}>
-                  <AsyncHeader />
-                </Suspense>
+                <AsyncHeader />
                 <main className="flex-1 overflow-y-auto">
                   <Suspense fallback={null}>
                     {children}

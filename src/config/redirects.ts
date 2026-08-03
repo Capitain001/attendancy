@@ -1,8 +1,16 @@
 // src/config/redirects.ts
-// Résolution de la destination post-login selon le profil utilisateur.
-// Fonctions pures — testables sans I/O.
-import type { UserInfo } from '@/services/user/types'
-import { ROLE_PATHS } from './roles'
+import { Functions, Role, UserInfo, UserRoles } from "@/types/user";
+
+// Mapping des chemins par rôle
+export const ROLE_PATHS: Record<Role, string> = {
+  [UserRoles.ADMIN]: "admin",
+  [UserRoles.TEACHER]: "teacher",
+  [UserRoles.STUDENT]: "student",
+  [UserRoles.PARENT]: "parent",
+  [UserRoles.DIRECTION]: "direction",
+  [UserRoles.GUEST]: "/invite",
+};
+
 
 /**
  * Résout la destination post-login selon le profil utilisateur.
@@ -25,9 +33,40 @@ export function redirectUser(user: Partial<UserInfo>): string {
 
   return `/${user.organization.slug}/${rolePath}`
 }
+
+
+
+
+/**
+ * Retourne le path de l'utilisateur en fonction de son rôle et de son organisation
+ * @param user - L'utilisateur (optionnel)
+ * @returns path sous forme de string
+ */
+export function orgPath(user?: UserInfo): string {
+  if (!user || !user.role) return "/";
+
+  const roleBase = ROLE_PATHS[user.role] ?? "/"; 
+
+  const path = user.organization?.slug 
+    ? `/${user.organization.slug}/${roleBase}` 
+    : `/${roleBase}`;
+
+  return path;
 }
 
-export function orgPath(user?: Partial<UserInfo>): string {
-  if (!user?.role || !user.organization?.slug) return '/'
-  return `/${user.organization.slug}/${ROLE_PATHS[user.role]}`
+
+/**
+ * Retourne le chemin de redirection pour un rôle donné
+ * @param role rôle de l'utilisateur
+ * @param orgSlug slug de l'organisation (optionnel)
+ */
+export function getRedirectPath(role: Role, orgSlug?: string) {
+  const basePath = ROLE_PATHS[role] ?? "/login";
+
+  // Pour les rôles avec orgSlug
+  if (orgSlug) {
+    return `/${orgSlug}/${basePath}`;
+  }
+
+  return '/auth/org/info';
 }

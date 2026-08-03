@@ -1,6 +1,6 @@
 'use server'
 import * as v from 'valibot'
-import { getUserInfo } from '@/services/user/userInfo'
+import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import { createSubscriptionSchema } from '../validation'
 import { createSubscription, updateSubscriptionStatus } from '../database'
@@ -8,10 +8,11 @@ import type { SubscriptionStatus } from '@/generated/prisma'
 
 export async function createSubscriptionAction(input: unknown) {
   try {
-    const user = await getUserInfo()
-    if (!user?.id) throw new Error(ERRORS.AUTH.UNAUTHORIZED)
-    const orgId = user.organization?.id
-    if (!orgId) throw new Error(ERRORS.ORG.NOT_FOUND)
+    const auth = await authAccess({ requiredRole: ['ADMIN', 'DIRECTION'], requiredFunction: 'PRINCIPAL' })
+    
+    if (!auth.data) return { error: auth.error }
+    const { orgId } = auth.data
+
     const parsed = v.parse(createSubscriptionSchema, input)
     const subscription = await createSubscription({ orgId, planId: parsed.planId })
     return { data: subscription }
@@ -25,10 +26,10 @@ export async function updateSubscriptionStatusAction(
   status: SubscriptionStatus
 ) {
   try {
-    const user = await getUserInfo()
-    if (!user?.id) throw new Error(ERRORS.AUTH.UNAUTHORIZED)
-    const orgId = user.organization?.id
-    if (!orgId) throw new Error(ERRORS.ORG.NOT_FOUND)
+    const auth = await authAccess({ requiredRole: ['ADMIN', 'DIRECTION'], requiredFunction: 'PRINCIPAL' })
+    if (!auth.data) return { error: auth.error }
+    const { orgId } = auth.data
+
     const result = await updateSubscriptionStatus(subscriptionId, orgId, status)
     return { data: result }
   } catch (error) {

@@ -1,7 +1,7 @@
 {
   "name": "createEventAction",
   "file": "src/services/event/actions/event.mutations.ts",
-  "sig": "(input: CreateEventInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; title: string; }; error?: undefined; }>",
+  "sig": "(input: CreateEventInput) => Promise<{ error: any; data?: undefined; } | { data: { id: string; title: string; }; error?: undefined; }>",
   "calls": [
     "createEvent"
   ],

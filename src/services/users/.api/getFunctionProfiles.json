@@ -1,8 +1,0 @@
-{
-  "name": "getFunctionProfiles",
-  "file": "src/services/users/database/users.queries.ts",
-  "sig": "(functionId: string, orgId: string) => Promise<{ function: { id: string; name: string; description: string | null; icon: string | null; }; id: string; userId: string; user: { id: string; firstName: string | null; lastName: string | null; email: string; avatar_url: string | null; }; functionId: string; assignedAt: Date; }[]>",
-  "composes": [],
-  "rules": [],
-  "why_ref": ""
-}

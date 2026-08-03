@@ -1,7 +1,7 @@
 {
   "name": "getWeeklyTemplatesAction",
   "file": "src/services/weekly-template/actions/weekly-template.queries.ts",
-  "sig": "() => Promise<{ error: \"Vous devez être connecté\"; data?: undefined; } | { error: \"Organisation introuvable\"; data?: undefined; } | { data: { id: string; name: string; isActive: boolean; createdAt: Date; _count: { ...; }; }[]; error?: undefined; } | { ...; }>",
+  "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; isActive: boolean; createdAt: Date; _count: { slots: number; }; }[]; error?: undefined; }>",
   "calls": [
     "getWeeklyTemplates"
   ],

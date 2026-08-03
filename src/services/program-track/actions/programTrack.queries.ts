@@ -1,6 +1,6 @@
 "use server";
 
-import { getUserInfo } from "@/services/user";
+import { getUserInfo } from '@/modules/user';
 import { ERRORS } from "@/config";
 import { getProgramTracks, getProgramTracksBasic, getProgramTrack } from "../database";
 import { groupProgramTracksByDepartment } from "../utils";

@@ -1,7 +1,7 @@
 {
   "name": "deleteFunctionAction",
   "file": "src/services/function/actions/function.mutations.ts",
-  "sig": "(functionId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "sig": "(functionId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
   "calls": [
     "deleteFunction"
   ],

@@ -1,14 +1,15 @@
 'use server'
-import { getUserInfo } from '@/services/user/userInfo'
+import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import { getUEs, getProgramUEs } from '../database'
 import { getProgramUEsTable } from '../utils'
 
 export async function getUEsAction(departmentId?: string) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
     return { data: await getUEs(orgId, departmentId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
@@ -16,10 +17,11 @@ export async function getUEsAction(departmentId?: string) {
 }
 
 export async function getProgramUEsAction({ programId }: { programId: string }) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
     return { data: await getProgramUEs(programId, orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
@@ -27,10 +29,13 @@ export async function getProgramUEsAction({ programId }: { programId: string }) 
 }
 
 export async function getProgramUEsTableAction({ programId }: { programId: string }) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const result = await getProgramUEsAction({ programId })
-    if ('error' in result) return result
-    return { data: getProgramUEsTable(result.data) }
+    const result = await getProgramUEs(programId, orgId)
+    return { data: getProgramUEsTable(result) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

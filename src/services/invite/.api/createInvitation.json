@@ -1,8 +1,0 @@
-{
-  "name": "createInvitation",
-  "file": "src/services/invite/database/invite.mutations.ts",
-  "sig": "(token: string, params: CreateInvitationParams) => Promise<{ id: string; token: string; }>",
-  "composes": [],
-  "rules": [],
-  "why_ref": ""
-}

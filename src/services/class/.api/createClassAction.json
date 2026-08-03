@@ -1,7 +1,7 @@
 {
   "name": "createClassAction",
   "file": "src/services/class/actions/class.mutations.ts",
-  "sig": "(input: CreateClassInput) => Promise<{ error: string; data?: undefined; } | { data: { level: Level; name: string; id: string; programTrackId: string; academicYearId: string; }; error?: undefined; }>",
+  "sig": "(input: CreateClassInput) => Promise<{ error: any; data?: undefined; } | { data: { level: Level; name: string; id: string; programTrackId: string; academicYearId: string; }; error?: undefined; }>",
   "calls": [
     "createClass"
   ],

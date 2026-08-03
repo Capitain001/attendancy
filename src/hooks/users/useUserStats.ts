@@ -2,7 +2,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { getUserRoleStatsAction } from "@/services/user/actions";
+import { getUserRoleStatsAction } from "@/modules/user";
 import type { UserRoleStats } from "@/services/users/stats";
 
 export function useUserStats() {

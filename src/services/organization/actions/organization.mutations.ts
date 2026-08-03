@@ -2,7 +2,6 @@
 'use server'
 import * as v from 'valibot'
 import { authAccess } from '@/services/auth'
-import { getUserInfo } from '@/modules/user/userInfo'
 import { setUserInfo } from '@/modules/user/update'
 import { logAuditAsync } from '@/services/audit'
 import { ERRORS } from '@/config'
@@ -21,9 +20,10 @@ import {
 // authAccess échouerait systématiquement (il exige un orgId), donc on compose
 // getUserInfo directement : cas explicitement documenté au pattern.
 export async function createOrgAction(input: OrgSetupInput) {
-  const user = await getUserInfo()
-  if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-  if (user.organization?.id) return { error: 'Vous avez déjà une organisation' }
+  
+const auth = await authAccess({ requiredRole: 'DIRECTION', requiredFunction: 'PRINCIPAL' })
+if (!auth.data) return { error: auth.error }
+const { user, orgId } = auth.data
 
   const parsed = v.safeParse(orgSetupSchema, input)
   if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }

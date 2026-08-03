@@ -11,7 +11,7 @@ import { Separator } from "@/components/ui/separator"
 import { BreadcrumbLayout } from "@/components/layout/sidebar/ui/BreadcrumbLayout"
 import { routes, getSerializableRoutes } from "@/components/layout/sidebar/nav"
 
-import { getUserInfo } from "@/services/user";
+import { getUserInfo } from '@/modules/user';
 import type { ReactNode } from "react";
 import React from 'react';
 import { UserSidebarSlot } from "@/components/layout/sidebar";

@@ -1,7 +1,7 @@
 {
   "name": "removeGroupAction",
   "file": "src/services/group/actions/group.mutations.ts",
-  "sig": "(groupId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "sig": "(groupId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
   "calls": [
     "removeGroup"
   ],

@@ -15,7 +15,15 @@ export const typography = {
 
   small: cn("text-xs text-text-subtle leading-relaxed"),
 
-// ─── Échelle marketing ────────────────────────────────────────────────────────
+  // ─── Typographie éditoriale ────────────────────────────────────────────────
+
+  lexical: cn(
+    "font-serif ",
+    "text-[1.125rem] leading-[1.8]",
+    "max-md:text-[1rem]"
+  ),
+
+  // ─── Échelle marketing ─────────────────────────────────────────────────────
 
   display: cn(
     "font-sans font-normal text-text-primary",
@@ -30,7 +38,7 @@ export const typography = {
   ),
 
   h2: cn(
-    "font-sans font-normal text-text-primary",
+    "font-normal text-text-primary",
     "text-[3em] leading-[1.2]",
     "max-md:text-[2.5rem]"
   ),
@@ -42,7 +50,6 @@ export const typography = {
   ),
 
   h4: cn(
-    "font-sans font-normal text-text-primary",
     "text-[1.9375em] leading-[1.2]",
     "max-md:text-[1.5rem]"
   ),

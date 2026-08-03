@@ -1,7 +1,7 @@
 {
   "name": "getUEsAction",
   "file": "src/services/ue/actions/ue.queries.ts",
-  "sig": "(departmentId?: string) => Promise<{ data: { name: string; id: string; code: string | null; departmentId: string | null; isOptional: boolean; department: { name: string; id: string; } | null; }[]; error?: undefined; } | { error: string; data?: undefined; }>",
+  "sig": "(departmentId?: string) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; code: string | null; departmentId: string | null; isOptional: boolean; department: { name: string; id: string; } | null; }[]; error?: undefined; }>",
   "calls": [
     "getUEs"
   ],

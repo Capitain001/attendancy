@@ -1,7 +1,7 @@
 {
   "name": "bulkSetStudentStatusAction",
   "file": "src/services/student/actions/student.mutations.ts",
-  "sig": "(studentIds: string[], status: UserStatus) => Promise<{ error: string; data?: undefined; } | { data: { count: number; }; error?: undefined; }>",
+  "sig": "(studentIds: string[], status: UserStatus) => Promise<{ error: any; data?: undefined; } | { data: { count: number; }; error?: undefined; }>",
   "calls": [],
   "auth": {},
   "rules": [],

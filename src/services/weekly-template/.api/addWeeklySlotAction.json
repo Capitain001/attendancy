@@ -1,7 +1,7 @@
 {
   "name": "addWeeklySlotAction",
   "file": "src/services/weekly-template/actions/weekly-template.mutations.ts",
-  "sig": "(templateId: string, input: unknown) => Promise<{ error: string; data?: undefined; } | { data: { id: string; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; dayOfWeek: number; startTime: string; ... 4 more ...; roomId: string; }; error?: undefined; }>",
+  "sig": "(templateId: string, input: unknown) => Promise<{ error: any; data?: undefined; } | { data: { id: string; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; dayOfWeek: number; startTime: string; ... 4 more ...; roomId: string; }; error?: undefined; }>",
   "calls": [
     "createWeeklySlot"
   ],

@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
-import { getUserInfo } from '@/services/user/userInfo'
+import { getUserInfo } from '@/modules/user'
 import { redirectUser } from '@/config/redirects'
 
 export async function GET(request: NextRequest) {

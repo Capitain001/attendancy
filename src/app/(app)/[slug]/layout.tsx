@@ -1,7 +1,7 @@
 
 // import { OrganizationProvider } from "@/providers/OrganizationProvider";
 // import { UserProvider } from "@/contexts/UserContext";
-import { getUserInfo } from "@/services/user";
+import { getUserInfo } from '@/modules/user';
 import { redirect } from "next/navigation";
 
 interface LayoutProps {

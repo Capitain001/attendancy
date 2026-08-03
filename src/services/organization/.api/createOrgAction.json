@@ -1,7 +1,7 @@
 {
   "name": "createOrgAction",
   "file": "src/services/organization/actions/organization.mutations.ts",
-  "sig": "(input: OrgSetupInput) => Promise<{ error: string; data?: undefined; } | { data: { slug: string; }; error?: undefined; }>",
+  "sig": "(input: OrgSetupInput) => Promise<{ error: any; data?: undefined; } | { data: { slug: string; }; error?: undefined; }>",
   "calls": [
     "createOrgWithDefaults"
   ],

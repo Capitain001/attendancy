@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import { ModeToggle } from './ModeToggle'
 import { UserMenu } from './UserMenu'
-import type { UserInfo } from '@/services/user/types'
+import { UserInfo } from '@/types/user'
+
 
 interface HeaderProps {
   user?: UserInfo

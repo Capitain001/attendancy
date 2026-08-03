@@ -1,7 +1,7 @@
 {
   "name": "updateSubscriptionStatusAction",
   "file": "src/services/subscription/actions/subscription.mutations.ts",
-  "sig": "(subscriptionId: string, status: SubscriptionStatus) => Promise<{ data: { id: string; status: SubscriptionStatus; }; error?: undefined; } | { error: string; data?: undefined; }>",
+  "sig": "(subscriptionId: string, status: SubscriptionStatus) => Promise<{ error: any; data?: undefined; } | { data: { id: string; status: SubscriptionStatus; }; error?: undefined; }>",
   "calls": [
     "updateSubscriptionStatus"
   ],

@@ -2,8 +2,9 @@
 "use server";
 
 import { PrismaClient, Role } from "@/generated/prisma/client";
-import { ensureMainFunctions } from "@/services/fonctions/main/database";
 import { Functions } from "@/types/user";
+// import { ensureMainFunctions } from "@/services/fonctions/main/database";
+// import { Functions } from "@/types/user";
 
 type Tx = Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'>
 
@@ -137,7 +138,7 @@ export async function assignFunctionToUser(
 
   try {
     // S'assurer que les fonctions principales existent pour l'organisation
-    await ensureMainFunctions(orgId);
+    // await ensureMainFunctions(orgId);
 
     // Trouver la fonction par nom et orgId
     const function_ = await tx.function.findUnique({

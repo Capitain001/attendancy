@@ -1,7 +1,7 @@
 {
   "name": "deleteTeacherUnavailabilityAction",
   "file": "src/services/teacher-unavailability/actions/teacher-unavailability.mutations.ts",
-  "sig": "(id: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "sig": "(id: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
   "calls": [
     "deleteTeacherUnavailability"
   ],

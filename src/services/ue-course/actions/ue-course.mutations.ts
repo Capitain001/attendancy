@@ -1,7 +1,6 @@
 'use server'
 import * as v from 'valibot'
-import { getUserInfo } from '@/services/user/userInfo'
-import { getAuthorization } from '@/services/auth/authorization'
+import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import { createUECourseSchema } from '../validation'
 import type { CreateUECourseInput } from '../validation'
@@ -9,30 +8,33 @@ import { createUECourse, removeUECourse, updateUECourse } from '../database'
 import type { UpdateUECourseData } from '../database'
 
 export async function createUECourseAction(input: CreateUECourseInput) {
-  try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
+  // 1. Validation (hors try/catch) - safeParse
+  const parsed = v.safeParse(createUECourseSchema, input)
+  if (!parsed.success) {
+    return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+  }
 
-    const parsed = v.parse(createUECourseSchema, input)
-    return { data: await createUECourse({ ...parsed, orgId }) }
+  // 2. Auth
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
+  // 3. Requête database (dans try/catch)
+  try {
+    return { data: await createUECourse({ ...parsed.output, orgId }) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
 export async function updateUECourseAction(ueCourseId: string, data: UpdateUECourseData) {
-  try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
+  // 1. Auth (pas de validation pour un ID simple)
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
+  // 2. Requête database (dans try/catch)
+  try {
     return { data: await updateUECourse(ueCourseId, orgId, data) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
@@ -40,14 +42,13 @@ export async function updateUECourseAction(ueCourseId: string, data: UpdateUECou
 }
 
 export async function removeUECourseAction(ueCourseId: string) {
-  try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
+  // 1. Auth (pas de validation pour un ID simple)
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
+  // 2. Requête database (dans try/catch)
+  try {
     return { data: await removeUECourse(ueCourseId, orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }

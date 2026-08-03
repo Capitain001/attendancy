@@ -1,6 +1,6 @@
 "use client";
 
-import type { UserInfo } from "@/services/user/types";
+import type { UserInfo } from "@/modules/user";
 import {
   DropdownMenu,
   DropdownMenuContent,

@@ -1,12 +1,12 @@
 import { UserInfo } from "@/types";
-import { getUserInfo } from "@/services/user";
+import { getUserInfo } from '@/modules/user';
 
 
 
 /**
  * Exemple d'utilisation depuis un composant server/client :
  * 
- * import { getOrganization, getOrgId, isSuperAdmin, signUpResponsable } from "@/services/auth/auth";
+ * import { getOrganization, getOrgId, isSuperAdmin, signUpResponsable } from "@/modules/user";
  * 
  * const org = await getOrganization();
  * const orgId = await getOrgId();

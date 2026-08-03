@@ -1,7 +1,7 @@
 ﻿// src/services/auth/permission/access.ts
 "use server";
 
-import { getUserInfo } from "@/services/user";
+import { getUserInfo } from '@/modules/user';
 import { getAuthorization } from "./autorization";
 import { UserInfo, Role, Functions, AuthenticatedUser } from "@/types/user";
 import { ERRORS } from "@/config";

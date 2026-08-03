@@ -1,5 +1,5 @@
 'use server'
-import { getUserInfo } from '@/services/user/userInfo'
+import { getUserInfo } from '@/modules/user'
 import { ERRORS } from '@/config'
 import { getCourse, getCourses, getCoursesByClass, getCourseTeachers, getCourseTeachersIds } from '../database'
 

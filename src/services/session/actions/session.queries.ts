@@ -1,8 +1,8 @@
 'use server'
 import { startOfDay, endOfDay } from 'date-fns'
 import { ERRORS } from '@/config'
-import { getUserInfo } from '@/services/user/userInfo'
-import { getAuthorization } from '@/services/auth/authorization'
+import { getUserInfo } from '@/modules/user'
+import { getAuthorization } from '@/modules/auth'
 import { getTeacherNextSchedule, getActiveSessions, getOrgDaySchedulesWithSession } from '../database'
 
 export async function getActiveSessionsAction() {

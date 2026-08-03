@@ -2,7 +2,7 @@
 
 import { Prisma }     from '@/generated/prisma/client'
 import * as v         from 'valibot'
-import { getUserInfo } from '@/services/user/userInfo'
+import { getUserInfo } from '@/modules/user'
 import { ERRORS }     from '@/config'
 import { prisma }     from '@/lib/prisma'
 

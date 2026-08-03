@@ -1,7 +1,7 @@
 {
   "name": "createDateRangeUnavailabilityAction",
   "file": "src/services/teacher-unavailability/actions/teacher-unavailability.mutations.ts",
-  "sig": "(input: CreateDateRangeUnavailabilityInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "sig": "(input: CreateDateRangeUnavailabilityInput) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
   "calls": [
     "createDateRangeUnavailability"
   ],

@@ -1,6 +1,6 @@
 import { getSubscriptionAction, getPlansAction } from '@/services/subscription'
 import type { GetSubscriptionDto, PlanDto } from '@/services/subscription'
-import { getUserInfo } from '@/services/user'
+import { getUserInfo } from '@/modules/user'
 import { SubscribeButton, ManageSubscriptionButton } from '@/components/stripe'
 import { redirect } from 'next/navigation'
 

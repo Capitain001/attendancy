@@ -1,7 +1,6 @@
 'use server'
 import * as v from 'valibot'
-import { getUserInfo } from '@/services/user/userInfo'
-import { getAuthorization } from '@/services/auth/authorization'
+import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import {
   createWeeklyUnavailabilitySchema,
@@ -19,12 +18,9 @@ import {
 
 export async function createWeeklyUnavailabilityAction(input: CreateWeeklyUnavailabilityInput) {
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'TEACHER')
-    if (!auth.success) return { error: auth.error }
+    const auth = await authAccess({ requiredRole: 'TEACHER' })
+    if (!auth.data) return { error: auth.error }
+    const { orgId } = auth.data
 
     const parsed = v.parse(createWeeklyUnavailabilitySchema, input)
     return { data: await createWeeklyUnavailability(orgId, parsed) }
@@ -35,12 +31,9 @@ export async function createWeeklyUnavailabilityAction(input: CreateWeeklyUnavai
 
 export async function createDateRangeUnavailabilityAction(input: CreateDateRangeUnavailabilityInput) {
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'TEACHER')
-    if (!auth.success) return { error: auth.error }
+    const auth = await authAccess({ requiredRole: 'TEACHER' })
+    if (!auth.data) return { error: auth.error }
+    const { orgId } = auth.data
 
     const parsed = v.parse(createDateRangeUnavailabilitySchema, input)
     return { data: await createDateRangeUnavailability(orgId, parsed) }
@@ -51,12 +44,9 @@ export async function createDateRangeUnavailabilityAction(input: CreateDateRange
 
 export async function deleteTeacherUnavailabilityAction(id: string) {
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'TEACHER')
-    if (!auth.success) return { error: auth.error }
+    const auth = await authAccess({ requiredRole: 'TEACHER' })
+    if (!auth.data) return { error: auth.error }
+    const { orgId } = auth.data
 
     await deleteTeacherUnavailability(id, orgId)
     return { data: { id } }

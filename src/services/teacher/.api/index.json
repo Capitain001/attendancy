@@ -2,7 +2,7 @@
   "service": "teacher",
   "path": "src/services/teacher/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
+  "derived_at": "3889557",
   "utils_dir": null,
   "fns": {
     "updateTeacherDepartment": {
@@ -44,21 +44,6 @@
       "f": ".api/getTeacher.json",
       "layer": "db",
       "kind": "query"
-    },
-    "createTeacherAction": {
-      "f": ".api/createTeacherAction.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "updateTeacherAction": {
-      "f": ".api/updateTeacherAction.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "deleteTeacherAction": {
-      "f": ".api/deleteTeacherAction.json",
-      "layer": "action",
-      "kind": "server-action"
     },
     "updateTeacherDepartmentAction": {
       "f": ".api/updateTeacherDepartmentAction.json",
@@ -131,12 +116,7 @@
     "getTeacher": [
       "getTeacherAction"
     ],
-    "createTeacherAction": [],
-    "updateTeacherAction": [],
-    "deleteTeacherAction": [],
-    "updateTeacherDepartmentAction": [
-      "updateTeacherAction"
-    ],
+    "updateTeacherDepartmentAction": [],
     "getCurrentTeacherId": [],
     "getTeacherSchedulesAction": [],
     "getTeacherTodaySchedulesAction": [],

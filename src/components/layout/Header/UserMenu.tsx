@@ -3,8 +3,8 @@
 // import { useRouter } from 'next/navigation'
 import { LogOut, Settings } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { logoutAction } from '@/services/auth'
-import type { UserInfo } from '@/services/user/types'
+import { logoutAction } from '@/modules/auth'
+import type { UserInfo } from '@/types/user'
 
 function initials(name?: string, email?: string): string {
   if (name) return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
@@ -26,8 +26,7 @@ export function UserMenu({ user }: { user: UserInfo }) {
   // }, [])
 
   async function handleLogout() {
-    await logoutAction()
-    window.location.href = '/login'
+    await logoutAction({})
   }
 
   return (

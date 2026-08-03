@@ -6,9 +6,9 @@ import { ERRORS } from "@/config"
 import { prisma } from "@/lib/prisma"
 import { createClient } from "@/utils/supabase/server"
 import type { UserMetadata } from "@/types/user"
-import { getRoleProfileKey } from "@/services/user/profile"
-import { syncUserOrganizationProfile } from "@/services/user/update"
-import { createRoleSpecificEntity } from "@/services/auth/members/utils"
+import { getRoleProfileKey } from "@/modules/user"
+import { syncUserOrganizationProfile } from "@/modules/user"
+import { createRoleSpecificEntity } from "@/modules/user"
 
 /** Id du profil de rôle existant pour (userId, orgId), ou null. Idempotence. */
 async function findRoleProfileId(role: Role, userId: string, orgId: string): Promise<string | null> {

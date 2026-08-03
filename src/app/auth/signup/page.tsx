@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { getUserInfo } from '@/services/user/userInfo'
+import { getUserInfo } from '@/modules/user'
 import { redirectUser } from '@/config/redirects'
 import { SignupLanding } from '@/components/auth/SignupLanding'
 

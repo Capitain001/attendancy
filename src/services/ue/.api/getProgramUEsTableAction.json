@@ -1,9 +1,9 @@
 {
   "name": "getProgramUEsTableAction",
   "file": "src/services/ue/actions/ue.queries.ts",
-  "sig": "({ programId }: { programId: string }) => Promise<{ data: { id: string; semester: number; order: number | null; ue: { name: string; id: string; code: string | null; description: string | null; imageUrl: string | null; departmentId: string | null; department: { ...; } | null; ueCourses: { ...; }[]; }; }[]; error?: undefined; } | { ...; } | { ...; }>",
+  "sig": "({ programId }: { programId: string }) => Promise<{ error: any; data?: undefined; } | { data: ProgramTable; error?: undefined; }>",
   "calls": [
-    "getProgramUEsAction"
+    "getProgramUEs"
   ],
   "auth": {},
   "rules": [],

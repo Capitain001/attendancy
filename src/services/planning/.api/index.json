@@ -2,7 +2,7 @@
   "service": "planning",
   "path": "src/services/planning/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
+  "derived_at": "3889557",
   "utils_dir": null,
   "fns": {
     "getOrgPlanningResources": {

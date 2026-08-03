@@ -1,4 +1,4 @@
-import { getUserInfo } from "@/services/user/userInfo";
+import { getUserInfo } from '@/modules/user';
 import Header from "./Header";
 
 export async function AsyncHeader() {

@@ -1,7 +1,7 @@
 {
   "name": "getTeacherStatsAction",
   "file": "src/services/teacher/actions/teacher.queries.ts",
-  "sig": "(teacherId: string) => Promise<{ data: { courses: number; assiduite: number; ponctualite: number; annulations: number; }; error?: undefined; } | { error: string; data?: undefined; }>",
+  "sig": "(teacherId: string) => Promise<{ error: any; data?: undefined; } | { data: { courses: number; assiduite: number; ponctualite: number; annulations: number; }; error?: undefined; }>",
   "calls": [
     "getTeacherStats"
   ],

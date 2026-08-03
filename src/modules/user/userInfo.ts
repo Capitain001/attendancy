@@ -31,18 +31,26 @@ export interface GetUserInfoOptions {
 }
 
 /**
- * Récupère l'ID utilisateur depuis la session
- * Pas de cache ici car on a besoin de l'userId pour créer la clé de cache
+ * Récupère la session Supabase une seule fois par request.
+ * cache() déduplique tous les appels concurrents/séquentiels dans le même render.
+ * Middleware getClaims() assure un token valide → getSession() = decode local (~30ms).
  */
-async function getUserId(): Promise<string | null> {
+const getSessionOnce = cache(async () => {
   const supabase = await createClient()
-  const { data: { session } } = await supabase.auth.getSession()
-  
-  if (!session?.access_token) return null
+  return supabase.auth.getSession()
+})
 
-  const token: any = jwtDecode(session.access_token)
-  return token.sub
-}
+/**
+ * Extrait l'userId depuis la session cachée.
+ * Wrappé dans cache() : même si 10 composants appellent getUserInfo(),
+ * getSession() ne tourne qu'une seule fois par request.
+ */
+const getUserId = cache(async (): Promise<string | null> => {
+  const { data: { session } } = await getSessionOnce()
+  if (!session?.access_token) return null
+  const token = jwtDecode<{ sub: string }>(session.access_token)
+  return token.sub ?? null
+})
 
 /**
  * Récupère les informations utilisateur depuis Supabase Auth

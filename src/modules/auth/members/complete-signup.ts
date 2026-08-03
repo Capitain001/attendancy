@@ -4,9 +4,9 @@ import { Action, Resource, Role } from "@/generated/prisma/client";
 
 import { prisma } from "@/lib/prisma";
 
-import { getUserInfo } from "@/services/user";
+import { getUserInfo } from '@/modules/user';
 import { syncUserOrganizationProfile } from "@/modules/user/update";
-import type { DatabaseInvitationDetails } from "@/types/invitation";
+
 
 import {
   assignFunctionToUser,
@@ -14,6 +14,7 @@ import {
   createRoleSpecificEntity,
 } from "./utils";
 import { logAuditAsync } from "@/utils/server";
+import { DatabaseInvitationDetails } from "@/types/invitation";
 
 /* =========================
    TYPES

@@ -1,7 +1,7 @@
 {
   "name": "getTeacherTodaySchedulesAction",
   "file": "src/services/teacher/actions/teacher.queries.ts",
-  "sig": "(teacherId: string) => Promise<{ data: { id: string; status: ScheduleStatus; room: { name: string; id: string; }; course: { name: string; id: string; }; startTime: Date; endTime: Date; notes: string | null; }[]; error?: undefined; } | { ...; }>",
+  "sig": "(teacherId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; status: ScheduleStatus; room: { name: string; id: string; }; course: { name: string; id: string; }; startTime: Date; endTime: Date; notes: string | null; }[]; error?: undefined; }>",
   "calls": [
     "getTeacherTodaySchedules"
   ],

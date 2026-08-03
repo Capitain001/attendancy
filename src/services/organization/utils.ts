@@ -2,7 +2,7 @@
 import slugify from "slugify";
 import { prisma } from "@/lib/prisma";
 
-import { getUserInfo } from "@/services/user";
+import { getUserInfo } from '@/modules/user';
 import { cache } from "react";
 
 export async function getOrganization() {

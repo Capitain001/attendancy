@@ -1,8 +1,0 @@
-{
-  "name": "deleteInvitation",
-  "file": "src/services/invite/database/invite.mutations.ts",
-  "sig": "(invitationId: string) => Promise<{ id: string; }>",
-  "composes": [],
-  "rules": [],
-  "why_ref": ""
-}

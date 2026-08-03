@@ -1,8 +1,0 @@
-{
-  "name": "resendInvite",
-  "file": "src/services/invite/database/invite.mutations.ts",
-  "sig": "(invitationId: string, newExpiry: Date) => Promise<{ id: string; email: string; }>",
-  "composes": [],
-  "rules": [],
-  "why_ref": ""
-}

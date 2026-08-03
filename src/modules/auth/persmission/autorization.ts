@@ -1,7 +1,7 @@
 // utils/authorization.ts
 import { UserInfo, Role, Functions, AuthenticatedUser } from "@/types/user";
 import { Permission, PermissionAction, PermissionResource, AuthorizationResult } from "@/types/permissions";
-import { getUserInfo } from "@/services/user";
+import { getUserInfo } from '@/modules/user';
 import { ROLE_HIERARCHY } from "./config";
 import { ERRORS } from "@/config";
 

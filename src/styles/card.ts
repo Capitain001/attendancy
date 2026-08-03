@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 export const card = {
   base: cn(
-    "rounded-lg",
+    "rounded-md",
     "border border-border/30",
     "bg-card text-card-foreground",
     "p-4"
@@ -16,12 +16,18 @@ export const card = {
   ),
 
   stat: cn(
-    "rounded-lg",
+    "rounded-lg ",
     "bg-muted/50",
     "p-4",
     "transition-colors"
   ),
-
+  lexical: cn(
+    "rounded-lg border border-dashed border-border/60",
+    "bg-card/10",
+        "hover:bg-card/15",
+    "p-4",
+    "transition-colors"
+  ),
   statInteractive: cn(
     "rounded-lg",
     "bg-muted/50",

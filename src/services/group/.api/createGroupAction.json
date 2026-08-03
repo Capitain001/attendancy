@@ -1,7 +1,7 @@
 {
   "name": "createGroupAction",
   "file": "src/services/group/actions/group.mutations.ts",
-  "sig": "(input: CreateGroupInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; description: string | null; }; error?: undefined; }>",
+  "sig": "(input: CreateGroupInput) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; }; error?: undefined; }>",
   "calls": [
     "createGroup"
   ],
