@@ -1,11 +1,8 @@
 {
   "name": "getOrganizationBySlug",
-  "file": "src/services/org/actions/org.mutations.ts",
-  "sig": "(slug: string) => Promise<{ organization: { id: string; name: string; email: string | null; slug: string | null; logo: string | null; domain: string | null; } | null; }>",
-  "calls": [
-    "getOrgBySlug"
-  ],
-  "auth": {},
+  "file": "src/services/organization/database/organization.queries.ts",
+  "sig": "(slug: string) => Promise<({ settings: { id: string; updatedAt: Date; settings: JsonValue; orgId: string; maxUsers: number; storageLimit: bigint; maxCourses: number | null; maxRooms: number | null; ... 7 more ...; breakDuration: number; } | null; usage: { ...; } | null; } & { ...; }) | null>",
+  "composes": [],
   "rules": [],
   "why_ref": ""
 }

@@ -1,6 +1,6 @@
 
 import { Skeleton, SkeletonCard } from '../ui/skeleton'
-import { FormButton } from '../ux/FormButton';
+import { FormButton } from '../forms/FormButton';
 
 export  function Loader() {
   return (

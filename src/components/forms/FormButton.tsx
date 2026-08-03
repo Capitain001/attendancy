@@ -8,7 +8,6 @@ interface FormButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
   text: string; // Texte principal du bouton
   icon?: React.ReactNode; // Icône optionnelle (peut être un <svg> ou un composant Lucide)
   loading?: boolean;
-  disabled?: boolean;
   className?: string;
 
 }

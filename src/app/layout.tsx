@@ -6,7 +6,7 @@ import { ErudaProvider } from '@/providers/eruda-provider'
 import ReactQueryProvider from '@/providers/react-query-provider'
 import { Suspense } from 'react'
 import { AsyncHeader } from '@/components/layout/Header/AsyncHeader'
-import HeaderSkeleton from '@/components/layout/Header/HeaderSkeleton'
+import {HeaderSkeleton} from '@/components/layout/Header/HeaderSkeleton'
 import './globals.css'
 
 export const metadata: Metadata = {

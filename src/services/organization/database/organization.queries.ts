@@ -114,3 +114,22 @@ export async function getOrgResourcesCounts(orgId: string) {
 
   return { courses, classes, rooms, teachers, students }
 }
+
+
+/**
+ * Récupère une organisation par son slug (public)
+ * Utilisé pour les pages publiques (onboarding, landing, etc.)
+ */
+export async function getOrganizationBySlug(slug: string) {
+  "use cache";
+  cacheTag(CACHE.ORG(slug));
+  cacheLife("hours");
+
+  return prisma.organization.findUnique({
+    where: { slug },
+    include: {
+      settings: true,
+      usage: true,
+    },
+  });
+}

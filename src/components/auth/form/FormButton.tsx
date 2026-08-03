@@ -1,7 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 import { Button } from "@/components/ui/button";
-import { Loader1 } from "@/components/loader/Loader";
+import { Loader1 } from "@/components/loaders/Loader";
 
 type ButtonProps = React.ComponentProps<typeof Button>;
 

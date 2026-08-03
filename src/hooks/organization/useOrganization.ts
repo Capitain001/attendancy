@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { getOrganizationBySlug } from "@/services/organization";
+import { getOrganizationBySlugAction } from "@/services/organization";
 
 interface UseOrganizationProps {
   slug: string;
@@ -9,20 +9,20 @@ interface UseOrganizationProps {
 
 export function useOrganization({ slug }: UseOrganizationProps) {
   const {
-    data: organization,
+    data,
     isLoading,
     error,
     refetch
   } = useQuery({
     queryKey: ["organization", slug],
-    queryFn: () => getOrganizationBySlug(slug),
+    queryFn: () => getOrganizationBySlugAction(slug),
     enabled: !!slug,
   });
 
   return {
-    organization: organization?.organization,
+    organization: data?.data ?? null,
     isLoading,
-    error,
+    error: error ?? data?.error,
     refetch,
   };
 }

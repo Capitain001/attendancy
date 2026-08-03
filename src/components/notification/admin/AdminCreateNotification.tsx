@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/select'
 import { Send, Loader2 } from 'lucide-react'
 import { useAdminNotifications } from '@/hooks/notification/useAdminNotifications'
-import { NotificationType } from '@prisma/client'
+import { NotificationType } from '@/generated/prisma'
 import UserIcon from '@/components/users/UserIcon'
 
 export function AdminCreateNotification() {

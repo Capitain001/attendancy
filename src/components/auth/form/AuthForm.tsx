@@ -1,10 +1,11 @@
 
-import LoginForm from "../operations/LoginForm";
+
 import AuthBar from "../ui/authBar";
 import FormCard from "../ui/FormCard";
 import Image from "next/image";
 import { InfoCard } from "../ui/InfoCard";
 import GoogleSignInButton from "../ui/GoogleSignInButton";
+import { LoginForm } from "../login/LoginForm";
 
 
 

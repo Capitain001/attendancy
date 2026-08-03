@@ -9,6 +9,7 @@ import {
   getOrgDailyMetrics,
   getOrgResourcesCounts,
   getOrgBySlug,
+  getOrganizationBySlug,
 } from '../database'
 
 export async function getOrgIdentityAction() {
@@ -79,5 +80,29 @@ export async function getOrgBySlugAction(slug: string) {
     return { data: await getOrgBySlug(slug) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+
+
+/**
+ * Action publique - Récupère une organisation par son slug
+ * Utilisée pour les pages publiques (pas d'auth requise)
+ */
+export async function getOrganizationBySlugAction(slug: string) {
+  // 1. Validation simple (hors try/catch)
+  if (!slug) {
+    return { error: "Slug d'organisation requis" };
+  }
+
+  // 2. Opération métier (dans try/catch)
+  try {
+    const organization = await getOrganizationBySlug(slug);
+    if (!organization) {
+      return { error: "Organisation non trouvée" };
+    }
+    return { data: organization };
+  } catch (error) {
+
+    return { error: "ERROR :getOrganizationBySlugAction :Impossible de récupérer l'organisation" };
   }
 }

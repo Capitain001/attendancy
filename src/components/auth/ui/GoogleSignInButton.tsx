@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { signInWithGoogle } from "@/services/auth/providers";
-import { Loader1 } from "@/components/loader/Loader";
+import { Loader1 } from "@/components/loaders/Loader";
 import { cn } from "@/lib/utils";
 
 interface GoogleSignInButtonProps {

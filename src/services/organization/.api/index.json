@@ -2,7 +2,7 @@
   "service": "organization",
   "path": "src/services/organization/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "3889557",
+  "derived_at": "fbe7c31",
   "utils_dir": null,
   "fns": {
     "createOrgWithDefaults": {
@@ -60,6 +60,11 @@
       "layer": "db",
       "kind": "query"
     },
+    "getOrganizationBySlug": {
+      "f": ".api/getOrganizationBySlug.json",
+      "layer": "db",
+      "kind": "query"
+    },
     "createOrgAction": {
       "f": ".api/createOrgAction.json",
       "layer": "action",
@@ -114,6 +119,11 @@
       "f": ".api/getOrgBySlugAction.json",
       "layer": "action",
       "kind": "server-action"
+    },
+    "getOrganizationBySlugAction": {
+      "f": ".api/getOrganizationBySlugAction.json",
+      "layer": "action",
+      "kind": "server-action"
     }
   },
   "edges": {
@@ -150,6 +160,9 @@
     "getOrgResourcesCounts": [
       "getOrgResourcesCountsAction"
     ],
+    "getOrganizationBySlug": [
+      "getOrganizationBySlugAction"
+    ],
     "createOrgAction": [],
     "updateOrgIdentityAction": [],
     "setOrgDetailsAction": [],
@@ -160,7 +173,8 @@
     "getOrgDetailsAction": [],
     "getOrgDailyMetricsAction": [],
     "getOrgResourcesCountsAction": [],
-    "getOrgBySlugAction": []
+    "getOrgBySlugAction": [],
+    "getOrganizationBySlugAction": []
   },
   "deps": {}
 }

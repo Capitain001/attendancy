@@ -5,46 +5,23 @@ Fichiers référencés dans le code mais introuvables dans la branche actuelle.
 
 ---
 
-## Composants UI
+## 1. Bloquants — branchés aux pages
+
+### Composants auth (pages `/auth/*`, `/login`)
 
 | Import manquant | Consommateur(s) |
 |---|---|
-| `@/components/auth/AuthError` | `src/app/auth/error/page.tsx` |
+<!-- | `@/components/auth/AuthError` | `src/app/auth/error/page.tsx` |
 | `@/components/auth/SignupLanding` | `src/app/auth/signup/page.tsx` |
-| `../operations/LoginForm` | `src/components/auth/form/AuthForm.tsx`, `src/components/auth/operations/index.ts` |
-| `@/components/loader/Loader` | `FormButton.tsx`, `FormButtonB.tsx`, `GoogleSignInButton.tsx`, `LoadButton.tsx` |
+| `../operations/LoginForm` | `src/components/auth/form/AuthForm.tsx`, `src/components/auth/operations/index.ts` | -->
+
 | `@/components/animate-ui/icons/log-in` | `AuthButton.tsx`, `AuthLinks.tsx` |
 | `@/components/illustrations/Resourceillustration` | `SignupPrincipalUi.tsx` |
-| `../RealTime/UserIcon` | `AvatarSelect.tsx`, `CourseTeachersSelect.tsx`, `SelectCourseTeachers.tsx` |
-| `../tools/ReusableDialog` | `CourseTeachersSelect.tsx`, `SelectCourseTeachers.tsx` |
-
----
-
-## Services manquants
-
-| Import manquant | Consommateur(s) |
-|---|---|
 | `@/services/auth/principal/signup` | `src/components/auth/principal/SignupPrincipal.tsx` |
 | `@/services/auth/responsable/signup` | `src/components/auth/responsable/SignupMainOrg.tsx` |
 | `@/services/auth/providers` | `src/components/auth/ui/GoogleSignInButton.tsx` |
-| `@/services/fonctions/actions` | `src/hooks/data/fonctions/useFonctions.ts` |
-| `@/services/fonctions/types` | `src/hooks/data/fonctions/useFonctions.ts` |
-| `@/services/fonctions` (barrel) | `src/hooks/data/fonctions/useManageFunctions.ts` |
-| `@/services/fonctions/user` | `src/hooks/data/userFunctions/useUserFunctions.ts` |
-| `@/services/fonctions/user/validation` | `src/hooks/data/userFunctions/useUserFunctions.ts` |
-| `@/services/fonctions/user/types` | `src/hooks/data/userFunctions/useUserFunctions.ts` |
-| `@/services/users/profile/actions` | `src/hooks/data/userFunctions/useProfileFunctions.ts` |
-| `@/services/users/profile/types` | `src/hooks/data/userFunctions/useProfileFunctions.ts` |
-| `@/services/users/stats` | `src/hooks/users/useUserStats.ts` |
-| `@/services/invite` (barrel + queries) | `src/hooks/invitation/useInvitationActions.ts`, `useInvitations.ts`, `useStudentInvitationActions.ts` |
-| `@/config/styles` | `src/components/ui/badge.tsx` |
-| `@/lib/project` | `src/components/users/avatars/avatar-1.tsx`, `LiveAvatars.tsx` |
-| `@/types/teacher` | `src/components/users/UserInfoPopover.tsx` |
-| `@/types/permissions` | `src/modules/auth/persmission/autorization.ts`, `persmission/utils.ts` |
 
----
-
-## Exports manquants dans des modules existants
+### Exports manquants dans modules existants (bloquants)
 
 | Export manquant | Module | Consommateur(s) |
 |---|---|---|
@@ -53,31 +30,48 @@ Fichiers référencés dans le code mais introuvables dans la branche actuelle.
 | `updateOrganizationLogo` | `@/services/organization` | `src/hooks/organization/useLogoUploader.ts` |
 | `getOrganizationBySlug` | `@/services/organization` | `src/hooks/organization/useOrganization.ts` |
 | `createTeacherAction` | `@/services/teacher/actions` | `src/hooks/teacher/useTeacherActions.ts` |
-| `updateTeacherAction` | `@/services/teacher/actions` | `src/hooks/teacher/useTeacherActions.ts` |
+<!-- | `updateTeacherAction` | `@/services/teacher/actions` | `src/hooks/teacher/useTeacherActions.ts` | -->
 | `deleteTeacherAction` | `@/services/teacher/actions` | `src/hooks/teacher/useTeacherActions.ts` |
 | `getUserRoleStatsAction` | `@/modules/user` | `src/hooks/users/useUserStats.ts` |
-| `checkBrowserSupport` | `@/modules/notification/utils` | `usePushNotifications.ts`, `useUserNotification.ts` |
-| `validateHTTPS` | `@/modules/notification/utils` | `usePushNotifications.ts`, `useUserNotification.ts` |
-| `getCurrentPermission` | `@/modules/notification/utils` | `usePushNotifications.ts`, `useUserNotification.ts` |
 
----
+### Services entiers manquants (bloquants)
 
-## Packages npm manquants
-
-| Package | Consommateur(s) |
+| Import manquant | Consommateur(s) |
 |---|---|
-| `use-sound` | `src/components/design/prim/skiper25.tsx` |
-| `slugify` | `src/services/organization/utils.ts` |
+| `@/services/invite` (barrel + queries) | `hooks/invitation/useInvitationActions.ts`, `useInvitations.ts`, `useStudentInvitationActions.ts` |
+| `@/services/fonctions/actions` | `hooks/data/fonctions/useFonctions.ts` |
+| `@/services/fonctions/types` | `hooks/data/fonctions/useFonctions.ts` |
+| `@/services/fonctions` (barrel) | `hooks/data/fonctions/useManageFunctions.ts` |
+| `@/services/fonctions/user` | `hooks/data/userFunctions/useUserFunctions.ts` |
+| `@/services/fonctions/user/validation` | `hooks/data/userFunctions/useUserFunctions.ts` |
+| `@/services/fonctions/user/types` | `hooks/data/userFunctions/useUserFunctions.ts` |
+| `@/services/users/profile/actions` | `hooks/data/userFunctions/useProfileFunctions.ts` |
+| `@/services/users/profile/types` | `hooks/data/userFunctions/useProfileFunctions.ts` |
+| `@/types/permissions` | `modules/auth/persmission/autorization.ts`, `persmission/utils.ts` |
+| `slugify` (npm) | `src/services/organization/utils.ts` |
+
+### Erreurs secondaires en cascade (disparaissent quand bloquants fournis)
+
+- `SignupPrincipal.tsx`, `SignupMainOrg.tsx` — `useActionState` signature incorrecte
+- `hooks/invitation/useInvitationActions.ts` — `result` of type `unknown` (lignes 60, 62, 87, 90, 94, 130, 131)
+- `hooks/data/userFunctions/useUserFunctions.ts` — `res` of type `unknown` (lignes 75, 85)
+- `hooks/teacher/useTeacherActions.ts` — `result` of type `unknown` (lignes 24, 54, 82)
 
 ---
 
-## Erreurs secondaires (cascade depuis manquants)
+## 2. UI non branchées aux pages (faible priorité)
 
-Ces erreurs disparaîtront automatiquement une fois les fichiers ci-dessus fournis :
+Ces fichiers ont des erreurs TS mais ne bloquent aucune route active.
 
-- `src/components/auth/principal/SignupPrincipal.tsx` — `useActionState` signature
-- `src/components/auth/responsable/SignupMainOrg.tsx` — `useActionState` signature  
-- `src/hooks/invitation/useInvitationActions.ts` — `result` of type `unknown` (lignes 60, 62, 87, 90, 94, 130, 131)
-- `src/hooks/data/userFunctions/useUserFunctions.ts` — `res` of type `unknown` (lignes 75, 85)
-- `src/hooks/teacher/useTeacherActions.ts` — `result` of type `unknown` (lignes 24, 54, 82)
-- `src/components/planning/hook/usePlanningEvents.ts` — `../types` manquant + `ERRORS.SCHEDULE`
+| Import manquant | Consommateur(s) | Raison |
+|---|---|---|
+| `@/config/styles` | `src/components/ui/badge.tsx` | Variante badge non utilisée |
+| `@/lib/project` | `avatars/avatar-1.tsx`, `LiveAvatars.tsx` | Avatars live non branchés |
+| `../RealTime/UserIcon` (`LiveUserIcon`) | `AvatarSelect.tsx`, `CourseTeachersSelect.tsx`, `SelectCourseTeachers.tsx` | Sélecteurs non montés sur pages |
+| `../tools/ReusableDialog` | `CourseTeachersSelect.tsx`, `SelectCourseTeachers.tsx` | Idem |
+| `@/types/teacher` | `UserInfoPopover.tsx` | Popover non branché |
+| `checkBrowserSupport`, `validateHTTPS`, `getCurrentPermission` | `@/modules/notification/utils` | Hooks push-notif non branchés |
+| `use-sound` (npm) | `src/components/design/prim/skiper25.tsx` | Composant design isolé |
+| `../types` (planning) | `components/planning/hook/usePlanningEvents.ts` | Hook planning non branché |
+| `ERRORS.SCHEDULE` | `components/planning/hook/usePlanningEvents.ts` | Idem |
+| `NotificationType` from `@prisma/client` | `AdminCreateNotification.tsx`, `AdminNotificationList.tsx` | Admin notif non branchés |
