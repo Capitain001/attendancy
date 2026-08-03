@@ -34,7 +34,6 @@ export async function createUEAction(input: {
         programId: input.programId,
         ueId:      ue.id,
         semester:  input.semester ?? 1,
-        orgId,
       })
     }
     return { data: ue }
@@ -94,7 +93,6 @@ export async function addUEToProgramAction(input: {
       programId: result.output.programId,
       ueId:      result.output.ueId,
       semester:  result.output.semester ?? 1,
-      orgId,
     })
     return { data }
   } catch (e) {

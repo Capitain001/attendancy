@@ -1,5 +1,5 @@
 'use client'
-import { login } from '@/modules/auth/operations'
+import { login } from '@/modules/auth/actions'
 import { useActionState } from 'react'
 import { useFormStatus } from 'react-dom'
 

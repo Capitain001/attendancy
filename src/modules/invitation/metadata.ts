@@ -38,7 +38,6 @@ export function generateInvitationMetadata(
     logo: user.organization?.logo || "",
     permissions: params.permissions || [],
     departmentId: params.departmentId,
-    resources: params.resources,
   };
 
   const invited_by ={

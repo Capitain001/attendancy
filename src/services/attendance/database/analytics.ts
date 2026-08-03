@@ -17,7 +17,6 @@ export async function getOrgTodayAbsences(orgId: string) {
   return prisma.attendance.findMany({
     where: {
       status: "ABSENT",
-      deletedAt: null,
       schedule: {
         orgId,
         deletedAt: null,
@@ -56,7 +55,6 @@ export async function getClassAttendanceRates(
   const rows = await prisma.attendance.groupBy({
     by: ["studentId", "status"],
     where: {
-      deletedAt: null,
       schedule: {
         classId,
         orgId,
@@ -71,7 +69,7 @@ export async function getClassAttendanceRates(
   const byStudent = new Map<string, Record<string, number>>();
   for (const row of rows) {
     if (!byStudent.has(row.studentId)) byStudent.set(row.studentId, {});
-    byStudent.get(row.studentId)![row.status] = row._count.status;
+    byStudent.get(row.studentId)![row.status] = (row._count as { status: number }).status;
   }
 
   const result = new Map<string, number>();

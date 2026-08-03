@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react'
 import { SYSTEM_CHECKS } from '@/config/notification'
-import { validateHTTPS, getCurrentPermission } from '@/services/notification/validation'
+import { validateHTTPS, getCurrentPermission } from '@/modules/notification/validation'
 
 interface NotificationStatusProps {
   subscription: PushSubscription | null

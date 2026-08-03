@@ -8,7 +8,7 @@ import {
   DatabaseInvitationDetails,
   AuditLogDetails,
 } from "@/types/invitation";
-import { Action, Prisma, Resource } from "@prisma/client";
+import { Action, Prisma, Resource } from "@/generated/prisma/client";
 
 function createDatabaseDetails(
   metadata: InvitationMetadata

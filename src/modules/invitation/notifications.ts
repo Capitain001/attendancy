@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import { NotificationType, Role } from "@prisma/client";
-import { sendPushNotificationById } from "@/services/notification/action";
+import { NotificationType, Role } from "@/generated/prisma/client";
+import { sendPushNotificationToUserById as sendPushNotificationById } from "@/modules/notification/user";
 
 export type InvitationNotifyEvent = "CREATED" | "RESENT" | "LINK_GENERATED";
 

@@ -12,10 +12,10 @@ import {
 } from './subscriptions/database'
 
 
-import { ERROR_KEY, ERRORS } from '@/config'
+import { ERRORS } from '@/config'
 import { getAuthUser } from '../auth/persmission/acces'
 import { createNotification, isVapidConfigured } from './action'
-import { NotificationType } from '@prisma/client'
+import { NotificationType } from '@/generated/prisma/client'
 import { createUserNotification } from './database'
 import { analyzeSendResults, sendNotificationPayload, sendToDevice } from './helper'
 import { isError } from '@/utils/server'

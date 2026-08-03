@@ -8,7 +8,7 @@ import type { UEOrder, CourseOrder } from '../validation'
 // Ré-export depuis la couche database de program-track (jamais depuis actions/,
 // voir SKILL.md service-module-pattern — "un service peut importer les fonctions
 // database/ d'un autre service, mais uniquement depuis sa propre couche database/").
-export { addUEToProgram } from '@/services/program-track/database'
+export { addUEToProgram } from '@/services/program-ue/database'
 
 export type UpdateUEData = {
   name?: string
@@ -73,7 +73,7 @@ export async function reorderProgram(
     where: { id: programId, orgId },
     select: { programTrackId: true },
   })
-  if (program) await invalidateEvent('PROGRAM_UE_UPDATED', orgId, program.programTrackId)
+  if (program) await invalidateEvent('PROGRAM_UPDATED', orgId, programId)
 }
 
 // remove* = soft delete (convention SKILL.md) — archiveUEAction l'expose sous le nom domaine

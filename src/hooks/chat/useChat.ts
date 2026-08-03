@@ -6,7 +6,7 @@ import { type ChatMessage, useRealtimeChat } from '@/hooks/chat'
 import { useMessages } from '@/hooks/data/chat/useMessages'
 import { mapMessages } from '@/hooks/chat/utils'
 import { PresenceUser } from '@/types'
-import { sendPushNotificationToUserById } from '@/services/notification/user'
+import { sendPushNotificationToUserById } from '@/modules/notification/user'
 import { getRoomParticipantsAction, type ChatRoomParticipant } from '@/services/chat'
 
 interface UseChatProps {

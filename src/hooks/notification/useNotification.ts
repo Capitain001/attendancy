@@ -6,7 +6,7 @@ import {
   getNotifications, 
   markAllRead, 
   markNotificationAsRead 
-} from '@/services/notification/action'
+} from '@/modules/notification/action'
 import { CACHE_KEYS } from '@/config/client_cache'
 
 export function useNotifications() {

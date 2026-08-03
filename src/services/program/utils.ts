@@ -1,4 +1,5 @@
-import { groupByRelation } from "../resources/utils";
+
+import { groupByRelation } from "../../lib/filter";
 import { ProgramListDto } from "./types";
 
 export function groupProgramsByTrack(

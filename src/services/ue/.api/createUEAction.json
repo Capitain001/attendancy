@@ -3,7 +3,8 @@
   "file": "src/services/ue/actions/ue.mutations.ts",
   "sig": "(input: { data: CreateUEInput programId?: string semester?: number order?: number }) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; code: string | null; }; error?: undefined; }>",
   "calls": [
-    "createUE"
+    "createUE",
+    "addUEToProgram"
   ],
   "auth": {},
   "rules": [],

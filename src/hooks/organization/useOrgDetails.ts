@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import type { OrgDetails } from "@/services/org";
+import type { OrgDetails } from "@/services/organization";
 import {
   getOrgDetailsAction,
   setOrgDetailsAction,
-} from "@/services/org";
+} from "@/services/organization";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types

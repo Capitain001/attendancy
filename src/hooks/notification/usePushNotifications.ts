@@ -1,10 +1,10 @@
 //src/hooks/notification/usePushNotifications.ts
 "use client"
 import { useState, useEffect, useCallback } from 'react'
-import { checkBrowserSupport, validateHTTPS, getCurrentPermission, urlBase64ToUint8Array, serializeSubscription } from '@/services/notification/utils'
-import { requestNotificationPermission } from '@/services/notification/permission'
-import { subscribeUser, unsubscribeUser, sendNotificationToUser } from '@/services/notification/user'
-import { getServiceWorkerRegistration, getCurrentSubscription } from '@/services/notification/service-worker'
+import { checkBrowserSupport, validateHTTPS, getCurrentPermission, urlBase64ToUint8Array, serializeSubscription } from '@/modules/notification/utils'
+import { requestNotificationPermission } from '@/modules/notification/permission'
+import { subscribeUser, unsubscribeUser, sendNotificationToUser } from '@/modules/notification/user'
+import { getServiceWorkerRegistration, getCurrentSubscription } from '@/modules/notification/service-worker'
 
 interface NotificationState {
   isSupported: boolean

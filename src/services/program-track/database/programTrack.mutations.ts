@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { invalidateCache } from "@/config/cache";
+import { invalidateCache, invalidateEvent } from '@/cache/server/key'
 import type { AddProgramTrackData, UpdateProgramTrackData } from "./programTrack.queries";
 
 export async function createProgramTrack({ data, orgId }: { data: AddProgramTrackData; orgId: string }) {
@@ -26,5 +26,5 @@ export async function updateProgramTrack(
 
 export async function deleteProgramTrack({ programTrackId, orgId }: { programTrackId: string; orgId: string }) {
   await prisma.programTrack.delete({ where: { id: programTrackId } });
-  await invalidateCache("PROGRAM_TRACK", orgId);
+  // await invalidateCache("PROGRAM_TRACK", orgId);
 }

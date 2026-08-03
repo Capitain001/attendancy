@@ -6,22 +6,21 @@ import {
   toCreateFn,
   toUpdateFn,
   toDeleteFn,
+  type ActionDeleteResponse,
 } from "@/hooks/entity/actionHelpers";
 import {
-  addProgramAction,
+  createProgramAction,
   getProgramsAction,
   updateProgramAction,
   removeProgramAction,
 } from "@/services/program/actions";
 import type {
-  AddProgramData,
-  UpdateProgramData,
-} from "@/services/program/database";
+  CreateProgramInput,
+  UpdateProgramInput,
+} from "@/services/program/validation";
 import type { ProgramDto } from "@/services/program/types";
 
-// Inputs
-export type CreateProgramInput = AddProgramData;
-export type UpdateProgramInput = UpdateProgramData;
+export type { CreateProgramInput, UpdateProgramInput };
 
 export interface UseProgramsOptions {
   classId?: string;
@@ -30,22 +29,17 @@ export interface UseProgramsOptions {
   enabled?: boolean;
 }
 
-/**
- * Hook CRUD pour Program
- */
 export function usePrograms(options: UseProgramsOptions = {}) {
-  const { classId,programTrackId, staleTime, enabled } = options;
+  const { classId, programTrackId, staleTime, enabled } = options;
 
-  const fetchFn = toFetchFn(getProgramsAction, { classId ,programTrackId });
-  const create = toCreateFn(addProgramAction);
+  const fetchFn = toFetchFn(getProgramsAction, { classId, programTrackId });
+  const create = toCreateFn(createProgramAction);
   const update = toUpdateFn(updateProgramAction);
-  const remove = toDeleteFn(removeProgramAction);
+  const remove = toDeleteFn(
+    removeProgramAction as (id: string) => Promise<ActionDeleteResponse>
+  );
 
-  return useCrudEntity<
-    ProgramDto,
-    CreateProgramInput,
-    UpdateProgramInput
-  >({
+  return useCrudEntity<ProgramDto, CreateProgramInput, UpdateProgramInput>({
     entityName: "programs",
     fetchFn,
     staleTime,

@@ -15,7 +15,7 @@ import {
   getScheduleAttendancesAction,
 } from "@/services/attendance";
 
-import { type ScheduleAttendanceDTO } from "@/services/attendance/types";
+import { type GetScheduleAttendancesDto as ScheduleAttendanceDTO } from "@/services/attendance/types";
 import type { $Enums } from "@/generated/prisma/client";
 
 import {
@@ -45,16 +45,18 @@ export const useAttendanceList = ({
 
   // ── Data ────────────────────────────────────────────────────────────────
 
-  const attendances: ScheduleAttendanceDTO[] = response?.data ?? [];
+  const attendances: ScheduleAttendanceDTO = response?.data ?? [];
 
+  type AttendanceItem = ScheduleAttendanceDTO[number];
   const byStatus = useMemo(
     () =>
       attendances.reduce(
         (acc, a) => {
-          acc[a.status] = [...(acc[a.status] ?? []), a];
+          const key = a.status;
+          acc[key] = [...(acc[key] ?? []), a] as AttendanceItem[];
           return acc;
         },
-        {} as Partial<Record<$Enums.AttendanceStatus, ScheduleAttendanceDTO[]>>
+        {} as Partial<Record<$Enums.AttendanceStatus, AttendanceItem[]>>
       ),
     [attendances]
   );

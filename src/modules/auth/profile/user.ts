@@ -8,7 +8,7 @@ import { createClient } from "@/utils/supabase/server"
 import type { UserMetadata } from "@/types/user"
 import { getRoleProfileKey } from "@/modules/user"
 import { syncUserOrganizationProfile } from "@/modules/user"
-import { createRoleSpecificEntity } from "@/modules/user"
+import { createRoleSpecificEntity } from "@/modules/auth/members/utils"
 
 /** Id du profil de rôle existant pour (userId, orgId), ou null. Idempotence. */
 async function findRoleProfileId(role: Role, userId: string, orgId: string): Promise<string | null> {

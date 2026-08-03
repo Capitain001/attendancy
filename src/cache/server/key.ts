@@ -25,7 +25,7 @@ import { CACHE_LIFE, key, createInvalidators } from "./engine";
 // Chaque service qui possède des données cachées expose un <SERVICE>_GRAPH
 // (dans <service>/cache.ts) : un mapping événement métier → fn qui retourne
 // les tags à invalider. Importer ici uniquement les services concernés.
-import { ORG_GRAPH } from "@/services/org/cache";
+import { ORG_GRAPH } from "@/services/organization/cache";
 import { ROOM_GRAPH } from "@/services/room/cache";
 import { TERM_GRAPH } from "@/services/term/cache";
 import { ACADEMIC_YEAR_GRAPH } from "@/services/academic-year/cache";
@@ -45,8 +45,9 @@ import { TEACHER_UNAVAILABILITY_GRAPH } from "@/services/teacher-unavailability/
 import { EVENT_GRAPH } from "@/services/event/cache";
 import { SUBSCRIPTION_GRAPH } from "@/services/subscription/cache";
 import { FUNCTION_GRAPH } from "@/services/function/cache";
-import { NOTIFICATION_GRAPH } from "@/services/notification/cache";
+// import { NOTIFICATION_GRAPH } from "@/services/notification/cache";
 import { DIRECTION_GRAPH } from "@/services/direction/cache";
+import { PROGRAM_GRAPH } from "@/services/program/cache";
 // ⚠ À ÉTENDRE PAR PROJET — un import par service à données cachées :
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -75,6 +76,7 @@ export const CACHE = {
   FUNCTION: key("function"),
   NOTIFICATION: key("notification"),
   DIRECTION: key("direction"),
+  PROGRAM: key("program"),
   // ⚠ À ÉTENDRE PAR PROJET — une entrée par entité cachée :
   // ENTITY: key("entity"),
   // RESOURCE: key("resource", CACHE_LIFE.SHORT),
@@ -104,10 +106,12 @@ export const CACHE_GRAPH = {
   ...EVENT_GRAPH,
   ...SUBSCRIPTION_GRAPH,
   ...FUNCTION_GRAPH,
-  ...NOTIFICATION_GRAPH,
   ...DIRECTION_GRAPH,
+  ...PROGRAM_GRAPH,
   // ⚠ À ÉTENDRE PAR PROJET — spreader chaque <SERVICE>_GRAPH importé :
 } as const;
+
+  // ...NOTIFICATION_GRAPH,
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 4. Invalidation — ne pas réimplémenter, toujours passer par le moteur

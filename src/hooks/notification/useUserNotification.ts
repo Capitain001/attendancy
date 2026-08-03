@@ -2,10 +2,10 @@
 "use client"
 
 import { useState, useEffect, useCallback } from 'react'
-import { checkBrowserSupport, validateHTTPS, getCurrentPermission } from '@/services/notification/utils'
-import { requestNotificationPermission } from '@/services/notification/permission'
-import { serializeSubscription } from '@/services/notification/utils'
-import { getServiceWorkerRegistration, getCurrentSubscription } from '@/services/notification/service-worker'
+import { checkBrowserSupport, validateHTTPS, getCurrentPermission } from '@/modules/notification/utils'
+import { requestNotificationPermission } from '@/modules/notification/permission'
+import { serializeSubscription } from '@/modules/notification/utils'
+import { getServiceWorkerRegistration, getCurrentSubscription } from '@/modules/notification/service-worker'
 import { 
   subscribeUser, 
   unsubscribeUser, 
@@ -13,9 +13,9 @@ import {
   sendNotificationToUser,
   debugUserSubscriptions,
   type SerializedPushSubscription
-} from '@/services/notification/user'
+} from '@/modules/notification/user'
 import { NOTIFICATION_CONFIG } from '@/config/notification'
-import { urlBase64ToUint8Array } from '@/services/notification/utils'
+import { urlBase64ToUint8Array } from '@/modules/notification/utils'
 
 export interface UserNotificationState {
   isSupported: boolean

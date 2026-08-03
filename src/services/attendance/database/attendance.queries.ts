@@ -12,7 +12,6 @@ export async function getScheduleAttendances(
     return prisma.attendance.findMany({
       where: {
         scheduleId,
-        deletedAt: null,
       },
   
       select: {
@@ -46,7 +45,7 @@ export async function getScheduleAttendances(
  */
 export async function getStudentAttendances(studentId: string, orgId: string) {
   return prisma.attendance.findMany({
-    where: { studentId, deletedAt: null, schedule: { orgId } },
+    where: { studentId, schedule: { orgId } },
     select: {
       id: true,
       status: true,
@@ -76,7 +75,7 @@ export async function getUserAttendance(
   orgId: string,
 ) {
   return prisma.attendance.findFirst({
-    where: { studentId, scheduleId, deletedAt: null, schedule: { orgId } },
+    where: { studentId, scheduleId, schedule: { orgId } },
     select: {
       id: true,
       status: true,
@@ -101,7 +100,6 @@ export async function getStudentAttendanceStatusCounts(
     by: ["status"],
     where: {
       studentId,
-      deletedAt: null,
       schedule: {
         orgId,
         ...(range && { startTime: { gte: range.start, lte: range.end } }),
@@ -116,7 +114,7 @@ export async function getStudentAttendanceStatusCounts(
   );
 
   for (const row of rows) {
-    counts[row.status] = row._count._all;
+    counts[row.status] = (row._count as { _all: number })._all;
   }
 
   return counts;
@@ -133,7 +131,7 @@ export async function getOrgStudentAttendanceRates(
 ): Promise<Record<string, { rate: number | null; absences: number; denominator: number }>> {
   const rows = await prisma.attendance.groupBy({
     by: ["studentId", "status"],
-    where: { deletedAt: null, schedule: { orgId } },
+    where: { schedule: { orgId } },
     _count: { _all: true },
   });
 

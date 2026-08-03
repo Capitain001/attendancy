@@ -2,7 +2,8 @@ import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { getUserInfo } from '@/modules/user'
 import { redirectUser } from '@/config/redirects'
-import { LoginForm } from '@/components/auth/LoginForm'
+import { LoginForm } from '@/components/auth/login/LoginForm'
+
 
 export const metadata: Metadata = {
   title: 'Connexion | Attendancy',

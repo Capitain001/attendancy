@@ -13,7 +13,7 @@ import {
   removeUECourseAction,
   updateUECourseAction,
 } from "@/services/ue-course";
-import { deleteUEFromProgramAction } from "@/services/program-ue/actions";
+import { removeUEFromProgramAction } from "@/services/program-ue/actions";
 import {
   CreateUEInput,
   LinkUEInput,
@@ -206,7 +206,7 @@ export function useProgramActions({ programId, classId }: UseProgramActionsOptio
         label: "Liaison UE",
         snapshot: context?.snapshot,
         run: async () => {
-          const { error } = await deleteUEFromProgramAction({ 
+          const { error } = await removeUEFromProgramAction({ 
             programId,
             ueId: input.ueId,
           });
@@ -255,7 +255,7 @@ export function useProgramActions({ programId, classId }: UseProgramActionsOptio
       };
     },
     mutationFn: async ({ programUEId, ueId }: { programUEId: string; ueId: string }) => {
-      const { data: result, error } = await deleteUEFromProgramAction({
+      const { data: result, error } = await removeUEFromProgramAction({
         programId,
         ueId,
       });

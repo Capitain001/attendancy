@@ -2,7 +2,7 @@
   "service": "program-ue",
   "path": "src/services/program-ue/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "7a0ca2e",
+  "derived_at": "61e08a7",
   "utils_dir": null,
   "fns": {
     "addUEToProgram": {

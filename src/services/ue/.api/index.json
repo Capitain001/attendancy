@@ -2,7 +2,7 @@
   "service": "ue",
   "path": "src/services/ue/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "3889557",
+  "derived_at": "61e08a7",
   "utils_dir": null,
   "fns": {
     "createUE": {
@@ -103,7 +103,13 @@
     "reorderProgramAction": [],
     "getUEsAction": [],
     "getProgramUEsAction": [],
-    "getProgramUEsTableAction": []
+    "getProgramUEsTableAction": [],
+    "addUEToProgram": [
+      "createUEAction",
+      "addUEToProgramAction"
+    ]
   },
-  "deps": {}
+  "deps": {
+    "addUEToProgram": "program-ue"
+  }
 }

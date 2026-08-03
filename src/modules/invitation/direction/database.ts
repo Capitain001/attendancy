@@ -1,8 +1,8 @@
 // src/services/invitation/direction/database.ts
 import { prisma } from "@/lib/prisma";
-import type { Function as PrismaFunction } from "@prisma/client";
+import type { Function as PrismaFunction } from "@/generated/prisma/client";
 import { unstable_cache } from "next/cache";
-import { CACHE } from "@/config/cache";
+import { CACHE } from "@/cache/server/key";
 
 /**
  * Vérifie que les fonctions existent dans l'organisation
@@ -48,7 +48,7 @@ export function checkFunctionsExist(
       return { valid, invalid };
     },
     ["check-functions", orgId, ...functionNames.sort()],
-    { revalidate: 300, tags: [CACHE.FUNCTIONS(orgId)] }
+    { revalidate: 300, tags: [CACHE.FUNCTION(orgId)] }
   )();
 }
 
@@ -79,7 +79,7 @@ export function getFunctionsByNames(
       });
     },
     ["functions-by-names", orgId, ...functionNames.sort()],
-    { revalidate: 300, tags: [CACHE.FUNCTIONS(orgId)] }
+    { revalidate: 300, tags: [CACHE.FUNCTION(orgId)] }
   )();
 }
 
@@ -112,7 +112,7 @@ export function allFunctionsExist(
       return count === functionNames.length;
     },
     ["all-functions-exist", orgId, ...functionNames.sort()],
-    { revalidate: 300, tags: [CACHE.FUNCTIONS(orgId)] }
+    { revalidate: 300, tags: [CACHE.FUNCTION(orgId)] }
   )();
 }
 

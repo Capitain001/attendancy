@@ -120,7 +120,7 @@ export async function getOrgAuditLogs(params: {
     where: {
       orgId,
       ...(resource ? { resource } : {}),
-      ...(action   ? { action   } : {}),
+      ...(action   ? { action: action as never } : {}),
     },
     orderBy: { createdAt: "desc" },
     take: limit + 1,

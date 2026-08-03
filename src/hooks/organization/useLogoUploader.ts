@@ -4,7 +4,7 @@
 import { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { toast } from "sonner";
-import { updateOrganizationLogo } from "@/services/org";
+import { updateOrganizationLogo } from "@/services/organization";
 
 const supabase = createClient();
 

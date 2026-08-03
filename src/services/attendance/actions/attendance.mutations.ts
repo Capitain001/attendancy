@@ -11,7 +11,7 @@ import {
 } from "../database";
 import { AttendanceStatus } from "@/generated/prisma/client";
 import { validateSessionToken } from "../../session/database/token.mutations";
-import { sendPushNotificationById } from "@/services/notification";
+import { sendPushNotificationById } from "@/modules/notification/action";
 
 /**
  * Notif PRESENT à la confirmation (D20) — best-effort, hors mutation :

@@ -3,7 +3,7 @@
 
 import { prisma } from '@/lib/prisma'
 import { tryCatch } from '@/utils/server'
-import { Notification, NotificationType } from '@prisma/client'
+import { Notification, NotificationType } from '@/generated/prisma/client'
 
 export type CreateNotificationData = Pick<Notification, 'message' | 'type' > & {
   metadata?: any
@@ -43,7 +43,6 @@ export async function getUnreadNotifications(userId: string) {
       where: {
         userId,
         read: false,
-        deletedAt: null
       },
       orderBy: {
         createdAt: 'desc'
@@ -59,7 +58,6 @@ export async function getUserNotifications(userId: string, limit: number = 20) {
     prisma.notification.findMany({
       where: {
         userId,
-        deletedAt: null
       },
       orderBy: {
         createdAt: 'desc'
@@ -75,7 +73,7 @@ export async function markAsRead({notificationId, userId}: {notificationId: stri
     prisma.notification.updateMany({
       where: {
         id: notificationId,
-        userId // Sécurité : vérifier que l'utilisateur possède la notification
+        userId
       },
       data: {
         read: true
@@ -91,7 +89,6 @@ export async function markAllAsRead(userId: string) {
       where: {
         userId,
         read: false,
-        deletedAt: null
       },
       data: {
         read: true
@@ -100,16 +97,13 @@ export async function markAllAsRead(userId: string) {
   )
 }
 
-// Supprimer une notification (soft delete)
+// Supprimer une notification (hard delete — pas de deletedAt dans le modèle)
 export async function deleteUserNotification({notificationId, userId}: {notificationId: string, userId: string}) {
   return tryCatch(
-    prisma.notification.updateMany({
+    prisma.notification.deleteMany({
       where: {
         id: notificationId,
         userId
-      },
-      data: {
-        deletedAt: new Date()
       }
     })
   )
@@ -122,7 +116,6 @@ export async function getUnreadCount({userId}: {userId: string}) {
       where: {
         userId,
         read: false,
-        deletedAt: null
       }
     })
   )
@@ -142,7 +135,6 @@ export async function getOrganizationNotifications(organizationId: string, limit
             }
           }
         },
-        deletedAt: null
       },
       include: {
         user: {
@@ -176,7 +168,6 @@ export async function getOrganizationUnreadNotifications(organizationId: string,
           }
         },
         read: false,
-        deletedAt: null
       },
       include: {
         user: {
@@ -210,7 +201,6 @@ export async function getOrganizationUserNotifications(organizationId: string, u
             }
           }
         },
-        deletedAt: null
       },
       include: {
         user: {
@@ -244,7 +234,6 @@ export async function getOrganizationUnreadCount(organizationId: string) {
           }
         },
         read: false,
-        deletedAt: null
       }
     })
   )
@@ -254,45 +243,25 @@ export async function getOrganizationUnreadCount(organizationId: string) {
 export async function getOrganizationNotificationStats(organizationId: string) {
   return tryCatch(
     (async () => {
-      const total = await prisma.notification.count({
-        where: {
-          user: {
-            userOrganizations: {
-              some: {
-                orgId: organizationId
-              }
+      const orgWhere = {
+        user: {
+          userOrganizations: {
+            some: {
+              orgId: organizationId
             }
-          },
-          deletedAt: null
-        }
-      })
+          }
+        },
+      }
+
+      const total = await prisma.notification.count({ where: orgWhere })
 
       const unread = await prisma.notification.count({
-        where: {
-          user: {
-            userOrganizations: {
-              some: {
-                orgId: organizationId
-              }
-            }
-          },
-          read: false,
-          deletedAt: null
-        }
+        where: { ...orgWhere, read: false }
       })
 
       const byType = await prisma.notification.groupBy({
         by: ['type'],
-        where: {
-          user: {
-            userOrganizations: {
-              some: {
-                orgId: organizationId
-              }
-            }
-          },
-          deletedAt: null
-        },
+        where: orgWhere,
         _count: {
           type: true
         }
@@ -300,16 +269,7 @@ export async function getOrganizationNotificationStats(organizationId: string) {
 
       const uniqueUsers = await prisma.notification.groupBy({
         by: ['userId'],
-        where: {
-          user: {
-            userOrganizations: {
-              some: {
-                orgId: organizationId
-              }
-            }
-          },
-          deletedAt: null
-        }
+        where: orgWhere,
       })
 
       return {
@@ -337,7 +297,6 @@ export async function createOrganizationNotification({
   userId: string
   data: CreateNotificationData
 }) {
-  // Vérifier que l'utilisateur appartient à l'organisation
   const userOrg = await prisma.userOrganization.findFirst({
     where: {
       userId,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { getOrganizationBySlug } from "@/services/org";
+import { getOrganizationBySlug } from "@/services/organization";
 
 interface UseOrganizationProps {
   slug: string;

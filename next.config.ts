@@ -11,7 +11,7 @@ module.exports = {
     // Transforme les imports barrel en imports directs au build (bundle size)
     optimizePackageImports: ['lucide-react'],
   },
-  cacheComponents: false, 
+  cacheComponents: true, 
   images: {
     remotePatterns: [
       // ⚠ À ÉTENDRE PAR PROJET — ajouter les hosts d'images du projet

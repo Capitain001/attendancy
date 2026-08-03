@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { invalidateCache } from "@/config/cache";
+import { invalidateCache } from "@/cache/server/key";
 import { tryUnique } from "@/utils/server";
 import { Prisma } from "@/generated/prisma/client";
 
@@ -54,7 +54,7 @@ export async function removeUEFromProgram({
   const result = await prisma.programUE.deleteMany({ where });
 
   await invalidateCache("PROGRAM", programId);
-  await invalidateCache("PROGRAM_UE", programId);
+  await invalidateCache("PROGRAM", programId);
 
   if (ueId) {
     await invalidateCache("UE", ueId);

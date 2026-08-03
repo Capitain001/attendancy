@@ -1,4 +1,4 @@
-import { logoutAction } from '@/services/auth/actions'
+import { logOutUserForm as logoutAction } from '@/services/auth/actions'
 import { LogOut } from 'lucide-react'
 import React from 'react'
 import { Button } from '../ui/button'

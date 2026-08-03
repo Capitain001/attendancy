@@ -2,7 +2,7 @@
 "use client"
 import { BUTTON_CONFIG } from "@/config/notification"
 import { cn } from "@/lib/utils"
-import { getPermissionStatus, requestNotificationPermission, showLocalNotification } from "@/services/notification/permission"
+import { getPermissionStatus, requestNotificationPermission, showLocalNotification } from "@/modules/notification/permission"
 import { BellIcon } from "lucide-react"
 import { Button } from "../ui/button"
 import { useEffect, useState } from "react"

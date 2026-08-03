@@ -20,7 +20,7 @@ import {
   type CreateNotificationData
 } from './database'
 import { sendPushNotificationToUserById } from './user'
-import { NotificationType } from '@prisma/client'
+import { NotificationType } from '@/generated/prisma/client'
 
 export async function isVapidConfigured(): Promise<boolean> {
   return !!(

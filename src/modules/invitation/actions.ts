@@ -154,11 +154,11 @@ export async function deleteInvitationUserAction(
     }
 
     // Trouver l'utilisateur Supabase par email
-    const { success: findSuccess, user: authUser, error: findError } = await findAuthUserByEmail(invitation.email);
-    
-    if (!findSuccess || findError) {
-      return { success: false, error: findError || "Erreur lors de la recherche de l'utilisateur" };
+    const findResult = await findAuthUserByEmail(invitation.email);
+    if ('error' in findResult) {
+      return { success: false, error: findResult.error ?? 'Erreur inconnue' };
     }
+    const authUser = findResult.data.user;
 
     // Si l'utilisateur n'existe pas dans Supabase, on supprime juste l'invitation
     if (!authUser) {
@@ -177,8 +177,8 @@ export async function deleteInvitationUserAction(
     if (!existingUser) {
       // Supprimer l'utilisateur de Supabase
       const deleteResult = await deleteAuthUser(authUser.id);
-      if (!deleteResult.success) {
-        return { success: false, error: deleteResult.error || "Erreur lors de la suppression de l'utilisateur Supabase" };
+      if ('error' in deleteResult) {
+        return { success: false, error: deleteResult.error ?? 'Erreur inconnue' };
       }
 
       // Supprimer l'invitation

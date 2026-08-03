@@ -25,7 +25,7 @@ export function useStudentsMetrics({
       withoutClass: students.filter((s) => s.className == null).length,
       disabled: students.filter((s) => s.status !== "ACTIVE").length,
       absenteeism: students.filter((s) =>
-        isAbsenteeism(attendanceRates[s.id]?.rate ?? 100),
+        isAbsenteeism(attendanceRates[s.id] ?? { rate: null, denominator: 0 }),
       ).length,
     }),
     [students, attendanceRates],

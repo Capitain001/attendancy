@@ -9,9 +9,9 @@ import {
   getAdminNotificationStats,
   getAdminUserNotifications,
   createAdminNotification
-} from '@/services/notification/action'
+} from '@/modules/notification/action'
 import { CACHE_KEYS } from '@/config/client_cache'
-import { CreateNotificationData } from '@/services/notification/database'
+import { CreateNotificationData } from '@/modules/notification/database'
 
 export function useAdminNotifications(limit?: number) {
   const queryClient = useQueryClient()

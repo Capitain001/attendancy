@@ -1,7 +1,7 @@
 "use client"
 
 import { useMutation } from "@tanstack/react-query"
-import { upsertUserProfile } from "@/modules/user"
+import { upsertUserProfile } from "@/modules/auth/profile/user"
 
 interface ProfileData {
   firstName: string
