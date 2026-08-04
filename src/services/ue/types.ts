@@ -3,7 +3,6 @@ import type { getUEs, getProgramUEs } from './database'
 
 export type { CreateUEInput }
 
-export type GetUEsDto = Awaited<ReturnType<typeof getUEs>>
 export type UEItem    = GetUEsDto[number]
 
 // Full UE list for org (used as catalogue for linking to programs)
@@ -34,3 +33,4 @@ export type ProgramTable = ProgramSemesterDTO[]
 
 // Re-export reorder payload types from validation (single source)
 export type { UEOrder, CourseOrder, ReorderProgramPayload } from './validation'
+export * from './generated.types'

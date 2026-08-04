@@ -1,56 +1,46 @@
-//src/services/notification/utils.ts
-"use client"; 
+import type { SerializedPushSubscription } from './types'
 
-// ✅ Fonction pour demander la permission de notification
-export async function requestNotificationPermission(): Promise<boolean> {
-    if (!("Notification" in window)) {
-      console.error("Ce navigateur ne prend pas en charge les notifications.");
-      return false;
-    }
-  
-    const permission = await Notification.requestPermission();
-    return permission === "granted";
-  }
-  
-  // ✅ Fonction pour afficher une notification
-  export function showNotification(title: string, options?: NotificationOptions) {
-    if (Notification.permission === "granted") {
-      new Notification(title, options);
-    } else {
-      console.warn("Permission de notification non accordée.");
-    }
-  }
-  
+// ─── Conversion VAPID ─────────────────────────────────────────────────────────
 
-//fonctions pour la serialisation de la subscription
-export function arrayBufferToBase64(buffer: ArrayBuffer): string {
-    const bytes = new Uint8Array(buffer)
-    return window.btoa(String.fromCharCode(...bytes))
-  }
-  
-  export function urlBase64ToUint8Array(base64String: string): Uint8Array {
-    const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
-    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
-    const rawData = window.atob(base64)
-    const buffer = new ArrayBuffer(rawData.length)
-    const bytes = new Uint8Array(buffer)
-    for (let i = 0; i < rawData.length; i++) {
-      bytes[i] = rawData.charCodeAt(i)
-    }
-    return bytes
-  }
-  
-  export function serializeSubscription(subscription: PushSubscription) {
-    return {
-      endpoint: subscription.endpoint,
-      keys: {
-        p256dh: arrayBufferToBase64(subscription.getKey('p256dh')!),
-        auth: arrayBufferToBase64(subscription.getKey('auth')!)
-      }
-    }
-  }
+export function urlBase64ToUint8Array(base64String: string): Uint8Array {
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
+  const rawData = atob(base64)
+  return Uint8Array.from([...rawData].map((c) => c.charCodeAt(0)))
+}
 
-  
+export function serializeSubscription(subscription: PushSubscription): SerializedPushSubscription {
+  const json = subscription.toJSON()
+  return {
+    endpoint: subscription.endpoint,
+    keys: {
+      p256dh: json.keys?.p256dh ?? '',
+      auth:   json.keys?.auth   ?? '',
+    },
+    expirationTime: subscription.expirationTime,
+  }
+}
 
+// ─── Détection de support navigateur ─────────────────────────────────────────
 
-  
+export function checkBrowserSupport(): boolean {
+  return (
+    typeof window !== 'undefined' &&
+    'Notification' in window &&
+    'serviceWorker' in navigator &&
+    'PushManager' in window
+  )
+}
+
+export function validateHTTPS(): boolean {
+  return (
+    typeof window === 'undefined' ||
+    window.location.protocol === 'https:' ||
+    window.location.hostname === 'localhost'
+  )
+}
+
+export function getCurrentPermission(): NotificationPermission {
+  if (typeof window === 'undefined' || !('Notification' in window)) return 'default'
+  return Notification.permission
+}

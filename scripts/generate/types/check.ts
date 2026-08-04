@@ -2,7 +2,9 @@
  * scripts/generate/types/check.ts
  *
  * Vérifie que les types inférés `Awaited<ReturnType<...>>` sont définis
- * uniquement dans `types.ts` — jamais dans database.ts, actions.ts, etc.
+ * uniquement dans `generated.types.ts` — jamais dans database.ts, actions.ts, etc.
+ * (`types.ts` est le barrel manuel : il ne doit contenir que du `export *`
+ * et d'éventuelles surcharges manuelles, jamais un type inféré directement.)
  *
  * Non bloquant (exit 0 toujours).
  *
@@ -63,7 +65,7 @@ function scanFile(absPath: string, service: string): Violation[] {
 
 // ── Parcours des fichiers d'un service ───────────────────────────────────────
 
-const EXCLUDED_FILES = new Set(["types.ts", "index.ts"]);
+const EXCLUDED_FILES = new Set(["generated.types.ts", "index.ts"]);
 const EXCLUDED_DIRS  = new Set([".api", "node_modules", "__tests__"]);
 
 function walkFiles(dir: string): string[] {
@@ -135,12 +137,12 @@ function print(all: Violation[]) {
   console.log(`\n${bold("── Inferred Types Placement Check ──────────────────────────────")}`);
 
   if (!all.length) {
-    console.log(`   ${green("✓")} Tous les Awaited<ReturnType<...>> sont dans types.ts\n`);
+    console.log(`   ${green("✓")} Tous les Awaited<ReturnType<...>> sont dans generated.types.ts\n`);
     return;
   }
 
   console.log(`   ${yellow("⚠  " + all.length + " violation(s)")} — non bloquant\n`);
-  console.log(dim(`   Règle : export type X = Awaited<ReturnType<...>> appartient à types.ts`));
+  console.log(dim(`   Règle : export type X = Awaited<ReturnType<...>> appartient à generated.types.ts`));
   console.log(dim(`   Fix   : npm run generate:types:svc -- <service>\n`));
 
   const byService = new Map<string, Violation[]>();
@@ -154,7 +156,7 @@ function print(all: Violation[]) {
     for (const v of vs) {
       console.log(`  ${yellow("⚠")}  type ${bold(v.type)}`);
       console.log(`     ${dim(v.file + ":" + v.line)}`);
-      console.log(`     Déplacer vers src/services/${v.service}/types.ts`);
+      console.log(`     Déplacer vers src/services/${v.service}/generated.types.ts`);
     }
     console.log();
   }

@@ -10,40 +10,57 @@ export type ApiResponse<T> =
   | { error: string }
 
 export const ERRORS = {
-  AUTH: {
-    UNAUTHORIZED: 'Vous devez être connecté',
-    FORBIDDEN: 'Accès non autorisé',
-  },
+  // AUTH: "Not authenticated, please login first.",
+  // FORBIDDEN: "You don't have permission to access this resource.",
+  NOT_FOUND: "Resource not found.",
+  BAD_REQUEST: "Bad request.",
+  SERVER: "Internal server error.",
   AUDIT_LOG: "[audit-log] Erreur lors de la journalisation",
   ORG: {
-    NOT_FOUND: 'Organisation introuvable',
+    NOT_FOUND: "Organisation non trouvée",
   },
-  DB: {
-    FOREIGN_KEY: 'Référence invalide',
-    NOT_FOUND: 'Enregistrement introuvable',
+  SCHEDULE: {
+    CONFLICT: "CONFLICT_SCHEDULE",
+    //MESSAGES
+    CONFLICT_MESSAGE: "Conflit détecté (salle ou enseignant déjà réservé) sur ce créneau",
   },
+
+
   UNIQUE: {
-    DEFAULT: 'Cette valeur existe déjà',
+    DEFAULT: "Cette valeur est déjà utilisée",
+    EMAIL: "Cet email est déjà utilisé",
+    CODE: "Ce code existe déjà",
+    NAME: "Ce nom est déjà utilisé",
   },
-  NOT_FOUND: 'Ressource introuvable',
-  SERVER: 'Une erreur serveur est survenue',
 
-  // ⚠ À ÉTENDRE PAR PROJET — ajouter les familles d'erreurs métier
-  // ENTITY: { NOT_FOUND: '...' },
-} as const
+  DB: {
+    NOT_FOUND: "la Resource est introuvable",
+    FOREIGN_KEY: "Impossible de supprimer cet élément car il est utilisé ailleurs",
+    OVERLAP: "Conflit de planification détecté",
+  },
 
-export const sessionConfig = {
-  thresholds: { checkIn: 15, checkOut: 15 },
-  timer: { updateInterval: 30_000 },
-  queryKeys: {
-    todaySchedules: (teacherId: string) => ['today-schedules', teacherId] as const,
+    AUTH: {
+    UNAUTHORIZED: "Not authenticated, please login first.",
+    FORBIDDEN: "Accès non autorisé",
   },
-  messages: {
-    startSuccess: 'Session démarrée avec succès',
-    startError: 'Erreur lors du démarrage de la session',
-    endSuccess: 'Session terminée avec succès',
-    endError: 'Erreur lors de la clôture de la session',
-  },
+} as const;
+
+
+type ErrorResponse = Extract<ApiResponse<any>, { error: string }>;
+export const ERROR_KEY: keyof ErrorResponse = "error";
+
+
+export const PRISMA_UNIQUE_MAP: Record<string, string> = {
+  code: ERRORS.UNIQUE.CODE,
+  email: ERRORS.UNIQUE.EMAIL,
+  name: ERRORS.UNIQUE.NAME,
+};
+
+export const DB_CONSTRAINTS = {
+  ROOM_OVERLAP: "no_room_overlap",
+  TEACHER_OVERLAP: "no_teacher_overlap",
+  CLASS_OVERLAP: "no_class_overlap_global",
+  GROUP_OVERLAP: "no_group_overlap",
 } as const
 
 // Mapping contrainte DB → message utilisateur, consommé par tryConstraint()

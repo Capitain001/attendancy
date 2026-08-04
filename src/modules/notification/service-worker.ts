@@ -1,22 +1,20 @@
-// src/services/service-worker-service.ts
+import { NOTIFICATION_CONFIG } from '@/config/notification'
 
-import { NOTIFICATION_CONFIG } from "@/config/notification"
-import { validateBrowserSupport } from "./validation"
+// ─── Enregistrement ───────────────────────────────────────────────────────────
 
 export async function registerServiceWorker(): Promise<ServiceWorkerRegistration> {
-  validateBrowserSupport()
+  if (typeof navigator === 'undefined' || !('serviceWorker' in navigator)) {
+    throw new Error('Service Worker non supporté')
+  }
 
   const registration = await navigator.serviceWorker.register(
     NOTIFICATION_CONFIG.serviceWorkerPath,
-    {
-      scope: NOTIFICATION_CONFIG.serviceWorkerScope,
-      updateViaCache: 'none'
-    }
+    { scope: NOTIFICATION_CONFIG.serviceWorkerScope, updateViaCache: 'none' },
   )
 
   if (registration.installing) {
     await new Promise<void>((resolve) => {
-      registration.installing!.addEventListener('statechange', function() {
+      registration.installing!.addEventListener('statechange', function () {
         if (this.state === 'activated') resolve()
       })
     })
@@ -25,40 +23,35 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
   return registration
 }
 
+// ─── Récupération avec fallback + timeout ────────────────────────────────────
+
 export async function getServiceWorkerRegistration(): Promise<ServiceWorkerRegistration> {
-  // Vérifier si un service worker est déjà enregistré
-  if (navigator.serviceWorker.controller) {
-    // Service worker déjà actif, récupérer la registration
-    const registration = await navigator.serviceWorker.getRegistration()
-    if (registration) {
-      return registration
-    }
+  if (typeof navigator === 'undefined' || !('serviceWorker' in navigator)) {
+    throw new Error('Service Worker non supporté')
   }
 
-  // Vérifier si une registration existe déjà
-  const existingRegistration = await navigator.serviceWorker.getRegistration()
-  if (existingRegistration) {
-    // Attendre que le service worker soit prêt avec timeout
-    const readyPromise = navigator.serviceWorker.ready
-    const timeoutPromise = new Promise<never>((_, reject) => {
-      setTimeout(() => reject(new Error('Timeout: Service worker n\'a pas pu être activé dans les 10 secondes')), 10000)
-    })
-    
+  const existing = await navigator.serviceWorker.getRegistration()
+  if (existing) {
+    const timeout = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('Timeout : Service Worker non activé après 10s')), 10_000),
+    )
     try {
-      return await Promise.race([readyPromise, timeoutPromise])
-    } catch (error) {
-      console.warn('Service worker ready timeout, tentative d\'enregistrement...')
-      // Si ready échoue, essayer d'enregistrer
-      return await registerServiceWorker()
+      return await Promise.race([navigator.serviceWorker.ready, timeout])
+    } catch {
+      return registerServiceWorker()
     }
   }
 
-  // Aucun service worker enregistré, en enregistrer un nouveau
-  console.log('📋 Enregistrement d\'un nouveau service worker...')
-  return await registerServiceWorker()
+  return registerServiceWorker()
 }
 
+// ─── Abonnement actuel ────────────────────────────────────────────────────────
+
 export async function getCurrentSubscription(): Promise<PushSubscription | null> {
-  const registration = await getServiceWorkerRegistration()
-  return registration.pushManager.getSubscription()
+  try {
+    const reg = await getServiceWorkerRegistration()
+    return reg.pushManager.getSubscription()
+  } catch {
+    return null
+  }
 }

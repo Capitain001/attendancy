@@ -2,20 +2,25 @@
 "use client"
 
 import { useState, useEffect, useCallback } from 'react'
-import { checkBrowserSupport, validateHTTPS, getCurrentPermission } from '@/modules/notification/utils'
-import { requestNotificationPermission } from '@/modules/notification/permission'
-import { serializeSubscription } from '@/modules/notification/utils'
-import { getServiceWorkerRegistration, getCurrentSubscription } from '@/modules/notification/service-worker'
-import { 
-  subscribeUser, 
-  unsubscribeUser, 
+import {
+  checkBrowserSupport,
+  validateHTTPS,
+  getCurrentPermission,
+  serializeSubscription,
+  urlBase64ToUint8Array,
+  requestNotificationPermission,
+  getServiceWorkerRegistration,
+  getCurrentSubscription,
+  type SerializedPushSubscription,
+} from '@/modules/notification'
+import {
+  subscribeUser,
+  unsubscribeUser,
   unsubscribeUserDevice,
-  sendNotificationToUser,
+  sendNotificationToCurrentUser,
   debugUserSubscriptions,
-  type SerializedPushSubscription
-} from '@/modules/notification/user'
+} from '@/services/notification'
 import { NOTIFICATION_CONFIG } from '@/config/notification'
-import { urlBase64ToUint8Array } from '@/modules/notification/utils'
 
 export interface UserNotificationState {
   isSupported: boolean
@@ -322,7 +327,7 @@ export function useUserNotification() {
     setError(null)
     
     try {
-      const result = await sendNotificationToUser({ message })
+      const result = await sendNotificationToCurrentUser({ message })
       
       if (!result.success) {
         setError(result.error || 'Erreur lors de l\'envoi de la notification')

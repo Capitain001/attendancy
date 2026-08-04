@@ -2,9 +2,13 @@
 /**
  * scripts/generate/types/types.ts
  *
- * Génère src/services/<service>/types.ts depuis database/*.queries.ts.
+ * Génère src/services/<service>/generated.types.ts depuis database/*.queries.ts.
  * Naming : fnName → export type FnNameDto = Awaited<ReturnType<typeof fn>>
  * Seules les fonctions exportées des fichiers *.queries.ts sont incluses.
+ *
+ * `generated.types.ts` est intégralement régénéré à chaque run (écrasement volontaire).
+ * `types.ts` (barrel public, manuel) n'est JAMAIS écrasé — le script s'assure seulement
+ * qu'il ré-exporte `./generated.types`, sans toucher au reste de son contenu.
  *
  * Usage:
  *   tsx scripts/generate/types/types.ts <service> [<service2> ...]
@@ -38,11 +42,25 @@ function extractExportedFns(filePath: string): string[] {
   return fns;
 }
 
+// ── Extraction des noms de types déjà exportés dans un fichier (pour détecter les collisions) ──
+
+function extractExportedTypeNames(filePath: string): string[] {
+  if (!fs.existsSync(filePath)) return [];
+  const content = fs.readFileSync(filePath, "utf8");
+  const names: string[] = [];
+  const re = /^export\s+(?:type|interface)\s+(\w+)/gm;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(content)) !== null) {
+    names.push(m[1]);
+  }
+  return names;
+}
+
 function toPascalCase(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-// ── Mise à jour du barrel index.ts ───────────────────────────────────────────
+// ── Mise à jour du barrel index.ts (inchangé — pointe toujours vers './types') ──
 
 function ensureTypesExport(indexPath: string): void {
   if (!fs.existsSync(indexPath)) return;
@@ -50,6 +68,46 @@ function ensureTypesExport(indexPath: string): void {
   if (content.includes("from './types'") || content.includes('from "./types"')) return;
   fs.appendFileSync(indexPath, `export * from './types'\n`, "utf8");
   console.log(`  ↳ index.ts  — export * from './types' ajouté`);
+}
+
+// ── Mise à jour du barrel manuel types.ts pour ré-exporter generated.types.ts ──
+//
+// types.ts n'est JAMAIS écrasé. On se contente d'y ajouter, si absent,
+// `export * from './generated.types'`. Si une collision de nom est détectée
+// entre un type manuel de types.ts et un DTO généré, on n'ajoute RIEN et on
+// avertit — au dev de trancher manuellement (voir CONTEXT.md).
+
+function ensureGeneratedReExport(serviceDir: string, generatedTypeNames: string[]): void {
+  const typesPath = path.join(serviceDir, "types.ts");
+
+  if (!fs.existsSync(typesPath)) {
+    fs.writeFileSync(typesPath, `export * from './generated.types'\n`, "utf8");
+    console.log(`  ↳ types.ts créé — export * from './generated.types'`);
+    return;
+  }
+
+  const content = fs.readFileSync(typesPath, "utf8");
+  if (content.includes("from './generated.types'") || content.includes('from "./generated.types"')) {
+    return; // déjà en place, rien à faire
+  }
+
+  const manualNames = extractExportedTypeNames(typesPath);
+  const collisions = generatedTypeNames.filter((n) => manualNames.includes(n));
+
+  if (collisions.length) {
+    console.warn(
+      `  ⚠ types.ts : collision de nom avec generated.types.ts — re-export NON ajouté automatiquement`
+    );
+    console.warn(`     Types en conflit : ${collisions.join(", ")}`);
+    console.warn(
+      `     → Renommez le type manuel dans types.ts, OU supprimez-le s'il est devenu redondant,`
+    );
+    console.warn(`       puis ajoutez vous-même : export * from './generated.types'`);
+    return;
+  }
+
+  fs.appendFileSync(typesPath, `\nexport * from './generated.types'\n`, "utf8");
+  console.log(`  ↳ types.ts — export * from './generated.types' ajouté`);
 }
 
 // ── Génération d'un service ───────────────────────────────────────────────────
@@ -87,7 +145,13 @@ function generateForService(servicePath: string): boolean {
     return true;
   }
 
+  const generatedTypeNames = fns.map((fn) => `${toPascalCase(fn)}Dto`);
+
   const lines = [
+    `// ⚠ Fichier généré automatiquement — NE PAS ÉDITER À LA MAIN`,
+    `// Régénérer : npx tsx scripts/generate/types/types.ts ${servicePath}`,
+    `// Pour surcharger un type, définissez-le dans ./types.ts (jamais écrasé).`,
+    "",
     `import { ${fns.join(", ")} } from './database'`,
     "",
     ...fns.map(
@@ -97,12 +161,13 @@ function generateForService(servicePath: string): boolean {
     "",
   ];
 
-  const outputPath = path.join(serviceDir, "types.ts");
+  const outputPath = path.join(serviceDir, "generated.types.ts");
   fs.writeFileSync(outputPath, lines.join("\n"), "utf8");
 
-  const typeNames = fns.map((fn) => `${toPascalCase(fn)}Dto`).join(", ");
-  console.log(`  ✓ ${servicePath}/types.ts  (${typeNames})`);
+  const typeNames = generatedTypeNames.join(", ");
+  console.log(`  ✓ ${servicePath}/generated.types.ts  (${typeNames})`);
 
+  ensureGeneratedReExport(serviceDir, generatedTypeNames);
   ensureTypesExport(path.join(serviceDir, "index.ts"));
   return true;
 }
@@ -125,7 +190,6 @@ function collectEligibleServices(dir: string, base = ""): string[] {
 
     if (hasQueries) results.push(servicePath);
 
-    // Descendre pour les sous-services
     results.push(...collectEligibleServices(fullPath, servicePath));
   }
 

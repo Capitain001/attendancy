@@ -7,15 +7,6 @@ import { CONSTRAINT_ERROR, ERRORS, TRIGGER_ERROR } from '@/config'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client'
 import { debugPrismaError } from './debug'
 
-export async function tryUnique<T>(promise: Promise<T>): Promise<T> {
-  try {
-    return await promise
-  } catch (error) {
-    uniqueError(error)
-    throw error
-  }
-}
-
 export async function tryConstraint<T>(promise: Promise<T>): Promise<T> {
   try {
     return await promise

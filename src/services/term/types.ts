@@ -1,3 +1,2 @@
 import type { generateTermsFromProgram } from './database'
-
-export type GenerateTermsDto = Awaited<ReturnType<typeof generateTermsFromProgram>>
+export * from './generated.types'

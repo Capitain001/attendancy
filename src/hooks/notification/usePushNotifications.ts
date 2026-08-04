@@ -1,10 +1,21 @@
 //src/hooks/notification/usePushNotifications.ts
 "use client"
 import { useState, useEffect, useCallback } from 'react'
-import { checkBrowserSupport, validateHTTPS, getCurrentPermission, urlBase64ToUint8Array, serializeSubscription } from '@/modules/notification/utils'
-import { requestNotificationPermission } from '@/modules/notification/permission'
-import { subscribeUser, unsubscribeUser, sendNotificationToUser } from '@/modules/notification/user'
-import { getServiceWorkerRegistration, getCurrentSubscription } from '@/modules/notification/service-worker'
+import {
+  urlBase64ToUint8Array,
+  serializeSubscription,
+  checkBrowserSupport,
+  validateHTTPS,
+  getCurrentPermission,
+  requestNotificationPermission,
+  getServiceWorkerRegistration,
+  getCurrentSubscription,
+} from '@/modules/notification'
+import {
+  subscribeUser,
+  unsubscribeUser,
+  sendNotificationToCurrentUser,
+} from '@/services/notification'
 
 interface NotificationState {
   isSupported: boolean
@@ -112,7 +123,7 @@ export function usePushNotifications() {
   }, [])
 
   const sendNotification = useCallback(async (message: string): Promise<boolean> => {
-    const result = await sendNotificationToUser({ message })
+    const result = await sendNotificationToCurrentUser({ message })
     return result.success
   }, [])
 
