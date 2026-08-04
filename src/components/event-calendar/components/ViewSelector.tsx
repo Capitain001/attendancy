@@ -75,7 +75,7 @@ export function ViewSelectorDropdown({ view, setView }: ViewSelectorProps) {
           <ChevronDownIcon size={14} className="text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-[10rem]">
+      <DropdownMenuContent align="end" className="min-w-40">
         <DropdownMenuRadioGroup
           value={view}
           onValueChange={(v) => setView(v as CalendarView)}

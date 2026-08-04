@@ -1,8 +1,2 @@
-export { getFunctionsAction, getFunctionAction } from './function.queries'
-export {
-  createFunctionAction,
-  updateFunctionAction,
-  deleteFunctionAction,
-  assignFunctionToUserAction,
-  removeFunctionFromUserAction,
-} from './function.mutations'
+export * from './function.queries'
+export * from './function.mutations'

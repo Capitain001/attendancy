@@ -8,7 +8,7 @@ type LoginState = { error: string } | null;
 export async function login(
   _prevState: LoginState,
   formData: FormData
-): Promise<LoginState> {
+) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const next = formData.get("next") as string | null;
@@ -45,4 +45,13 @@ export async function login(
       : redirectUser(user);
 
   redirect(redirectPath); // navigation serveur directe, pas de round-trip client
+}
+
+
+export async function loginAction(formData: FormData): Promise<void> {
+  const result = await login(null, formData);
+  if (result?.error) {
+    redirect(`/auth/signin?error=${encodeURIComponent(result.error)}`);
+  }
+  // pas d'erreur → login() a déjà appelé redirect() en interne, donc on n'arrive jamais ici
 }

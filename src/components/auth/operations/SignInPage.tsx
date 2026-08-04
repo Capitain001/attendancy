@@ -1,16 +1,13 @@
-import { login } from "@/modules/auth/actions";
+import { loginAction } from "@/modules/auth/actions";
 import { GlassInputWrapper, GoogleIcon } from "../ui/components";
 import { PasswordInput } from "../ui/PasswordInput";
-
-
-
 interface SignInPageProps {
   searchParams?: { error?: string };
 }
 
 export function SignInPage({ searchParams }: SignInPageProps) {
   return (
-    <div className="h-[100dvh] flex flex-col md:flex-row font-geist w-[100dvw]">
+    <div className="h-100dvh flex flex-col md:flex-row font-geist w-dvw">
       {/* Left column: sign-in form */}
       <section className="flex-1 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
@@ -30,7 +27,7 @@ export function SignInPage({ searchParams }: SignInPageProps) {
             )}
 
             {/* Formulaire avec action serveur */}
-            <form className="space-y-5" action={login}>
+            <form className="space-y-5" action={loginAction}>
               <div className="animate-element animate-delay-300">
                 <label className="text-sm font-medium text-muted-foreground">
                   Email Address

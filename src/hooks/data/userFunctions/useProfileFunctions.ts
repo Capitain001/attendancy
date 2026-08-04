@@ -3,8 +3,9 @@
 
 import { useCallback } from "react";
 import { useEntity } from "@/hooks/entity/useEntity";
-import { getFunctionProfilesAction } from "@/services/users/profile/actions";
-import type { FunctionProfile, UserProfile } from "@/services/users/profile/types";
+import { getFunctionProfilesAction } from "@/services/function";
+
+import type { GetFunctionProfilesDto } from "@/services/function";
 
 /**
  * Hook pour récupérer les profils des utilisateurs selon l'ID de fonction
@@ -48,7 +49,7 @@ export function useProfileFunctions({
 
   const entityName = `function-profiles-${functionId}`;
 
-  const entity = useEntity<FunctionProfile>({
+  const entity = useEntity<GetFunctionProfilesDto[number]>({
     entityName,
     fetchFn,
     enabled: enabled && !!functionId,

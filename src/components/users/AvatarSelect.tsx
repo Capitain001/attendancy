@@ -83,6 +83,7 @@ export default function AvatarUserSelect({
             //   name={selectedUser.name || undefined}
             //   className="border-4 relative"
             // />
+            
              <div className="text-muted-foreground text-xs">+</div>
           ) : (
             <div className="text-muted-foreground text-xs">+</div>

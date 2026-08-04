@@ -28,7 +28,7 @@ import { useAdminNotifications } from '@/hooks/notification/useAdminNotification
 import { formatDate } from '@/lib/utils'
 
 import { cn } from '@/lib/utils'
-import { NotificationType } from '@prisma/client'
+import { NotificationType } from '@/generated/prisma'
 
 export function AdminNotificationList() {
   const { notifications, unread, isLoading, error, actions } = useAdminNotifications()

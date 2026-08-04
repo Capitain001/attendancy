@@ -3,17 +3,18 @@
 
 import { useCrudEntity } from "@/hooks/entity/useCrudEntity";
 import { toFetchFn, toCreateFn, toUpdateFn, toDeleteFn } from "@/hooks/entity/actionHelpers";
-import { 
-  addFunctionAction, 
-  updateFunctionAction, 
-  removeFunctionAction, 
-  getFunctionsAction 
-} from "@/services/fonctions/actions";
-import type { Function, AddFunctionData, UpdateFunctionData } from "@/services/fonctions/types";
+import {
+  createFunctionAction,
+  updateFunctionAction,
+  deleteFunctionAction,
+  getFunctionsAction
+} from "@/services/function/actions";
+import type { FunctionItem } from "@/services/function/types";
+import type { CreateFunctionInput as ServiceCreateInput, UpdateFunctionInput as ServiceUpdateInput } from "@/services/function/validation";
 
 // Types pour les inputs du hook
-export type CreateFunctionInput = Omit<AddFunctionData, "orgId">;
-export type UpdateFunctionInput = UpdateFunctionData;
+export type CreateFunctionInput = ServiceCreateInput;
+export type UpdateFunctionInput = Omit<ServiceUpdateInput, 'functionId'>;
 
 export interface UseFonctionsOptions {
   isMain?: boolean;
@@ -21,35 +22,18 @@ export interface UseFonctionsOptions {
   enabled?: boolean;
 }
 
-/**
- * Hook pour gérer les fonctions avec CRUD complet
- * 
- * @example
- * ```tsx
- * const { data, create, update, delete: deleteFunction, loading } = useFonctions();
- * 
- * // Créer une fonction
- * await create({ name: "Directeur", description: "Direction de l'établissement", isMain: true });
- * 
- * // Mettre à jour
- * await update({ id: "function-123", data: { name: "Directeur Général" } });
- * 
- * // Supprimer
- * deleteFunction("function-123");
- * ```
- */
 export function useFonctions(options: UseFonctionsOptions = {}) {
   const { isMain, staleTime, enabled } = options;
 
   const fetchFn = toFetchFn(getFunctionsAction, { isMain });
-  const create = toCreateFn(addFunctionAction);
-  const update = toUpdateFn((id: string, data: UpdateFunctionInput) => updateFunctionAction({ id, data }));
+  const create = toCreateFn(createFunctionAction);
+  const update = toUpdateFn((id: string, data: UpdateFunctionInput) => updateFunctionAction({ functionId: id, ...data }));
   const deleteFunction = toDeleteFn<string>(async (id) => {
-    const r = await removeFunctionAction(id);
+    const r = await deleteFunctionAction(id);
     return 'error' in r ? { success: false as const, error: r.error } : { success: true as const };
   });
 
-  return useCrudEntity<Function, CreateFunctionInput, UpdateFunctionInput>({
+  return useCrudEntity<FunctionItem, CreateFunctionInput, UpdateFunctionInput>({
     entityName: "functions",
     fetchFn,
     staleTime,
@@ -67,4 +51,3 @@ export function useFonctions(options: UseFonctionsOptions = {}) {
     }
   });
 }
-

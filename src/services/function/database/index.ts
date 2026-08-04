@@ -1,2 +1,2 @@
-export { getFunctions, getFunctionByName, getFunctionsByNames } from './function.queries'
-export { createFunction, updateFunction, deleteFunction, assignFunctionToUser, removeFunctionFromUser } from './function.mutations'
+export * from './function.queries'
+export * from './function.mutations'

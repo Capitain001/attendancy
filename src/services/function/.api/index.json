@@ -2,7 +2,7 @@
   "service": "function",
   "path": "src/services/function/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "3889557",
+  "derived_at": "6ef8fc1",
   "utils_dir": null,
   "fns": {
     "createFunction": {
@@ -45,6 +45,11 @@
       "layer": "db",
       "kind": "query"
     },
+    "getFunctionProfiles": {
+      "f": ".api/getFunctionProfiles.json",
+      "layer": "db",
+      "kind": "query"
+    },
     "createFunctionAction": {
       "f": ".api/createFunctionAction.json",
       "layer": "action",
@@ -75,8 +80,13 @@
       "layer": "action",
       "kind": "server-action"
     },
-    "getFunctionAction": {
-      "f": ".api/getFunctionAction.json",
+    "getFunctionByNameAction": {
+      "f": ".api/getFunctionByNameAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getFunctionProfilesAction": {
+      "f": ".api/getFunctionProfilesAction.json",
       "layer": "action",
       "kind": "server-action"
     }
@@ -102,16 +112,20 @@
     ],
     "getFunctionByName": [
       "assignFunctionToUserAction",
-      "getFunctionAction"
+      "getFunctionByNameAction"
     ],
     "getFunctionsByNames": [],
+    "getFunctionProfiles": [
+      "getFunctionProfilesAction"
+    ],
     "createFunctionAction": [],
     "updateFunctionAction": [],
     "deleteFunctionAction": [],
     "assignFunctionToUserAction": [],
     "removeFunctionFromUserAction": [],
     "getFunctionsAction": [],
-    "getFunctionAction": []
+    "getFunctionByNameAction": [],
+    "getFunctionProfilesAction": []
   },
   "deps": {}
 }

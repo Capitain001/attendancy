@@ -7,8 +7,6 @@ import { usePresence } from "@/hooks/realtime/usePresence"
 import { getUserInfo, PresenceUser, UserInfo } from "@/services/user"
 
 
-
-
 interface UserContextType {
   user: UserInfo | null
   isLoading: boolean

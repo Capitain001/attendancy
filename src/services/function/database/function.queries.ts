@@ -40,3 +40,52 @@ export async function getFunctionsByNames(names: string[], orgId: string) {
     select: { id: true, name: true },
   })
 }
+
+
+
+/**
+ * Récupère les profils utilisateurs associés à une fonction
+ * Retourne les informations de l'utilisateur, de la fonction, et les métadonnées d'assignation
+ */
+export async function getFunctionProfiles({
+  functionId,
+  orgId,
+}: {
+  functionId: string;
+  orgId: string;
+}) {
+  "use cache";
+  cacheTag(CACHE.FUNCTION(orgId, functionId));
+  cacheLife("minutes");
+
+  return prisma.userFunction.findMany({
+    where: { functionId },
+    select: {
+      id: true,
+      assignedAt: true,
+      assignedBy: true,
+      user: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          phone: true,
+          avatar_url: true,
+          status: true,
+          dateOfBirth: true,
+          sex: true,
+          createdAt: true,
+          details: true,
+        },
+      },
+      function: {
+        select: {
+          name: true,
+          isMain: true,
+        },
+      },
+    },
+    orderBy: { assignedAt: "desc" },
+  });
+}

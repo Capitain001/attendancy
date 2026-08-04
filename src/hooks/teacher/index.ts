@@ -1,4 +1,1 @@
-// src/hooks/teacher/index.ts
-
-export { useTeacherActions } from "./useTeacherActions";
-
+// useTeacherActions à fournir — voir docs/missing-mvp-imports.md

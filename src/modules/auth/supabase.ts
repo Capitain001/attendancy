@@ -119,31 +119,40 @@ export async function updateAuthUser(password: string, email?: string) {
 
 // ── OAuth ─────────────────────────────────────────────────────────────────────
 
+
+type OAuthProvider = 'google' | 'github';
+
+async function signInWithOAuthProvider(provider: OAuthProvider, next?: string) {
+  const supabase = await createClient();
+  const redirectTo = next
+    ? `${CALL_BACK}?next=${encodeURIComponent(next)}`
+    : CALL_BACK;
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: { redirectTo },
+  });
+
+  if (error) return { error: error.message };
+  return { url: data.url };
+}
+
 /**
  * Connexion avec Google OAuth
  */
-export async function signInWithGoogle() {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: { redirectTo: CALL_BACK },
-  });
-  if (error) return { error: error.message };
-  return { data: { url: data.url } };
+export async function signInWithGoogle(next?: string) {
+  return signInWithOAuthProvider('google', next);
 }
 
 /**
  * Connexion avec GitHub OAuth
  */
-export async function signInWithGitHub() {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'github',
-    options: { redirectTo: CALL_BACK },
-  });
-  if (error) return { error: error.message };
-  return { data: { url: data.url } };
+export async function signInWithGitHub(next?: string) {
+  return signInWithOAuthProvider('github', next);
 }
+
+
+
 
 // ── Admin (service-role) ──────────────────────────────────────────────────────
 
