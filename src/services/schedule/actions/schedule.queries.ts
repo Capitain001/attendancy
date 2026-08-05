@@ -2,7 +2,16 @@
 import { getUserInfo } from '@/modules/user'
 import { getAuthorization } from '@/modules/auth'
 import { ERRORS } from '@/config'
-import { getSchedulesByClass, getSchedules, getScheduleDays, getSchedulesByCourse } from '../database'
+import {
+  getSchedulesByClass,
+  getSchedules,
+  getScheduleDays,
+  getSchedulesByCourse,
+  getDaySchedules,
+  getTeacherNextSchedule,
+  getTodayClassSchedules,
+  type ScheduleFilterParams,
+} from '../database'
 import { getCoursesByClass } from '@/services/course/database'
 import { getGroupsByClass } from '@/services/group/database'
 import { getRooms } from '@/services/room/database'
@@ -24,20 +33,31 @@ export async function getClassSchedulesAction(
   }
 }
 
-export async function getSchedulesAction(params: {
-  classId?:   string
-  teacherId?: string
-  roomId?:    string
-  rangeStart: Date
-  rangeEnd:   Date
-}) {
+export async function getSchedulesAction(
+  params: Omit<ScheduleFilterParams, 'orgId'>,
+) {
   try {
     const user = await getUserInfo()
     const orgId = user?.organization?.id
     if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
     const auth = getAuthorization(user, 'DIRECTION')
     if (!auth.success) return { error: auth.error }
-    return { data: await getSchedules(orgId, params) }
+    return { data: await getSchedules({ orgId, ...params }) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+
+export async function getDaySchedulesAction(
+  params: Omit<ScheduleFilterParams, 'orgId'>,
+) {
+  try {
+    const user = await getUserInfo()
+    const orgId = user?.organization?.id
+    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+    const auth = getAuthorization(user, 'DIRECTION')
+    if (!auth.success) return { error: auth.error }
+    return { data: await getDaySchedules({ orgId, ...params }) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
@@ -63,6 +83,28 @@ export async function getScheduleDaysAction(month: string) {
     const orgId = user?.organization?.id
     if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
     return { data: await getScheduleDays(orgId, month) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+
+export async function getTeacherNextScheduleAction(teacherId: string) {
+  try {
+    const user = await getUserInfo()
+    const orgId = user?.organization?.id
+    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+    return { data: await getTeacherNextSchedule(teacherId, orgId) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+
+export async function getTodayClassSchedulesAction(classId: string) {
+  try {
+    const user = await getUserInfo()
+    const orgId = user?.organization?.id
+    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+    return { data: await getTodayClassSchedules(classId, orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

@@ -2,6 +2,8 @@
 'use server'
 import * as v from 'valibot'
 import { authAccess } from '@/services/auth'
+import { getUserInfo } from '@/modules/user'
+import { getAuthorization } from '@/modules/auth/persmission/autorization'
 import { setUserInfo } from '@/modules/user/update'
 import { logAuditAsync } from '@/services/audit'
 import { ERRORS } from '@/config'
@@ -16,14 +18,14 @@ import {
   updateOrgLogo,
 } from '../database'
 
-// Pas d'orgId à ce stade — l'utilisateur n'a justement pas encore d'organisation.
-// authAccess échouerait systématiquement (il exige un orgId), donc on compose
-// getUserInfo directement : cas explicitement documenté au pattern.
+// Cas spécial : l'utilisateur n'a pas encore d'org — authAccess exige orgId et échouerait.
+// On passe par getUserInfo directement + getAuthorization pour vérifier role/function.
 export async function createOrgAction(input: OrgSetupInput) {
-  
-const auth = await authAccess({ requiredRole: 'DIRECTION', requiredFunction: 'PRINCIPAL' })
-if (!auth.data) return { error: auth.error }
-const { user, orgId } = auth.data
+  const user = await getUserInfo()
+  if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
+
+  const authCheck = getAuthorization(user, 'DIRECTION', 'PRINCIPAL')
+  if (authCheck.error) return { error: authCheck.error }
 
   const parsed = v.safeParse(orgSetupSchema, input)
   if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }

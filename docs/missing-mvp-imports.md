@@ -23,7 +23,6 @@ _Dernière mise à jour : 2026-08-04_
 
 | Fichier cassé | Import manquant |
 |---|---|
-| `src/hooks/data/fonctions/useManageFunctions.ts` | `getMainFunctionsWithUsersAction` absent de `@/services/function` |
 | `src/hooks/data/userFunctions/useUserFunctions.ts` | `getUserFunctionsAction`, `getUsersByFunctionAction`, `AssignFunctionInput`, `UserFunctionAssignment` absents de `@/services/function` |
 
 ### Invitations (3)
@@ -71,6 +70,7 @@ _Dernière mise à jour : 2026-08-04_
 | Import | Fix appliqué |
 |---|---|
 | `@/services/fonctions/actions` dans `useFonctions.ts` | → `@/services/function/actions` + mapping (`addFunctionAction`→`createFunctionAction`, `removeFunctionAction`→`deleteFunctionAction`) |
+| `getMainFunctionsWithUsersAction` dans `useManageFunctions.ts` | → deux queries composées : `getFunctionsAction()` (filter isMain) + `getFunctionProfilesAction(id)` |
 | `@/services/auth/providers` dans `GoogleSignInButton.tsx` | déjà importé depuis `@/modules/auth` |
 | `@/components/animate-ui/icons/log-in` dans `AuthButton.tsx`, `AuthLinks.tsx` | fichier existe — fausse alarme |
 | `use-sound` dans `skiper25.tsx` | package installé (`^5.0.0`) — fausse alarme |

@@ -122,3 +122,52 @@ export async function restoreSchedule(scheduleId: string, orgId: string) {
   await invalidateEvent('SCHEDULE_CREATED', orgId, existing.classId)
   return existing
 }
+
+/* =========================
+   RÉCURRENCE (weekRecurrenceId)
+========================= */
+
+export async function deleteSchedulesByRule(ruleId: string, orgId: string) {
+  const affected = await prisma.schedule.findMany({
+    where: { weekRecurrenceId: ruleId, orgId, deletedAt: null },
+    select: { classId: true },
+    distinct: ['classId'],
+  })
+
+  await prisma.schedule.deleteMany({
+    where: { weekRecurrenceId: ruleId, orgId },
+  })
+
+  await Promise.all(
+    affected.map(({ classId }) => invalidateEvent('SCHEDULE_REMOVED', orgId, classId)),
+  )
+}
+
+export async function deleteNextSchedulesByRule(ruleId: string, orgId: string) {
+  const affected = await prisma.schedule.findMany({
+    where: {
+      weekRecurrenceId: ruleId,
+      orgId,
+      startTime: { gte: new Date() },
+      status: 'PENDING',
+      confirmed: false,
+      deletedAt: null,
+    },
+    select: { classId: true },
+    distinct: ['classId'],
+  })
+
+  await prisma.schedule.deleteMany({
+    where: {
+      weekRecurrenceId: ruleId,
+      orgId,
+      startTime: { gte: new Date() },
+      status: 'PENDING',
+      confirmed: false,
+    },
+  })
+
+  await Promise.all(
+    affected.map(({ classId }) => invalidateEvent('SCHEDULE_REMOVED', orgId, classId)),
+  )
+}

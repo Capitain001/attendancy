@@ -12,11 +12,12 @@ export const metadata: Metadata = {
 }
 
 export default async function SignupPrincipalPage() {
+
   const user = await getUserInfo()
   if (user?.id) redirect(redirectUser(user))
 
   return (
-    <main className="flex min-h-screen items-center justify-center p-4">
+    <main className="flex min-h-screen  items-center justify-center p-4">
       <SignupPrincipalForm />
     </main>
   )

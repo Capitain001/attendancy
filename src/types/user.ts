@@ -1,5 +1,4 @@
 ﻿//src/types/user.ts
-import { UserStatus as DBUserStatus } from "@/generated/prisma/client";
 import { FUNCTIONS } from "@/config/data";
 import { InvitedBy } from "./invitation";
 
@@ -48,9 +47,13 @@ export type PresenceUser = Pick<
 
 
 export const UserStatus = {
-  ...DBUserStatus,
-  NEW: "NEW",           // Nouveau compte
-  INVITED: "INVITED",   // Invitation envoyée mais non acceptée
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  SUSPENDED: 'SUSPENDED',
+  ON_LEAVE: 'ON_LEAVE',
+  PENDING: 'PENDING',
+  NEW: 'NEW',
+  INVITED: 'INVITED',
 } as const;
 
 

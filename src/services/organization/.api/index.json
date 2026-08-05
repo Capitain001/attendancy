@@ -2,7 +2,7 @@
   "service": "organization",
   "path": "src/services/organization/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "fbe7c31",
+  "derived_at": "d812ade",
   "utils_dir": null,
   "fns": {
     "createOrgWithDefaults": {

@@ -19,3 +19,5 @@ export type PushSubscriptionStats = {
   expiredSubscriptions: number
   uniqueUsers: number
 }
+
+export * from './generated.types'

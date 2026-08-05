@@ -1,0 +1,10 @@
+{
+  "name": "getClassSchedules",
+  "file": "src/services/schedule/database/schedule.queries.ts",
+  "sig": "(params: Omit<ScheduleFilterParams, 'teacherId' | 'roomId'>) => Promise<({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { id: string; user: { firstName: string | null; lastName: string | null; avatar_url: string | null; }; }; } & { ...; })[]>",
+  "composes": [
+    "getSchedules"
+  ],
+  "rules": [],
+  "why_ref": ""
+}

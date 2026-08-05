@@ -2,13 +2,23 @@
   "service": "planning",
   "path": "src/services/planning/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "3889557",
+  "derived_at": "d812ade",
   "utils_dir": null,
   "fns": {
+    "getPlanningResources": {
+      "f": ".api/getPlanningResources.json",
+      "layer": "db",
+      "kind": "query"
+    },
     "getOrgPlanningResources": {
       "f": ".api/getOrgPlanningResources.json",
       "layer": "db",
       "kind": "query"
+    },
+    "getPlanningResourcesAction": {
+      "f": ".api/getPlanningResourcesAction.json",
+      "layer": "action",
+      "kind": "server-action"
     },
     "getOrgPlanningResourcesAction": {
       "f": ".api/getOrgPlanningResourcesAction.json",
@@ -17,9 +27,13 @@
     }
   },
   "edges": {
+    "getPlanningResources": [
+      "getPlanningResourcesAction"
+    ],
     "getOrgPlanningResources": [
       "getOrgPlanningResourcesAction"
     ],
+    "getPlanningResourcesAction": [],
     "getOrgPlanningResourcesAction": []
   },
   "deps": {}

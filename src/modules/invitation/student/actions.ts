@@ -144,7 +144,7 @@ export async function getClassInvitationsAction({ classId }: { classId: string }
 
     if (!user) throw new Error(ERRORS.AUTH.UNAUTHORIZED);
     const orgId = user?.organization?.id;
-    if (!orgId) throw new Error("Organisation non trouvée");
+    if (!orgId) throw new Error(ERRORS.ORG.NOT_FOUND);
 
     const auth = await getAuthorization(user, "DIRECTION", "PRINCIPAL");
     if (auth.success === false) throw new Error(auth.error);

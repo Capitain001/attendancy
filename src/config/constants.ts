@@ -65,20 +65,59 @@ export const DB_CONSTRAINTS = {
 
 // Mapping contrainte DB → message utilisateur, consommé par tryConstraint()
 // (utils/server/prisma.ts). Clé = nom de la contrainte Postgres.
-// ⚠ À ÉTENDRE PAR PROJET
 export const CONSTRAINT_ERROR: Record<string, string> = {
-  'AcademicYear_name_orgId_key': 'Une année avec ce nom existe déjà',
-  'Department_name_orgId_key': 'Un département avec ce nom existe déjà',
-  'UE_code_orgId_key': 'Un code UE identique existe déjà dans cette organisation',
-  'UE_name_departmentId_key': 'Une UE avec ce nom existe déjà dans ce département',
-  'ProgramTrack_name_departmentId_key': 'Une filière avec ce nom existe déjà dans ce département',
-  'Program_name_programTrackId_key': 'Une maquette avec ce nom existe déjà dans cette filière',
-  'ProgramUE_programId_ueId_key': 'Cette UE est déjà dans ce programme',
-  'UECourse_name_ueId_key': 'Une matière avec ce nom existe déjà dans cette UE',
+  // ── Utilisateurs / Organisations ────────────────────────────────────────────
+  'User_email_key':                            'Cet email est déjà utilisé',
+  'User_phone_key':                            'Ce numéro de téléphone est déjà utilisé',
+  'SuperAdmin_email_key':                      'Cet email est déjà utilisé',
+  'Organization_name_key':                     "Ce nom d'organisation est déjà pris",
+  'Organization_email_key':                    "Cet email d'organisation est déjà utilisé",
+  'Organization_slug_key':                     'Ce slug est déjà pris',
+  'Organization_domain_key':                   'Ce domaine est déjà utilisé',
+  'UserOrganization_userId_orgId_key':         'Cet utilisateur est déjà membre de cette organisation',
+
+  // ── Profils par rôle ────────────────────────────────────────────────────────
+  'Admin_userId_key':                          'Un profil admin existe déjà pour cet utilisateur',
+  'Teacher_userId_orgId_key':                  'Un profil enseignant existe déjà pour cet utilisateur dans cette organisation',
+  'Student_userId_orgId_key':                  'Un profil étudiant existe déjà pour cet utilisateur dans cette organisation',
+  'Parent_userId_orgId_key':                   'Un profil parent existe déjà pour cet utilisateur dans cette organisation',
+  'Direction_userId_orgId_key':                'Un profil direction existe déjà pour cet utilisateur dans cette organisation',
+  'ParentRelation_parentId_studentId_key':     'Ce parent est déjà lié à cet étudiant',
+
+  // ── Fonctions / RBAC ────────────────────────────────────────────────────────
+  'Function_name_orgId_key':                   'Une fonction avec ce nom existe déjà dans cette organisation',
+  'UserFunction_userId_functionId_key':        'Cet utilisateur a déjà cette fonction',
+
+  // ── Académique ───────────────────────────────────────────────────────────────
+  'AcademicYear_name_orgId_key':               'Une année avec ce nom existe déjà',
+  'Department_name_orgId_key':                 'Un département avec ce nom existe déjà',
+  'UE_code_orgId_key':                         'Un code UE identique existe déjà dans cette organisation',
+  'UE_name_departmentId_key':                  'Une UE avec ce nom existe déjà dans ce département',
+  'ProgramTrack_name_departmentId_key':        'Une filière avec ce nom existe déjà dans ce département',
+  'Program_name_programTrackId_key':           'Une maquette avec ce nom existe déjà dans cette filière',
+  'ProgramUE_programId_ueId_key':              'Cette UE est déjà dans ce programme',
+  'UECourse_name_ueId_key':                    'Une matière avec ce nom existe déjà dans cette UE',
   'Class_programTrackId_name_academicYearId_key': 'Une classe avec ce nom existe déjà dans cette filière pour cette année',
-  'CourseTeacher_teacherId_courseId_key': 'Cet enseignant est déjà assigné à ce cours',
-  'StudentEnrollment_studentId_classId_key': 'Cet étudiant est déjà inscrit dans cette classe',
-  'StudentGroup_enrollmentId_groupId_key': 'Cet étudiant est déjà dans ce groupe',
+  'CourseTeacher_teacherId_courseId_key':      'Cet enseignant est déjà assigné à ce cours',
+  'StudentEnrollment_studentId_classId_key':   'Cet étudiant est déjà inscrit dans cette classe',
+  'StudentGroup_enrollmentId_groupId_key':     'Cet étudiant est déjà dans ce groupe',
+
+  // ── Planning / Salles ────────────────────────────────────────────────────────
+  'Room_name_orgId_key':                       'Une salle avec ce nom existe déjà',
+
+  // ── Présences ────────────────────────────────────────────────────────────────
+  'Attendance_scheduleId_studentId_key':       'Une présence est déjà enregistrée pour cet étudiant sur cette séance',
+
+  // ── Permissions ──────────────────────────────────────────────────────────────
+  'permission_user_scope_unique_idx':          'Cette permission existe déjà pour cet utilisateur',
+  'permission_function_scope_unique_idx':      'Cette permission existe déjà pour cette fonction',
+
+  // ── Communication ─────────────────────────────────────────────────────────────
+  'ChannelMember_channelId_userId_key':        'Cet utilisateur est déjà membre de ce canal',
+  'EventParticipant_eventId_userId_key':       'Cet utilisateur participe déjà à cet événement',
+
+  // ── UEs optionnelles ──────────────────────────────────────────────────────────
+  'OptionalUE_studentId_ueId_yearId_key':      'Cet étudiant a déjà inscrit cette UE en option pour cette année',
 }
 
 // Mapping message de trigger SQL → message utilisateur, consommé par tryConstraint().

@@ -3,7 +3,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { getDirectionMembersAction } from "@/services/direction/actions";
-import { DirectionMemberDto } from "@/services/direction";
+import type { GetDirectionMembersDto } from "@/services/direction";
 
 
 interface UseDirectionMembersOptions {
@@ -11,7 +11,7 @@ interface UseDirectionMembersOptions {
   includeDeleted?: boolean;
   functionId?: string;
   enabled?: boolean;
-  initialData?: DirectionMemberDto[];
+  initialData?: GetDirectionMembersDto;
 }
 
 /**
@@ -34,7 +34,7 @@ export function useDirectionMembers({
     isLoading,
     error,
     refetch,
-  } = useQuery<DirectionMemberDto[]>({
+  } = useQuery<GetDirectionMembersDto>({
     queryKey,
     queryFn: async () => {
       const result = await getDirectionMembersAction({ functionId });

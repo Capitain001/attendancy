@@ -1,7 +1,7 @@
 {
   "name": "getDirectionMembersAction",
   "file": "src/services/direction/actions/direction.queries.ts",
-  "sig": "(params?: { functionId?: string }) => Promise<{ data: DirectionMemberDto[] } | { error: string }>",
+  "sig": "(params?: { functionId?: string }) => Promise<{ data: GetDirectionMembersDto } | { error: string }>",
   "calls": [
     "getDirectionMembers"
   ],

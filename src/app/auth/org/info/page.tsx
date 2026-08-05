@@ -23,6 +23,7 @@ export default async function OrgInfoPage() {
           </p>
         </div>
         {/* OrgInfoForm — à implémenter */}
+        {JSON.stringify(user, null, 2)}
       </div>
     </main>
   )

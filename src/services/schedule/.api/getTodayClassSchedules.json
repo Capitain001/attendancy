@@ -1,0 +1,8 @@
+{
+  "name": "getTodayClassSchedules",
+  "file": "src/services/schedule/database/schedule.queries.ts",
+  "sig": "(classId: string, orgId: string) => Promise<{ id: string; startTime: Date; endTime: Date; status: ScheduleStatus; course: { name: string; }; room: { name: string; }; teacher: { user: { firstName: string | null; lastName: string | null; }; }; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

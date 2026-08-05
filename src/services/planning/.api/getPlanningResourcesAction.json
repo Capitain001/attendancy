@@ -1,0 +1,11 @@
+{
+  "name": "getPlanningResourcesAction",
+  "file": "src/services/planning/actions.ts",
+  "sig": "(classId: string) => Promise<{ error: any; data?: undefined; } | { data: { class: { id: string; name: string; }; rooms: { id: string; name: string; }[]; groups: { id: string; name: string; }[]; courses: { id: string; name: string; teachers: { id: string; name: string; email: string; avatar_url: string | null; isMain: boolean; }[]; }[]; ...",
+  "calls": [
+    "getPlanningResources"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

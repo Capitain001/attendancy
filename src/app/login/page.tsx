@@ -20,7 +20,7 @@ export default async function LoginPage({ searchParams }: Props) {
   const { next } = await searchParams
 
   return (
-    <main className="flex min-h-screen items-center justify-center p-4">
+    <main className="flex min-h-screen bg-background items-center justify-center p-4">
       <LoginForm next={next} />
     </main>
   )

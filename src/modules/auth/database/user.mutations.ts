@@ -3,20 +3,23 @@
 // L'id Supabase Auth est la source de vérité — jamais généré côté appli.
 import { UserStatus } from  '@/prisma'
 import { prisma } from '@/lib/prisma'
+import { tryConstraint } from '@/utils/server';
 
 
 // Idempotent — re-signup ou état partiel ne lève pas de violation d'unicité.
 export async function createUserRecord(params: { id: string; email: string;firstName?: string; lastName?: string }) {
-  return prisma.user.upsert({
-    where: { id: params.id },
-    create: {
-      id: params.id,
-      email: params.email,
-      firstName: params.firstName,
-      lastName: params.lastName,
-      status: UserStatus.PENDING,
-    },
-    update: {},
-  })
+ return tryConstraint(
+    prisma.user.upsert({
+      where: { id: params.id },
+      create: {
+        id: params.id,
+        email: params.email,
+        firstName: params.firstName,
+        lastName: params.lastName,
+        status: UserStatus.PENDING,
+      },
+      update: {},
+    })
+  )
 }
 

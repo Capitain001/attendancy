@@ -2,6 +2,7 @@
 
 'use server'
 
+import { ERRORS } from '@/config'
 import { getAuthUser } from '../auth/persmission/acces'
 import { 
   createUserNotification,
@@ -73,7 +74,7 @@ export async function getAdminNotifications(limit?: number) {
   const organizationId = user.organization?.id
   
   if (!organizationId) {
-    return { error: 'Organisation non trouvée' }
+    return { error: ERRORS.ORG.NOT_FOUND }
   }
 
   return await getOrganizationNotifications(organizationId, limit)
@@ -85,7 +86,7 @@ export async function getAdminUnreadNotifications(limit?: number) {
   const organizationId = user.organization?.id
   
   if (!organizationId) {
-    return { error: 'Organisation non trouvée' }
+    return { error: ERRORS.ORG.NOT_FOUND }
   }
 
   return await getOrganizationUnreadNotifications(organizationId, limit)
@@ -97,7 +98,7 @@ export async function getAdminUserNotifications(userId: string, limit?: number) 
   const organizationId = user.organization?.id
   
   if (!organizationId) {
-    return { error: 'Organisation non trouvée' }
+    return { error: ERRORS.ORG.NOT_FOUND }
   }
 
   return await getOrganizationUserNotifications(organizationId, userId, limit)
@@ -109,7 +110,7 @@ export async function getAdminUnreadCount() {
   const organizationId = user.organization?.id
   
   if (!organizationId) {
-    return { error: 'Organisation non trouvée' }
+    return { error: ERRORS.ORG.NOT_FOUND }
   }
 
   return await getOrganizationUnreadCount(organizationId)
@@ -121,7 +122,7 @@ export async function getAdminNotificationStats() {
   const organizationId = user.organization?.id
   
   if (!organizationId) {
-    return { error: 'Organisation non trouvée' }
+    return { error: ERRORS.ORG.NOT_FOUND }
   }
 
   return await getOrganizationNotificationStats(organizationId)
@@ -133,7 +134,7 @@ export async function createAdminNotification(userId: string, data: CreateNotifi
   const organizationId = user.organization?.id
   
   if (!organizationId) {
-    return { error: 'Organisation non trouvée' }
+    return { error: ERRORS.ORG.NOT_FOUND }
   }
 
   return await createOrganizationNotification({ organizationId, userId, data })
@@ -196,7 +197,7 @@ export async function sendAdminPushNotification(
   const organizationId = user.organization?.id
   
   if (!organizationId) {
-    return { success: false, error: 'Organisation non trouvée' }
+    return { success: false, error: ERRORS.ORG.NOT_FOUND }
   }
 
   // Vérifier que l'utilisateur appartient à l'organisation

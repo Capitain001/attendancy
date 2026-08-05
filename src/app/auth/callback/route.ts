@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
   // DIRECTION sans org → setup de l'organisation
   const needsOrgSetup = user.function === 'PRINCIPAL' && !user.organization?.id
   if (needsOrgSetup) {
-    return NextResponse.redirect(new URL('/auth/org-setup', request.url))
+    return NextResponse.redirect(new URL('/auth/org/setup', request.url))
   }
 
   return NextResponse.redirect(new URL(redirectUser(user), request.url))

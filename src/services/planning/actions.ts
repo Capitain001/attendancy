@@ -1,21 +1,29 @@
 'use server'
 
-import { getUserInfo } from '@/modules/user'
-import { getAuthorization } from '@/modules/auth'
+import { authAccess } from '@/modules/auth'
 import { ERRORS } from '@/config'
-import { getOrgPlanningResources } from './database'
+import { getOrgPlanningResources, getPlanningResources } from './database'
+
+export async function getPlanningResourcesAction(classId: string) {
+  const auth = await authAccess({ requiredRole: ['ADMIN', 'TEACHER', 'DIRECTION'] })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
+  try {
+    const resources = await getPlanningResources(classId, orgId)
+    if (!resources) return { error: 'Classe introuvable' }
+    return { data: resources }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
 
 export async function getOrgPlanningResourcesAction() {
+  const auth = await authAccess({ requiredRole: ['ADMIN', 'DIRECTION'] })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    if (!user) return { error: ERRORS.AUTH.UNAUTHORIZED }
-
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-
-    const auth = getAuthorization(user, ['ADMIN', 'DIRECTION'])
-    if (!auth.success) return { error: auth.error }
-
     const data = await getOrgPlanningResources(orgId)
     return { data }
   } catch (e) {

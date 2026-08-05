@@ -2,7 +2,7 @@
   "service": "schedule",
   "path": "src/services/schedule/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "3889557",
+  "derived_at": "d812ade",
   "utils_dir": null,
   "fns": {
     "createSchedule": {
@@ -25,13 +25,43 @@
       "layer": "db",
       "kind": "mutation"
     },
-    "getSchedulesByClass": {
-      "f": ".api/getSchedulesByClass.json",
+    "deleteSchedulesByRule": {
+      "f": ".api/deleteSchedulesByRule.json",
       "layer": "db",
-      "kind": "query"
+      "kind": "mutation"
+    },
+    "deleteNextSchedulesByRule": {
+      "f": ".api/deleteNextSchedulesByRule.json",
+      "layer": "db",
+      "kind": "mutation"
     },
     "getSchedules": {
       "f": ".api/getSchedules.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getDaySchedules": {
+      "f": ".api/getDaySchedules.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getClassSchedules": {
+      "f": ".api/getClassSchedules.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getTeacherSchedules": {
+      "f": ".api/getTeacherSchedules.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getRoomSchedules": {
+      "f": ".api/getRoomSchedules.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getSchedulesByClass": {
+      "f": ".api/getSchedulesByClass.json",
       "layer": "db",
       "kind": "query"
     },
@@ -42,6 +72,21 @@
     },
     "getScheduleDays": {
       "f": ".api/getScheduleDays.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getTeacherNextSchedule": {
+      "f": ".api/getTeacherNextSchedule.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getTodayClassSchedules": {
+      "f": ".api/getTodayClassSchedules.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "assertClassInOrg": {
+      "f": ".api/assertClassInOrg.json",
       "layer": "db",
       "kind": "query"
     },
@@ -85,6 +130,11 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "getDaySchedulesAction": {
+      "f": ".api/getDaySchedulesAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "getCourseScheduleAction": {
       "f": ".api/getCourseScheduleAction.json",
       "layer": "action",
@@ -95,13 +145,18 @@
       "layer": "action",
       "kind": "server-action"
     },
-    "getClassScheduleOptionsAction": {
-      "f": ".api/getClassScheduleOptionsAction.json",
+    "getTeacherNextScheduleAction": {
+      "f": ".api/getTeacherNextScheduleAction.json",
       "layer": "action",
       "kind": "server-action"
     },
-    "getTeacherNextScheduleAction": {
-      "f": ".api/getTeacherNextScheduleAction.json",
+    "getTodayClassSchedulesAction": {
+      "f": ".api/getTodayClassSchedulesAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getClassScheduleOptionsAction": {
+      "f": ".api/getClassScheduleOptionsAction.json",
       "layer": "action",
       "kind": "server-action"
     }
@@ -120,11 +175,22 @@
     "restoreSchedule": [
       "restoreScheduleAction"
     ],
+    "deleteSchedulesByRule": [],
+    "deleteNextSchedulesByRule": [],
+    "getSchedules": [
+      "getClassSchedules",
+      "getTeacherSchedules",
+      "getRoomSchedules",
+      "getSchedulesAction"
+    ],
+    "getDaySchedules": [
+      "getDaySchedulesAction"
+    ],
+    "getClassSchedules": [],
+    "getTeacherSchedules": [],
+    "getRoomSchedules": [],
     "getSchedulesByClass": [
       "getClassSchedulesAction"
-    ],
-    "getSchedules": [
-      "getSchedulesAction"
     ],
     "getSchedulesByCourse": [
       "getCourseScheduleAction"
@@ -132,6 +198,13 @@
     "getScheduleDays": [
       "getScheduleDaysAction"
     ],
+    "getTeacherNextSchedule": [
+      "getTeacherNextScheduleAction"
+    ],
+    "getTodayClassSchedules": [
+      "getTodayClassSchedulesAction"
+    ],
+    "assertClassInOrg": [],
     "createScheduleAction": [],
     "updateScheduleAction": [],
     "removeScheduleAction": [
@@ -142,10 +215,12 @@
     "cancelScheduleAction": [],
     "getClassSchedulesAction": [],
     "getSchedulesAction": [],
+    "getDaySchedulesAction": [],
     "getCourseScheduleAction": [],
     "getScheduleDaysAction": [],
-    "getClassScheduleOptionsAction": [],
     "getTeacherNextScheduleAction": [],
+    "getTodayClassSchedulesAction": [],
+    "getClassScheduleOptionsAction": [],
     "getCoursesByClass": [
       "getClassScheduleOptionsAction"
     ],
@@ -154,15 +229,11 @@
     ],
     "getGroupsByClass": [
       "getClassScheduleOptionsAction"
-    ],
-    "getTeacherNextSchedule": [
-      "getTeacherNextScheduleAction"
     ]
   },
   "deps": {
     "getCoursesByClass": "course",
     "getRooms": "room",
-    "getGroupsByClass": "group",
-    "getTeacherNextSchedule": "session"
+    "getGroupsByClass": "group"
   }
 }

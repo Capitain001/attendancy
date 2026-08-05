@@ -61,6 +61,11 @@ export const ORG_ID_CHECK = {
     // teacher — orgId imbriqué dans relation course/schedule (pas de colonne orgId directe sur CourseTeacher/Session)
     "getTeacherCourses",
     "getTeacherStats",
+    // schedule — orgId dans buildScheduleWhere() (helper non traçable statiquement)
+    "getSchedules",
+    "getDaySchedules",
+    // schedule — orgId imbriqué dans programTrack: { orgId } (Class sans colonne orgId directe)
+    "assertClassInOrg",
     // schedule — Class n'a pas orgId direct (via programTrack.orgId)
     "createSchedule",
     // course — Class via programTrack.orgId ; CourseTeacher via course.orgId ; partial unique check sans orgId (classId scope)
@@ -77,6 +82,8 @@ export const ORG_ID_CHECK = {
     "getUserProfile",
     // users — orgId imbriqué via UserFunction.function.orgId (UserFunction n'a pas de colonne orgId directe)
     "getFunctionProfiles",
+    // planning — Class n'a pas orgId direct (via academicYear.orgId) ; Teacher via courses.course.orgId
+    "getOrgPlanningResources",
   ],
 
   // Répertoires exemptés (auth, super-admin — scope vérifié autrement ou

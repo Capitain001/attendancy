@@ -4,3 +4,5 @@ export type { AddMessageData, UpdateMessageData }
 
 export type ChatMessage = Awaited<ReturnType<typeof getMessages>>[number]
 export type ChatRoomParticipant = Awaited<ReturnType<typeof getRoomParticipants>>[number]
+
+export * from './generated.types'

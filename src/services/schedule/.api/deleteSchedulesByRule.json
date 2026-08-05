@@ -1,0 +1,8 @@
+{
+  "name": "deleteSchedulesByRule",
+  "file": "src/services/schedule/database/schedule.mutations.ts",
+  "sig": "(ruleId: string, orgId: string) => Promise<void>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

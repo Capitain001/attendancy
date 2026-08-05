@@ -98,7 +98,7 @@ export async function getOrganizationBySlugAction(slug: string) {
   try {
     const organization = await getOrganizationBySlug(slug);
     if (!organization) {
-      return { error: "Organisation non trouvée" };
+      return { error: ERRORS.ORG.NOT_FOUND };
     }
     return { data: organization };
   } catch (error) {

@@ -6,11 +6,11 @@ import {
   getDirectionMember,
   getDirectionMemberByUserId,
 } from '../database'
-import type { DirectionMemberDto } from '../types'
+import type { GetDirectionMembersDto } from '../types'
 
 export async function getDirectionMembersAction(params?: {
   functionId?: string
-}): Promise<{ data: DirectionMemberDto[] } | { error: string }> {
+}): Promise<{ data: GetDirectionMembersDto } | { error: string }> {
   try {
     const user = await getUserInfo()
     const orgId = user?.organization?.id

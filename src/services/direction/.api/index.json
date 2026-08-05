@@ -2,7 +2,7 @@
   "service": "direction",
   "path": "src/services/direction/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "61e08a7",
+  "derived_at": "d812ade",
   "utils_dir": null,
   "fns": {
     "assignFunctionsToMember": {

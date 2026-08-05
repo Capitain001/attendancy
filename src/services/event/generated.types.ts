@@ -5,9 +5,4 @@
 import { getEvents, getEvent } from './database'
 
 export type GetEventsDto = Awaited<ReturnType<typeof getEvents>>
-export type GetEventsItem  = GetEventsDto[number]
-
-export type GetEventsDtoNotNull   =  NonNullable<GetEventDto>
-
-
 export type GetEventDto = Awaited<ReturnType<typeof getEvent>>

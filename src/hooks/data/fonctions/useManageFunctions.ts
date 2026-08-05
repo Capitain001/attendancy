@@ -2,54 +2,63 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import { getMainFunctionsWithUsersAction } from '@/services/fonctions'
+import { getFunctionsAction, getFunctionProfilesAction } from '@/services/function/actions'
 import { CACHE_KEYS } from '@/config/client_cache'
-
 
 export default function useManageFunctions() {
   const [activeIndex, setActiveIndex] = useState(0)
 
-  // Récupération des fonctions principales avec leurs utilisateurs
   const {
     data: functions,
-    isLoading,
+    isLoading: isFunctionsLoading,
     error,
     refetch
   } = useQuery({
     queryKey: CACHE_KEYS.FUNCTIONS.MAIN_WITH_USERS,
     queryFn: async () => {
-      const result = await getMainFunctionsWithUsersAction()
-      if ('error' in result) {
-        throw new Error(result.error)
-      }
-      return result.data || []
+      const result = await getFunctionsAction()
+      if ('error' in result) throw new Error(result.error)
+      return (result.data ?? []).filter(f => f.isMain)
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   })
 
-  // Fonction pour obtenir la fonction active
-  const activeFunction = functions && functions.length > 0 
-    ? functions[activeIndex] 
+  const activeFn = functions?.[activeIndex]
+
+  const {
+    data: activeProfiles,
+    isLoading: isProfilesLoading,
+  } = useQuery({
+    queryKey: ['function-profiles', activeFn?.id],
+    queryFn: async () => {
+      if (!activeFn) return []
+      const result = await getFunctionProfilesAction(activeFn.id)
+      if ('error' in result) throw new Error(result.error)
+      return result.data ?? []
+    },
+    enabled: !!activeFn,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  })
+
+  const activeFunction = activeFn
+    ? { ...activeFn, profiles: activeProfiles ?? [] }
     : undefined
 
-  // Fonction pour changer la fonction active
   const setActive = (index: number) => {
     if (functions && index >= 0 && index < functions.length) {
       setActiveIndex(index)
     }
   }
 
-  // Réinitialiser l'index actif si les données changent
-  const resetActiveIndex = () => {
-    setActiveIndex(0)
-  }
+  const resetActiveIndex = () => setActiveIndex(0)
 
   return {
-    functions: functions || [],
+    functions: functions ?? [],
     activeFunction,
     activeIndex,
-    isLoading,
+    isLoading: isFunctionsLoading || isProfilesLoading,
     error,
     setActive,
     resetActiveIndex,

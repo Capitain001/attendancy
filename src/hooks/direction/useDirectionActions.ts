@@ -9,7 +9,7 @@ import {
   updateMemberFunctionsAction,
   deleteDirectionMemberAction,
 } from "@/services/direction/actions";
-import { AssignFunctionsParams, DirectionMemberDto } from "@/services/direction/types";
+import type { AssignFunctionsParams, GetDirectionMembersDto } from "@/services/direction/types";
 
 interface UseDirectionActionsOptions {
   organizationId: string;
@@ -32,7 +32,7 @@ export function useDirectionActions({ organizationId, onSuccess }: UseDirectionA
     onMutate: async (params) => {
       await queryClient.cancelQueries({ queryKey });
 
-      // const previousMembers = queryClient.getQueryData<DirectionMemberDto[]>(queryKey);
+      // const previousMembers = queryClient.getQueryData<GetDirectionMembersDto[]>(queryKey);
 
   const previousMembers = null
       return { previousMembers };
@@ -61,7 +61,7 @@ export function useDirectionActions({ organizationId, onSuccess }: UseDirectionA
     onMutate: async ({ userId, functionIds }) => {
       await queryClient.cancelQueries({ queryKey });
 
-      const previousMembers = queryClient.getQueryData<DirectionMemberDto[]>(queryKey);
+      const previousMembers = queryClient.getQueryData<GetDirectionMembersDto[]>(queryKey);
 
       // Mise à jour optimiste : retirer les fonctions du membre
      
@@ -90,7 +90,7 @@ export function useDirectionActions({ organizationId, onSuccess }: UseDirectionA
     onMutate: async (params) => {
       await queryClient.cancelQueries({ queryKey });
 
-      const previousMembers = queryClient.getQueryData<DirectionMemberDto[]>(queryKey);
+      const previousMembers = queryClient.getQueryData<GetDirectionMembersDto[]>(queryKey);
 
       // Mise à jour optimiste : remplacer les fonctions
       // On attendra la réponse du serveur pour avoir les bonnes données
@@ -119,10 +119,10 @@ export function useDirectionActions({ organizationId, onSuccess }: UseDirectionA
     onMutate: async (directionId) => {
       await queryClient.cancelQueries({ queryKey });
 
-      const previousMembers = queryClient.getQueryData<DirectionMemberDto[]>(queryKey);
+      const previousMembers = queryClient.getQueryData<GetDirectionMembersDto[]>(queryKey);
 
       // Mise à jour optimiste : supprimer le membre de la liste
-      queryClient.setQueryData<DirectionMemberDto[]>(queryKey, (old) => {
+      queryClient.setQueryData<GetDirectionMembersDto[]>(queryKey, (old) => {
         if (!old) return old;
         return old.filter((member) => member?.id !== directionId);
       });
