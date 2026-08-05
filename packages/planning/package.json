@@ -13,8 +13,7 @@
   "dependencies": {
     "@attendancy/types": "workspace:*",
     "@tanstack/react-query": "^5.99.0",
-    "@tanstack/react-query-persist-client": "^5.99.0",
-    "idb-keyval": "^6.2.1"
+    "@tanstack/react-query-persist-client": "^5.99.0"
   },
   "devDependencies": {
     "@types/react": "^19",
