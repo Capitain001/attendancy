@@ -138,11 +138,15 @@ export async function getEnrolledStudents(classId: string, orgId: string) {
           group: { select: { id: true, name: true } },
         },
       },
+      createdAt: true,
       student: {
         select: {
           id: true,
           user: {
-            select: { firstName: true, lastName: true, email: true, avatar_url: true },
+            select: {
+              firstName: true, lastName: true, email: true, avatar_url: true,
+              sex: true, phone: true, dateOfBirth: true, status: true,
+            },
           },
         },
       },
