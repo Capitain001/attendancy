@@ -109,7 +109,7 @@ export function ClassCreateButton({
         </Button>
       }
       title="Nouvelle classe"
-      description={!currentYear ? 'Définissez d'abord une année académique courante.' : undefined}
+      description={!currentYear ? "Définissez d'abord une année académique courante." : undefined}
     >
       {(close) => (
         <Form programTracks={programTracks} currentYear={currentYear} close={close} />

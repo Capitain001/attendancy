@@ -1,7 +1,6 @@
 'use server'
 import * as v from 'valibot'
-import { getUserInfo } from '@/modules/user'
-import { getAuthorization } from '@/modules/auth'
+import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import { createFunctionSchema, updateFunctionSchema } from '../validation'
 import type { CreateFunctionInput, UpdateFunctionInput } from '../validation'
@@ -11,47 +10,45 @@ import {
   deleteFunction,
   assignFunctionToUser,
   removeFunctionFromUser,
+  getFunctionByName,
 } from '../database'
-import { getFunctionByName } from '../database'
 
 export async function createFunctionAction(input: CreateFunctionInput) {
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
+  const parsed = v.safeParse(createFunctionSchema, input)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
-    const parsed = v.parse(createFunctionSchema, input)
-    return { data: await createFunction({ ...parsed, orgId }) }
+    return { data: await createFunction({ ...parsed.output, orgId }) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
 export async function updateFunctionAction(input: UpdateFunctionInput) {
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
+  const parsed = v.safeParse(updateFunctionSchema, input)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
-    const parsed = v.parse(updateFunctionSchema, input)
-    return { data: await updateFunction({ ...parsed, orgId }) }
+    return { data: await updateFunction({ ...parsed.output, orgId }) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
 export async function deleteFunctionAction(functionId: string) {
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
     await deleteFunction(functionId, orgId)
     return { data: { id: functionId } }
   } catch (e) {
@@ -63,13 +60,11 @@ export async function assignFunctionToUserAction(params: {
   userId: string
   functionName: string
 }) {
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId, user } = auth.data
+
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
     const fn = await getFunctionByName(params.functionName, orgId)
     if (!fn) return { error: `Fonction "${params.functionName}" introuvable` }
     return { data: await assignFunctionToUser({ userId: params.userId, functionId: fn.id, orgId, assignedBy: user.id }) }
@@ -82,13 +77,11 @@ export async function removeFunctionFromUserAction(params: {
   userId: string
   functionId: string
 }) {
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
     await removeFunctionFromUser({ userId: params.userId, functionId: params.functionId, orgId })
     return { data: { userId: params.userId, functionId: params.functionId } }
   } catch (e) {

@@ -1,6 +1,5 @@
 'use server'
-import { getUserInfo } from '@/modules/user'
-import { getAuthorization } from '@/modules/auth'
+import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import { prisma } from '@/lib/prisma'
 import { invalidateEvent } from '@/cache/server/key'
@@ -14,9 +13,9 @@ type GroupRow = {
 
 export async function getClassGroupsAction(input: { classId: string }) {
   try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+    const auth = await authAccess()
+    if (!auth.data) return { error: auth.error }
+    const { orgId } = auth.data
 
     const [groups, cls] = await Promise.all([
       prisma.group.findMany({
@@ -38,9 +37,9 @@ export async function getClassGroupsAction(input: { classId: string }) {
 
 export async function getGroupEligibleStudentsAction(input: { classId: string; groupId: string }) {
   try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+    const auth = await authAccess()
+    if (!auth.data) return { error: auth.error }
+    const { orgId } = auth.data
 
     const enrollments = await prisma.studentEnrollment.findMany({
       where: {
@@ -68,12 +67,9 @@ export async function getGroupEligibleStudentsAction(input: { classId: string; g
 
 export async function createClassGroupAction(input: { classId: string; name: string; description?: string }) {
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
+    const auth = await authAccess({ requiredRole: 'DIRECTION' })
+    if (!auth.data) return { error: auth.error }
+    const { orgId } = auth.data
 
     const group = await prisma.group.create({
       data: { name: input.name, description: input.description ?? null, classId: input.classId },
@@ -88,12 +84,9 @@ export async function createClassGroupAction(input: { classId: string; name: str
 
 export async function updateClassGroupAction(input: { classId: string; groupId: string; name?: string; description?: string | null }) {
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
+    const auth = await authAccess({ requiredRole: 'DIRECTION' })
+    if (!auth.data) return { error: auth.error }
+    const { orgId } = auth.data
 
     const group = await prisma.group.update({
       where: { id: input.groupId, classId: input.classId },
@@ -109,12 +102,9 @@ export async function updateClassGroupAction(input: { classId: string; groupId: 
 
 export async function deleteClassGroupAction(input: { classId: string; groupId: string }) {
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
+    const auth = await authAccess({ requiredRole: 'DIRECTION' })
+    if (!auth.data) return { error: auth.error }
+    const { orgId } = auth.data
 
     await prisma.group.update({
       where: { id: input.groupId, classId: input.classId },
@@ -129,12 +119,9 @@ export async function deleteClassGroupAction(input: { classId: string; groupId: 
 
 export async function setGroupStudentsAction(input: { classId: string; groupId: string; enrollmentIds: string[] }) {
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
+    const auth = await authAccess({ requiredRole: 'DIRECTION' })
+    if (!auth.data) return { error: auth.error }
+    const { orgId } = auth.data
 
     await prisma.$transaction([
       prisma.studentGroup.deleteMany({ where: { groupId: input.groupId } }),

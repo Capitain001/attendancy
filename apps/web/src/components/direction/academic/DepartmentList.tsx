@@ -24,11 +24,15 @@ function Stat({ label, value }: { label: string; value: number }) {
 }
 
 function DepartmentRow({ dept }: { dept: Department }) {
-  const { delete: remove, isDeleting } = useDepartments()
+  const hook = useDepartments()
   const canDelete =
     dept._count.programTracks === 0 &&
     dept._count.teachers === 0 &&
     dept._count.ues === 0
+
+  function handleDelete() {
+    if (hook.delete) hook.delete(dept.id)
+  }
 
   return (
     <div className={cn(card.base, 'flex items-center gap-4')}>
@@ -50,9 +54,9 @@ function DepartmentRow({ dept }: { dept: Department }) {
             <Button
               variant="ghost"
               size="sm"
-              disabled={!canDelete || isDeleting}
+              disabled={!canDelete || hook.isDeleting}
               className="text-xs text-destructive hover:text-destructive disabled:opacity-40"
-              title={!canDelete ? "Retirez les filières, enseignants et UEs d'abord  " : undefined}
+              title={!canDelete ? "Retirez les filières, enseignants et UEs d'abord" : undefined}
             >
               Supprimer
             </Button>
@@ -61,7 +65,7 @@ function DepartmentRow({ dept }: { dept: Department }) {
           description="Cette action est irréversible. Le département sera supprimé définitivement."
           confirmLabel="Supprimer"
           destructive
-          onConfirm={() => remove(dept.id)}
+          onConfirm={handleDelete}
         />
       </div>
     </div>
@@ -69,16 +73,15 @@ function DepartmentRow({ dept }: { dept: Department }) {
 }
 
 export function DepartmentList({ initialDepartments }: { initialDepartments: Department[] }) {
-  const { data: departments, isLoading } = useDepartments()
-  const data = (departments as Department[] | undefined)?.length
-    ? (departments as Department[])
-    : initialDepartments
+  const { data, loading } = useDepartments()
+  const liveItems = data.items as Department[]
+  const displayed = liveItems.length > 0 ? liveItems : initialDepartments
 
   return (
-    <CollapseSection label="Départements" count={data.length} defaultOpen>
-      {isLoading && data.length === 0 ? (
+    <CollapseSection label="Départements" count={displayed.length} defaultOpen>
+      {loading && displayed.length === 0 ? (
         <p className={typography.small}>Chargement…</p>
-      ) : data.length === 0 ? (
+      ) : displayed.length === 0 ? (
         <div className="py-8 text-center">
           <Building2 className="mx-auto mb-2 size-8 text-text-subtle" strokeWidth={1} />
           <p className={typography.body}>Aucun département créé.</p>
@@ -86,7 +89,7 @@ export function DepartmentList({ initialDepartments }: { initialDepartments: Dep
         </div>
       ) : (
         <div className="flex flex-col gap-2">
-          {data.map((d) => (
+          {displayed.map((d) => (
             <DepartmentRow key={d.id} dept={d} />
           ))}
         </div>

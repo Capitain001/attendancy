@@ -193,35 +193,10 @@ export async function createEntityAction(input: unknown) { ... }
 - `Awaited<ReturnType<typeof fn>>` — inféré depuis la query, aligné sur le `select`.
 - Générable : `npx tsx scripts/generate/types/types.ts <service>`.
 
+src/services/<module>/
+  types.ts              # Types manuels (écrits à la main)
+  generated.types.ts    # les types auto-générés
 
-### `/src/types/<feature>.ts` — types manuels dérivés (hors des services)
- 
-les types du services sont auto-généré  et décrivent toujours la forme **complète** retournée par une query.
-
-donc les types ecris manuelement (non auto-generer) sont a ecrire dans un dossier ``src/types/*``
- 
-```ts
-// src/types/program-ue.ts
-import type { GetProgramsByTrackDto } from '@/services/program-track'
- 
-export type ProgramUEType = GetProgramsByTrackDto['programUEs'][number]
-```
-
-```ts
-//src/types/program-track.ts
-import { DepartmentDto } from "@/services/department";
-import { ProgramTracksDto } from "@/services/program-track";
-
-
-export type ProgramTrackDto = ProgramTracksDto[number]
-
-export type ProgramTrackByDepartmentType = {
-  department:DepartmentDto;
-  tracks: ProgramTracksDto;
-};
-
-
-```
 ### `CLAUDE.md`
 
 - Rôle, table des fichiers, points d'extension (⚠), invariants.
@@ -264,7 +239,7 @@ export * from './types'
 6. `validation.ts` — schémas Valibot pour les entrées mutables.
 7. `actions/<model>.queries.ts` + `actions/<model>.mutations.ts`.
 8. `actions/index.ts` — `export *`.
-9. `types.ts` — DTOs `<FnName>Dto` (ou générateur).
+9. `types.ts` — DTOs `<FnName>Dto` .
 10. `index.ts` — barrel racine (actions + types).
 11. `CLAUDE.md` — contexte du service.
 12. Ownership dans `SERVICE_CONTEXT.md` + régénérer `.api/`.

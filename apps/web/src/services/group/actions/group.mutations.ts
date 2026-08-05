@@ -1,37 +1,32 @@
 'use server'
 import * as v from 'valibot'
-import { getUserInfo } from '@/modules/user'
-import { getAuthorization } from '@/modules/auth'
+import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import { createGroupSchema } from '../validation'
 import type { CreateGroupInput } from '../validation'
 import { createGroup, removeGroup } from '../database'
 
 export async function createGroupAction(input: CreateGroupInput) {
-  try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
-    const parsed = v.parse(createGroupSchema, input)
-    return { data: await createGroup({ ...parsed, orgId }) }
+  const parsed = v.safeParse(createGroupSchema, input)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+
+  try {
+    return { data: await createGroup({ ...parsed.output, orgId }) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
 export async function removeGroupAction(groupId: string) {
-  try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
+  try {
     return { data: await removeGroup(groupId, orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }

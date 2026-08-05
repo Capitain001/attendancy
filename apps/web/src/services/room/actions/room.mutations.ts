@@ -1,86 +1,79 @@
 // src/services/room/actions/room.mutations.ts
 'use server'
 import * as v from 'valibot'
-import { getUserInfo } from '@/modules/user'
+import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import { createRoomSchema, createLocationSchema } from '../validation'
 import type { CreateRoomInput, CreateLocationInput } from '../validation'
 import { createRoom, removeRoom, updateRoom, createLocation, toggleLocationActive } from '../database'
 
 export async function createRoomAction(input: CreateRoomInput) {
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
+  const parsed = v.safeParse(createRoomSchema, input)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-
-    const parsed = v.parse(createRoomSchema, input)
-
-    try {
-      const room = await createRoom({ ...parsed, orgId })
-      return { data: room }
-    } catch (e) {
-      const isUnique = e instanceof Error && (e.message.includes('Unique constraint') || e.message.includes('P2002'))
-      return { error: isUnique ? 'Une salle avec ce nom existe déjà' : 'Erreur lors de la création' }
-    }
-  } catch (error) {
-    return { error: error instanceof Error ? error.message : ERRORS.SERVER }
+    const room = await createRoom({ ...parsed.output, orgId })
+    return { data: room }
+  } catch (e) {
+    const isUnique = e instanceof Error && (e.message.includes('Unique constraint') || e.message.includes('P2002'))
+    return { error: isUnique ? 'Une salle avec ce nom existe déjà' : 'Erreur lors de la création' }
   }
 }
 
 export async function removeRoomAction(roomId: string) {
-  try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
+  try {
     await removeRoom(roomId, orgId)
-    return { data: true }
-  } catch (error) {
-    return { error: error instanceof Error ? error.message : ERRORS.SERVER }
+    return { data: true as const }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
 export const addRoomAction = createRoomAction
 
 export async function updateRoomAction(roomId: string, data: { name?: string; capacity?: number; locationId?: string; equipment?: string[] }) {
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
     return { data: await updateRoom(roomId, orgId, data) }
-  } catch (error) {
-    return { error: error instanceof Error ? error.message : ERRORS.SERVER }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
 export async function createLocationAction(input: CreateLocationInput) {
-  try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
-    const parsed = v.parse(createLocationSchema, input)
-    const loc = await createLocation({ ...parsed, orgId })
-    return { data: loc }
-  } catch (error) {
-    return { error: error instanceof Error ? error.message : ERRORS.SERVER }
+  const parsed = v.safeParse(createLocationSchema, input)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+
+  try {
+    return { data: await createLocation({ ...parsed.output, orgId }) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
 export async function toggleLocationActiveAction(locationId: string) {
-  try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
-    const result = await toggleLocationActive(locationId, orgId)
-    return { data: result }
-  } catch (error) {
-    return { error: error instanceof Error ? error.message : ERRORS.SERVER }
+  try {
+    return { data: await toggleLocationActive(locationId, orgId) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }

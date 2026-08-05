@@ -1,5 +1,5 @@
 'use server'
-import { getUserInfo } from '@/modules/user'
+import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import {
   getDirectionMembers,
@@ -8,26 +8,24 @@ import {
 } from '../database'
 import type { GetDirectionMembersDto } from '../types'
 
-export async function getDirectionMembersAction(params?: {
-  functionId?: string
-}): Promise<{ data: GetDirectionMembersDto } | { error: string }> {
+export async function getDirectionMembersAction(params?: { functionId?: string }) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    return { data: await getDirectionMembers(orgId, params?.functionId) }
+    return { data: await getDirectionMembers(orgId, params?.functionId) as GetDirectionMembersDto }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
-export async function getDirectionMemberAction(
-  directionId: string
-): Promise<{ data: NonNullable<Awaited<ReturnType<typeof getDirectionMember>>> } | { error: string }> {
+export async function getDirectionMemberAction(directionId: string) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
     const data = await getDirectionMember(directionId, orgId)
     if (!data) return { error: 'Membre introuvable' }
     return { data }
@@ -36,13 +34,12 @@ export async function getDirectionMemberAction(
   }
 }
 
-export async function getDirectionMemberByUserIdAction(
-  userId: string
-): Promise<{ data: NonNullable<Awaited<ReturnType<typeof getDirectionMemberByUserId>>> } | { error: string }> {
+export async function getDirectionMemberByUserIdAction(userId: string) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
     const data = await getDirectionMemberByUserId(userId, orgId)
     if (!data) return { error: 'Membre introuvable' }
     return { data }

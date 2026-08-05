@@ -14,14 +14,9 @@ export const directionRoutes: Route[] = [
     link: "/direction/academic/classes",
     subs: [
       {
-        title: "Classes",
-        icon: "BookOpen",
-        link: "/direction/academic/classes",
-      },
-      {
-        title: "Filières",
-        icon: "School",
-        link: "/direction/academic/programs",
+        title: "Années",
+        icon: "CalendarRange",
+        link: "/direction/academic/years",
       },
       {
         title: "Départements",
@@ -29,7 +24,17 @@ export const directionRoutes: Route[] = [
         link: "/direction/academic/departments",
       },
       {
-        title: "Cours",
+        title: "Filières",
+        icon: "School",
+        link: "/direction/academic/programs",
+      },
+      {
+        title: "Classes",
+        icon: "BookOpen",
+        link: "/direction/academic/classes",
+      },
+      {
+        title: "UEs",
         icon: "LibraryBig",
         link: "/direction/academic/courses",
       },

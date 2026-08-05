@@ -1,7 +1,6 @@
 'use server'
 import { ERRORS } from '@/config'
-import { getUserInfo } from '@/modules/user'
-import { getAuthorization } from '@/modules/auth'
+import { authAccess } from '@/services/auth'
 import { invalidateEvent } from '@/cache/server/key'
 import { startSession, finalizeSession } from '../database'
 
@@ -9,12 +8,11 @@ export async function startSessionAction(
   scheduleId: string,
   coords: { lat: number; lng: number } | null,
 ) {
+  const auth = await authAccess({ requiredRole: 'TEACHER' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'TEACHER')
-    if (!auth.success) return { error: auth.error }
     const data = await startSession(scheduleId, coords)
     invalidateEvent('SESSION_STARTED', orgId)
     return { data }
@@ -24,12 +22,11 @@ export async function startSessionAction(
 }
 
 export async function completeSessionAction(scheduleId: string) {
+  const auth = await authAccess({ requiredRole: 'TEACHER' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'TEACHER')
-    if (!auth.success) return { error: auth.error }
     const data = await finalizeSession(scheduleId)
     invalidateEvent('SESSION_COMPLETED', orgId)
     return { data }

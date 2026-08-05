@@ -25,7 +25,7 @@ export async function createOrgAction(input: OrgSetupInput) {
   if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
 
   const authCheck = getAuthorization(user, 'DIRECTION', 'PRINCIPAL')
-  if (authCheck.error) return { error: authCheck.error }
+  if (!authCheck.success) return { error: authCheck.error }
 
   const parsed = v.safeParse(orgSetupSchema, input)
   if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }

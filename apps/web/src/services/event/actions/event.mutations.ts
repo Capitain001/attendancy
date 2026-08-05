@@ -1,53 +1,47 @@
 'use server'
 import * as v from 'valibot'
-import { getUserInfo } from '@/modules/user'
-import { getAuthorization } from '@/modules/auth'
+import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import { createEventSchema, updateEventSchema } from '../validation'
 import type { CreateEventInput, UpdateEventInput } from '../validation'
 import { createEvent, updateEvent, removeEventDb } from '../database'
 
 export async function createEventAction(input: CreateEventInput) {
-  try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId, user } = auth.data
 
-    const parsed = v.parse(createEventSchema, input)
-    return { data: await createEvent(orgId, user.id, parsed) }
+  const parsed = v.safeParse(createEventSchema, input)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+
+  try {
+    return { data: await createEvent(orgId, user.id, parsed.output) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
 export async function updateEventAction(eventId: string, input: UpdateEventInput) {
-  try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
-    const parsed = v.parse(updateEventSchema, input)
-    return { data: await updateEvent(eventId, orgId, parsed) }
+  const parsed = v.safeParse(updateEventSchema, input)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+
+  try {
+    return { data: await updateEvent(eventId, orgId, parsed.output) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
 export async function removeEventAction(eventId: string) {
-  try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
+  try {
     await removeEventDb(eventId, orgId)
     return { data: { id: eventId } }
   } catch (e) {

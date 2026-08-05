@@ -1,6 +1,6 @@
 'use server'
 import * as v from 'valibot'
-import { getUserInfo } from '@/modules/user/userInfo'
+import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import {
   isVapidConfigured,
@@ -27,44 +27,49 @@ export type { SerializedPushSubscription }
 
 // ─── Abonnement push ──────────────────────────────────────────────────────────
 
-export async function subscribeUser(
-  subscription: SerializedPushSubscription,
-  userAgent?: string,
-): Promise<{ data: true } | { error: string }> {
+export async function subscribeUser(subscription: SerializedPushSubscription, userAgent?: string) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { user } = auth.data
+
+  const parsed = v.safeParse(subscribeSchema, subscription)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const parsed = v.parse(subscribeSchema, subscription)
     await upsertPushSubscription({
       userId: user.id,
-      endpoint: parsed.endpoint,
-      p256dh: parsed.keys.p256dh,
-      auth: parsed.keys.auth,
+      endpoint: parsed.output.endpoint,
+      p256dh: parsed.output.keys.p256dh,
+      auth: parsed.output.keys.auth,
       userAgent,
     })
-    return { data: true }
+    return { data: true as const }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
-export async function unsubscribeUser(): Promise<{ data: true } | { error: string }> {
+export async function unsubscribeUser() {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { user } = auth.data
+
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
     await unsubscribeAllDevices(user.id)
-    return { data: true }
+    return { data: true as const }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
-export async function unsubscribeUserDevice(endpoint: string): Promise<{ data: true } | { error: string }> {
+export async function unsubscribeUserDevice(endpoint: string) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { user } = auth.data
+
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
     await unsubscribeDevice({ userId: user.id, endpoint })
-    return { data: true }
+    return { data: true as const }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
@@ -124,25 +129,20 @@ export async function sendPushNotificationToUserById(
   }
 }
 
-/** Envoie une notification à l'utilisateur authentifié. */
-export async function sendNotificationToCurrentUser(payload: {
-  message: string
-}): Promise<{ success: boolean; error?: string }> {
-  try {
-    const user = await getUserInfo()
-    if (!user?.id) return { success: false, error: ERRORS.AUTH.UNAUTHORIZED }
-    return sendPushNotificationToUserById(user.id, payload)
-  } catch (e) {
-    return { success: false, error: e instanceof Error ? e.message : ERRORS.SERVER }
-  }
+export async function sendNotificationToCurrentUser(payload: { message: string }): Promise<{ success: boolean; error?: string }> {
+  const auth = await authAccess()
+  if (!auth.data) return { success: false, error: auth.error }
+  return sendPushNotificationToUserById(auth.data.user.id, payload)
 }
 
 // ─── Debug ────────────────────────────────────────────────────────────────────
 
 export async function debugUserSubscriptions() {
+  const auth = await authAccess()
+  if (!auth.data) return { success: false, error: auth.error }
+  const { user } = auth.data
+
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { success: false, error: ERRORS.AUTH.UNAUTHORIZED }
     const subscriptions = await getPushSubscriptionsByUserId(user.id)
     return {
       success: true,

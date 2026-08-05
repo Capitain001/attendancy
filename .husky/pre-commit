@@ -1,12 +1,12 @@
 #!/usr/bin/env sh
 # pre-commit — service-api-index
 # Garde-fou bornes (régime A) + régénération (régime B) + check cross-service.
-# Voir scripts/generate/api/ pour le générateur.
+# Voir apps/web/scripts/generate/api/ pour le générateur.
 
 set -e
 
-# Performance : skip total si aucun fichier src/services/ n'est staged
-if ! git diff --cached --name-only | grep -qE '^src/services/'; then
+# Performance : skip total si aucun fichier apps/web/src/services/ n'est staged
+if ! git diff --cached --name-only | grep -qE '^apps/web/src/services/'; then
   exit 0
 fi
 
@@ -19,7 +19,7 @@ process.stdin.on('data', d => chunks.push(d.toString()));
 process.stdin.on('end', () => {
   const services = new Set();
   for (const line of chunks.join('').split('\n').filter(Boolean)) {
-    const m = line.match(/^src\/services\/(.+?)\/(database\/|database\.ts|actions\/|actions\.ts)/);
+    const m = line.match(/^apps\/web\/src\/services\/(.+?)\/(database\/|database\.ts|actions\/|actions\.ts)/);
     if (m) services.add(m[1]);
   }
   process.stdout.write([...services].join('\n'));
@@ -33,7 +33,7 @@ fi
 # ── a. Garde-fou bornes ──────────────────────────────────────────────────────
 # Régime A (derived_at === "manual") : WARN si > 8 fns (non bloquant).
 for svc in $SERVICES; do
-  INDEX="src/services/$svc/.api/index.json"
+  INDEX="apps/web/src/services/$svc/.api/index.json"
   if [ -f "$INDEX" ]; then
     INDEX="$INDEX" node -e '
       const fs = require("fs");
@@ -55,7 +55,7 @@ done
 
 # ── b. Régénération (régime B : derived_at = sha git) ────────────────────────
 for svc in $SERVICES; do
-  INDEX="src/services/$svc/.api/index.json"
+  INDEX="apps/web/src/services/$svc/.api/index.json"
   if [ -f "$INDEX" ]; then
     IS_GEN=$(INDEX="$INDEX" node -e '
       const fs = require("fs");
@@ -66,12 +66,12 @@ for svc in $SERVICES; do
     ')
     if [ "$IS_GEN" = "yes" ]; then
       echo "  -> Regeneration : $svc"
-      npx tsx scripts/generate/api/api.ts "$svc" || exit 1
-      git add "src/services/$svc/.api/"
+      (cd apps/web && npx tsx scripts/generate/api/api.ts "$svc") || exit 1
+      git add "apps/web/src/services/$svc/.api/"
     fi
   fi
 done
 
 # ── c. Check global cross-service ────────────────────────────────────────────
 # dead_reference -> bloque, unverified -> skip non bloquant
-npx tsx scripts/generate/api/api.ts --check || exit 1
+(cd apps/web && npx tsx scripts/generate/api/api.ts --check) || exit 1

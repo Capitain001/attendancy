@@ -43,7 +43,7 @@ const GooeyTooltip = () => {
               animate={{ x: 100,y: -140, scale: 1, opacity: 1 }}
               exit={{ x:0,y: 0, scale: 0.2, opacity: 0 }}
               transition={{ type: "spring", bounce: 0.3, duration: 0.8 }}
-              className="absolute w-52 min-h-[100px] rounded-2xl bg-zinc-200 text-zinc-900 text-center flex items-center justify-center px-4 py-4 pointer-events-none"
+              className="absolute w-52 min-h-25 rounded-2xl bg-zinc-200 text-zinc-900 text-center flex items-center justify-center px-4 py-4 pointer-events-none"
             >
               Hello content
             </motion.div>

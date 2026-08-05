@@ -1,23 +1,20 @@
 'use server'
 import * as v from 'valibot'
-import { getUserInfo } from '@/modules/user'
-import { getAuthorization } from '@/modules/auth'
+import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import { createSchedule, updateSchedule, removeSchedule, restoreSchedule } from '../database'
 import { createScheduleSchema, updateScheduleSchema } from '../validation'
 
 export async function createScheduleAction(input: unknown) {
-  const user = await getUserInfo()
-  const orgId = user?.organization?.id
-  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-  const auth = getAuthorization(user, 'DIRECTION')
-  if (!auth.success) return { error: auth.error }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
   const parsed = v.safeParse(createScheduleSchema, input)
   if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
 
   if (new Date(parsed.output.endTime) <= new Date(parsed.output.startTime)) {
-    return { error: 'L\'heure de fin doit être après l\'heure de début' }
+    return { error: "L'heure de fin doit être après l'heure de début" }
   }
 
   try {
@@ -29,11 +26,9 @@ export async function createScheduleAction(input: unknown) {
 }
 
 export async function updateScheduleAction(scheduleId: string, input: unknown) {
-  const user = await getUserInfo()
-  const orgId = user?.organization?.id
-  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-  const auth = getAuthorization(user, 'DIRECTION')
-  if (!auth.success) return { error: auth.error }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
   const parsed = v.safeParse(updateScheduleSchema, input)
   if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
@@ -52,15 +47,13 @@ export async function updateScheduleAction(scheduleId: string, input: unknown) {
 }
 
 export async function removeScheduleAction(scheduleId: string) {
-  try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
+  try {
     await removeSchedule(scheduleId, orgId)
-    return { data: true }
+    return { data: true as const }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
@@ -71,12 +64,11 @@ export async function deleteScheduleAction(scheduleId: string) {
 }
 
 export async function restoreScheduleAction(scheduleId: string) {
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
     return { data: await restoreSchedule(scheduleId, orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
@@ -84,15 +76,13 @@ export async function restoreScheduleAction(scheduleId: string) {
 }
 
 export async function cancelScheduleAction(scheduleId: string) {
-  try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
+  try {
     await updateSchedule(scheduleId, orgId, { status: 'CANCELED' })
-    return { data: true }
+    return { data: true as const }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

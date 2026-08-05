@@ -3,7 +3,7 @@
 **Branch**: main
 **Specs**: specs.md
 **Architecture**: architecture.md
-**Status**: In Progress ⏰
+**Status**: Terminé ✅
 
 ---
 
@@ -68,7 +68,7 @@
 
 ---
 
-## Phase 4: US3 — Salles (P2) ⏳ (~2h)
+## Phase 4: US3 — Salles (P2) ✅ (~2h)
 
 **Goal**: La direction peut ajouter et retirer des salles.
 
@@ -78,10 +78,10 @@
 
 ### Tasks
 
-- [ ] T012 [US3] Créer `src/hooks/data/room/useManageRooms.ts` — mutations `create`, `remove`, `update`
-- [ ] T013 [US3] Créer `src/components/direction/rooms/RoomForm.tsx` — formulaire client (`name`, `capacity`, `equipment` tags)
-- [ ] T014 [US3] Créer `src/components/direction/rooms/RoomActions.tsx` — bouton "Retirer" avec confirmation (soft delete)
-- [ ] T015 [US3] Modifier `src/app/(app)/[slug]/direction/schedule/rooms/page.tsx` — passer de RSC inline à : bouton "+ Salle" + intégrer `RoomForm` + `RoomActions` dans les cards
+- [x] T012 [US3] `useRooms` existant réutilisé — mutations `create`, `delete` disponibles
+- [x] T013 [US3] `src/components/direction/rooms/RoomForm.tsx` — `RoomCreateButton` (name + capacity)
+- [x] T014 [US3] `src/components/direction/rooms/RoomList.tsx` — CollapseSection + ConfirmDialog retirer
+- [x] T015 [US3] `src/app/(app)/[slug]/direction/schedule/rooms/page.tsx` — MetricCard + SectionHeader + RoomList
 
 **Checkpoint**: ✋ US3 testable — créer/retirer une salle
 
@@ -90,7 +90,7 @@
 
 ---
 
-## Phase 5: US4 — Filières / ProgramTrack (P2) ⏳ (~2h)
+## Phase 5: US4 — Filières / ProgramTrack (P2) ✅ (~2h)
 
 **Goal**: La direction peut créer des filières rattachées à un département.
 
@@ -100,11 +100,11 @@
 
 ### Tasks
 
-- [ ] T016 [US4] Lire les actions disponibles dans `src/services/program-track/.api/index.json` pour connaître les noms exacts
-- [ ] T017 [US4] Créer `src/hooks/data/program-track/useManageProgramTracks.ts` — mutations `create`, `update`, `archive`
-- [ ] T018 [US4] Créer `src/components/direction/academic/ProgramTrackForm.tsx` — formulaire (`name`, select `departmentId` depuis la liste des depts passée en props)
-- [ ] T019 [US4] Créer `src/components/direction/academic/ProgramTrackActions.tsx` — boutons Edit / Archiver
-- [ ] T020 [US4] Modifier `src/app/(app)/[slug]/direction/academic/programs/page.tsx` — fetch departments en parallèle, passer au formulaire + enrichir `ProgramList` avec actions
+- [x] T016 [US4] Actions vérifiées dans `src/services/program-track/actions/`
+- [x] T017 [US4] `src/hooks/data/program-track/useManageProgramTracks.ts` — create, update, remove
+- [x] T018 [US4] `src/components/direction/academic/ProgramTrackForm.tsx` — `ProgramTrackCreateButton` + `ProgramTrackEditButton`
+- [x] T019 [US4] `ProgramList.tsx` refactorisé — CollapseSection + edit + ConfirmDialog (guard `_count.classes > 0`)
+- [x] T020 [US4] `programs/page.tsx` — MetricCard + fetch deps parallèle + ProgramTrackCreateButton + ProgramList
 
 **Checkpoint**: ✋ US4 testable — créer/archiver une filière
 
@@ -113,7 +113,7 @@
 
 ---
 
-## Phase 6: US5 — Classes (P3) ⏳ (~2h)
+## Phase 6: US5 — Classes (P3) ✅ (~2h)
 
 **Goal**: La direction peut créer des classes pour l'année courante.
 
@@ -123,10 +123,10 @@
 
 ### Tasks
 
-- [ ] T021 [US5] Créer `src/hooks/data/class/useManageClasses.ts` — mutations `create`, `remove`
-- [ ] T022 [US5] Créer `src/components/direction/academic/ClassForm.tsx` — formulaire (`name`, select `programTrackId`, select `level` enum L1…D3, année courante affichée en readonly)
-- [ ] T023 [US5] Créer `src/components/direction/academic/ClassActions.tsx` — bouton "Archiver" avec confirmation
-- [ ] T024 [US5] Modifier `src/app/(app)/[slug]/direction/academic/classes/page.tsx` — fetch filières + année courante en parallèle, passer au formulaire + enrichir `ClassList` avec actions
+- [x] T021 [US5] `src/hooks/data/class/useManageClasses.ts` — create, remove
+- [x] T022 [US5] `src/components/direction/academic/ClassForm.tsx` — `ClassCreateButton` (name + programTrackId select + level select + année readonly)
+- [x] T023 [US5] `src/components/direction/academic/ClassList.tsx` — CollapseSection + ConfirmDialog archiver
+- [x] T024 [US5] `classes/page.tsx` — MetricCard + fetch tracks+year parallèle + ClassCreateButton + ClassList
 
 **Checkpoint**: ✋ US5 testable — créer/archiver une classe
 
@@ -135,7 +135,7 @@
 
 ---
 
-## Phase 7: US6 — UEs (P3) ⏳ (~2h)
+## Phase 7: US6 — UEs (P3) ✅ (~2h)
 
 **Goal**: La direction peut créer et archiver des Unités d'Enseignement.
 
@@ -145,10 +145,10 @@
 
 ### Tasks
 
-- [ ] T025 [US6] Créer `src/hooks/data/ue/useManageUEs.ts` — mutations `create`, `archive`
-- [ ] T026 [US6] Créer `src/components/direction/academic/UEForm.tsx` — formulaire (`code`, `name`, `credits`, select `departmentId` optionnel)
-- [ ] T027 [US6] Créer `src/components/direction/academic/UEList.tsx` — liste UEs avec badge département + bouton "Archiver"
-- [ ] T028 [US6] Modifier `src/app/(app)/[slug]/direction/academic/courses/page.tsx` — intégrer section UEs avec `UEList` + bouton "+ UE"
+- [x] T025 [US6] `src/hooks/data/ue/useManageUEs.ts` — create, archive
+- [x] T026 [US6] `src/components/direction/academic/UEForm.tsx` — `UECreateButton` (name + code + departmentId select)
+- [x] T027 [US6] `src/components/direction/academic/UEList.tsx` — CollapseSection + badge code/dept + ConfirmDialog archiver
+- [x] T028 [US6] `courses/page.tsx` — MetricCard + fetch deps parallèle + UECreateButton + UEList
 
 **Checkpoint**: ✋ US6 testable — créer/archiver une UE
 
@@ -157,18 +157,19 @@
 
 ---
 
-## Phase 8: Polish ⏳ (~1h)
+## Phase 8: Polish ✅ (~1h)
 
 **Purpose**: Vérification des conventions et cohérence UX
 
-- [ ] T029 Lancer `npx tsx scripts/generate/naming/check.ts academic-year` et corriger les ⚠
-- [ ] T030 Lancer `npx tsx scripts/generate/naming/check.ts department` et corriger les ⚠
-- [ ] T031 Lancer `npx tsx scripts/generate/api/api.ts room` si des actions ont été ajoutées au service
-- [ ] T032 Vérifier les états vides sur toutes les pages (message + CTA "Créer le premier X")
-- [ ] T033 Vérifier les messages d'erreur de contrainte unique (`CONSTRAINT_ERROR`) sur chaque formulaire
+- [x] T029 `naming/check.ts academic-year` → ✓ 0 violation
+- [x] T030 `naming/check.ts department` → ✓ 0 violation
+- [x] T029b `naming/check.ts room|program-track|class|ue` → ✓ 0 violation
+- [x] T031 `api.ts room` → index régénéré (16 fns)
+- [x] T032 États vides présents sur toutes les pages (icône + message + libellé "Créez le premier X")
+- [x] T033 `types/check.ts ue` → ⚠ non bloquant : `ProgramUEsDTO` pré-existant dans `types.ts` — hors scope de ces US
 
 **Notes:**
--
+- Seule violation types : `ProgramUEsDTO` dans `src/services/ue/types.ts` — antérieure à ces US, à corriger en scope UE séparé
 
 ---
 

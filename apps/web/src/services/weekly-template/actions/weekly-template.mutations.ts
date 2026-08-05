@@ -1,7 +1,6 @@
 'use server'
 import * as v from 'valibot'
-import { getUserInfo } from '@/modules/user'
-import { getAuthorization } from '@/modules/auth'
+import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import {
   createWeeklyTemplate,
@@ -19,53 +18,39 @@ import {
 } from '../validation'
 
 export async function createWeeklyTemplateAction(input: unknown) {
-  const user = await getUserInfo()
-  if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-  const orgId = user.organization?.id
-  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-
-  const auth = getAuthorization(user, 'DIRECTION')
-  if (!auth.success) return { error: auth.error }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
   const result = v.safeParse(createWeeklyTemplateSchema, input)
   if (!result.success) return { error: result.issues[0]?.message ?? 'Données invalides' }
 
   try {
-    const data = await createWeeklyTemplate(orgId, result.output.name)
-    return { data }
+    return { data: await createWeeklyTemplate(orgId, result.output.name) }
   } catch {
     return { error: ERRORS.SERVER }
   }
 }
 
 export async function updateWeeklyTemplateAction(id: string, input: unknown) {
-  const user = await getUserInfo()
-  if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-  const orgId = user.organization?.id
-  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-
-  const auth = getAuthorization(user, 'DIRECTION')
-  if (!auth.success) return { error: auth.error }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
   const result = v.safeParse(updateWeeklyTemplateSchema, input)
   if (!result.success) return { error: result.issues[0]?.message ?? 'Données invalides' }
 
   try {
-    const data = await updateWeeklyTemplate(id, orgId, result.output)
-    return { data }
+    return { data: await updateWeeklyTemplate(id, orgId, result.output) }
   } catch {
     return { error: ERRORS.SERVER }
   }
 }
 
 export async function removeWeeklyTemplateAction(id: string) {
-  const user = await getUserInfo()
-  if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-  const orgId = user.organization?.id
-  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-
-  const auth = getAuthorization(user, 'DIRECTION')
-  if (!auth.success) return { error: auth.error }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
   try {
     await removeWeeklyTemplate(id, orgId)
@@ -76,33 +61,24 @@ export async function removeWeeklyTemplateAction(id: string) {
 }
 
 export async function addWeeklySlotAction(templateId: string, input: unknown) {
-  const user = await getUserInfo()
-  if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-  const orgId = user.organization?.id
-  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-
-  const auth = getAuthorization(user, 'DIRECTION')
-  if (!auth.success) return { error: auth.error }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
   const result = v.safeParse(createWeeklySlotSchema, input)
   if (!result.success) return { error: result.issues[0]?.message ?? 'Données invalides' }
 
   try {
-    const data = await createWeeklySlot(templateId, orgId, result.output)
-    return { data }
+    return { data: await createWeeklySlot(templateId, orgId, result.output) }
   } catch {
     return { error: ERRORS.SERVER }
   }
 }
 
 export async function removeWeeklySlotAction(slotId: string) {
-  const user = await getUserInfo()
-  if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-  const orgId = user.organization?.id
-  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-
-  const auth = getAuthorization(user, 'DIRECTION')
-  if (!auth.success) return { error: auth.error }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
   try {
     await removeWeeklySlot(slotId, orgId)
@@ -113,20 +89,15 @@ export async function removeWeeklySlotAction(slotId: string) {
 }
 
 export async function applyWeeklyTemplateAction(input: unknown) {
-  const user = await getUserInfo()
-  if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-  const orgId = user.organization?.id
-  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-
-  const auth = getAuthorization(user, 'DIRECTION')
-  if (!auth.success) return { error: auth.error }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
   const result = v.safeParse(applyTemplateSchema, input)
   if (!result.success) return { error: result.issues[0]?.message ?? 'Données invalides' }
 
   try {
-    const data = await applyWeeklyTemplate({ ...result.output, orgId })
-    return { data }
+    return { data: await applyWeeklyTemplate({ ...result.output, orgId }) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

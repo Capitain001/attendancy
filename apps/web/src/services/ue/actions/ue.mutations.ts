@@ -1,14 +1,10 @@
 'use server'
 import * as v from 'valibot'
-import { getUserInfo } from '@/modules/user'
-import { getAuthorization } from '@/modules/auth'
+import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import { createUESchema, linkUESchema } from '../validation'
 import type { CreateUEInput, ReorderProgramPayload } from '../validation'
 import type { UpdateUEData } from '../database'
-// Fix : addUEToProgram importé depuis ../database (propre couche du service),
-// plus depuis '@/services/program-track/database' (violation de la règle d'or
-// du SKILL.md service-module-pattern).
 import { createUE, removeUE, updateUE, reorderProgram, addUEToProgram } from '../database'
 
 export async function createUEAction(input: {
@@ -17,12 +13,9 @@ export async function createUEAction(input: {
   semester?: number
   order?: number
 }) {
-  const user = await getUserInfo()
-  if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-  const orgId = user.organization?.id
-  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-  const auth = getAuthorization(user, 'DIRECTION')
-  if (!auth.success) return { error: auth.error }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
   const result = v.safeParse(createUESchema, input.data)
   if (!result.success) return { error: result.issues[0]?.message ?? 'Données invalides' }
@@ -43,14 +36,11 @@ export async function createUEAction(input: {
 }
 
 export async function archiveUEAction(ueId: string) {
-  try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
+  try {
     return { data: await removeUE(ueId, orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
@@ -58,14 +48,11 @@ export async function archiveUEAction(ueId: string) {
 }
 
 export async function updateUEAction({ ueId, data }: { ueId: string; data: UpdateUEData }) {
-  try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
+  try {
     return { data: await updateUE(ueId, orgId, data) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
@@ -78,39 +65,32 @@ export async function addUEToProgramAction(input: {
   semester?: number
   order?: number
 }) {
-  const user = await getUserInfo()
-  if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-  const orgId = user.organization?.id
-  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-  const auth = getAuthorization(user, 'DIRECTION')
-  if (!auth.success) return { error: auth.error }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
   const result = v.safeParse(linkUESchema, input)
   if (!result.success) return { error: result.issues[0]?.message ?? 'Données invalides' }
 
   try {
-    const data = await addUEToProgram({
+    return { data: await addUEToProgram({
       programId: result.output.programId,
       ueId:      result.output.ueId,
       semester:  result.output.semester ?? 1,
-    })
-    return { data }
+    }) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
 export async function reorderProgramAction({ programId, ueOrders, courseOrders }: ReorderProgramPayload) {
-  try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
+  try {
     await reorderProgram(programId, orgId, ueOrders, courseOrders)
-    return { data: true }
+    return { data: true as const }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

@@ -1,6 +1,5 @@
 'use server'
-import { getUserInfo } from '@/modules/user'
-import { getAuthorization } from '@/modules/auth'
+import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import {
   getSchedulesByClass,
@@ -21,12 +20,11 @@ export async function getClassSchedulesAction(
   rangeStart: Date,
   rangeEnd: Date,
 ) {
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
     return { data: await getSchedulesByClass(classId, orgId, rangeStart, rangeEnd) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
@@ -36,12 +34,11 @@ export async function getClassSchedulesAction(
 export async function getSchedulesAction(
   params: Omit<ScheduleFilterParams, 'orgId'>,
 ) {
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
     return { data: await getSchedules({ orgId, ...params }) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
@@ -51,12 +48,11 @@ export async function getSchedulesAction(
 export async function getDaySchedulesAction(
   params: Omit<ScheduleFilterParams, 'orgId'>,
 ) {
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
     return { data: await getDaySchedules({ orgId, ...params }) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
@@ -64,24 +60,23 @@ export async function getDaySchedulesAction(
 }
 
 export async function getCourseScheduleAction(courseId: string) {
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
     return { data: await getSchedulesByCourse(courseId, orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
-/** Jours (yyyy-MM-dd) ayant au moins une séance pour un mois "yyyy-MM". */
 export async function getScheduleDaysAction(month: string) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
     return { data: await getScheduleDays(orgId, month) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
@@ -89,10 +84,11 @@ export async function getScheduleDaysAction(month: string) {
 }
 
 export async function getTeacherNextScheduleAction(teacherId: string) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
     return { data: await getTeacherNextSchedule(teacherId, orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
@@ -100,25 +96,23 @@ export async function getTeacherNextScheduleAction(teacherId: string) {
 }
 
 export async function getTodayClassSchedulesAction(classId: string) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
     return { data: await getTodayClassSchedules(classId, orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
-/** Options pour le formulaire de création de séance (cours + salles + groupes de la classe). */
 export async function getClassScheduleOptionsAction(classId: string) {
-  try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, 'DIRECTION')
-    if (!auth.success) return { error: auth.error }
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
+  try {
     const [courses, rooms, groups] = await Promise.all([
       getCoursesByClass(classId, orgId),
       getRooms(orgId),

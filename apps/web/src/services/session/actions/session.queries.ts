@@ -1,47 +1,44 @@
 'use server'
 import { startOfDay, endOfDay } from 'date-fns'
 import { ERRORS } from '@/config'
-import { getUserInfo } from '@/modules/user'
-import { getAuthorization } from '@/modules/auth'
+import { authAccess } from '@/services/auth'
 import { getTeacherNextSchedule, getActiveSessions, getOrgDaySchedulesWithSession } from '../database'
 
 export async function getActiveSessionsAction() {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    const orgId = user?.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const data = await getActiveSessions(orgId)
-    return { data }
+    return { data: await getActiveSessions(orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
 export async function getDirectionSessionsAction() {
+  const auth = await authAccess({ requiredRole: ['DIRECTION', 'ADMIN'] })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   try {
-    const user = await getUserInfo()
-    if (!user) return { error: ERRORS.AUTH.UNAUTHORIZED }
-    const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
-    const auth = getAuthorization(user, ['DIRECTION', 'ADMIN'])
-    if (!auth.success) return { error: auth.error }
     const now = new Date()
-    const data = await getOrgDaySchedulesWithSession(orgId, startOfDay(now), endOfDay(now))
-    return { data }
+    return { data: await getOrgDaySchedulesWithSession(orgId, startOfDay(now), endOfDay(now)) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
 export async function getTeacherNextScheduleAction() {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId, user } = auth.data
+
+  const teacherId = user.organization?.teacherId
+  if (!teacherId) return { error: 'Profil enseignant introuvable' }
+
   try {
-    const user = await getUserInfo()
-    const orgId     = user?.organization?.id
-    const teacherId = user?.organization?.teacherId
-    if (!orgId)     return { error: ERRORS.ORG.NOT_FOUND }
-    if (!teacherId) return { error: 'Profil enseignant introuvable' }
-    const data = await getTeacherNextSchedule(teacherId, orgId)
-    return { data: data ?? null }
+    return { data: await getTeacherNextSchedule(teacherId, orgId) ?? null }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

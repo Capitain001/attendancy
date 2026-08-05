@@ -2,7 +2,7 @@
 
 import { Prisma }     from '@/generated/prisma/client'
 import * as v         from 'valibot'
-import { getUserInfo } from '@/modules/user'
+import { authAccess } from '@/services/auth'
 import { ERRORS }     from '@/config'
 import { prisma }     from '@/lib/prisma'
 
@@ -20,10 +20,9 @@ export type CheckAvailabilityActionParams = Omit<CheckAvailabilityParams, 'orgId
 export async function checkAvailabilityAction(
   params: CheckAvailabilityActionParams,
 ): Promise<{ data: NonNullable<CheckAvailabilityResult['data']> } | { error: string }> {
-  const user  = await getUserInfo()
-  if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-  const orgId = user.organization?.id
-  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
   try {
     const result = await checkAvailability({ ...params, orgId, prismaClient: prisma })
@@ -105,10 +104,9 @@ function serializeConflictReport(report: ConflictReport): ConflictReportDto {
 }
 
 export async function checkConflictsAction(params: CheckConflictsActionParams) {
-  const user  = await getUserInfo()
-  if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-  const orgId = user.organization?.id
-  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
   const parsed = v.safeParse(checkConflictsParamsSchema, params)
   if (!parsed.success) return { error: 'Paramètres invalides.' as const }
@@ -155,14 +153,12 @@ const MAX_ITEMS = 200
 export async function filterAvailabilityAction(
   params: FilterAvailabilityActionParams,
 ): Promise<{ data: FilterAvailabilityResponse } | { error: string }> {
-  const user  = await getUserInfo()
-  if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
-  const orgId = user.organization?.id
-  if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
 
   const { start, end, excludeScheduleId, rooms, courses, teachers } = params
 
-  // ── Validation ────────────────────────────────────────────
   if (start >= end) {
     return { error: "L'heure de fin doit être après l'heure de début." }
   }
@@ -177,7 +173,6 @@ export async function filterAvailabilityAction(
   }
 
   try {
-    // ── Schedules en conflit sur le créneau ───────────────────
     const overlapping = await prisma.$queryRaw<Array<{ roomId: string; teacherId: string | null }>>`
       SELECT "roomId", "teacherId"
       FROM   "Schedule"
@@ -201,7 +196,6 @@ export async function filterAvailabilityAction(
           : Prisma.empty}
     `
 
-    // ── Sets de ressources occupées — lookup O(1) ─────────────
     const busyRoomIds    = new Set(overlapping.map((s) => s.roomId))
     const busyTeacherIds = new Set(
       overlapping.map((s) => s.teacherId).filter((id): id is string => id !== null),

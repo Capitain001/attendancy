@@ -1,12 +1,13 @@
 'use server'
-import { getUserInfo } from '@/modules/user'
+import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import { getMessages, getRoomParticipants } from '../database'
 
 export async function getMessagesAction(channelId: string) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
     return { data: await getMessages(channelId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
@@ -14,9 +15,10 @@ export async function getMessagesAction(channelId: string) {
 }
 
 export async function getRoomParticipantsAction(channelId: string) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
     return { data: await getRoomParticipants(channelId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }

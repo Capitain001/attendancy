@@ -1,39 +1,31 @@
 "use server";
 
-import { getUserInfo } from '@/modules/user';
+import { authAccess } from '@/services/auth';
 import { ERRORS } from "@/config";
 import { getProgramTracks, getProgramTracksBasic, getProgramTrack } from "../database";
 import { groupProgramTracksByDepartment } from "../utils";
 
 export async function getProgramTracksAction({ departmentId }: { departmentId?: string }) {
+  const auth = await authAccess();
+  if (!auth.data) return { error: auth.error };
+  const { orgId } = auth.data;
+
   try {
-    const user = await getUserInfo();
-    if (!user) throw new Error(ERRORS.AUTH.UNAUTHORIZED);
-
-    const orgId = user.organization?.id;
-    if (!orgId) throw new Error(ERRORS.ORG.NOT_FOUND);
-
-    const data = await getProgramTracks({ orgId, departmentId });
-    return { data };
-  } catch (error) {
-    console.error("getProgramTracksAction:", error);
-    return { error: error instanceof Error ? error.message : ERRORS.SERVER };
+    return { data: await getProgramTracks({ orgId, departmentId }) };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER };
   }
 }
 
 export async function getProgramTracksBasicAction({ departmentId }: { departmentId?: string }) {
+  const auth = await authAccess();
+  if (!auth.data) return { error: auth.error };
+  const { orgId } = auth.data;
+
   try {
-    const user = await getUserInfo();
-    if (!user) throw new Error(ERRORS.AUTH.UNAUTHORIZED);
-
-    const orgId = user.organization?.id;
-    if (!orgId) throw new Error(ERRORS.ORG.NOT_FOUND);
-
-    const data = await getProgramTracksBasic({ orgId, departmentId });
-    return { data };
-  } catch (error) {
-    console.error("getProgramTracksBasicAction:", error);
-    return { error: error instanceof Error ? error.message : ERRORS.SERVER };
+    return { data: await getProgramTracksBasic({ orgId, departmentId }) };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER };
   }
 }
 
@@ -42,26 +34,21 @@ export async function getProgramTracksByDepartmentAction({ departmentId }: { dep
     const result = await getProgramTracksAction({ departmentId });
     if ("error" in result) return result;
     return { data: groupProgramTracksByDepartment(result.data) };
-  } catch (error) {
-    console.error("getProgramTracksByDepartmentAction:", error);
-    return { error: error instanceof Error ? error.message : ERRORS.SERVER };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER };
   }
 }
 
 export async function getProgramTrackAction({ programTrackId }: { programTrackId: string }) {
+  const auth = await authAccess();
+  if (!auth.data) return { error: auth.error };
+  const { orgId } = auth.data;
+
   try {
-    const user = await getUserInfo();
-    if (!user) throw new Error(ERRORS.AUTH.UNAUTHORIZED);
-
-    const orgId = user.organization?.id;
-    if (!orgId) throw new Error(ERRORS.ORG.NOT_FOUND);
-
     const track = await getProgramTrack({ programTrackId, orgId });
-    if (!track) throw new Error("Filière introuvable");
-
+    if (!track) return { error: "Filière introuvable" };
     return { data: track };
-  } catch (error) {
-    console.error("getProgramTrackAction:", error);
-    return { error: error instanceof Error ? error.message : ERRORS.SERVER };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER };
   }
 }

@@ -1,23 +1,55 @@
 import { connection } from 'next/server'
 import { getProgramTracksAction } from '@/services/program-track'
+import { getDepartmentsAction } from '@/services/department'
+import { MetricCard } from '@/components/stats/ui/MetricCard'
+import { SectionHeader } from '@/components/direction/SectionHeader'
 import { ProgramList } from '@/components/direction/academic/ProgramList'
+import { ProgramTrackCreateButton } from '@/components/direction/academic/ProgramTrackForm'
 import { typography } from '@/styles'
 
 export default async function ProgramsPage() {
   await connection()
-  const result = await getProgramTracksAction({})
 
-  if ('error' in result) {
-    return <p className={typography.body}>{result.error}</p>
+  const [tracksResult, deptsResult] = await Promise.all([
+    getProgramTracksAction({}),
+    getDepartmentsAction(),
+  ])
+
+  if ('error' in tracksResult) {
+    return <p className={typography.body}>{tracksResult.error}</p>
   }
 
+  const tracks = tracksResult.data
+  const departments = 'data' in deptsResult ? deptsResult.data : []
+
+  const totalClasses = tracks.reduce((sum, t) => sum + (t._count?.classes ?? 0), 0)
+
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-base font-semibold text-text-primary">Filières</h1>
-        <span className={typography.small}>{result.data.length} filière{result.data.length !== 1 ? 's' : ''}</span>
-      </div>
-      <ProgramList programs={result.data} />
+    <div className="flex flex-col gap-y-4">
+      <SectionHeader
+        title="Filières"
+        action={<ProgramTrackCreateButton departments={departments} />}
+      />
+
+      <section className="grid grid-cols-2 gap-3 lg:grid-cols-3">
+        <MetricCard
+          label="Filières"
+          value={String(tracks.length)}
+          sub="dans cet établissement"
+        />
+        <MetricCard
+          label="Classes associées"
+          value={String(totalClasses)}
+          sub="toutes filières confondues"
+        />
+        <MetricCard
+          label="Départements"
+          value={String(departments.length)}
+          sub="avec filières rattachées"
+        />
+      </section>
+
+      <ProgramList initialPrograms={tracks} departments={departments} />
     </div>
   )
 }

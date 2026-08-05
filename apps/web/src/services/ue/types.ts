@@ -1,5 +1,6 @@
 import type { CreateUEInput } from './validation'
 import type { getUEs, getProgramUEs } from './database'
+import { GetUEsDto } from './generated.types'
 
 export type { CreateUEInput }
 

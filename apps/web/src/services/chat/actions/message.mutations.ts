@@ -1,13 +1,15 @@
 'use server'
-import { getUserInfo } from '@/modules/user/userInfo'
+import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import { createMessage, updateMessage, removeMessage } from '../database'
 import type { AddMessageData, UpdateMessageData } from '../database'
 
 export async function sendMessageAction(input: Omit<AddMessageData, 'userId'>) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { user } = auth.data
+
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
     return { data: await createMessage({ ...input, userId: user.id }) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
@@ -15,9 +17,11 @@ export async function sendMessageAction(input: Omit<AddMessageData, 'userId'>) {
 }
 
 export async function updateMessageAction(messageId: string, data: UpdateMessageData) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { user } = auth.data
+
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
     return { data: await updateMessage(messageId, user.id, data) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
@@ -25,9 +29,11 @@ export async function updateMessageAction(messageId: string, data: UpdateMessage
 }
 
 export async function removeMessageAction(messageId: string) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { user } = auth.data
+
   try {
-    const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
     return { data: await removeMessage(messageId, user.id) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
