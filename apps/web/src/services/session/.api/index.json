@@ -1,0 +1,115 @@
+{
+  "service": "session",
+  "path": "src/services/session/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "2dc6b24",
+  "utils_dir": null,
+  "fns": {
+    "startSession": {
+      "f": ".api/startSession.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "endSession": {
+      "f": ".api/endSession.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "finalizeSession": {
+      "f": ".api/finalizeSession.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getActiveSessions": {
+      "f": ".api/getActiveSessions.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrgDaySchedulesWithSession": {
+      "f": ".api/getOrgDaySchedulesWithSession.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getTeacherNextSchedule": {
+      "f": ".api/getTeacherNextSchedule.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createSessionToken": {
+      "f": ".api/createSessionToken.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "validateSessionToken": {
+      "f": ".api/validateSessionToken.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "startSessionAction": {
+      "f": ".api/startSessionAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "completeSessionAction": {
+      "f": ".api/completeSessionAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getActiveSessionsAction": {
+      "f": ".api/getActiveSessionsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getDirectionSessionsAction": {
+      "f": ".api/getDirectionSessionsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getTeacherNextScheduleAction": {
+      "f": ".api/getTeacherNextScheduleAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "generateTokenAction": {
+      "f": ".api/generateTokenAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "startSession": [
+      "startSessionAction"
+    ],
+    "endSession": [
+      "finalizeSession"
+    ],
+    "finalizeSession": [
+      "completeSessionAction"
+    ],
+    "getActiveSessions": [
+      "getActiveSessionsAction"
+    ],
+    "getOrgDaySchedulesWithSession": [
+      "getDirectionSessionsAction"
+    ],
+    "getTeacherNextSchedule": [
+      "getTeacherNextScheduleAction"
+    ],
+    "createSessionToken": [
+      "generateTokenAction"
+    ],
+    "validateSessionToken": [],
+    "startSessionAction": [],
+    "completeSessionAction": [],
+    "getActiveSessionsAction": [],
+    "getDirectionSessionsAction": [],
+    "getTeacherNextScheduleAction": [],
+    "generateTokenAction": [],
+    "markScheduleAbsences": [
+      "finalizeSession"
+    ]
+  },
+  "deps": {
+    "markScheduleAbsences": "attendance"
+  }
+}

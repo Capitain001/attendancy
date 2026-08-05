@@ -1,0 +1,11 @@
+{
+  "name": "createRoomAction",
+  "file": "src/services/room/actions/room.mutations.ts",
+  "sig": "(input: CreateRoomInput) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; capacity: number | null; equipment: string[]; location: { id: string; name: string; } | null; locationId: string | null; }; error?: undefined; }>",
+  "calls": [
+    "createRoom"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

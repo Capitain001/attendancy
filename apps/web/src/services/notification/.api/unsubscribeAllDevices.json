@@ -1,0 +1,8 @@
+{
+  "name": "unsubscribeAllDevices",
+  "file": "src/services/notification/database/push.mutations.ts",
+  "sig": "(userId: string) => Promise<BatchPayload>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

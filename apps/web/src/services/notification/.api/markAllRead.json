@@ -1,0 +1,11 @@
+{
+  "name": "markAllRead",
+  "file": "src/services/notification/actions/notification.mutations.ts",
+  "sig": "() => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
+  "calls": [
+    "markAllNotificationsRead"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

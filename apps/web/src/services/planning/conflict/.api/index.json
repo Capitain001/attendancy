@@ -1,0 +1,30 @@
+{
+  "service": "planning/conflict",
+  "path": "src/services/planning/conflict/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "2dc6b24",
+  "utils_dir": null,
+  "fns": {
+    "checkAvailabilityAction": {
+      "f": ".api/checkAvailabilityAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "checkConflictsAction": {
+      "f": ".api/checkConflictsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "filterAvailabilityAction": {
+      "f": ".api/filterAvailabilityAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "checkAvailabilityAction": [],
+    "checkConflictsAction": [],
+    "filterAvailabilityAction": []
+  },
+  "deps": {}
+}

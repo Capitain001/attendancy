@@ -1,0 +1,27 @@
+{
+  "name": "@attendancy/planning",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./hooks": "./src/hooks/index.ts",
+    "./views": "./src/views/index.ts"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@attendancy/types": "workspace:*",
+    "@tanstack/react-query": "^5.99.0",
+    "@tanstack/react-query-persist-client": "^5.99.0",
+    "idb-keyval": "^6.2.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "react": "^19.0.0",
+    "typescript": "^6"
+  },
+  "peerDependencies": {
+    "react": "^18 || ^19"
+  }
+}

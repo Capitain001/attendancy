@@ -1,9 +1,0 @@
-{
-  "name": "checkConflictsAction",
-  "file": "src/services/planning/conflict/actions.ts",
-  "sig": "(params: CheckConflictsActionParams) => Promise<{ data: ConflictReportDto; error?: undefined; } | { error: string; data?: undefined; }>",
-  "calls": [],
-  "auth": {},
-  "rules": [],
-  "why_ref": ""
-}

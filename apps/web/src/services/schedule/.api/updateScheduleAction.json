@@ -1,0 +1,11 @@
+{
+  "name": "updateScheduleAction",
+  "file": "src/services/schedule/actions/schedule.mutations.ts",
+  "sig": "(scheduleId: string, input: unknown) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "calls": [
+    "updateSchedule"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

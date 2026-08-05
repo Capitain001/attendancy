@@ -1,0 +1,11 @@
+{
+  "name": "getTodayClassSchedulesAction",
+  "file": "src/services/schedule/actions/schedule.queries.ts",
+  "sig": "(classId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; startTime: Date; endTime: Date; status: ScheduleStatus; course: { name: string; }; room: { name: string; }; teacher: { ...; }; }[]; error?: undefined; }>",
+  "calls": [
+    "getTodayClassSchedules"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

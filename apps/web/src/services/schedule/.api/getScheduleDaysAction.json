@@ -1,0 +1,11 @@
+{
+  "name": "getScheduleDaysAction",
+  "file": "src/services/schedule/actions/schedule.queries.ts",
+  "sig": "(month: string) => Promise<{ error: any; data?: undefined; } | { data: string[]; error?: undefined; }>",
+  "calls": [
+    "getScheduleDays"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

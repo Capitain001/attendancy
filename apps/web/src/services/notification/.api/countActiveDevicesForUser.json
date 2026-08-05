@@ -1,0 +1,8 @@
+{
+  "name": "countActiveDevicesForUser",
+  "file": "src/services/notification/database/push.queries.ts",
+  "sig": "(userId: string) => Promise<number>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

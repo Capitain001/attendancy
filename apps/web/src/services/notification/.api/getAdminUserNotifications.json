@@ -1,0 +1,11 @@
+{
+  "name": "getAdminUserNotifications",
+  "file": "src/services/notification/actions/notification.queries.ts",
+  "sig": "(userId: string, limit?: number) => Promise<{ error: any; data?: undefined; } | { data: ({ user: { id: string; firstName: string | null; lastName: string | null; email: string; }; } & { id: string; message: string; type: NotificationType; ... 5 more ...; scheduleId: string | null; })[]; error?: undefined; }>",
+  "calls": [
+    "getOrganizationUserNotifications"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

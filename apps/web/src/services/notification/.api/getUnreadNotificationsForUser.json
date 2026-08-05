@@ -1,0 +1,8 @@
+{
+  "name": "getUnreadNotificationsForUser",
+  "file": "src/services/notification/database/notification.queries.ts",
+  "sig": "(userId: string, limit = 10) => Promise<{ id: string; message: string; type: NotificationType; read: boolean; metadata: JsonValue; createdAt: Date; updatedAt: Date; scheduleId: string | null; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

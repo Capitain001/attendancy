@@ -1,0 +1,68 @@
+{
+  "service": "ue-course",
+  "path": "src/services/ue-course/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "2dc6b24",
+  "utils_dir": null,
+  "fns": {
+    "createUECourse": {
+      "f": ".api/createUECourse.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateUECourse": {
+      "f": ".api/updateUECourse.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "removeUECourse": {
+      "f": ".api/removeUECourse.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getUECoursesByUE": {
+      "f": ".api/getUECoursesByUE.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createUECourseAction": {
+      "f": ".api/createUECourseAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateUECourseAction": {
+      "f": ".api/updateUECourseAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeUECourseAction": {
+      "f": ".api/removeUECourseAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getUECoursesAction": {
+      "f": ".api/getUECoursesAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createUECourse": [
+      "createUECourseAction"
+    ],
+    "updateUECourse": [
+      "updateUECourseAction"
+    ],
+    "removeUECourse": [
+      "removeUECourseAction"
+    ],
+    "getUECoursesByUE": [
+      "getUECoursesAction"
+    ],
+    "createUECourseAction": [],
+    "updateUECourseAction": [],
+    "removeUECourseAction": [],
+    "getUECoursesAction": []
+  },
+  "deps": {}
+}

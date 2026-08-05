@@ -1,0 +1,10 @@
+{
+  "name": "hasActiveSubscriptions",
+  "file": "src/services/notification/database/push.queries.ts",
+  "sig": "(userId: string) => Promise<boolean>",
+  "composes": [
+    "countActiveDevicesForUser"
+  ],
+  "rules": [],
+  "why_ref": ""
+}

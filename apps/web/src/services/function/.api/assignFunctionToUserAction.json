@@ -1,0 +1,12 @@
+{
+  "name": "assignFunctionToUserAction",
+  "file": "src/services/function/actions/function.mutations.ts",
+  "sig": "(params: { userId: string functionName: string }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; functionId: string; userId: string; }; error?: undefined; }>",
+  "calls": [
+    "getFunctionByName",
+    "assignFunctionToUser"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

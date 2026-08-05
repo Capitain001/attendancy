@@ -1,0 +1,11 @@
+{
+  "name": "getProgramsByTrackAction",
+  "file": "src/services/program/actions/program.queries.ts",
+  "sig": "({ classId, programTrackId }: { classId?: string programTrackId?: string }) => Promise<{ error: any; data?: undefined; } | { data: { programTrack: Relation; programs: unknown[]; }[]; error?: undefined; }>",
+  "calls": [
+    "getProgramList"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

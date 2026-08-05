@@ -1,0 +1,11 @@
+{
+  "name": "removeRoomAction",
+  "file": "src/services/room/actions/room.mutations.ts",
+  "sig": "(roomId: string) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
+  "calls": [
+    "removeRoom"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

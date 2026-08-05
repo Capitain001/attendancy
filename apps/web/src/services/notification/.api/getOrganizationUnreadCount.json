@@ -1,0 +1,8 @@
+{
+  "name": "getOrganizationUnreadCount",
+  "file": "src/services/notification/database/notification.queries.ts",
+  "sig": "(orgId: string) => Promise<number>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

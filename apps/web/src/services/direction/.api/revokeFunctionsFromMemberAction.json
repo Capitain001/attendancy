@@ -1,0 +1,11 @@
+{
+  "name": "revokeFunctionsFromMemberAction",
+  "file": "src/services/direction/actions/direction.mutations.ts",
+  "sig": "(userId: string, functionIds: string[]) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
+  "calls": [
+    "revokeFunctionsFromMember"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,8 @@
+{
+  "name": "checkOrgMembership",
+  "file": "src/services/notification/database/notification.mutations.ts",
+  "sig": "(userId: string, orgId: string) => Promise<boolean>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

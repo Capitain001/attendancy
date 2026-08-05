@@ -1,0 +1,117 @@
+{
+  "service": "program",
+  "path": "src/services/program/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "2dc6b24",
+  "utils_dir": null,
+  "fns": {
+    "createProgram": {
+      "f": ".api/createProgram.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateProgram": {
+      "f": ".api/updateProgram.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "removeProgram": {
+      "f": ".api/removeProgram.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getPrograms": {
+      "f": ".api/getPrograms.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getProgramById": {
+      "f": ".api/getProgramById.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getProgramList": {
+      "f": ".api/getProgramList.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getClassProgram": {
+      "f": ".api/getClassProgram.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createProgramAction": {
+      "f": ".api/createProgramAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateProgramAction": {
+      "f": ".api/updateProgramAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "linkProgramToClassAction": {
+      "f": ".api/linkProgramToClassAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeProgramAction": {
+      "f": ".api/removeProgramAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getProgramsAction": {
+      "f": ".api/getProgramsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getProgramsByTrackAction": {
+      "f": ".api/getProgramsByTrackAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getClassProgramAction": {
+      "f": ".api/getClassProgramAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getProgramByIdAction": {
+      "f": ".api/getProgramByIdAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createProgram": [
+      "createProgramAction"
+    ],
+    "updateProgram": [
+      "updateProgramAction",
+      "linkProgramToClassAction"
+    ],
+    "removeProgram": [
+      "removeProgramAction"
+    ],
+    "getPrograms": [
+      "getProgramsAction"
+    ],
+    "getProgramById": [
+      "getProgramByIdAction"
+    ],
+    "getProgramList": [
+      "getProgramsByTrackAction"
+    ],
+    "getClassProgram": [
+      "getClassProgramAction"
+    ],
+    "createProgramAction": [],
+    "updateProgramAction": [],
+    "linkProgramToClassAction": [],
+    "removeProgramAction": [],
+    "getProgramsAction": [],
+    "getProgramsByTrackAction": [],
+    "getClassProgramAction": [],
+    "getProgramByIdAction": []
+  },
+  "deps": {}
+}

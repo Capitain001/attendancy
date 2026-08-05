@@ -1,0 +1,11 @@
+{
+  "name": "getRoomAction",
+  "file": "src/services/room/actions/room.queries.ts",
+  "sig": "(roomId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; capacity: number | null; equipment: string[]; location: { id: string; name: string; address: string; } | null; locationId: string | null; }; error?: undefined; }>",
+  "calls": [
+    "getRoomById"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

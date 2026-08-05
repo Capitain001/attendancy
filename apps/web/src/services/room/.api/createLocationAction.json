@@ -1,0 +1,11 @@
+{
+  "name": "createLocationAction",
+  "file": "src/services/room/actions/room.mutations.ts",
+  "sig": "(input: CreateLocationInput) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; address: string; }; error?: undefined; }>",
+  "calls": [
+    "createLocation"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,268 @@
+{
+  "service": "notification",
+  "path": "src/services/notification/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "2dc6b24",
+  "utils_dir": null,
+  "fns": {
+    "createUserNotification": {
+      "f": ".api/createUserNotification.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "markNotificationRead": {
+      "f": ".api/markNotificationRead.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "markAllNotificationsRead": {
+      "f": ".api/markAllNotificationsRead.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "removeNotification": {
+      "f": ".api/removeNotification.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "checkOrgMembership": {
+      "f": ".api/checkOrgMembership.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "createNotificationForOrgUser": {
+      "f": ".api/createNotificationForOrgUser.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getNotificationsForUser": {
+      "f": ".api/getNotificationsForUser.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getUnreadNotificationsForUser": {
+      "f": ".api/getUnreadNotificationsForUser.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getUnreadCountForUser": {
+      "f": ".api/getUnreadCountForUser.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrganizationNotifications": {
+      "f": ".api/getOrganizationNotifications.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrganizationUnreadNotifications": {
+      "f": ".api/getOrganizationUnreadNotifications.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrganizationUserNotifications": {
+      "f": ".api/getOrganizationUserNotifications.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrganizationUnreadCount": {
+      "f": ".api/getOrganizationUnreadCount.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrganizationNotificationStats": {
+      "f": ".api/getOrganizationNotificationStats.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "upsertPushSubscription": {
+      "f": ".api/upsertPushSubscription.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "unsubscribeDevice": {
+      "f": ".api/unsubscribeDevice.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "unsubscribeAllDevices": {
+      "f": ".api/unsubscribeAllDevices.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "markSubscriptionExpired": {
+      "f": ".api/markSubscriptionExpired.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "cleanupExpiredSubscriptions": {
+      "f": ".api/cleanupExpiredSubscriptions.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getPushSubscriptionsByUserId": {
+      "f": ".api/getPushSubscriptionsByUserId.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getActivePushSubscriptionsByUserId": {
+      "f": ".api/getActivePushSubscriptionsByUserId.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "findPushSubscriptionByEndpoint": {
+      "f": ".api/findPushSubscriptionByEndpoint.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "countActiveDevicesForUser": {
+      "f": ".api/countActiveDevicesForUser.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "hasActiveSubscriptions": {
+      "f": ".api/hasActiveSubscriptions.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getPushSubscriptionStats": {
+      "f": ".api/getPushSubscriptionStats.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "markNotificationAsRead": {
+      "f": ".api/markNotificationAsRead.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "markAllRead": {
+      "f": ".api/markAllRead.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "deleteNotification": {
+      "f": ".api/deleteNotification.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "createAdminNotification": {
+      "f": ".api/createAdminNotification.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "sendAdminPushNotification": {
+      "f": ".api/sendAdminPushNotification.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getNotifications": {
+      "f": ".api/getNotifications.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getUnread": {
+      "f": ".api/getUnread.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getUnreadCount": {
+      "f": ".api/getUnreadCount.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getAdminNotifications": {
+      "f": ".api/getAdminNotifications.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getAdminUnreadNotifications": {
+      "f": ".api/getAdminUnreadNotifications.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getAdminUserNotifications": {
+      "f": ".api/getAdminUserNotifications.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getAdminUnreadCount": {
+      "f": ".api/getAdminUnreadCount.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getAdminNotificationStats": {
+      "f": ".api/getAdminNotificationStats.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createUserNotification": [],
+    "markNotificationRead": [
+      "markNotificationAsRead"
+    ],
+    "markAllNotificationsRead": [
+      "markAllRead"
+    ],
+    "removeNotification": [
+      "deleteNotification"
+    ],
+    "checkOrgMembership": [
+      "sendAdminPushNotification"
+    ],
+    "createNotificationForOrgUser": [
+      "createAdminNotification"
+    ],
+    "getNotificationsForUser": [
+      "getNotifications"
+    ],
+    "getUnreadNotificationsForUser": [
+      "getUnread"
+    ],
+    "getUnreadCountForUser": [
+      "getUnreadCount"
+    ],
+    "getOrganizationNotifications": [
+      "getAdminNotifications"
+    ],
+    "getOrganizationUnreadNotifications": [
+      "getAdminUnreadNotifications"
+    ],
+    "getOrganizationUserNotifications": [
+      "getAdminUserNotifications"
+    ],
+    "getOrganizationUnreadCount": [
+      "getAdminUnreadCount"
+    ],
+    "getOrganizationNotificationStats": [
+      "getAdminNotificationStats"
+    ],
+    "upsertPushSubscription": [],
+    "unsubscribeDevice": [],
+    "unsubscribeAllDevices": [],
+    "markSubscriptionExpired": [],
+    "cleanupExpiredSubscriptions": [],
+    "getPushSubscriptionsByUserId": [],
+    "getActivePushSubscriptionsByUserId": [],
+    "findPushSubscriptionByEndpoint": [],
+    "countActiveDevicesForUser": [
+      "hasActiveSubscriptions"
+    ],
+    "hasActiveSubscriptions": [],
+    "getPushSubscriptionStats": [],
+    "markNotificationAsRead": [],
+    "markAllRead": [],
+    "deleteNotification": [],
+    "createAdminNotification": [],
+    "sendAdminPushNotification": [],
+    "getNotifications": [],
+    "getUnread": [],
+    "getUnreadCount": [],
+    "getAdminNotifications": [],
+    "getAdminUnreadNotifications": [],
+    "getAdminUserNotifications": [],
+    "getAdminUnreadCount": [],
+    "getAdminNotificationStats": []
+  },
+  "deps": {}
+}

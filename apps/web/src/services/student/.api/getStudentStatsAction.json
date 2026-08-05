@@ -1,0 +1,11 @@
+{
+  "name": "getStudentStatsAction",
+  "file": "src/services/student/actions/student.queries.ts",
+  "sig": "(params: { classId: string; groupIds: string[] }) => Promise<{ error: any; data?: undefined; } | { data: { attendanceRate: number; totalCourses: number; todayCount: number; averageGrade: number; totalEvaluations: number; }; error?: undefined; }>",
+  "calls": [
+    "getStudentStats"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

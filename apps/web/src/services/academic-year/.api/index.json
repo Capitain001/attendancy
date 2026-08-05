@@ -1,0 +1,96 @@
+{
+  "service": "academic-year",
+  "path": "src/services/academic-year/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "2dc6b24",
+  "utils_dir": null,
+  "fns": {
+    "createAcademicYear": {
+      "f": ".api/createAcademicYear.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "setCurrentYear": {
+      "f": ".api/setCurrentYear.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateAcademicYear": {
+      "f": ".api/updateAcademicYear.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "removeAcademicYear": {
+      "f": ".api/removeAcademicYear.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getAcademicYears": {
+      "f": ".api/getAcademicYears.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getCurrentYear": {
+      "f": ".api/getCurrentYear.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createAcademicYearAction": {
+      "f": ".api/createAcademicYearAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "setCurrentYearAction": {
+      "f": ".api/setCurrentYearAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateAcademicYearAction": {
+      "f": ".api/updateAcademicYearAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeAcademicYearAction": {
+      "f": ".api/removeAcademicYearAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getAcademicYearsAction": {
+      "f": ".api/getAcademicYearsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getCurrentYearAction": {
+      "f": ".api/getCurrentYearAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createAcademicYear": [
+      "createAcademicYearAction"
+    ],
+    "setCurrentYear": [
+      "setCurrentYearAction"
+    ],
+    "updateAcademicYear": [
+      "updateAcademicYearAction"
+    ],
+    "removeAcademicYear": [
+      "removeAcademicYearAction"
+    ],
+    "getAcademicYears": [
+      "getAcademicYearsAction"
+    ],
+    "getCurrentYear": [
+      "getCurrentYearAction"
+    ],
+    "createAcademicYearAction": [],
+    "setCurrentYearAction": [],
+    "updateAcademicYearAction": [],
+    "removeAcademicYearAction": [],
+    "getAcademicYearsAction": [],
+    "getCurrentYearAction": []
+  },
+  "deps": {}
+}

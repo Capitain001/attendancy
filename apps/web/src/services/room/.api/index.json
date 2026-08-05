@@ -1,0 +1,124 @@
+{
+  "service": "room",
+  "path": "src/services/room/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "2dc6b24",
+  "utils_dir": null,
+  "fns": {
+    "createRoom": {
+      "f": ".api/createRoom.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "removeRoom": {
+      "f": ".api/removeRoom.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "createLocation": {
+      "f": ".api/createLocation.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateRoom": {
+      "f": ".api/updateRoom.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "toggleLocationActive": {
+      "f": ".api/toggleLocationActive.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getRooms": {
+      "f": ".api/getRooms.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getRoomById": {
+      "f": ".api/getRoomById.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getLocations": {
+      "f": ".api/getLocations.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createRoomAction": {
+      "f": ".api/createRoomAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeRoomAction": {
+      "f": ".api/removeRoomAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateRoomAction": {
+      "f": ".api/updateRoomAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "createLocationAction": {
+      "f": ".api/createLocationAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "toggleLocationActiveAction": {
+      "f": ".api/toggleLocationActiveAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getRoomsAction": {
+      "f": ".api/getRoomsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getRoomAction": {
+      "f": ".api/getRoomAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getLocationsAction": {
+      "f": ".api/getLocationsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createRoom": [
+      "createRoomAction"
+    ],
+    "removeRoom": [
+      "removeRoomAction"
+    ],
+    "createLocation": [
+      "createLocationAction"
+    ],
+    "updateRoom": [
+      "updateRoomAction"
+    ],
+    "toggleLocationActive": [
+      "toggleLocationActiveAction"
+    ],
+    "getRooms": [
+      "getRoomsAction"
+    ],
+    "getRoomById": [
+      "getRoomAction"
+    ],
+    "getLocations": [
+      "getLocationsAction"
+    ],
+    "createRoomAction": [],
+    "removeRoomAction": [],
+    "updateRoomAction": [],
+    "createLocationAction": [],
+    "toggleLocationActiveAction": [],
+    "getRoomsAction": [],
+    "getRoomAction": [],
+    "getLocationsAction": []
+  },
+  "deps": {}
+}

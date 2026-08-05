@@ -1,0 +1,8 @@
+{
+  "name": "findPushSubscriptionByEndpoint",
+  "file": "src/services/notification/database/push.queries.ts",
+  "sig": "(endpoint: string) => Promise<{ id: string; userId: string; endpoint: string; expiresAt: Date | null; } | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,44 @@
+{
+  "service": "program-ue",
+  "path": "src/services/program-ue/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "2dc6b24",
+  "utils_dir": null,
+  "fns": {
+    "addUEToProgram": {
+      "f": ".api/addUEToProgram.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "removeUEFromProgram": {
+      "f": ".api/removeUEFromProgram.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateProgramUE": {
+      "f": ".api/updateProgramUE.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getProgramUEs": {
+      "f": ".api/getProgramUEs.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "removeUEFromProgramAction": {
+      "f": ".api/removeUEFromProgramAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "addUEToProgram": [],
+    "removeUEFromProgram": [
+      "removeUEFromProgramAction"
+    ],
+    "updateProgramUE": [],
+    "getProgramUEs": [],
+    "removeUEFromProgramAction": []
+  },
+  "deps": {}
+}

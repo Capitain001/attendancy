@@ -1,0 +1,124 @@
+{
+  "service": "weekly-template",
+  "path": "src/services/weekly-template/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "2dc6b24",
+  "utils_dir": null,
+  "fns": {
+    "createWeeklyTemplate": {
+      "f": ".api/createWeeklyTemplate.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateWeeklyTemplate": {
+      "f": ".api/updateWeeklyTemplate.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "removeWeeklyTemplate": {
+      "f": ".api/removeWeeklyTemplate.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "createWeeklySlot": {
+      "f": ".api/createWeeklySlot.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "removeWeeklySlot": {
+      "f": ".api/removeWeeklySlot.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "applyWeeklyTemplate": {
+      "f": ".api/applyWeeklyTemplate.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getWeeklyTemplates": {
+      "f": ".api/getWeeklyTemplates.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getWeeklyTemplate": {
+      "f": ".api/getWeeklyTemplate.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createWeeklyTemplateAction": {
+      "f": ".api/createWeeklyTemplateAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateWeeklyTemplateAction": {
+      "f": ".api/updateWeeklyTemplateAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeWeeklyTemplateAction": {
+      "f": ".api/removeWeeklyTemplateAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "addWeeklySlotAction": {
+      "f": ".api/addWeeklySlotAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeWeeklySlotAction": {
+      "f": ".api/removeWeeklySlotAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "applyWeeklyTemplateAction": {
+      "f": ".api/applyWeeklyTemplateAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getWeeklyTemplatesAction": {
+      "f": ".api/getWeeklyTemplatesAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getWeeklyTemplateAction": {
+      "f": ".api/getWeeklyTemplateAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createWeeklyTemplate": [
+      "createWeeklyTemplateAction"
+    ],
+    "updateWeeklyTemplate": [
+      "updateWeeklyTemplateAction"
+    ],
+    "removeWeeklyTemplate": [
+      "removeWeeklyTemplateAction"
+    ],
+    "createWeeklySlot": [
+      "addWeeklySlotAction"
+    ],
+    "removeWeeklySlot": [
+      "removeWeeklySlotAction"
+    ],
+    "applyWeeklyTemplate": [
+      "applyWeeklyTemplateAction"
+    ],
+    "getWeeklyTemplates": [
+      "getWeeklyTemplatesAction"
+    ],
+    "getWeeklyTemplate": [
+      "getWeeklyTemplateAction"
+    ],
+    "createWeeklyTemplateAction": [],
+    "updateWeeklyTemplateAction": [],
+    "removeWeeklyTemplateAction": [],
+    "addWeeklySlotAction": [],
+    "removeWeeklySlotAction": [],
+    "applyWeeklyTemplateAction": [],
+    "getWeeklyTemplatesAction": [],
+    "getWeeklyTemplateAction": []
+  },
+  "deps": {}
+}

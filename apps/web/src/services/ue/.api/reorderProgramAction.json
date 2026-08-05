@@ -1,0 +1,11 @@
+{
+  "name": "reorderProgramAction",
+  "file": "src/services/ue/actions/ue.mutations.ts",
+  "sig": "({ programId, ueOrders, courseOrders }: ReorderProgramPayload) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
+  "calls": [
+    "reorderProgram"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

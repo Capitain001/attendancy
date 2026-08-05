@@ -1,0 +1,11 @@
+{
+  "name": "createAdminNotification",
+  "file": "src/services/notification/actions/notification.mutations.ts",
+  "sig": "(userId: string, input: { message: string; type?: string; scheduleId?: string; metadata?: Record<string, unknown> }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; message: string; type: NotificationType; read: boolean; metadata: JsonValue; createdAt: Date; updatedAt: Date; scheduleId: string | null; }; error?: undefined; }>",
+  "calls": [
+    "createNotificationForOrgUser"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}
