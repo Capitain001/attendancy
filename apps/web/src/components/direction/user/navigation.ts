@@ -26,6 +26,11 @@ export const directionRoutes: Route[] = [
       {
         title: "Filières",
         icon: "School",
+        link: "/direction/academic/program-tracks",
+      },
+      {
+        title: "Programmes",
+        icon: "BookMarked",
         link: "/direction/academic/programs",
       },
       {

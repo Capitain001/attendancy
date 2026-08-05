@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useAvailability } from "@/hooks/planning/useAvailability";
+import { useAvailability } from "@/hooks/data/planning/useAvailability";
 import { isSlotElapsed } from "@/services/planning/policy";
 import type { PlanningResources } from "@/services/planning";
 

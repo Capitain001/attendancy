@@ -4,12 +4,15 @@ import { idbPersister, PlanningView } from '@attendancy/planning'
 
 const queryClient = new QueryClient({
   defaultOptions: {
-    queries: { retry: 1, staleTime: 5 * 60 * 1000 },
+    queries: {
+      retry: 1,
+      staleTime: 5 * 60 * 1000,
+      gcTime: 7 * 24 * 60 * 60 * 1000,
+    },
   },
 })
 
-// TODO: récupérer classId depuis le profil Supabase (auth à implémenter Phase 5)
-const DEMO_CLASS_ID = 'TODO'
+const DEMO_CLASS_ID = 'b588e534-16b0-47e5-9bf8-8e7313fbdf7d'
 const today = new Date().toISOString().slice(0, 10)
 const nextWeek = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10)
 

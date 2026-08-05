@@ -6,10 +6,9 @@ import { Button } from '@/components/ui/button'
 import { Plus, Pencil } from 'lucide-react'
 import { FormDialog } from '@/components/ui/FormDialog'
 import { DialogFooter } from '@/components/ui/dialog'
+import type { DepartmentItem } from '@/services/department'
 
-type Dept = { id: string; name: string }
-
-function CreateForm({ departments, close }: { departments: Dept[]; close: () => void }) {
+function CreateForm({ departments, close }: { departments: DepartmentItem[]; close: () => void }) {
   const { create } = useManageProgramTracks()
   const ref = useRef<HTMLFormElement>(null)
 
@@ -63,7 +62,7 @@ function CreateForm({ departments, close }: { departments: Dept[]; close: () => 
 
 function EditForm({
   id, currentName, currentDeptId, departments, close,
-}: { id: string; currentName: string; currentDeptId?: string | null; departments: Dept[]; close: () => void }) {
+}: { id: string; currentName: string; currentDeptId?: string | null; departments: DepartmentItem[]; close: () => void }) {
   const { update } = useManageProgramTracks()
   const [name, setName] = useState(currentName)
 
@@ -110,7 +109,7 @@ function EditForm({
   )
 }
 
-export function ProgramTrackCreateButton({ departments }: { departments: Dept[] }) {
+export function ProgramTrackCreateButton({ departments }: { departments: DepartmentItem[] }) {
   return (
     <FormDialog
       trigger={
@@ -128,7 +127,7 @@ export function ProgramTrackCreateButton({ departments }: { departments: Dept[] 
 
 export function ProgramTrackEditButton({
   id, name, departmentId, departments,
-}: { id: string; name: string; departmentId?: string | null; departments: Dept[] }) {
+}: { id: string; name: string; departmentId?: string | null; departments: DepartmentItem[] }) {
   return (
     <FormDialog
       trigger={

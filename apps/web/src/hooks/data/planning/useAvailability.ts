@@ -1,4 +1,4 @@
-// src/hooks/planning/useAvailability.ts
+// src/hooks/data/planning/useAvailability.ts
 //
 // Hook React Query pour vérifier la disponibilité des ressources en temps réel.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -23,7 +23,7 @@ export interface UseAvailabilityParams {
     classes?:           { id: string }[];
     groups?:            { id: string }[];
     excludeScheduleId?: string;
-    enabled?:           boolean; // override manuel si besoin
+    enabled?:           boolean;
 }
 
 export interface ResourceAvailability {
@@ -60,23 +60,16 @@ export function useAvailability(params: UseAvailabilityParams) {
         enabled: enabledOverride,
     } = params;
 
-    // ── Debounce des inputs instables ─────────────────────────
-    // On debounce l'ensemble des params pour éviter N appels
-    // quand l'utilisateur sélectionne plusieurs ressources à la suite.
     const debouncedParams = useDebounce(
         { start, end, rooms, teachers, classes, groups, excludeScheduleId },
         300
     );
 
-    // ── Validation des dates ──────────────────────────────────
-    const isInvalidDate = 
-        !!debouncedParams.start && 
-        !!debouncedParams.end && 
+    const isInvalidDate =
+        !!debouncedParams.start &&
+        !!debouncedParams.end &&
         debouncedParams.start >= debouncedParams.end;
 
-    // ── Condition d'activation ────────────────────────────────
-    // On ne lance la requête que si on a un créneau valide
-    // et au moins une ressource à vérifier.
     const hasResources =
         debouncedParams.rooms.length    > 0 ||
         debouncedParams.teachers.length > 0 ||
@@ -85,7 +78,6 @@ export function useAvailability(params: UseAvailabilityParams) {
 
     const isEnabled = enabledOverride ?? (!isInvalidDate && hasResources);
 
-    // ── Query ─────────────────────────────────────────────────
     const query = useQuery({
         queryKey: availabilityKeys.check({
             start:             debouncedParams.start!,
@@ -113,13 +105,10 @@ export function useAvailability(params: UseAvailabilityParams) {
         },
 
         enabled:   isEnabled,
-        staleTime: 30_000,  // 30s — les conflits ne changent pas à la seconde
-        retry:     false,   // pas de retry sur erreur métier (UUID invalide, etc.)
+        staleTime: 30_000,
+        retry:     false,
     });
 
-    // ── Helpers de lookup O(1) ────────────────────────────────
-    // Permet au composant de faire : isRoomAvailable(roomId)
-    // sans itérer sur le tableau à chaque render.
     const availabilityMap = {
         rooms:    new Map(query.data?.rooms.map(    (r) => [r.id, r.available]) ?? []),
         teachers: new Map(query.data?.teachers.map( (t) => [t.id, t.available]) ?? []),
@@ -128,30 +117,21 @@ export function useAvailability(params: UseAvailabilityParams) {
     };
 
     return {
-        // ── Validation des dates ──────────────────────────────
         isInvalidDate,
-
-        // ── État React Query ──────────────────────────────────
         data:      query.data,
-        isLoading: query.isLoading && isEnabled, // false si désactivé
+        isLoading: query.isLoading && isEnabled,
         isError:   query.isError,
         error:     query.error,
-
-        // ── Helpers de lookup ─────────────────────────────────
         isRoomAvailable:    (id: string) => availabilityMap.rooms.get(id)    ?? true,
         isTeacherAvailable: (id: string) => availabilityMap.teachers.get(id) ?? true,
         isClassAvailable:   (id: string) => availabilityMap.classes.get(id)  ?? true,
         isGroupAvailable:   (id: string) => availabilityMap.groups.get(id)   ?? true,
-
-        // ── État global : est-ce qu'il y a au moins un conflit ?
         hasConflict: query.data
             ? [...availabilityMap.rooms.values(),
                ...availabilityMap.teachers.values(),
                ...availabilityMap.classes.values(),
                ...availabilityMap.groups.values()].some((v) => !v)
             : false,
-
-        // Indique si le hook est en attente du debounce ou de la requête
         isChecking: isEnabled && (query.isFetching || query.isLoading),
     };
 }

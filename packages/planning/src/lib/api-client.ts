@@ -15,7 +15,7 @@ const API_BASE = getApiBase()
 
 export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
-    credentials: 'include',
+    ...(API_BASE ? {} : { credentials: 'include' }),
     headers: { 'Content-Type': 'application/json', ...init?.headers },
     ...init,
   })

@@ -1,65 +1,71 @@
 'use client'
-import { School } from 'lucide-react'
+import { BookMarked } from 'lucide-react'
 import { CollapseSection } from '@/components/layout/CollapseSection'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
-import { ProgramTrackEditButton } from '@/components/direction/academic/ProgramTrackForm'
+import { ProgramEditButton } from '@/components/direction/academic/ProgramForm'
 import { Button } from '@/components/ui/button'
-import { useManageProgramTracks } from '@/hooks/data/program-track/useManageProgramTracks'
+import { useManagePrograms } from '@/hooks/data/program/useManagePrograms'
 import { card, typography } from '@/styles'
 import { cn } from '@/lib/utils'
+import type { GetProgramsDto } from '@/services/program'
+import type { GetProgramTracksDto } from '@/services/program-track'
 
-type Dept = { id: string; name: string }
+type ProgramItem = GetProgramsDto[number]
+type TrackItem = NonNullable<GetProgramTracksDto>[number]
 
-type ProgramTrack = {
-  id: string
-  name: string
-  description: string | null
-  department: { id: string; name: string } | null
-  _count: { classes: number }
-}
-
-function ProgramRow({ track, departments }: { track: ProgramTrack; departments: Dept[] }) {
-  const { remove } = useManageProgramTracks()
+function ProgramRow({
+  program,
+  tracks,
+}: {
+  program: ProgramItem
+  tracks: TrackItem[]
+}) {
+  const { remove } = useManagePrograms()
 
   return (
     <div className={cn(card.base, 'flex items-center gap-3')}>
-      <School className="size-4 shrink-0 text-primary" strokeWidth={1.5} />
+      <BookMarked className="size-4 shrink-0 text-primary" strokeWidth={1.5} />
 
       <div className="min-w-0 flex-1 flex flex-col gap-0.5">
-        <span className="text-sm font-medium text-text-primary">{track.name}</span>
-        {track.department && (
-          <span className={typography.small}>{track.department.name}</span>
+        <span className="text-sm font-medium text-text-primary">{program.name}</span>
+        {program.programTrack && (
+          <span className={typography.small}>{program.programTrack.name}</span>
         )}
       </div>
 
       <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
-        {track._count.classes} classe{track._count.classes !== 1 ? 's' : ''}
+        {program.classes.length} classe{program.classes.length !== 1 ? 's' : ''}
       </span>
 
       <div className="flex shrink-0 items-center gap-1">
-        <ProgramTrackEditButton
-          id={track.id}
-          name={track.name}
-          departmentId={track.department?.id}
-          departments={departments}
+        <ProgramEditButton
+          id={program.id}
+          name={program.name}
+          description={program.description}
+          programTrackId={program.programTrack?.id}
+          tracks={tracks}
         />
         <ConfirmDialog
           trigger={
             <Button
               variant="ghost"
               size="sm"
-              disabled={track._count.classes > 0}
+              disabled={program.classes.length > 0}
               className="text-xs text-destructive hover:text-destructive disabled:opacity-40"
-              title={track._count.classes > 0 ? "Archivez d'abord les classes associées" : undefined}
+              title={
+                program.classes.length > 0
+                  ? 'Dissociez les classes avant de supprimer'
+                  : undefined
+              }
             >
               Supprimer
             </Button>
           }
-          title={`Supprimer "${track.name}" ?`}
-          description="La filière sera supprimée définitivement."
+          title={`Supprimer "${program.name}" ?`}
+          description="Le programme sera supprimé définitivement."
           confirmLabel="Supprimer"
           destructive
-          onConfirm={() => remove.mutate(track.id)}
+          onConfirm={() => remove.mutate(program.id)}
         />
       </div>
     </div>
@@ -68,28 +74,28 @@ function ProgramRow({ track, departments }: { track: ProgramTrack; departments: 
 
 export function ProgramList({
   initialPrograms,
-  departments,
+  tracks,
 }: {
-  initialPrograms: ProgramTrack[]
-  departments: Dept[]
+  initialPrograms: ProgramItem[]
+  tracks: TrackItem[]
 }) {
-  const { tracks, isLoading } = useManageProgramTracks()
-  const data = tracks.length > 0 ? (tracks as ProgramTrack[]) : initialPrograms
+  const { programs, isLoading } = useManagePrograms()
+  const data = programs.length > 0 ? programs : initialPrograms
 
   return (
-    <CollapseSection label="Filières" count={data.length} defaultOpen>
+    <CollapseSection label="Programmes" count={data.length} defaultOpen>
       {isLoading && data.length === 0 ? (
         <p className={typography.small}>Chargement…</p>
       ) : data.length === 0 ? (
         <div className="py-8 text-center">
-          <School className="mx-auto mb-2 size-8 text-text-subtle" strokeWidth={1} />
-          <p className={typography.body}>Aucune filière créée.</p>
-          <p className={typography.small}>Créez la première pour commencer.</p>
+          <BookMarked className="mx-auto mb-2 size-8 text-text-subtle" strokeWidth={1} />
+          <p className={typography.body}>Aucun programme créé.</p>
+          <p className={typography.small}>Créez le premier pour commencer.</p>
         </div>
       ) : (
         <div className="flex flex-col gap-2">
-          {data.map((t) => (
-            <ProgramRow key={t.id} track={t} departments={departments} />
+          {data.map((p) => (
+            <ProgramRow key={p.id} program={p} tracks={tracks} />
           ))}
         </div>
       )}

@@ -1,4 +1,4 @@
-import type { UseAvailabilityParams } from "@/hooks/planning/useAvailability";
+import type { UseAvailabilityParams } from "@/hooks/data/planning/useAvailability";
 import type { PlanningResources } from "@/services/planning";
 
 import type { CoursePlanningFormState } from "../types";
