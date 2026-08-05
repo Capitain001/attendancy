@@ -1,8 +1,14 @@
 # dependencies
-/node_modules
+node_modules
+
+# turbo
+.turbo
+
+# dist (desktop Vite build)
+apps/desktop/dist
 
 # next.js
-/.next/
+.next/
 /out/
 next-env.d.ts
 
@@ -14,7 +20,10 @@ next-env.d.ts
 .env*.local
 
 # prisma — client généré (recréé par `prisma generate`)
-/src/generated/
+src/generated/
+
+# rust build artifacts
+src-tauri/target/
 
 # misc
 .DS_Store

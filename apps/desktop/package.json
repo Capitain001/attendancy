@@ -14,6 +14,7 @@
   "dependencies": {
     "@attendancy/planning": "workspace:*",
     "@attendancy/types": "workspace:*",
+    "@attendancy/ui": "workspace:*",
     "@tanstack/react-query": "^5.99.0",
     "@tanstack/react-query-persist-client": "^5.99.0",
     "@tauri-apps/api": "^2",

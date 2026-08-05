@@ -7,7 +7,8 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "turbo dev",
+    "dev": "turbo dev --filter=@attendancy/web",
+    "dev:desktop": "turbo dev --filter=@attendancy/desktop",
     "build": "turbo build",
     "lint": "turbo lint",
     "check-types": "turbo check-types",

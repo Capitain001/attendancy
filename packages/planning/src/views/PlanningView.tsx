@@ -1,5 +1,6 @@
 'use client'
 
+import { Card, CardContent, CardHeader } from '@attendancy/ui'
 import { usePlanning } from '../hooks/usePlanning'
 
 type Props = {
@@ -22,13 +23,15 @@ export function PlanningView({ classId, from, to }: Props) {
           <p className="font-semibold text-sm mb-2">{day.date}</p>
           <div className="space-y-2">
             {day.slots.map((slot) => (
-              <div key={slot.id} className="rounded-md border p-3 text-sm">
-                <div className="font-medium">{slot.courseName}</div>
-                <div className="text-muted-foreground">
+              <Card key={slot.id}>
+                <CardHeader className="pb-1 pt-3 px-3">
+                  <span className="font-medium text-sm">{slot.courseName}</span>
+                </CardHeader>
+                <CardContent className="pb-3 px-3 pt-0 text-xs text-muted-foreground">
                   {slot.startTime} – {slot.endTime}
                   {slot.roomName && ` · ${slot.roomName}`}
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
