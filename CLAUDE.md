@@ -26,7 +26,7 @@ Les chemins ci-dessous sont **relatifs à `apps/web/`**.
   sans ouvrir chaque fichier.
 - `apps/web/src/app/**` (pages RSC, layouts) → lire `docs/skills/nextjs-ppr/SKILL.md` (règle
   `connection()` / Suspense — contrainte PPR `cacheComponents: true`).
-- `apps/web/src/hooks/data/**` → lire `apps/web/src/hooks/data/DATA_CONTEXT.md` + `src/hooks/entity/USAGE.md`.
+- `apps/web/src/hooks/data/**` → lire `apps/web/src/hooks/CLAUDE.md` + `src/hooks/entity/usage.md`.
 - `apps/web/src/store/**` → lire `apps/web/src/store/STORE_CONTEXT.md` (quand un store vs React Query vs RSC).
 - `docs/**` → lire `docs/DOCS_CONTEXT.md` (quel document va dans quel dossier).
 - `apps/web/prisma/schemas/**` → lire `apps/web/prisma/schemas/README.md` (découpage multi-schema).
@@ -59,12 +59,9 @@ TypeScript strict · pas de framework UI · pas de Prisma · pas de Valibot.
 - Actions : préfixe `get*` (jamais `list*`), retour `{ data }` / `{ error: string }`.
 - Pages RSC sans `getUserInfo()` direct → `await connection()` (next/server) en
   tête (contrainte PPR de cacheComponents).
-- Valibot pour toute validation — jamais Zod.
 - Chaque service maintient son `CLAUDE.md` à jour.
 - Composants clients : jamais d'appel direct à une server action — toujours via
   un hook `apps/web/src/hooks/data/<domain>/` (useCrudEntity/useEntity).
-- Toast : importer `@/lib/toast/custom-toast` — jamais sonner directement.
-- Un store Zustand ne duplique jamais une donnée gérée par React Query.
 - `packages/planning` et `packages/types` : jamais de server actions, jamais de Prisma.
   Appels HTTP uniquement (`apiFetch` vers `/api/*`).
 

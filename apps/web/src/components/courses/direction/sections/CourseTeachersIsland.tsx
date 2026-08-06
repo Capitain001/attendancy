@@ -1,43 +1,40 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { getCourseTeachersAction, syncCourseTeachersAction } from '@/services/course-teacher'
-import { getTeachersAction } from '@/services/teacher'
+import { useMemo } from 'react'
+import { useCourseTeachers } from '@/hooks/data/courses/useCourseTeachers'
+import { useTeachers } from '@/hooks/data/teachers/useTeachers'
+import { useSyncCourseTeachers } from '@/hooks/data/courses/useSyncCourseTeachers'
 import { TeacherSection } from '../components/TeacherSection'
-import type { Teacher, CourseTeacherRelation } from '../components/TeacherSection'
+import type { Teacher, CourseTeacherRelation } from '../types'
 
 export function CourseTeachersIsland({ courseId }: { courseId: string }) {
-  const router = useRouter()
-  const [teachers, setTeachers] = useState<CourseTeacherRelation[]>([])
-  const [allTeachers, setAllTeachers] = useState<Teacher[]>([])
+  // Lectures via hooks/data (invariant : un client ne touche jamais une action
+  // serveur en direct) — React Query gère cache, états et annulation.
+  const courseTeachersEntity = useCourseTeachers({ courseId })
+  const teachersEntity = useTeachers({})
+  const { sync } = useSyncCourseTeachers(courseId)
 
-  useEffect(() => {
-    getCourseTeachersAction(courseId).then((res) => {
-      if (!('error' in res) && res.data) {
-        setTeachers(
-          res.data.map((ct) => ({
-            id: ct.id,
-            teacherId: ct.teacher?.id ?? null,
-            isMain: ct.isMain,
-            hours: ct.hours,
-          })),
-        )
-      }
-    })
-    getTeachersAction().then((res) => {
-      if (!('error' in res) && res.data) {
-        setAllTeachers(
-          res.data.map((t) => ({
-            id: t.id,
-            firstName: t.user.firstName,
-            lastName: t.user.lastName,
-            avatar_url: t.user.avatar_url,
-          })),
-        )
-      }
-    })
-  }, [courseId])
+  const courseTeachers = useMemo<CourseTeacherRelation[]>(
+    () =>
+      courseTeachersEntity.data.items.map((ct) => ({
+        id: ct.id,
+        teacherId: ct.teacher?.id ?? null,
+        isMain: ct.isMain,
+        hours: ct.hours,
+      })),
+    [courseTeachersEntity.data.items],
+  )
+
+  const allTeachers = useMemo<Teacher[]>(
+    () =>
+      teachersEntity.data.items.map((t) => ({
+        id: t.id,
+        firstName: t.user.firstName,
+        lastName: t.user.lastName,
+        avatar_url: t.user.avatar_url,
+      })),
+    [teachersEntity.data.items],
+  )
 
   async function handleSave({
     principalId,
@@ -46,13 +43,8 @@ export function CourseTeachersIsland({ courseId }: { courseId: string }) {
     principalId: string
     assistantIds: string[]
   }) {
-    const res = await syncCourseTeachersAction({ courseId, principalId, assistantIds })
-    if ('error' in res) {
-      console.error(res.error)
-      return
-    }
-    router.refresh()
+    await sync({ principalId, assistantIds })
   }
 
-  return <TeacherSection courseTeachers={teachers} allTeachers={allTeachers} onSave={handleSave} />
+  return <TeacherSection courseTeachers={courseTeachers} allTeachers={allTeachers} onSave={handleSave} />
 }

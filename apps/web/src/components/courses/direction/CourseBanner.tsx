@@ -1,16 +1,7 @@
 import { BackgroundPattern } from '@/components/design/BackgroundPattern'
+import type { CourseBannerData } from './types'
 
-interface CourseBannerProps {
-  course: {
-    id: string
-    name: string
-    credits: number
-    ueCourse: { code: string | null }
-    class: { name: string }
-  }
-}
-
-export function CourseBanner({ course }: CourseBannerProps) {
+export function CourseBanner({ course }: { course: CourseBannerData }) {
   return (
     <div className="relative overflow-hidden flex flex-col justify-between bg-card border rounded-2xl p-5 h-40 md:h-44 transition-all duration-300">
       <BackgroundPattern pattern="pattern-noise" className="opacity-70 dark:opacity-60" />

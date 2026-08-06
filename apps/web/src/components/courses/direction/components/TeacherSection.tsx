@@ -2,20 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { CheckIcon, PlusIcon, ChevronDownIcon } from 'lucide-react'
-
-export interface Teacher {
-  id: string
-  firstName: string | null
-  lastName: string | null
-  avatar_url: string | null
-}
-
-export interface CourseTeacherRelation {
-  id: string
-  teacherId: string | null
-  isMain: boolean
-  hours: number | null
-}
+import type { Teacher, CourseTeacherRelation } from '../types'
 
 interface EnrichedCourseTeacher extends CourseTeacherRelation {
   teacher: Teacher

@@ -1,5 +1,5 @@
 import { DirectionCourseDetailPage } from '@/components/courses/direction'
-import { notFound } from 'next/navigation'
+import { validateUUID } from '@/utils/server/validation'
 
 interface PageProps {
   params: Promise<{ courseId: string; slug: string }>
@@ -7,6 +7,7 @@ interface PageProps {
 
 export default async function Page({ params }: PageProps) {
   const { courseId, slug } = await params
-  if (!courseId) notFound()
+  // UUID invalide → notFound() immédiat, avant toute requête DB du détail cours.
+  validateUUID(courseId)
   return <DirectionCourseDetailPage courseId={courseId} slug={slug} />
 }
