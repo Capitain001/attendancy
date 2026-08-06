@@ -2,7 +2,7 @@
 
 import { useQueries } from "@tanstack/react-query";
 
-import { getClassGroupsAction } from "@/services/class";
+import { getClassGroupsAction } from "@/services/group";
 
 export interface GroupOption {
   id: string;

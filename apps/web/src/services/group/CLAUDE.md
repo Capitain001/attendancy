@@ -17,19 +17,19 @@ invalident donc `CACHE.CLASS(orgId, classId)` — pas de CACHE.GROUP séparé.
 
 | Fichier | Rôle |
 |---------|------|
-| `database/group.queries.ts` | `getGroupsByClass` — liste tagguée sur CACHE.CLASS |
-| `database/group.mutations.ts` | `createGroup`, `deleteGroup` (soft delete) |
-| `cache.ts` | `GROUP_GRAPH` → invalide CACHE.CLASS |
-| `validation.ts` | `createGroupSchema` |
-| `actions/group.queries.ts` | `getGroupsByClassAction(classId)` |
-| `actions/group.mutations.ts` | `createGroupAction`, `deleteGroupAction` |
+| `database/group.queries.ts` | `getGroupsByClass`, `getGroupEligibleStudents` (inscriptions + flag `inGroup`) |
+| `database/group.mutations.ts` | `createGroup`, `updateGroup`, `removeGroup` (soft delete), `setGroupStudents` |
+| `cache.ts` | `GROUP_GRAPH` → invalide CACHE.CLASS + CACHE.GROUP |
+| `validation.ts` | `createGroupSchema`, `updateGroupSchema`, `setGroupStudentsSchema` |
+| `actions/group.queries.ts` | `getGroupsByClassAction`, `getClassGroupsAction` (groupes + info classe), `getGroupEligibleStudentsAction` |
+| `actions/group.mutations.ts` | `createGroupAction`, `updateGroupAction`, `removeGroupAction`, `setGroupStudentsAction` |
 
 ## Invariants
 
 - Soft delete obligatoire — `Schedule.group` Restrict bloque le hard delete si séances liées
-- `deleteGroup` : vérification ownership avant soft delete (findFirst avec orgId)
-
-## Points d'extension (⚠)
-
-- `updateGroupAction` pour renommer
-- `setGroupStudentsAction` — diff transactionnel add/remove StudentGroup
+- `removeGroup` : vérification ownership avant soft delete (findFirst avec orgId)
+- `getClassGroupsAction` compose l'info classe via l'action propriétaire `getClassAction`
+  (service `class`) — jamais de `prisma.class` en lecture de payload ici.
+- `getGroupEligibleStudents` lit `StudentEnrollment` (join membership) scopé par
+  `class.programTrack.orgId` ; `groupId` est un arg → clé de cache `'use cache'` par groupe.
+- `setGroupStudents` : set transactionnel (`deleteMany` + `createMany`) après garde ownership.

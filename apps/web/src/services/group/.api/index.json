@@ -2,11 +2,21 @@
   "service": "group",
   "path": "src/services/group/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "5306ac7",
+  "derived_at": "decb56e",
   "utils_dir": null,
   "fns": {
     "createGroup": {
       "f": ".api/createGroup.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateGroup": {
+      "f": ".api/updateGroup.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "setGroupStudents": {
+      "f": ".api/setGroupStudents.json",
       "layer": "db",
       "kind": "mutation"
     },
@@ -20,8 +30,18 @@
       "layer": "db",
       "kind": "query"
     },
+    "getGroupEligibleStudents": {
+      "f": ".api/getGroupEligibleStudents.json",
+      "layer": "db",
+      "kind": "query"
+    },
     "createGroupAction": {
       "f": ".api/createGroupAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateGroupAction": {
+      "f": ".api/updateGroupAction.json",
       "layer": "action",
       "kind": "server-action"
     },
@@ -30,8 +50,23 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "setGroupStudentsAction": {
+      "f": ".api/setGroupStudentsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "getGroupsByClassAction": {
       "f": ".api/getGroupsByClassAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getClassGroupsAction": {
+      "f": ".api/getClassGroupsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getGroupEligibleStudentsAction": {
+      "f": ".api/getGroupEligibleStudentsAction.json",
       "layer": "action",
       "kind": "server-action"
     }
@@ -40,15 +75,34 @@
     "createGroup": [
       "createGroupAction"
     ],
+    "updateGroup": [
+      "updateGroupAction"
+    ],
+    "setGroupStudents": [
+      "setGroupStudentsAction"
+    ],
     "removeGroup": [
       "removeGroupAction"
     ],
     "getGroupsByClass": [
-      "getGroupsByClassAction"
+      "getGroupsByClassAction",
+      "getClassGroupsAction"
+    ],
+    "getGroupEligibleStudents": [
+      "getGroupEligibleStudentsAction"
     ],
     "createGroupAction": [],
+    "updateGroupAction": [],
     "removeGroupAction": [],
-    "getGroupsByClassAction": []
+    "setGroupStudentsAction": [],
+    "getGroupsByClassAction": [],
+    "getClassGroupsAction": [],
+    "getGroupEligibleStudentsAction": [],
+    "getClassAction": [
+      "getClassGroupsAction"
+    ]
   },
-  "deps": {}
+  "deps": {
+    "getClassAction": "class"
+  }
 }
