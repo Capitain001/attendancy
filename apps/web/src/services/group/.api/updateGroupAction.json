@@ -1,0 +1,11 @@
+{
+  "name": "updateGroupAction",
+  "file": "src/services/group/actions/group.mutations.ts",
+  "sig": "(input: UpdateGroupInput) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; _count: { studentGroups: number; }; }; error?: undefined; }>",
+  "calls": [
+    "updateGroup"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

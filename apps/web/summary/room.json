@@ -2,13 +2,13 @@
   "service": "room",
   "path": "src/services/room/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
-  "generated_at": "2026-07-29T12:17:29.379Z",
+  "derived_at": "5306ac7",
+  "generated_at": "2026-08-06T12:17:34.695Z",
   "fns": {
     "createRoom": {
       "name": "createRoom",
       "file": "src/services/room/database/room.mutations.ts",
-      "sig": "(data: { name: string capacity?: number locationId?: string equipment?: string[] orgId: string }) => Promise<{ name: string; id: string; location: { name: string; id: string; } | null; capacity: number | null; locationId: string | null; equipment: string[]; }>",
+      "sig": "(data: { name: string capacity?: number locationId?: string equipment?: string[] orgId: string }) => Promise<{ id: string; name: string; capacity: number | null; equipment: string[]; location: { id: string; name: string; } | null; locationId: string | null; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -28,7 +28,17 @@
     "createLocation": {
       "name": "createLocation",
       "file": "src/services/room/database/room.mutations.ts",
-      "sig": "(data: { name: string address: string latitude: number longitude: number radius?: number orgId: string }) => Promise<{ name: string; id: string; address: string; }>",
+      "sig": "(data: { name: string address: string latitude: number longitude: number radius?: number orgId: string }) => Promise<{ id: string; name: string; address: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateRoom": {
+      "name": "updateRoom",
+      "file": "src/services/room/database/room.mutations.ts",
+      "sig": "(id: string, orgId: string, data: { name?: string; capacity?: number; locationId?: string; equipment?: string[] }) => Promise<{ id: string; name: string; capacity: number | null; equipment: string[]; location: { id: string; name: string; } | null; locationId: string | null; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -48,7 +58,7 @@
     "getRooms": {
       "name": "getRooms",
       "file": "src/services/room/database/room.queries.ts",
-      "sig": "(orgId: string) => Promise<{ name: string; id: string; location: { name: string; id: string; } | null; capacity: number | null; locationId: string | null; equipment: string[]; }[]>",
+      "sig": "(orgId: string) => Promise<{ id: string; name: string; capacity: number | null; equipment: string[]; location: { id: string; name: string; } | null; locationId: string | null; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -58,7 +68,7 @@
     "getRoomById": {
       "name": "getRoomById",
       "file": "src/services/room/database/room.queries.ts",
-      "sig": "(id: string, orgId: string) => Promise<{ name: string; id: string; location: { name: string; id: string; address: string; } | null; capacity: number | null; locationId: string | null; equipment: string[]; } | null>",
+      "sig": "(id: string, orgId: string) => Promise<{ id: string; name: string; capacity: number | null; equipment: string[]; location: { id: string; name: string; address: string; } | null; locationId: string | null; } | null>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -68,7 +78,7 @@
     "getLocations": {
       "name": "getLocations",
       "file": "src/services/room/database/room.queries.ts",
-      "sig": "(orgId: string) => Promise<{ name: string; id: string; address: string; radius: number; active: boolean; }[]>",
+      "sig": "(orgId: string) => Promise<{ id: string; name: string; address: string; radius: number; active: boolean; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -78,7 +88,7 @@
     "createRoomAction": {
       "name": "createRoomAction",
       "file": "src/services/room/actions/room.mutations.ts",
-      "sig": "(input: CreateRoomInput) => Promise<{ data: { name: string; id: string; location: { name: string; id: string; } | null; capacity: number | null; locationId: string | null; equipment: string[]; }; error?: undefined; } | { error: string; data?: undefined; }>",
+      "sig": "(input: CreateRoomInput) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; capacity: number | null; equipment: string[]; location: { id: string; name: string; } | null; locationId: string | null; }; error?: undefined; }>",
       "calls": [
         "createRoom"
       ],
@@ -91,7 +101,7 @@
     "removeRoomAction": {
       "name": "removeRoomAction",
       "file": "src/services/room/actions/room.mutations.ts",
-      "sig": "(roomId: string) => Promise<{ success: boolean; error?: string }>",
+      "sig": "(roomId: string) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
       "calls": [
         "removeRoom"
       ],
@@ -104,8 +114,10 @@
     "updateRoomAction": {
       "name": "updateRoomAction",
       "file": "src/services/room/actions/room.mutations.ts",
-      "sig": "(roomId: string, data: { name?: string; capacity?: number; locationId?: string; equipment?: string[] }) => Promise<{ data: { name: string; id: string; location: { name: string; id: string; } | null; capacity: number | null; locationId: string | null; equipment: string[]; }; error?: undefined; } | { error: string; data?: undefined; }>",
-      "calls": [],
+      "sig": "(roomId: string, data: { name?: string; capacity?: number; locationId?: string; equipment?: string[] }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; capacity: number | null; equipment: string[]; location: { id: string; name: string; } | null; locationId: string | null; }; error?: undefined; }>",
+      "calls": [
+        "updateRoom"
+      ],
       "auth": {},
       "rules": [],
       "why_ref": "",
@@ -115,7 +127,7 @@
     "createLocationAction": {
       "name": "createLocationAction",
       "file": "src/services/room/actions/room.mutations.ts",
-      "sig": "(input: CreateLocationInput) => Promise<{ data: { name: string; id: string; address: string; }; error?: undefined; } | { error: string; data?: undefined; }>",
+      "sig": "(input: CreateLocationInput) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; address: string; }; error?: undefined; }>",
       "calls": [
         "createLocation"
       ],
@@ -128,7 +140,7 @@
     "toggleLocationActiveAction": {
       "name": "toggleLocationActiveAction",
       "file": "src/services/room/actions/room.mutations.ts",
-      "sig": "(locationId: string) => Promise<{ data: { id: string; active: boolean; }; error?: undefined; } | { error: string; data?: undefined; }>",
+      "sig": "(locationId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; active: boolean; }; error?: undefined; }>",
       "calls": [
         "toggleLocationActive"
       ],
@@ -141,7 +153,7 @@
     "getRoomsAction": {
       "name": "getRoomsAction",
       "file": "src/services/room/actions/room.queries.ts",
-      "sig": "() => Promise<{ data: { name: string; id: string; location: { name: string; id: string; } | null; capacity: number | null; locationId: string | null; equipment: string[]; }[]; error?: undefined; } | { error: string; data?: undefined; }>",
+      "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; capacity: number | null; equipment: string[]; location: { id: string; name: string; } | null; locationId: string | null; }[]; error?: undefined; }>",
       "calls": [
         "getRooms"
       ],
@@ -154,7 +166,7 @@
     "getRoomAction": {
       "name": "getRoomAction",
       "file": "src/services/room/actions/room.queries.ts",
-      "sig": "(roomId: string) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; location: { name: string; id: string; address: string; } | null; capacity: number | null; locationId: string | null; equipment: string[]; }; error?: undefined; }>",
+      "sig": "(roomId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; capacity: number | null; equipment: string[]; location: { id: string; name: string; address: string; } | null; locationId: string | null; }; error?: undefined; }>",
       "calls": [
         "getRoomById"
       ],
@@ -167,7 +179,7 @@
     "getLocationsAction": {
       "name": "getLocationsAction",
       "file": "src/services/room/actions/room.queries.ts",
-      "sig": "() => Promise<{ data: { name: string; id: string; address: string; radius: number; active: boolean; }[]; error?: undefined; } | { error: string; data?: undefined; }>",
+      "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; address: string; radius: number; active: boolean; }[]; error?: undefined; }>",
       "calls": [
         "getLocations"
       ],
@@ -187,6 +199,9 @@
     ],
     "createLocation": [
       "createLocationAction"
+    ],
+    "updateRoom": [
+      "updateRoomAction"
     ],
     "toggleLocationActive": [
       "toggleLocationActiveAction"

@@ -1,0 +1,8 @@
+{
+  "name": "createUETemplateImport",
+  "file": "src/services/ue-template/database/template.mutations.ts",
+  "sig": "(params: { templateId: string orgId: string ueId: string }) => Promise<{ id: string; orgId: string; templateId: string; ueId: string; importedAt: Date; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

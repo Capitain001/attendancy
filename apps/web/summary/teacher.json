@@ -2,8 +2,8 @@
   "service": "teacher",
   "path": "src/services/teacher/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
-  "generated_at": "2026-07-29T12:17:29.429Z",
+  "derived_at": "2dc6b24",
+  "generated_at": "2026-08-06T12:17:34.888Z",
   "fns": {
     "updateTeacherDepartment": {
       "name": "updateTeacherDepartment",
@@ -18,7 +18,7 @@
     "getTeachers": {
       "name": "getTeachers",
       "file": "src/services/teacher/database/teacher.queries.ts",
-      "sig": "(orgId: string, departmentId?: string) => Promise<{ id: string; _count: { courses: number; }; department: { name: string; id: string; } | null; user: { id: string; email: string; avatar_url: string | null; status: UserStatus; firstName: string | null; lastName: string | null; }; departmentId: string | null; }[]>",
+      "sig": "(orgId: string, departmentId?: string) => Promise<{ id: string; departmentId: string | null; department: { name: string; id: string; } | null; user: { id: string; firstName: string | null; lastName: string | null; email: string; avatar_url: string | null; status: UserStatus; }; _count: { ...; }; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -28,7 +28,7 @@
     "getTeacherTodaySchedules": {
       "name": "getTeacherTodaySchedules",
       "file": "src/services/teacher/database/teacher.queries.ts",
-      "sig": "(teacherId: string, orgId: string) => Promise<{ id: string; course: { name: string; id: string; }; room: { name: string; id: string; }; status: ScheduleStatus; notes: string | null; startTime: Date; endTime: Date; }[]>",
+      "sig": "(teacherId: string, orgId: string) => Promise<{ id: string; status: ScheduleStatus; room: { name: string; id: string; }; course: { name: string; id: string; }; startTime: Date; endTime: Date; notes: string | null; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -48,7 +48,7 @@
     "getTeacherSchedules": {
       "name": "getTeacherSchedules",
       "file": "src/services/teacher/database/teacher.queries.ts",
-      "sig": "(teacherId: string, orgId: string, rangeStart: Date, rangeEnd: Date) => Promise<{ id: string; class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; status: ScheduleStatus; notes: string | null; startTime: Date; endTime: Date; }[]>",
+      "sig": "(teacherId: string, orgId: string, rangeStart: Date, rangeEnd: Date) => Promise<{ id: string; status: ScheduleStatus; room: { name: string; id: string; }; class: { name: string; id: string; }; group: { name: string; id: string; } | null; course: { name: string; id: string; }; startTime: Date; endTime: Date; notes: string | null; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -65,55 +65,30 @@
       "layer": "db",
       "kind": "query"
     },
-    "getTeacher": {
-      "name": "getTeacher",
+    "getTeacherOrganizationStats": {
+      "name": "getTeacherOrganizationStats",
       "file": "src/services/teacher/database/teacher.queries.ts",
-      "sig": "(teacherId: string, orgId: string) => Promise<{ id: string; _count: { courses: number; }; department: { name: string; id: string; } | null; user: { id: string; email: string; avatar_url: string | null; phone: string | null; status: UserStatus; firstName: string | null; lastName: string | null; }; departmentId: string | null; } | null>",
+      "sig": "(orgId: string) => Promise<{ total: number; active: number; inactive: number; withCourses: number; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
       "layer": "db",
       "kind": "query"
     },
-    "createTeacherAction": {
-      "name": "createTeacherAction",
-      "file": "src/services/teacher/actions/teacher.mutations.ts",
-      "sig": "(_input: CreateTeacherInput) => Promise<{ readonly error: \"Les enseignants sont créés via le flux invitation\"; }>",
-      "calls": [],
-      "auth": {},
+    "getTeacher": {
+      "name": "getTeacher",
+      "file": "src/services/teacher/database/teacher.queries.ts",
+      "sig": "(teacherId: string, orgId: string) => Promise<{ id: string; departmentId: string | null; department: { name: string; id: string; } | null; user: { id: string; firstName: string | null; lastName: string | null; email: string; phone: string | null; avatar_url: string | null; status: UserStatus; }; _count: { ...; }; } | null>",
+      "composes": [],
       "rules": [],
       "why_ref": "",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "updateTeacherAction": {
-      "name": "updateTeacherAction",
-      "file": "src/services/teacher/actions/teacher.mutations.ts",
-      "sig": "(teacherId: string, data: UpdateTeacherInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; departmentId: string | null; }; error?: undefined; }>",
-      "calls": [
-        "updateTeacherDepartmentAction"
-      ],
-      "auth": {},
-      "rules": [],
-      "why_ref": "",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "deleteTeacherAction": {
-      "name": "deleteTeacherAction",
-      "file": "src/services/teacher/actions/teacher.mutations.ts",
-      "sig": "(_teacherId: string) => Promise<{ readonly error: \"La suppression directe des enseignants n'est pas supportée\"; }>",
-      "calls": [],
-      "auth": {},
-      "rules": [],
-      "why_ref": "",
-      "layer": "action",
-      "kind": "server-action"
+      "layer": "db",
+      "kind": "query"
     },
     "updateTeacherDepartmentAction": {
       "name": "updateTeacherDepartmentAction",
       "file": "src/services/teacher/actions/teacher.mutations.ts",
-      "sig": "(input: UpdateTeacherDepartmentInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; departmentId: string | null; }; error?: undefined; }>",
+      "sig": "(input: UpdateTeacherDepartmentInput) => Promise<{ error: any; data?: undefined; } | { data: { id: string; departmentId: string | null; }; error?: undefined; }>",
       "calls": [
         "updateTeacherDepartment"
       ],
@@ -137,7 +112,7 @@
     "getTeacherSchedulesAction": {
       "name": "getTeacherSchedulesAction",
       "file": "src/services/teacher/actions/teacher.queries.ts",
-      "sig": "(teacherId: string, rangeStart: Date, rangeEnd: Date) => Promise<{ data: { id: string; class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; status: ScheduleStatus; notes: string | null; startTime: Date; endTime: Date; }[]; error?: undefined; } | { ...; }>",
+      "sig": "(teacherId: string, rangeStart: Date, rangeEnd: Date) => Promise<{ error: any; data?: undefined; } | { data: { id: string; status: ScheduleStatus; room: { name: string; id: string; }; class: { name: string; id: string; }; group: { name: string; id: string; } | null; course: { ...; }; startTime: Date; endTime: Date; notes: string | null; }[]; error?: undefined; }>",
       "calls": [
         "getTeacherSchedules"
       ],
@@ -150,7 +125,7 @@
     "getTeacherTodaySchedulesAction": {
       "name": "getTeacherTodaySchedulesAction",
       "file": "src/services/teacher/actions/teacher.queries.ts",
-      "sig": "(teacherId: string) => Promise<{ data: { id: string; course: { name: string; id: string; }; room: { name: string; id: string; }; status: ScheduleStatus; notes: string | null; startTime: Date; endTime: Date; }[]; error?: undefined; } | { ...; }>",
+      "sig": "(teacherId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; status: ScheduleStatus; room: { name: string; id: string; }; course: { name: string; id: string; }; startTime: Date; endTime: Date; notes: string | null; }[]; error?: undefined; }>",
       "calls": [
         "getTeacherTodaySchedules"
       ],
@@ -163,7 +138,7 @@
     "getTeacherCoursesAction": {
       "name": "getTeacherCoursesAction",
       "file": "src/services/teacher/actions/teacher.queries.ts",
-      "sig": "(teacherId: string) => Promise<{ id: string; name: string; class: { name: string; id: string; }; }[] | { error: \"Organisation introuvable\"; }>",
+      "sig": "(teacherId: string) => Promise<{ id: string; name: string; class: { name: string; id: string; }; }[] | { error: any; }>",
       "calls": [
         "getTeacherCourses"
       ],
@@ -176,7 +151,7 @@
     "getTeacherStatsAction": {
       "name": "getTeacherStatsAction",
       "file": "src/services/teacher/actions/teacher.queries.ts",
-      "sig": "(teacherId: string) => Promise<{ data: { courses: number; assiduite: number; ponctualite: number; annulations: number; }; error?: undefined; } | { error: string; data?: undefined; }>",
+      "sig": "(teacherId: string) => Promise<{ error: any; data?: undefined; } | { data: { courses: number; assiduite: number; ponctualite: number; annulations: number; }; error?: undefined; }>",
       "calls": [
         "getTeacherStats"
       ],
@@ -189,7 +164,7 @@
     "getTeachersAction": {
       "name": "getTeachersAction",
       "file": "src/services/teacher/actions/teacher.queries.ts",
-      "sig": "(departmentId?: string) => Promise<{ data: { id: string; _count: { courses: number; }; department: { name: string; id: string; } | null; user: { id: string; email: string; avatar_url: string | null; status: UserStatus; firstName: string | null; lastName: string | null; }; departmentId: string | null; }[]; error?: undefined; } | { ...; }>",
+      "sig": "(departmentId?: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; departmentId: string | null; department: { name: string; id: string; } | null; user: { id: string; firstName: string | null; lastName: string | null; email: string; avatar_url: string | null; status: UserStatus; }; _count: { ...; }; }[]; error?: undef...",
       "calls": [
         "getTeachers"
       ],
@@ -202,9 +177,22 @@
     "getTeacherAction": {
       "name": "getTeacherAction",
       "file": "src/services/teacher/actions/teacher.queries.ts",
-      "sig": "(teacherId: string) => Promise<{ data: { id: string; _count: { courses: number; }; department: { name: string; id: string; } | null; user: { id: string; email: string; avatar_url: string | null; phone: string | null; status: UserStatus; firstName: string | null; lastName: string | null; }; departmentId: string | null; } | null; error?: un...",
+      "sig": "(teacherId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; departmentId: string | null; department: { name: string; id: string; } | null; user: { id: string; firstName: string | null; lastName: string | null; email: string; phone: string | null; avatar_url: string | null; status: UserStatus; }; _count: { ...;...",
       "calls": [
         "getTeacher"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getTeacherOrganizationStatsAction": {
+      "name": "getTeacherOrganizationStatsAction",
+      "file": "src/services/teacher/actions/teacher.queries.ts",
+      "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { total: number; active: number; inactive: number; withCourses: number; }; error?: undefined; }>",
+      "calls": [
+        "getTeacherOrganizationStats"
       ],
       "auth": {},
       "rules": [],
@@ -232,22 +220,21 @@
     "getTeacherStats": [
       "getTeacherStatsAction"
     ],
+    "getTeacherOrganizationStats": [
+      "getTeacherOrganizationStatsAction"
+    ],
     "getTeacher": [
       "getTeacherAction"
     ],
-    "createTeacherAction": [],
-    "updateTeacherAction": [],
-    "deleteTeacherAction": [],
-    "updateTeacherDepartmentAction": [
-      "updateTeacherAction"
-    ],
+    "updateTeacherDepartmentAction": [],
     "getCurrentTeacherId": [],
     "getTeacherSchedulesAction": [],
     "getTeacherTodaySchedulesAction": [],
     "getTeacherCoursesAction": [],
     "getTeacherStatsAction": [],
     "getTeachersAction": [],
-    "getTeacherAction": []
+    "getTeacherAction": [],
+    "getTeacherOrganizationStatsAction": []
   },
   "deps": {}
 }

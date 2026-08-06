@@ -10,11 +10,11 @@ import { toast } from "sonner";
 import {
   getClassGroupsAction,
   getGroupEligibleStudentsAction,
-  createClassGroupAction,
+  createGroupAction,
   setGroupStudentsAction,
-  updateClassGroupAction,
-  deleteClassGroupAction,
-} from "@/services/class";
+  updateGroupAction,
+  removeGroupAction,
+} from "@/services/group";
 import { CACHE_KEYS, QUERY_PRESETS } from "@/config/client_cache";
 
 type GroupsRes = Awaited<ReturnType<typeof getClassGroupsAction>>;
@@ -55,7 +55,7 @@ export function useClassGroups(classId: string) {
   // ── Création (append optimiste à la réponse serveur) ──
   const createMutation = useMutation({
     mutationFn: (input: { name: string; description?: string }) =>
-      createClassGroupAction({ classId, ...input }),
+      createGroupAction({ classId, ...input }),
     onSuccess: (res) => {
       if ("error" in res && res.error) {
         toast.error(res.error);
@@ -69,7 +69,7 @@ export function useClassGroups(classId: string) {
   // ── Renommer / description (optimiste) ──
   const updateMutation = useMutation({
     mutationFn: (input: { groupId: string; name?: string; description?: string | null }) =>
-      updateClassGroupAction({ classId, ...input }),
+      updateGroupAction({ classId, ...input }),
     onMutate: async (input) => {
       await qc.cancelQueries({ queryKey: key });
       const prev = qc.getQueryData<GroupsRes>(key);
@@ -96,7 +96,7 @@ export function useClassGroups(classId: string) {
 
   // ── Suppression (soft) — optimiste ──
   const deleteMutation = useMutation({
-    mutationFn: (groupId: string) => deleteClassGroupAction({ classId, groupId }),
+    mutationFn: (groupId: string) => removeGroupAction(groupId),
     onMutate: async (groupId) => {
       await qc.cancelQueries({ queryKey: key });
       const prev = qc.getQueryData<GroupsRes>(key);

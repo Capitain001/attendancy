@@ -55,3 +55,10 @@ export async function getProgramUEs(programId: string, orgId: string) {
     orderBy: [{ semester: 'asc' }, { order: 'asc' }],
   })
 }
+
+export async function getUEByCode(code: string, orgId: string) {
+  return prisma.uE.findFirst({
+    where: { code, orgId, deletedAt: null },
+    select: { id: true, name: true, code: true },
+  })
+}

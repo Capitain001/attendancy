@@ -8,75 +8,81 @@ import { getPlanningRange } from './utils'
 import { getOrgPlanningResourcesAction } from './actions'
 import type { OrgPlanningResources } from './types'
 
+
 export interface PlanningScheduleFilters {
-  date:       string | null
-  classId?:   string
-  groupId?:   string
-  teacherId?: string
-  roomId?:    string
-  status?:    ScheduleStatus
-  enabled?:   boolean
+  date: string | null;
+  classId?: string;
+  groupId?: string;
+  teacherId?: string;
+  roomId?: string;
+  status?: ScheduleStatus;
+  enabled?: boolean;
 }
 
 /**
  * Options de query partagées : même `queryKey` + `queryFn` côté serveur
- * (prefetchQuery) et client (useQuery) → hydratation garantie.
+ * (prefetchQuery) et client (useQuery) -> hydratation garantie.
  */
 export function planningSchedulesQuery(
-  filters: Omit<PlanningScheduleFilters, 'enabled'>
+  filters: Omit<PlanningScheduleFilters, "enabled">
 ) {
   return {
-    queryKey: CACHE_KEYS.SCHEDULES.PLANNING(filters as Record<string, unknown>),
+    queryKey: CACHE_KEYS.SCHEDULES.PLANNING(filters),
     queryFn: async (): Promise<GetSchedulesReturn> => {
-      const { rangeStart, rangeEnd } = getPlanningRange(filters.date)
+      const { rangeStart, rangeEnd } = getPlanningRange(filters.date);
       const res = await getSchedulesAction({
         rangeStart,
         rangeEnd,
-        classId:   filters.classId,
+        classId: filters.classId,
+        groupId: filters.groupId,
         teacherId: filters.teacherId,
-        roomId:    filters.roomId,
-      })
+        roomId: filters.roomId,
+        status: filters.status,
+      });
       if (res.error || !res.data) {
-        throw new Error(res.error ?? 'Impossible de récupérer les séances.')
+        throw new Error(res.error ?? "Impossible de récupérer les schedules.");
       }
-      return res.data
+      return res.data;
     },
     ...QUERY_PRESETS.DASHBOARD,
-  }
+  };
 }
 
 /**
  * Jours (yyyy-MM-dd) ayant des séances pour un mois "yyyy-MM".
+ * Une entrée cache par mois — réutilisable serveur (prefetch) + client (hook).
  */
 export function scheduleDaysQuery(month: string) {
   return {
     queryKey: CACHE_KEYS.SCHEDULES.DAYS(month),
     queryFn: async (): Promise<string[]> => {
-      const res = await getScheduleDaysAction(month)
+      const res = await getScheduleDaysAction(month);
       if (res.error || !res.data) {
-        throw new Error(res.error ?? 'Impossible de récupérer les jours.')
+        throw new Error(res.error ?? "Impossible de récupérer les jours.");
       }
-      return res.data
+      return res.data;
     },
     ...QUERY_PRESETS.DASHBOARD,
-  }
+  };
 }
 
 /**
- * Ressources planning org (classes, enseignants, salles) pour les filtres.
+ * Ressources planning org (classes, enseignants, salles) pour peupler les filtres.
+ * Réutilisable serveur (prefetch) + client (hook).
  */
 export function orgPlanningResourcesQuery() {
   return {
-    queryKey: ['planning', 'org-resources'] as const,
+    queryKey: ["planning", "org-resources"] as const,
     queryFn: async (): Promise<OrgPlanningResources> => {
-      const res = await getOrgPlanningResourcesAction()
-      if ('error' in res || !res.data) {
+      const res = await getOrgPlanningResourcesAction();
+      if ("error" in res || !res.data) {
         throw new Error(
-          ('error' in res && res.error) || 'Ressources indisponibles.'
-        )
+          ("error" in res && res.error) || "Ressources indisponibles."
+        );
       }
-      return res.data
+      return res.data;
     },
     ...QUERY_PRESETS.STATIC,
-  }
+  };
 }
+

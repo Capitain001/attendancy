@@ -2,9 +2,69 @@
   "service": "attendance",
   "path": "src/services/attendance/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
-  "generated_at": "2026-07-29T12:17:29.215Z",
+  "derived_at": "2dc6b24",
+  "generated_at": "2026-08-06T12:17:33.981Z",
   "fns": {
+    "getOrgTodayAbsences": {
+      "name": "getOrgTodayAbsences",
+      "file": "src/services/attendance/database/analytics.ts",
+      "sig": "(orgId: string) => Promise<{ id: string; schedule: { startTime: Date; class: { name: string; }; course: { name: string; }; group: { name: string; } | null; }; student: { user: { firstName: string | null; lastName: string | null; }; }; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getClassAttendanceRates": {
+      "name": "getClassAttendanceRates",
+      "file": "src/services/attendance/database/analytics.ts",
+      "sig": "(classId: string, orgId: string, courseId?: string) => Promise<Map<string, number>>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "recordAttendance": {
+      "name": "recordAttendance",
+      "file": "src/services/attendance/database/attendance.mutations.ts",
+      "sig": "(scheduleId: string, studentId: string, coords?: { lat: number; lng: number }) => Promise<{ id: string; status: AttendanceStatus; } | { id: string; status: AttendanceStatus; alreadyRecorded: boolean; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "createAttendance": {
+      "name": "createAttendance",
+      "file": "src/services/attendance/database/attendance.mutations.ts",
+      "sig": "(scheduleId: string, studentId: string, enrollmentId: string, orgId: string, status: AttendanceStatus = \"PENDING\") => Promise<{ id: string; status: AttendanceStatus; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "confirmAttendance": {
+      "name": "confirmAttendance",
+      "file": "src/services/attendance/database/attendance.mutations.ts",
+      "sig": "(attendanceId: string) => Promise<{ id: string; status: AttendanceStatus; userId: string; confirmed: boolean; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "confirmAllAttendances": {
+      "name": "confirmAllAttendances",
+      "file": "src/services/attendance/database/attendance.mutations.ts",
+      "sig": "(scheduleId: string) => Promise<{ confirmed: number; userIds: string[]; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
     "markScheduleAbsences": {
       "name": "markScheduleAbsences",
       "file": "src/services/attendance/database/attendance.mutations.ts",
@@ -17,21 +77,64 @@
       "layer": "db",
       "kind": "mutation"
     },
-    "getOrgTodayAbsences": {
-      "name": "getOrgTodayAbsences",
+    "getScheduleAttendances": {
+      "name": "getScheduleAttendances",
       "file": "src/services/attendance/database/attendance.queries.ts",
-      "sig": "(orgId: string) => Promise<{ id: string; student: { user: { firstName: string | null; lastName: string | null; }; }; schedule: { class: { name: string; }; course: { name: string; }; group: { name: string; } | null; startTime: Date; }; }[]>",
+      "sig": "(scheduleId: string) => Promise<{ id: string; status: AttendanceStatus; recordedAt: Date; student: { user: { id: string; firstName: string | null; lastName: string | null; avatar_url: string | null; }; }; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
       "layer": "db",
       "kind": "query"
     },
-    "getScheduleAttendances": {
-      "name": "getScheduleAttendances",
+    "getStudentAttendances": {
+      "name": "getStudentAttendances",
       "file": "src/services/attendance/database/attendance.queries.ts",
-      "sig": "(scheduleId: string) => Promise<{ id: string; student: { user: { id: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; status: AttendanceStatus; recordedAt: Date; }[]>",
+      "sig": "(studentId: string, orgId: string) => Promise<{ id: string; status: AttendanceStatus; recordedAt: Date; schedule: { id: string; startTime: Date; endTime: Date; course: { id: string; name: string; }; }; }[]>",
       "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getUserAttendance": {
+      "name": "getUserAttendance",
+      "file": "src/services/attendance/database/attendance.queries.ts",
+      "sig": "(studentId: string, scheduleId: string, orgId: string) => Promise<{ id: string; status: AttendanceStatus; recordedAt: Date; details: JsonValue; notes: string | null; } | null>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getStudentAttendanceStatusCounts": {
+      "name": "getStudentAttendanceStatusCounts",
+      "file": "src/services/attendance/database/attendance.queries.ts",
+      "sig": "(studentId: string, orgId: string, range?: { start: Date; end: Date }) => Promise<Record<AttendanceStatus, number>>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrgStudentAttendanceRates": {
+      "name": "getOrgStudentAttendanceRates",
+      "file": "src/services/attendance/database/attendance.queries.ts",
+      "sig": "(orgId: string) => Promise<Record<string, { rate: number | null; absences: number; denominator: number }>>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getStudentAttendanceSummary": {
+      "name": "getStudentAttendanceSummary",
+      "file": "src/services/attendance/database/attendance.queries.ts",
+      "sig": "(studentId: string, orgId: string) => Promise<{ rate: number | null; absences: number; recentAbsences: { id: string; status: AttendanceStatus; recordedAt: Date; schedule: { id: string; startTime: Date; endTime: Date; course: { ...; }; }; }[]; }>",
+      "composes": [
+        "getStudentAttendanceStatusCounts",
+        "getStudentAttendances"
+      ],
       "rules": [],
       "why_ref": "",
       "layer": "db",
@@ -47,11 +150,52 @@
       "layer": "db",
       "kind": "query"
     },
+    "getClassAttendanceRatesAction": {
+      "name": "getClassAttendanceRatesAction",
+      "file": "src/services/attendance/actions/analytics.ts",
+      "sig": "({ classId, courseId }: { classId: string; courseId?: string }) => Promise<{ error: any; data?: undefined; } | { data: Map<string, number>; error?: undefined; }>",
+      "calls": [
+        "getClassAttendanceRates"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getOrgTodayAbsencesAction": {
+      "name": "getOrgTodayAbsencesAction",
+      "file": "src/services/attendance/actions/analytics.ts",
+      "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { id: string; schedule: { startTime: Date; class: { name: string; }; course: { name: string; }; group: { name: string; } | null; }; student: { user: { firstName: string | null; lastName: string | null; }; }; }[]; error?: undefined; }>",
+      "calls": [
+        "getOrgTodayAbsences"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "createAttendanceAction": {
+      "name": "createAttendanceAction",
+      "file": "src/services/attendance/actions/attendance.mutations.ts",
+      "sig": "({ scheduleId, studentId, status, enrollmentId }: { scheduleId: string; studentId: string; status?: AttendanceStatus; enrollmentId: string }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; status: AttendanceStatus; }; error?: undefined; }>",
+      "calls": [
+        "createAttendance"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "confirmAttendanceAction": {
       "name": "confirmAttendanceAction",
       "file": "src/services/attendance/actions/attendance.mutations.ts",
-      "sig": "({ attendanceId }: { attendanceId: string }) => Promise<{ error: string; data?: undefined; } | { data: { id: string; status: AttendanceStatus; confirmed: boolean; }; error?: undefined; }>",
-      "calls": [],
+      "sig": "({ attendanceId }: { attendanceId: string }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; status: AttendanceStatus; userId: string; confirmed: boolean; }; error?: undefined; }>",
+      "calls": [
+        "confirmAttendance"
+      ],
       "auth": {},
       "rules": [],
       "why_ref": "",
@@ -61,20 +205,62 @@
     "confirmAllAttendancesAction": {
       "name": "confirmAllAttendancesAction",
       "file": "src/services/attendance/actions/attendance.mutations.ts",
-      "sig": "({ scheduleId }: { scheduleId: string }) => Promise<{ error: string; data?: undefined; } | { data: { confirmed: number; }; error?: undefined; }>",
-      "calls": [],
+      "sig": "({ scheduleId }: { scheduleId: string }) => Promise<{ error: any; data?: undefined; } | { data: { confirmed: number; userIds: string[]; }; error?: undefined; }>",
+      "calls": [
+        "confirmAllAttendances"
+      ],
       "auth": {},
       "rules": [],
       "why_ref": "",
       "layer": "action",
       "kind": "server-action"
     },
-    "getOrgTodayAbsencesAction": {
-      "name": "getOrgTodayAbsencesAction",
-      "file": "src/services/attendance/actions/attendance.queries.ts",
-      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { id: string; student: { user: { firstName: string | null; lastName: string | null; }; }; schedule: { class: { name: string; }; course: { name: string; }; group: { ...; } | null; startTime: Date; }; }[]; error?: undefined; }>",
+    "recordAttendanceAction": {
+      "name": "recordAttendanceAction",
+      "file": "src/services/attendance/actions/attendance.mutations.ts",
+      "sig": "(token: string, coords?: { lat: number; lng: number }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; status: AttendanceStatus; } | { id: string; status: AttendanceStatus; alreadyRecorded: boolean; }; error?: undefined; }>",
       "calls": [
-        "getOrgTodayAbsences"
+        "validateSessionToken",
+        "recordAttendance"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getStudentAttendancesAction": {
+      "name": "getStudentAttendancesAction",
+      "file": "src/services/attendance/actions/attendance.queries.ts",
+      "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { id: string; status: AttendanceStatus; recordedAt: Date; schedule: { id: string; startTime: Date; endTime: Date; course: { ...; }; }; }[]; error?: undefined; }>",
+      "calls": [
+        "getStudentAttendances"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getStudentAttendanceSummaryAction": {
+      "name": "getStudentAttendanceSummaryAction",
+      "file": "src/services/attendance/actions/attendance.queries.ts",
+      "sig": "(studentId: string) => Promise<{ error: any; data?: undefined; } | { data: { rate: number | null; absences: number; recentAbsences: { id: string; status: AttendanceStatus; recordedAt: Date; schedule: { ...; }; }[]; }; error?: undefined; }>",
+      "calls": [
+        "getStudentAttendanceSummary"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getOrgStudentAttendanceRatesAction": {
+      "name": "getOrgStudentAttendanceRatesAction",
+      "file": "src/services/attendance/actions/attendance.queries.ts",
+      "sig": "() => Promise<{ error: any; data?: undefined; } | { data: Record<string, { rate: number | null; absences: number; denominator: number; }>; error?: undefined; }>",
+      "calls": [
+        "getOrgStudentAttendanceRates"
       ],
       "auth": {},
       "rules": [],
@@ -85,7 +271,7 @@
     "getScheduleAttendancesAction": {
       "name": "getScheduleAttendancesAction",
       "file": "src/services/attendance/actions/attendance.queries.ts",
-      "sig": "({ scheduleId }: { scheduleId: string }) => Promise<{ error: string; data?: undefined; } | { data: { id: string; student: { user: { id: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; status: AttendanceStatus; recordedAt: Date; }[]; error?: undefined; }>",
+      "sig": "({ scheduleId }: { scheduleId: string }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; status: AttendanceStatus; recordedAt: Date; student: { user: { id: string; firstName: string | null; lastName: string | null; avatar_url: string | null; }; }; }[]; error?: undefined; }>",
       "calls": [
         "getScheduleAttendances"
       ],
@@ -97,20 +283,60 @@
     }
   },
   "edges": {
-    "markScheduleAbsences": [],
     "getOrgTodayAbsences": [
       "getOrgTodayAbsencesAction"
     ],
+    "getClassAttendanceRates": [
+      "getClassAttendanceRatesAction"
+    ],
+    "recordAttendance": [
+      "recordAttendanceAction"
+    ],
+    "createAttendance": [
+      "createAttendanceAction"
+    ],
+    "confirmAttendance": [
+      "confirmAttendanceAction"
+    ],
+    "confirmAllAttendances": [
+      "confirmAllAttendancesAction"
+    ],
+    "markScheduleAbsences": [],
     "getScheduleAttendances": [
       "getScheduleAttendancesAction"
+    ],
+    "getStudentAttendances": [
+      "getStudentAttendanceSummary",
+      "getStudentAttendancesAction"
+    ],
+    "getUserAttendance": [],
+    "getStudentAttendanceStatusCounts": [
+      "getStudentAttendanceSummary"
+    ],
+    "getOrgStudentAttendanceRates": [
+      "getOrgStudentAttendanceRatesAction"
+    ],
+    "getStudentAttendanceSummary": [
+      "getStudentAttendanceSummaryAction"
     ],
     "getExpectedAttendees": [
       "markScheduleAbsences"
     ],
+    "getClassAttendanceRatesAction": [],
+    "getOrgTodayAbsencesAction": [],
+    "createAttendanceAction": [],
     "confirmAttendanceAction": [],
     "confirmAllAttendancesAction": [],
-    "getOrgTodayAbsencesAction": [],
-    "getScheduleAttendancesAction": []
+    "recordAttendanceAction": [],
+    "getStudentAttendancesAction": [],
+    "getStudentAttendanceSummaryAction": [],
+    "getOrgStudentAttendanceRatesAction": [],
+    "getScheduleAttendancesAction": [],
+    "validateSessionToken": [
+      "recordAttendanceAction"
+    ]
   },
-  "deps": {}
+  "deps": {
+    "validateSessionToken": "session"
+  }
 }

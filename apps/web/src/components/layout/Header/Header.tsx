@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ModeToggle } from './ModeToggle'
 import { UserMenu } from './UserMenu'
 import { UserInfo } from '@/types/user'
+import { orgPath } from '@/config'
 
 
 interface HeaderProps {
@@ -9,7 +10,7 @@ interface HeaderProps {
 }
 
 export default function Header({ user }: HeaderProps) {
-  const orgHref  = user?.organization?.slug ? `/${user.organization.slug}` : '/'
+  const orgHref  = orgPath(user)
   const orgLabel = user?.organization?.name ?? 'Attendancy'
 
   return (
@@ -24,7 +25,7 @@ export default function Header({ user }: HeaderProps) {
           </span>
           <span className="text-sm font-medium text-text-primary">{orgLabel}</span>
         </Link>
-
+{/* <p>{orgHref}</p> */}
         <div className="flex items-center gap-1">
           <ModeToggle />
           {user ? (

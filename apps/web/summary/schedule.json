@@ -2,13 +2,13 @@
   "service": "schedule",
   "path": "src/services/schedule/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
-  "generated_at": "2026-07-29T12:17:29.392Z",
+  "derived_at": "5306ac7",
+  "generated_at": "2026-08-06T12:17:34.756Z",
   "fns": {
     "createSchedule": {
       "name": "createSchedule",
       "file": "src/services/schedule/database/schedule.mutations.ts",
-      "sig": "(data: CreateScheduleOutput & { orgId: string }) => Promise<{ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; teacher: { id: string; user: { firstName: string | null; lastName: string | null; }; }; room: { ...; }; } & { ...; }>",
+      "sig": "(data: CreateScheduleOutput & { orgId: string }) => Promise<{ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { id: string; user: { firstName: string | null; lastName: string | null; }; }; } & { ...; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -35,20 +35,106 @@
       "layer": "db",
       "kind": "mutation"
     },
-    "getSchedulesByClass": {
-      "name": "getSchedulesByClass",
+    "restoreSchedule": {
+      "name": "restoreSchedule",
+      "file": "src/services/schedule/database/schedule.mutations.ts",
+      "sig": "(scheduleId: string, orgId: string) => Promise<{ classId: string; class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { id: string; user: { firstName: string | null; lastName: string | null; avatar_url: string | null; }; }; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "deleteSchedulesByRule": {
+      "name": "deleteSchedulesByRule",
+      "file": "src/services/schedule/database/schedule.mutations.ts",
+      "sig": "(ruleId: string, orgId: string) => Promise<void>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "deleteNextSchedulesByRule": {
+      "name": "deleteNextSchedulesByRule",
+      "file": "src/services/schedule/database/schedule.mutations.ts",
+      "sig": "(ruleId: string, orgId: string) => Promise<void>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getSchedules": {
+      "name": "getSchedules",
       "file": "src/services/schedule/database/schedule.queries.ts",
-      "sig": "(classId: string, orgId: string, rangeStart: Date, rangeEnd: Date) => Promise<({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; teacher: { id: string; user: { avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; room: { ...; }; } & { ...; })[]>",
+      "sig": "(params: ScheduleFilterParams) => Promise<({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { id: string; user: { firstName: string | null; lastName: string | null; avatar_url: string | null; }; }; } & { ...; })[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
       "layer": "db",
       "kind": "query"
     },
-    "getSchedules": {
-      "name": "getSchedules",
+    "getDaySchedules": {
+      "name": "getDaySchedules",
       "file": "src/services/schedule/database/schedule.queries.ts",
-      "sig": "(orgId: string, params: { classId?: string teacherId?: string roomId?: string rangeStart: Date rangeEnd: Date }) => Promise<({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; teacher: { id: string; user: { avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; room: { ...; }; } & { ...; })[]>",
+      "sig": "(params: ScheduleFilterParams) => Promise<{ id: string; startTime: Date; endTime: Date; status: ScheduleStatus; confirmed: boolean; classId: string; groupId: string | null; course: { name: string; id: string; }; room: { ...; }; _count: { ...; }; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getClassSchedules": {
+      "name": "getClassSchedules",
+      "file": "src/services/schedule/database/schedule.queries.ts",
+      "sig": "(params: Omit<ScheduleFilterParams, 'teacherId' | 'roomId'>) => Promise<({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { id: string; user: { firstName: string | null; lastName: string | null; avatar_url: string | null; }; }; } & { ...; })[]>",
+      "composes": [
+        "getSchedules"
+      ],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getTeacherSchedules": {
+      "name": "getTeacherSchedules",
+      "file": "src/services/schedule/database/schedule.queries.ts",
+      "sig": "(params: Omit<ScheduleFilterParams, 'classId' | 'roomId'>) => Promise<({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { id: string; user: { firstName: string | null; lastName: string | null; avatar_url: string | null; }; }; } & { ...; })[]>",
+      "composes": [
+        "getSchedules"
+      ],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getRoomSchedules": {
+      "name": "getRoomSchedules",
+      "file": "src/services/schedule/database/schedule.queries.ts",
+      "sig": "(params: Omit<ScheduleFilterParams, 'classId' | 'teacherId'>) => Promise<({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { id: string; user: { firstName: string | null; lastName: string | null; avatar_url: string | null; }; }; } & { ...; })[]>",
+      "composes": [
+        "getSchedules"
+      ],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getSchedulesByClass": {
+      "name": "getSchedulesByClass",
+      "file": "src/services/schedule/database/schedule.queries.ts",
+      "sig": "(classId: string, orgId: string, rangeStart: Date, rangeEnd: Date) => Promise<({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { id: string; user: { firstName: string | null; lastName: string | null; avatar_url: string | null; }; }; } & { ...; })[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getSchedulesByCourse": {
+      "name": "getSchedulesByCourse",
+      "file": "src/services/schedule/database/schedule.queries.ts",
+      "sig": "(courseId: string, orgId: string) => Promise<({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { id: string; user: { firstName: string | null; lastName: string | null; avatar_url: string | null; }; }; } & { ...; })[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -65,10 +151,40 @@
       "layer": "db",
       "kind": "query"
     },
+    "getTeacherNextSchedule": {
+      "name": "getTeacherNextSchedule",
+      "file": "src/services/schedule/database/schedule.queries.ts",
+      "sig": "(teacherId: string, orgId: string) => Promise<{ id: string; startTime: Date; endTime: Date; status: ScheduleStatus; confirmed: boolean; notes: string | null; class: { level: Level; name: string; _count: { ...; }; }; course: { ...; }; group: { ...; } | null; room: { ...; }; session: { ...; } | null; } | null>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getTodayClassSchedules": {
+      "name": "getTodayClassSchedules",
+      "file": "src/services/schedule/database/schedule.queries.ts",
+      "sig": "(classId: string, orgId: string) => Promise<{ id: string; startTime: Date; endTime: Date; status: ScheduleStatus; course: { name: string; }; room: { name: string; }; teacher: { user: { firstName: string | null; lastName: string | null; }; }; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "assertClassInOrg": {
+      "name": "assertClassInOrg",
+      "file": "src/services/schedule/database/schedule.queries.ts",
+      "sig": "(classId: string, orgId: string) => Promise<void>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
     "createScheduleAction": {
       "name": "createScheduleAction",
       "file": "src/services/schedule/actions/schedule.mutations.ts",
-      "sig": "(input: unknown) => Promise<{ error: string; data?: undefined; } | { data: { class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; teacher: { id: string; user: { firstName: string | null; lastName: string | null; }; }; room: { ...; }; } & { ...; }; error?: undefined; }>",
+      "sig": "(input: unknown) => Promise<{ error: any; data?: undefined; } | { data: { class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { ...; }; } & { ...; }; error?: undefined; }>",
       "calls": [
         "createSchedule"
       ],
@@ -81,7 +197,7 @@
     "updateScheduleAction": {
       "name": "updateScheduleAction",
       "file": "src/services/schedule/actions/schedule.mutations.ts",
-      "sig": "(scheduleId: string, input: unknown) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "sig": "(scheduleId: string, input: unknown) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
       "calls": [
         "updateSchedule"
       ],
@@ -94,7 +210,7 @@
     "removeScheduleAction": {
       "name": "removeScheduleAction",
       "file": "src/services/schedule/actions/schedule.mutations.ts",
-      "sig": "(scheduleId: string) => Promise<{ error: string; data?: undefined; } | { data: boolean; error?: undefined; }>",
+      "sig": "(scheduleId: string) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
       "calls": [
         "removeSchedule"
       ],
@@ -107,7 +223,7 @@
     "deleteScheduleAction": {
       "name": "deleteScheduleAction",
       "file": "src/services/schedule/actions/schedule.mutations.ts",
-      "sig": "(scheduleId: string) => Promise<{ error: string; data?: undefined; } | { data: boolean; error?: undefined; }>",
+      "sig": "(scheduleId: string) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
       "calls": [
         "removeScheduleAction"
       ],
@@ -120,8 +236,10 @@
     "restoreScheduleAction": {
       "name": "restoreScheduleAction",
       "file": "src/services/schedule/actions/schedule.mutations.ts",
-      "sig": "(scheduleId: string) => Promise<{ error: string; data?: undefined; } | { data: { class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; teacher: { id: string; user: { avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; room: { ...; }; } & { ....",
-      "calls": [],
+      "sig": "(scheduleId: string) => Promise<{ error: any; data?: undefined; } | { data: { classId: string; class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { ...; }; }; error?: undefined; }>",
+      "calls": [
+        "restoreSchedule"
+      ],
       "auth": {},
       "rules": [],
       "why_ref": "",
@@ -131,7 +249,7 @@
     "cancelScheduleAction": {
       "name": "cancelScheduleAction",
       "file": "src/services/schedule/actions/schedule.mutations.ts",
-      "sig": "(scheduleId: string) => Promise<{ error: string; data?: undefined; } | { data: boolean; error?: undefined; }>",
+      "sig": "(scheduleId: string) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
       "calls": [
         "updateSchedule"
       ],
@@ -144,7 +262,7 @@
     "getClassSchedulesAction": {
       "name": "getClassSchedulesAction",
       "file": "src/services/schedule/actions/schedule.queries.ts",
-      "sig": "(classId: string, rangeStart: Date, rangeEnd: Date) => Promise<{ error: string; data?: undefined; } | { data: ({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; teacher: { id: string; user: { avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; room: { ...; }; } & { ...",
+      "sig": "(classId: string, rangeStart: Date, rangeEnd: Date) => Promise<{ error: any; data?: undefined; } | { data: ({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { ...; }; } & { ...; })[]; error?: undefined; }>",
       "calls": [
         "getSchedulesByClass"
       ],
@@ -157,9 +275,35 @@
     "getSchedulesAction": {
       "name": "getSchedulesAction",
       "file": "src/services/schedule/actions/schedule.queries.ts",
-      "sig": "(params: { classId?: string teacherId?: string roomId?: string rangeStart: Date rangeEnd: Date }) => Promise<{ error: string; data?: undefined; } | { data: ({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; teacher: { id: string; user: { avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; room: { ...; }; } & { ...",
+      "sig": "(params: Omit<ScheduleFilterParams, 'orgId'>) => Promise<{ error: any; data?: undefined; } | { data: ({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { ...; }; } & { ...; })[]; error?: undefined; }>",
       "calls": [
         "getSchedules"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getDaySchedulesAction": {
+      "name": "getDaySchedulesAction",
+      "file": "src/services/schedule/actions/schedule.queries.ts",
+      "sig": "(params: Omit<ScheduleFilterParams, 'orgId'>) => Promise<{ error: any; data?: undefined; } | { data: { id: string; startTime: Date; endTime: Date; status: ScheduleStatus; confirmed: boolean; classId: string; groupId: string | null; course: { ...; }; room: { ...; }; _count: { ...; }; }[]; error?: undefined; }>",
+      "calls": [
+        "getDaySchedules"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getCourseScheduleAction": {
+      "name": "getCourseScheduleAction",
+      "file": "src/services/schedule/actions/schedule.queries.ts",
+      "sig": "(courseId: string) => Promise<{ error: any; data?: undefined; } | { data: ({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { ...; }; } & { ...; })[]; error?: undefined; }>",
+      "calls": [
+        "getSchedulesByCourse"
       ],
       "auth": {},
       "rules": [],
@@ -170,9 +314,35 @@
     "getScheduleDaysAction": {
       "name": "getScheduleDaysAction",
       "file": "src/services/schedule/actions/schedule.queries.ts",
-      "sig": "(month: string) => Promise<{ data: string[]; error?: undefined; } | { error: string; data?: undefined; }>",
+      "sig": "(month: string) => Promise<{ error: any; data?: undefined; } | { data: string[]; error?: undefined; }>",
       "calls": [
         "getScheduleDays"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getTeacherNextScheduleAction": {
+      "name": "getTeacherNextScheduleAction",
+      "file": "src/services/schedule/actions/schedule.queries.ts",
+      "sig": "(teacherId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; startTime: Date; endTime: Date; status: ScheduleStatus; confirmed: boolean; notes: string | null; class: { ...; }; course: { ...; }; group: { ...; } | null; room: { ...; }; session: { ...; } | null; } | null; error?: undefined; }>",
+      "calls": [
+        "getTeacherNextSchedule"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getTodayClassSchedulesAction": {
+      "name": "getTodayClassSchedulesAction",
+      "file": "src/services/schedule/actions/schedule.queries.ts",
+      "sig": "(classId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; startTime: Date; endTime: Date; status: ScheduleStatus; course: { name: string; }; room: { name: string; }; teacher: { ...; }; }[]; error?: undefined; }>",
+      "calls": [
+        "getTodayClassSchedules"
       ],
       "auth": {},
       "rules": [],
@@ -183,24 +353,11 @@
     "getClassScheduleOptionsAction": {
       "name": "getClassScheduleOptionsAction",
       "file": "src/services/schedule/actions/schedule.queries.ts",
-      "sig": "(classId: string) => Promise<{ error: string; data?: undefined; } | { data: { courses: { id: string; name: string; teachers: { id: string; name: string; isMain: boolean; }[]; }[]; rooms: { id: string; name: string; }[]; groups: { id: string; name: string; }[]; }; error?: undefined; }>",
+      "sig": "(classId: string) => Promise<{ error: any; data?: undefined; } | { data: { courses: { id: string; name: string; teachers: { id: string; name: string; isMain: boolean; }[]; }[]; rooms: { id: string; name: string; }[]; groups: { id: string; name: string; }[]; }; error?: undefined; }>",
       "calls": [
         "getCoursesByClass",
         "getRooms",
         "getGroupsByClass"
-      ],
-      "auth": {},
-      "rules": [],
-      "why_ref": "",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "getTeacherNextScheduleAction": {
-      "name": "getTeacherNextScheduleAction",
-      "file": "src/services/schedule/actions/schedule.teacher.ts",
-      "sig": "({ teacherId }: { teacherId: string }) => Promise<{ data: { id: string; class: { level: Level; name: string; _count: { studentEnrollments: number; }; }; course: { name: string; ueCourse: { code: string | null; }; }; group: { name: string; _count: { ...; }; } | null; ... 6 more ...; confirmed: boolean; } | null; error?: undefined; } | { ...; }>",
-      "calls": [
-        "getTeacherNextSchedule"
       ],
       "auth": {},
       "rules": [],
@@ -220,15 +377,39 @@
     "removeSchedule": [
       "removeScheduleAction"
     ],
+    "restoreSchedule": [
+      "restoreScheduleAction"
+    ],
+    "deleteSchedulesByRule": [],
+    "deleteNextSchedulesByRule": [],
+    "getSchedules": [
+      "getClassSchedules",
+      "getTeacherSchedules",
+      "getRoomSchedules",
+      "getSchedulesAction"
+    ],
+    "getDaySchedules": [
+      "getDaySchedulesAction"
+    ],
+    "getClassSchedules": [],
+    "getTeacherSchedules": [],
+    "getRoomSchedules": [],
     "getSchedulesByClass": [
       "getClassSchedulesAction"
     ],
-    "getSchedules": [
-      "getSchedulesAction"
+    "getSchedulesByCourse": [
+      "getCourseScheduleAction"
     ],
     "getScheduleDays": [
       "getScheduleDaysAction"
     ],
+    "getTeacherNextSchedule": [
+      "getTeacherNextScheduleAction"
+    ],
+    "getTodayClassSchedules": [
+      "getTodayClassSchedulesAction"
+    ],
+    "assertClassInOrg": [],
     "createScheduleAction": [],
     "updateScheduleAction": [],
     "removeScheduleAction": [
@@ -239,9 +420,12 @@
     "cancelScheduleAction": [],
     "getClassSchedulesAction": [],
     "getSchedulesAction": [],
+    "getDaySchedulesAction": [],
+    "getCourseScheduleAction": [],
     "getScheduleDaysAction": [],
-    "getClassScheduleOptionsAction": [],
     "getTeacherNextScheduleAction": [],
+    "getTodayClassSchedulesAction": [],
+    "getClassScheduleOptionsAction": [],
     "getCoursesByClass": [
       "getClassScheduleOptionsAction"
     ],
@@ -250,15 +434,11 @@
     ],
     "getGroupsByClass": [
       "getClassScheduleOptionsAction"
-    ],
-    "getTeacherNextSchedule": [
-      "getTeacherNextScheduleAction"
     ]
   },
   "deps": {
     "getCoursesByClass": "course",
     "getRooms": "room",
-    "getGroupsByClass": "group",
-    "getTeacherNextSchedule": "session"
+    "getGroupsByClass": "group"
   }
 }

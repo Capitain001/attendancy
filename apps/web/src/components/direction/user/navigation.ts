@@ -43,6 +43,11 @@ export const directionRoutes: Route[] = [
         icon: "LibraryBig",
         link: "/direction/academic/courses",
       },
+      {
+        title: "Référentiel MESRS",
+        icon: "Library",
+        link: "/direction/ue-templates",
+      },
     ],
   },
   {

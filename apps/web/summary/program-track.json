@@ -2,13 +2,33 @@
   "service": "program-track",
   "path": "src/services/program-track/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
-  "generated_at": "2026-07-29T12:17:29.362Z",
+  "derived_at": "5306ac7",
+  "generated_at": "2026-08-06T12:17:34.650Z",
   "fns": {
     "createProgramTrack": {
       "name": "createProgramTrack",
-      "file": "src/services/program-track/database/program-track.mutations.ts",
-      "sig": "(data: CreateProgramTrackOutput & { orgId: string }) => Promise<{ name: string; id: string; }>",
+      "file": "src/services/program-track/database/programTrack.mutations.ts",
+      "sig": "({ data, orgId }: { data: AddProgramTrackData; orgId: string }) => Promise<{ id: string; name: string; description: string | null; departmentId: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateProgramTrack": {
+      "name": "updateProgramTrack",
+      "file": "src/services/program-track/database/programTrack.mutations.ts",
+      "sig": "({ programTrackId, orgId }: { programTrackId: string; orgId: string }, data: UpdateProgramTrackData) => Promise<{ id: string; name: string; description: string | null; departmentId: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "deleteProgramTrack": {
+      "name": "deleteProgramTrack",
+      "file": "src/services/program-track/database/programTrack.mutations.ts",
+      "sig": "({ programTrackId, orgId }: { programTrackId: string; orgId: string }) => Promise<void>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -17,58 +37,64 @@
     },
     "getProgramTracks": {
       "name": "getProgramTracks",
-      "file": "src/services/program-track/database/program-track.queries.ts",
-      "sig": "(orgId: string) => Promise<{ name: string; id: string; _count: { classes: number; programs: number; }; department: { name: string; id: string; }; description: string | null; departmentId: string; }[]>",
+      "file": "src/services/program-track/database/programTrack.queries.ts",
+      "sig": "({ orgId, departmentId }: { orgId: string; departmentId?: string }) => Promise<{ id: string; name: string; description: string | null; department: { id: string; name: string; }; _count: { classes: number; }; }[]>",
+      "cache": {
+        "strategy": "unstable_cache",
+        "keys": [
+          "programTrack",
+          "orgId",
+          "departmentId || \"all"
+        ],
+        "tags": [
+          "CACHE.PROGRAM_TRACK(orgId)"
+        ],
+        "revalidate": "300"
+      },
       "composes": [],
       "rules": [],
       "why_ref": "",
       "layer": "db",
       "kind": "query"
     },
-    "createProgram": {
-      "name": "createProgram",
-      "file": "src/services/program-track/database/program.mutations.ts",
-      "sig": "(data: CreateProgramOutput & { orgId: string }) => Promise<{ name: string; id: string; programTrackId: string; }>",
+    "getProgramTracksBasic": {
+      "name": "getProgramTracksBasic",
+      "file": "src/services/program-track/database/programTrack.queries.ts",
+      "sig": "({ orgId, departmentId }: { orgId: string; departmentId?: string }) => Promise<{ id: string; name: string; description: string | null; departmentId: string; }[]>",
+      "cache": {
+        "strategy": "unstable_cache",
+        "keys": [
+          "programTrackBasic",
+          "orgId",
+          "departmentId || \"all"
+        ],
+        "tags": [
+          "CACHE.PROGRAM_TRACK(orgId)"
+        ],
+        "revalidate": "300"
+      },
       "composes": [],
       "rules": [],
       "why_ref": "",
       "layer": "db",
-      "kind": "mutation"
+      "kind": "query"
     },
-    "addUEToProgram": {
-      "name": "addUEToProgram",
-      "file": "src/services/program-track/database/program.mutations.ts",
-      "sig": "(data: AddUEToProgramOutput & { orgId: string }) => Promise<{ id: string; order: number | null; semester: number; }>",
-      "composes": [],
-      "rules": [],
-      "why_ref": "",
-      "layer": "db",
-      "kind": "mutation"
-    },
-    "deleteUEFromProgramByComposite": {
-      "name": "deleteUEFromProgramByComposite",
-      "file": "src/services/program-track/database/program.mutations.ts",
-      "sig": "(programId: string, ueId: string, orgId: string) => Promise<{ count: number; }>",
-      "composes": [],
-      "rules": [],
-      "why_ref": "",
-      "layer": "db",
-      "kind": "mutation"
-    },
-    "deleteUEFromProgram": {
-      "name": "deleteUEFromProgram",
-      "file": "src/services/program-track/database/program.mutations.ts",
-      "sig": "(programUEId: string, orgId: string) => Promise<void>",
-      "composes": [],
-      "rules": [],
-      "why_ref": "",
-      "layer": "db",
-      "kind": "mutation"
-    },
-    "getProgramsByTrack": {
-      "name": "getProgramsByTrack",
-      "file": "src/services/program-track/database/program.queries.ts",
-      "sig": "(programTrackId: string, orgId: string) => Promise<{ name: string; id: string; programUEs: { id: string; ue: { name: string; id: string; code: string | null; }; order: number | null; isOptional: boolean; semester: number; }[]; }[]>",
+    "getProgramTrack": {
+      "name": "getProgramTrack",
+      "file": "src/services/program-track/database/programTrack.queries.ts",
+      "sig": "({ programTrackId, orgId }: { programTrackId: string; orgId: string }) => Promise<{ id: string; name: string; description: string | null; department: { id: string; name: string; }; _count: { classes: number; }; } | null>",
+      "cache": {
+        "strategy": "unstable_cache",
+        "keys": [
+          "programTrack",
+          "orgId",
+          "programTrackId"
+        ],
+        "tags": [
+          "CACHE.PROGRAM_TRACK(orgId)"
+        ],
+        "revalidate": "300"
+      },
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -77,8 +103,8 @@
     },
     "createProgramTrackAction": {
       "name": "createProgramTrackAction",
-      "file": "src/services/program-track/actions/program-track.mutations.ts",
-      "sig": "(input: CreateProgramTrackInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; }; error?: undefined; }>",
+      "file": "src/services/program-track/actions/programTrack.mutations.ts",
+      "sig": "(data: AddProgramTrackData) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; description: string | null; departmentId: string; }; error?: undefined; }>",
       "calls": [
         "createProgramTrack"
       ],
@@ -88,12 +114,12 @@
       "layer": "action",
       "kind": "server-action"
     },
-    "createProgramAction": {
-      "name": "createProgramAction",
-      "file": "src/services/program-track/actions/program-track.mutations.ts",
-      "sig": "(input: CreateProgramInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; programTrackId: string; }; error?: undefined; }>",
+    "updateProgramTrackAction": {
+      "name": "updateProgramTrackAction",
+      "file": "src/services/program-track/actions/programTrack.mutations.ts",
+      "sig": "(programTrackId: string, data: UpdateProgramTrackData) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; description: string | null; departmentId: string; }; error?: undefined; }>",
       "calls": [
-        "createProgram"
+        "updateProgramTrack"
       ],
       "auth": {},
       "rules": [],
@@ -101,25 +127,12 @@
       "layer": "action",
       "kind": "server-action"
     },
-    "addUEToProgramAction": {
-      "name": "addUEToProgramAction",
-      "file": "src/services/program-track/actions/program-track.mutations.ts",
-      "sig": "(input: AddUEToProgramInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; order: number | null; semester: number; }; error?: undefined; }>",
+    "deleteProgramTrackAction": {
+      "name": "deleteProgramTrackAction",
+      "file": "src/services/program-track/actions/programTrack.mutations.ts",
+      "sig": "(programTrackId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
       "calls": [
-        "addUEToProgram"
-      ],
-      "auth": {},
-      "rules": [],
-      "why_ref": "",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "deleteUEFromProgramAction": {
-      "name": "deleteUEFromProgramAction",
-      "file": "src/services/program-track/actions/program-track.mutations.ts",
-      "sig": "(programUEId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
-      "calls": [
-        "deleteUEFromProgram"
+        "deleteProgramTrack"
       ],
       "auth": {},
       "rules": [],
@@ -129,8 +142,8 @@
     },
     "getProgramTracksAction": {
       "name": "getProgramTracksAction",
-      "file": "src/services/program-track/actions/program-track.queries.ts",
-      "sig": "() => Promise<{ data: { name: string; id: string; _count: { classes: number; programs: number; }; department: { name: string; id: string; }; description: string | null; departmentId: string; }[]; error?: undefined; } | { ...; }>",
+      "file": "src/services/program-track/actions/programTrack.queries.ts",
+      "sig": "({ departmentId }: { departmentId?: string }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; description: string | null; department: { id: string; name: string; }; _count: { classes: number; }; }[]; error?: undefined; }>",
       "calls": [
         "getProgramTracks"
       ],
@@ -140,12 +153,38 @@
       "layer": "action",
       "kind": "server-action"
     },
-    "getProgramsByTrackAction": {
-      "name": "getProgramsByTrackAction",
-      "file": "src/services/program-track/actions/program-track.queries.ts",
-      "sig": "(programTrackId: string) => Promise<{ data: { name: string; id: string; programUEs: { id: string; ue: { name: string; id: string; code: string | null; }; order: number | null; isOptional: boolean; semester: number; }[]; }[]; error?: undefined; } | { ...; }>",
+    "getProgramTracksBasicAction": {
+      "name": "getProgramTracksBasicAction",
+      "file": "src/services/program-track/actions/programTrack.queries.ts",
+      "sig": "({ departmentId }: { departmentId?: string }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; description: string | null; departmentId: string; }[]; error?: undefined; }>",
       "calls": [
-        "getProgramsByTrack"
+        "getProgramTracksBasic"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getProgramTracksByDepartmentAction": {
+      "name": "getProgramTracksByDepartmentAction",
+      "file": "src/services/program-track/actions/programTrack.queries.ts",
+      "sig": "({ departmentId }: { departmentId?: string }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; description: string | null; department: { id: string; name: string; }; _count: { classes: number; }; }[]; error?: undefined; } | { data: { ...; }[]; }>",
+      "calls": [
+        "getProgramTracksAction"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getProgramTrackAction": {
+      "name": "getProgramTrackAction",
+      "file": "src/services/program-track/actions/programTrack.queries.ts",
+      "sig": "({ programTrackId }: { programTrackId: string }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; description: string | null; department: { id: string; name: string; }; _count: { classes: number; }; }; error?: undefined; }>",
+      "calls": [
+        "getProgramTrack"
       ],
       "auth": {},
       "rules": [],
@@ -158,28 +197,30 @@
     "createProgramTrack": [
       "createProgramTrackAction"
     ],
+    "updateProgramTrack": [
+      "updateProgramTrackAction"
+    ],
+    "deleteProgramTrack": [
+      "deleteProgramTrackAction"
+    ],
     "getProgramTracks": [
       "getProgramTracksAction"
     ],
-    "createProgram": [
-      "createProgramAction"
+    "getProgramTracksBasic": [
+      "getProgramTracksBasicAction"
     ],
-    "addUEToProgram": [
-      "addUEToProgramAction"
-    ],
-    "deleteUEFromProgramByComposite": [],
-    "deleteUEFromProgram": [
-      "deleteUEFromProgramAction"
-    ],
-    "getProgramsByTrack": [
-      "getProgramsByTrackAction"
+    "getProgramTrack": [
+      "getProgramTrackAction"
     ],
     "createProgramTrackAction": [],
-    "createProgramAction": [],
-    "addUEToProgramAction": [],
-    "deleteUEFromProgramAction": [],
-    "getProgramTracksAction": [],
-    "getProgramsByTrackAction": []
+    "updateProgramTrackAction": [],
+    "deleteProgramTrackAction": [],
+    "getProgramTracksAction": [
+      "getProgramTracksByDepartmentAction"
+    ],
+    "getProgramTracksBasicAction": [],
+    "getProgramTracksByDepartmentAction": [],
+    "getProgramTrackAction": []
   },
   "deps": {}
 }

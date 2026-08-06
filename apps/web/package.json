@@ -20,6 +20,7 @@
     "test:db:setup": "node scripts/test-db-setup.js",
     "db:migrate": "prisma migrate dev",
     "seed": "tsx --env-file=.env prisma/seed/index.ts",
+    "seed:referential": "tsx --env-file=.env prisma/seed/referential-togo-2022.ts",
     "generate:api": "tsx scripts/generate/api/sync.ts",
     "generate:api:svc": "tsx scripts/generate/api/api.ts",
     "generate:summary": "tsx scripts/generate/api/summary.ts",

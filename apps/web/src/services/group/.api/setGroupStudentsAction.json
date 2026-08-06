@@ -1,0 +1,11 @@
+{
+  "name": "setGroupStudentsAction",
+  "file": "src/services/group/actions/group.mutations.ts",
+  "sig": "(input: SetGroupStudentsInput) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "calls": [
+    "setGroupStudents"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

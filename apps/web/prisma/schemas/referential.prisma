@@ -1,0 +1,82 @@
+// ─── Référentiel national ────────────────────────────────────────────────────
+// Modèles globaux (sans orgId) : catalogue des UE standardisées par pays.
+// NationalReferential → UETemplate → UETemplateEC  (lecture seule en prod)
+// UETemplateImport  trace les imports par organisation.
+
+model NationalReferential {
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  country     String       // ISO 3166-1 alpha-2 : "TG", "BJ"…
+  issuer      String       // "MESRS-Togo"
+  name        String       // "Curricula harmonisés 2022"
+  version     String       // "2022-04"
+  isActive    Boolean      @default(true)
+  publishedAt DateTime
+
+  templates   UETemplate[]
+
+  createdAt   DateTime     @default(now())
+
+  @@index([country])
+  @@schema("public")
+}
+
+model UETemplate {
+  id            String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  referentialId String              @db.Uuid
+  referential   NationalReferential @relation(fields: [referentialId], references: [id])
+
+  domain        String              // "LLA", "SHS", "ST"…
+  degree        String              // "LICENCE", "MASTER"
+  mention       String
+  speciality    String?
+  semester      Int                 // 1–6
+  code          String?             // nullable pour type LIBRE
+  name          String
+  type          UETemplateType
+  credits       Decimal             @db.Decimal(4, 2)
+
+  elements      UETemplateEC[]
+  imports       UETemplateImport[]
+
+  // @@unique sur (referentialId, code) seulement si code non null — géré applicativement
+  // Pour les cas code non-null, contrainte DB partielle via post-migrate si nécessaire
+  @@index([referentialId, domain, mention, semester])
+  @@schema("public")
+}
+
+model UETemplateEC {
+  id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  templateId String     @db.Uuid
+  template   UETemplate @relation(fields: [templateId], references: [id])
+
+  code       String
+  name       String?
+  credits    Decimal    @db.Decimal(4, 2)
+
+  @@unique([templateId, code])
+  @@schema("public")
+}
+
+enum UETemplateType {
+  FONDAMENTALE
+  COMPLEMENTAIRE
+  APPROFONDISSEMENT
+  SPECIALITE
+  TRANSVERSALE
+  LIBRE
+
+  @@schema("public")
+}
+
+model UETemplateImport {
+  id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  templateId String     @db.Uuid
+  template   UETemplate @relation(fields: [templateId], references: [id])
+  orgId      String     @db.Uuid
+  ueId       String     @db.Uuid   // UE créée dans l'org
+  importedAt DateTime   @default(now())
+
+  @@unique([templateId, orgId])
+  @@index([orgId])
+  @@schema("public")
+}

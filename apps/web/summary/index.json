@@ -1,17 +1,11 @@
 {
-  "generated_at": "2026-08-06T06:03:21.966Z",
+  "generated_at": "2026-08-06T14:31:10.364Z",
   "services": [
     {
-      "service": "course",
-      "file": "summary/course.json",
-      "fnCount": 15,
-      "derived_at": "4e41f59"
-    },
-    {
-      "service": "course-teacher",
-      "file": "summary/course-teacher.json",
-      "fnCount": 10,
-      "derived_at": "4e41f59"
+      "service": "ue-template",
+      "file": "summary/ue-template.json",
+      "fnCount": 14,
+      "derived_at": "decb56e"
     }
   ]
 }

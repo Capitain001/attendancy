@@ -143,7 +143,7 @@ model UECourse {
   id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name         String
   description  String?
-  credits      Int          @default(2)
+  credits      Decimal      @default(2) @db.Decimal(4, 2)
   imageUrl     String?
   duration     Int          @default(10)
   settings     Json?

@@ -2,8 +2,8 @@
   "service": "group",
   "path": "src/services/group/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
-  "generated_at": "2026-07-29T12:17:29.307Z",
+  "derived_at": "5306ac7",
+  "generated_at": "2026-08-06T12:17:34.411Z",
   "fns": {
     "createGroup": {
       "name": "createGroup",
@@ -28,7 +28,7 @@
     "getGroupsByClass": {
       "name": "getGroupsByClass",
       "file": "src/services/group/database/group.queries.ts",
-      "sig": "(classId: string, orgId: string) => Promise<{ name: string; id: string; _count: { studentGroups: number; }; description: string | null; }[]>",
+      "sig": "(classId: string, orgId: string) => Promise<{ name: string; id: string; description: string | null; _count: { studentGroups: number; }; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -38,7 +38,7 @@
     "createGroupAction": {
       "name": "createGroupAction",
       "file": "src/services/group/actions/group.mutations.ts",
-      "sig": "(input: CreateGroupInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; description: string | null; }; error?: undefined; }>",
+      "sig": "(input: CreateGroupInput) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; }; error?: undefined; }>",
       "calls": [
         "createGroup"
       ],
@@ -51,7 +51,7 @@
     "removeGroupAction": {
       "name": "removeGroupAction",
       "file": "src/services/group/actions/group.mutations.ts",
-      "sig": "(groupId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "sig": "(groupId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
       "calls": [
         "removeGroup"
       ],
@@ -64,7 +64,7 @@
     "getGroupsByClassAction": {
       "name": "getGroupsByClassAction",
       "file": "src/services/group/actions/group.queries.ts",
-      "sig": "(classId: string) => Promise<{ data: { name: string; id: string; _count: { studentGroups: number; }; description: string | null; }[]; error?: undefined; } | { error: string; data?: undefined; }>",
+      "sig": "(classId: string) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; _count: { studentGroups: number; }; }[]; error?: undefined; }>",
       "calls": [
         "getGroupsByClass"
       ],

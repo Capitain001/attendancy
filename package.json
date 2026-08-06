@@ -7,7 +7,8 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "turbo dev --filter=@attendancy/web",
+    "dev": "concurrently -n web,tauri -c cyan,magenta \"bun run dev:web\" \"bun --filter @attendancy/desktop run tauri:dev\"",
+    "dev:web": "turbo dev --filter=@attendancy/web",
     "dev:desktop": "turbo dev --filter=@attendancy/desktop",
     "build": "turbo build",
     "lint": "turbo lint",
@@ -16,6 +17,7 @@
     "clean": "turbo clean"
   },
   "devDependencies": {
+    "concurrently": "^10.0.4",
     "prettier": "^3.0.0",
     "turbo": "^2.3.3"
   },

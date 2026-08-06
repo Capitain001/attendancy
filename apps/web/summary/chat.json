@@ -2,13 +2,13 @@
   "service": "chat",
   "path": "src/services/chat/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
-  "generated_at": "2026-07-29T12:17:29.233Z",
+  "derived_at": "5306ac7",
+  "generated_at": "2026-08-06T12:17:33.999Z",
   "fns": {
     "createMessage": {
       "name": "createMessage",
       "file": "src/services/chat/database/message.mutations.ts",
-      "sig": "(data: AddMessageData) => Promise<{ id: string; user: { id: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; createdAt: Date; updatedAt: Date; content: string; channelId: string; parentId: string | null; }>",
+      "sig": "(data: AddMessageData) => Promise<{ id: string; content: string; createdAt: Date; updatedAt: Date; user: { id: string; firstName: string | null; lastName: string | null; avatar_url: string | null; } | null; channelId: string; parentId: string | null; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -18,7 +18,7 @@
     "updateMessage": {
       "name": "updateMessage",
       "file": "src/services/chat/database/message.mutations.ts",
-      "sig": "(messageId: string, userId: string, data: UpdateMessageData) => Promise<{ id: string; user: { id: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; createdAt: Date; updatedAt: Date; content: string; channelId: string; parentId: string | null; }>",
+      "sig": "(messageId: string, userId: string, data: UpdateMessageData) => Promise<{ id: string; content: string; createdAt: Date; updatedAt: Date; user: { id: string; firstName: string | null; lastName: string | null; avatar_url: string | null; } | null; channelId: string; parentId: string | null; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -38,7 +38,7 @@
     "getMessages": {
       "name": "getMessages",
       "file": "src/services/chat/database/message.queries.ts",
-      "sig": "(channelId: string, limit = 50) => Promise<{ id: string; user: { id: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; createdAt: Date; updatedAt: Date; content: string; channelId: string; parentId: string | null; }[]>",
+      "sig": "(channelId: string, limit = 50) => Promise<{ id: string; content: string; createdAt: Date; updatedAt: Date; user: { id: string; firstName: string | null; lastName: string | null; avatar_url: string | null; } | null; channelId: string; parentId: string | null; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -48,7 +48,7 @@
     "getRoomParticipants": {
       "name": "getRoomParticipants",
       "file": "src/services/chat/database/message.queries.ts",
-      "sig": "(channelId: string) => Promise<{ user: { id: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; role: ParticipantRole; userId: string; joinedAt: Date; }[]>",
+      "sig": "(channelId: string) => Promise<{ user: { id: string; firstName: string | null; lastName: string | null; avatar_url: string | null; }; userId: string; role: ParticipantRole; joinedAt: Date; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -58,7 +58,7 @@
     "sendMessageAction": {
       "name": "sendMessageAction",
       "file": "src/services/chat/actions/message.mutations.ts",
-      "sig": "(input: Omit<AddMessageData, 'userId'>) => Promise<{ data: { id: string; user: { id: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; createdAt: Date; updatedAt: Date; content: string; channelId: string; parentId: string | null; }; error?: undefined; } | { ...; }>",
+      "sig": "(input: Omit<AddMessageData, 'userId'>) => Promise<{ error: any; data?: undefined; } | { data: { id: string; content: string; createdAt: Date; updatedAt: Date; user: { id: string; firstName: string | null; lastName: string | null; avatar_url: string | null; } | null; channelId: string; parentId: string | null; }; error?: undefined; }>",
       "calls": [
         "createMessage"
       ],
@@ -71,7 +71,7 @@
     "updateMessageAction": {
       "name": "updateMessageAction",
       "file": "src/services/chat/actions/message.mutations.ts",
-      "sig": "(messageId: string, data: UpdateMessageData) => Promise<{ data: { id: string; user: { id: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; createdAt: Date; updatedAt: Date; content: string; channelId: string; parentId: string | null; }; error?: undefined; } | { ...; }>",
+      "sig": "(messageId: string, data: UpdateMessageData) => Promise<{ error: any; data?: undefined; } | { data: { id: string; content: string; createdAt: Date; updatedAt: Date; user: { id: string; firstName: string | null; lastName: string | null; avatar_url: string | null; } | null; channelId: string; parentId: string | null; }; error?: undefined; }>",
       "calls": [
         "updateMessage"
       ],
@@ -84,7 +84,7 @@
     "removeMessageAction": {
       "name": "removeMessageAction",
       "file": "src/services/chat/actions/message.mutations.ts",
-      "sig": "(messageId: string) => Promise<{ data: { id: string; }; error?: undefined; } | { error: string; data?: undefined; }>",
+      "sig": "(messageId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
       "calls": [
         "removeMessage"
       ],
@@ -97,7 +97,7 @@
     "getMessagesAction": {
       "name": "getMessagesAction",
       "file": "src/services/chat/actions/message.queries.ts",
-      "sig": "(channelId: string) => Promise<{ data: { id: string; user: { id: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; createdAt: Date; updatedAt: Date; content: string; channelId: string; parentId: string | null; }[]; error?: undefined; } | { ...; }>",
+      "sig": "(channelId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; content: string; createdAt: Date; updatedAt: Date; user: { id: string; firstName: string | null; lastName: string | null; avatar_url: string | null; } | null; channelId: string; parentId: string | null; }[]; error?: undefined; }>",
       "calls": [
         "getMessages"
       ],
@@ -110,7 +110,7 @@
     "getRoomParticipantsAction": {
       "name": "getRoomParticipantsAction",
       "file": "src/services/chat/actions/message.queries.ts",
-      "sig": "(channelId: string) => Promise<{ data: { user: { id: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; role: ParticipantRole; userId: string; joinedAt: Date; }[]; error?: undefined; } | { ...; }>",
+      "sig": "(channelId: string) => Promise<{ error: any; data?: undefined; } | { data: { user: { id: string; firstName: string | null; lastName: string | null; avatar_url: string | null; }; userId: string; role: ParticipantRole; joinedAt: Date; }[]; error?: undefined; }>",
       "calls": [
         "getRoomParticipants"
       ],

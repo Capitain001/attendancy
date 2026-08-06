@@ -1,0 +1,11 @@
+{
+  "name": "getUETemplatesAction",
+  "file": "src/services/ue-template/actions/referential.queries.ts",
+  "sig": "(params: GetUETemplatesParams) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; code: string | null; _count: { elements: number; }; type: UETemplateType; semester: number; domain: string; degree: string; mention: string; speciality: string | null; credits: Decimal; }[]; error?: undefined; }>",
+  "calls": [
+    "getUETemplates"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,7 +1,7 @@
 "use server";
 
 import { resendInvitation, generateMagicLink } from "./supabase";
-import { getInvitationStats, InvitationListItem, updateInvitationToken } from "./database";
+import { getInvitationStats, getOrganizationInvitations, InvitationListItem, updateInvitationToken } from "./database";
 import { getUserInfo } from "../user";
 import { generateInvitationToken } from "./token";
 import { deleteAuthUser, findAuthUserByEmail } from "../auth/supabase";
@@ -219,5 +219,24 @@ export async function getInvitationStatsAction (){
       success: false,
       error: error instanceof Error ? error.message : "Erreur inconnue",
     };
+  }
+}
+
+/**
+ * Historique des invitations de l'organisation courante (hub Direction).
+ * Retour discriminé `{ data } | { error }` — normalisé côté hook `useOrgInvitations`.
+ */
+export async function getOrgInvitationsAction(limit = 50) {
+  try {
+    const user = await getUserInfo();
+    if (!user) return { error: "Non authentifié" };
+
+    const orgId = user.organization?.id;
+    if (!orgId) return { error: "Organisation non trouvée" };
+
+    const data = await getOrganizationInvitations(orgId, limit);
+    return { data };
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : ERRORS.SERVER };
   }
 }

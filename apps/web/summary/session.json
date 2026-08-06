@@ -2,8 +2,8 @@
   "service": "session",
   "path": "src/services/session/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
-  "generated_at": "2026-07-29T12:17:29.402Z",
+  "derived_at": "5306ac7",
+  "generated_at": "2026-08-06T12:17:34.778Z",
   "fns": {
     "startSession": {
       "name": "startSession",
@@ -41,7 +41,7 @@
     "getActiveSessions": {
       "name": "getActiveSessions",
       "file": "src/services/session/database/session.queries.ts",
-      "sig": "(orgId: string) => Promise<{ id: string; schedule: { id: string; course: { name: string; }; teacher: { id: string; user: { avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; room: { name: string; }; groupId: string | null; startTime: Date; endTime: Date; classId: string; }; status: SessionStatus; check...",
+      "sig": "(orgId: string) => Promise<{ schedule: { course: { name: string; }; teacher: { user: { firstName: string | null; lastName: string | null; avatar_url: string | null; }; id: string; }; room: { name: string; }; id: string; startTime: Date; endTime: Date; classId: string; groupId: string | null; }; id: string; status: SessionStatus; check...",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -51,7 +51,7 @@
     "getOrgDaySchedulesWithSession": {
       "name": "getOrgDaySchedulesWithSession",
       "file": "src/services/session/database/session.queries.ts",
-      "sig": "(orgId: string, rangeStart: Date, rangeEnd: Date) => Promise<{ id: string; class: { name: string; id: string; _count: { studentEnrollments: number; }; }; course: { name: string; id: string; }; group: { name: string; id: string; _count: { studentGroups: number; }; } | null; ... 7 more ...; endTime: Date; }[]>",
+      "sig": "(orgId: string, rangeStart: Date, rangeEnd: Date) => Promise<{ class: { id: string; _count: { studentEnrollments: number; }; name: string; }; course: { id: string; name: string; }; group: { id: string; _count: { studentGroups: number; }; name: string; } | null; session: { ...; } | null; ... 7 more ...; attendances: { ...; }[]; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -61,7 +61,7 @@
     "getTeacherNextSchedule": {
       "name": "getTeacherNextSchedule",
       "file": "src/services/session/database/session.queries.ts",
-      "sig": "(teacherId: string, orgId: string) => Promise<{ id: string; class: { level: Level; name: string; _count: { studentEnrollments: number; }; }; course: { name: string; ueCourse: { code: string | null; }; }; group: { name: string; _count: { studentGroups: number; }; } | null; ... 6 more ...; confirmed: boolean; } | null>",
+      "sig": "(teacherId: string, orgId: string) => Promise<{ class: { level: Level; _count: { studentEnrollments: number; }; name: string; }; course: { name: string; ueCourse: { code: string | null; }; }; group: { _count: { studentGroups: number; }; name: string; } | null; ... 7 more ...; notes: string | null; } | null>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -91,7 +91,7 @@
     "startSessionAction": {
       "name": "startSessionAction",
       "file": "src/services/session/actions/session.mutations.ts",
-      "sig": "(scheduleId: string, coords: { lat: number; lng: number } | null) => Promise<{ error: string; data?: undefined; } | { data: { sessionId: string; checkIn: Date; isLate: boolean; locationId: string | null; checkInMethod: string; }; error?: undefined; }>",
+      "sig": "(scheduleId: string, coords: { lat: number; lng: number } | null) => Promise<{ error: any; data?: undefined; } | { data: { sessionId: string; checkIn: Date; isLate: boolean; locationId: string | null; checkInMethod: string; }; error?: undefined; }>",
       "calls": [
         "startSession"
       ],
@@ -104,7 +104,7 @@
     "completeSessionAction": {
       "name": "completeSessionAction",
       "file": "src/services/session/actions/session.mutations.ts",
-      "sig": "(scheduleId: string) => Promise<{ error: string; data?: undefined; } | { data: { absentUserIds: string[]; absentStudentIds: string[]; audience: number; sessionId: string; checkOut: Date; durationMinutes: number; }; error?: undefined; }>",
+      "sig": "(scheduleId: string) => Promise<{ error: any; data?: undefined; } | { data: { absentUserIds: string[]; absentStudentIds: string[]; audience: number; sessionId: string; checkOut: Date; durationMinutes: number; }; error?: undefined; }>",
       "calls": [
         "finalizeSession"
       ],
@@ -117,7 +117,7 @@
     "getActiveSessionsAction": {
       "name": "getActiveSessionsAction",
       "file": "src/services/session/actions/session.queries.ts",
-      "sig": "() => Promise<{ data: { id: string; schedule: { id: string; course: { name: string; }; teacher: { id: string; user: { avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; room: { name: string; }; groupId: string | null; startTime: Date; endTime: Date; classId: string; }; status: SessionStatu...",
+      "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { schedule: { course: { name: string; }; teacher: { user: { firstName: string | null; lastName: string | null; avatar_url: string | null; }; id: string; }; ... 5 more ...; groupId: string | null; }; id: string; status: SessionStatus; checkIn: Date | null; }[]; erro...",
       "calls": [
         "getActiveSessions"
       ],
@@ -130,7 +130,7 @@
     "getDirectionSessionsAction": {
       "name": "getDirectionSessionsAction",
       "file": "src/services/session/actions/session.queries.ts",
-      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { id: string; class: { name: string; id: string; _count: { studentEnrollments: number; }; }; course: { name: string; id: string; }; group: { name: string; id: string; _count: { ...; }; } | null; ... 7 more ...; endTime: Date; }[]; error?: undefined; }>",
+      "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { class: { id: string; _count: { studentEnrollments: number; }; name: string; }; course: { id: string; name: string; }; group: { id: string; _count: { studentGroups: number; }; name: string; } | null; ... 8 more ...; attendances: { ...; }[]; }[]; error?: undefined;...",
       "calls": [
         "getOrgDaySchedulesWithSession"
       ],
@@ -143,7 +143,7 @@
     "getTeacherNextScheduleAction": {
       "name": "getTeacherNextScheduleAction",
       "file": "src/services/session/actions/session.queries.ts",
-      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { id: string; class: { level: Level; name: string; _count: { studentEnrollments: number; }; }; course: { name: string; ueCourse: { code: string | null; }; }; ... 7 more ...; confirmed: boolean; } | null; error?: undefined; }>",
+      "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { class: { level: Level; _count: { studentEnrollments: number; }; name: string; }; course: { name: string; ueCourse: { code: string | null; }; }; group: { ...; } | null; ... 7 more ...; notes: string | null; } | null; error?: undefined; }>",
       "calls": [
         "getTeacherNextSchedule"
       ],
@@ -156,7 +156,7 @@
     "generateTokenAction": {
       "name": "generateTokenAction",
       "file": "src/services/session/actions/token.actions.ts",
-      "sig": "(sessionId: string) => Promise<{ error: string; data?: undefined; } | { data: { token: string; expiresAt: Date; url: string; }; error?: undefined; }>",
+      "sig": "(sessionId: string) => Promise<{ error: any; data?: undefined; } | { data: { token: string; expiresAt: Date; url: string; }; error?: undefined; }>",
       "calls": [
         "createSessionToken"
       ],

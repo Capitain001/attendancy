@@ -1,0 +1,11 @@
+{
+  "name": "getUETemplateImportsByOrgAction",
+  "file": "src/services/ue-template/actions/referential.queries.ts",
+  "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { templateId: string; ueId: string; importedAt: Date; }[]; error?: undefined; }>",
+  "calls": [
+    "getUETemplateImportsByOrg"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

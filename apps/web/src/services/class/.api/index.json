@@ -2,7 +2,7 @@
   "service": "class",
   "path": "src/services/class/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "5306ac7",
+  "derived_at": "decb56e",
   "utils_dir": null,
   "fns": {
     "createClass": {
@@ -24,36 +24,6 @@
       "f": ".api/getClass.json",
       "layer": "db",
       "kind": "query"
-    },
-    "getClassGroupsAction": {
-      "f": ".api/getClassGroupsAction.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "getGroupEligibleStudentsAction": {
-      "f": ".api/getGroupEligibleStudentsAction.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "createClassGroupAction": {
-      "f": ".api/createClassGroupAction.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "updateClassGroupAction": {
-      "f": ".api/updateClassGroupAction.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "deleteClassGroupAction": {
-      "f": ".api/deleteClassGroupAction.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "setGroupStudentsAction": {
-      "f": ".api/setGroupStudentsAction.json",
-      "layer": "action",
-      "kind": "server-action"
     },
     "createClassAction": {
       "f": ".api/createClassAction.json",
@@ -89,12 +59,6 @@
     "getClass": [
       "getClassAction"
     ],
-    "getClassGroupsAction": [],
-    "getGroupEligibleStudentsAction": [],
-    "createClassGroupAction": [],
-    "updateClassGroupAction": [],
-    "deleteClassGroupAction": [],
-    "setGroupStudentsAction": [],
     "createClassAction": [],
     "removeClassAction": [],
     "getClassesAction": [],

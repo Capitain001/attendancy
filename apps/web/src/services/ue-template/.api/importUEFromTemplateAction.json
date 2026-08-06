@@ -1,0 +1,11 @@
+{
+  "name": "importUEFromTemplateAction",
+  "file": "src/services/ue-template/actions/template.mutations.ts",
+  "sig": "(input: ImportUETemplateInput) => Promise<{ error: any; data?: undefined; } | { data: { ueId: string; importedCount: number; importId: string; }; error?: undefined; }>",
+  "calls": [
+    "importUEFromTemplate"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

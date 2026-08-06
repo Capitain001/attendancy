@@ -2,8 +2,8 @@
   "service": "student",
   "path": "src/services/student/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
-  "generated_at": "2026-07-29T12:17:29.414Z",
+  "derived_at": "2aac61e",
+  "generated_at": "2026-08-06T12:17:34.811Z",
   "fns": {
     "enrollStudent": {
       "name": "enrollStudent",
@@ -48,7 +48,7 @@
     "getStudentProfile": {
       "name": "getStudentProfile",
       "file": "src/services/student/database/student.queries.ts",
-      "sig": "(studentId: string, orgId: string) => Promise<{ studentId: string; classId: string; groupIds: string[]; user: { email: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; } | null>",
+      "sig": "(studentId: string, orgId: string) => Promise<{ studentId: string; classId: string; groupIds: string[]; user: { firstName: string | null; lastName: string | null; email: string; avatar_url: string | null; }; } | null>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -58,7 +58,7 @@
     "getStudentSchedules": {
       "name": "getStudentSchedules",
       "file": "src/services/student/database/student.queries.ts",
-      "sig": "(groupIds: string[], params: { orgId: string; classId: string; rangeStart: Date; rangeEnd: Date }) => Promise<{ id: string; course: { name: string; id: string; }; teacher: { id: string; user: { firstName: string | null; lastName: string | null; }; }; room: { name: string; id: string; }; status: ScheduleStatus; notes: string | null; startTime: Date; endTime: Date; }[]>",
+      "sig": "(groupIds: string[], params: { orgId: string; classId: string; rangeStart: Date; rangeEnd: Date }) => Promise<{ id: string; status: ScheduleStatus; teacher: { id: string; user: { firstName: string | null; lastName: string | null; }; }; room: { name: string; id: string; }; course: { name: string; id: string; }; startTime: Date; endTime: Date; notes: string | null; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -68,7 +68,7 @@
     "getStudentStats": {
       "name": "getStudentStats",
       "file": "src/services/student/database/student.queries.ts",
-      "sig": "(params: { studentId: string; orgId: string; classId: string; groupIds: string[] }) => Promise<{ attendanceRate: number; totalCourses: number; todayCount: number; }>",
+      "sig": "(params: { studentId: string; orgId: string; classId: string; groupIds: string[] }) => Promise<{ attendanceRate: number; totalCourses: number; todayCount: number; averageGrade: number; totalEvaluations: number; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -78,7 +78,7 @@
     "getEnrolledStudents": {
       "name": "getEnrolledStudents",
       "file": "src/services/student/database/student.queries.ts",
-      "sig": "(classId: string, orgId: string) => Promise<{ id: string; student: { id: string; user: { email: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; studentId: string; studentGroups: { id: string; group: { ...; }; }[]; }[]>",
+      "sig": "(classId: string, orgId: string) => Promise<{ id: string; studentId: string; createdAt: Date; student: { id: string; user: { firstName: string | null; lastName: string | null; email: string; sex: Sex; phone: string | null; avatar_url: string | null; dateOfBirth: Date | null; status: UserStatus; }; }; studentGroups: { ...; }[]; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -88,7 +88,7 @@
     "enrollStudentAction": {
       "name": "enrollStudentAction",
       "file": "src/services/student/actions/student.mutations.ts",
-      "sig": "(input: EnrollStudentInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; studentId: string; classId: string; }; error?: undefined; }>",
+      "sig": "(input: EnrollStudentInput) => Promise<{ error: any; data?: undefined; } | { data: { id: string; studentId: string; classId: string; }; error?: undefined; }>",
       "calls": [
         "enrollStudent"
       ],
@@ -101,7 +101,7 @@
     "removeEnrollmentAction": {
       "name": "removeEnrollmentAction",
       "file": "src/services/student/actions/student.mutations.ts",
-      "sig": "(enrollmentId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "sig": "(enrollmentId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
       "calls": [
         "removeEnrollment"
       ],
@@ -114,7 +114,7 @@
     "assignStudentGroupAction": {
       "name": "assignStudentGroupAction",
       "file": "src/services/student/actions/student.mutations.ts",
-      "sig": "(input: AssignStudentGroupInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "sig": "(input: AssignStudentGroupInput) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
       "calls": [
         "assignStudentGroup"
       ],
@@ -127,7 +127,7 @@
     "bulkSetStudentStatusAction": {
       "name": "bulkSetStudentStatusAction",
       "file": "src/services/student/actions/student.mutations.ts",
-      "sig": "(studentIds: string[], status: UserStatus) => Promise<{ error: string; data?: undefined; } | { data: { count: number; }; error?: undefined; }>",
+      "sig": "(studentIds: string[], status: UserStatus) => Promise<{ error: any; data?: undefined; } | { data: { count: number; }; error?: undefined; }>",
       "calls": [],
       "auth": {},
       "rules": [],
@@ -138,7 +138,7 @@
     "deleteStudentGroupAction": {
       "name": "deleteStudentGroupAction",
       "file": "src/services/student/actions/student.mutations.ts",
-      "sig": "(studentGroupId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "sig": "(studentGroupId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
       "calls": [
         "deleteStudentGroup"
       ],
@@ -162,7 +162,7 @@
     "getStudentProfileAction": {
       "name": "getStudentProfileAction",
       "file": "src/services/student/actions/student.queries.ts",
-      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { studentId: string; classId: string; groupIds: string[]; user: { email: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; error?: undefined; }>",
+      "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { studentId: string; classId: string; groupIds: string[]; user: { firstName: string | null; lastName: string | null; email: string; avatar_url: string | null; }; }; error?: undefined; }>",
       "calls": [
         "getStudentProfile"
       ],
@@ -175,7 +175,7 @@
     "getStudentScheduleAction": {
       "name": "getStudentScheduleAction",
       "file": "src/services/student/actions/student.queries.ts",
-      "sig": "(params: { classId: string groupIds: string[] rangeStart: Date rangeEnd: Date }) => Promise<{ data: { id: string; course: { name: string; id: string; }; teacher: { id: string; user: { firstName: string | null; lastName: string | null; }; }; room: { name: string; id: string; }; status: ScheduleStatus; notes: string | null; startTime: Date; endTime: Date; }[]; error?: undefined; } | { ...; }>",
+      "sig": "(params: { classId: string groupIds: string[] rangeStart: Date rangeEnd: Date }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; status: ScheduleStatus; teacher: { id: string; user: { firstName: string | null; lastName: string | null; }; }; room: { name: string; id: string; }; course: { ...; }; startTime: Date; endTime: Date; notes: string | null; }[]; error?: undefined; }>",
       "calls": [
         "getStudentSchedules"
       ],
@@ -188,7 +188,7 @@
     "getStudentStatsAction": {
       "name": "getStudentStatsAction",
       "file": "src/services/student/actions/student.queries.ts",
-      "sig": "(params: { classId: string; groupIds: string[] }) => Promise<{ error: string; data?: undefined; } | { data: { attendanceRate: number; totalCourses: number; todayCount: number; }; error?: undefined; }>",
+      "sig": "(params: { classId: string; groupIds: string[] }) => Promise<{ error: any; data?: undefined; } | { data: { attendanceRate: number; totalCourses: number; todayCount: number; averageGrade: number; totalEvaluations: number; }; error?: undefined; }>",
       "calls": [
         "getStudentStats"
       ],
@@ -201,7 +201,7 @@
     "getEnrolledStudentsAction": {
       "name": "getEnrolledStudentsAction",
       "file": "src/services/student/actions/student.queries.ts",
-      "sig": "(classId: string) => Promise<{ data: { id: string; student: { id: string; user: { email: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; studentId: string; studentGroups: { id: string; group: { ...; }; }[]; }[]; error?: undefined; } | { ...; }>",
+      "sig": "(classId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; studentId: string; createdAt: Date; student: { id: string; user: { firstName: string | null; lastName: string | null; email: string; ... 4 more ...; status: UserStatus; }; }; studentGroups: { ...; }[]; }[]; error?: undefined; }>",
       "calls": [
         "getEnrolledStudents"
       ],
