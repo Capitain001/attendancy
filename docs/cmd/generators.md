@@ -4,6 +4,48 @@ Scripts dans `scripts/generate/` — exécutables via `npm run` ou `npx tsx` dir
 
 ---
 
+## `service` — Scaffolding d'un nouveau service
+
+Génère la structure minimale d'un service `src/services/<name>/` conforme au
+pattern `service-module-pattern` (cf. `src/services/entity/`). Pose le squelette
+(fichiers + fonctions à compléter) — ne remplit **pas** la logique métier.
+
+```bash
+# Modèle déduit du nom (course-teacher → CourseTeacher)
+npx tsx scripts/generate/service/service.ts <name> --model=<Model>
+
+# Exemple : sous-modèle avec code actif prêt à compléter (agent IA)
+npx tsx scripts/generate/service/service.ts course-teacher --model=CourseTeacher --minimal
+```
+
+**Options** :
+
+| Option | Effet |
+|--------|-------|
+| `--name=<kebab>` | Nom du service (alternative au positionnel) |
+| `--model=<Pascal>` | Modèle Prisma (déduit de `<name>` si omis) |
+| `--prefix=<kebab>` | Préfixe de domaine pour les clés cache/événements (ex: `--prefix=ue` → `UE_COURSE_TEACHER_CREATED`) |
+| `--soft-delete` | Génère `remove*` (`deletedAt`) au lieu de `delete*` (hard delete) |
+| `--minimal` | Code **actif** (imports réels, fonctions exécutables) au lieu du gabarit commenté — pensé pour un agent IA qui remplit immédiatement |
+| `--skip-cache-registry` | Ne patche pas `src/cache/server/key.ts` |
+| `--cache-registry=<path>` | Chemin du registre cache si non standard |
+| `--force` | Écrase un service existant (ou un dossier vide déjà créé) |
+
+**Effet de bord** : enregistre automatiquement `<SERVICE>_GRAPH` dans
+`src/cache/server/key.ts` (import + entrée `CACHE.<KEY>` + spread dans `CACHE_GRAPH`),
+sauf `--skip-cache-registry`.
+
+**Après génération** (le script les rappelle) :
+1. Remplacer les `TODO` (champs réels du modèle) — ou décommenter si mode gabarit.
+2. Compléter le `CLAUDE.md` (rôle, contraintes).
+3. Renseigner l'ownership dans `src/services/SERVICE_CONTEXT.md`.
+4. `npx tsx scripts/generate/types/types.ts <name>` puis `... /api/api.ts <name>`.
+
+> Le mode `--minimal` génère des imports réels alignés sur le monorepo
+> (`@/lib/prisma`, `@/services/auth`, `@/services/audit`, `@/utils/server/prisma`).
+
+---
+
 ## `api` — Index API d'un service
 
 Génère `src/services/<service>/.api/index.json` + une fiche JSON par fonction exportée.

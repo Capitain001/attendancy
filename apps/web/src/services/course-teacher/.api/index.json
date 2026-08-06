@@ -1,0 +1,88 @@
+{
+  "service": "course-teacher",
+  "path": "src/services/course-teacher/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "4e41f59",
+  "utils_dir": null,
+  "fns": {
+    "assignTeacher": {
+      "f": ".api/assignTeacher.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "deleteTeacherFromCourse": {
+      "f": ".api/deleteTeacherFromCourse.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "syncCourseTeachers": {
+      "f": ".api/syncCourseTeachers.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getCourseTeachers": {
+      "f": ".api/getCourseTeachers.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getCourseTeachersIds": {
+      "f": ".api/getCourseTeachersIds.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "assignTeacherAction": {
+      "f": ".api/assignTeacherAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "deleteTeacherAction": {
+      "f": ".api/deleteTeacherAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "syncCourseTeachersAction": {
+      "f": ".api/syncCourseTeachersAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getCourseTeachersAction": {
+      "f": ".api/getCourseTeachersAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getCourseTeachersIdAction": {
+      "f": ".api/getCourseTeachersIdAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "assignTeacher": [
+      "assignTeacherAction"
+    ],
+    "deleteTeacherFromCourse": [
+      "deleteTeacherAction"
+    ],
+    "syncCourseTeachers": [
+      "syncCourseTeachersAction"
+    ],
+    "getCourseTeachers": [
+      "getCourseTeachersAction"
+    ],
+    "getCourseTeachersIds": [
+      "getCourseTeachersIdAction"
+    ],
+    "assignTeacherAction": [],
+    "deleteTeacherAction": [],
+    "syncCourseTeachersAction": [],
+    "getCourseTeachersAction": [],
+    "getCourseTeachersIdAction": [],
+    "getCourseClassId": [
+      "assignTeacher",
+      "syncCourseTeachers"
+    ]
+  },
+  "deps": {
+    "getCourseClassId": "course"
+  }
+}

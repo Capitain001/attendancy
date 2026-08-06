@@ -16,6 +16,8 @@ service dans `src/services/*`.
 |---------------|----------------------|
 | `Organization` | `org` |
 | `User` (record applicatif) | `auth` |
+| `Course` | `course` |
+| `CourseTeacher` | `course-teacher` |
 | ⚠ À ÉTENDRE PAR PROJET — une ligne par modèle | |
 
 La couche Prisma d'un modèle vit dans son domaine propriétaire — **une seule

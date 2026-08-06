@@ -1,7 +1,7 @@
 'use server'
 import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
-import { getCourse, getCourses, getCoursesByClass, getCourseTeachers, getCourseTeachersIds } from '../database'
+import { getCourse, getCourseDetail, getCourses, getCoursesByClass } from '../database'
 
 export async function getCourseAction(courseId: string) {
   const auth = await authAccess()
@@ -39,25 +39,15 @@ export async function getCoursesAction(classId: string) {
   }
 }
 
-export async function getCourseTeachersAction(courseId: string) {
+export async function getCourseDetailAction(courseId: string) {
   const auth = await authAccess()
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
 
   try {
-    return { data: await getCourseTeachers(courseId, orgId) }
-  } catch (e) {
-    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
-  }
-}
-
-export async function getCourseTeachersIdAction(courseId: string) {
-  const auth = await authAccess()
-  if (!auth.data) return { error: auth.error }
-  const { orgId } = auth.data
-
-  try {
-    return { data: await getCourseTeachersIds(courseId, orgId) }
+    const data = await getCourseDetail(courseId, orgId)
+    if (!data) return { error: 'Cours introuvable' }
+    return { data }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

@@ -3,8 +3,8 @@
 
 import { useCallback } from "react";
 import { useEntity } from "@/hooks/entity/useEntity";
-import { getCourseTeachersAction } from "@/services/course";
-import type { CourseTeacher } from "@/services/course";
+import { getCourseTeachersAction } from "@/services/course-teacher";
+import type { CourseTeacher } from "@/services/course-teacher";
 
 /**
  * Hook pour récupérer les enseignants assignés à un cours

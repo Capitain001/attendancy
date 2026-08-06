@@ -1,0 +1,10 @@
+{
+  "name": "syncCourseTeachers",
+  "file": "src/services/course-teacher/database/course-teacher.mutations.ts",
+  "sig": "(courseId: string, principalId: string, assistantIds: string[], orgId: string) => Promise<void>",
+  "composes": [
+    "getCourseClassId"
+  ],
+  "rules": [],
+  "why_ref": ""
+}

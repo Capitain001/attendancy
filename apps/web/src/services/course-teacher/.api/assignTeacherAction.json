@@ -1,6 +1,6 @@
 {
   "name": "assignTeacherAction",
-  "file": "src/services/course/actions/course.mutations.ts",
+  "file": "src/services/course-teacher/actions/course-teacher.mutations.ts",
   "sig": "(input: AssignTeacherInput) => Promise<{ error: any; data?: undefined; } | { data: { id: string; isMain: boolean; }; error?: undefined; }>",
   "calls": [
     "assignTeacher"

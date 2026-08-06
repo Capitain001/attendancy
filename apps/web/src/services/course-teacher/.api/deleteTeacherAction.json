@@ -1,6 +1,6 @@
 {
   "name": "deleteTeacherAction",
-  "file": "src/services/course/actions/course.mutations.ts",
+  "file": "src/services/course-teacher/actions/course-teacher.mutations.ts",
   "sig": "(courseTeacherId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
   "calls": [
     "deleteTeacherFromCourse"

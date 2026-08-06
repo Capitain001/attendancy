@@ -1,0 +1,11 @@
+{
+  "name": "getCourseDetailAction",
+  "file": "src/services/course/actions/course.queries.ts",
+  "sig": "(courseId: string) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; classId: string; durationDone: number; durationTotal: number; credits: number; description: string | null; termId: string | null; class: { ...; }; ueCourse: { ...; }; teachers: { ...; }[]; schedules: { ...; }[]; }; error?: undefined; }>",
+  "calls": [
+    "getCourseDetail"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -48,6 +48,7 @@ import { FUNCTION_GRAPH } from "@/services/function/cache";
 import { NOTIFICATION_GRAPH } from "@/services/notification/cache";
 import { DIRECTION_GRAPH } from "@/services/direction/cache";
 import { PROGRAM_GRAPH } from "@/services/program/cache";
+import { COURSE_TEACHER_GRAPH } from "@/services/course-teacher/cache";
 // ⚠ À ÉTENDRE PAR PROJET — un import par service à données cachées :
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -77,7 +78,8 @@ export const CACHE = {
   NOTIFICATION: key("notification"),
   DIRECTION: key("direction"),
   PROGRAM: key("program"),
-  // ⚠ À ÉTENDRE PAR PROJET — une entrée par entité cachée :
+    COURSE_TEACHER: key("course-teacher"),
+// ⚠ À ÉTENDRE PAR PROJET — une entrée par entité cachée :
   // ENTITY: key("entity"),
   // RESOURCE: key("resource", CACHE_LIFE.SHORT),
 } as const;
@@ -109,7 +111,8 @@ export const CACHE_GRAPH = {
   ...DIRECTION_GRAPH,
   ...PROGRAM_GRAPH,
   ...NOTIFICATION_GRAPH,
-  // ⚠ À ÉTENDRE PAR PROJET — spreader chaque <SERVICE>_GRAPH importé :
+    ...COURSE_TEACHER_GRAPH,
+// ⚠ À ÉTENDRE PAR PROJET — spreader chaque <SERVICE>_GRAPH importé :
 } as const;
 
 // ─────────────────────────────────────────────────────────────────────────────

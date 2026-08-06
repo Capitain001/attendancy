@@ -2,7 +2,7 @@
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
 import { invalidateEvent } from '@/cache/server/key'
-import type { CreateCourseOutput, AssignTeacherOutput } from '../validation'
+import type { CreateCourseOutput } from '../validation'
 
 export async function createCourse(data: CreateCourseOutput & { orgId: string }) {
   // Verify class belongs to org
@@ -42,39 +42,24 @@ export async function createCourse(data: CreateCourseOutput & { orgId: string })
   return result
 }
 
-export async function assignTeacher(data: AssignTeacherOutput & { orgId: string }) {
-  // Verify course belongs to org
+export async function updateCourse(
+  courseId: string,
+  data: { name?: string; description?: string | null },
+  orgId: string,
+) {
   const course = await prisma.course.findFirst({
-    where: { id: data.courseId, orgId: data.orgId, deletedAt: null },
-    select: { id: true, classId: true },
+    where: { id: courseId, orgId, deletedAt: null },
+    select: { classId: true },
   })
   if (!course) throw new Error('Cours introuvable')
 
-  const result = await tryConstraint(prisma.courseTeacher.create({
-    data: {
-      courseId:  data.courseId,
-      teacherId: data.teacherId,
-      isMain:    data.isMain ?? false,
-      hours:     data.hours,
-    },
-    select: { id: true, isMain: true },
-  }))
-  await invalidateEvent('COURSE_UPDATED', data.orgId, course.classId)
-  return result
-}
-
-export async function deleteTeacherFromCourse(courseTeacherId: string, orgId: string) {
-  const ct = await prisma.courseTeacher.findFirst({
-    where: { id: courseTeacherId, course: { orgId } },
-    select: { course: { select: { classId: true } } },
+  const result = await prisma.course.update({
+    where: { id: courseId },
+    data,
+    select: { id: true, name: true, description: true },
   })
-  if (!ct) throw new Error('Affectation introuvable')
-
-  await tryConstraint(prisma.courseTeacher.delete({
-    where: { id: courseTeacherId },
-  }))
-  await invalidateEvent('COURSE_UPDATED', orgId, ct.course.classId)
-  return { id: courseTeacherId }
+  await invalidateEvent('COURSE_UPDATED', orgId, course.classId)
+  return result
 }
 
 export async function removeCourse(courseId: string, orgId: string) {

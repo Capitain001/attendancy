@@ -1,0 +1,8 @@
+{
+  "name": "updateCourse",
+  "file": "src/services/course/database/course.mutations.ts",
+  "sig": "(courseId: string, data: { name?: string; description?: string | null }, orgId: string) => Promise<{ name: string; id: string; description: string | null; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

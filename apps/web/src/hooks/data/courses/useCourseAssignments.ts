@@ -1,10 +1,10 @@
 "use client";
 
-import { 
-  assignCourseTeacherAction,
-  unassignCourseTeacherAction,
-  getCourseTeachersIdAction 
-} from "@/services/course";
+import {
+  assignTeacherAction,
+  deleteTeacherAction,
+  getCourseTeachersIdAction
+} from "@/services/course-teacher";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -20,7 +20,7 @@ export const useCourseAssignments = (courseId: string) => {
     queryKey: ["courseAssignments", courseId],
     queryFn: async () => {
       const result = await getCourseTeachersIdAction(courseId);
-      if (result.error) throw new Error(result.error);
+      if ("error" in result) throw new Error(result.error);
       return result.data;
     },
     enabled: !!courseId,
@@ -40,13 +40,13 @@ export const useCourseAssignments = (courseId: string) => {
       teacherId: string;
       isMain?: boolean;
     }) => {
-      const result = await assignCourseTeacherAction({ 
-        courseId, 
-        teacherId, 
-        isMain 
+      const result = await assignTeacherAction({
+        courseId,
+        teacherId,
+        isMain
       });
-      
-      if (result.error) throw new Error(result.error);
+
+      if ("error" in result) throw new Error(result.error);
       return result.data;
     },
 
@@ -94,9 +94,9 @@ export const useCourseAssignments = (courseId: string) => {
   // Mutation pour désassigner un enseignant
   const unassignMutation = useMutation({
     mutationFn: async ({ courseTeacherId }: { courseTeacherId: string }) => {
-      const result = await unassignCourseTeacherAction(courseTeacherId);
-      
-      if (result.error) throw new Error(result.error);
+      const result = await deleteTeacherAction(courseTeacherId);
+
+      if ("error" in result) throw new Error(result.error);
       return result.data;
     },
 

@@ -1,6 +1,6 @@
 {
   "name": "getCourseTeachersAction",
-  "file": "src/services/course/actions/course.queries.ts",
+  "file": "src/services/course-teacher/actions/course-teacher.queries.ts",
   "sig": "(courseId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; isMain: boolean; hours: number | null; teacher: { id: string; user: { id: string; firstName: string | null; lastName: string | null; email: string; }; } | null; }[]; error?: undefined; }>",
   "calls": [
     "getCourseTeachers"

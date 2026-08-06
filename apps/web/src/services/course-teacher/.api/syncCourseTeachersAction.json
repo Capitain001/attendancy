@@ -1,0 +1,11 @@
+{
+  "name": "syncCourseTeachersAction",
+  "file": "src/services/course-teacher/actions/course-teacher.mutations.ts",
+  "sig": "(input: SyncCourseTeachersInput) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
+  "calls": [
+    "syncCourseTeachers"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

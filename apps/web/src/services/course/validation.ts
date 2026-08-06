@@ -1,5 +1,5 @@
 // src/services/course/validation.ts
-import { object, optional, pipe, string, trim, minLength, maxLength, number, integer, minValue, boolean, uuid } from 'valibot'
+import { object, optional, pipe, string, trim, minLength, maxLength, uuid } from 'valibot'
 import type { InferInput, InferOutput } from 'valibot'
 
 export const createCourseSchema = object({
@@ -11,13 +11,3 @@ export const createCourseSchema = object({
 
 export type CreateCourseInput  = InferInput<typeof createCourseSchema>
 export type CreateCourseOutput = InferOutput<typeof createCourseSchema>
-
-export const assignTeacherSchema = object({
-  courseId:  pipe(string(), uuid('ID cours invalide')),
-  teacherId: pipe(string(), uuid('ID enseignant invalide')),
-  isMain:    optional(boolean()),
-  hours:     optional(pipe(number(), integer(), minValue(1))),
-})
-
-export type AssignTeacherInput  = InferInput<typeof assignTeacherSchema>
-export type AssignTeacherOutput = InferOutput<typeof assignTeacherSchema>

@@ -14,25 +14,16 @@ export async function getCourses(orgId: string) {
   })
 }
 
-export async function getCourseTeachers(courseId: string, orgId: string) {
-  return prisma.courseTeacher.findMany({
-    where: { course: { id: courseId, orgId, deletedAt: null } },
-    select: {
-      id: true, isMain: true, hours: true,
-      teacher: {
-        select: {
-          id: true,
-          user: { select: { id: true, firstName: true, lastName: true, email: true } },
-        },
-      },
-    },
-  })
-}
-
-export async function getCourseTeachersIds(courseId: string, orgId: string) {
-  return prisma.courseTeacher.findMany({
-    where: { course: { id: courseId, orgId, deletedAt: null } },
-    select: { id: true, teacherId: true, isMain: true },
+/**
+ * Lookup léger d'appartenance — retourne l'id du cours + son classId.
+ * Exposé pour les services voisins (ex. course-teacher) qui ont besoin de
+ * vérifier l'ownership et de connaître le classId pour l'invalidation cache,
+ * sans dupliquer un `prisma.course` sur un modèle qu'ils ne possèdent pas.
+ */
+export async function getCourseClassId(courseId: string, orgId: string) {
+  return prisma.course.findFirst({
+    where: { id: courseId, orgId, deletedAt: null },
+    select: { id: true, classId: true },
   })
 }
 
@@ -57,6 +48,63 @@ export async function getCourse(courseId: string, orgId: string) {
             },
           },
         },
+      },
+    },
+  })
+}
+
+export async function getCourseDetail(courseId: string, orgId: string) {
+  'use cache'
+  cacheTag(CACHE.COURSE(orgId))
+  cacheTag(CACHE.COURSE(orgId, courseId))
+  cacheLife(CACHE.COURSE.life)
+  return prisma.course.findFirst({
+    where: { id: courseId, orgId, deletedAt: null },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      credits: true,
+      durationDone: true,
+      durationTotal: true,
+      classId: true,
+      termId: true,
+      class: {
+        select: {
+          id: true,
+          name: true,
+          level: true,
+          _count: { select: { studentEnrollments: true } },
+        },
+      },
+      ueCourse: {
+        select: { id: true, name: true, code: true, credits: true, duration: true },
+      },
+      teachers: {
+        select: {
+          id: true,
+          teacherId: true,
+          isMain: true,
+          hours: true,
+          teacher: {
+            select: {
+              id: true,
+              user: { select: { firstName: true, lastName: true, avatar_url: true } },
+            },
+          },
+        },
+      },
+      schedules: {
+        where: { deletedAt: null },
+        select: {
+          id: true,
+          startTime: true,
+          endTime: true,
+          status: true,
+          room: { select: { id: true, name: true } },
+          attendances: { select: { status: true } },
+        },
+        orderBy: { startTime: 'asc' },
       },
     },
   })

@@ -195,7 +195,7 @@ function fileConstantsCommented(): string {
 // Constantes du domaine. Enum aligné compile-time sur Prisma via
 // "as const satisfies readonly EnumType[]" + labels en Record.
 //
-// import type { ${modelName}Status } from "@/generated/prisma/enums";
+// import type { ${modelName}Status } from "@/generated/prisma/client";
 //
 // export const ${eventPrefix}_STATUSES = [] as const satisfies readonly ${modelName}Status[];
 // export type ${modelName}StatusValue = (typeof ${eventPrefix}_STATUSES)[number];
@@ -286,7 +286,7 @@ function fileActionsMutationsCommented(): string {
 // import { ERRORS } from "@/config";
 // import { create${modelName}Schema } from "../validation";
 // import { create${modelName}, ${removeVerb}${modelName} } from "../database";
-// import { logAuditAsync } from "@/utils/server/audit";
+// import { logAuditAsync } from "@/services/audit";
 //
 // export async function create${modelName}Action(input: unknown) {
 //   const parsed = v.safeParse(create${modelName}Schema, input);
@@ -348,7 +348,7 @@ function fileDatabaseQueriesCommented(): string {
   }
 //
 // import { cacheTag, cacheLife } from "next/cache";
-// import { prisma } from "@/lib/db";
+// import { prisma } from "@/lib/prisma";
 // import { CACHE } from "@/cache/server/key";
 //
 // export async function get${modelName}s(orgId: string) {
@@ -386,7 +386,7 @@ function fileDatabaseMutationsCommented(): string {
 // chaque mutation réussie, orgId dans le where (multi-tenant strict).
 // ${softDelete ? "remove* = soft delete (deletedAt)." : "delete* = hard delete."}
 //
-// import { prisma } from "@/lib/db";
+// import { prisma } from "@/lib/prisma";
 // import { tryConstraint } from "@/utils/server/prisma";
 // import { invalidateEvent } from "@/cache/server/key";
 //
@@ -416,7 +416,7 @@ function fileTestHelpersCommented(): string {
 // Helpers de test d'intégration. Prérequis : npm run test:db:setup
 // (base TEST_DATABASE_URL). Chaque test crée son propre tenant isolé.
 //
-// import { prisma } from "@/lib/db";
+// import { prisma } from "@/lib/prisma";
 //
 // export async function createTestOrg() {
 //   return prisma.organization.create({
@@ -463,7 +463,7 @@ export const ${eventPrefix}_GRAPH = {
 
 function fileConstantsMinimal(): string {
   return `// TODO: enums du domaine ${modelName} si nécessaire — aligner sur Prisma :
-// import type { ${modelName}Status } from "@/generated/prisma/enums";
+// import type { ${modelName}Status } from "@/generated/prisma/client";
 // export const ${eventPrefix}_STATUSES = [] as const satisfies readonly ${modelName}Status[];
 // export type ${modelName}StatusValue = (typeof ${eventPrefix}_STATUSES)[number];
 
@@ -527,7 +527,7 @@ import { authAccess } from "@/services/auth";
 import { ERRORS } from "@/config";
 import { create${modelName}Schema } from "../validation";
 import { create${modelName}, ${removeVerb}${modelName} } from "../database";
-import { logAuditAsync } from "@/utils/server/audit";
+import { logAuditAsync } from "@/services/audit";
 
 export async function create${modelName}Action(input: unknown) {
   const parsed = v.safeParse(create${modelName}Schema, input);
@@ -578,7 +578,7 @@ export * from "./${kebabName}.mutations";
 function fileDatabaseQueriesMinimal(): string {
   const whereClause = softDelete ? "{ orgId, deletedAt: null }" : "{ orgId }";
   return `import { cacheTag, cacheLife } from "next/cache";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 import { CACHE } from "@/cache/server/key";
 
 export async function get${modelName}s(orgId: string) {
@@ -610,7 +610,7 @@ function fileDatabaseMutationsMinimal(): string {
     }),
   );`;
 
-  return `import { prisma } from "@/lib/db";
+  return `import { prisma } from "@/lib/prisma";
 import { tryConstraint } from "@/utils/server/prisma";
 import { invalidateEvent } from "@/cache/server/key";
 
@@ -634,7 +634,7 @@ ${removeBody}
 }
 
 function fileTestHelpersMinimal(): string {
-  return `import { prisma } from "@/lib/db";
+  return `import { prisma } from "@/lib/prisma";
 
 export async function createTestOrg() {
   return prisma.organization.create({
@@ -656,8 +656,7 @@ function file(commented: () => string, activeCode: () => string): string {
   return minimal ? activeCode() : commented();
 }
 
-// CLAUDE.md et index.json ne dépendent pas de --minimal : ce sont de la doc/
-// métadonnées, pas du code à décommenter.
+// CLAUDE.md ne dépend pas de --minimal : c'est de la doc, pas du code à décommenter.
 
 function fileClaudeMd(): string {
   return `# Service \`${kebabName}\`
@@ -684,23 +683,6 @@ Régime de suppression : ${softDelete ? "**soft delete** (`deletedAt`, `remove*`
 ## Questions ouvertes
 <!-- TODO -->
 `;
-}
-
-function fileIndexJson(): string {
-  return `${JSON.stringify(
-    {
-      service: kebabName,
-      path: `src/services/${kebabName}/`,
-      claude_md: "./CLAUDE.md",
-      derived_at: null,
-      utils_dir: null,
-      fns: {},
-      edges: {},
-      deps: {},
-    },
-    null,
-    2,
-  )}\n`;
 }
 
 // ─── Enregistrement automatique dans src/cache/server/key.ts ───────────────────
@@ -803,7 +785,9 @@ function main(): void {
   );
 
   writeFile("CLAUDE.md", fileClaudeMd());
-  writeFile("index.json", fileIndexJson());
+  // Pas de index.json à la racine : l'index API canonique est `.api/index.json`,
+  // écrit par `generate:api` (étape 5 ci-dessous). Un fichier racine serait un
+  // orphelin qu'aucun outil ne lit (api/summary ne scannent que `.api/`).
 
   console.log(`\n✔ Service "${kebabName}" créé dans src/services/${kebabName}/`);
 

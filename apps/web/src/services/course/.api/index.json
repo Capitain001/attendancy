@@ -2,7 +2,7 @@
   "service": "course",
   "path": "src/services/course/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "5306ac7",
+  "derived_at": "4e41f59",
   "utils_dir": null,
   "fns": {
     "createCourse": {
@@ -10,13 +10,8 @@
       "layer": "db",
       "kind": "mutation"
     },
-    "assignTeacher": {
-      "f": ".api/assignTeacher.json",
-      "layer": "db",
-      "kind": "mutation"
-    },
-    "deleteTeacherFromCourse": {
-      "f": ".api/deleteTeacherFromCourse.json",
+    "updateCourse": {
+      "f": ".api/updateCourse.json",
       "layer": "db",
       "kind": "mutation"
     },
@@ -30,18 +25,18 @@
       "layer": "db",
       "kind": "query"
     },
-    "getCourseTeachers": {
-      "f": ".api/getCourseTeachers.json",
-      "layer": "db",
-      "kind": "query"
-    },
-    "getCourseTeachersIds": {
-      "f": ".api/getCourseTeachersIds.json",
+    "getCourseClassId": {
+      "f": ".api/getCourseClassId.json",
       "layer": "db",
       "kind": "query"
     },
     "getCourse": {
       "f": ".api/getCourse.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getCourseDetail": {
+      "f": ".api/getCourseDetail.json",
       "layer": "db",
       "kind": "query"
     },
@@ -55,13 +50,8 @@
       "layer": "action",
       "kind": "server-action"
     },
-    "assignTeacherAction": {
-      "f": ".api/assignTeacherAction.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "deleteTeacherAction": {
-      "f": ".api/deleteTeacherAction.json",
+    "updateCourseAction": {
+      "f": ".api/updateCourseAction.json",
       "layer": "action",
       "kind": "server-action"
     },
@@ -85,13 +75,8 @@
       "layer": "action",
       "kind": "server-action"
     },
-    "getCourseTeachersAction": {
-      "f": ".api/getCourseTeachersAction.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "getCourseTeachersIdAction": {
-      "f": ".api/getCourseTeachersIdAction.json",
+    "getCourseDetailAction": {
+      "f": ".api/getCourseDetailAction.json",
       "layer": "action",
       "kind": "server-action"
     }
@@ -100,11 +85,8 @@
     "createCourse": [
       "createCourseAction"
     ],
-    "assignTeacher": [
-      "assignTeacherAction"
-    ],
-    "deleteTeacherFromCourse": [
-      "deleteTeacherAction"
+    "updateCourse": [
+      "updateCourseAction"
     ],
     "removeCourse": [
       "removeCourseAction"
@@ -112,27 +94,23 @@
     "getCourses": [
       "getAllCoursesAction"
     ],
-    "getCourseTeachers": [
-      "getCourseTeachersAction"
-    ],
-    "getCourseTeachersIds": [
-      "getCourseTeachersIdAction"
-    ],
+    "getCourseClassId": [],
     "getCourse": [
       "getCourseAction"
+    ],
+    "getCourseDetail": [
+      "getCourseDetailAction"
     ],
     "getCoursesByClass": [
       "getCoursesAction"
     ],
     "createCourseAction": [],
-    "assignTeacherAction": [],
-    "deleteTeacherAction": [],
+    "updateCourseAction": [],
     "removeCourseAction": [],
     "getCourseAction": [],
     "getAllCoursesAction": [],
     "getCoursesAction": [],
-    "getCourseTeachersAction": [],
-    "getCourseTeachersIdAction": []
+    "getCourseDetailAction": []
   },
   "deps": {}
 }

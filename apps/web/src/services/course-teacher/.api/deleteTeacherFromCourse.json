@@ -1,6 +1,6 @@
 {
   "name": "deleteTeacherFromCourse",
-  "file": "src/services/course/database/course.mutations.ts",
+  "file": "src/services/course-teacher/database/course-teacher.mutations.ts",
   "sig": "(courseTeacherId: string, orgId: string) => Promise<{ id: string; }>",
   "composes": [],
   "rules": [],

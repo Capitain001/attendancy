@@ -1,0 +1,157 @@
+{
+  "service": "course-teacher",
+  "path": "src/services/course-teacher/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "4e41f59",
+  "generated_at": "2026-08-06T06:03:21.964Z",
+  "fns": {
+    "assignTeacher": {
+      "name": "assignTeacher",
+      "file": "src/services/course-teacher/database/course-teacher.mutations.ts",
+      "sig": "(data: AssignTeacherOutput & { orgId: string }) => Promise<{ id: string; isMain: boolean; }>",
+      "composes": [
+        "getCourseClassId"
+      ],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "deleteTeacherFromCourse": {
+      "name": "deleteTeacherFromCourse",
+      "file": "src/services/course-teacher/database/course-teacher.mutations.ts",
+      "sig": "(courseTeacherId: string, orgId: string) => Promise<{ id: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "syncCourseTeachers": {
+      "name": "syncCourseTeachers",
+      "file": "src/services/course-teacher/database/course-teacher.mutations.ts",
+      "sig": "(courseId: string, principalId: string, assistantIds: string[], orgId: string) => Promise<void>",
+      "composes": [
+        "getCourseClassId"
+      ],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getCourseTeachers": {
+      "name": "getCourseTeachers",
+      "file": "src/services/course-teacher/database/course-teacher.queries.ts",
+      "sig": "(courseId: string, orgId: string) => Promise<{ id: string; hours: number | null; teacher: { id: string; user: { id: string; firstName: string | null; lastName: string | null; email: string; }; } | null; isMain: boolean; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getCourseTeachersIds": {
+      "name": "getCourseTeachersIds",
+      "file": "src/services/course-teacher/database/course-teacher.queries.ts",
+      "sig": "(courseId: string, orgId: string) => Promise<{ id: string; teacherId: string | null; isMain: boolean; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "assignTeacherAction": {
+      "name": "assignTeacherAction",
+      "file": "src/services/course-teacher/actions/course-teacher.mutations.ts",
+      "sig": "(input: AssignTeacherInput) => Promise<{ error: any; data?: undefined; } | { data: { id: string; isMain: boolean; }; error?: undefined; }>",
+      "calls": [
+        "assignTeacher"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "deleteTeacherAction": {
+      "name": "deleteTeacherAction",
+      "file": "src/services/course-teacher/actions/course-teacher.mutations.ts",
+      "sig": "(courseTeacherId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "calls": [
+        "deleteTeacherFromCourse"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "syncCourseTeachersAction": {
+      "name": "syncCourseTeachersAction",
+      "file": "src/services/course-teacher/actions/course-teacher.mutations.ts",
+      "sig": "(input: SyncCourseTeachersInput) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
+      "calls": [
+        "syncCourseTeachers"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getCourseTeachersAction": {
+      "name": "getCourseTeachersAction",
+      "file": "src/services/course-teacher/actions/course-teacher.queries.ts",
+      "sig": "(courseId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; hours: number | null; teacher: { id: string; user: { id: string; firstName: string | null; lastName: string | null; email: string; }; } | null; isMain: boolean; }[]; error?: undefined; }>",
+      "calls": [
+        "getCourseTeachers"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getCourseTeachersIdAction": {
+      "name": "getCourseTeachersIdAction",
+      "file": "src/services/course-teacher/actions/course-teacher.queries.ts",
+      "sig": "(courseId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; teacherId: string | null; isMain: boolean; }[]; error?: undefined; }>",
+      "calls": [
+        "getCourseTeachersIds"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "assignTeacher": [
+      "assignTeacherAction"
+    ],
+    "deleteTeacherFromCourse": [
+      "deleteTeacherAction"
+    ],
+    "syncCourseTeachers": [
+      "syncCourseTeachersAction"
+    ],
+    "getCourseTeachers": [
+      "getCourseTeachersAction"
+    ],
+    "getCourseTeachersIds": [
+      "getCourseTeachersIdAction"
+    ],
+    "assignTeacherAction": [],
+    "deleteTeacherAction": [],
+    "syncCourseTeachersAction": [],
+    "getCourseTeachersAction": [],
+    "getCourseTeachersIdAction": [],
+    "getCourseClassId": [
+      "assignTeacher",
+      "syncCourseTeachers"
+    ]
+  },
+  "deps": {
+    "getCourseClassId": "course"
+  }
+}

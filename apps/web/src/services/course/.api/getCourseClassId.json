@@ -1,0 +1,8 @@
+{
+  "name": "getCourseClassId",
+  "file": "src/services/course/database/course.queries.ts",
+  "sig": "(courseId: string, orgId: string) => Promise<{ id: string; classId: string; } | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}
