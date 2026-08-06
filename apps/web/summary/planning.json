@@ -2,23 +2,46 @@
   "service": "planning",
   "path": "src/services/planning/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
-  "generated_at": "2026-07-29T12:17:29.342Z",
+  "derived_at": "2dc6b24",
+  "generated_at": "2026-08-06T12:17:34.553Z",
   "fns": {
-    "getOrgPlanningResources": {
-      "name": "getOrgPlanningResources",
+    "getPlanningResources": {
+      "name": "getPlanningResources",
       "file": "src/services/planning/database.ts",
-      "sig": "(orgId: string) => Promise<{ classes: { name: string; id: string; }[]; teachers: { id: string; name: string; avatarUrl: string | null; }[]; rooms: { name: string; id: string; }[]; }>",
+      "sig": "(classId: string, orgId: string) => Promise<{ class: { id: string; name: string; }; rooms: { id: string; name: string; }[]; groups: { id: string; name: string; }[]; courses: { id: string; name: string; teachers: { id: string; name: string; email: string; avatar_url: string | null; isMain: boolean; }[]; }[]; } | null>",
       "composes": [],
       "rules": [],
       "why_ref": "",
       "layer": "db",
       "kind": "query"
     },
+    "getOrgPlanningResources": {
+      "name": "getOrgPlanningResources",
+      "file": "src/services/planning/database.ts",
+      "sig": "(orgId: string) => Promise<{ classes: { id: string; name: string; }[]; teachers: { id: string; name: string; avatarUrl: string | null; }[]; rooms: { id: string; name: string; }[]; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getPlanningResourcesAction": {
+      "name": "getPlanningResourcesAction",
+      "file": "src/services/planning/actions.ts",
+      "sig": "(classId: string) => Promise<{ error: any; data?: undefined; } | { data: { class: { id: string; name: string; }; rooms: { id: string; name: string; }[]; groups: { id: string; name: string; }[]; courses: { id: string; name: string; teachers: { id: string; name: string; email: string; avatar_url: string | null; isMain: boolean; }[]; }[]; ...",
+      "calls": [
+        "getPlanningResources"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "getOrgPlanningResourcesAction": {
       "name": "getOrgPlanningResourcesAction",
       "file": "src/services/planning/actions.ts",
-      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { classes: { name: string; id: string; }[]; teachers: { id: string; name: string; avatarUrl: string | null; }[]; rooms: { name: string; id: string; }[]; }; error?: undefined; }>",
+      "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { classes: { id: string; name: string; }[]; teachers: { id: string; name: string; avatarUrl: string | null; }[]; rooms: { id: string; name: string; }[]; }; error?: undefined; }>",
       "calls": [
         "getOrgPlanningResources"
       ],
@@ -30,9 +53,13 @@
     }
   },
   "edges": {
+    "getPlanningResources": [
+      "getPlanningResourcesAction"
+    ],
     "getOrgPlanningResources": [
       "getOrgPlanningResourcesAction"
     ],
+    "getPlanningResourcesAction": [],
     "getOrgPlanningResourcesAction": []
   },
   "deps": {}

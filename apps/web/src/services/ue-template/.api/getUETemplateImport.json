@@ -1,0 +1,8 @@
+{
+  "name": "getUETemplateImport",
+  "file": "src/services/ue-template/database/template.queries.ts",
+  "sig": "(templateId: string, orgId: string) => Promise<{ id: string; ueId: string; importedAt: Date; } | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

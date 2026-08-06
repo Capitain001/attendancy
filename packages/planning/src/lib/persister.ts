@@ -1,26 +1,30 @@
 import type { Persister, PersistedClient } from '@tanstack/react-query-persist-client'
+import { get, set, del } from 'idb-keyval'
 
 const CACHE_KEY = 'attendancy-rq-cache'
 
-// Persister localStorage — disponible dans browser ET WebView Tauri.
-// localStorage est synchrone et disponible sans package supplémentaire.
+// IndexedDB via idb-keyval — async, pas de limite 5 MB, fonctionne dans
+// browser ET WebView Tauri. Fallback silencieux si IndexedDB indisponible.
 export const idbPersister: Persister = {
-  persistClient(client: PersistedClient) {
+  async persistClient(client: PersistedClient) {
     try {
-      localStorage.setItem(CACHE_KEY, JSON.stringify(client))
+      await set(CACHE_KEY, client)
     } catch {
-      // Quota dépassé — silencieux
+      // IndexedDB plein ou indisponible — silencieux
     }
   },
-  restoreClient() {
+  async restoreClient() {
     try {
-      const item = localStorage.getItem(CACHE_KEY)
-      return item ? (JSON.parse(item) as PersistedClient) : undefined
+      return await get<PersistedClient>(CACHE_KEY)
     } catch {
       return undefined
     }
   },
-  removeClient() {
-    localStorage.removeItem(CACHE_KEY)
+  async removeClient() {
+    try {
+      await del(CACHE_KEY)
+    } catch {
+      // silencieux
+    }
   },
 }

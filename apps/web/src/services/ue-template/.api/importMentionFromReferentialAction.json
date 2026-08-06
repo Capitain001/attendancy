@@ -1,0 +1,11 @@
+{
+  "name": "importMentionFromReferentialAction",
+  "file": "src/services/ue-template/actions/template.mutations.ts",
+  "sig": "(input: ImportMentionInput) => Promise<{ error: any; data?: undefined; } | { data: { imported: number; skipped: number; total: number; }; error?: undefined; }>",
+  "calls": [
+    "importMentionFromReferential"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

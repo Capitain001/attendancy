@@ -2,8 +2,8 @@
   "service": "event",
   "path": "src/services/event/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
-  "generated_at": "2026-07-29T12:17:29.284Z",
+  "derived_at": "5306ac7",
+  "generated_at": "2026-08-06T12:17:34.208Z",
   "fns": {
     "createEvent": {
       "name": "createEvent",
@@ -38,7 +38,7 @@
     "getEvents": {
       "name": "getEvents",
       "file": "src/services/event/database/event.queries.ts",
-      "sig": "(orgId: string) => Promise<{ id: string; _count: { participants: number; }; type: EventType; location: string | null; status: EventStatus; createdAt: Date; startTime: Date | null; ... 6 more ...; createdBy: { ...; }; }[]>",
+      "sig": "(orgId: string) => Promise<{ id: string; title: string; description: string | null; startTime: Date | null; endTime: Date | null; location: string | null; targetRoles: Role[]; color: string | null; ... 5 more ...; _count: { ...; }; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -48,7 +48,7 @@
     "getEvent": {
       "name": "getEvent",
       "file": "src/services/event/database/event.queries.ts",
-      "sig": "(eventId: string, orgId: string) => Promise<{ id: string; _count: { participants: number; }; type: EventType; location: string | null; status: EventStatus; createdAt: Date; startTime: Date | null; ... 7 more ...; participants: { ...; }[]; } | null>",
+      "sig": "(eventId: string, orgId: string) => Promise<{ id: string; title: string; description: string | null; startTime: Date | null; endTime: Date | null; location: string | null; targetRoles: Role[]; color: string | null; ... 6 more ...; _count: { ...; }; } | null>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -58,7 +58,7 @@
     "createEventAction": {
       "name": "createEventAction",
       "file": "src/services/event/actions/event.mutations.ts",
-      "sig": "(input: CreateEventInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; title: string; }; error?: undefined; }>",
+      "sig": "(input: CreateEventInput) => Promise<{ error: any; data?: undefined; } | { data: { id: string; title: string; }; error?: undefined; }>",
       "calls": [
         "createEvent"
       ],
@@ -71,7 +71,7 @@
     "updateEventAction": {
       "name": "updateEventAction",
       "file": "src/services/event/actions/event.mutations.ts",
-      "sig": "(eventId: string, input: UpdateEventInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "sig": "(eventId: string, input: UpdateEventInput) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
       "calls": [
         "updateEvent"
       ],
@@ -84,7 +84,7 @@
     "removeEventAction": {
       "name": "removeEventAction",
       "file": "src/services/event/actions/event.mutations.ts",
-      "sig": "(eventId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "sig": "(eventId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
       "calls": [
         "removeEventDb"
       ],
@@ -97,7 +97,7 @@
     "getEventsAction": {
       "name": "getEventsAction",
       "file": "src/services/event/actions/event.queries.ts",
-      "sig": "() => Promise<{ data: { id: string; _count: { participants: number; }; type: EventType; location: string | null; status: EventStatus; createdAt: Date; startTime: Date | null; ... 6 more ...; createdBy: { ...; }; }[]; error?: undefined; } | { ...; }>",
+      "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { id: string; title: string; description: string | null; startTime: Date | null; endTime: Date | null; location: string | null; targetRoles: Role[]; ... 6 more ...; _count: { ...; }; }[]; error?: undefined; }>",
       "calls": [
         "getEvents"
       ],
@@ -110,7 +110,7 @@
     "getEventAction": {
       "name": "getEventAction",
       "file": "src/services/event/actions/event.queries.ts",
-      "sig": "(eventId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; _count: { participants: number; }; type: EventType; location: string | null; status: EventStatus; createdAt: Date; ... 8 more ...; participants: { ...; }[]; }; error?: undefined; }>",
+      "sig": "(eventId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; title: string; description: string | null; startTime: Date | null; endTime: Date | null; location: string | null; targetRoles: Role[]; ... 7 more ...; _count: { ...; }; }; error?: undefined; }>",
       "calls": [
         "getEvent"
       ],

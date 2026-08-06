@@ -112,6 +112,7 @@ Ouvrir l'interface graphique :
 
 ```bash
 bunx prisma studio
+bun --cwd apps/web prisma studio // depuis workspace
 ```
 
 ---

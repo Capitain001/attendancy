@@ -13,8 +13,9 @@ const activeSessionSelect = {
       endTime: true,
       classId: true,
       groupId: true,
-      course: { select: { name: true } },
-      room: { select: { name: true } },
+      course: { select: { id: true, name: true } },
+      room:   { select: { id: true, name: true } },
+      class:  { select: { name: true } },
       teacher: {
         select: {
           id: true,

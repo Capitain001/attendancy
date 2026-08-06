@@ -2,7 +2,7 @@
   "service": "ue",
   "path": "src/services/ue/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "5306ac7",
+  "derived_at": "9a40932",
   "utils_dir": null,
   "fns": {
     "createUE": {
@@ -32,6 +32,11 @@
     },
     "getProgramUEs": {
       "f": ".api/getProgramUEs.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getUEByCode": {
+      "f": ".api/getUEByCode.json",
       "layer": "db",
       "kind": "query"
     },
@@ -96,6 +101,7 @@
       "getProgramUEsAction",
       "getProgramUEsTableAction"
     ],
+    "getUEByCode": [],
     "createUEAction": [],
     "archiveUEAction": [],
     "updateUEAction": [],

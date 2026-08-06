@@ -1,0 +1,16 @@
+{
+  "name": "importUEFromTemplate",
+  "file": "src/services/ue-template/database/import.mutations.ts",
+  "sig": "(params: { templateId: string programId: string semester: number orgId: string }) => Promise<{ ueId: string; importedCount: number; importId: string; }>",
+  "composes": [
+    "getUETemplateImport",
+    "getUETemplate",
+    "getUEByCode",
+    "createUE",
+    "createUECourse",
+    "addUEToProgram",
+    "createUETemplateImport"
+  ],
+  "rules": [],
+  "why_ref": ""
+}

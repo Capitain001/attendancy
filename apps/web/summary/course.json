@@ -3,7 +3,7 @@
   "path": "src/services/course/",
   "claude_md": "./CLAUDE.md",
   "derived_at": "4e41f59",
-  "generated_at": "2026-08-06T06:03:21.943Z",
+  "generated_at": "2026-08-06T12:17:34.051Z",
   "fns": {
     "createCourse": {
       "name": "createCourse",

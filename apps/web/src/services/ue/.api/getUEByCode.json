@@ -1,0 +1,8 @@
+{
+  "name": "getUEByCode",
+  "file": "src/services/ue/database/ue.queries.ts",
+  "sig": "(code: string, orgId: string) => Promise<{ name: string; id: string; code: string | null; } | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

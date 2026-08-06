@@ -45,7 +45,7 @@ export async function DirectionClassDetailPage({ classId, slug }: DirectionClass
   const groupsHref     = `/${slug}/direction/classes/${classId}/groups`
 
   return (
-    <div className="flex flex-col min-h-screen gap-4">
+    <div className="flex flex-col gap-4">
       <div className="flex gap-2 w-full flex-wrap items-center justify-between">
         <div className="flex scrollbar-hidden rounded-2xl gap-2 max-w-95 md:max-w-full overflow-x-auto">
           <ButtonX className="w-fit" href={programHref}>Programme</ButtonX>

@@ -1,0 +1,12 @@
+{
+  "name": "deleteImportedUE",
+  "file": "src/services/ue-template/database/import.mutations.ts",
+  "sig": "(ueId: string, orgId: string) => Promise<void>",
+  "composes": [
+    "getUETemplateImportsByOrg",
+    "removeUE",
+    "deleteUETemplateImport"
+  ],
+  "rules": [],
+  "why_ref": ""
+}

@@ -2,15 +2,55 @@
   "service": "program-ue",
   "path": "src/services/program-ue/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
-  "generated_at": "2026-07-29T12:17:29.365Z",
+  "derived_at": "2dc6b24",
+  "generated_at": "2026-08-06T12:17:34.661Z",
   "fns": {
-    "deleteUEFromProgramAction": {
-      "name": "deleteUEFromProgramAction",
-      "file": "src/services/program-ue/actions.ts",
-      "sig": "({ programId, ueId }: { programId: string ueId: string }) => Promise<{ error: string; data?: undefined; } | { data: { count: number; }; error?: undefined; }>",
+    "addUEToProgram": {
+      "name": "addUEToProgram",
+      "file": "src/services/program-ue/database/program-ue.mutations.ts",
+      "sig": "({ programId, ueId, semester, order, isOptional = false }: { programId: string; ueId: string; semester?: number; order?: number; isOptional?: boolean }) => Promise<{ id: string; programId: string; ueId: string; isCompleted: boolean; isOptional: boolean; semester: number; createdAt: Date; order: number | null; updatedAt: Date; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "removeUEFromProgram": {
+      "name": "removeUEFromProgram",
+      "file": "src/services/program-ue/database/program-ue.mutations.ts",
+      "sig": "({ programUEId, programId, ueId }: { programUEId?: string; programId: string; ueId?: string }) => Promise<BatchPayload>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateProgramUE": {
+      "name": "updateProgramUE",
+      "file": "src/services/program-ue/database/program-ue.mutations.ts",
+      "sig": "({ programId, ueId, data }: { programId: string; ueId: string; data: { semester?: number; order?: number; isOptional?: boolean; isCompleted?: boolean } }) => Promise<BatchPayload>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getProgramUEs": {
+      "name": "getProgramUEs",
+      "file": "src/services/program-ue/database/program-ue.queries.ts",
+      "sig": "({ programId, orgId }: { programId: string; orgId: string }) => Promise<{ id: string; semester: number; ue: { name: string; id: string; code: string | null; description: string | null; ueCourses: { name: string; id: string; order: number | null; code: string | null; description: string | null; credits: number; duration: number; }[]; }; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "removeUEFromProgramAction": {
+      "name": "removeUEFromProgramAction",
+      "file": "src/services/program-ue/actions/program-ue.mutations.ts",
+      "sig": "({ programUEId, programId, ueId }: { programUEId?: string; programId: string; ueId?: string }) => Promise<{ error: any; data?: undefined; } | { data: BatchPayload; error?: undefined; }>",
       "calls": [
-        "deleteUEFromProgramByComposite"
+        "removeUEFromProgram"
       ],
       "auth": {},
       "rules": [],
@@ -20,12 +60,13 @@
     }
   },
   "edges": {
-    "deleteUEFromProgramAction": [],
-    "deleteUEFromProgramByComposite": [
-      "deleteUEFromProgramAction"
-    ]
+    "addUEToProgram": [],
+    "removeUEFromProgram": [
+      "removeUEFromProgramAction"
+    ],
+    "updateProgramUE": [],
+    "getProgramUEs": [],
+    "removeUEFromProgramAction": []
   },
-  "deps": {
-    "deleteUEFromProgramByComposite": "program-track"
-  }
+  "deps": {}
 }

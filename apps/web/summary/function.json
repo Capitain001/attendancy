@@ -1,0 +1,241 @@
+{
+  "service": "function",
+  "path": "src/services/function/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "5306ac7",
+  "generated_at": "2026-08-06T12:17:34.320Z",
+  "fns": {
+    "createFunction": {
+      "name": "createFunction",
+      "file": "src/services/function/database/function.mutations.ts",
+      "sig": "(data: CreateFunctionOutput & { orgId: string }) => Promise<{ name: string; id: string; description: string | null; isMain: boolean; icon: string | null; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateFunction": {
+      "name": "updateFunction",
+      "file": "src/services/function/database/function.mutations.ts",
+      "sig": "(data: UpdateFunctionOutput & { orgId: string }) => Promise<{ name: string; id: string; description: string | null; isMain: boolean; icon: string | null; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "deleteFunction": {
+      "name": "deleteFunction",
+      "file": "src/services/function/database/function.mutations.ts",
+      "sig": "(functionId: string, orgId: string) => Promise<void>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "assignFunctionToUser": {
+      "name": "assignFunctionToUser",
+      "file": "src/services/function/database/function.mutations.ts",
+      "sig": "(params: { userId: string functionId: string orgId: string assignedBy?: string }) => Promise<{ id: string; functionId: string; userId: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "removeFunctionFromUser": {
+      "name": "removeFunctionFromUser",
+      "file": "src/services/function/database/function.mutations.ts",
+      "sig": "(params: { userId: string functionId: string orgId: string }) => Promise<void>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getFunctions": {
+      "name": "getFunctions",
+      "file": "src/services/function/database/function.queries.ts",
+      "sig": "(orgId: string) => Promise<{ name: string; id: string; description: string | null; isMain: boolean; icon: string | null; _count: { users: number; }; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getFunctionByName": {
+      "name": "getFunctionByName",
+      "file": "src/services/function/database/function.queries.ts",
+      "sig": "(name: string, orgId: string) => Promise<{ name: string; id: string; description: string | null; isMain: boolean; icon: string | null; } | null>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getFunctionsByNames": {
+      "name": "getFunctionsByNames",
+      "file": "src/services/function/database/function.queries.ts",
+      "sig": "(names: string[], orgId: string) => Promise<{ name: string; id: string; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getFunctionProfiles": {
+      "name": "getFunctionProfiles",
+      "file": "src/services/function/database/function.queries.ts",
+      "sig": "({ functionId, orgId }: { functionId: string; orgId: string }) => Promise<{ function: { name: string; isMain: boolean; }; id: string; assignedAt: Date; assignedBy: string | null; user: { id: string; createdAt: Date; firstName: string | null; lastName: string | null; ... 6 more ...; details: JsonValue; }; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createFunctionAction": {
+      "name": "createFunctionAction",
+      "file": "src/services/function/actions/function.mutations.ts",
+      "sig": "(input: CreateFunctionInput) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; isMain: boolean; icon: string | null; }; error?: undefined; }>",
+      "calls": [
+        "createFunction"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateFunctionAction": {
+      "name": "updateFunctionAction",
+      "file": "src/services/function/actions/function.mutations.ts",
+      "sig": "(input: UpdateFunctionInput) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; isMain: boolean; icon: string | null; }; error?: undefined; }>",
+      "calls": [
+        "updateFunction"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "deleteFunctionAction": {
+      "name": "deleteFunctionAction",
+      "file": "src/services/function/actions/function.mutations.ts",
+      "sig": "(functionId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "calls": [
+        "deleteFunction"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "assignFunctionToUserAction": {
+      "name": "assignFunctionToUserAction",
+      "file": "src/services/function/actions/function.mutations.ts",
+      "sig": "(params: { userId: string functionName: string }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; functionId: string; userId: string; }; error?: undefined; }>",
+      "calls": [
+        "getFunctionByName",
+        "assignFunctionToUser"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeFunctionFromUserAction": {
+      "name": "removeFunctionFromUserAction",
+      "file": "src/services/function/actions/function.mutations.ts",
+      "sig": "(params: { userId: string functionId: string }) => Promise<{ error: any; data?: undefined; } | { data: { userId: string; functionId: string; }; error?: undefined; }>",
+      "calls": [
+        "removeFunctionFromUser"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getFunctionsAction": {
+      "name": "getFunctionsAction",
+      "file": "src/services/function/actions/function.queries.ts",
+      "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; isMain: boolean; icon: string | null; _count: { users: number; }; }[]; error?: undefined; }>",
+      "calls": [
+        "getFunctions"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getFunctionByNameAction": {
+      "name": "getFunctionByNameAction",
+      "file": "src/services/function/actions/function.queries.ts",
+      "sig": "(name: string) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; isMain: boolean; icon: string | null; }; error?: undefined; }>",
+      "calls": [
+        "getFunctionByName"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getFunctionProfilesAction": {
+      "name": "getFunctionProfilesAction",
+      "file": "src/services/function/actions/function.queries.ts",
+      "sig": "(functionId: string) => Promise<{ error: any; data?: undefined; } | { data: { function: { name: string; isMain: boolean; }; id: string; assignedAt: Date; assignedBy: string | null; user: { id: string; createdAt: Date; ... 8 more ...; details: JsonValue; }; }[]; error?: undefined; }>",
+      "calls": [
+        "getFunctionProfiles"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createFunction": [
+      "createFunctionAction"
+    ],
+    "updateFunction": [
+      "updateFunctionAction"
+    ],
+    "deleteFunction": [
+      "deleteFunctionAction"
+    ],
+    "assignFunctionToUser": [
+      "assignFunctionToUserAction"
+    ],
+    "removeFunctionFromUser": [
+      "removeFunctionFromUserAction"
+    ],
+    "getFunctions": [
+      "getFunctionsAction"
+    ],
+    "getFunctionByName": [
+      "assignFunctionToUserAction",
+      "getFunctionByNameAction"
+    ],
+    "getFunctionsByNames": [],
+    "getFunctionProfiles": [
+      "getFunctionProfilesAction"
+    ],
+    "createFunctionAction": [],
+    "updateFunctionAction": [],
+    "deleteFunctionAction": [],
+    "assignFunctionToUserAction": [],
+    "removeFunctionFromUserAction": [],
+    "getFunctionsAction": [],
+    "getFunctionByNameAction": [],
+    "getFunctionProfilesAction": []
+  },
+  "deps": {}
+}

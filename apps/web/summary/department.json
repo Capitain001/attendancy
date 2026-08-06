@@ -2,13 +2,13 @@
   "service": "department",
   "path": "src/services/department/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
-  "generated_at": "2026-07-29T12:17:29.267Z",
+  "derived_at": "2dc6b24",
+  "generated_at": "2026-08-06T12:17:34.126Z",
   "fns": {
     "createDepartment": {
       "name": "createDepartment",
       "file": "src/services/department/database/department.mutations.ts",
-      "sig": "(data: CreateDepartmentOutput & { orgId: string }) => Promise<{ name: string; id: string; _count: { teachers: number; programTracks: number; ues: number; }; }>",
+      "sig": "(data: CreateDepartmentOutput & { orgId: string }) => Promise<{ name: string; id: string; _count: { programTracks: number; teachers: number; ues: number; }; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -18,7 +18,7 @@
     "updateDepartment": {
       "name": "updateDepartment",
       "file": "src/services/department/database/department.mutations.ts",
-      "sig": "({ departmentId, orgId, name }: UpdateDepartmentOutput & { orgId: string }) => Promise<{ name: string; id: string; _count: { teachers: number; programTracks: number; ues: number; }; }>",
+      "sig": "({ departmentId, orgId, name }: UpdateDepartmentOutput & { orgId: string }) => Promise<{ name: string; id: string; _count: { programTracks: number; teachers: number; ues: number; }; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -38,7 +38,7 @@
     "getDepartments": {
       "name": "getDepartments",
       "file": "src/services/department/database/department.queries.ts",
-      "sig": "(orgId: string) => Promise<{ name: string; id: string; _count: { teachers: number; programTracks: number; ues: number; }; }[]>",
+      "sig": "(orgId: string) => Promise<{ name: string; id: string; _count: { programTracks: number; teachers: number; ues: number; }; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -48,7 +48,7 @@
     "createDepartmentAction": {
       "name": "createDepartmentAction",
       "file": "src/services/department/actions/department.mutations.ts",
-      "sig": "(input: CreateDepartmentInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; _count: { teachers: number; programTracks: number; ues: number; }; }; error?: undefined; }>",
+      "sig": "(input: CreateDepartmentInput) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; _count: { programTracks: number; teachers: number; ues: number; }; }; error?: undefined; }>",
       "calls": [
         "createDepartment"
       ],
@@ -61,7 +61,7 @@
     "updateDepartmentAction": {
       "name": "updateDepartmentAction",
       "file": "src/services/department/actions/department.mutations.ts",
-      "sig": "(input: UpdateDepartmentInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; _count: { teachers: number; programTracks: number; ues: number; }; }; error?: undefined; }>",
+      "sig": "(input: UpdateDepartmentInput) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; _count: { programTracks: number; teachers: number; ues: number; }; }; error?: undefined; }>",
       "calls": [
         "updateDepartment"
       ],
@@ -74,7 +74,7 @@
     "deleteDepartmentAction": {
       "name": "deleteDepartmentAction",
       "file": "src/services/department/actions/department.mutations.ts",
-      "sig": "(departmentId: string) => Promise<{ error: string; data?: undefined; } | { data: void; error?: undefined; }>",
+      "sig": "(departmentId: string) => Promise<{ error: any; data?: undefined; } | { data: void; error?: undefined; }>",
       "calls": [
         "deleteDepartment"
       ],
@@ -113,7 +113,7 @@
     "getDepartmentsAction": {
       "name": "getDepartmentsAction",
       "file": "src/services/department/actions/department.queries.ts",
-      "sig": "() => Promise<{ data: { name: string; id: string; _count: { teachers: number; programTracks: number; ues: number; }; }[]; error?: undefined; } | { error: string; data?: undefined; }>",
+      "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; _count: { programTracks: number; teachers: number; ues: number; }; }[]; error?: undefined; }>",
       "calls": [
         "getDepartments"
       ],

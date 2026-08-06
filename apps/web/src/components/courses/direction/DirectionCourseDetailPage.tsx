@@ -20,7 +20,7 @@ interface DirectionCourseDetailPageProps {
 
 export async function DirectionCourseDetailPage({ courseId }: DirectionCourseDetailPageProps) {
   return (
-    <div className="space-y-4 px-4 pb-8 pt-4 max-w-4xl mx-auto">
+    <div className="space-y-4 px-4 pb-8 pt-4 w-full mx-auto">
       <Suspense fallback={<BannerSkeleton />}>
         <CourseBannerSection courseId={courseId} />
       </Suspense>
@@ -30,7 +30,7 @@ export async function DirectionCourseDetailPage({ courseId }: DirectionCourseDet
       </Suspense>
 
       <CollapseSection label="Détails" defaultOpen>
-        <Suspense fallback={<BlockSkeleton className="min-h-[200px]" />}>
+        <Suspense fallback={<BlockSkeleton className="min-h-50" />}>
           <CourseInfoAndStatsSection courseId={courseId} />
         </Suspense>
       </CollapseSection>
@@ -38,7 +38,7 @@ export async function DirectionCourseDetailPage({ courseId }: DirectionCourseDet
       <CollapseSection label="Progression" defaultOpen>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <CourseTeachersIsland courseId={courseId} />
-          <Suspense fallback={<BlockSkeleton className="min-h-[160px]" />}>
+          <Suspense fallback={<BlockSkeleton className="min-h-50" />}>
             <CourseUpcomingSection courseId={courseId} />
           </Suspense>
         </div>

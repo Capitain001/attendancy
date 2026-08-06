@@ -95,6 +95,21 @@ Les API routes appellent les fonctions `database/` existantes — pas de duplica
 
 ---
 
+## État d'avancement
+
+| Phase | Statut | Notes |
+|-------|--------|-------|
+| 1 — Monorepo root | ✅ | pnpm-workspace.yaml, turbo.json, packages/* |
+| 2 — packages/types | ✅ | schedule.ts, session.ts, planning.ts |
+| 3 — packages/planning | ✅ | PlanningView, SessionView, usePlanning, useActiveSession, api-client, idb persister |
+| 4 — API routes | ✅ | /api/planning (dual Bearer+cookie+CORS), /api/session/active (idem), /api/auth/me |
+| 5 — apps/desktop | ✅ | Auth Supabase, LoginView, App.tsx (WeekNav, SessionView+PlanningView, Realtime) |
+| 6 — Persistence offline | ✅ | idb-keyval IndexedDB, PersistQueryClientProvider |
+
+**Reste à faire** : navigation multi-écrans avancée (TanStack Router), Tauri mobile (gen/android + gen/apple).
+
+---
+
 ## Phases de migration
 
 ### Phase 1 — Monorepo root (~2h)

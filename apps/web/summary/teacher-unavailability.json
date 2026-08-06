@@ -2,8 +2,8 @@
   "service": "teacher-unavailability",
   "path": "src/services/teacher-unavailability/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
-  "generated_at": "2026-07-29T12:17:29.436Z",
+  "derived_at": "5306ac7",
+  "generated_at": "2026-08-06T12:17:34.918Z",
   "fns": {
     "createWeeklyUnavailability": {
       "name": "createWeeklyUnavailability",
@@ -38,7 +38,7 @@
     "getTeacherUnavailabilities": {
       "name": "getTeacherUnavailabilities",
       "file": "src/services/teacher-unavailability/database/teacher-unavailability.queries.ts",
-      "sig": "(teacherId: string, orgId: string) => Promise<{ id: string; startDate: Date | null; endDate: Date | null; type: UnavailabilityType; createdAt: Date; startTime: string | null; endTime: string | null; dayOfWeek: number | null; reason: string | null; }[]>",
+      "sig": "(teacherId: string, orgId: string) => Promise<{ id: string; type: UnavailabilityType; dayOfWeek: number | null; startTime: string | null; endTime: string | null; startDate: Date | null; endDate: Date | null; reason: string | null; createdAt: Date; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -48,7 +48,7 @@
     "createWeeklyUnavailabilityAction": {
       "name": "createWeeklyUnavailabilityAction",
       "file": "src/services/teacher-unavailability/actions/teacher-unavailability.mutations.ts",
-      "sig": "(input: CreateWeeklyUnavailabilityInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "sig": "(input: CreateWeeklyUnavailabilityInput) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
       "calls": [
         "createWeeklyUnavailability"
       ],
@@ -61,7 +61,7 @@
     "createDateRangeUnavailabilityAction": {
       "name": "createDateRangeUnavailabilityAction",
       "file": "src/services/teacher-unavailability/actions/teacher-unavailability.mutations.ts",
-      "sig": "(input: CreateDateRangeUnavailabilityInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "sig": "(input: CreateDateRangeUnavailabilityInput) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
       "calls": [
         "createDateRangeUnavailability"
       ],
@@ -74,7 +74,7 @@
     "deleteTeacherUnavailabilityAction": {
       "name": "deleteTeacherUnavailabilityAction",
       "file": "src/services/teacher-unavailability/actions/teacher-unavailability.mutations.ts",
-      "sig": "(id: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "sig": "(id: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
       "calls": [
         "deleteTeacherUnavailability"
       ],
@@ -87,7 +87,7 @@
     "getTeacherUnavailabilitiesAction": {
       "name": "getTeacherUnavailabilitiesAction",
       "file": "src/services/teacher-unavailability/actions/teacher-unavailability.queries.ts",
-      "sig": "(teacherId: string) => Promise<{ data: { id: string; startDate: Date | null; endDate: Date | null; type: UnavailabilityType; createdAt: Date; startTime: string | null; endTime: string | null; dayOfWeek: number | null; reason: string | null; }[]; error?: undefined; } | { ...; }>",
+      "sig": "(teacherId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; type: UnavailabilityType; dayOfWeek: number | null; startTime: string | null; endTime: string | null; startDate: Date | null; endDate: Date | null; reason: string | null; createdAt: Date; }[]; error?: undefined; }>",
       "calls": [
         "getTeacherUnavailabilities"
       ],

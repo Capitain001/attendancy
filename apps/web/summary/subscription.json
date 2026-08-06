@@ -1,0 +1,120 @@
+{
+  "service": "subscription",
+  "path": "src/services/subscription/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "2dc6b24",
+  "generated_at": "2026-08-06T12:17:34.854Z",
+  "fns": {
+    "createSubscription": {
+      "name": "createSubscription",
+      "file": "src/services/subscription/database/subscription.mutations.ts",
+      "sig": "({ orgId, planId }: CreateSubscriptionData) => Promise<{ id: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateSubscriptionStatus": {
+      "name": "updateSubscriptionStatus",
+      "file": "src/services/subscription/database/subscription.mutations.ts",
+      "sig": "(subscriptionId: string, orgId: string, status: SubscriptionStatus) => Promise<{ id: string; status: SubscriptionStatus; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getPlans": {
+      "name": "getPlans",
+      "file": "src/services/subscription/database/subscription.queries.ts",
+      "sig": "() => Promise<{ name: string; id: string; code: string; priceMonthly: Decimal | null; currency: string; features: JsonValue; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getSubscription": {
+      "name": "getSubscription",
+      "file": "src/services/subscription/database/subscription.queries.ts",
+      "sig": "(orgId: string) => Promise<{ id: string; status: SubscriptionStatus; trialEndsAt: Date | null; currentPeriodStart: Date | null; currentPeriodEnd: Date | null; canceledAt: Date | null; plan: { ...; }; } | null>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createSubscriptionAction": {
+      "name": "createSubscriptionAction",
+      "file": "src/services/subscription/actions/subscription.mutations.ts",
+      "sig": "(input: unknown) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "calls": [
+        "createSubscription"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateSubscriptionStatusAction": {
+      "name": "updateSubscriptionStatusAction",
+      "file": "src/services/subscription/actions/subscription.mutations.ts",
+      "sig": "(subscriptionId: string, status: SubscriptionStatus) => Promise<{ error: any; data?: undefined; } | { data: { id: string; status: SubscriptionStatus; }; error?: undefined; }>",
+      "calls": [
+        "updateSubscriptionStatus"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getSubscriptionAction": {
+      "name": "getSubscriptionAction",
+      "file": "src/services/subscription/actions/subscription.queries.ts",
+      "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { id: string; status: SubscriptionStatus; trialEndsAt: Date | null; currentPeriodStart: Date | null; currentPeriodEnd: Date | null; canceledAt: Date | null; plan: { ...; }; } | null; error?: undefined; }>",
+      "calls": [
+        "getSubscription"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getPlansAction": {
+      "name": "getPlansAction",
+      "file": "src/services/subscription/actions/subscription.queries.ts",
+      "sig": "() => Promise<{ data: { name: string; id: string; code: string; priceMonthly: Decimal | null; currency: string; features: JsonValue; }[]; error?: undefined; } | { error: string; data?: undefined; }>",
+      "calls": [
+        "getPlans"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createSubscription": [
+      "createSubscriptionAction"
+    ],
+    "updateSubscriptionStatus": [
+      "updateSubscriptionStatusAction"
+    ],
+    "getPlans": [
+      "getPlansAction"
+    ],
+    "getSubscription": [
+      "getSubscriptionAction"
+    ],
+    "createSubscriptionAction": [],
+    "updateSubscriptionStatusAction": [],
+    "getSubscriptionAction": [],
+    "getPlansAction": []
+  },
+  "deps": {}
+}

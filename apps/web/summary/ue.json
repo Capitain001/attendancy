@@ -2,8 +2,8 @@
   "service": "ue",
   "path": "src/services/ue/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
-  "generated_at": "2026-07-29T12:17:29.450Z",
+  "derived_at": "5306ac7",
+  "generated_at": "2026-08-06T12:17:34.974Z",
   "fns": {
     "createUE": {
       "name": "createUE",
@@ -18,7 +18,7 @@
     "updateUE": {
       "name": "updateUE",
       "file": "src/services/ue/database/ue.mutations.ts",
-      "sig": "(ueId: string, orgId: string, data: UpdateUEData) => Promise<{ name: string; id: string; description: string | null; departmentId: string | null; code: string | null; isOptional: boolean; }>",
+      "sig": "(ueId: string, orgId: string, data: UpdateUEData) => Promise<{ name: string; id: string; code: string | null; description: string | null; departmentId: string | null; isOptional: boolean; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -48,7 +48,7 @@
     "getUEs": {
       "name": "getUEs",
       "file": "src/services/ue/database/ue.queries.ts",
-      "sig": "(orgId: string, departmentId?: string) => Promise<{ name: string; id: string; department: { name: string; id: string; } | null; departmentId: string | null; code: string | null; isOptional: boolean; }[]>",
+      "sig": "(orgId: string, departmentId?: string) => Promise<{ name: string; id: string; code: string | null; departmentId: string | null; isOptional: boolean; department: { name: string; id: string; } | null; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -58,7 +58,7 @@
     "getProgramUEs": {
       "name": "getProgramUEs",
       "file": "src/services/ue/database/ue.queries.ts",
-      "sig": "(programId: string, orgId: string) => Promise<{ id: string; ue: { name: string; id: string; department: { name: string; id: string; } | null; description: string | null; departmentId: string | null; imageUrl: string | null; code: string | null; ueCourses: { ...; }[]; }; order: number | null; semester: number; }[]>",
+      "sig": "(programId: string, orgId: string) => Promise<{ id: string; semester: number; order: number | null; ue: { name: string; id: string; code: string | null; description: string | null; imageUrl: string | null; departmentId: string | null; department: { ...; } | null; ueCourses: { ...; }[]; }; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -68,7 +68,7 @@
     "createUEAction": {
       "name": "createUEAction",
       "file": "src/services/ue/actions/ue.mutations.ts",
-      "sig": "(input: { data: CreateUEInput programId?: string semester?: number order?: number }) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; code: string | null; }; error?: undefined; }>",
+      "sig": "(input: { data: CreateUEInput programId?: string semester?: number order?: number }) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; code: string | null; }; error?: undefined; }>",
       "calls": [
         "createUE",
         "addUEToProgram"
@@ -82,7 +82,7 @@
     "archiveUEAction": {
       "name": "archiveUEAction",
       "file": "src/services/ue/actions/ue.mutations.ts",
-      "sig": "(ueId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "sig": "(ueId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
       "calls": [
         "removeUE"
       ],
@@ -95,7 +95,7 @@
     "updateUEAction": {
       "name": "updateUEAction",
       "file": "src/services/ue/actions/ue.mutations.ts",
-      "sig": "({ ueId, data }: { ueId: string; data: UpdateUEData }) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; description: string | null; departmentId: string | null; code: string | null; isOptional: boolean; }; error?: undefined; }>",
+      "sig": "({ ueId, data }: { ueId: string; data: UpdateUEData }) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; code: string | null; description: string | null; departmentId: string | null; isOptional: boolean; }; error?: undefined; }>",
       "calls": [
         "updateUE"
       ],
@@ -108,7 +108,7 @@
     "addUEToProgramAction": {
       "name": "addUEToProgramAction",
       "file": "src/services/ue/actions/ue.mutations.ts",
-      "sig": "(input: { ueId: string programId: string semester?: number order?: number }) => Promise<{ error: string; data?: undefined; } | { data: { id: string; order: number | null; semester: number; }; error?: undefined; }>",
+      "sig": "(input: { ueId: string programId: string semester?: number order?: number }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; createdAt: Date; updatedAt: Date; isOptional: boolean; semester: number; order: number | null; programId: string; ueId: string; isCompleted: boolean; }; error?: undefined; }>",
       "calls": [
         "addUEToProgram"
       ],
@@ -121,7 +121,7 @@
     "reorderProgramAction": {
       "name": "reorderProgramAction",
       "file": "src/services/ue/actions/ue.mutations.ts",
-      "sig": "({ programId, ueOrders, courseOrders }: ReorderProgramPayload) => Promise<{ error: string; data?: undefined; } | { data: boolean; error?: undefined; }>",
+      "sig": "({ programId, ueOrders, courseOrders }: ReorderProgramPayload) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
       "calls": [
         "reorderProgram"
       ],
@@ -134,7 +134,7 @@
     "getUEsAction": {
       "name": "getUEsAction",
       "file": "src/services/ue/actions/ue.queries.ts",
-      "sig": "(departmentId?: string) => Promise<{ data: { name: string; id: string; department: { name: string; id: string; } | null; departmentId: string | null; code: string | null; isOptional: boolean; }[]; error?: undefined; } | { error: string; data?: undefined; }>",
+      "sig": "(departmentId?: string) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; code: string | null; departmentId: string | null; isOptional: boolean; department: { name: string; id: string; } | null; }[]; error?: undefined; }>",
       "calls": [
         "getUEs"
       ],
@@ -147,7 +147,7 @@
     "getProgramUEsAction": {
       "name": "getProgramUEsAction",
       "file": "src/services/ue/actions/ue.queries.ts",
-      "sig": "({ programId }: { programId: string }) => Promise<{ data: { id: string; ue: { name: string; id: string; department: { name: string; id: string; } | null; description: string | null; departmentId: string | null; imageUrl: string | null; code: string | null; ueCourses: { ...; }[]; }; order: number | null; semester: number; }[]; error?: undefined; } | { ...; }>",
+      "sig": "({ programId }: { programId: string }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; semester: number; order: number | null; ue: { name: string; id: string; code: string | null; description: string | null; imageUrl: string | null; departmentId: string | null; department: { ...; } | null; ueCourses: { ...; }[]; }; }[]; error?: undefine...",
       "calls": [
         "getProgramUEs"
       ],
@@ -160,9 +160,9 @@
     "getProgramUEsTableAction": {
       "name": "getProgramUEsTableAction",
       "file": "src/services/ue/actions/ue.queries.ts",
-      "sig": "({ programId }: { programId: string }) => Promise<{ data: { id: string; ue: { name: string; id: string; department: { name: string; id: string; } | null; description: string | null; departmentId: string | null; imageUrl: string | null; code: string | null; ueCourses: { ...; }[]; }; order: number | null; semester: number; }[]; error?: undefined; } | { ...; }...",
+      "sig": "({ programId }: { programId: string }) => Promise<{ error: any; data?: undefined; } | { data: ProgramTable; error?: undefined; }>",
       "calls": [
-        "getProgramUEsAction"
+        "getProgramUEs"
       ],
       "auth": {},
       "rules": [],
@@ -188,7 +188,8 @@
       "getUEsAction"
     ],
     "getProgramUEs": [
-      "getProgramUEsAction"
+      "getProgramUEsAction",
+      "getProgramUEsTableAction"
     ],
     "createUEAction": [],
     "archiveUEAction": [],
@@ -196,9 +197,7 @@
     "addUEToProgramAction": [],
     "reorderProgramAction": [],
     "getUEsAction": [],
-    "getProgramUEsAction": [
-      "getProgramUEsTableAction"
-    ],
+    "getProgramUEsAction": [],
     "getProgramUEsTableAction": [],
     "addUEToProgram": [
       "createUEAction",
@@ -206,6 +205,6 @@
     ]
   },
   "deps": {
-    "addUEToProgram": "program-track"
+    "addUEToProgram": "program-ue"
   }
 }

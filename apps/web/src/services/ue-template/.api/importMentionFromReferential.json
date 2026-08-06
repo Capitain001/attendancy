@@ -1,0 +1,17 @@
+{
+  "name": "importMentionFromReferential",
+  "file": "src/services/ue-template/database/import.mutations.ts",
+  "sig": "(params: { referentialId: string mention: string speciality: string | null | undefined programId: string orgId: string }) => Promise<{ imported: number; skipped: number; total: number; }>",
+  "composes": [
+    "getUETemplates",
+    "getUETemplateImport",
+    "getUETemplate",
+    "getUEByCode",
+    "createUE",
+    "createUECourse",
+    "addUEToProgram",
+    "createUETemplateImport"
+  ],
+  "rules": [],
+  "why_ref": ""
+}

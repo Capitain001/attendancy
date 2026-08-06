@@ -1,0 +1,11 @@
+{
+  "name": "deleteUETemplateImportAction",
+  "file": "src/services/ue-template/actions/template.mutations.ts",
+  "sig": "({ ueId }: { ueId: string }) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
+  "calls": [
+    "deleteImportedUE"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

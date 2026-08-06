@@ -2,26 +2,83 @@
   "service": "program",
   "path": "src/services/program/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
-  "generated_at": "2026-07-29T12:17:29.351Z",
+  "derived_at": "2dc6b24",
+  "generated_at": "2026-08-06T12:17:34.620Z",
   "fns": {
-    "getProgramsAction": {
-      "name": "getProgramsAction",
-      "file": "src/services/program/actions.ts",
-      "sig": "({ classId, programTrackId }: { classId?: string programTrackId?: string } = {}) => Promise<{ data: { name: string; id: string; classes: { name: string; academicYear: { name: string; id: string; }; id: string; }[]; programTrack: { name: string; id: string; department: { name: string; id: string; }; }; description: string | null; }[]; error?: undefined; } | { ...; }>",
-      "calls": [
-        "getPrograms"
-      ],
-      "auth": {},
+    "createProgram": {
+      "name": "createProgram",
+      "file": "src/services/program/database/program.mutations.ts",
+      "sig": "({ data, orgId }: { data: AddProgramData orgId: string }) => Promise<{ name: string; id: string; description: string | null; programTrackId: string; classes: { name: string; id: string; programTrack: { name: string; id: string; }; academicYear: { name: string; id: string; }; }[]; programTrack: { ...; }; }>",
+      "composes": [],
       "rules": [],
       "why_ref": "",
-      "layer": "action",
-      "kind": "server-action"
+      "layer": "db",
+      "kind": "mutation"
     },
-    "addProgramAction": {
-      "name": "addProgramAction",
-      "file": "src/services/program/actions.ts",
-      "sig": "(data: AddProgramData) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; classes: { name: string; academicYear: { name: string; id: string; }; id: string; }[]; programTrack: { name: string; id: string; department: { ...; }; }; description: string | null; }; error?: undefined; }>",
+    "updateProgram": {
+      "name": "updateProgram",
+      "file": "src/services/program/database/program.mutations.ts",
+      "sig": "({ programId, orgId }: { programId: string; orgId: string }, data: UpdateProgramData) => Promise<{ name: string; id: string; description: string | null; programTrackId: string; classes: { name: string; id: string; programTrack: { name: string; id: string; }; academicYear: { name: string; id: string; }; }[]; programTrack: { ...; }; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "removeProgram": {
+      "name": "removeProgram",
+      "file": "src/services/program/database/program.mutations.ts",
+      "sig": "({ programId, orgId }: { programId: string orgId: string }) => Promise<{ id: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getPrograms": {
+      "name": "getPrograms",
+      "file": "src/services/program/database/program.queries.ts",
+      "sig": "({ orgId, classId, programTrackId }: { orgId: string classId?: string programTrackId?: string }) => Promise<{ name: string; id: string; description: string | null; classes: { name: string; id: string; academicYear: { name: string; id: string; }; }[]; programTrack: { name: string; id: string; department: { name: string; id: string; }; }; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getProgramById": {
+      "name": "getProgramById",
+      "file": "src/services/program/database/program.queries.ts",
+      "sig": "({ orgId, programId }: { orgId: string programId: string }) => Promise<{ name: string; id: string; description: string | null; classes: { level: Level; name: string; id: string; academicYear: { name: string; id: string; }; }[]; programTrack: { name: string; id: string; department: { ...; }; }; } | null>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getProgramList": {
+      "name": "getProgramList",
+      "file": "src/services/program/database/program.queries.ts",
+      "sig": "({ orgId, classId, programTrackId }: { orgId: string classId?: string programTrackId?: string }) => Promise<{ name: string; id: string; description: string | null; programTrack: { name: string; id: string; }; _count: { classes: number; }; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getClassProgram": {
+      "name": "getClassProgram",
+      "file": "src/services/program/database/program.queries.ts",
+      "sig": "({ classId }: { classId: string }) => Promise<{ level: Level; name: string; program: { name: string; id: string; description: string | null; } | null; programTrack: { name: string; id: string; }; academicYear: { name: string; id: string; }; } | null>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createProgramAction": {
+      "name": "createProgramAction",
+      "file": "src/services/program/actions/program.mutations.ts",
+      "sig": "(input: CreateProgramInput) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; programTrackId: string; classes: { name: string; id: string; programTrack: { name: string; id: string; }; academicYear: { ...; }; }[]; programTrack: { ...; }; }; error?: undefined; }>",
       "calls": [
         "createProgram"
       ],
@@ -33,8 +90,21 @@
     },
     "updateProgramAction": {
       "name": "updateProgramAction",
-      "file": "src/services/program/actions.ts",
-      "sig": "(programId: string, data: UpdateProgramData) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; classes: { name: string; academicYear: { name: string; id: string; }; id: string; }[]; programTrack: { name: string; id: string; department: { ...; }; }; description: string | null; }; error?: undefined; }>",
+      "file": "src/services/program/actions/program.mutations.ts",
+      "sig": "(programId: string, input: UpdateProgramInput) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; programTrackId: string; classes: { name: string; id: string; programTrack: { name: string; id: string; }; academicYear: { ...; }; }[]; programTrack: { ...; }; }; error?: undefined; }>",
+      "calls": [
+        "updateProgram"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "linkProgramToClassAction": {
+      "name": "linkProgramToClassAction",
+      "file": "src/services/program/actions/program.mutations.ts",
+      "sig": "({ classId, programId }: { classId: string programId: string }) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; programTrackId: string; classes: { name: string; id: string; programTrack: { name: string; id: string; }; academicYear: { ...; }; }[]; programTrack: { ...; }; }; error?: undefined; }>",
       "calls": [
         "updateProgram"
       ],
@@ -46,10 +116,62 @@
     },
     "removeProgramAction": {
       "name": "removeProgramAction",
-      "file": "src/services/program/actions.ts",
-      "sig": "(programId: string) => Promise<{ success: boolean; error?: string }>",
+      "file": "src/services/program/actions/program.mutations.ts",
+      "sig": "(programId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
       "calls": [
-        "deleteProgram"
+        "removeProgram"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getProgramsAction": {
+      "name": "getProgramsAction",
+      "file": "src/services/program/actions/program.queries.ts",
+      "sig": "({ classId, programTrackId }: { classId?: string programTrackId?: string }) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; classes: { name: string; id: string; academicYear: { name: string; id: string; }; }[]; programTrack: { name: string; id: string; department: { ...; }; }; }[]; error?: undefined; }>",
+      "calls": [
+        "getPrograms"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getProgramsByTrackAction": {
+      "name": "getProgramsByTrackAction",
+      "file": "src/services/program/actions/program.queries.ts",
+      "sig": "({ classId, programTrackId }: { classId?: string programTrackId?: string }) => Promise<{ error: any; data?: undefined; } | { data: { programTrack: Relation; programs: unknown[]; }[]; error?: undefined; }>",
+      "calls": [
+        "getProgramList"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getClassProgramAction": {
+      "name": "getClassProgramAction",
+      "file": "src/services/program/actions/program.queries.ts",
+      "sig": "(classId: string) => Promise<{ error: any; data?: undefined; } | { data: { level: Level; name: string; program: { name: string; id: string; description: string | null; } | null; programTrack: { name: string; id: string; }; academicYear: { ...; }; } | null; error?: undefined; }>",
+      "calls": [
+        "getClassProgram"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getProgramByIdAction": {
+      "name": "getProgramByIdAction",
+      "file": "src/services/program/actions/program.queries.ts",
+      "sig": "({ programId }: { programId: string }) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; classes: { level: Level; name: string; id: string; academicYear: { name: string; id: string; }; }[]; programTrack: { ...; }; } | null; error?: undefined; }>",
+      "calls": [
+        "getProgramById"
       ],
       "auth": {},
       "rules": [],
@@ -59,22 +181,36 @@
     }
   },
   "edges": {
-    "getProgramsAction": [],
-    "addProgramAction": [],
-    "updateProgramAction": [],
-    "removeProgramAction": [],
+    "createProgram": [
+      "createProgramAction"
+    ],
+    "updateProgram": [
+      "updateProgramAction",
+      "linkProgramToClassAction"
+    ],
+    "removeProgram": [
+      "removeProgramAction"
+    ],
     "getPrograms": [
       "getProgramsAction"
     ],
-    "createProgram": [
-      "addProgramAction"
+    "getProgramById": [
+      "getProgramByIdAction"
     ],
-    "updateProgram": [
-      "updateProgramAction"
+    "getProgramList": [
+      "getProgramsByTrackAction"
     ],
-    "deleteProgram": [
-      "removeProgramAction"
-    ]
+    "getClassProgram": [
+      "getClassProgramAction"
+    ],
+    "createProgramAction": [],
+    "updateProgramAction": [],
+    "linkProgramToClassAction": [],
+    "removeProgramAction": [],
+    "getProgramsAction": [],
+    "getProgramsByTrackAction": [],
+    "getClassProgramAction": [],
+    "getProgramByIdAction": []
   },
   "deps": {}
 }

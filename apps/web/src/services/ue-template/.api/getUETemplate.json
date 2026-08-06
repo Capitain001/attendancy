@@ -1,0 +1,8 @@
+{
+  "name": "getUETemplate",
+  "file": "src/services/ue-template/database/referential.queries.ts",
+  "sig": "(templateId: string) => Promise<{ name: string; id: string; code: string | null; type: UETemplateType; semester: number; domain: string; degree: string; mention: string; speciality: string | null; credits: Decimal; elements: { ...; }[]; } | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

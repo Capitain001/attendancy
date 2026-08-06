@@ -2,13 +2,13 @@
   "service": "term",
   "path": "src/services/term/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
-  "generated_at": "2026-07-29T12:17:29.439Z",
+  "derived_at": "2dc6b24",
+  "generated_at": "2026-08-06T12:17:34.924Z",
   "fns": {
     "generateTermsFromProgram": {
       "name": "generateTermsFromProgram",
       "file": "src/services/term/database/term.mutations.ts",
-      "sig": "(classId: string, orgId: string) => Promise<{ name: string; id: string; order: number; }[]>",
+      "sig": "(classId: string, orgId: string) => Promise<{ id: string; order: number; name: string; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -18,7 +18,7 @@
     "generateTermsFromProgramAction": {
       "name": "generateTermsFromProgramAction",
       "file": "src/services/term/actions/term.mutations.ts",
-      "sig": "(classId: string) => Promise<{ data: { name: string; id: string; order: number; }[]; error?: undefined; } | { error: string; data?: undefined; }>",
+      "sig": "(classId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; order: number; name: string; }[]; error?: undefined; }>",
       "calls": [
         "generateTermsFromProgram"
       ],
