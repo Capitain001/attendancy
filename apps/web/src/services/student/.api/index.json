@@ -2,7 +2,7 @@
   "service": "student",
   "path": "src/services/student/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "ddaf5bf",
+  "derived_at": "8324205",
   "utils_dir": null,
   "fns": {
     "enrollStudent": {
@@ -42,6 +42,11 @@
     },
     "getStudentActiveSession": {
       "f": ".api/getStudentActiveSession.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getStudentSessionDetail": {
+      "f": ".api/getStudentSessionDetail.json",
       "layer": "db",
       "kind": "query"
     },
@@ -105,6 +110,11 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "getStudentSessionDetailAction": {
+      "f": ".api/getStudentSessionDetailAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "getStudentActiveSessionAction": {
       "f": ".api/getStudentActiveSessionAction.json",
       "layer": "action",
@@ -140,7 +150,8 @@
       "deleteStudentGroupAction"
     ],
     "getStudentProfile": [
-      "getStudentProfileAction"
+      "getStudentProfileAction",
+      "getStudentSessionDetailAction"
     ],
     "getStudentSchedules": [
       "getStudentScheduleAction"
@@ -150,6 +161,9 @@
     ],
     "getStudentActiveSession": [
       "getStudentActiveSessionAction"
+    ],
+    "getStudentSessionDetail": [
+      "getStudentSessionDetailAction"
     ],
     "getStudentByIdForDirection": [
       "getStudentByIdForDirectionAction"
@@ -169,6 +183,7 @@
     "getStudentProfileAction": [],
     "getStudentScheduleAction": [],
     "getStudentStatsAction": [],
+    "getStudentSessionDetailAction": [],
     "getStudentActiveSessionAction": [],
     "getEnrolledStudentsAction": [],
     "getStudentByIdForDirectionAction": [],
@@ -177,7 +192,8 @@
       "getStudentActiveSession"
     ],
     "getUserAttendance": [
-      "getStudentActiveSession"
+      "getStudentActiveSession",
+      "getStudentSessionDetail"
     ]
   },
   "deps": {

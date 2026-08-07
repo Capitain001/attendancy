@@ -16,15 +16,14 @@
 | P2 `StudentDayRing` | ⏸ non porté (dépend `analytic-ring` + stats.today) |
 | P3 Dashboard `student/page.tsx` | ✅ fait (visuel V1, ring omis), TS 0 err |
 | P3 Session `student/session/page.tsx` + `StudentScanButton` | ✅ fait — ⚠ lecteur QR placeholder (`@yudiel/react-qr-scanner` absent V2) |
-| P3 Planning `student/planning/page.tsx` | ⏸ **différé** — 2 gaps backend (ci-dessous) |
+| P3 Planning `student/planning/page.tsx` + `StudentPlanningCalendar` + `StudentSessionDialog` | ✅ fait, TS 0 err |
+| P1bis backend planning (`getStudentSchedules` étendu ScheduleRow + `getStudentSessionDetail`(+Action)) | ✅ fait |
 | P4 Layout + `studentRoutes` | ⏸ non fait (dépend `UserSidebar`/`RoleLiveBar`/`sidebar/types` V2 à auditer) |
 | P5 pages refactor vision | ⏸ non commencé (audit backend requis) |
 
-### Gaps backend planning (à traiter avant P3-planning)
-1. `mapScheduleToEvent(ScheduleRow)` exige `confirmed`, `courseId/teacherId/roomId/classId/groupId`, `group` —
-   or `getStudentSchedules` V2 renvoie une shape réduite. → **étendre** le select de `getStudentSchedules`.
-2. `StudentSessionDialog` requiert `getStudentSessionDetailAction` (+`getStudentSessionDetail` DB) **absents V2**
-   → **porter** depuis V1 (service `student`).
+### Gaps backend planning — RÉSOLUS
+1. ✅ `getStudentSchedules` select étendu (confirmed, IDs plats, classId, groupId, group) → `mapScheduleToEvent` OK.
+2. ✅ `getStudentSessionDetail` (DB) + `getStudentSessionDetailAction` portés ; dialog utilise `GetStudentSessionDetailDto`.
 
 ### Gap package
 - `@yudiel/react-qr-scanner` non installé → `StudentScanButton` livré avec lecteur placeholder (bouton/dialog conservés).

@@ -4,6 +4,11 @@ import { prisma } from '@/lib/prisma'
 import { CACHE } from '@/cache/server/key'
 import { getActiveSessions } from '@/services/session/database/session.queries'
 import { getUserAttendance } from '@/services/attendance/database/attendance.queries'
+import {
+  ATTENDANCE_NUMERATOR_STATUSES,
+  ATTENDANCE_DENOMINATOR_STATUSES,
+} from '@/services/attendance/policy'
+import type { AttendanceStatus } from '@/generated/prisma/client'
 
 /** Profil étudiant courant — classId + groupIds pour filtrer les schedules. */
 export async function getStudentProfile(studentId: string, orgId: string) {
@@ -59,6 +64,8 @@ export async function getStudentSchedules(
     },
     select: {
       id: true, status: true, startTime: true, endTime: true, notes: true,
+      confirmed: true,
+      courseId: true, teacherId: true, roomId: true, classId: true, groupId: true,
       course:  { select: { id: true, name: true } },
       room:    { select: { id: true, name: true } },
       teacher: {
@@ -67,6 +74,7 @@ export async function getStudentSchedules(
           user: { select: { firstName: true, lastName: true } },
         },
       },
+      group:   { select: { id: true, name: true } },
     },
     orderBy: { startTime: 'asc' },
   })
@@ -150,6 +158,73 @@ export async function getStudentActiveSession(params: {
     myAttendance: myAttendance
       ? { status: myAttendance.status, recordedAt: myAttendance.recordedAt }
       : null,
+  }
+}
+
+/**
+ * Détail d'une séance pour le dialog planning étudiant (lecture seule).
+ * Séance (scopée classe/groupe) + ma présence + taux perso sur le cours + déroulé.
+ */
+export async function getStudentSessionDetail(params: {
+  studentId: string; scheduleId: string; orgId: string; classId: string; groupIds: string[];
+}) {
+  const { studentId, scheduleId, orgId, classId, groupIds } = params
+
+  const schedule = await prisma.schedule.findFirst({
+    where: {
+      id: scheduleId, orgId, classId, deletedAt: null,
+      OR: [{ groupId: null }, { groupId: { in: groupIds } }],
+    },
+    select: {
+      id: true, courseId: true, startTime: true, endTime: true, status: true,
+      confirmed: true, notes: true,
+      course:  { select: { name: true, credits: true } },
+      room:    { select: { name: true } },
+      teacher: { select: { user: { select: { firstName: true, lastName: true, avatar_url: true } } } },
+      session: { select: { isLate: true, status: true, checkIn: true, checkOut: true } },
+    },
+  })
+  if (!schedule) return null
+
+  const [myAttendance, courseRows] = await Promise.all([
+    getUserAttendance(studentId, scheduleId, orgId),
+    prisma.attendance.groupBy({
+      by: ['status'],
+      where: { studentId, schedule: { orgId, courseId: schedule.courseId } },
+      _count: { status: true },
+    }),
+  ])
+
+  let numerator = 0
+  let denominator = 0
+  for (const row of courseRows) {
+    const n = row._count.status
+    if ((ATTENDANCE_NUMERATOR_STATUSES as readonly AttendanceStatus[]).includes(row.status)) numerator += n
+    if ((ATTENDANCE_DENOMINATOR_STATUSES as readonly AttendanceStatus[]).includes(row.status)) denominator += n
+  }
+  const courseRate = denominator > 0 ? Math.round((numerator / denominator) * 100) : null
+
+  const t = schedule.teacher?.user ?? null
+  return {
+    schedule: {
+      id: schedule.id,
+      courseName: schedule.course.name,
+      credits: schedule.course.credits,
+      roomName: schedule.room?.name ?? null,
+      startTime: schedule.startTime,
+      endTime: schedule.endTime,
+      status: schedule.status,
+      confirmed: schedule.confirmed,
+      notes: schedule.notes,
+      teacher: t
+        ? { firstName: t.firstName, lastName: t.lastName, avatarUrl: t.avatar_url }
+        : null,
+    },
+    myAttendance: myAttendance
+      ? { status: myAttendance.status, notes: myAttendance.notes }
+      : null,
+    session: schedule.session,
+    courseRate,
   }
 }
 

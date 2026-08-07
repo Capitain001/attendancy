@@ -4,7 +4,7 @@ import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import {
   getEnrolledStudents, getStudentActiveSession, getStudentProfile,
-  getStudentSchedules, getStudentStats,
+  getStudentSchedules, getStudentStats, getStudentSessionDetail,
   getStudentByIdForDirection, getParentsForDirection,
 } from '../database'
 
@@ -57,6 +57,30 @@ export async function getStudentStatsAction(params: { classId: string; groupIds:
 
   try {
     return { data: await getStudentStats({ studentId, orgId, ...params }) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+
+export async function getStudentSessionDetailAction(params: { scheduleId: string }) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId, user } = auth.data
+
+  const studentId = user.organization?.studentId
+  if (!studentId) return { error: 'Profil étudiant introuvable' }
+
+  try {
+    const profile = await getStudentProfile(studentId, orgId)
+    if (!profile?.classId) return { error: 'Aucune classe associée' }
+    const data = await getStudentSessionDetail({
+      studentId,
+      scheduleId: params.scheduleId,
+      orgId,
+      classId: profile.classId,
+      groupIds: profile.groupIds,
+    })
+    return { data }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
