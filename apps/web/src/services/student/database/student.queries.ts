@@ -2,6 +2,8 @@
 import { cacheTag, cacheLife } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { CACHE } from '@/cache/server/key'
+import { getActiveSessions } from '@/services/session/database/session.queries'
+import { getUserAttendance } from '@/services/attendance/database/attendance.queries'
 
 /** Profil étudiant courant — classId + groupIds pour filtrer les schedules. */
 export async function getStudentProfile(studentId: string, orgId: string) {
@@ -115,6 +117,111 @@ export async function getStudentStats(params: {
     averageGrade:     totalMaxScore > 0 ? Math.round((totalScore / totalMaxScore) * 100 * 100) / 100 : 0,
     totalEvaluations: evaluations.length,
   }
+}
+
+/**
+ * Séance active de l'étudiant (émargement). Non caché — temps réel.
+ * Filtre groupe-sinon-classe (même règle que le planning). Compose sur session + attendance.
+ */
+export async function getStudentActiveSession(params: {
+  studentId: string; orgId: string; classId: string; groupIds: string[];
+}) {
+  const { studentId, orgId, classId, groupIds } = params
+  const active = await getActiveSessions(orgId)
+  const groupSet = new Set(groupIds)
+
+  const mine = active.find(
+    (s) =>
+      s.schedule.classId === classId &&
+      (s.schedule.groupId === null || groupSet.has(s.schedule.groupId)),
+  )
+  if (!mine) return null
+
+  const myAttendance = await getUserAttendance(studentId, mine.schedule.id, orgId)
+  const t = mine.schedule.teacher?.user
+
+  return {
+    scheduleId: mine.schedule.id,
+    course:     mine.schedule.course.name,
+    room:       mine.schedule.room?.name ?? null,
+    teacher:    t ? [t.firstName, t.lastName].filter(Boolean).join(' ') || null : null,
+    startTime:  mine.schedule.startTime,
+    endTime:    mine.schedule.endTime,
+    myAttendance: myAttendance
+      ? { status: myAttendance.status, recordedAt: myAttendance.recordedAt }
+      : null,
+  }
+}
+
+/** Profil d'un étudiant par son ID — vue Direction (accès à n'importe quel étudiant de l'org). */
+export async function getStudentByIdForDirection(studentId: string, orgId: string) {
+  'use cache'
+  cacheTag(CACHE.STUDENT(orgId, studentId))
+  cacheLife(CACHE.STUDENT.life)
+  const enrollment = await prisma.studentEnrollment.findFirst({
+    where: { studentId, endedAt: null, class: { programTrack: { orgId } } },
+    orderBy: { createdAt: 'desc' },
+    select: {
+      id: true,
+      classId: true,
+      createdAt: true,
+      class: { select: { id: true, name: true } },
+      studentGroups: {
+        where: { group: { deletedAt: null } },
+        select: { group: { select: { id: true, name: true } } },
+      },
+      student: {
+        select: {
+          id: true,
+          user: {
+            select: {
+              firstName: true, lastName: true, email: true, avatar_url: true,
+              sex: true, phone: true, dateOfBirth: true, status: true,
+            },
+          },
+        },
+      },
+    },
+  })
+  if (!enrollment) return null
+  return {
+    studentId,
+    classId:    enrollment.classId,
+    enrolledAt: enrollment.createdAt,
+    class:      enrollment.class,
+    groups:     enrollment.studentGroups.map(sg => sg.group),
+    user:       enrollment.student.user,
+  }
+}
+
+/** Liste des parents d'une org avec leurs liens étudiants. */
+export async function getParentsForDirection(orgId: string) {
+  'use cache'
+  cacheTag(CACHE.STUDENT(orgId))
+  cacheLife(CACHE.STUDENT.life)
+  return prisma.parentRelation.findMany({
+    where: { orgId },
+    select: {
+      id: true,
+      relation: true,
+      parent: {
+        select: {
+          id: true,
+          user: { select: { firstName: true, lastName: true, email: true, avatar_url: true } },
+        },
+      },
+      student: {
+        select: {
+          id: true,
+          user: { select: { firstName: true, lastName: true } },
+        },
+      },
+    },
+    orderBy: [
+      { parent: { user: { lastName: 'asc' } } },
+      { parent: { user: { firstName: 'asc' } } },
+    ],
+  })
 }
 
 export async function getEnrolledStudents(classId: string, orgId: string) {

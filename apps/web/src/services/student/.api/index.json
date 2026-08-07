@@ -2,7 +2,7 @@
   "service": "student",
   "path": "src/services/student/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "2aac61e",
+  "derived_at": "ddaf5bf",
   "utils_dir": null,
   "fns": {
     "enrollStudent": {
@@ -37,6 +37,21 @@
     },
     "getStudentStats": {
       "f": ".api/getStudentStats.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getStudentActiveSession": {
+      "f": ".api/getStudentActiveSession.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getStudentByIdForDirection": {
+      "f": ".api/getStudentByIdForDirection.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getParentsForDirection": {
+      "f": ".api/getParentsForDirection.json",
       "layer": "db",
       "kind": "query"
     },
@@ -90,8 +105,23 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "getStudentActiveSessionAction": {
+      "f": ".api/getStudentActiveSessionAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "getEnrolledStudentsAction": {
       "f": ".api/getEnrolledStudentsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getStudentByIdForDirectionAction": {
+      "f": ".api/getStudentByIdForDirectionAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getParentsForDirectionAction": {
+      "f": ".api/getParentsForDirectionAction.json",
       "layer": "action",
       "kind": "server-action"
     }
@@ -118,6 +148,15 @@
     "getStudentStats": [
       "getStudentStatsAction"
     ],
+    "getStudentActiveSession": [
+      "getStudentActiveSessionAction"
+    ],
+    "getStudentByIdForDirection": [
+      "getStudentByIdForDirectionAction"
+    ],
+    "getParentsForDirection": [
+      "getParentsForDirectionAction"
+    ],
     "getEnrolledStudents": [
       "getEnrolledStudentsAction"
     ],
@@ -130,7 +169,19 @@
     "getStudentProfileAction": [],
     "getStudentScheduleAction": [],
     "getStudentStatsAction": [],
-    "getEnrolledStudentsAction": []
+    "getStudentActiveSessionAction": [],
+    "getEnrolledStudentsAction": [],
+    "getStudentByIdForDirectionAction": [],
+    "getParentsForDirectionAction": [],
+    "getActiveSessions": [
+      "getStudentActiveSession"
+    ],
+    "getUserAttendance": [
+      "getStudentActiveSession"
+    ]
   },
-  "deps": {}
+  "deps": {
+    "getActiveSessions": "session",
+    "getUserAttendance": "attendance"
+  }
 }

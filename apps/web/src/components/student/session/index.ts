@@ -1,0 +1,1 @@
+export { StudentScanButton } from "./StudentScanButton";

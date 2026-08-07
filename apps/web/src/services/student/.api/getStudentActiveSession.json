@@ -1,0 +1,11 @@
+{
+  "name": "getStudentActiveSession",
+  "file": "src/services/student/database/student.queries.ts",
+  "sig": "(params: { studentId: string; orgId: string; classId: string; groupIds: string[] }) => Promise<{ scheduleId: string; course: string; room: string; teacher: string | null; startTime: Date; endTime: Date; myAttendance: { status: AttendanceStatus; recordedAt: Date; } | null; } | null>",
+  "composes": [
+    "getActiveSessions",
+    "getUserAttendance"
+  ],
+  "rules": [],
+  "why_ref": ""
+}

@@ -2,7 +2,11 @@
 import { getUserInfo } from '@/modules/user'
 import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
-import { getEnrolledStudents, getStudentProfile, getStudentSchedules, getStudentStats } from '../database'
+import {
+  getEnrolledStudents, getStudentActiveSession, getStudentProfile,
+  getStudentSchedules, getStudentStats,
+  getStudentByIdForDirection, getParentsForDirection,
+} from '../database'
 
 export async function getCurrentStudentId(): Promise<string | null> {
   const user = await getUserInfo()
@@ -58,6 +62,21 @@ export async function getStudentStatsAction(params: { classId: string; groupIds:
   }
 }
 
+export async function getStudentActiveSessionAction(params: { classId: string; groupIds: string[] }) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId, user } = auth.data
+
+  const studentId = user.organization?.studentId
+  if (!studentId) return { error: 'Profil étudiant introuvable' }
+
+  try {
+    return { data: await getStudentActiveSession({ studentId, orgId, ...params }) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+
 export async function getEnrolledStudentsAction(classId: string) {
   const auth = await authAccess()
   if (!auth.data) return { error: auth.error }
@@ -65,6 +84,30 @@ export async function getEnrolledStudentsAction(classId: string) {
 
   try {
     return { data: await getEnrolledStudents(classId, orgId) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+
+export async function getStudentByIdForDirectionAction(studentId: string) {
+  const auth = await authAccess({ requiredRole: ['DIRECTION', 'ADMIN'] })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+  try {
+    const data = await getStudentByIdForDirection(studentId, orgId)
+    if (!data) return { error: 'Étudiant introuvable' }
+    return { data }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+
+export async function getParentsForDirectionAction() {
+  const auth = await authAccess({ requiredRole: ['DIRECTION', 'ADMIN'] })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+  try {
+    return { data: await getParentsForDirection(orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
