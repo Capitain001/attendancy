@@ -11,11 +11,11 @@
 | Livrable | Statut |
 |---|---|
 | P1 `getStudentActiveSession` (+Action) | ✅ fait (compose session+attendance) |
-| P1 `getStudentStatsAction.today` (ring) | ⏸ différé → dashboard sans `StudentDayRing` (A-5 option B) |
+| P1 `getStudentStatsAction.today` (ring) | ✅ fait (séances/absences/minutes du jour) |
 | P2 `ui/{badges,stat,illustrations}` + barrels | ✅ fait |
-| P2 `StudentDayRing` | ⏸ non porté (dépend `analytic-ring` + stats.today) |
-| P3 Dashboard `student/page.tsx` | ✅ fait (visuel V1, ring omis), TS 0 err |
-| P3 Session `student/session/page.tsx` + `StudentScanButton` | ✅ fait — ⚠ lecteur QR placeholder (`@yudiel/react-qr-scanner` absent V2) |
+| P2 `StudentDayRing` (`components/student/ux/`) | ✅ intégré (composant + `analytic-ring` fournis) |
+| P3 Dashboard `student/page.tsx` | ✅ fait (visuel V1 complet, anneau inclus), TS 0 err |
+| P3 Session `student/session/page.tsx` + `StudentScanButton` | ✅ fait — lecteur QR live (`@yudiel/react-qr-scanner@2.6.0`) |
 | P3 Planning `student/planning/page.tsx` + `StudentPlanningCalendar` + `StudentSessionDialog` | ✅ fait, TS 0 err |
 | P1bis backend planning (`getStudentSchedules` étendu ScheduleRow + `getStudentSessionDetail`(+Action)) | ✅ fait |
 | P4 Layout + `studentRoutes` | ⏸ non fait (dépend `UserSidebar`/`RoleLiveBar`/`sidebar/types` V2 à auditer) |
@@ -25,9 +25,9 @@
 1. ✅ `getStudentSchedules` select étendu (confirmed, IDs plats, classId, groupId, group) → `mapScheduleToEvent` OK.
 2. ✅ `getStudentSessionDetail` (DB) + `getStudentSessionDetailAction` portés ; dialog utilise `GetStudentSessionDetailDto`.
 
-### Gap package
-- `@yudiel/react-qr-scanner` non installé → `StudentScanButton` livré avec lecteur placeholder (bouton/dialog conservés).
-  Installer le package pour réactiver le scan live.
+### Écarts — RÉSOLUS (fidélité complète)
+- ✅ `StudentDayRing` intégré (composant + `analytic-ring` fournis) + `getStudentStats.today` porté.
+- ✅ `@yudiel/react-qr-scanner@2.6.0` installé → lecteur QR live dans `StudentScanButton`.
 
 ---
 

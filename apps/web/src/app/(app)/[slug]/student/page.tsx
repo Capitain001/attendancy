@@ -1,5 +1,4 @@
-// Dashboard étudiant — visuel porté de la V1 (section « anneau du jour » omise :
-// getStudentStatsAction V2 ne fournit pas encore `today` — cf. specs/student-pages-v2 A-5).
+// Dashboard étudiant — visuel porté de la V1.
 import { connection } from "next/server";
 import { addDays, endOfDay, format, isSameDay, startOfDay } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -15,6 +14,7 @@ import { resolveScheduleUiStatus } from "@/services/schedule/policy";
 import { formatTime } from "@/lib/utils";
 import { ScheduleStatusBadge } from "@/components/student/ui/badges";
 import { StudentStat, StudentStatGrid } from "@/components/student/ui/stat";
+import { StudentDayRing } from "@/components/student/ux/StudentDayRing";
 import {
   BackpackIllustration,
   CalendarRestIllustration,
@@ -187,6 +187,25 @@ export default async function StudentDashboardPage() {
           })
         )}
       </section>
+
+      {/* ── Aperçu de la journée (anneau interactif) ── */}
+      {stats?.today && (
+        <section className="space-y-2">
+          <h3 className="font-display px-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            Aperçu de la journée
+          </h3>
+          <div className="flex justify-center py-2">
+            <StudentDayRing
+              doneSessions={stats.today.doneSessions}
+              totalSessions={stats.today.totalSessions}
+              absences={stats.today.absences}
+              doneMinutes={stats.today.doneMinutes}
+              totalMinutes={stats.today.totalMinutes}
+              nextLead={nextLead}
+            />
+          </div>
+        </section>
+      )}
 
       {/* ── Mon suivi (stats serif, factuel P-25) ── */}
       {stats && (

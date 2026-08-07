@@ -2,7 +2,7 @@
   "service": "student",
   "path": "src/services/student/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "8324205",
+  "derived_at": "7fdd939",
   "utils_dir": null,
   "fns": {
     "enrollStudent": {

@@ -1,7 +1,7 @@
 {
   "name": "getStudentStats",
   "file": "src/services/student/database/student.queries.ts",
-  "sig": "(params: { studentId: string; orgId: string; classId: string; groupIds: string[] }) => Promise<{ attendanceRate: number; totalCourses: number; todayCount: number; averageGrade: number; totalEvaluations: number; }>",
+  "sig": "(params: { studentId: string; orgId: string; classId: string; groupIds: string[] }) => Promise<{ attendanceRate: number; totalCourses: number; todayCount: number; averageGrade: number; totalEvaluations: number; today: { doneSessions: number; totalSessions: number; absences: number; doneMinutes: number; totalMinutes: number; }; }>",
   "composes": [],
   "rules": [],
   "why_ref": ""

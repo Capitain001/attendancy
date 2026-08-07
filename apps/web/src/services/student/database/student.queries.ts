@@ -88,7 +88,12 @@ export async function getStudentStats(params: {
   const start = new Date(now); start.setHours(0, 0, 0, 0)
   const end   = new Date(now); end.setHours(23, 59, 59, 999)
 
-  const [total, present, coursesCount, todayCount, evaluations] = await Promise.all([
+  const groupOr = [
+    { groupId: null },
+    ...(params.groupIds.length > 0 ? [{ groupId: { in: params.groupIds } }] : []),
+  ]
+
+  const [total, present, coursesCount, todaySchedules, absencesToday, evaluations] = await Promise.all([
     prisma.attendance.count({
       where: { studentId: params.studentId, orgId: params.orgId },
     }),
@@ -98,14 +103,18 @@ export async function getStudentStats(params: {
     prisma.courseTeacher.count({
       where: { course: { classId: params.classId, orgId: params.orgId, deletedAt: null } },
     }),
-    prisma.schedule.count({
+    prisma.schedule.findMany({
       where: {
         classId: params.classId, orgId: params.orgId, deletedAt: null,
         startTime: { gte: start, lte: end },
-        OR: [
-          { groupId: null },
-          ...(params.groupIds.length > 0 ? [{ groupId: { in: params.groupIds } }] : []),
-        ],
+        OR: groupOr,
+      },
+      select: { status: true, startTime: true, endTime: true },
+    }),
+    prisma.attendance.count({
+      where: {
+        studentId: params.studentId, orgId: params.orgId, status: 'ABSENT',
+        schedule: { startTime: { gte: start, lte: end } },
       },
     }),
     prisma.evaluation.findMany({
@@ -118,12 +127,25 @@ export async function getStudentStats(params: {
   let totalMaxScore = 0
   for (const e of evaluations) { totalScore += e.score; totalMaxScore += e.maxScore }
 
+  // Bloc « ta journée » — CANCELED exclu (pas de séance fantôme, D22).
+  const activeToday = todaySchedules.filter((s) => s.status !== 'CANCELED')
+  const doneToday = activeToday.filter((s) => s.status === 'COMPLETED')
+  const minutesOf = (list: typeof activeToday) =>
+    Math.round(list.reduce((acc, s) => acc + (s.endTime.getTime() - s.startTime.getTime()) / 60000, 0))
+
   return {
     attendanceRate:   total > 0 ? Math.round((present / total) * 100) : 100,
     totalCourses:     coursesCount,
-    todayCount,
+    todayCount:       todaySchedules.length,
     averageGrade:     totalMaxScore > 0 ? Math.round((totalScore / totalMaxScore) * 100 * 100) / 100 : 0,
     totalEvaluations: evaluations.length,
+    today: {
+      doneSessions:  doneToday.length,
+      totalSessions: activeToday.length,
+      absences:      absencesToday,
+      doneMinutes:   minutesOf(doneToday),
+      totalMinutes:  minutesOf(activeToday),
+    },
   }
 }
 
