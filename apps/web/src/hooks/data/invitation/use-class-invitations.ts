@@ -2,7 +2,12 @@
 // Invitations d'une classe (écran Direction/classe) + mutation inviteStudent.
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { getClassInvitationsAction, inviteStudent } from '@/modules/invitation'
+import {
+  getClassInvitationsAction,
+  inviteStudent,
+  resendInvitationAction,
+  deleteInvitationUserAction,
+} from '@/modules/invitation'
 import { customToast } from '@/lib/toast/custom-toast'
 import { CACHE_KEYS } from '@/cache/client/key'
 
@@ -31,5 +36,25 @@ export function useClassInvitations(classId: string) {
     onError: () => customToast.error("Envoi de l'invitation impossible."),
   })
 
-  return { invitations, isLoading, inviteStudent: inviteStudentMut }
+  const resend = useMutation({
+    mutationFn: resendInvitationAction,
+    onSuccess: (r) => {
+      if (!r.success) { customToast.error(r.error); return }
+      invalidate()
+      customToast.success(r.message)
+    },
+    onError: () => customToast.error('Relance impossible.'),
+  })
+
+  const revoke = useMutation({
+    mutationFn: deleteInvitationUserAction,
+    onSuccess: (r) => {
+      if (!r.success) { customToast.error(r.error); return }
+      invalidate()
+      customToast.success(r.message)
+    },
+    onError: () => customToast.error('Révocation impossible.'),
+  })
+
+  return { invitations, isLoading, inviteStudent: inviteStudentMut, resend, revoke }
 }
