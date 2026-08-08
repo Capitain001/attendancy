@@ -15,8 +15,8 @@ import { getUserInfo } from '@/modules/user';
 import type { ReactNode } from "react";
 import React from 'react';
 import { UserSidebarSlot } from "@/components/layout/sidebar";
-// import { NavTab, RoleLiveBar } from "@/components/live/layout/NavBar";
 import { directionRoutes } from "@/components/direction/user/navigation";
+import { RoleLiveBar } from "@/components/RealTime/RoleLiveBar";
 
 interface LayoutProps {
   children: ReactNode;
@@ -33,8 +33,8 @@ const Layout = async ({ children, params }: LayoutProps) => {
       <UserSidebarSlot routes={directionRoutes} user={user ?? undefined} slug={slug} />
       <SidebarInset className="min-w-0 overflow-hidden flex flex-col">
         <header className="flex h-12 shrink-0 items-center  transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-          <div className="flex items-center gap-2 px-4 justify-between w-full">
-            <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 px-4 justify-between w-full bg-transparent md:bg-inherit">
+            <div className="flex items-center gap-2 ">
               <SidebarTrigger className="-ml-1" />
               <Separator orientation="vertical" className="mr-2 h-4" />
               <BreadcrumbLayout
@@ -45,7 +45,7 @@ const Layout = async ({ children, params }: LayoutProps) => {
             </div>
 
             <div className="flex items-center gap-2">
-              {/* <RoleLiveBar role={"DIRECTION"} /> */}
+              <RoleLiveBar role={"DIRECTION"} />
 
             </div>
           </div>

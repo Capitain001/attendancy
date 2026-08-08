@@ -1,0 +1,8 @@
+{
+  "name": "getAttendanceReport",
+  "file": "src/services/attendance/database/analytics.ts",
+  "sig": "(orgId: string, opts: { classId?: string; startDate?: Date; endDate?: Date } = {}) => Promise<{ studentId: string; firstName: string | null; lastName: string | null; classId: string | null; className: string | null; absences: number; denominator: number; rate: number | null; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

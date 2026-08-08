@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react'
+import Link from 'next/link'
 import { Users } from 'lucide-react'
 import { card, typography } from '@/styles'
 import { cn } from '@/lib/utils'
@@ -21,7 +23,7 @@ function displayName(t: Teacher) {
   return [t.user.firstName, t.user.lastName].filter(Boolean).join(' ') || t.user.email
 }
 
-export function TeacherList({ teachers }: { teachers: Teacher[] }) {
+export function TeacherList({ teachers, slug }: { teachers: Teacher[]; slug?: string }) {
   if (teachers.length === 0) {
     return (
       <div className={cn(card.soft, 'py-12 text-center')}>
@@ -43,16 +45,18 @@ export function TeacherList({ teachers }: { teachers: Teacher[] }) {
           </tr>
         </thead>
         <tbody>
-          {teachers.map((t) => (
+          {teachers.map((t) => {
+            const href = slug ? `/${slug}/direction/people/teachers/${t.id}` : undefined
+            return (
             <tr key={t.id} className="border-b border-border/20 last:border-0 hover:bg-muted/20 transition-colors">
               <td className="px-4 py-3">
-                <div className="flex items-center gap-3">
+                <ConditionalLink href={href} className="flex items-center gap-3">
                   <UserIcon name={displayName(t)} avatarUrl={t.user.avatar_url} className="size-8 text-xs" />
                   <div className="flex flex-col gap-0.5">
                     <span className="font-medium text-text-primary">{displayName(t)}</span>
                     <span className={typography.small}>{t.user.email}</span>
                   </div>
-                </div>
+                </ConditionalLink>
               </td>
               <td className="px-4 py-3 text-text-secondary hidden md:table-cell">
                 {t.department?.name ?? <span className="text-text-subtle italic">—</span>}
@@ -62,7 +66,7 @@ export function TeacherList({ teachers }: { teachers: Teacher[] }) {
                 <StatusBadge status={t.user.status} />
               </td>
             </tr>
-          ))}
+          )})}
         </tbody>
       </table>
     </div>
@@ -73,6 +77,19 @@ const STATUS_MAP: Record<string, { label: string; cls: string }> = {
   ACTIVE:   { label: 'Actif',    cls: 'bg-green-500/15 text-green-600' },
   INACTIVE: { label: 'Inactif',  cls: 'bg-muted text-text-subtle' },
   INVITED:  { label: 'Invité',   cls: 'bg-primary/10 text-primary' },
+}
+
+function ConditionalLink({
+  href,
+  children,
+  className,
+}: {
+  href?: string
+  children: ReactNode
+  className?: string
+}) {
+  if (href) return <Link href={href} className={cn(className, 'hover:opacity-80 transition-opacity')}>{children}</Link>
+  return <div className={className}>{children}</div>
 }
 
 function StatusBadge({ status }: { status: string }) {

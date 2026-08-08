@@ -9,17 +9,25 @@ import { BackgroundPattern } from "@/components/design/BackgroundPattern";
 interface ButtonXProps extends React.ComponentProps<typeof Button> {
   children?: React.ReactNode;
   href?: string;
+  icon?: React.ReactNode;
 }
 
 export function ButtonX({
   children,
   className,
   href,
+  icon,
   ...props
 }: ButtonXProps) {
+  const content = (
+    <>
+      {icon}
+      {children}
+    </>
+  );
+
   return (
     <Button
-      // asChild={!!href}
       className={cn(
         "relative overflow-hidden rounded-xl border bg-card px-4 py-2",
         "text-sm font-medium text-foreground",
@@ -36,11 +44,11 @@ export function ButtonX({
 
         {href ? (
           <Link href={href} className="relative z-10 flex items-center gap-2">
-            {children}
+            {content}
           </Link>
         ) : (
           <span className="relative z-10 flex items-center gap-2">
-            {children}
+            {content}
           </span>
         )}
       </>

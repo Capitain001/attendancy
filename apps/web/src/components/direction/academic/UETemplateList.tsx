@@ -1,6 +1,6 @@
 'use client'
 import { useState, useMemo } from 'react'
-import { BookOpen, Check, ChevronLeft, ChevronRight, GraduationCap, Library } from 'lucide-react'
+import { BookOpen, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, GraduationCap, Library } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -178,48 +178,107 @@ function MentionCard({
   referentialId,
   activated,
   programs,
+  mentionTemplates,
 }: {
   mention: MentionSummary
   referentialId: string
   activated: boolean
   programs: ProgramItem[]
+  mentionTemplates: TemplateItem[]
 }) {
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [expanded,   setExpanded]   = useState(false)
+
+  // UEs de cette filière groupées par semestre
+  const bySemester = useMemo(() => {
+    const map = new Map<number, TemplateItem[]>()
+    for (const t of mentionTemplates) {
+      const list = map.get(t.semester) ?? []
+      list.push(t)
+      map.set(t.semester, list)
+    }
+    return [...map.entries()].sort(([a], [b]) => a - b)
+  }, [mentionTemplates])
 
   return (
     <>
-      <div className={cn(card.base, 'flex items-center gap-4 py-3')}>
-        <div className="shrink-0 flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-          <GraduationCap className="size-4 text-primary" strokeWidth={1.5} />
-        </div>
+      <div className={cn(card.base, 'flex flex-col py-3 gap-0')}>
+        {/* ── Ligne principale ── */}
+        <div className="flex items-center gap-3 px-1">
+          <div className="shrink-0 flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+            <GraduationCap className="size-4 text-primary" strokeWidth={1.5} />
+          </div>
 
-        <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium text-text-primary truncate">{mention.mention}</p>
-          {mention.speciality && (
-            <p className={cn(typography.small, 'truncate')}>{mention.speciality}</p>
-          )}
-          <div className="mt-0.5 flex gap-2 text-[11px] text-text-subtle">
-            <span>{mention.degree}</span>
-            <span>·</span>
-            <span>{mention.semesterCount} sem.</span>
-            <span>·</span>
-            <span>{mention.ueCount} UE</span>
-            {mention.ecCount > 0 && <><span>·</span><span>{mention.ecCount} EC</span></>}
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium text-text-primary truncate">{mention.mention}</p>
+            {mention.speciality && (
+              <p className={cn(typography.small, 'truncate')}>{mention.speciality}</p>
+            )}
+            <div className="mt-0.5 flex gap-2 text-[11px] text-text-subtle">
+              <span>{mention.degree}</span>
+              <span>·</span>
+              <span>{mention.semesterCount} sem.</span>
+              <span>·</span>
+              <span>{mention.ueCount} UE</span>
+              {mention.ecCount > 0 && <><span>·</span><span>{mention.ecCount} EC</span></>}
+            </div>
+          </div>
+
+          <div className="shrink-0 flex items-center gap-2">
+            {/* Bouton expand */}
+            <button
+              onClick={() => setExpanded((v) => !v)}
+              className="flex items-center gap-1 text-xs text-text-subtle hover:text-text-primary transition-colors"
+            >
+              {expanded ? <ChevronUp className="size-3.5" /> : <ChevronDown className="size-3.5" />}
+              <span>{expanded ? 'Masquer' : 'Voir UEs'}</span>
+            </button>
+
+            {activated ? (
+              <span className="flex items-center gap-1 text-xs font-medium text-emerald-600">
+                <Check className="size-3.5" />
+                Activée
+              </span>
+            ) : (
+              <Button size="sm" variant="outline" className="h-8 text-xs" onClick={() => setDialogOpen(true)}>
+                Activer
+              </Button>
+            )}
           </div>
         </div>
 
-        <div className="shrink-0">
-          {activated ? (
-            <span className="flex items-center gap-1 text-xs font-medium text-emerald-600">
-              <Check className="size-3.5" />
-              Activée
-            </span>
-          ) : (
-            <Button size="sm" variant="outline" className="h-8 text-xs" onClick={() => setDialogOpen(true)}>
-              Activer
-            </Button>
-          )}
-        </div>
+        {/* ── Contenu expandable : UEs par semestre ── */}
+        {expanded && (
+          <div className="mt-3 border-t border-border/60 pt-3 flex flex-col gap-4 px-1">
+            {bySemester.map(([sem, ues]) => (
+              <div key={sem} className="flex flex-col gap-1.5">
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-text-subtle">
+                  Semestre {sem}
+                </p>
+                {ues.map((ue) => (
+                  <div key={ue.id} className="flex items-start justify-between gap-2 rounded-md bg-muted/40 px-3 py-2">
+                    <div className="min-w-0">
+                      {ue.code && (
+                        <span className="mr-1.5 inline-block rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-mono font-medium text-primary">
+                          {ue.code}
+                        </span>
+                      )}
+                      <span className="text-xs text-text-primary">{ue.name}</span>
+                      {ue._count.elements > 0 && (
+                        <span className="ml-1.5 text-[10px] text-text-subtle">
+                          · {ue._count.elements} EC
+                        </span>
+                      )}
+                    </div>
+                    <span className="shrink-0 text-[11px] text-text-subtle whitespace-nowrap">
+                      {Number(ue.credits)} cr.
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {dialogOpen && (
@@ -296,6 +355,9 @@ function ReferentialDetail({
                     referentialId={referential.id}
                     activated={m.templateIds.some((id) => importedTemplateIds.has(id))}
                     programs={programs}
+                    mentionTemplates={templates.filter((t) =>
+                      t.mention === m.mention && (t.speciality ?? null) === m.speciality
+                    )}
                   />
                 ))}
               </div>

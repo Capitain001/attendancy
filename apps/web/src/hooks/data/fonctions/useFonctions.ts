@@ -27,11 +27,12 @@ export function useFonctions(options: UseFonctionsOptions = {}) {
 
   const fetchFn = toFetchFn(getFunctionsAction, { isMain });
   const create = toCreateFn(createFunctionAction);
-  const update = toUpdateFn((id: string, data: UpdateFunctionInput) => updateFunctionAction({ functionId: id, ...data }));
-  const deleteFunction = toDeleteFn<string>(async (id) => {
-    const r = await deleteFunctionAction(id);
-    return 'error' in r ? { success: false as const, error: r.error } : { success: true as const };
-  });
+  // ✅ aucun générique explicite requis : TResponse s'infère depuis
+  // updateFunctionAction lui-même, TId/TInput utilisent leurs defaults
+  // (string / object), suffisamment larges pour matcher UpdateFunctionInput
+  // au moment de l'assignation à crud.update plus bas.
+  const update = toUpdateFn(updateFunctionAction, "functionId");
+  const deleteFunction = toDeleteFn(deleteFunctionAction);
 
   return useCrudEntity<FunctionItem, CreateFunctionInput, UpdateFunctionInput>({
     entityName: "functions",
@@ -40,6 +41,10 @@ export function useFonctions(options: UseFonctionsOptions = {}) {
     enabled,
     crud: {
       create,
+      // ✅ createFunctionAction ne renvoie pas _count (une fonction neuve a
+      // toujours 0 utilisateur) : createDefaults comble ce champ sans avoir
+      // à le requêter côté serveur.
+      createDefaults: { _count: { users: 0 } },
       update,
       delete: deleteFunction,
       messages: {

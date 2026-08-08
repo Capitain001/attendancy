@@ -1,6 +1,6 @@
 
 // import { OrganizationProvider } from "@/providers/OrganizationProvider";
-// import { UserProvider } from "@/contexts/UserContext";
+import { UserProvider } from "@/contexts/UserContext";
 import { getUserInfo } from '@/modules/user';
 import { redirect } from "next/navigation";
 
@@ -25,9 +25,9 @@ export default async function OrganizationLayout({
 
   return (
     <div className="scrollbar-hidden h-full overflow-hidden">
-       {/* <UserProvider initialUser={user}> */}
+       <UserProvider initialUser={user}>
           {children}
-        {/* </UserProvider> */}
+        </UserProvider>
     </div>
   );
 }

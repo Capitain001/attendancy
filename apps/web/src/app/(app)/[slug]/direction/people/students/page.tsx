@@ -6,12 +6,13 @@ import { ClassSelectorBar } from '@/components/direction/people/ClassSelectorBar
 import { typography } from '@/styles'
 
 interface Props {
+  params: Promise<{ slug: string }>
   searchParams: Promise<{ classId?: string }>
 }
 
-export default async function StudentsPage({ searchParams }: Props) {
+export default async function StudentsPage({ params, searchParams }: Props) {
   await connection()
-  const { classId } = await searchParams
+  const [{ slug }, { classId }] = await Promise.all([params, searchParams])
 
   const classesResult = await getClassesAction()
   const classes = ('data' in classesResult ? classesResult.data : null) ?? []
@@ -42,7 +43,7 @@ export default async function StudentsPage({ searchParams }: Props) {
       ) : studentsResult && 'error' in studentsResult ? (
         <p className={typography.body}>{studentsResult.error}</p>
       ) : studentsResult && 'data' in studentsResult ? (
-        <StudentList enrollments={studentsResult.data ?? []} />
+        <StudentList enrollments={studentsResult.data ?? []} slug={slug} />
       ) : null}
     </div>
   )

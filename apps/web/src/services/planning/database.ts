@@ -63,13 +63,13 @@ function mapClassPlanningResources([classRow, rooms]: ClassPlanningRaw) {
       name: c.name,
       teachers: c.teachers
         .map((ct) => ({
-          id: ct.teacher.id,
-          name: [ct.teacher.user.firstName, ct.teacher.user.lastName]
+          id: ct?.teacher?.id,
+          name: [ct.teacher?.user.firstName, ct.teacher?.user.lastName]
             .filter(Boolean)
             .join(' ')
             .trim() || 'Sans nom',
-          email: ct.teacher.user.email,
-          avatar_url: ct.teacher.user.avatar_url,
+          email: ct.teacher?.user.email,
+          avatar_url: ct.teacher?.user.avatar_url,
           isMain: ct.isMain,
         }))
         .sort((a, b) => {

@@ -67,7 +67,7 @@ export function CalendarHeader({
         : formatDateRange(startOfMonth(firstDayCurrentMonth), endOfMonth(firstDayCurrentMonth));
 
   return (
-    <div className="flex space-y-4 p-4 md:flex-row md:items-center md:justify-between md:space-y-0 lg:flex-none">
+    <div className="flex space-y-4 md:p-4  md:pt-0 md:flex-row md:items-center md:justify-between md:space-y-0 lg:flex-none">
       <div className="flex flex-auto">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
@@ -84,12 +84,12 @@ export function CalendarHeader({
             <button
               type="button"
               onClick={goToToday}
-              className="w-20 flex-col items-center justify-center rounded-lg border bg-muted p-0.5 flex transition-colors hover:bg-muted/80"
+              className="w-20 flex-col items-center justify-center rounded-lg border bg-muted p-0.5 flex transition-colors hover:bg-muted/80 "
             >
               <h1 className="p-1 text-xs uppercase text-muted-foreground">
                 {format(today, "MMM", { locale: fr })}
               </h1>
-              <div className="flex w-full items-center justify-center rounded-lg border bg-background p-0.5 text-lg font-bold">
+              <div className="flex w-full items-center justify-center rounded-lg border bg-background p-0.5 text-lg font-bold cursor-pointer">
                 <span>{format(today, "d")}</span>
               </div>
             </button>

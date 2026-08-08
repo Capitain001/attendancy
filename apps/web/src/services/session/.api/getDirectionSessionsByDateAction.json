@@ -1,0 +1,11 @@
+{
+  "name": "getDirectionSessionsByDateAction",
+  "file": "src/services/session/actions/session.queries.ts",
+  "sig": "(dateStr?: string) => Promise<{ error: any; data?: undefined; } | { data: { class: { id: string; _count: { studentEnrollments: number; }; name: string; }; course: { id: string; name: string; }; group: { id: string; _count: { studentGroups: number; }; name: string; } | null; ... 8 more ...; attendances: { ...; }[]; }[]; error?: undefined;...",
+  "calls": [
+    "getOrgDaySchedulesWithSession"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

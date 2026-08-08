@@ -26,9 +26,9 @@ export function WeekHeader({ days,
 
   return (
     <div className="sticky top-0 z-30 mb-3">
-      <div className="flex flex-1  rounded border bg-muted/80 backdrop-blur-md">
+      <div className="flex flex-1  rounded-xs border bg-muted/80 backdrop-blur-md">
         {/* Colonne fixe à gauche */}
-        <div className="flex w-full flex-1 flex-shrink-0 border-r border-dashed py-2 text-center text-sm text-muted-foreground/70 pointer-events-none">
+        <div className="flex w-full flex-1 shrink-0 border-r border-dashed py-2 text-center text-sm text-muted-foreground/70 pointer-events-none">
           <span className="m-auto max-[479px]:sr-only">
             {format(new Date(), "O")}
           </span>

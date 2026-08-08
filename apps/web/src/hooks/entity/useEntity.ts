@@ -31,7 +31,7 @@ export interface UseEntityOptions<T> {
 }
 
 // Types de retour
-interface BaseEntityResult<T> {
+export interface BaseEntityResult<T> {
   data: { items: T[]; byId: Record<string, T> };
   loading: boolean;
   refreshing: boolean;
@@ -43,7 +43,7 @@ interface BaseEntityResult<T> {
   queryClient: any;
 }
 
-interface EntityResultWithCRUD<T> extends BaseEntityResult<T> {
+export interface EntityResultWithCRUD<T> extends BaseEntityResult<T> {
   applyPayload: (payload: Payload<T>) => void;
 }
 
@@ -92,7 +92,7 @@ export function useEntity<T extends { id: string }>(
     refetchOnWindowFocus: false,
     enabled: queryEnabled,
     ...(suspense ? { suspense: true } : {}),
-    
+
     select: transformFn || itemsToById,
   });
 
@@ -106,21 +106,21 @@ export function useEntity<T extends { id: string }>(
 
     const newQueryKey = [entityName, newParams].filter(Boolean);
     const newData = await fetchFn(newParams);
-    const transformedNewData = transformFn 
-      ? transformFn(newData) 
+    const transformedNewData = transformFn
+      ? transformFn(newData)
       : itemsToById(newData);
-    
+
     queryClient.setQueryData(newQueryKey, (oldData: any) => {
       if (!oldData) return transformedNewData;
-      
+
       const mergedItems = mergeItemsById(oldData.items, newData);
-      const mergedTransformed = transformFn 
-        ? transformFn(mergedItems) 
+      const mergedTransformed = transformFn
+        ? transformFn(mergedItems)
         : itemsToById(mergedItems);
-      
+
       return mergedTransformed;
     });
-    
+
     return newData;
   };
 
@@ -138,7 +138,7 @@ export function useEntity<T extends { id: string }>(
       if (!old) return old;
 
       const currentItems = Array.isArray(old) ? old : old.items || [];
-      const currentById = Array.isArray(old) 
+      const currentById = Array.isArray(old)
         ? old.reduce((acc, item) => ({ ...acc, [item.id]: item }), {} as Record<string, T>)
         : old.byId || {};
 
@@ -146,17 +146,26 @@ export function useEntity<T extends { id: string }>(
       let newById: Record<string, T>;
 
       switch (payload.type) {
-        case "INSERT":
-          newItems = [...currentItems, payload.record];
+        case "INSERT": {
+          const exists = !!currentById[payload.record.id];
+          newItems = exists
+            ? currentItems.map((item) =>
+              item.id === payload.record.id ? payload.record : item
+            )
+            : [...currentItems, payload.record];
           newById = { ...currentById, [payload.record.id]: payload.record };
           break;
+        }
 
-        case "UPDATE":
+        case "UPDATE": {
+          // merge superficiel : accepte un record partiel ({id, ...quelques champs})
+          const merged = { ...currentById[payload.record.id], ...payload.record };
           newItems = currentItems.map((item) =>
-            item.id === payload.record.id ? payload.record : item
+            item.id === payload.record.id ? merged : item
           );
-          newById = { ...currentById, [payload.record.id]: payload.record };
+          newById = { ...currentById, [payload.record.id]: merged };
           break;
+        }
 
         case "DELETE":
           newItems = currentItems.filter((item) => item.id !== payload.old_record.id);
@@ -198,7 +207,7 @@ export function useEntity<T extends { id: string }>(
 // Helpers pour la manipulation des données et la fusion
 function mergeItemsById<T extends { id: string }>(oldItems: T[], newItems: T[]): T[] {
   const result = [...oldItems];
-  
+
   newItems.forEach(newItem => {
     const index = result.findIndex(item => item.id === newItem.id);
     if (index >= 0) {
@@ -207,7 +216,7 @@ function mergeItemsById<T extends { id: string }>(oldItems: T[], newItems: T[]):
       result.push(newItem);
     }
   });
-  
+
   return result;
 }
 

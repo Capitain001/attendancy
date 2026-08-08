@@ -127,7 +127,7 @@ export function EventCalendar({
         // Hauteur DÉFINIE (pas de flex-1 ici : flex-1 mettrait flex-basis:0% et,
         // dans un parent à hauteur indéfinie, rendrait la hauteur indéterminée →
         // les conteneurs internes overflow-y-auto cesseraient de scroller).
-        "flex h-[calc(100dvh-var(--calendar-shell-offset,0px))] min-h-0 flex-col overflow-hidden",
+        "flex h-[calc(100dvh-var(--calendar-shell-offset,0px))] min-h-0 flex-col overflow-hidden ",
         className
       )}
       style={
@@ -139,8 +139,8 @@ export function EventCalendar({
       }
     >
       <CalendarDndProvider onEventUpdate={handleEventUpdate} readOnly={readOnly}>
-        <div className="flex min-h-0 flex-1 flex-col overflow-hidden ">
-          <div className="sticky top-0 z-40 shrink-0 border-b bg-background/95 backdrop-blur">
+        <div className="flex min-h-0 flex-1  flex-col overflow-hidden ">
+          <div className="sticky top-0 z-40 shrink-0  bg-background/95 backdrop-blur">
             <CalendarHeader
               view={view}
               setView={setView}

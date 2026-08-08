@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { RiCalendarLine, RiDeleteBinLine } from "@remixicon/react";
+// import { RiCalendarLine, RiDeleteBinLine } from "@remixicon/react";
+import { RiCalendarLine, RiDeleteBinLine } from "react-icons/ri";
+
 import { format, isBefore } from "date-fns";
 
 import type { ScheduleEvent, EventColor } from "@/components/event-calendar";

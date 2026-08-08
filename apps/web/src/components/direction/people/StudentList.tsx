@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react'
+import Link from 'next/link'
 import { GraduationCap } from 'lucide-react'
 import { card, typography } from '@/styles'
 import { cn } from '@/lib/utils'
@@ -26,7 +28,12 @@ function displayName(e: Enrollment) {
   return [firstName, lastName].filter(Boolean).join(' ') || e.student.user.email
 }
 
-export function StudentList({ enrollments }: { enrollments: Enrollment[] }) {
+function ConditionalLink({ href, children, className }: { href?: string; children: ReactNode; className?: string }) {
+  if (href) return <Link href={href} className={cn(className, 'hover:opacity-80 transition-opacity')}>{children}</Link>
+  return <div className={className}>{children}</div>
+}
+
+export function StudentList({ enrollments, slug }: { enrollments: Enrollment[]; slug?: string }) {
   if (enrollments.length === 0) {
     return (
       <div className={cn(card.soft, 'py-12 text-center')}>
@@ -46,16 +53,18 @@ export function StudentList({ enrollments }: { enrollments: Enrollment[] }) {
           </tr>
         </thead>
         <tbody>
-          {enrollments.map((e) => (
+          {enrollments.map((e) => {
+            const href = slug ? `/${slug}/direction/people/students/${e.studentId}` : undefined
+            return (
             <tr key={e.id} className="border-b border-border/20 last:border-0 hover:bg-muted/20 transition-colors">
               <td className="px-4 py-3">
-                <div className="flex items-center gap-3">
+                <ConditionalLink href={href} className="flex items-center gap-3">
                   <UserIcon name={displayName(e)} avatarUrl={e.student.user.avatar_url} className="size-8 text-xs" />
                   <div className="flex flex-col gap-0.5">
                     <span className="font-medium text-text-primary">{displayName(e)}</span>
                     <span className={typography.small}>{e.student.user.email}</span>
                   </div>
-                </div>
+                </ConditionalLink>
               </td>
               <td className="px-4 py-3 hidden md:table-cell">
                 {e.studentGroups.length > 0 ? (
@@ -71,7 +80,7 @@ export function StudentList({ enrollments }: { enrollments: Enrollment[] }) {
                 )}
               </td>
             </tr>
-          ))}
+          )})}
         </tbody>
       </table>
     </div>

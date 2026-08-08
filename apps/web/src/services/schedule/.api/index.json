@@ -2,7 +2,7 @@
   "service": "schedule",
   "path": "src/services/schedule/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "5306ac7",
+  "derived_at": "dceb1e9",
   "utils_dir": null,
   "fns": {
     "createSchedule": {

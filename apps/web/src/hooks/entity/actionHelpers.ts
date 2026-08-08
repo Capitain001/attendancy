@@ -9,17 +9,18 @@
  * useCrudEntity attend :
  * - fetchFn: () => Promise<T[]>
  * - create: (data) => Promise<T>
- * - update: (id, data) => Promise<T>
+ * - update: (id, data) => Promise<Partial<T> & { id: string }>
  * - delete: (id) => Promise<void>
  */
 
 // Convention V2 : { data: T } | { error: string }
 export type ActionResponse<T> = { data: T } | { error: string };
 export type ActionArrayResponse<T> = { data: T[] } | { error: string };
-// Ancien pattern (V1) — conservé pour rétrocompatibilité avec les hooks existants
-export type ActionSuccessResponse = { success: boolean; error?: string };
-// Pattern suppression V2 : { data: boolean } | { error: string }
-export type ActionDeleteResponse = ActionResponse<boolean> | ActionSuccessResponse;
+// ✅ Le pattern V1 ({ success: boolean; error?: string }) est retiré : le
+// projet est entièrement en V2, seule la présence d'`error` dans la réponse
+// détermine l'échec. La forme de `data` (id, boolean, objet complet...)
+// n'a plus d'importance pour toDeleteFn.
+export type ActionDeleteResponse = ActionResponse<any>;
 
 // Extrait T depuis { data: T } | { error: string } sans déclencher l'inférence distributive
 type ExtractData<R> = R extends { data: infer T } ? T : never;
@@ -52,19 +53,51 @@ export function toCreateFn<TInput, TResponse extends ActionResponse<any>>(
   };
 }
 
-export function toUpdateFn<TId, TInput, TResponse extends ActionResponse<any>>(
-  action: (id: TId, data: TInput) => Promise<TResponse>
+/**
+ * Convertit une action serveur V2 (id fusionné dans un objet unique)
+ * en fonction (id, data) => Promise<T>.
+ *
+ * `updateFunctionAction({ functionId, ...data })`
+ * → `toUpdateFn(updateFunctionAction, "functionId")`
+ *
+ * Aucun générique explicite n'est nécessaire à l'appel : TResponse
+ * s'infère directement depuis `action` (placé en premier paramètre de
+ * type exprès pour ça), TId/TInput ont des valeurs par défaut (`string`,
+ * `object`) suffisamment larges pour être assignables partout où le hook
+ * consommateur attend un type plus précis (contravariance des paramètres
+ * de fonction : accepter `object` est toujours valide là où `UpdateInput`
+ * est attendu).
+ *
+ * ⚠️ Le pattern V1 (action(id, data) avec deux paramètres séparés) n'est
+ * plus supporté : le garder en union avec le pattern V2 rendait
+ * l'inférence de type ambiguë pour TS (il pouvait confondre le paramètre
+ * `id` avec l'objet `input` du pattern V2, produisant des signatures
+ * absurdes du type `(id: { functionId, name?, ... }, data: object) => ...`).
+ * Le projet étant entièrement migré en V2, `idField` est obligatoire.
+ *
+ * @example
+ * const update = toUpdateFn(updateFunctionAction, "functionId");
+ */
+export function toUpdateFn<
+  TResponse extends ActionResponse<any>,
+  TId = string,
+  TInput extends object = object
+>(
+  action: (input: any) => Promise<TResponse>,
+  idField: string
 ): (id: TId, data: TInput) => Promise<ExtractData<TResponse>> {
   return async (id: TId, data: TInput) => {
-    const response = await action(id, data);
+    const response = await action({ [idField]: id, ...data });
     if ('error' in response) throw new Error(response.error);
     return (response as { data: ExtractData<TResponse> }).data;
   };
 }
 
 /**
- * Convertit une action qui retourne { success: boolean, error?: string }
- * en fonction (id) => Promise<void>
+ * Convertit une action qui retourne { data: any, error?: string }
+ * en fonction (id) => Promise<void>. La forme de `data` n'a pas
+ * d'importance (id, boolean, objet complet...) : seule la présence
+ * d'`error` déclenche un throw.
  * 
  * @example
  * const delete = toDeleteFn(removeCourseAction);
@@ -75,7 +108,6 @@ export function toDeleteFn<TId>(
   return async (id: TId) => {
     const response = await action(id);
     if ('error' in response && response.error) throw new Error(response.error)
-    if ('success' in response && !response.success) throw new Error('Erreur lors de la suppression')
   };
 }
 
@@ -89,12 +121,15 @@ export function toDeleteFn<TId>(
  *   update: updateCourseAction,
  *   delete: removeCourseAction
  * }, { classId: "123" });
+ *
+ * // Pattern V2 (id fusionné dans l'objet), passer idField :
+ * const { update } = createActionWrappers({ ... }, args, { updateIdField: "functionId" });
  */
 export function createActionWrappers<
   TFetchInput extends any[],
   TCreateInput,
   TUpdateId,
-  TUpdateInput,
+  TUpdateInput extends object,
   TDeleteId,
   TFetchResponse extends ActionArrayResponse<any>,
   TCreateResponse extends ActionResponse<any>,
@@ -102,14 +137,13 @@ export function createActionWrappers<
 >(actions: {
   fetch: (...args: TFetchInput) => Promise<TFetchResponse>;
   create: (data: TCreateInput) => Promise<TCreateResponse>;
-  update: (id: TUpdateId, data: TUpdateInput) => Promise<TUpdateResponse>;
+  update: (input: any) => Promise<TUpdateResponse>;
   delete: (id: TDeleteId) => Promise<ActionDeleteResponse>;
-}, fetchArgs: TFetchInput) {
+}, fetchArgs: TFetchInput, options: { updateIdField: string }) {
   return {
     fetchFn: toFetchFn(actions.fetch, ...fetchArgs),
     create: toCreateFn(actions.create),
-    update: toUpdateFn(actions.update),
+    update: toUpdateFn<TUpdateResponse, TUpdateId, TUpdateInput>(actions.update, options.updateIdField),
     delete: toDeleteFn(actions.delete),
   };
 }
-

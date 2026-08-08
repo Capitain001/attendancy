@@ -8,6 +8,7 @@ import {
   getStudentAttendances,
   getStudentAttendanceSummary,
   getOrgStudentAttendanceRates,
+  getAttendanceReport,
 } from "../database";
 
 /** Historique de présence de l'étudiant courant (lecture de son propre dossier). */
@@ -61,6 +62,23 @@ export async function getOrgStudentAttendanceRatesAction() {
   } catch (error) {
     console.error("[getOrgStudentAttendanceRatesAction]", error);
     return { error: error instanceof Error ? error.message : ERRORS.SERVER };
+  }
+}
+
+export async function getAttendanceReportAction(params: {
+  classId?: string
+  startDate?: Date
+  endDate?: Date
+} = {}) {
+  try {
+    const auth = await authAccess({ requiredRole: ['DIRECTION', 'ADMIN'] })
+    if (!auth.data) return { error: auth.error }
+    const { orgId } = auth.data
+    const data = await getAttendanceReport(orgId, params)
+    return { data }
+  } catch (error) {
+    console.error('[getAttendanceReportAction]', error)
+    return { error: error instanceof Error ? error.message : ERRORS.SERVER }
   }
 }
 

@@ -1,7 +1,7 @@
 {
   "name": "getPlanningResources",
   "file": "src/services/planning/database.ts",
-  "sig": "(classId: string, orgId: string) => Promise<{ class: { id: string; name: string; }; rooms: { id: string; name: string; }[]; groups: { id: string; name: string; }[]; courses: { id: string; name: string; teachers: { id: string; name: string; email: string; avatar_url: string | null; isMain: boolean; }[]; }[]; } | null>",
+  "sig": "(classId: string, orgId: string) => Promise<{ class: { id: string; name: string; }; rooms: { id: string; name: string; }[]; groups: { id: string; name: string; }[]; courses: { id: string; name: string; teachers: { id: string | undefined; name: string; email: string | undefined; avatar_url: string | ... 1 more ... | undefined; isMain: boolean; }[]; }[]...",
   "composes": [],
   "rules": [],
   "why_ref": ""

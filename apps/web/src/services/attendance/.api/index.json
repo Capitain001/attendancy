@@ -2,7 +2,7 @@
   "service": "attendance",
   "path": "src/services/attendance/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "2dc6b24",
+  "derived_at": "dceb1e9",
   "utils_dir": null,
   "fns": {
     "getOrgTodayAbsences": {
@@ -12,6 +12,11 @@
     },
     "getClassAttendanceRates": {
       "f": ".api/getClassAttendanceRates.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getAttendanceReport": {
+      "f": ".api/getAttendanceReport.json",
       "layer": "db",
       "kind": "query"
     },
@@ -120,6 +125,11 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "getAttendanceReportAction": {
+      "f": ".api/getAttendanceReportAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "getScheduleAttendancesAction": {
       "f": ".api/getScheduleAttendancesAction.json",
       "layer": "action",
@@ -132,6 +142,9 @@
     ],
     "getClassAttendanceRates": [
       "getClassAttendanceRatesAction"
+    ],
+    "getAttendanceReport": [
+      "getAttendanceReportAction"
     ],
     "recordAttendance": [
       "recordAttendanceAction"
@@ -175,6 +188,7 @@
     "getStudentAttendancesAction": [],
     "getStudentAttendanceSummaryAction": [],
     "getOrgStudentAttendanceRatesAction": [],
+    "getAttendanceReportAction": [],
     "getScheduleAttendancesAction": [],
     "validateSessionToken": [
       "recordAttendanceAction"

@@ -29,6 +29,20 @@ export async function getDirectionSessionsAction() {
   }
 }
 
+/** Sessions de l'org pour une date donnée (ISO string, défaut = aujourd'hui). */
+export async function getDirectionSessionsByDateAction(dateStr?: string) {
+  const auth = await authAccess({ requiredRole: ['DIRECTION', 'ADMIN'] })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
+  try {
+    const date = dateStr ? new Date(dateStr) : new Date()
+    return { data: await getOrgDaySchedulesWithSession(orgId, startOfDay(date), endOfDay(date)) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+
 export async function getTeacherNextScheduleAction() {
   const auth = await authAccess()
   if (!auth.data) return { error: auth.error }

@@ -1,5 +1,6 @@
 import type { CreateClassInput } from './validation'
 import type { getClasses, getClass } from './database'
+import { GetClassesDto } from './generated.types'
 
 export type { CreateClassInput }
 

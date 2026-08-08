@@ -10,6 +10,9 @@ import { StudentsSection } from '@/components/student/sections'
 import { AttendanceSheetButton } from './AttendanceSheetButton'
 import { mapCoursesForClassSection, mapSchedulesForClassSection } from './mapClassProfile'
 
+
+import { UsersGroup } from "@mynaui/icons-react";
+
 export interface DirectionClassDetailPageProps {
   classId: string
   slug: string
@@ -52,9 +55,9 @@ export async function DirectionClassDetailPage({ classId, slug }: DirectionClass
           <ButtonX className="w-fit" href={planningHref}>Planning</ButtonX>
           <ButtonX className="w-fit" href={invitationsHref}>Invitations</ButtonX>
           <ButtonX className="w-fit" href={enrollmentHref}>Enrôlement</ButtonX>
-          <ButtonX className="w-fit" href={groupsHref}>Groupes</ButtonX>
+          <ButtonX icon={<UsersGroup  />} className="w-fit" href={groupsHref}>Groupes</ButtonX>
         </div>
-        <AttendanceSheetButton className={class_.name} students={roster} />
+        <AttendanceSheetButton className={class_?.name ?? ""} students={roster} />
       </div>
 
       {coursesRes.error && (

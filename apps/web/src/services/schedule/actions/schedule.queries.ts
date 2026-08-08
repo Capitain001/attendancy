@@ -83,7 +83,7 @@ export async function getScheduleDaysAction(month: string) {
   }
 }
 
-export async function getTeacherNextScheduleAction(teacherId: string) {
+export async function getTeacherNextScheduleAction({ teacherId }: { teacherId: string }) {
   const auth = await authAccess()
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
