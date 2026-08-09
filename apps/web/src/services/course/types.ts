@@ -1,3 +1,4 @@
+//src/services/course/types.ts
 import type { CreateCourseInput } from './validation'
 import type { GetCoursesByClassDto } from './generated.types'
 

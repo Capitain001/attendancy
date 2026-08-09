@@ -2,19 +2,28 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { card, typography } from '@/styles'
 
-interface MetricCardProps {
-  label: string
-  value: string
-  sub: string
-  href?: string
-}
+// interface MetricCardProps {
+//   label: string
+//   value: string
+//   sub: string
+//   href?: string
+// }
 
+
+export interface MetricCardProps {
+  label: string
+  value: number | string
+  sub?: string
+  href?: string
+  max?: number | string
+}
 
 export function MetricCard({
   label,
   value,
   sub,
   href,
+  max,
 }: MetricCardProps) {
   const classes = href ? card.statInteractive : card.stat
 
@@ -26,6 +35,9 @@ export function MetricCard({
 
       <p className={typography.metric}>
         {value}
+        {max !== undefined && (
+          <span className="text-muted-foreground/50">/{max}</span>
+        )}
       </p>
 
       <p className={cn("mt-0.5 hidden md:block", typography.small)}>

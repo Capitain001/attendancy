@@ -14,6 +14,9 @@ import { AlertCategoryCards } from '@/components/direction/dashboard/AlertCatego
 import { TodaySessionsWidget } from '@/components/direction/dashboard/TodaySessionsWidget'
 import { CollapseSection } from '@/components/layout/CollapseSection'
 import { Loader } from '@/components/loaders/AppLoaders'
+import { ActiveSessionsGrid } from '@/components/session/Activesessionsgrid'
+import { UserRoundCheck } from "lucide-react";
+
 
 export default async function DirectionDashboard({
   params,
@@ -75,6 +78,7 @@ export default async function DirectionDashboard({
           value={schedulesCount}
           sub="complétées aujourd'hui"
           href={`${base}/schedule`}
+          max={String(metrics?.todaySchedules ?? undefined)}
         />
         <MetricCard
           label="Sessions en cours"
@@ -85,45 +89,52 @@ export default async function DirectionDashboard({
       </section>
 
       {/* ── Absences du jour ── */}
-      <CollapseSection
-        label="Absences du jour"
-        count={absences.length}
-        defaultOpen={absences.length > 0}
-      >
-        {absences.length === 0 ? (
-          <p className="px-1 text-sm text-muted-foreground">
-            Aucune absence enregistrée aujourd'hui.
-          </p>
-        ) : (
-          <ul className="divide-y divide-border/60">
-            {absences.map((a) => {
-              const name =
-                [a.student.user.firstName, a.student.user.lastName]
-                  .filter(Boolean)
-                  .join(' ') || 'Étudiant'
-              return (
-                <li key={a.id} className="flex items-center gap-3 py-2.5">
-                  <span className="size-2 shrink-0 rounded-full bg-red-500/70" />
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium">{name}</p>
-                    <p className="truncate text-xs text-muted-foreground">
-                      {a.schedule.course.name}
-                      {' · '}
-                      {a.schedule.group?.name ?? a.schedule.class.name}
-                    </p>
-                  </div>
-                  <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
-                    {format(a.schedule.startTime, 'HH:mm')}
-                  </span>
-                </li>
-              )
-            })}
-          </ul>
-        )}
-      </CollapseSection>
+<CollapseSection
+  label="Absences du jour"
+  count={absences.length}
+  defaultOpen={absences.length > 0}
+>
+  {absences.length === 0 ? (
+    <div className="flex min-h-[120px] flex-col items-center justify-center gap-2 bg-card rounded">
+        <UserRoundCheck className="size-5 text-muted-foreground/40" />
+      <span className="text-[11px] text-muted-foreground">
+        Aucune absence enregistrée aujourd'hui
+      </span>
+    </div>
+  ) : (
+    <ul className="divide-y divide-border/60">
+      {absences.map((a) => {
+        const name =
+          [a.student.user.firstName, a.student.user.lastName]
+            .filter(Boolean)
+            .join(' ') || 'Étudiant'
+
+        return (
+          <li key={a.id} className="flex items-center gap-3 py-2.5">
+            <span className="size-2 shrink-0 rounded-full bg-red-500/70" />
+
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-medium">{name}</p>
+              <p className="truncate text-xs text-muted-foreground">
+                {a.schedule.course.name}
+                {' · '}
+                {a.schedule.group?.name ?? a.schedule.class.name}
+              </p>
+            </div>
+
+            <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
+              {format(a.schedule.startTime, 'HH:mm')}
+            </span>
+          </li>
+        )
+      })}
+    </ul>
+  )}
+</CollapseSection>
+
 
       {/* ── Séances en cours ── */}
-      <CollapseSection
+      {/* <CollapseSection
         label="Séances en cours"
         count={metrics?.activeSessions ?? 0}
         defaultOpen
@@ -131,6 +142,15 @@ export default async function DirectionDashboard({
         <Suspense fallback={<Loader />}>
           <TodaySessionsWidget />
         </Suspense>
+      </CollapseSection> */}
+
+            {/* ── Séances en cours ── */}
+      <CollapseSection
+        label="Séances en cours"
+        count={metrics?.activeSessions ?? 0}
+        defaultOpen
+      >
+        <ActiveSessionsGrid className="rounded-2xl" />
       </CollapseSection>
 
       {/* ── Ressources ── */}
