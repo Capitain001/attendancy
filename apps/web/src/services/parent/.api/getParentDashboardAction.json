@@ -1,0 +1,14 @@
+{
+  "name": "getParentDashboardAction",
+  "file": "src/services/parent/actions.ts",
+  "sig": "(params: { studentId: string; classId: string | null; groupIds: string[] }) => Promise<{ error: string; data?: undefined; } | { data: { profile: null; stats: null; activeSession: null; }; error?: undefined; } | { data: { profile: { studentId: string; classId: string; groupIds: string[]; user: { ...; }; } | null; stats: { ...; }; activeSession: { ...; } | null; }; error?: undefined; }>",
+  "calls": [
+    "isStudentParent",
+    "getStudentProfile",
+    "getStudentStats",
+    "getStudentActiveSession"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

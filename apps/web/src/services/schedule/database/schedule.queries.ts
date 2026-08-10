@@ -139,27 +139,18 @@ export function getRoomSchedules(
    SCHEDULE BY CLASS (conservé — compatibilité actions)
 ========================= */
 
-export async function getSchedulesByClass(
+
+export function getSchedulesByClass(
   classId: string,
   orgId: string,
   rangeStart: Date,
   rangeEnd: Date,
 ) {
-  'use cache'
-  cacheTag(CACHE.SCHEDULE(orgId))
-  cacheTag(CACHE.SCHEDULE(orgId, classId))
-  cacheLife({ revalidate: 300 })
-
-  return prisma.schedule.findMany({
-    where: {
-      orgId,
-      classId,
-      deletedAt: null,
-      startTime: { lt: rangeEnd },
-      endTime: { gt: rangeStart },
-    },
-    include: scheduleInclude,
-    orderBy: { startTime: 'asc' },
+  return getSchedules({
+    orgId,
+    classId,
+    rangeStart,
+    rangeEnd,
   })
 }
 

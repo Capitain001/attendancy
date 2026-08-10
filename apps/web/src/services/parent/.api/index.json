@@ -1,0 +1,145 @@
+{
+  "service": "parent",
+  "path": "src/services/parent/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "1760cd7",
+  "utils_dir": null,
+  "fns": {
+    "createParentRelationWithAudit": {
+      "f": ".api/createParentRelationWithAudit.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "deleteParentRelationWithAudit": {
+      "f": ".api/deleteParentRelationWithAudit.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getParentOverview": {
+      "f": ".api/getParentOverview.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getParentStudents": {
+      "f": ".api/getParentStudents.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "searchEligibleParents": {
+      "f": ".api/searchEligibleParents.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getParentUserIdsForStudents": {
+      "f": ".api/getParentUserIdsForStudents.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getParentStudentsAction": {
+      "f": ".api/getParentStudentsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getParentOverviewAction": {
+      "f": ".api/getParentOverviewAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getParentDashboardAction": {
+      "f": ".api/getParentDashboardAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getParentAttendancesAction": {
+      "f": ".api/getParentAttendancesAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getParentPlanningAction": {
+      "f": ".api/getParentPlanningAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getParentSessionDetailAction": {
+      "f": ".api/getParentSessionDetailAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "searchEligibleParentsAction": {
+      "f": ".api/searchEligibleParentsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "assignParentToStudentAction": {
+      "f": ".api/assignParentToStudentAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeParentFromStudentAction": {
+      "f": ".api/removeParentFromStudentAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createParentRelationWithAudit": [
+      "assignParentToStudentAction"
+    ],
+    "deleteParentRelationWithAudit": [
+      "removeParentFromStudentAction"
+    ],
+    "getParentOverview": [
+      "getParentOverviewAction"
+    ],
+    "getParentStudents": [
+      "getParentOverview",
+      "getParentStudentsAction"
+    ],
+    "searchEligibleParents": [
+      "searchEligibleParentsAction"
+    ],
+    "getParentUserIdsForStudents": [],
+    "getParentStudentsAction": [],
+    "getParentOverviewAction": [],
+    "getParentDashboardAction": [],
+    "getParentAttendancesAction": [],
+    "getParentPlanningAction": [],
+    "getParentSessionDetailAction": [],
+    "searchEligibleParentsAction": [],
+    "assignParentToStudentAction": [],
+    "removeParentFromStudentAction": [],
+    "isStudentParent": [
+      "getParentDashboardAction",
+      "getParentAttendancesAction",
+      "getParentPlanningAction",
+      "getParentSessionDetailAction"
+    ],
+    "getStudentProfile": [
+      "getParentDashboardAction",
+      "getParentSessionDetailAction"
+    ],
+    "getStudentStats": [
+      "getParentDashboardAction"
+    ],
+    "getStudentActiveSession": [
+      "getParentDashboardAction"
+    ],
+    "getStudentAttendances": [
+      "getParentAttendancesAction"
+    ],
+    "getStudentSchedules": [
+      "getParentPlanningAction"
+    ],
+    "getStudentSessionDetail": [
+      "getParentSessionDetailAction"
+    ]
+  },
+  "deps": {
+    "getStudentProfile": "student",
+    "getStudentStats": "student",
+    "getStudentActiveSession": "student",
+    "getStudentAttendances": "attendance",
+    "getStudentSchedules": "student",
+    "getStudentSessionDetail": "student"
+  }
+}

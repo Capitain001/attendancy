@@ -1,0 +1,8 @@
+{
+  "name": "getParentUserIdsForStudents",
+  "file": "src/services/parent/database/parent.queries.ts",
+  "sig": "(studentIds: string[], orgId: string) => Promise<string[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

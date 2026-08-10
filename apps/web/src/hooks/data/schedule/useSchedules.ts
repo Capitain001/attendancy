@@ -2,14 +2,13 @@
 "use client";
 
 import { useCrudEntity } from "@/hooks/entity/useCrudEntity";
-import { toFetchFn, toCreateFn, toUpdateFn, toDeleteFn } from "@/hooks/entity/actionHelpers";
+import { toFetchFn, toCreateFn, toDeleteFn } from "@/hooks/entity/actionHelpers";
 import {
   getSchedulesAction,
   createScheduleAction,
   updateScheduleAction,
   deleteScheduleAction,
 } from "@/services/schedule/actions";
-import type { Schedule } from "@/generated/prisma/client";
 
 import type { CreateScheduleInput as AddScheduleData, GetSchedulesReturn, UpdateScheduleInput as UpdateScheduleData } from "@/services/schedule";
 
@@ -43,13 +42,16 @@ export interface UseSchedulesOptions {
  * });
  *
  * // Mettre à jour un schedule
+ * // data peut être partiel : seuls les champs à changer.
+ * // updateScheduleAction ne renvoie que { id } — le cache se met malgré
+ * // tout à jour immédiatement avec les valeurs envoyées (voir useCrudEntity).
  * await update({
  *   id: "schedule-123",
  *   data: { status: "COMPLETED" },
  * });
  *
  * // Supprimer
- * deleteSchedule("schedule-123");
+ * await deleteSchedule("schedule-123");
  * ```
  */
 export function useSchedules(options: UseSchedulesOptions = {}) {
@@ -58,15 +60,30 @@ export function useSchedules(options: UseSchedulesOptions = {}) {
   // ✅ Utilisation des helpers réutilisables
   const fetchFn = toFetchFn(getSchedulesAction, { ruleId, academicYearId });
   const create = toCreateFn(createScheduleAction);
-  // FIXME: useCrudEntity exige un retour full-entity sur update pour patcher le cache.
-  // updateScheduleAction retourne intentionnellement { id } (mise à jour optimiste côté serveur).
-  // À corriger quand useCrudEntity supportera une stratégie "invalidate" sur update.
-  const update = toUpdateFn(updateScheduleAction) as (id: string, data: UpdateScheduleInput) => Promise<GetSchedulesReturn[number]>;
-  // deleteScheduleAction renvoie { data, error } → adapter au contrat { success, error }.
-  const deleteSchedule = toDeleteFn<string>(async (id) => {
-    const r = await deleteScheduleAction(id);
-    return { success: !r.error, error: r.error ?? undefined };
-  });
+
+  // ⚠️ updateScheduleAction a une signature différente de updateFunctionAction :
+  // l'id est un paramètre SÉPARÉ (scheduleId, input), pas fusionné dans un
+  // objet unique. toUpdateFn (dans actionHelpers.ts) ne supporte que le
+  // pattern "id fusionné" — on écrit donc ici un adaptateur minimal, local à
+  // ce hook, plutôt que de forcer toUpdateFn à s'appliquer avec un cast.
+  //
+  // Le retour n'est PAS casté en entité complète (contrairement à avant) :
+  // updateScheduleAction renvoie volontairement { id } seul, ce qui est
+  // maintenant un cas normal et géré par useCrudEntity — il merge
+  // {existant en cache} + {data envoyée par l'UI} + {retour serveur}, donc
+  // { id } seul suffit pour que le cache reflète correctement le changement.
+  const update = async (id: string, data: UpdateScheduleInput) => {
+    const response = await updateScheduleAction(id, data);
+    if ('error' in response) throw new Error(response.error);
+    return response.data; // { id: string } — partiel, voir commentaire ci-dessus
+  };
+
+  // ✅ Simplifié : deleteScheduleAction renvoie { data: true } | { error },
+  // ce qui correspond directement au contrat de toDeleteFn (n'importe quelle
+  // forme de `data` est acceptée, seule la présence d'`error` compte).
+  // L'ancien wrapper qui remappait vers { success, error } n'est plus
+  // nécessaire.
+  const deleteSchedule = toDeleteFn(deleteScheduleAction);
 
   return useCrudEntity<GetSchedulesReturn[number], CreateScheduleInput, UpdateScheduleInput>({
     entityName: "schedules",
@@ -86,4 +103,3 @@ export function useSchedules(options: UseSchedulesOptions = {}) {
     },
   });
 }
-

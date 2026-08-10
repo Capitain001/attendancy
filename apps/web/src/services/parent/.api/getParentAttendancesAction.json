@@ -1,0 +1,12 @@
+{
+  "name": "getParentAttendancesAction",
+  "file": "src/services/parent/actions.ts",
+  "sig": "(params: { studentId: string }) => Promise<{ error: string; data?: undefined; } | { data: { attendances: { schedule: { course: { id: string; name: string; }; id: string; startTime: Date; endTime: Date; }; id: string; status: AttendanceStatus; recordedAt: Date; }[]; }; error?: undefined; }>",
+  "calls": [
+    "isStudentParent",
+    "getStudentAttendances"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,8 @@
+{
+  "name": "searchEligibleParents",
+  "file": "src/services/parent/database/parent.queries.ts",
+  "sig": "(params: { orgId: string; query: string; excludeStudentId?: string }) => Promise<{ parentId: string; userId: string; firstName: string | null; lastName: string | null; email: string; avatarUrl: string | null; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

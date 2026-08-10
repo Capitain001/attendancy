@@ -1,0 +1,11 @@
+{
+  "name": "searchEligibleParentsAction",
+  "file": "src/services/parent/actions.ts",
+  "sig": "(input: unknown) => Promise<{ error: any; data?: undefined; } | { data: { parentId: string; userId: string; firstName: string | null; lastName: string | null; email: string; avatarUrl: string | null; }[]; error?: undefined; }>",
+  "calls": [
+    "searchEligibleParents"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

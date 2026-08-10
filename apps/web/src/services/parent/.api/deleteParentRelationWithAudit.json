@@ -1,0 +1,8 @@
+{
+  "name": "deleteParentRelationWithAudit",
+  "file": "src/services/parent/database/parent.mutations.ts",
+  "sig": "(params: { orgId: string; relationId: string; actorUserId: string }) => Promise<{ relationId: string; studentId: string; parentId: string }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

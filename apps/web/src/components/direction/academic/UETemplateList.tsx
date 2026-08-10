@@ -1,6 +1,7 @@
 'use client'
 import { useState, useMemo } from 'react'
 import { BookOpen, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, GraduationCap, Library } from 'lucide-react'
+import UETemplatePage from './UETemplatePage'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -179,15 +180,16 @@ function MentionCard({
   activated,
   programs,
   mentionTemplates,
+  onOpenDetail,
 }: {
   mention: MentionSummary
   referentialId: string
   activated: boolean
   programs: ProgramItem[]
   mentionTemplates: TemplateItem[]
+  onOpenDetail: (m: MentionSummary, templates: TemplateItem[]) => void
 }) {
   const [dialogOpen, setDialogOpen] = useState(false)
-  const [expanded,   setExpanded]   = useState(false)
 
   // UEs de cette filière groupées par semestre
   const bySemester = useMemo(() => {
@@ -225,13 +227,13 @@ function MentionCard({
           </div>
 
           <div className="shrink-0 flex items-center gap-2">
-            {/* Bouton expand */}
+            {/* Open detail view */}
             <button
-              onClick={() => setExpanded((v) => !v)}
+              onClick={() => onOpenDetail(mention, mentionTemplates)}
               className="flex items-center gap-1 text-xs text-text-subtle hover:text-text-primary transition-colors"
             >
-              {expanded ? <ChevronUp className="size-3.5" /> : <ChevronDown className="size-3.5" />}
-              <span>{expanded ? 'Masquer' : 'Voir UEs'}</span>
+              <ChevronDown className="size-3.5" />
+              <span>Voir UEs</span>
             </button>
 
             {activated ? (
@@ -246,39 +248,6 @@ function MentionCard({
             )}
           </div>
         </div>
-
-        {/* ── Contenu expandable : UEs par semestre ── */}
-        {expanded && (
-          <div className="mt-3 border-t border-border/60 pt-3 flex flex-col gap-4 px-1">
-            {bySemester.map(([sem, ues]) => (
-              <div key={sem} className="flex flex-col gap-1.5">
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-text-subtle">
-                  Semestre {sem}
-                </p>
-                {ues.map((ue) => (
-                  <div key={ue.id} className="flex items-start justify-between gap-2 rounded-md bg-muted/40 px-3 py-2">
-                    <div className="min-w-0">
-                      {ue.code && (
-                        <span className="mr-1.5 inline-block rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-mono font-medium text-primary">
-                          {ue.code}
-                        </span>
-                      )}
-                      <span className="text-xs text-text-primary">{ue.name}</span>
-                      {ue._count.elements > 0 && (
-                        <span className="ml-1.5 text-[10px] text-text-subtle">
-                          · {ue._count.elements} EC
-                        </span>
-                      )}
-                    </div>
-                    <span className="shrink-0 text-[11px] text-text-subtle whitespace-nowrap">
-                      {Number(ue.credits)} cr.
-                    </span>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        )}
       </div>
 
       {dialogOpen && (
@@ -307,6 +276,7 @@ function ReferentialDetail({
 }) {
   const { templates, isLoading } = useUETemplates({ referentialId: referential.id })
   const { importedTemplateIds }  = useUETemplateImports()
+  const [openMention, setOpenMention] = useState<null | { mention: MentionSummary; templates: TemplateItem[] }>(null)
 
   const mentions  = useMemo(() => buildMentions(templates), [templates])
   const byDomain  = useMemo(() => {
@@ -358,11 +328,23 @@ function ReferentialDetail({
                     mentionTemplates={templates.filter((t) =>
                       t.mention === m.mention && (t.speciality ?? null) === m.speciality
                     )}
+                    onOpenDetail={(mm, tpls) => setOpenMention({ mention: mm, templates: tpls })}
                   />
                 ))}
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {openMention && (
+        <div className="mt-2">
+          <UETemplatePage
+            referentialName={referential.name}
+            mention={openMention.mention}
+            templates={openMention.templates}
+            onClose={() => setOpenMention(null)}
+          />
         </div>
       )}
     </div>

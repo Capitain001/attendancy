@@ -2,7 +2,7 @@
   "service": "schedule",
   "path": "src/services/schedule/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "dceb1e9",
+  "derived_at": "1760cd7",
   "utils_dir": null,
   "fns": {
     "createSchedule": {
@@ -22,6 +22,16 @@
     },
     "restoreSchedule": {
       "f": ".api/restoreSchedule.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "markScheduleCreationNotified": {
+      "f": ".api/markScheduleCreationNotified.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getScheduleForNotify": {
+      "f": ".api/getScheduleForNotify.json",
       "layer": "db",
       "kind": "mutation"
     },
@@ -100,6 +110,11 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "cancelScheduleAction": {
+      "f": ".api/cancelScheduleAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "removeScheduleAction": {
       "f": ".api/removeScheduleAction.json",
       "layer": "action",
@@ -115,8 +130,13 @@
       "layer": "action",
       "kind": "server-action"
     },
-    "cancelScheduleAction": {
-      "f": ".api/cancelScheduleAction.json",
+    "notifyScheduleCreationAction": {
+      "f": ".api/notifyScheduleCreationAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "notifyScheduleCreationsAction": {
+      "f": ".api/notifyScheduleCreationsAction.json",
       "layer": "action",
       "kind": "server-action"
     },
@@ -175,12 +195,21 @@
     "restoreSchedule": [
       "restoreScheduleAction"
     ],
+    "markScheduleCreationNotified": [
+      "notifyScheduleCreationAction",
+      "notifyScheduleCreationsAction"
+    ],
+    "getScheduleForNotify": [
+      "notifyScheduleCreationAction",
+      "notifyScheduleCreationsAction"
+    ],
     "deleteSchedulesByRule": [],
     "deleteNextSchedulesByRule": [],
     "getSchedules": [
       "getClassSchedules",
       "getTeacherSchedules",
       "getRoomSchedules",
+      "getSchedulesByClass",
       "getSchedulesAction"
     ],
     "getDaySchedules": [
@@ -207,12 +236,14 @@
     "assertClassInOrg": [],
     "createScheduleAction": [],
     "updateScheduleAction": [],
+    "cancelScheduleAction": [],
     "removeScheduleAction": [
       "deleteScheduleAction"
     ],
     "deleteScheduleAction": [],
     "restoreScheduleAction": [],
-    "cancelScheduleAction": [],
+    "notifyScheduleCreationAction": [],
+    "notifyScheduleCreationsAction": [],
     "getClassSchedulesAction": [],
     "getSchedulesAction": [],
     "getDaySchedulesAction": [],

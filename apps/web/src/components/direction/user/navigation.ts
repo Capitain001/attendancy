@@ -41,7 +41,7 @@ export const directionRoutes: Route[] = [
       {
         title: "UEs",
         icon: "LibraryBig",
-        link: "/direction/academic/courses",
+        link: "/direction/academic/ues",
       },
       {
         title: "Référentiel MESRS",

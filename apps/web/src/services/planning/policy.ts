@@ -45,6 +45,10 @@ export function isSlotElapsed(
 //
 // Un créneau est valide ssi début < fin (contrainte DB `check_schedule_time_order`).
 // Convention d'intervalle : demi-ouvert `[start, end)` (tstzrange '[)').
+  
+/** Message utilisateur partagé (actions serveur). */
+export const INVALID_TIME_ORDER_ERROR =
+  "L'heure de fin doit être après l'heure de début.";
 
 export function isValidTimeOrder(
   start: Date | string,

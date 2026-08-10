@@ -1,8 +1,12 @@
 generator client {
   provider = "prisma-client"
   output   = "../../src/generated/prisma"
-}
 
+}
+generator valibot {
+  provider = "prisma-valibot-generator"
+  output   = "../../src/generated/valibot"  
+}
 datasource db {
   provider = "postgresql"
   schemas  = ["public", "billing"]

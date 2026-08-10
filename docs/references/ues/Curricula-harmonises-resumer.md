@@ -299,6 +299,3 @@
 - **UE:** ANG 1260 Anglais (T) (4cr) | EC: 1ANG1260 (2cr), 2ANG1260 (2cr)
 - **UE:** TCC 1290 Stage d'exploration (F) (4cr)
 
-#### Semestre 3
-- **UE:** PSY 1350 Psychologie appliquée (S) (6cr) | EC: 1PSY1350 (2cr), 2PSY1350 (2cr), 3PSY1350 (2cr)
-- **UE:** PSY 1351 Service social (S) (4cr) | EC: 1PSY1351 

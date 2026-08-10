@@ -1,0 +1,19 @@
+{
+  "name": "getParentStudents",
+  "file": "src/services/parent/database/parent.queries.ts",
+  "sig": "(parentId: string, orgId: string) => Promise<{ studentId: string; relation: string; firstName: string | null; lastName: string | null; avatarUrl: string | null; dateOfBirth: Date | null; className: string; }[]>",
+  "cache": {
+    "strategy": "unstable_cache",
+    "keys": [
+      "parent",
+      "students",
+      "orgId",
+      "parentId"
+    ],
+    "tags": [],
+    "revalidate": "300"
+  },
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

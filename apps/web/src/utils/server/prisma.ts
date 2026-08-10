@@ -7,6 +7,14 @@ import { CONSTRAINT_ERROR, ERRORS, TRIGGER_ERROR } from '@/config'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client'
 import { debugPrismaError } from './debug'
 
+export function ScheduleConflict(error: any) {
+  return (
+    error?.code === "P2010" ||
+    error?.message?.includes("overlap") ||
+    error?.cause?.message?.includes("23P01")
+  );
+}
+
 export async function tryUnique<T>(promise: Promise<T>): Promise<T> {
   try {
     return await promise;

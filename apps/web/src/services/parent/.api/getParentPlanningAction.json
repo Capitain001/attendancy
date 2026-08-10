@@ -1,0 +1,12 @@
+{
+  "name": "getParentPlanningAction",
+  "file": "src/services/parent/actions.ts",
+  "sig": "(params: { studentId: string; classId: string | null; groupIds: string[]; rangeStart: Date; rangeEnd: Date }) => Promise<{ error: string; data?: undefined; } | { data: { schedules: { course: { id: string; name: string; }; group: { id: string; name: string; } | null; teacher: { user: { firstName: string | null; lastName: string | null; }; id: string; }; ... 11 more ...; notes: string | null; }[]; }; error?: undefined; }>",
+  "calls": [
+    "isStudentParent",
+    "getStudentSchedules"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

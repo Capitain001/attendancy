@@ -1,7 +1,7 @@
 {
   "name": "restoreScheduleAction",
   "file": "src/services/schedule/actions/schedule.mutations.ts",
-  "sig": "(scheduleId: string) => Promise<{ error: any; data?: undefined; } | { data: { classId: string; class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { ...; }; }; error?: undefined; }>",
+  "sig": "(scheduleId: string) => Promise<{ error: any; data?: undefined; } | { data: { class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { ...; }; } & { ...; }; error?: undefined; }>",
   "calls": [
     "restoreSchedule"
   ],

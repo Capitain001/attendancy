@@ -1,0 +1,13 @@
+{
+  "name": "getParentSessionDetailAction",
+  "file": "src/services/parent/actions.ts",
+  "sig": "(params: { studentId: string; scheduleId: string }) => Promise<{ error: string; data?: undefined; } | { data: { schedule: { id: string; courseName: string; credits: number; roomName: string; startTime: Date; endTime: Date; status: ScheduleStatus; confirmed: boolean; notes: string | null; teacher: { ...; } | null; }; myAttendance: { ...; } | null; session: { ...; } | nul...",
+  "calls": [
+    "isStudentParent",
+    "getStudentProfile",
+    "getStudentSessionDetail"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

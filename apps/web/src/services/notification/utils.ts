@@ -7,3 +7,4 @@ export {
   validateHTTPS,
   getCurrentPermission,
 } from '@/modules/notification'
+

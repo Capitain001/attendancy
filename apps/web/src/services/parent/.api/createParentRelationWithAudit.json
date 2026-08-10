@@ -1,0 +1,8 @@
+{
+  "name": "createParentRelationWithAudit",
+  "file": "src/services/parent/database/parent.mutations.ts",
+  "sig": "(params: { orgId: string; parentId: string; studentId: string; relation: string; actorUserId: string }) => Promise<{ relationId: string }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,12 +1,12 @@
-// ─── Référentiel national ────────────────────────────────────────────────────
+// ─── Référentiel UEs ─────────────────────────────────────────────────────
 // Modèles globaux (sans orgId) : catalogue des UE standardisées par pays.
-// NationalReferential → UETemplate → UETemplateEC  (lecture seule en prod)
+// Referential → UETemplate → UETemplateEC  (lecture seule en prod)
 // UETemplateImport  trace les imports par organisation.
 
-model NationalReferential {
+model Referential {
   id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  country     String       // ISO 3166-1 alpha-2 : "TG", "BJ"…
-  issuer      String       // "MESRS-Togo"
+  country     String ?      // ISO 3166-1 alpha-2 : "TG", "BJ"…
+  issuer      String ?      // "MESRS-Togo"
   name        String       // "Curricula harmonisés 2022"
   version     String       // "2022-04"
   isActive    Boolean      @default(true)
@@ -23,7 +23,7 @@ model NationalReferential {
 model UETemplate {
   id            String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   referentialId String              @db.Uuid
-  referential   NationalReferential @relation(fields: [referentialId], references: [id])
+  referential   Referential @relation(fields: [referentialId], references: [id])
 
   domain        String              // "LLA", "SHS", "ST"…
   degree        String              // "LICENCE", "MASTER"
@@ -68,6 +68,7 @@ enum UETemplateType {
   @@schema("public")
 }
 
+//table de liaison entre un template d'UE et org (université).
 model UETemplateImport {
   id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   templateId String     @db.Uuid

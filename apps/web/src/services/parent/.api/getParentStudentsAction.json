@@ -1,0 +1,11 @@
+{
+  "name": "getParentStudentsAction",
+  "file": "src/services/parent/actions.ts",
+  "sig": "() => Promise<{ data: { studentId: string; relation: string; firstName: string | null; lastName: string | null; avatarUrl: string | null; dateOfBirth: Date | null; className: string; }[]; error?: undefined; } | { ...; }>",
+  "calls": [
+    "getParentStudents"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

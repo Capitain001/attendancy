@@ -1,7 +1,7 @@
 {
   "name": "updateScheduleAction",
   "file": "src/services/schedule/actions/schedule.mutations.ts",
-  "sig": "(scheduleId: string, input: unknown) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "sig": "(scheduleId: string, data: UpdateScheduleOutput) => Promise<{ error: any; data?: undefined; } | { data: { class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { ...; }; } & { ...; }; error?: undefined; }>",
   "calls": [
     "updateSchedule"
   ],

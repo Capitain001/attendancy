@@ -1,0 +1,11 @@
+{
+  "name": "getParentOverviewAction",
+  "file": "src/services/parent/actions.ts",
+  "sig": "() => Promise<{ data: { header: { name: string | null; avatarUrl: string | null; orgName: string | null; childrenCount: number; }; metrics: { attendanceRate: number; pendingCount: number; monthAbsences: number; }; alert: { ...; } | null; children: ParentChildOverview[]; }; error?: undefined; } | { ...; }>",
+  "calls": [
+    "getParentOverview"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

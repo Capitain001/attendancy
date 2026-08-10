@@ -1,7 +1,7 @@
 {
   "name": "updateSchedule",
   "file": "src/services/schedule/database/schedule.mutations.ts",
-  "sig": "(scheduleId: string, orgId: string, data: { roomId?: string teacherId?: string startTime?: string endTime?: string notes?: string confirmed?: boolean status?: 'PENDING' | 'COMPLETED' | 'CANCELED' | 'MISSED' }) => Promise<{ id: string; }>",
+  "sig": "(scheduleId: string, orgId: string, data: UpdateScheduleOutput) => Promise<{ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { id: string; user: { firstName: string | null; lastName: string | null; }; }; } & { ...; }>",
   "composes": [],
   "rules": [],
   "why_ref": ""

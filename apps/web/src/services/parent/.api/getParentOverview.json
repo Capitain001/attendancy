@@ -1,0 +1,10 @@
+{
+  "name": "getParentOverview",
+  "file": "src/services/parent/database/parent.overview.ts",
+  "sig": "(parentId: string, orgId: string) => Promise<OverviewData>",
+  "composes": [
+    "getParentStudents"
+  ],
+  "rules": [],
+  "why_ref": ""
+}
