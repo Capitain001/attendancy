@@ -3,38 +3,29 @@ import Link from 'next/link'
 import { BookOpen } from 'lucide-react'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { Button } from '@/components/ui/button'
-import { useManageClasses } from '@/hooks/data/class/useManageClasses'
+import { useClasses } from '@/hooks/data/classes/useClasses'
 import { typography } from '@/styles'
-
-const LEVEL_LABEL: Record<string, string> = {
-  L1: 'Licence 1',
-  L2: 'Licence 2',
-  L3: 'Licence 3',
-  M1: 'Master 1',
-  M2: 'Master 2',
-  D1: 'Doctorat 1',
-  D2: 'Doctorat 2',
-  D3: 'Doctorat 3',
-}
+import { LEVEL_LABEL } from '@/services/class/constants'
+import { Level } from '@/generated/prisma'
 
 export type PromotionRow = {
   id: string
   name: string
-  level: string | null
+  level: Level
   programTrack: { id: string; name: string }
   academicYear:  { id: string; name: string }
   _count: { studentEnrollments: number; courses: number }
 }
 
 function PromotionItem({ cls }: { cls: PromotionRow }) {
-  const { remove } = useManageClasses()
+  const { delete: remove } = useClasses()
 
   return (
     <tr className="border-b border-border/20 last:border-0 hover:bg-muted/20 transition-colors">
       <td className="px-4 py-3 font-medium text-text-primary"> <Link href={`./promotions/${cls.id}`}>{cls.name}</Link></td>
       <td className="px-4 py-3 text-text-secondary hidden md:table-cell">{cls.programTrack.name}</td>
       <td className="px-4 py-3 text-text-secondary hidden md:table-cell">
-        {cls.level ? (LEVEL_LABEL[cls.level] ?? cls.level) : '—'}
+       {LEVEL_LABEL[cls.level]}
       </td>
       <td className="px-4 py-3 text-center text-text-secondary">{cls._count.studentEnrollments}</td>
       <td className="px-4 py-3 text-center text-text-secondary hidden md:table-cell">{cls._count.courses}</td>
@@ -49,7 +40,7 @@ function PromotionItem({ cls }: { cls: PromotionRow }) {
           description="La promotion sera désactivée. Les inscriptions et cours sont conservés."
           confirmLabel="Archiver"
           destructive
-          onConfirm={() => remove.mutate(cls.id)}
+          onConfirm={() => remove && remove(cls.id)}
         />
       </td>
     </tr>

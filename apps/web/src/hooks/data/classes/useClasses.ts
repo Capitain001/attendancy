@@ -10,7 +10,7 @@ import {
   toDeleteFn,
 } from "@/hooks/entity/actionHelpers";
 import {
-  addClassAction,
+  createClassAction,
   updateClassAction,
   removeClassAction,
   getClassesAction,
@@ -20,6 +20,7 @@ import type {
   UpdateClassData,
 } from "@/services/class/database";
 import { ClasseDTo } from "@/services/class/types";
+import { Level } from "@/generated/prisma";
 
 // Inputs
 export type CreateClassInput = AddClassData;
@@ -28,9 +29,12 @@ export type UpdateClassInput = UpdateClassData;
 export interface UseClassesOptions {
   yearId?: string;
   programTrackId?: string;
+  name?: string;
+  level?: Level;
   staleTime?: number;
   enabled?: boolean;
 }
+
 
 /**
  * Hook CRUD pour la gestion des classes
@@ -80,7 +84,7 @@ export function useClasses(options: UseClassesOptions = {}) {
 
 
 
-  const create = toCreateFn(addClassAction);
+  const create = toCreateFn(createClassAction);
   const update = toUpdateFn(updateClassAction);
   const deleteClass = toDeleteFn(removeClassAction);
 

@@ -1,19 +1,14 @@
 'use client'
 import { useRef } from 'react'
-import { useManageClasses } from '@/hooks/data/class/useManageClasses'
+import { useClasses } from '@/hooks/data/classes/useClasses'
 import { input } from '@/styles/input'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { FormDialog } from '@/components/ui/FormDialog'
 import { DialogFooter } from '@/components/ui/dialog'
+import { LEVELS, LEVEL_LABEL } from '@/services/class/constants'
 
-const LEVELS = ['L1', 'L2', 'L3', 'M1', 'M2', 'D1', 'D2', 'D3'] as const
 type Level = typeof LEVELS[number]
-const LEVEL_LABEL: Record<string, string> = {
-  L1: 'Licence 1', L2: 'Licence 2', L3: 'Licence 3',
-  M1: 'Master 1', M2: 'Master 2',
-  D1: 'Doctorat 1', D2: 'Doctorat 2', D3: 'Doctorat 3',
-}
 
 type ProgramTrack = { id: string; name: string }
 type CurrentYear  = { id: string; name: string } | null
@@ -27,13 +22,14 @@ function Form({
   currentYear: CurrentYear
   close: () => void
 }) {
-  const { create } = useManageClasses(currentYear?.id)
+  const { create, isCreating } = useClasses({ yearId: currentYear?.id })
   const ref = useRef<HTMLFormElement>(null)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    if (!create) return
     const fd = new FormData(e.currentTarget)
-    await create.mutateAsync({
+    await create({
       name:           fd.get('name') as string,
       programTrackId: fd.get('programTrackId') as string,
       level:          (fd.get('level') as Level) || undefined,
@@ -86,8 +82,8 @@ function Form({
 
       <DialogFooter>
         <Button type="button" variant="outline" size="sm" onClick={close}>Annuler</Button>
-        <Button type="submit" size="sm" disabled={create.isPending || !currentYear}>
-          {create.isPending ? 'Création…' : 'Créer'}
+        <Button type="submit" size="sm" disabled={isCreating || !currentYear}>
+          {isCreating ? 'Création…' : 'Créer'}
         </Button>
       </DialogFooter>
     </form>

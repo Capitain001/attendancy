@@ -1,5 +1,5 @@
 
-//types
+//src/services/schedule/types.ts
 export * from './generated.types'
 import type { getTeacherNextSchedule } from '@/services/session/database'
 import type { getSchedules } from './database'

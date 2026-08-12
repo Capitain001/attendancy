@@ -1,11 +1,6 @@
 import { Search } from 'lucide-react'
 import { input } from '@/styles'
-
-const LEVEL_LABEL: Record<string, string> = {
-  L1: 'L1', L2: 'L2', L3: 'L3',
-  M1: 'M1', M2: 'M2',
-  D1: 'D1', D2: 'D2', D3: 'D3',
-}
+import { LEVEL_LABEL } from '@/services/class/constants'
 
 export type ProgramTrack = { id: string; name: string }
 

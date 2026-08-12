@@ -7,4 +7,8 @@ export const CLASS_GRAPH = {
     CACHE.CLASS(orgId),
     CACHE.CLASS(orgId, classId),
   ],
+  CLASS_UPDATED: (orgId: string, classId: string) => [
+    CACHE.CLASS(orgId),
+    CACHE.CLASS(orgId, classId),
+  ],
 } as const

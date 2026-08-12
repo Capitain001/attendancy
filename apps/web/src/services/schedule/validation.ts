@@ -34,7 +34,7 @@ export const updateScheduleSchema: v.GenericSchema<UpdateScheduleDataValidation,
   endTime: v.optional(v.pipe(v.string(), v.nonEmpty('Heure de fin requise'))),
   notes: v.optional(v.nullable(v.string())),
   confirmed: v.optional(v.boolean()),
-  status: v.optional(v.picklist(['PENDING', 'COMPLETED', 'CANCELED', 'MISSED'])),
+  status: v.optional(v.picklist(['PENDING', 'COMPLETED', 'CANCELED', 'MISSED'])),// je corrigerais ca apres
 })
 
 export type UpdateScheduleInput = InferInput<typeof updateScheduleSchema>

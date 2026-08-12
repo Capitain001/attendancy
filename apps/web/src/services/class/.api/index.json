@@ -2,11 +2,16 @@
   "service": "class",
   "path": "src/services/class/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "80d36e8",
+  "derived_at": "70747c0",
   "utils_dir": null,
   "fns": {
     "createClass": {
       "f": ".api/createClass.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateClass": {
+      "f": ".api/updateClass.json",
       "layer": "db",
       "kind": "mutation"
     },
@@ -30,6 +35,11 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "updateClassAction": {
+      "f": ".api/updateClassAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "removeClassAction": {
       "f": ".api/removeClassAction.json",
       "layer": "action",
@@ -50,6 +60,9 @@
     "createClass": [
       "createClassAction"
     ],
+    "updateClass": [
+      "updateClassAction"
+    ],
     "removeClass": [
       "removeClassAction"
     ],
@@ -60,6 +73,7 @@
       "getClassAction"
     ],
     "createClassAction": [],
+    "updateClassAction": [],
     "removeClassAction": [],
     "getClassesAction": [],
     "getClassAction": [],

@@ -1,8 +1,13 @@
 import type { CreateClassInput } from './validation'
-import type { getClasses, getClass } from './database'
 import { GetClassesDto } from './generated.types'
+import { Class } from '@/generated/prisma/client'
+export * from './generated.types'
 
 export type { CreateClassInput }
 
 export type ClassItem     = GetClassesDto[number]
-export * from './generated.types'
+
+
+// Source de vérité : le modèle Prisma.
+export type CreateClassData = Pick<Class, 'name' | 'programTrackId' | 'level' | 'academicYearId'>
+export type UpdateClassData = Partial<CreateClassData>

@@ -1,49 +1,33 @@
 'use client'
+
 import { useState } from 'react'
 import { CollapseSection } from '@/components/layout/CollapseSection'
-import { useManageClasses } from '@/hooks/data/class/useManageClasses'
-import { useDebounce } from '@/hooks/use-debounce'
+import { useClasses } from '@/hooks/data/classes/useClasses'
 import { PromotionFilter, ProgramTrack } from './PromotionFilter'
 import { PromotionTable, PromotionRow } from './PromotionTable'
 
-export function PromotionList({ 
-  initialClasses,
-  programTracks = [],
-  currentYearId
-}: { 
-  initialClasses: PromotionRow[],
-  programTracks?: ProgramTrack[],
-  currentYearId?: string
-}) {
+export function PromotionList({ initialClasses, programTracks = [], currentYearId }: { initialClasses: PromotionRow[]; programTracks?: ProgramTrack[]; currentYearId?: string }) {
   const [query, setQuery] = useState('')
   const [trackId, setTrackId] = useState('')
   const [level, setLevel] = useState('')
 
-  const debouncedQuery = useDebounce(query, 300)
+  const { data: { items: classes = [] } = {}, loading: isLoading } = useClasses({
+    yearId: currentYearId,
+  })
 
-  const { classes, isLoading } = useManageClasses(currentYearId, debouncedQuery, trackId)
-  
-  // If we have filters active or we fetched data, use `classes`. Otherwise fallback to `initialClasses`.
-  const baseData = (debouncedQuery || trackId || classes.length > 0) ? (classes as PromotionRow[]) : initialClasses
-  
-  // Client-side level filtering
-  const data = level ? baseData.filter(c => c.level === level) : baseData
+  const data = classes.filter((cls) => {
+    const matchesName = !query || cls.name.toLowerCase().includes(query.toLowerCase())
+    const matchesTrack = !trackId || cls.programTrackId === trackId
+    const matchesLevel = !level || cls.level === level
+    return matchesName && matchesTrack && matchesLevel
+  })
+
+  const rows = classes.length > 0 || !isLoading ? data : initialClasses
 
   return (
-    <CollapseSection label="Promotions" count={data.length} defaultOpen>
-      <PromotionFilter 
-        query={query} 
-        setQuery={setQuery}
-        trackId={trackId}
-        setTrackId={setTrackId}
-        level={level}
-        setLevel={setLevel}
-        programTracks={programTracks}
-      />
-      <PromotionTable 
-        data={data} 
-        isLoading={isLoading} 
-      />
+    <CollapseSection label="Promotions" count={rows.length} defaultOpen>
+      <PromotionFilter query={query} setQuery={setQuery} trackId={trackId} setTrackId={setTrackId} level={level} setLevel={setLevel} programTracks={programTracks} />
+      <PromotionTable data={rows} isLoading={isLoading} />
     </CollapseSection>
   )
 }

@@ -1,0 +1,11 @@
+{
+  "name": "updateClassAction",
+  "file": "src/services/class/actions/class.mutations.ts",
+  "sig": "({ classId, data }: { classId: string; data: UpdateClassOutput }) => Promise<{ error: any; data?: undefined; } | { data: { level: Level; name: string; id: string; programTrackId: string; academicYearId: string; }; error?: undefined; }>",
+  "calls": [
+    "updateClass"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}
