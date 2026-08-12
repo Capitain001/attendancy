@@ -34,9 +34,9 @@ export const directionRoutes: Route[] = [
         link: "/direction/academic/programs",
       },
       {
-        title: "Classes",
+        title: "Promotions",
         icon: "BookOpen",
-        link: "/direction/academic/classes",
+        link: "/direction/academic/promotions",
       },
       {
         title: "UEs",

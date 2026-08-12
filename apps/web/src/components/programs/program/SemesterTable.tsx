@@ -47,7 +47,7 @@ export function SemesterTable({
       <div className={`grid ${COL} border-b  border-dashed border-foreground/20 bg-foreground/5`}>
         <div className={`${CELL} py-2 text-[9px] sm:text-[10px] font-medium uppercase tracking-widest text-muted-foreground justify-center`}>N°</div>
         <div className={`hidden sm:flex ${CELL} py-2 text-[10px] font-medium uppercase tracking-widest text-muted-foreground justify-center`}>Code</div>
-        <div className={`${CELL} py-2 text-[9px] sm:text-[10px] font-medium uppercase tracking-widest text-muted-foreground`}>Intitulé</div>
+        <div className={`${CELL} py-2 ml-4 text-[9px] sm:text-[10px] font-medium uppercase tracking-widest text-muted-foreground`}>Intitulé</div>
         <div className={`${CELL} py-2 text-[9px] sm:text-[10px] font-medium uppercase tracking-widest text-muted-foreground justify-center`}>
           <span className="hidden sm:inline">Vol. horaire</span><span className="sm:hidden">VH</span>
         </div>

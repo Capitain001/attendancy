@@ -58,7 +58,9 @@ export default async function ProgramDetailPage({
           Retour aux programmes
         </Link>
       </div>
-
+{/* <span>
+  {JSON.stringify(allUes, null, 2)}
+</span> */}
       <DirectionProgramPage
         programId={programId}
         allUes={allUes}

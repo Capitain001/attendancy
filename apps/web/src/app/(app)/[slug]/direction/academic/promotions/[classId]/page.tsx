@@ -1,4 +1,4 @@
-import { DirectionClassDetailPage } from '@/components/classes/direction'
+import { DirectionPromotionDetailPage } from '@/components/classes/direction'
 import { notFound } from 'next/navigation'
 
 interface PageProps {
@@ -8,5 +8,5 @@ interface PageProps {
 export default async function Page({ params }: PageProps) {
   const { classId, slug } = await params
   if (!classId) notFound()
-  return <DirectionClassDetailPage classId={classId} slug={slug} />
+  return <DirectionPromotionDetailPage classId={classId} slug={slug} />
 }

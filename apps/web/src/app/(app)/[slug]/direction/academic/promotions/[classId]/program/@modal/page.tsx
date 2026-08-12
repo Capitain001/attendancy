@@ -22,7 +22,7 @@ export default async function ProgramModalPage(props: ProgramModalPageProps) {
   if (error || !classprogram) {
     return (
       <div className="p-6">
-        Erreur : {error ?? 'Impossible de récupérer les informations de la classe.'}
+        Erreur : {error ?? 'Impossible de récupérer les informations de la promotion.'}
       </div>
     )
   }

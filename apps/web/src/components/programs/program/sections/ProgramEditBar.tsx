@@ -36,8 +36,8 @@ export function ProgramEditBar({
           }`}
           title={isActive ? "Programme actif (applicable aux nouvelles classes)" : "Programme inactif (masqué pour les nouvelles classes)"}
         >
-          {isActive ? <CheckCircle className="size-3.5" /> : <XCircle className="size-3.5" />}
-          {isActive ? "Actif" : "Inactif"}
+          {isActive ? <XCircle className="size-3.5" /> :<CheckCircle className="size-3.5" />  }
+          {isActive ? "Désactiver" : "Activer"}
         </button>
       )}
 
@@ -52,7 +52,7 @@ export function ProgramEditBar({
           title={isLocked ? "Déverrouiller la maquette pédagogique" : "Verrouiller la maquette pédagogique"}
         >
           {isLocked ? <Lock className="size-3.5" /> : <Unlock className="size-3.5" />}
-          {isLocked ? "Verrouillé" : "Déverrouillé"}
+          {/* {isLocked ? "Verrouillé" : "Déverrouillé"} */}
         </button>
       )}
 
@@ -75,16 +75,16 @@ export function ProgramEditBar({
       <button
         onClick={onToggleEdit}
         disabled={isLocked}
-        title={isLocked ? "Impossible d'éditer un programme verrouillé" : undefined}
+        title={isLocked ? "Impossible d'éditer un programme verrouillé" : "Éditer"}
         className={`h-8 px-4 text-[12px] font-medium border border-dashed rounded-sm transition-colors ${
           isLocked
             ? "opacity-50 cursor-not-allowed text-muted-foreground border-foreground/20"
             : isEditing
-            ? "bg-foreground text-background border-transparent hover:opacity-80"
-            : "text-foreground border-foreground/30 hover:bg-foreground/[0.05]"
+            ? "bg-foreground/[0.2] text-background border-transparent hover:opacity-80"
+            : "text-foreground border-foreground/30 bg-foreground/[0.05] hover:bg-muted/80"
         }`}
       >
-        {isLocked ? "Verrouillé" : isEditing ? "Terminer l'édition" : "Éditer"}
+        { isEditing ? "Terminer l'édition" : "Éditer"}
       </button>
     </div>
   );

@@ -52,7 +52,7 @@ function Form({
       )}
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="cls-name" className={input.label}>Nom de la classe *</label>
+        <label htmlFor="cls-name" className={input.label}>Nom de la promotion *</label>
         <input
           id="cls-name"
           name="name"
@@ -106,10 +106,10 @@ export function ClassCreateButton({
       trigger={
         <Button size="sm" variant="outline" disabled={!currentYear||!programTracks}>
           <Plus className="size-3.5" />
-          Classe
+          Nouvelle promotion
         </Button>
       }
-      title="Nouvelle classe"
+      title="Nouvelle promotion"
       description={!currentYear ? "Définissez d'abord une année académique courante." : undefined}
     >
       {(close) => (

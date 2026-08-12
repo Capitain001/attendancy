@@ -2,7 +2,7 @@ import { BackgroundPattern } from "@/components/design/BackgroundPattern";
 import { GetClassDto } from "@/services/class/types";
 import { Users, GraduationCap } from "lucide-react";
 
-export  function ClassBanner({ class_ }: { class_?: GetClassDto }) {
+export  function PromotionBanner({ class_ }: { class_?: GetClassDto }) {
   return (
     <div className="relative w-full h-24 md:h-36 overflow-hidden rounded-md border bg-card">
       <BackgroundPattern className="opacity-25 dark:opacity-10" />
@@ -18,7 +18,7 @@ export  function ClassBanner({ class_ }: { class_?: GetClassDto }) {
         {/* Class name header */}
         <div className="flex items-center gap-2 text-xs md:text-base uppercase tracking-widest">
           <span className="font-medium text-muted-foreground">
-            Classe
+            Promotion
           </span>
           <h1 className="font-semibold text-foreground">
             {class_?.name ?? "—"}

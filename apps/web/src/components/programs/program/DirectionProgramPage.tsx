@@ -276,6 +276,11 @@ export function DirectionProgramPage({
           <ProgramExportButton data={exportData} />
         </div>
 
+        <pre>
+          exportData :
+  {JSON.stringify(exportData, null, 2)}
+</pre>
+
         <ProgramSemesterList
           semesters={data}
           isEditing={isEditing}

@@ -10,17 +10,19 @@ import { StudentsSection } from '@/components/student/sections'
 import { AttendanceSheetButton } from './AttendanceSheetButton'
 import { mapCoursesForClassSection, mapSchedulesForClassSection } from './mapClassProfile'
 
-
 import { UsersGroup } from "@mynaui/icons-react";
 
-export interface DirectionClassDetailPageProps {
+
+export interface DirectionPromotionDetailPageProps {
   classId: string
   slug: string
 }
 
-export async function DirectionClassDetailPage({ classId, slug }: DirectionClassDetailPageProps) {
+
+export async function DirectionPromotionDetailPage({ classId, slug }: DirectionPromotionDetailPageProps) {
   const { data: class_, error } = await getClassAction(classId)
   if (error || !class_) notFound()
+
 
   const [coursesRes, enrollRes, ratesRes, schedRes] = await Promise.all([
     getCoursesAction(classId),
@@ -29,9 +31,11 @@ export async function DirectionClassDetailPage({ classId, slug }: DirectionClass
     getTodayClassSchedulesAction(classId),
   ])
 
+
   const courses = coursesRes.data ? mapCoursesForClassSection(coursesRes.data) : []
   const enrollments = enrollRes.data ?? []
   const attendanceRates = ratesRes.data ? Object.fromEntries(ratesRes.data) : {}
+
 
   const roster = enrollments.map((e) => ({
     fullName:
@@ -39,13 +43,16 @@ export async function DirectionClassDetailPage({ classId, slug }: DirectionClass
     groupName: e.studentGroups?.[0]?.group?.name ?? null,
   }))
 
+
   const schedules = schedRes.data ? mapSchedulesForClassSection(schedRes.data) : []
 
-  const programHref    = `/${slug}/direction/academic/classes/${classId}/program`
-  const planningHref   = `/${slug}/direction/planning/classe/${classId}`
+
+  const programHref     = `/${slug}/direction/academic/programs/${class_.programId}`
+  const planningHref    = `/${slug}/direction/planning/promotions/${classId}`
   const invitationsHref = `./${classId}/invitations`
-  const enrollmentHref = `/${slug}/direction/academic/classes/${classId}/enrollment`
-  const groupsHref     = `/${slug}/direction/academic/classes/${classId}/groups`
+  const enrollmentHref  = `/${slug}/direction/academic/promotions/${classId}/enrollment`
+  const groupsHref      = `/${slug}/direction/academic/promotions/${classId}/groups`
+
 
   return (
     <div className="flex flex-col gap-4">
@@ -55,10 +62,11 @@ export async function DirectionClassDetailPage({ classId, slug }: DirectionClass
           <ButtonX className="w-fit" href={planningHref}>Planning</ButtonX>
           <ButtonX className="w-fit" href={invitationsHref}>Invitations</ButtonX>
           <ButtonX className="w-fit" href={enrollmentHref}>Enrôlement</ButtonX>
-          <ButtonX icon={<UsersGroup  />} className="w-fit" href={groupsHref}>Groupes</ButtonX>
+          <ButtonX icon={<UsersGroup />} className="w-fit" href={groupsHref}>Groupes</ButtonX>
         </div>
         <AttendanceSheetButton className={class_?.name ?? ""} students={roster} />
       </div>
+
 
       {coursesRes.error && (
         <p className="text-sm text-destructive px-1">{coursesRes.error}</p>
@@ -70,10 +78,12 @@ export async function DirectionClassDetailPage({ classId, slug }: DirectionClass
         <p className="text-sm text-destructive px-1">{schedRes.error}</p>
       )}
 
+
       <section>
         <CollapseSection label="Cours" count={courses.length}>
           <CoursesSection courses={courses} />
         </CollapseSection>
+
 
         <CollapseSection label="Étudiants" count={enrollments.length}>
           <StudentsSection
@@ -82,6 +92,7 @@ export async function DirectionClassDetailPage({ classId, slug }: DirectionClass
             slug={slug}
           />
         </CollapseSection>
+
 
         <CollapseSection label="Planning" count={schedules.length}>
           <ScheduleSection planningHref={planningHref} schedules={schedules} />

@@ -2,11 +2,11 @@
 
 import { useCallback, useState } from "react";
 import type { ProgramSemesterDTO } from "@/services/ue/types";
-import { ProgramPageData } from "@/components/programs copy/types";
+import { ProgramPageData } from "@/components/programs/types";
 
 // ==================== TYPES ====================
 
-export type ExportFormat = "pdf" | "csv" | "json";
+export type ExportFormat = "pdf" | "xlsx" | "json";
 export type ExportTemplate = "official" | "synthetic" | "teaching_load";
 export type ExportStatus = "idle" | "loading" | "done" | "error";
 
@@ -285,11 +285,123 @@ async function buildAndDownloadPDF(data: ProgramPageData, config: ProgramExportC
 function buildCSV(semesters: ProgramSemesterDTO[]): string {
   const rows = flattenRows(semesters);
   const header = ["Semestre", "N° UE", "Code UE", "Intitulé UE", "Code Cours", "Intitulé Cours", "Volume", "Crédits"];
+  const escape = (v: any) => {
+    const s = String(v ?? "");
+    return /[;"\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
   const lines = rows.map(r =>
     [r.semesterLabel, r.ueOrder, r.ueCode, r.ueName, r.courseCode, r.courseName, r.duration, r.credits]
-    .map(v => `"${String(v ?? "").replace(/"/g, '""')}"`).join(",")
+      .map(escape).join(";")
   );
-  return [header.map(h => `"${h}"`).join(","), ...lines].join("\r\n");
+  return [header.map(escape).join(";"), ...lines].join("\r\n");
+}
+
+// ==================== XLSX ====================
+async function buildAndDownloadXLSX(data: ProgramPageData) {
+  const ExcelJS = await import("exceljs");
+  const workbook = new ExcelJS.Workbook();
+  const sheet = workbook.addWorksheet("Programme");
+
+  sheet.columns = [
+    { header: "Semestre",       key: "semesterLabel", width: 14 },
+    { header: "N° UE",          key: "ueOrder",        width: 8  },
+    { header: "Code UE",        key: "ueCode",         width: 14 },
+    { header: "Intitulé UE",    key: "ueName",         width: 42 },
+    { header: "N° Cours",       key: "courseOrder",    width: 10 },
+    { header: "Code Cours",     key: "courseCode",     width: 16 },
+    { header: "Intitulé Cours", key: "courseName",     width: 42 },
+    { header: "Volume",         key: "duration",        width: 10 },
+    { header: "Crédits",        key: "credits",         width: 10 },
+  ];
+
+  const THIN_BORDER = {
+    top:    { style: "thin", color: { argb: "FFB0B0B5" } },
+    bottom: { style: "thin", color: { argb: "FFB0B0B5" } },
+    left:   { style: "thin", color: { argb: "FFB0B0B5" } },
+    right:  { style: "thin", color: { argb: "FFB0B0B5" } },
+  } as const;
+
+  // Style de l'en-tête
+  sheet.getRow(1).eachCell((cell) => {
+    cell.font = { bold: true };
+    cell.alignment = { horizontal: "left", vertical: "middle" };
+    cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFD7D7DC" } };
+    cell.border = THIN_BORDER;
+  });
+
+  let rowIndex = 2;
+
+  for (const sem of data.semesters) {
+    const semStartRow = rowIndex;
+
+    for (const pue of sem.ues) {
+      const ueStartRow = rowIndex;
+
+      for (const course of pue.ue.ueCourses) {
+        const row = sheet.addRow({
+          semesterLabel: sem.semester ? `Semestre ${sem.semester}` : "",
+          ueOrder: pue.order,
+          ueCode: pue.ue.code,
+          ueName: pue.ue.name,
+          courseOrder: `${pue.order}.${course.order}`,
+          courseCode: course.code,
+          courseName: course.name,
+          duration: course.duration,
+          credits: course.credits,
+        });
+        row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
+          // Colonnes A, B, C, D = Semestre, N° UE, Code UE, Intitulé UE (cellules fusionnées)
+          const isMergedGroupColumn = colNumber >= 1 && colNumber <= 4;
+          cell.alignment = {
+            horizontal: "left",
+            vertical: isMergedGroupColumn ? "top" : "middle",
+          };
+          cell.border = THIN_BORDER;
+        });
+        rowIndex++;
+      }
+
+      const ueEndRow = rowIndex - 1;
+      if (ueEndRow > ueStartRow) {
+        sheet.mergeCells(`B${ueStartRow}:B${ueEndRow}`);
+        sheet.mergeCells(`C${ueStartRow}:C${ueEndRow}`);
+        sheet.mergeCells(`D${ueStartRow}:D${ueEndRow}`);
+      }
+    }
+
+    const semEndRow = rowIndex - 1;
+    if (semEndRow > semStartRow) {
+      sheet.mergeCells(`A${semStartRow}:A${semEndRow}`);
+    }
+
+    // Ligne "total" du semestre
+    const totalRow = sheet.addRow({
+      semesterLabel: "total",
+      ueOrder: "",
+      ueCode: "",
+      ueName: "",
+      courseOrder: "",
+      courseCode: "",
+      courseName: "",
+      duration: sem.totalDuration,
+      credits: sem.totalCredits,
+    });
+    totalRow.eachCell({ includeEmpty: true }, (cell) => {
+      cell.alignment = { horizontal: "left", vertical: "middle" };
+      cell.border = THIN_BORDER;
+      cell.font = { bold: true };
+    });
+    rowIndex++;
+  }
+
+  sheet.views = [{ state: "frozen", ySplit: 1 }];
+
+  const buffer = await workbook.xlsx.writeBuffer();
+  const filename = `programme_${data.class.name}`.replace(/\s+/g, "_").toLowerCase();
+  triggerDownload(
+    new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),
+    `${filename}.xlsx`
+  );
 }
 
 function buildJSON(data: ProgramPageData): string {
@@ -318,7 +430,7 @@ export function useProgramExport(data: ProgramPageData): UseProgramExportReturn 
       const filename = `programme_${data.class.name}`.replace(/\s+/g, "_").toLowerCase();
 
       if (config.format === "pdf") await buildAndDownloadPDF(data, config);
-      else if (config.format === "csv") triggerDownload(new Blob(["\uFEFF" + buildCSV(data.semesters)], { type: "text/csv" }), `${filename}.csv`);
+      else if (config.format === "xlsx") await buildAndDownloadXLSX(data);
       else if (config.format === "json") triggerDownload(new Blob([buildJSON(data)], { type: "application/json" }), `${filename}.json`);
 
       setStatus("done");

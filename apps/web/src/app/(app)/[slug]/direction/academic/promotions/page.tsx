@@ -8,7 +8,7 @@ import { ClassList } from '@/components/direction/academic/ClassList'
 import { ClassCreateButton } from '@/components/direction/academic/ClassForm'
 import { typography } from '@/styles'
 
-export default async function ClassesPage() {
+export default async function PromotionsPage() {
   await connection()
 
   const [classesResult, yearResult, tracksResult] = await Promise.all([
@@ -33,7 +33,7 @@ export default async function ClassesPage() {
   return (
     <div className="flex flex-col gap-y-4">
       <SectionHeader
-        title="Classes"
+        title="Promotions"
         // action={
         //   <ClassCreateButton
         //     programTracks={programTracks}
@@ -50,14 +50,14 @@ export default async function ClassesPage() {
 
       {/* <section className="grid grid-cols-2 gap-3 lg:grid-cols-3">
         <MetricCard
-          label="Classes actives"
+          label="Promotions actives"
           value={String(classes.length)}
           sub={currentYear ? `année ${currentYear.name}` : 'toutes années'}
         />
         <MetricCard
           label="Étudiants inscrits"
           value={String(totalStudents)}
-          sub="toutes classes confondues"
+          sub="toutes promotions confondues"
         />
         {currentYear && (
           <MetricCard

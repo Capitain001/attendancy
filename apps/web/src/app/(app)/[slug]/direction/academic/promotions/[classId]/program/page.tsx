@@ -40,9 +40,10 @@ export default async function Page({
   if (!programId) {
     return (
       <EmptyResource
-        message="Aucun programme n'est affecté à cette classe."
-        title="Ajouter un programme"
-        href={`/${slug}/direction/academic/classes/${classId}/program?program_modal=create`}
+        title="Aucun programme"
+        message="Aucun programme n'est affecté à cette promotion."
+        actionLabel="Affecter un programme"
+        href={`/${slug}/direction/academic/promotions/${classId}/program?program_modal=create`}
       />
     );
   }

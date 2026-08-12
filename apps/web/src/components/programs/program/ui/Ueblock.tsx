@@ -59,7 +59,7 @@ export function UEBlock({ ue, semesterIndex, isDragging, onCoursesChange }: {
   // ── Edit context (null en mode lecture) ──
   const edit = useEditHandlers();
 
-  const COL  = 'grid-cols-[24px_1fr_52px_44px_32px] sm:grid-cols-[28px_90px_1fr_72px_56px_44px]';
+  const COL = 'grid-cols-[24px_1fr_52px_44px_32px] sm:grid-cols-[28px_90px_1fr_72px_56px_44px]';
   const CELL = 'px-1.5 sm:px-2.5 py-0 flex items-center';
 
   return (
@@ -115,7 +115,7 @@ export function UEBlock({ ue, semesterIndex, isDragging, onCoursesChange }: {
         </div>
 
         {/* Actions */}
-        <div className={`${CELL} py-2 sm:py-2.5 justify-center`}>
+        <div className={`${CELL} py-2 sm:py-2.5 justify-center ${edit ? '' : 'hidden'}`}>
           {edit ? (
             // Mode édition — menu contextuel
             <ActionMenu items={[
@@ -135,7 +135,7 @@ export function UEBlock({ ue, semesterIndex, isDragging, onCoursesChange }: {
             // Mode lecture — bouton inerte
             <button className="size-5 sm:size-6 rounded-sm border border-dashed border-foreground/20 flex items-center justify-center text-muted-foreground/40 cursor-default" disabled>
               <svg className="size-2.5 sm:size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
+                <circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /><circle cx="5" cy="12" r="1" />
               </svg>
             </button>
           )}
@@ -163,7 +163,7 @@ export function UEBlock({ ue, semesterIndex, isDragging, onCoursesChange }: {
                     course={course}
                     ueOrder={ue.order}
                     programUEId={ue.programUEId}
-                    // parentUE={ue}
+                  // parentUE={ue}
                   />
                 ))}
               </SortableContext>

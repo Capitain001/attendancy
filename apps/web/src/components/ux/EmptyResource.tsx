@@ -3,10 +3,11 @@ import { GridDeco } from '../design/GridDeco'
 import { cn } from '@/lib/utils'
 
 type EmptyResourceProps = {
-  href: string
+  href?: string
   message?: string
   title?: string
   className?: string
+  actionLabel?: string
 }
 
 export function EmptyResource({
@@ -14,6 +15,7 @@ export function EmptyResource({
   message = "Aucune information disponible",
   title = 'Consulter',
   className,
+  actionLabel
 }: EmptyResourceProps) {
   return (
     <div className={cn(
@@ -23,12 +25,23 @@ export function EmptyResource({
       <GridDeco />
       <div className="relative z-10 space-y-3">
         <p className="text-[13px] font-medium text-muted-foreground/60">{message}</p>
+        {href &&(
+        
         <Link
-          href={href}
-          className="inline-block text-[11px] font-bold uppercase tracking-widest text-foreground/80 hover:text-foreground underline underline-offset-4 decoration-foreground/20 transition-colors"
+        href={href?? '#'}
+        className="inline-block text-[11px] font-bold uppercase tracking-widest text-foreground/80 hover:text-foreground underline underline-offset-4 decoration-foreground/20 transition-colors"
         >
           {title}
         </Link>
+        )}
+
+        {actionLabel &&(
+          <p
+          className="inline-block text-[11px] font-bold uppercase tracking-widest text-foreground/80 hover:text-foreground underline underline-offset-4 decoration-foreground/20 transition-colors"
+          >
+            {actionLabel}
+          </p>
+        )}
       </div>
     </div>
   )

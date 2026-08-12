@@ -27,7 +27,7 @@ function ClassItem({ cls }: { cls: ClassRow }) {
 
   return (
     <tr className="border-b border-border/20 last:border-0 hover:bg-muted/20 transition-colors">
-      <td className="px-4 py-3 font-medium text-text-primary"> <Link href={`./classes/${cls.id}`}>{cls.name}</Link></td>
+      <td className="px-4 py-3 font-medium text-text-primary"> <Link href={`./promotions/${cls.id}`}>{cls.name}</Link></td>
       <td className="px-4 py-3 text-text-secondary hidden md:table-cell">{cls.programTrack.name}</td>
       <td className="px-4 py-3 text-text-secondary hidden md:table-cell">
         {cls.level ? (LEVEL_LABEL[cls.level] ?? cls.level) : '—'}
