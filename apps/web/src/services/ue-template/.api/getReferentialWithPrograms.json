@@ -1,7 +1,7 @@
 {
   "name": "getReferentialWithPrograms",
   "file": "src/services/ue-template/database/referential.queries.ts",
-  "sig": "(referentialId: string) => Promise<({ programs: ({ programUEs: ({ ueTemplate: { elements: { id: string; name: string; description: string | null; order: number; code: string; templateId: string; credits: number; duration: number | null; settings: JsonValue; }[]; } & { ...; }; } & { ...; })[]; } & { ...; })[]; } & { ...; }) | null>",
+  "sig": "(referentialId: string) => Promise<({ programs: ({ programUEs: ({ ueTemplate: { elements: { name: string; id: string; settings: JsonValue; credits: number; description: string | null; duration: number | null; code: string; order: number; templateId: string; }[]; } & { ...; }; } & { ...; })[]; } & { ...; })[]; } & { ...; }) | null>",
   "composes": [],
   "rules": [],
   "why_ref": ""

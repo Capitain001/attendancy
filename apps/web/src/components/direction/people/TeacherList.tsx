@@ -4,26 +4,27 @@ import { Users } from 'lucide-react'
 import { card, typography } from '@/styles'
 import { cn } from '@/lib/utils'
 import UserIcon from '@/components/users/UserIcon'
+import { GetTeachersDto } from '@/services/teacher'
 
-type Teacher = {
-  id: string
-  department: { id: string; name: string } | null
-  user: {
-    id: string
-    firstName: string | null
-    lastName: string | null
-    email: string
-    avatar_url: string | null
-    status: string
-  }
-  _count: { courses: number }
-}
+// type Teacher = {
+//   id: string
+//   department: { id: string; name: string } | null
+//   user: {
+//     id: string
+//     firstName: string | null
+//     lastName: string | null
+//     email: string
+//     avatar_url: string | null
+//     status: string
+//   }
+//   _count: { courses: number }
+// }
 
-function displayName(t: Teacher) {
+function displayName(t: GetTeachersDto[number]) {
   return [t.user.firstName, t.user.lastName].filter(Boolean).join(' ') || t.user.email
 }
 
-export function TeacherList({ teachers, slug }: { teachers: Teacher[]; slug?: string }) {
+export function TeacherList({ teachers, slug }: { teachers: GetTeachersDto; slug?: string }) {
   if (teachers.length === 0) {
     return (
       <div className={cn(card.soft, 'py-12 text-center')}>

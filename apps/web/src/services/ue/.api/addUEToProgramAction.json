@@ -1,7 +1,7 @@
 {
   "name": "addUEToProgramAction",
   "file": "src/services/ue/actions/ue.mutations.ts",
-  "sig": "(input: { ueId: string programId: string semester?: number order?: number }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; createdAt: Date; updatedAt: Date; isOptional: boolean; semester: number; order: number | null; ueId: string; programId: string; isCompleted: boolean; }; error?: undefined; }>",
+  "sig": "(input: { ueId: string programId: string semester?: number order?: number }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; createdAt: Date; updatedAt: Date; programId: string; ueId: string; order: number | null; isCompleted: boolean; isOptional: boolean; semester: number; }; error?: undefined; }>",
   "calls": [
     "addUEToProgram"
   ],

@@ -1,7 +1,7 @@
 {
   "name": "restoreSchedule",
   "file": "src/services/schedule/database/schedule.mutations.ts",
-  "sig": "(scheduleId: string, orgId: string) => Promise<{ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { id: string; user: { firstName: string | null; lastName: string | null; }; }; } & { ...; }>",
+  "sig": "(scheduleId: string, orgId: string) => Promise<{ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; teacher: { id: string; user: { firstName: string | null; lastName: string | null; }; }; room: { ...; }; } & { ...; }>",
   "composes": [],
   "rules": [],
   "why_ref": ""

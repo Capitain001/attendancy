@@ -1,7 +1,7 @@
 {
   "name": "getOrgProgramTemplates",
   "file": "src/services/ue-template/database/template.queries.ts",
-  "sig": "(orgId: string) => Promise<({ programTemplate: { level: Level; id: string; createdAt: Date; referentialId: string; domain: string; mention: string; specialty: string; degree: DegreeType; profile: string | null; competencies: string | null; outcomes: string | null; updatedAt: Date; }; } & { ...; })[]>",
+  "sig": "(orgId: string) => Promise<({ programTemplate: { level: Level; id: string; createdAt: Date; updatedAt: Date; domain: string; referentialId: string; mention: string; specialty: string; degree: DegreeType; profile: string | null; competencies: string | null; outcomes: string | null; }; } & { ...; })[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

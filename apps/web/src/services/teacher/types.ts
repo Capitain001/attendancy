@@ -1,5 +1,6 @@
 import type { UpdateTeacherDepartmentInput } from './validation'
 import type { getTeachers, getTeacher, getTeacherStats, getTeacherOrganizationStats } from './database'
+import { GetTeachersDto } from './generated.types'
 
 export type { UpdateTeacherDepartmentInput }
 

@@ -1,7 +1,7 @@
 {
   "name": "createWeeklyTemplate",
   "file": "src/services/weekly-template/database/weekly-template.mutations.ts",
-  "sig": "(orgId: string, name: string) => Promise<{ id: string; name: string; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; orgId: string; }>",
+  "sig": "(orgId: string, name: string) => Promise<{ name: string; id: string; orgId: string; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; }>",
   "composes": [],
   "rules": [],
   "why_ref": ""

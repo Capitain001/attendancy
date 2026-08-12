@@ -1,7 +1,7 @@
 {
   "name": "getReferentialsAction",
   "file": "src/services/ue-template/actions/referential.queries.ts",
-  "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { id: string; createdAt: Date; name: string; isActive: boolean; country: string; issuer: string; version: string; publishedAt: Date; }[]; error?: undefined; }>",
+  "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; isActive: boolean; createdAt: Date; country: string; issuer: string; version: string; publishedAt: Date; }[]; error?: undefined; }>",
   "calls": [
     "getReferentials"
   ],

@@ -1,8 +1,15 @@
 import { Search } from 'lucide-react'
 import { input } from '@/styles'
 import { LEVEL_LABEL } from '@/services/class/constants'
+import { SelectYear } from './year/SelectYear'
 
 export type ProgramTrack = { id: string; name: string }
+
+type YearDTO = {
+  id: string;
+  name: string;
+  isCurrent: boolean;
+};
 
 interface PromotionFilterProps {
   query: string
@@ -12,6 +19,9 @@ interface PromotionFilterProps {
   level: string
   setLevel: (lvl: string) => void
   programTracks: ProgramTrack[]
+  yearId: string
+  setYearId: (id: string) => void
+  years: YearDTO[]
 }
 
 export function PromotionFilter({
@@ -22,6 +32,9 @@ export function PromotionFilter({
   level,
   setLevel,
   programTracks,
+  yearId,
+  setYearId,
+  years,
 }: PromotionFilterProps) {
   return (
     <div className="flex flex-col sm:flex-row gap-3 mb-4">
@@ -35,7 +48,14 @@ export function PromotionFilter({
           onChange={(e) => setQuery(e.target.value)}
         />
       </div>
-      <div className="flex flex-end max-w-[400px] gap-2">
+      <div className="flex flex-end max-w-[500px] gap-2 flex-wrap sm:flex-nowrap">
+        {years.length > 0 && (
+          <SelectYear 
+            years={years}
+            selectedYearId={yearId}
+            onChange={setYearId}
+          />
+        )}
         <select
           className={input.base}
           value={trackId}

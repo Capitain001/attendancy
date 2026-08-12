@@ -1,7 +1,7 @@
 {
   "name": "getRoomParticipantsAction",
   "file": "src/services/chat/actions/message.queries.ts",
-  "sig": "(channelId: string) => Promise<{ error: any; data?: undefined; } | { data: { user: { id: string; firstName: string | null; lastName: string | null; avatar_url: string | null; }; userId: string; role: ParticipantRole; joinedAt: Date; }[]; error?: undefined; }>",
+  "sig": "(channelId: string) => Promise<{ error: any; data?: undefined; } | { data: { user: { id: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; role: ParticipantRole; userId: string; joinedAt: Date; }[]; error?: undefined; }>",
   "calls": [
     "getRoomParticipants"
   ],

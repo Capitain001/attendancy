@@ -1,7 +1,7 @@
 {
   "name": "updateDepartmentAction",
   "file": "src/services/department/actions/department.mutations.ts",
-  "sig": "(input: UpdateDepartmentInput) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; _count: { programTracks: number; teachers: number; ues: number; }; }; error?: undefined; }>",
+  "sig": "(input: UpdateDepartmentInput) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; _count: { teachers: number; programTracks: number; ues: number; }; }; error?: undefined; }>",
   "calls": [
     "updateDepartment"
   ],

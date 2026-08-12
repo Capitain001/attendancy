@@ -1,7 +1,7 @@
 {
   "name": "getStudentAttendanceSummaryAction",
   "file": "src/services/attendance/actions/attendance.queries.ts",
-  "sig": "(studentId: string) => Promise<{ error: any; data?: undefined; } | { data: { rate: number | null; absences: number; recentAbsences: { id: string; status: AttendanceStatus; recordedAt: Date; schedule: { ...; }; }[]; }; error?: undefined; }>",
+  "sig": "(studentId: string) => Promise<{ error: any; data?: undefined; } | { data: { rate: number | null; absences: number; recentAbsences: { id: string; schedule: { id: string; course: { name: string; id: string; }; startTime: Date; endTime: Date; }; status: AttendanceStatus; recordedAt: Date; }[]; }; error?: undefined; }>",
   "calls": [
     "getStudentAttendanceSummary"
   ],

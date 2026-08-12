@@ -1,7 +1,7 @@
 {
   "name": "getTeacherNextScheduleAction",
   "file": "src/services/session/actions/session.queries.ts",
-  "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { class: { level: Level; _count: { studentEnrollments: number; }; name: string; }; course: { name: string; ueCourse: { code: string | null; }; }; group: { ...; } | null; ... 7 more ...; notes: string | null; } | null; error?: undefined; }>",
+  "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { id: string; class: { level: Level; name: string; _count: { studentEnrollments: number; }; }; course: { name: string; ueCourse: { code: string | null; }; }; ... 7 more ...; confirmed: boolean; } | null; error?: undefined; }>",
   "calls": [
     "getTeacherNextSchedule"
   ],

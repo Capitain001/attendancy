@@ -29,7 +29,12 @@ function PromotionItem({ cls }: { cls: PromotionRow }) {
       </td>
       <td className="px-4 py-3 text-center text-text-secondary">{cls._count.studentEnrollments}</td>
       <td className="px-4 py-3 text-center text-text-secondary hidden md:table-cell">{cls._count.courses}</td>
-      <td className="px-4 py-3 text-right">
+      <td className="px-4 py-3 text-right flex justify-end gap-2">
+        <Link href={`./promotions/${cls.id}/program`}>
+          <Button variant="ghost" size="sm" className="text-xs">
+            Programme
+          </Button>
+        </Link>
         <ConfirmDialog
           trigger={
             <Button variant="ghost" size="sm" className="text-xs text-destructive hover:text-destructive">

@@ -1,7 +1,7 @@
 {
   "name": "getCourseDetailAction",
   "file": "src/services/course/actions/course.queries.ts",
-  "sig": "(courseId: string) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; classId: string; durationDone: number; durationTotal: number; credits: number; description: string | null; termId: string | null; class: { ...; }; ueCourse: { ...; }; teachers: { ...; }[]; schedules: { ...; }[]; }; error?: undefined; }>",
+  "sig": "(courseId: string) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; class: { level: Level; name: string; id: string; _count: { studentEnrollments: number; }; }; classId: string; durationDone: number; ... 6 more ...; schedules: { ...; }[]; }; error?: undefined; }>",
   "calls": [
     "getCourseDetail"
   ],

@@ -1,7 +1,7 @@
 {
   "name": "assignFunctionToUser",
   "file": "src/services/function/database/function.mutations.ts",
-  "sig": "(params: { userId: string functionId: string orgId: string assignedBy?: string }) => Promise<{ id: string; functionId: string; userId: string; }>",
+  "sig": "(params: { userId: string functionId: string orgId: string assignedBy?: string }) => Promise<{ id: string; userId: string; functionId: string; }>",
   "composes": [],
   "rules": [],
   "why_ref": ""

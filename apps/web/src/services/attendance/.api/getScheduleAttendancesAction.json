@@ -1,7 +1,7 @@
 {
   "name": "getScheduleAttendancesAction",
   "file": "src/services/attendance/actions/attendance.queries.ts",
-  "sig": "({ scheduleId }: { scheduleId: string }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; status: AttendanceStatus; recordedAt: Date; student: { user: { id: string; firstName: string | null; lastName: string | null; avatar_url: string | null; }; }; }[]; error?: undefined; }>",
+  "sig": "({ scheduleId }: { scheduleId: string }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; student: { user: { id: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; status: AttendanceStatus; recordedAt: Date; }[]; error?: undefined; }>",
   "calls": [
     "getScheduleAttendances"
   ],

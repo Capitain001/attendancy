@@ -1,7 +1,7 @@
 {
   "name": "getClassSchedulesAction",
   "file": "src/services/schedule/actions/schedule.queries.ts",
-  "sig": "(classId: string, rangeStart: Date, rangeEnd: Date) => Promise<{ error: any; data?: undefined; } | { data: ({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { ...; }; } & { ...; })[]; error?: undefined; }>",
+  "sig": "(classId: string, rangeStart: Date, rangeEnd: Date) => Promise<{ error: any; data?: undefined; } | { data: ({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; teacher: { id: string; user: { avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; room: { ...; }; } & { ......",
   "calls": [
     "getSchedulesByClass"
   ],

@@ -2,6 +2,7 @@
 import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import { getTeachers, getTeacher, getTeacherTodaySchedules, getTeacherSchedules, getTeacherCourses, getTeacherStats, getTeacherOrganizationStats } from '../database'
+import { mockgetTeachers } from '@/data/mocks/teachers'
 
 export async function getCurrentTeacherId(): Promise<string | null> {
   const auth = await authAccess()
@@ -61,13 +62,14 @@ export async function getTeacherStatsAction(teacherId: string) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
-
-export async function getTeachersAction(departmentId?: string) {
+//MOCKS_USE
+export async function getTeachersAction({departmentId}:{departmentId?: string}) {
   try {
     const auth = await authAccess()
     if (!auth.data) return { error: auth.error }
     const { orgId } = auth.data
 
+    return {data: mockgetTeachers}
     return { data: await getTeachers(orgId, departmentId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }

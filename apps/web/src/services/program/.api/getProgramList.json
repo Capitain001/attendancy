@@ -1,7 +1,7 @@
 {
   "name": "getProgramList",
   "file": "src/services/program/database/program.queries.ts",
-  "sig": "({ orgId, classId, programTrackId, onlyActive }: { orgId: string classId?: string programTrackId?: string onlyActive?: boolean }) => Promise<{ name: string; id: string; description: string | null; isActive: boolean; isLocked: boolean; programTrack: { name: string; id: string; }; _count: { classes: number; }; }[]>",
+  "sig": "({ orgId, classId, programTrackId, onlyActive }: { orgId: string classId?: string programTrackId?: string onlyActive?: boolean }) => Promise<{ name: string; id: string; isActive: boolean; _count: { classes: number; }; programTrack: { name: string; id: string; }; description: string | null; isLocked: boolean; }[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

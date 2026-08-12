@@ -1,7 +1,7 @@
 {
   "name": "getEventAction",
   "file": "src/services/event/actions/event.queries.ts",
-  "sig": "(eventId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; title: string; description: string | null; startTime: Date | null; endTime: Date | null; location: string | null; targetRoles: Role[]; ... 7 more ...; _count: { ...; }; }; error?: undefined; }>",
+  "sig": "(eventId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; _count: { participants: number; }; type: EventType; location: string | null; status: EventStatus; startTime: Date | null; ... 8 more ...; participants: { ...; }[]; }; error?: undefined; }>",
   "calls": [
     "getEvent"
   ],

@@ -1,7 +1,7 @@
 {
   "name": "getScheduleForNotify",
   "file": "src/services/schedule/database/schedule.mutations.ts",
-  "sig": "(scheduleId: string, orgId: string) => Promise<{ startTime: Date; course: { name: string; }; } | null>",
+  "sig": "(scheduleId: string, orgId: string) => Promise<{ course: { name: string; }; startTime: Date; } | null>",
   "composes": [],
   "rules": [],
   "why_ref": ""

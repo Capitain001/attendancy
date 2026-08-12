@@ -1,7 +1,7 @@
 {
   "name": "addUEToProgram",
   "file": "src/services/program-ue/database/program-ue.mutations.ts",
-  "sig": "({ programId, ueId, semester, order, isOptional = false }: { programId: string; ueId: string; semester?: number; order?: number; isOptional?: boolean }) => Promise<{ id: string; programId: string; ueId: string; isCompleted: boolean; isOptional: boolean; semester: number; createdAt: Date; order: number | null; updatedAt: Date; }>",
+  "sig": "({ programId, ueId, semester, order, isOptional = false }: { programId: string; ueId: string; semester?: number; order?: number; isOptional?: boolean }) => Promise<{ id: string; createdAt: Date; updatedAt: Date; programId: string; ueId: string; order: number | null; isCompleted: boolean; isOptional: boolean; semester: number; }>",
   "composes": [],
   "rules": [],
   "why_ref": ""

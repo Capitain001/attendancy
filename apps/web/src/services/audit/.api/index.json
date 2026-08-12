@@ -1,0 +1,18 @@
+{
+  "service": "audit",
+  "path": "src/services/audit/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "5a9e707",
+  "utils_dir": null,
+  "fns": {
+    "getOrgAuditLogsAction": {
+      "f": ".api/getOrgAuditLogsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "getOrgAuditLogsAction": []
+  },
+  "deps": {}
+}

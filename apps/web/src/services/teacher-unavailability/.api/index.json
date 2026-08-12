@@ -2,7 +2,7 @@
   "service": "teacher-unavailability",
   "path": "src/services/teacher-unavailability/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "5306ac7",
+  "derived_at": "5a9e707",
   "utils_dir": null,
   "fns": {
     "createWeeklyUnavailability": {

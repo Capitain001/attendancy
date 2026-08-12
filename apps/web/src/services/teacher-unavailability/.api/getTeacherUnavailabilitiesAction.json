@@ -1,7 +1,7 @@
 {
   "name": "getTeacherUnavailabilitiesAction",
   "file": "src/services/teacher-unavailability/actions/teacher-unavailability.queries.ts",
-  "sig": "(teacherId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; type: UnavailabilityType; dayOfWeek: number | null; startTime: string | null; endTime: string | null; startDate: Date | null; endDate: Date | null; reason: string | null; createdAt: Date; }[]; error?: undefined; }>",
+  "sig": "(teacherId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; startDate: Date | null; endDate: Date | null; type: UnavailabilityType; startTime: string | null; endTime: string | null; createdAt: Date; dayOfWeek: number | null; reason: string | null; }[]; error?: undefined; }>",
   "calls": [
     "getTeacherUnavailabilities"
   ],

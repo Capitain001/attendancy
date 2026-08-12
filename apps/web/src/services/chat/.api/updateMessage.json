@@ -1,7 +1,7 @@
 {
   "name": "updateMessage",
   "file": "src/services/chat/database/message.mutations.ts",
-  "sig": "(messageId: string, userId: string, data: UpdateMessageData) => Promise<{ id: string; content: string; createdAt: Date; updatedAt: Date; user: { id: string; firstName: string | null; lastName: string | null; avatar_url: string | null; } | null; channelId: string; parentId: string | null; }>",
+  "sig": "(messageId: string, userId: string, data: UpdateMessageData) => Promise<{ id: string; user: { id: string; avatar_url: string | null; firstName: string | null; lastName: string | null; } | null; createdAt: Date; updatedAt: Date; content: string; channelId: string; parentId: string | null; }>",
   "composes": [],
   "rules": [],
   "why_ref": ""

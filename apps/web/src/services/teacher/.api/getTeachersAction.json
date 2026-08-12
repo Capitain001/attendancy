@@ -1,7 +1,7 @@
 {
   "name": "getTeachersAction",
   "file": "src/services/teacher/actions/teacher.queries.ts",
-  "sig": "(departmentId?: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; departmentId: string | null; department: { name: string; id: string; } | null; user: { id: string; firstName: string | null; lastName: string | null; email: string; avatar_url: string | null; status: UserStatus; }; _count: { ...; }; }[]; error?: undef...",
+  "sig": "({departmentId}:{departmentId?: string}) => Promise<{ error: any; data?: undefined; } | { data: { id: string; departmentId: string | null; department: { name: string; id: string; } | null; user: { id: string; firstName: string | null; lastName: string | null; email: string; avatar_url: string | null; status: UserStatus; }; _count: { ...; }; }[]; error?: undef...",
   "calls": [
     "getTeachers"
   ],

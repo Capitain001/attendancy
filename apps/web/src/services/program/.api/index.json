@@ -2,7 +2,7 @@
   "service": "program",
   "path": "src/services/program/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "d07c3a8",
+  "derived_at": "5a9e707",
   "utils_dir": null,
   "fns": {
     "createProgram": {

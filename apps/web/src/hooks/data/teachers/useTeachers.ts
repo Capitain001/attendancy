@@ -30,7 +30,7 @@ export function useTeachers({
   enabled?: boolean;
 }) {
   const fetchFn = useCallback(async () => {
-    const response = await getTeachersAction(departmentId);
+    const response = await getTeachersAction({departmentId});
 
     if ("error" in response) {
       throw new Error(response.error);

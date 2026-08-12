@@ -1,7 +1,7 @@
 {
   "name": "getOrgPlanningResources",
   "file": "src/services/planning/database.ts",
-  "sig": "(orgId: string) => Promise<{ classes: { id: string; name: string; }[]; teachers: { id: string; name: string; avatarUrl: string | null; }[]; rooms: { id: string; name: string; }[]; }>",
+  "sig": "(orgId: string) => Promise<{ classes: { name: string; id: string; }[]; teachers: { id: string; name: string; avatarUrl: string | null; }[]; rooms: { name: string; id: string; }[]; }>",
   "composes": [],
   "rules": [],
   "why_ref": ""

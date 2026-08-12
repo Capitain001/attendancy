@@ -1,7 +1,7 @@
 {
   "name": "getWeeklyTemplatesAction",
   "file": "src/services/weekly-template/actions/weekly-template.queries.ts",
-  "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; isActive: boolean; createdAt: Date; _count: { slots: number; }; }[]; error?: undefined; }>",
+  "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; isActive: boolean; _count: { slots: number; }; createdAt: Date; }[]; error?: undefined; }>",
   "calls": [
     "getWeeklyTemplates"
   ],

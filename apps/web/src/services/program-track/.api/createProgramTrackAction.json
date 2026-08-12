@@ -1,7 +1,7 @@
 {
   "name": "createProgramTrackAction",
   "file": "src/services/program-track/actions/programTrack.mutations.ts",
-  "sig": "(data: AddProgramTrackData) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; description: string | null; departmentId: string; }; error?: undefined; }>",
+  "sig": "(data: AddProgramTrackData) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; departmentId: string; }; error?: undefined; }>",
   "calls": [
     "createProgramTrack"
   ],

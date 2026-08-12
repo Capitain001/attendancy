@@ -2,7 +2,7 @@
   "service": "parent",
   "path": "src/services/parent/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "1760cd7",
+  "derived_at": "5a9e707",
   "utils_dir": null,
   "fns": {
     "createParentRelationWithAudit": {

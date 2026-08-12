@@ -1,7 +1,7 @@
 {
   "name": "getUnread",
   "file": "src/services/notification/actions/notification.queries.ts",
-  "sig": "(limit?: number) => Promise<{ error: any; data?: undefined; } | { data: { id: string; message: string; type: NotificationType; read: boolean; metadata: JsonValue; createdAt: Date; updatedAt: Date; scheduleId: string | null; }[]; error?: undefined; }>",
+  "sig": "(limit?: number) => Promise<{ error: any; data?: undefined; } | { data: { id: string; type: NotificationType; metadata: JsonValue; message: string; scheduleId: string | null; createdAt: Date; updatedAt: Date; read: boolean; }[]; error?: undefined; }>",
   "calls": [
     "getUnreadNotificationsForUser"
   ],

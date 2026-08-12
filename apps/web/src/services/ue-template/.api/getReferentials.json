@@ -1,7 +1,7 @@
 {
   "name": "getReferentials",
   "file": "src/services/ue-template/database/referential.queries.ts",
-  "sig": "() => Promise<{ id: string; createdAt: Date; name: string; isActive: boolean; country: string; issuer: string; version: string; publishedAt: Date; }[]>",
+  "sig": "() => Promise<{ name: string; id: string; isActive: boolean; createdAt: Date; country: string; issuer: string; version: string; publishedAt: Date; }[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

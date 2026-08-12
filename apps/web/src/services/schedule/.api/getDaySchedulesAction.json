@@ -1,7 +1,7 @@
 {
   "name": "getDaySchedulesAction",
   "file": "src/services/schedule/actions/schedule.queries.ts",
-  "sig": "(params: Omit<ScheduleFilterParams, 'orgId'>) => Promise<{ error: any; data?: undefined; } | { data: { id: string; startTime: Date; endTime: Date; status: ScheduleStatus; confirmed: boolean; classId: string; groupId: string | null; course: { ...; }; room: { ...; }; _count: { ...; }; }[]; error?: undefined; }>",
+  "sig": "(params: Omit<ScheduleFilterParams, 'orgId'>) => Promise<{ error: any; data?: undefined; } | { data: { id: string; _count: { attendances: number; }; course: { name: string; id: string; }; room: { name: string; id: string; }; status: ScheduleStatus; ... 4 more ...; groupId: string | null; }[]; error?: undefined; }>",
   "calls": [
     "getDaySchedules"
   ],

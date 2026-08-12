@@ -1,7 +1,7 @@
 {
   "name": "getWeeklyTemplate",
   "file": "src/services/weekly-template/database/weekly-template.queries.ts",
-  "sig": "(id: string, orgId: string) => Promise<({ slots: ({ course: { id: string; name: string; }; room: { id: string; name: string; }; teacher: { id: string; user: { firstName: string | null; lastName: string | null; }; }; } & { id: string; isActive: boolean; ... 9 more ...; roomId: string; })[]; } & { ...; }) | null>",
+  "sig": "(id: string, orgId: string) => Promise<({ slots: ({ course: { name: string; id: string; }; teacher: { id: string; user: { firstName: string | null; lastName: string | null; }; }; room: { name: string; id: string; }; } & { id: string; isActive: boolean; ... 9 more ...; templateId: string; })[]; } & { ...; }) | null>",
   "composes": [],
   "rules": [],
   "why_ref": ""

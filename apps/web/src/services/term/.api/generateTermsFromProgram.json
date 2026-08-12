@@ -1,7 +1,7 @@
 {
   "name": "generateTermsFromProgram",
   "file": "src/services/term/database/term.mutations.ts",
-  "sig": "(classId: string, orgId: string) => Promise<{ id: string; order: number; name: string; }[]>",
+  "sig": "(classId: string, orgId: string) => Promise<{ name: string; id: string; order: number; }[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

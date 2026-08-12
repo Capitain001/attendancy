@@ -1,7 +1,7 @@
 {
   "name": "updateClass",
   "file": "src/services/class/database/class.mutations.ts",
-  "sig": "(classId: string, orgId: string, data: UpdateClassOutput) => Promise<{ level: Level; name: string; id: string; programTrackId: string; academicYearId: string; }>",
+  "sig": "(classId: string, orgId: string, data: UpdateClassOutput) => Promise<{ level: Level; name: string; id: string; academicYearId: string; programTrackId: string; }>",
   "composes": [],
   "rules": [],
   "why_ref": ""

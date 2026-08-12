@@ -1,7 +1,7 @@
 {
   "name": "getParentPlanningAction",
   "file": "src/services/parent/actions.ts",
-  "sig": "(params: { studentId: string; classId: string | null; groupIds: string[]; rangeStart: Date; rangeEnd: Date }) => Promise<{ error: string; data?: undefined; } | { data: { schedules: { course: { id: string; name: string; }; group: { id: string; name: string; } | null; teacher: { user: { firstName: string | null; lastName: string | null; }; id: string; }; ... 11 more ...; notes: string | null; }[]; }; error?: undefined; }>",
+  "sig": "(params: { studentId: string; classId: string | null; groupIds: string[]; rangeStart: Date; rangeEnd: Date }) => Promise<{ error: string; data?: undefined; } | { data: { schedules: { id: string; course: { name: string; id: string; }; group: { name: string; id: string; } | null; teacher: { id: string; user: { firstName: string | null; lastName: string | null; }; }; ... 10 more ...; groupId: string | null; }[]; }; error?: undefi...",
   "calls": [
     "isStudentParent",
     "getStudentSchedules"

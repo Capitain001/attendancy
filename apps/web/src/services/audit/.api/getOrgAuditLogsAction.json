@@ -1,0 +1,9 @@
+{
+  "name": "getOrgAuditLogsAction",
+  "file": "src/services/audit/actions.ts",
+  "sig": "(params?: { resource?: string action?: string cursor?: string limit?: number }) => Promise<{ error: any; data?: undefined; } | { data: { items: { id: string; user: { firstName: string | null; lastName: string | null; } | null; details: JsonValue; createdAt: Date; userId: string | null; action: Action; resource: string | null; resourceId: string | null; }[]; hasNext: boolean; nextCursor: string | n...",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

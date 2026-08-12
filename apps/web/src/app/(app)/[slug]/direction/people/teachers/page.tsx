@@ -5,7 +5,7 @@ import { typography } from '@/styles'
 
 export default async function TeachersPage({ params }: { params: Promise<{ slug: string }> }) {
   await connection()
-  const [{ slug }, result] = await Promise.all([params, getTeachersAction()])
+  const [{ slug }, result] = await Promise.all([params, getTeachersAction({})])
 
   if ('error' in result) {
     return <p className={typography.body}>{result.error}</p>

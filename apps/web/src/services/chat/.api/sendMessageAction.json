@@ -1,7 +1,7 @@
 {
   "name": "sendMessageAction",
   "file": "src/services/chat/actions/message.mutations.ts",
-  "sig": "(input: Omit<AddMessageData, 'userId'>) => Promise<{ error: any; data?: undefined; } | { data: { id: string; content: string; createdAt: Date; updatedAt: Date; user: { id: string; firstName: string | null; lastName: string | null; avatar_url: string | null; } | null; channelId: string; parentId: string | null; }; error?: undefined; }>",
+  "sig": "(input: Omit<AddMessageData, 'userId'>) => Promise<{ error: any; data?: undefined; } | { data: { id: string; user: { id: string; avatar_url: string | null; firstName: string | null; lastName: string | null; } | null; createdAt: Date; updatedAt: Date; content: string; channelId: string; parentId: string | null; }; error?: undefined; }>",
   "calls": [
     "createMessage"
   ],

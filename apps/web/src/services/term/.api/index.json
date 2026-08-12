@@ -2,7 +2,7 @@
   "service": "term",
   "path": "src/services/term/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "2dc6b24",
+  "derived_at": "5a9e707",
   "utils_dir": null,
   "fns": {
     "generateTermsFromProgram": {

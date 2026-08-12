@@ -1,7 +1,7 @@
 {
   "name": "getActivePushSubscriptionsByUserId",
   "file": "src/services/notification/database/push.queries.ts",
-  "sig": "(userId: string) => Promise<{ id: string; endpoint: string; p256dh: string; auth: string; userAgent: string | null; }[]>",
+  "sig": "(userId: string) => Promise<{ id: string; userAgent: string | null; endpoint: string; p256dh: string; auth: string; }[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

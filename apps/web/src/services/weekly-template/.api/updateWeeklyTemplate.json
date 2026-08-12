@@ -1,7 +1,7 @@
 {
   "name": "updateWeeklyTemplate",
   "file": "src/services/weekly-template/database/weekly-template.mutations.ts",
-  "sig": "(id: string, orgId: string, data: { name?: string; isActive?: boolean }) => Promise<{ id: string; name: string; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; orgId: string; }>",
+  "sig": "(id: string, orgId: string, data: { name?: string; isActive?: boolean }) => Promise<{ name: string; id: string; orgId: string; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; }>",
   "composes": [],
   "rules": [],
   "why_ref": ""

@@ -1,7 +1,7 @@
 {
   "name": "generateTermsFromProgramAction",
   "file": "src/services/term/actions/term.mutations.ts",
-  "sig": "(classId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; order: number; name: string; }[]; error?: undefined; }>",
+  "sig": "(classId: string) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; order: number; }[]; error?: undefined; }>",
   "calls": [
     "generateTermsFromProgram"
   ],

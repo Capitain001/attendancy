@@ -1,7 +1,7 @@
 {
   "name": "updateProgramAction",
   "file": "src/services/program/actions/program.mutations.ts",
-  "sig": "(programId: string, input: UpdateProgramInput) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; programTrackId: string; classes: { name: string; id: string; programTrack: { name: string; id: string; }; academicYear: { ...; }; }[]; programTrack: { ...; }; }; error?: undefined; }>",
+  "sig": "(programId: string, input: UpdateProgramInput) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; classes: { name: string; academicYear: { name: string; id: string; }; id: string; programTrack: { name: string; id: string; }; }[]; programTrack: { ...; }; description: string | null; programTrackId: string; }; error?: undefined; }>",
   "calls": [
     "updateProgram"
   ],

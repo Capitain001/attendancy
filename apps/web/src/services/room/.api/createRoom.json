@@ -1,7 +1,7 @@
 {
   "name": "createRoom",
   "file": "src/services/room/database/room.mutations.ts",
-  "sig": "(data: { name: string capacity?: number locationId?: string equipment?: string[] orgId: string }) => Promise<{ id: string; name: string; capacity: number | null; equipment: string[]; location: { id: string; name: string; } | null; locationId: string | null; }>",
+  "sig": "(data: { name: string capacity?: number locationId?: string equipment?: string[] orgId: string }) => Promise<{ name: string; id: string; location: { name: string; id: string; } | null; capacity: number | null; locationId: string | null; equipment: string[]; }>",
   "composes": [],
   "rules": [],
   "why_ref": ""

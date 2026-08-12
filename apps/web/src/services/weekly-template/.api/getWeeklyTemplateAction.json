@@ -1,7 +1,7 @@
 {
   "name": "getWeeklyTemplateAction",
   "file": "src/services/weekly-template/actions/weekly-template.queries.ts",
-  "sig": "(id: string) => Promise<{ error: any; data?: undefined; } | { data: { slots: ({ course: { id: string; name: string; }; room: { id: string; name: string; }; teacher: { id: string; user: { firstName: string | null; lastName: string | null; }; }; } & { ...; })[]; } & { ...; }; error?: undefined; }>",
+  "sig": "(id: string) => Promise<{ error: any; data?: undefined; } | { data: { slots: ({ course: { name: string; id: string; }; teacher: { id: string; user: { firstName: string | null; lastName: string | null; }; }; room: { name: string; id: string; }; } & { ...; })[]; } & { ...; }; error?: undefined; }>",
   "calls": [
     "getWeeklyTemplate"
   ],

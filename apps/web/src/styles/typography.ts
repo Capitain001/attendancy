@@ -7,8 +7,9 @@ export const typography = {
     "text-[11px] font-medium uppercase tracking-widest text-text-subtle"
   ),
 
-  metric: cn("text-2xl font-semibold text-text-primary"),
-
+  metric: cn(
+    "font-medium text-text-primary md:text-2xl"
+  ),
   sub: cn("text-xs text-text-subtle"),
 
   body: cn("text-sm text-text-secondary leading-relaxed"),
