@@ -20,7 +20,7 @@ export interface DirectionPromotionDetailPageProps {
 
 
 export async function DirectionPromotionDetailPage({ classId, slug }: DirectionPromotionDetailPageProps) {
-  const { data: class_, error } = await getClassAction(classId)
+  const { data: class_, error } = await getClassAction({classId})
   if (error || !class_) notFound()
 
 

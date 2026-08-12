@@ -14,7 +14,7 @@ export default async function StudentsPage({ params, searchParams }: Props) {
   await connection()
   const [{ slug }, { classId }] = await Promise.all([params, searchParams])
 
-  const classesResult = await getClassesAction()
+  const classesResult = await getClassesAction({})
   const classes = ('data' in classesResult ? classesResult.data : null) ?? []
 
   const selectedClassId = classId ?? classes[0]?.id ?? null

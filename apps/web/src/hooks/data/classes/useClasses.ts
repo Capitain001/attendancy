@@ -69,13 +69,16 @@ export interface UseClassesOptions {
  * ```
  */
 export function useClasses(options: UseClassesOptions = {}) {
-  const { yearId, programTrackId, staleTime, enabled } = options;
-
+  const { yearId, programTrackId, name, level, staleTime, enabled } = options;
   // 🔗 Actions alignées avec l’API
   const fetchFn = toFetchFn(getClassesAction, {
     yearId,
     programTrackId,
-  });
+    name,
+    level,
+  })
+
+
 
   const create = toCreateFn(addClassAction);
   const update = toUpdateFn(updateClassAction);

@@ -29,7 +29,7 @@ async function ReportContent({ searchParams }: Props) {
 
   const [reportResult, classesResult] = await Promise.all([
     getAttendanceReportAction({ classId, startDate, endDate }),
-    getClassesAction(),
+    getClassesAction({}),
   ])
 
   const rows    = 'error' in reportResult  ? [] : reportResult.data

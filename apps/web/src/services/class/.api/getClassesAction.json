@@ -1,7 +1,7 @@
 {
   "name": "getClassesAction",
   "file": "src/services/class/actions/class.queries.ts",
-  "sig": "(yearId?: string) => Promise<{ error: any; data?: undefined; } | { data: { level: Level; name: string; id: string; programTrackId: string; academicYearId: string; academicYear: { name: string; id: string; }; programTrack: { ...; }; _count: { ...; }; }[]; error?: undefined; }>",
+  "sig": "({ yearId, programTrackId, name, level }: { yearId?: string; programTrackId?: string; name?: string; level?: Level }) => Promise<{ error: any; data?: undefined; } | { data: { level: Level; name: string; id: string; programTrackId: string; academicYearId: string; academicYear: { name: string; id: string; }; programTrack: { ...; }; _count: { ...; }; }[]; error?: undefined; }>",
   "calls": [
     "getClasses"
   ],

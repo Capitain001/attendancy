@@ -17,7 +17,7 @@ export default async function DirectionPromotionLayout({ children, params }: Lay
   const { classId, slug } = await params;
 
   // Récupération des données de la promotion
-  const { data: class_, error } = await getClassAction(classId);
+  const { data: class_, error } = await getClassAction({classId});
 
   // if (error || !class_) {
   //   notFound();

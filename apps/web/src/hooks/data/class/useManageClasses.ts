@@ -9,14 +9,14 @@ import { customToast } from '@/lib/toast/custom-toast'
 
 const QK = ['classes'] as const
 
-export function useManageClasses(yearId?: string) {
+export function useManageClasses(yearId?: string, query?: string, programTrackId?: string) {
   const qc = useQueryClient()
   const invalidate = () => qc.invalidateQueries({ queryKey: QK })
 
   const { data: classes = [], isLoading } = useQuery({
-    queryKey: [...QK, yearId],
+    queryKey: [...QK, yearId, query, programTrackId],
     queryFn: async () => {
-      const r = await getClassesAction(yearId)
+      const r = await getClassesAction({yearId})
       if ('error' in r) throw new Error(r.error)
       return r.data
     },

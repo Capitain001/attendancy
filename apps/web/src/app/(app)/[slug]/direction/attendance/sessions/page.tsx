@@ -15,7 +15,7 @@ async function SessionsContent({ searchParams }: Props) {
 
   const [sessionsResult, classesResult] = await Promise.all([
     getDirectionSessionsByDateAction(dateStr),
-    getClassesAction(),
+    getClassesAction({}),
   ])
 
   const sessions = 'error' in sessionsResult ? [] : sessionsResult.data

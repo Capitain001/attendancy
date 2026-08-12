@@ -124,6 +124,8 @@ export function useEntity<T extends { id: string }>(
     return newData;
   };
 
+  
+
   /**
    * Appliquer un payload pour mise à jour optimiste du cache
    */
