@@ -1,0 +1,11 @@
+{
+  "name": "toggleProgramActiveAction",
+  "file": "src/services/program/actions/program.mutations.ts",
+  "sig": "({ programId, isActive }: { programId: string isActive: boolean }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; isActive: boolean; }; error?: undefined; }>",
+  "calls": [
+    "toggleProgramActive"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,11 @@
+{
+  "name": "toggleProgramLockAction",
+  "file": "src/services/program/actions/program.mutations.ts",
+  "sig": "({ programId, isLocked }: { programId: string isLocked: boolean }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; isLocked: boolean; }; error?: undefined; }>",
+  "calls": [
+    "toggleProgramLock"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

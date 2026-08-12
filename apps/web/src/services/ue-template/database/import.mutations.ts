@@ -1,119 +1,151 @@
-// Orchestration cross-service — pattern validé : database/ peut importer database/ d'autres owners
-// Voir commentaire src/services/ue/database/ue.mutations.ts
-import { createUE, removeUE } from '@/services/ue/database'
-import { getUEByCode } from '@/services/ue/database'
-import { createUECourse } from '@/services/ue-course/database'
-import { addUEToProgram } from '@/services/program-ue/database'
-import { getUETemplates, getUETemplate } from './referential.queries'
-import { getUETemplateImport, getUETemplateImportsByOrg } from './template.queries'
-import { createUETemplateImport, deleteUETemplateImport } from './template.mutations'
+import { prisma } from '@/lib/prisma'
+import { tryConstraint } from '@/utils/server/prisma'
+import { invalidateEvent } from '@/cache/server/key'
 
-export async function importUEFromTemplate(params: {
-  templateId: string
-  programId: string
-  semester: number
-  orgId: string
-}) {
-  const { templateId, programId, semester, orgId } = params
-
-  const existing = await getUETemplateImport(templateId, orgId)
-  if (existing) throw new Error('Cette UE est déjà importée dans votre organisation.')
-
-  const template = await getUETemplate(templateId)
-  if (!template) throw new Error('Template introuvable.')
-
-  if (template.code) {
-    const conflict = await getUEByCode(template.code, orgId)
-    if (conflict) throw new Error(`Code "${template.code}" déjà utilisé dans votre organisation.`)
-  }
-
-  const ue = await createUE({ name: template.name, code: template.code ?? undefined, orgId })
-
-  const courses = await Promise.all(
-    template.elements.map((ec) => {
-      const credits = Number(ec.credits)
-      return createUECourse({
-        name:     ec.name ?? ec.code,
-        code:     ec.code,
-        credits,
-        duration: Math.max(1, Math.round(credits * 15)),
-        ueId:     ue.id,
-        orgId,
-      })
-    })
-  )
-
-  await addUEToProgram({ ueId: ue.id, programId, semester })
-
-  const importRecord = await createUETemplateImport({ templateId, orgId, ueId: ue.id })
-
-  return { ueId: ue.id, importedCount: courses.length, importId: importRecord.id }
-}
-
-// Import d'une filière complète : toutes les UEs d'une mention/spécialité en une opération.
-// Chaque UE va dans son semestre propre (UETemplate.semester).
-// Idempotent : les UEs déjà importées sont silencieusement ignorées.
-export async function importMentionFromReferential(params: {
-  referentialId: string
-  mention: string
-  speciality: string | null | undefined
-  programId: string
-  orgId: string
-}) {
-  const { referentialId, mention, speciality, programId, orgId } = params
-
-  const templates = await getUETemplates({
-    referentialId,
-    mention,
-    ...(speciality !== undefined && { speciality: speciality ?? null }),
+export async function applyProgramTemplate(orgId: string, programTemplateId: string) {
+  // 1. Fetch template with details
+  const template = await prisma.programTemplate.findUniqueOrThrow({
+    where: { id: programTemplateId },
+    include: {
+      programUEs: {
+        include: {
+          ueTemplate: {
+            include: { elements: true },
+          },
+        },
+      },
+    },
   })
 
-  if (templates.length === 0) throw new Error('Aucune UE trouvée pour cette filière.')
-
-  let imported = 0
-  let skipped  = 0
-
-  for (const t of templates) {
-    const existing = await getUETemplateImport(t.id, orgId)
-    if (existing) { skipped++; continue }
-
-    const full = await getUETemplate(t.id)
-    if (!full) continue
-
-    if (full.code) {
-      const conflict = await getUEByCode(full.code, orgId)
-      if (conflict) { skipped++; continue }
-    }
-
-    const ue = await createUE({ name: full.name, code: full.code ?? undefined, orgId })
-
-    await Promise.all(
-      full.elements.map((ec) => {
-        const credits = Number(ec.credits)
-        return createUECourse({
-          name:     ec.name ?? ec.code,
-          code:     ec.code,
-          credits,
-          duration: Math.max(1, Math.round(credits * 15)),
-          ueId:     ue.id,
-          orgId,
-        })
-      })
-    )
-
-    await addUEToProgram({ ueId: ue.id, programId, semester: full.semester })
-    await createUETemplateImport({ templateId: full.id, orgId, ueId: ue.id })
-    imported++
+  // 2. Créer/mettre à jour les entités de base (hors transaction)
+  let department = await prisma.department.findUnique({
+    where: { name_orgId: { name: template.domain, orgId } },
+  })
+  if (!department) {
+    department = await prisma.department.create({
+      data: { name: template.domain, orgId },
+    })
   }
 
-  return { imported, skipped, total: templates.length }
-}
+  let track = await prisma.programTrack.findUnique({
+    where: { name_departmentId: { name: template.mention, departmentId: department.id } },
+  })
+  if (!track) {
+    track = await prisma.programTrack.create({
+      data: { name: template.mention, departmentId: department.id, orgId },
+    })
+  }
 
-export async function deleteImportedUE(ueId: string, orgId: string) {
-  const imports = await getUETemplateImportsByOrg(orgId)
-  const record = imports.find((i) => i.ueId === ueId)
-  if (!record) throw new Error('Import introuvable pour cette UE.')
+  let program = await prisma.program.findUnique({
+    where: { name_programTrackId: { name: template.specialty, programTrackId: track.id } },
+  })
+  if (!program) {
+    program = await prisma.program.create({
+      data: {
+        name: template.specialty,
+        programTrackId: track.id,
+        orgId,
+        description: template.profile,
+         isLocked: true,// rules: tout program issue d un template est verouller : seul l user autoriser peut le deverouiller
+      },
+    })
+  }
 
-  await removeUE(ueId, orgId)
-  await deleteUETemplateImport(record.templateId, orgId)
+  // 3. Traiter les UEs une par une (hors transaction ou avec des transactions plus petites)
+  for (const pUETemplate of template.programUEs) {
+    const ueT = pUETemplate.ueTemplate
+
+    // Utiliser une transaction plus petite pour chaque UE
+    await prisma.$transaction(
+      async (tx) => {
+        // Find or create OrgUETemplate
+        let orgUE = await tx.orgUETemplate.findUnique({
+          where: { templateId_orgId: { templateId: ueT.id, orgId } },
+        })
+
+        let ueId = orgUE?.ueId
+
+        if (!orgUE) {
+          // Attempt to find existing UE by code if code is present
+          let ue = ueT.code
+            ? await tx.uE.findUnique({
+                where: { code_orgId: { code: ueT.code, orgId } },
+              })
+            : null
+
+          if (!ue) {
+            ue = await tx.uE.create({
+              data: {
+                name: ueT.name,
+                code: ueT.code,
+                description: ueT.description,
+                orgId,
+                departmentId: department.id,
+              },
+            })
+          }
+          ueId = ue.id
+
+          await tx.orgUETemplate.create({
+            data: { templateId: ueT.id, orgId, ueId },
+          })
+
+          // Create ECs if they don't exist
+          for (const ec of ueT.elements) {
+            const ueCourse = await tx.uECourse.findUnique({
+              where: { ueId_order: { ueId: ueId, order: ec.order } },
+            })
+            if (!ueCourse) {
+              await tx.uECourse.create({
+                data: {
+                  name: ec.name,
+                  code: ec.code,
+                  description: ec.description,
+                  credits: ec.credits,
+                  order: ec.order,
+                  ueId: ueId,
+                  orgId,
+                },
+              })
+            }
+          }
+        }
+
+        // Link UE to Program
+        const programUE = await tx.programUE.findUnique({
+          where: { programId_ueId: { programId: program.id, ueId: ueId! } },
+        })
+
+        if (!programUE) {
+          await tx.programUE.create({
+            data: {
+              programId: program.id,
+              ueId: ueId!,
+              semester: pUETemplate.semester,
+              order: pUETemplate.order,
+            },
+          })
+        }
+      },
+      {
+        timeout: 10000, // 10 secondes par UE
+      }
+    )
+  }
+
+  // 4. Upsert trace table (dernière opération)
+  const result = await prisma.orgProgramTemplate.upsert({
+    where: { orgId_programTemplateId: { orgId, programTemplateId } },
+    update: { departmentId: department.id, trackId: track.id, programId: program.id },
+    create: {
+      orgId,
+      programTemplateId,
+      departmentId: department.id,
+      trackId: track.id,
+      programId: program.id,
+    },
+  })
+
+  invalidateEvent('PROGRAM_TEMPLATE_APPLIED', orgId)
+  return result
 }

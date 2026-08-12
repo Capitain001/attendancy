@@ -2,21 +2,11 @@
   "service": "ue-template",
   "path": "src/services/ue-template/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "9a40932",
+  "derived_at": "d07c3a8",
   "utils_dir": null,
   "fns": {
-    "importUEFromTemplate": {
-      "f": ".api/importUEFromTemplate.json",
-      "layer": "db",
-      "kind": "mutation"
-    },
-    "importMentionFromReferential": {
-      "f": ".api/importMentionFromReferential.json",
-      "layer": "db",
-      "kind": "mutation"
-    },
-    "deleteImportedUE": {
-      "f": ".api/deleteImportedUE.json",
+    "applyProgramTemplate": {
+      "f": ".api/applyProgramTemplate.json",
       "layer": "db",
       "kind": "mutation"
     },
@@ -25,134 +15,58 @@
       "layer": "db",
       "kind": "query"
     },
-    "getUETemplates": {
-      "f": ".api/getUETemplates.json",
+    "getReferential": {
+      "f": ".api/getReferential.json",
       "layer": "db",
       "kind": "query"
     },
-    "getUETemplate": {
-      "f": ".api/getUETemplate.json",
+    "getReferentialWithPrograms": {
+      "f": ".api/getReferentialWithPrograms.json",
       "layer": "db",
       "kind": "query"
     },
-    "createUETemplateImport": {
-      "f": ".api/createUETemplateImport.json",
-      "layer": "db",
-      "kind": "mutation"
-    },
-    "deleteUETemplateImport": {
-      "f": ".api/deleteUETemplateImport.json",
-      "layer": "db",
-      "kind": "mutation"
-    },
-    "getUETemplateImport": {
-      "f": ".api/getUETemplateImport.json",
+    "getProgramTemplates": {
+      "f": ".api/getProgramTemplates.json",
       "layer": "db",
       "kind": "query"
     },
-    "getUETemplateImportsByOrg": {
-      "f": ".api/getUETemplateImportsByOrg.json",
+    "getOrgProgramTemplates": {
+      "f": ".api/getOrgProgramTemplates.json",
       "layer": "db",
       "kind": "query"
+    },
+    "applyProgramsAction": {
+      "f": ".api/applyProgramsAction.json",
+      "layer": "action",
+      "kind": "server-action"
     },
     "getReferentialsAction": {
       "f": ".api/getReferentialsAction.json",
       "layer": "action",
       "kind": "server-action"
     },
-    "getUETemplatesAction": {
-      "f": ".api/getUETemplatesAction.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "getUETemplateImportsByOrgAction": {
-      "f": ".api/getUETemplateImportsByOrgAction.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "importUEFromTemplateAction": {
-      "f": ".api/importUEFromTemplateAction.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "importMentionFromReferentialAction": {
-      "f": ".api/importMentionFromReferentialAction.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "deleteUETemplateImportAction": {
-      "f": ".api/deleteUETemplateImportAction.json",
+    "getReferentialAction": {
+      "f": ".api/getReferentialAction.json",
       "layer": "action",
       "kind": "server-action"
     }
   },
   "edges": {
-    "importUEFromTemplate": [
-      "importUEFromTemplateAction"
-    ],
-    "importMentionFromReferential": [
-      "importMentionFromReferentialAction"
-    ],
-    "deleteImportedUE": [
-      "deleteUETemplateImportAction"
+    "applyProgramTemplate": [
+      "applyProgramsAction"
     ],
     "getReferentials": [
       "getReferentialsAction"
     ],
-    "getUETemplates": [
-      "importMentionFromReferential",
-      "getUETemplatesAction"
+    "getReferential": [],
+    "getReferentialWithPrograms": [
+      "getReferentialAction"
     ],
-    "getUETemplate": [
-      "importUEFromTemplate",
-      "importMentionFromReferential"
-    ],
-    "createUETemplateImport": [
-      "importUEFromTemplate",
-      "importMentionFromReferential"
-    ],
-    "deleteUETemplateImport": [
-      "deleteImportedUE"
-    ],
-    "getUETemplateImport": [
-      "importUEFromTemplate",
-      "importMentionFromReferential"
-    ],
-    "getUETemplateImportsByOrg": [
-      "deleteImportedUE",
-      "getUETemplateImportsByOrgAction"
-    ],
+    "getProgramTemplates": [],
+    "getOrgProgramTemplates": [],
+    "applyProgramsAction": [],
     "getReferentialsAction": [],
-    "getUETemplatesAction": [],
-    "getUETemplateImportsByOrgAction": [],
-    "importUEFromTemplateAction": [],
-    "importMentionFromReferentialAction": [],
-    "deleteUETemplateImportAction": [],
-    "getUEByCode": [
-      "importUEFromTemplate",
-      "importMentionFromReferential"
-    ],
-    "createUE": [
-      "importUEFromTemplate",
-      "importMentionFromReferential"
-    ],
-    "createUECourse": [
-      "importUEFromTemplate",
-      "importMentionFromReferential"
-    ],
-    "addUEToProgram": [
-      "importUEFromTemplate",
-      "importMentionFromReferential"
-    ],
-    "removeUE": [
-      "deleteImportedUE"
-    ]
+    "getReferentialAction": []
   },
-  "deps": {
-    "getUEByCode": "ue",
-    "createUE": "ue",
-    "createUECourse": "ue-course",
-    "addUEToProgram": "program-ue",
-    "removeUE": "ue"
-  }
+  "deps": {}
 }

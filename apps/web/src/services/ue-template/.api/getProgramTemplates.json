@@ -1,0 +1,8 @@
+{
+  "name": "getProgramTemplates",
+  "file": "src/services/ue-template/database/template.queries.ts",
+  "sig": "(referentialId: string) => Promise<({ programUEs: ({ ueTemplate: { elements: { id: string; name: string; description: string | null; order: number; code: string; templateId: string; credits: number; duration: number | null; settings: JsonValue; }[]; } & { ...; }; } & { ...; })[]; } & { ...; })[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

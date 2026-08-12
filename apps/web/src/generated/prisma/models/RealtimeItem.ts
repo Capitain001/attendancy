@@ -437,14 +437,6 @@ export type RealtimeItemUncheckedUpdateManyWithoutChannelNestedInput = {
   deleteMany?: Prisma.RealtimeItemScalarWhereInput | Prisma.RealtimeItemScalarWhereInput[]
 }
 
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type RealtimeItemCreateWithoutChannelInput = {
   itemId: string
   x: number

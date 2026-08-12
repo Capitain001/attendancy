@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
-import { logOutUserForm } from "@/services/auth/actions";
+import { logoutActionForm } from "@/modules/auth";
 import { cn } from "@/lib/utils";
 
 interface LogOutFormProps {
@@ -13,7 +13,7 @@ interface LogOutFormProps {
 
 export default function LogOutForm({ userId, className }: LogOutFormProps) {
   return (
-    <form action={logOutUserForm} className={cn("w-full", className)}>
+    <form action={logoutActionForm} className={cn("w-full", className)}>
       {/* Champ caché pour transmettre l'ID utilisateur au server action */}
       {userId && <input type="hidden" name="userId" value={userId} />}
       

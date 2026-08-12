@@ -83,10 +83,10 @@ export const AuthMenu: React.FC<AuthMenuProps> = ({ user, className }) => {
   ]
 
   return (
-    <div className={cn("w-full bg-background border border-border rounded-xl shadow-sm overflow-hidden", className)}>
+    <div className={cn("w-full rounded-lg border border-border/30 bg-card shadow-[var(--shadow-card)]", className)}>
       
       {/* Header */}
-      <div className="flex items-center gap-3 p-3 bg-foreground/[0.01] border-b border-border/50">
+      <div className="flex items-center gap-3 py-1 px-3 bg-foreground/[0.01] border-b border-border/50">
         <UserIcon avatarUrl={user?.avatar_url ?? null} />
 
         <div className="min-w-0 flex-1">

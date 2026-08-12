@@ -227,10 +227,15 @@ export type Direction = Prisma.DirectionModel
  */
 export type ParentRelation = Prisma.ParentRelationModel
 /**
- * Model NationalReferential
+ * Model Referential
  * 
  */
-export type NationalReferential = Prisma.NationalReferentialModel
+export type Referential = Prisma.ReferentialModel
+/**
+ * Model ProgramTemplate
+ * 
+ */
+export type ProgramTemplate = Prisma.ProgramTemplateModel
 /**
  * Model UETemplate
  * 
@@ -242,10 +247,20 @@ export type UETemplate = Prisma.UETemplateModel
  */
 export type UETemplateEC = Prisma.UETemplateECModel
 /**
- * Model UETemplateImport
+ * Model ProgramUETemplate
  * 
  */
-export type UETemplateImport = Prisma.UETemplateImportModel
+export type ProgramUETemplate = Prisma.ProgramUETemplateModel
+/**
+ * Model OrgProgramTemplate
+ * 
+ */
+export type OrgProgramTemplate = Prisma.OrgProgramTemplateModel
+/**
+ * Model OrgUETemplate
+ * 
+ */
+export type OrgUETemplate = Prisma.OrgUETemplateModel
 /**
  * Model Schedule
  * 

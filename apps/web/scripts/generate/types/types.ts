@@ -2,9 +2,10 @@
 /**
  * scripts/generate/types/types.ts
  *
- * Génère src/services/<service>/generated.types.ts depuis database/*.queries.ts.
+ * Génère src/services/<service>/generated.types.ts depuis database/*.queries.ts
+ * ET database/*.mutations.ts.
  * Naming : fnName → export type FnNameDto = Awaited<ReturnType<typeof fn>>
- * Seules les fonctions exportées des fichiers *.queries.ts sont incluses.
+ * Seules les fonctions exportées des fichiers *.queries.ts / *.mutations.ts sont incluses.
  *
  * `generated.types.ts` est intégralement régénéré à chaque run (écrasement volontaire).
  * `types.ts` (barrel public, manuel) n'est JAMAIS écrasé — le script s'assure seulement
@@ -28,6 +29,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT = path.resolve(__dirname, "../../..");
 const SERVICES_DIR = path.join(ROOT, "src/services");
+
+// Suffixes de fichiers database/ scannés pour les exports de fonctions.
+const DB_FILE_SUFFIXES = [".queries.ts", ".mutations.ts"];
+
+function isDbFile(fileName: string): boolean {
+  return DB_FILE_SUFFIXES.some((suffix) => fileName.endsWith(suffix));
+}
 
 // ── Extraction des noms de fonctions exportées ────────────────────────────────
 
@@ -126,35 +134,52 @@ function generateForService(servicePath: string): boolean {
     return true;
   }
 
-  const queryFiles = fs
-    .readdirSync(dbDir)
-    .filter((f) => f.endsWith(".queries.ts"));
+  const dbFiles = fs.readdirSync(dbDir).filter(isDbFile);
 
-  if (!queryFiles.length) {
-    console.log(`  ⚠ ${servicePath} : aucun *.queries.ts — skip`);
+  if (!dbFiles.length) {
+    console.log(`  ⚠ ${servicePath} : aucun *.queries.ts / *.mutations.ts — skip`);
     return true;
   }
 
   const fns: string[] = [];
-  for (const f of queryFiles) {
+  for (const f of dbFiles) {
     fns.push(...extractExportedFns(path.join(dbDir, f)));
   }
 
   if (!fns.length) {
-    console.log(`  ⚠ ${servicePath} : aucune fn exportée dans queries — skip`);
+    console.log(`  ⚠ ${servicePath} : aucune fn exportée dans queries/mutations — skip`);
     return true;
   }
 
-  const generatedTypeNames = fns.map((fn) => `${toPascalCase(fn)}Dto`);
+  // Garde-fou : deux fonctions de même nom (ex. dans queries.ts et mutations.ts)
+  // généreraient un type dupliqué — on dédoublonne en gardant la 1ère occurrence
+  // et on avertit, plutôt que d'écrire un fichier invalide.
+  const seen = new Set<string>();
+  const dupes: string[] = [];
+  const uniqueFns = fns.filter((fn) => {
+    if (seen.has(fn)) {
+      dupes.push(fn);
+      return false;
+    }
+    seen.add(fn);
+    return true;
+  });
+  if (dupes.length) {
+    console.warn(
+      `  ⚠ ${servicePath} : fonction(s) exportée(s) en double (queries/mutations) — ignorée(s) après la 1ère occurrence : ${dupes.join(", ")}`
+    );
+  }
+
+  const generatedTypeNames = uniqueFns.map((fn) => `${toPascalCase(fn)}Dto`);
 
   const lines = [
     `// ⚠ Fichier généré automatiquement — NE PAS ÉDITER À LA MAIN`,
     `// Régénérer : npx tsx scripts/generate/types/types.ts ${servicePath}`,
     `// Pour surcharger un type, définissez-le dans ./types.ts (jamais écrasé).`,
     "",
-    `import { ${fns.join(", ")} } from './database'`,
+    `import { ${uniqueFns.join(", ")} } from './database'`,
     "",
-    ...fns.map(
+    ...uniqueFns.map(
       (fn) =>
         `export type ${toPascalCase(fn)}Dto = Awaited<ReturnType<typeof ${fn}>>`
     ),
@@ -184,11 +209,10 @@ function collectEligibleServices(dir: string, base = ""): string[] {
 
     const servicePath = base ? `${base}/${entry}` : entry;
     const dbDir = path.join(fullPath, "database");
-    const hasQueries =
-      fs.existsSync(dbDir) &&
-      fs.readdirSync(dbDir).some((f) => f.endsWith(".queries.ts"));
+    const hasDbFiles =
+      fs.existsSync(dbDir) && fs.readdirSync(dbDir).some(isDbFile);
 
-    if (hasQueries) results.push(servicePath);
+    if (hasDbFiles) results.push(servicePath);
 
     results.push(...collectEligibleServices(fullPath, servicePath));
   }

@@ -4,24 +4,34 @@ import * as v from 'valibot';
 export const UETemplateECSchema = v.object({
   id: v.string(),
   templateId: v.string(),
+  order: v.number(),
   code: v.string(),
-  name: v.nullable(v.string()),
-  credits: v.union([v.number(), v.string()])
+  name: v.string(),
+  credits: v.number(),
+  description: v.nullable(v.string()),
+  duration: v.nullable(v.number()),
+  settings: v.nullable(v.any())
 });
 export type UETemplateECSchemaType = v.InferOutput<typeof UETemplateECSchema>;
 
 export const CreateUETemplateECSchema = v.object({
   templateId: v.string(),
+  order: v.number(),
   code: v.string(),
-  credits: v.union([v.number(), v.string()])
+  name: v.string(),
+  credits: v.number()
 });
 export type CreateUETemplateECSchemaType = v.InferOutput<typeof CreateUETemplateECSchema>;
 
 export const UpdateUETemplateECSchema = v.object({
   id: v.optional(v.string()),
   templateId: v.optional(v.string()),
+  order: v.optional(v.number()),
   code: v.optional(v.string()),
   name: v.optional(v.string()),
-  credits: v.optional(v.union([v.number(), v.string()]))
+  credits: v.optional(v.number()),
+  description: v.optional(v.string()),
+  duration: v.optional(v.number()),
+  settings: v.optional(v.any())
 });
 export type UpdateUETemplateECSchemaType = v.InferOutput<typeof UpdateUETemplateECSchema>;

@@ -19,19 +19,19 @@ export default async function DirectionClassLayout({ children, params }: LayoutP
   // Récupération des données de la classe
   const { data: class_, error } = await getClassAction(classId);
 
-  if (error || !class_) {
-    notFound();
-  }
+  // if (error || !class_) {
+  //   notFound();
+  // }
 
   return (
     <div className="flex flex-col min-h-screen gap-4">
       {/* La bannière reste fixe pendant la navigation interne */}
-      <div className="px-4">
+      <div className="">
           <ClassBanner class_={class_} />
       </div>
       
       {/* Contenu dynamique des pages (Détails, Invitations, etc.) */}
-      <div className="flex-1 px-4">
+      <div className="flex-1 ">
         {children}
       </div>
     </div>

@@ -8,6 +8,7 @@ import { FormDialog } from '@/components/ui/FormDialog'
 import { DialogFooter } from '@/components/ui/dialog'
 
 const LEVELS = ['L1', 'L2', 'L3', 'M1', 'M2', 'D1', 'D2', 'D3'] as const
+type Level = typeof LEVELS[number]
 const LEVEL_LABEL: Record<string, string> = {
   L1: 'Licence 1', L2: 'Licence 2', L3: 'Licence 3',
   M1: 'Master 1', M2: 'Master 2',
@@ -35,7 +36,7 @@ function Form({
     await create.mutateAsync({
       name:           fd.get('name') as string,
       programTrackId: fd.get('programTrackId') as string,
-      level:          (fd.get('level') as string) || undefined,
+      level:          (fd.get('level') as Level) || undefined,
       academicYearId: currentYear?.id,
     })
     ref.current?.reset()
@@ -103,7 +104,7 @@ export function ClassCreateButton({
   return (
     <FormDialog
       trigger={
-        <Button size="sm" variant="outline" disabled={!currentYear}>
+        <Button size="sm" variant="outline" disabled={!currentYear||!programTracks}>
           <Plus className="size-3.5" />
           Classe
         </Button>

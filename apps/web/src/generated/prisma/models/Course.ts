@@ -288,7 +288,7 @@ export type CourseWhereInput = {
   durationTotal?: Prisma.IntFilter<"Course"> | number
   orgId?: Prisma.UuidFilter<"Course"> | string
   name?: Prisma.StringFilter<"Course"> | string
-  credits?: Prisma.IntFilter<"Course"> | number
+  credits?: Prisma.FloatFilter<"Course"> | number
   description?: Prisma.StringNullableFilter<"Course"> | string | null
   ueCourseId?: Prisma.UuidFilter<"Course"> | string
   termId?: Prisma.UuidNullableFilter<"Course"> | string | null
@@ -341,7 +341,7 @@ export type CourseWhereUniqueInput = Prisma.AtLeast<{
   durationTotal?: Prisma.IntFilter<"Course"> | number
   orgId?: Prisma.UuidFilter<"Course"> | string
   name?: Prisma.StringFilter<"Course"> | string
-  credits?: Prisma.IntFilter<"Course"> | number
+  credits?: Prisma.FloatFilter<"Course"> | number
   description?: Prisma.StringNullableFilter<"Course"> | string | null
   ueCourseId?: Prisma.UuidFilter<"Course"> | string
   termId?: Prisma.UuidNullableFilter<"Course"> | string | null
@@ -391,7 +391,7 @@ export type CourseScalarWhereWithAggregatesInput = {
   durationTotal?: Prisma.IntWithAggregatesFilter<"Course"> | number
   orgId?: Prisma.UuidWithAggregatesFilter<"Course"> | string
   name?: Prisma.StringWithAggregatesFilter<"Course"> | string
-  credits?: Prisma.IntWithAggregatesFilter<"Course"> | number
+  credits?: Prisma.FloatWithAggregatesFilter<"Course"> | number
   description?: Prisma.StringNullableWithAggregatesFilter<"Course"> | string | null
   ueCourseId?: Prisma.UuidWithAggregatesFilter<"Course"> | string
   termId?: Prisma.UuidNullableWithAggregatesFilter<"Course"> | string | null
@@ -406,7 +406,7 @@ export type CourseCreateInput = {
   durationDone?: number
   durationTotal?: number
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   class: Prisma.ClassCreateNestedOneWithoutCoursesInput
   organization: Prisma.OrganizationCreateNestedOneWithoutCoursesInput
@@ -429,7 +429,7 @@ export type CourseUncheckedCreateInput = {
   durationTotal?: number
   orgId: string
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   ueCourseId: string
   termId?: string | null
@@ -448,7 +448,7 @@ export type CourseUpdateInput = {
   durationDone?: Prisma.IntFieldUpdateOperationsInput | number
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   class?: Prisma.ClassUpdateOneRequiredWithoutCoursesNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutCoursesNestedInput
@@ -471,7 +471,7 @@ export type CourseUncheckedUpdateInput = {
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ueCourseId?: Prisma.StringFieldUpdateOperationsInput | string
   termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -492,7 +492,7 @@ export type CourseCreateManyInput = {
   durationTotal?: number
   orgId: string
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   ueCourseId: string
   termId?: string | null
@@ -507,7 +507,7 @@ export type CourseUpdateManyMutationInput = {
   durationDone?: Prisma.IntFieldUpdateOperationsInput | number
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -522,7 +522,7 @@ export type CourseUncheckedUpdateManyInput = {
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ueCourseId?: Prisma.StringFieldUpdateOperationsInput | string
   termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -837,7 +837,7 @@ export type CourseCreateWithoutUeCourseInput = {
   durationDone?: number
   durationTotal?: number
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   class: Prisma.ClassCreateNestedOneWithoutCoursesInput
   organization: Prisma.OrganizationCreateNestedOneWithoutCoursesInput
@@ -859,7 +859,7 @@ export type CourseUncheckedCreateWithoutUeCourseInput = {
   durationTotal?: number
   orgId: string
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   termId?: string | null
   teachers?: Prisma.CourseTeacherUncheckedCreateNestedManyWithoutCourseInput
@@ -908,7 +908,7 @@ export type CourseScalarWhereInput = {
   durationTotal?: Prisma.IntFilter<"Course"> | number
   orgId?: Prisma.UuidFilter<"Course"> | string
   name?: Prisma.StringFilter<"Course"> | string
-  credits?: Prisma.IntFilter<"Course"> | number
+  credits?: Prisma.FloatFilter<"Course"> | number
   description?: Prisma.StringNullableFilter<"Course"> | string | null
   ueCourseId?: Prisma.UuidFilter<"Course"> | string
   termId?: Prisma.UuidNullableFilter<"Course"> | string | null
@@ -923,7 +923,7 @@ export type CourseCreateWithoutClassInput = {
   durationDone?: number
   durationTotal?: number
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   organization: Prisma.OrganizationCreateNestedOneWithoutCoursesInput
   term?: Prisma.TermCreateNestedOneWithoutCoursesInput
@@ -944,7 +944,7 @@ export type CourseUncheckedCreateWithoutClassInput = {
   durationTotal?: number
   orgId: string
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   ueCourseId: string
   termId?: string | null
@@ -989,7 +989,7 @@ export type CourseCreateWithoutTermInput = {
   durationDone?: number
   durationTotal?: number
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   class: Prisma.ClassCreateNestedOneWithoutCoursesInput
   organization: Prisma.OrganizationCreateNestedOneWithoutCoursesInput
@@ -1011,7 +1011,7 @@ export type CourseUncheckedCreateWithoutTermInput = {
   durationTotal?: number
   orgId: string
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   ueCourseId: string
   teachers?: Prisma.CourseTeacherUncheckedCreateNestedManyWithoutCourseInput
@@ -1055,7 +1055,7 @@ export type CourseCreateWithoutTeachersInput = {
   durationDone?: number
   durationTotal?: number
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   class: Prisma.ClassCreateNestedOneWithoutCoursesInput
   organization: Prisma.OrganizationCreateNestedOneWithoutCoursesInput
@@ -1077,7 +1077,7 @@ export type CourseUncheckedCreateWithoutTeachersInput = {
   durationTotal?: number
   orgId: string
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   ueCourseId: string
   termId?: string | null
@@ -1111,7 +1111,7 @@ export type CourseUpdateWithoutTeachersInput = {
   durationDone?: Prisma.IntFieldUpdateOperationsInput | number
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   class?: Prisma.ClassUpdateOneRequiredWithoutCoursesNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutCoursesNestedInput
@@ -1133,7 +1133,7 @@ export type CourseUncheckedUpdateWithoutTeachersInput = {
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ueCourseId?: Prisma.StringFieldUpdateOperationsInput | string
   termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1151,7 +1151,7 @@ export type CourseCreateWithoutEvaluationsInput = {
   durationDone?: number
   durationTotal?: number
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   class: Prisma.ClassCreateNestedOneWithoutCoursesInput
   organization: Prisma.OrganizationCreateNestedOneWithoutCoursesInput
@@ -1173,7 +1173,7 @@ export type CourseUncheckedCreateWithoutEvaluationsInput = {
   durationTotal?: number
   orgId: string
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   ueCourseId: string
   termId?: string | null
@@ -1207,7 +1207,7 @@ export type CourseUpdateWithoutEvaluationsInput = {
   durationDone?: Prisma.IntFieldUpdateOperationsInput | number
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   class?: Prisma.ClassUpdateOneRequiredWithoutCoursesNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutCoursesNestedInput
@@ -1229,7 +1229,7 @@ export type CourseUncheckedUpdateWithoutEvaluationsInput = {
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ueCourseId?: Prisma.StringFieldUpdateOperationsInput | string
   termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1247,7 +1247,7 @@ export type CourseCreateWithoutSchedulesInput = {
   durationDone?: number
   durationTotal?: number
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   class: Prisma.ClassCreateNestedOneWithoutCoursesInput
   organization: Prisma.OrganizationCreateNestedOneWithoutCoursesInput
@@ -1269,7 +1269,7 @@ export type CourseUncheckedCreateWithoutSchedulesInput = {
   durationTotal?: number
   orgId: string
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   ueCourseId: string
   termId?: string | null
@@ -1303,7 +1303,7 @@ export type CourseUpdateWithoutSchedulesInput = {
   durationDone?: Prisma.IntFieldUpdateOperationsInput | number
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   class?: Prisma.ClassUpdateOneRequiredWithoutCoursesNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutCoursesNestedInput
@@ -1325,7 +1325,7 @@ export type CourseUncheckedUpdateWithoutSchedulesInput = {
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ueCourseId?: Prisma.StringFieldUpdateOperationsInput | string
   termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1343,7 +1343,7 @@ export type CourseCreateWithoutWeeklySlotsInput = {
   durationDone?: number
   durationTotal?: number
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   class: Prisma.ClassCreateNestedOneWithoutCoursesInput
   organization: Prisma.OrganizationCreateNestedOneWithoutCoursesInput
@@ -1365,7 +1365,7 @@ export type CourseUncheckedCreateWithoutWeeklySlotsInput = {
   durationTotal?: number
   orgId: string
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   ueCourseId: string
   termId?: string | null
@@ -1399,7 +1399,7 @@ export type CourseUpdateWithoutWeeklySlotsInput = {
   durationDone?: Prisma.IntFieldUpdateOperationsInput | number
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   class?: Prisma.ClassUpdateOneRequiredWithoutCoursesNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutCoursesNestedInput
@@ -1421,7 +1421,7 @@ export type CourseUncheckedUpdateWithoutWeeklySlotsInput = {
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ueCourseId?: Prisma.StringFieldUpdateOperationsInput | string
   termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1439,7 +1439,7 @@ export type CourseCreateWithoutOrganizationInput = {
   durationDone?: number
   durationTotal?: number
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   class: Prisma.ClassCreateNestedOneWithoutCoursesInput
   term?: Prisma.TermCreateNestedOneWithoutCoursesInput
@@ -1460,7 +1460,7 @@ export type CourseUncheckedCreateWithoutOrganizationInput = {
   durationDone?: number
   durationTotal?: number
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   ueCourseId: string
   termId?: string | null
@@ -1507,7 +1507,7 @@ export type CourseCreateManyUeCourseInput = {
   durationTotal?: number
   orgId: string
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   termId?: string | null
 }
@@ -1521,7 +1521,7 @@ export type CourseUpdateWithoutUeCourseInput = {
   durationDone?: Prisma.IntFieldUpdateOperationsInput | number
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   class?: Prisma.ClassUpdateOneRequiredWithoutCoursesNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutCoursesNestedInput
@@ -1543,7 +1543,7 @@ export type CourseUncheckedUpdateWithoutUeCourseInput = {
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   teachers?: Prisma.CourseTeacherUncheckedUpdateManyWithoutCourseNestedInput
@@ -1563,7 +1563,7 @@ export type CourseUncheckedUpdateManyWithoutUeCourseInput = {
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -1578,7 +1578,7 @@ export type CourseCreateManyClassInput = {
   durationTotal?: number
   orgId: string
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   ueCourseId: string
   termId?: string | null
@@ -1593,7 +1593,7 @@ export type CourseUpdateWithoutClassInput = {
   durationDone?: Prisma.IntFieldUpdateOperationsInput | number
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutCoursesNestedInput
   term?: Prisma.TermUpdateOneWithoutCoursesNestedInput
@@ -1614,7 +1614,7 @@ export type CourseUncheckedUpdateWithoutClassInput = {
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ueCourseId?: Prisma.StringFieldUpdateOperationsInput | string
   termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1634,7 +1634,7 @@ export type CourseUncheckedUpdateManyWithoutClassInput = {
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ueCourseId?: Prisma.StringFieldUpdateOperationsInput | string
   termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1651,7 +1651,7 @@ export type CourseCreateManyTermInput = {
   durationTotal?: number
   orgId: string
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   ueCourseId: string
 }
@@ -1665,7 +1665,7 @@ export type CourseUpdateWithoutTermInput = {
   durationDone?: Prisma.IntFieldUpdateOperationsInput | number
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   class?: Prisma.ClassUpdateOneRequiredWithoutCoursesNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutCoursesNestedInput
@@ -1687,7 +1687,7 @@ export type CourseUncheckedUpdateWithoutTermInput = {
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ueCourseId?: Prisma.StringFieldUpdateOperationsInput | string
   teachers?: Prisma.CourseTeacherUncheckedUpdateManyWithoutCourseNestedInput
@@ -1707,7 +1707,7 @@ export type CourseUncheckedUpdateManyWithoutTermInput = {
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ueCourseId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -1722,7 +1722,7 @@ export type CourseCreateManyOrganizationInput = {
   durationDone?: number
   durationTotal?: number
   name: string
-  credits: number
+  credits?: number
   description?: string | null
   ueCourseId: string
   termId?: string | null
@@ -1737,7 +1737,7 @@ export type CourseUpdateWithoutOrganizationInput = {
   durationDone?: Prisma.IntFieldUpdateOperationsInput | number
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   class?: Prisma.ClassUpdateOneRequiredWithoutCoursesNestedInput
   term?: Prisma.TermUpdateOneWithoutCoursesNestedInput
@@ -1758,7 +1758,7 @@ export type CourseUncheckedUpdateWithoutOrganizationInput = {
   durationDone?: Prisma.IntFieldUpdateOperationsInput | number
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ueCourseId?: Prisma.StringFieldUpdateOperationsInput | string
   termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1778,7 +1778,7 @@ export type CourseUncheckedUpdateManyWithoutOrganizationInput = {
   durationDone?: Prisma.IntFieldUpdateOperationsInput | number
   durationTotal?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  credits?: Prisma.IntFieldUpdateOperationsInput | number
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ueCourseId?: Prisma.StringFieldUpdateOperationsInput | string
   termId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2420,7 +2420,7 @@ export interface CourseFieldRefs {
   readonly durationTotal: Prisma.FieldRef<"Course", 'Int'>
   readonly orgId: Prisma.FieldRef<"Course", 'String'>
   readonly name: Prisma.FieldRef<"Course", 'String'>
-  readonly credits: Prisma.FieldRef<"Course", 'Int'>
+  readonly credits: Prisma.FieldRef<"Course", 'Float'>
   readonly description: Prisma.FieldRef<"Course", 'String'>
   readonly ueCourseId: Prisma.FieldRef<"Course", 'String'>
   readonly termId: Prisma.FieldRef<"Course", 'String'>

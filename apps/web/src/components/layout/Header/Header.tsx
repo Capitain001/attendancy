@@ -3,6 +3,8 @@ import { ModeToggle } from './ModeToggle'
 import { UserMenu } from './UserMenu'
 import { UserInfo } from '@/types/user'
 import { orgPath } from '@/config'
+import AuthButton from '@/components/auth/ui/AuthButton'
+import { NotificationsPopover } from '../sidebar/ui/NotificationsPopover'
 
 
 interface HeaderProps {
@@ -28,7 +30,7 @@ export default function Header({ user }: HeaderProps) {
 {/* <p>{orgHref}</p> */}
         <div className="flex items-center gap-1">
           <ModeToggle />
-          {user ? (
+          {/* {user ? (
             <UserMenu user={user} />
           ) : (
             <Link
@@ -37,7 +39,10 @@ export default function Header({ user }: HeaderProps) {
             >
               Connexion
             </Link>
-          )}
+          )} */}
+
+            {user && <NotificationsPopover />}
+  <AuthButton user={user} />
         </div>
       </div>
     </header>

@@ -22,4 +22,16 @@
 //     process.exit(1)
 //   })
 
-export {}
+import { defineConfig } from "prisma/config";
+import { seedReferentialTogo2022 } from "./referential-togo-2022";
+
+  export default defineConfig({
+    migrations: {
+      seed: "./referential-togo-2022.ts",
+    },
+    datasource: {
+      url: process.env.DATABASE_URL,
+    },
+  })
+
+// export {}

@@ -27,13 +27,13 @@ export type AggregateUECourse = {
 }
 
 export type UECourseAvgAggregateOutputType = {
-  credits: runtime.Decimal | null
+  credits: number | null
   duration: number | null
   order: number | null
 }
 
 export type UECourseSumAggregateOutputType = {
-  credits: runtime.Decimal | null
+  credits: number | null
   duration: number | null
   order: number | null
 }
@@ -42,7 +42,7 @@ export type UECourseMinAggregateOutputType = {
   id: string | null
   name: string | null
   description: string | null
-  credits: runtime.Decimal | null
+  credits: number | null
   imageUrl: string | null
   duration: number | null
   orgId: string | null
@@ -58,7 +58,7 @@ export type UECourseMaxAggregateOutputType = {
   id: string | null
   name: string | null
   description: string | null
-  credits: runtime.Decimal | null
+  credits: number | null
   imageUrl: string | null
   duration: number | null
   orgId: string | null
@@ -241,7 +241,7 @@ export type UECourseGroupByOutputType = {
   id: string
   name: string
   description: string | null
-  credits: runtime.Decimal
+  credits: number
   imageUrl: string | null
   duration: number
   settings: runtime.JsonValue | null
@@ -281,7 +281,7 @@ export type UECourseWhereInput = {
   id?: Prisma.UuidFilter<"UECourse"> | string
   name?: Prisma.StringFilter<"UECourse"> | string
   description?: Prisma.StringNullableFilter<"UECourse"> | string | null
-  credits?: Prisma.DecimalFilter<"UECourse"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: Prisma.FloatFilter<"UECourse"> | number
   imageUrl?: Prisma.StringNullableFilter<"UECourse"> | string | null
   duration?: Prisma.IntFilter<"UECourse"> | number
   settings?: Prisma.JsonNullableFilter<"UECourse">
@@ -326,7 +326,7 @@ export type UECourseWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UECourseWhereInput | Prisma.UECourseWhereInput[]
   name?: Prisma.StringFilter<"UECourse"> | string
   description?: Prisma.StringNullableFilter<"UECourse"> | string | null
-  credits?: Prisma.DecimalFilter<"UECourse"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: Prisma.FloatFilter<"UECourse"> | number
   imageUrl?: Prisma.StringNullableFilter<"UECourse"> | string | null
   duration?: Prisma.IntFilter<"UECourse"> | number
   settings?: Prisma.JsonNullableFilter<"UECourse">
@@ -371,7 +371,7 @@ export type UECourseScalarWhereWithAggregatesInput = {
   id?: Prisma.UuidWithAggregatesFilter<"UECourse"> | string
   name?: Prisma.StringWithAggregatesFilter<"UECourse"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"UECourse"> | string | null
-  credits?: Prisma.DecimalWithAggregatesFilter<"UECourse"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: Prisma.FloatWithAggregatesFilter<"UECourse"> | number
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"UECourse"> | string | null
   duration?: Prisma.IntWithAggregatesFilter<"UECourse"> | number
   settings?: Prisma.JsonNullableWithAggregatesFilter<"UECourse">
@@ -388,7 +388,7 @@ export type UECourseCreateInput = {
   id?: string
   name: string
   description?: string | null
-  credits?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: number
   imageUrl?: string | null
   duration?: number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -406,7 +406,7 @@ export type UECourseUncheckedCreateInput = {
   id?: string
   name: string
   description?: string | null
-  credits?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: number
   imageUrl?: string | null
   duration?: number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -424,7 +424,7 @@ export type UECourseUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -442,7 +442,7 @@ export type UECourseUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -460,7 +460,7 @@ export type UECourseCreateManyInput = {
   id?: string
   name: string
   description?: string | null
-  credits?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: number
   imageUrl?: string | null
   duration?: number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -477,7 +477,7 @@ export type UECourseUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -492,7 +492,7 @@ export type UECourseUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -633,12 +633,12 @@ export type UECourseUncheckedUpdateManyWithoutUeNestedInput = {
   deleteMany?: Prisma.UECourseScalarWhereInput | Prisma.UECourseScalarWhereInput[]
 }
 
-export type DecimalFieldUpdateOperationsInput = {
-  set?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type UECourseCreateNestedOneWithoutCoursesInput = {
@@ -701,7 +701,7 @@ export type UECourseCreateWithoutUeInput = {
   id?: string
   name: string
   description?: string | null
-  credits?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: number
   imageUrl?: string | null
   duration?: number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -718,7 +718,7 @@ export type UECourseUncheckedCreateWithoutUeInput = {
   id?: string
   name: string
   description?: string | null
-  credits?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: number
   imageUrl?: string | null
   duration?: number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -764,7 +764,7 @@ export type UECourseScalarWhereInput = {
   id?: Prisma.UuidFilter<"UECourse"> | string
   name?: Prisma.StringFilter<"UECourse"> | string
   description?: Prisma.StringNullableFilter<"UECourse"> | string | null
-  credits?: Prisma.DecimalFilter<"UECourse"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: Prisma.FloatFilter<"UECourse"> | number
   imageUrl?: Prisma.StringNullableFilter<"UECourse"> | string | null
   duration?: Prisma.IntFilter<"UECourse"> | number
   settings?: Prisma.JsonNullableFilter<"UECourse">
@@ -781,7 +781,7 @@ export type UECourseCreateWithoutCoursesInput = {
   id?: string
   name: string
   description?: string | null
-  credits?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: number
   imageUrl?: string | null
   duration?: number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -798,7 +798,7 @@ export type UECourseUncheckedCreateWithoutCoursesInput = {
   id?: string
   name: string
   description?: string | null
-  credits?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: number
   imageUrl?: string | null
   duration?: number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -831,7 +831,7 @@ export type UECourseUpdateWithoutCoursesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -848,7 +848,7 @@ export type UECourseUncheckedUpdateWithoutCoursesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -865,7 +865,7 @@ export type UECourseCreateWithoutOrganizationInput = {
   id?: string
   name: string
   description?: string | null
-  credits?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: number
   imageUrl?: string | null
   duration?: number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -882,7 +882,7 @@ export type UECourseUncheckedCreateWithoutOrganizationInput = {
   id?: string
   name: string
   description?: string | null
-  credits?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: number
   imageUrl?: string | null
   duration?: number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -925,7 +925,7 @@ export type UECourseCreateManyUeInput = {
   id?: string
   name: string
   description?: string | null
-  credits?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: number
   imageUrl?: string | null
   duration?: number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -941,7 +941,7 @@ export type UECourseUpdateWithoutUeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -958,7 +958,7 @@ export type UECourseUncheckedUpdateWithoutUeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -975,7 +975,7 @@ export type UECourseUncheckedUpdateManyWithoutUeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -991,7 +991,7 @@ export type UECourseCreateManyOrganizationInput = {
   id?: string
   name: string
   description?: string | null
-  credits?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: number
   imageUrl?: string | null
   duration?: number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1007,7 +1007,7 @@ export type UECourseUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1024,7 +1024,7 @@ export type UECourseUncheckedUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1041,7 +1041,7 @@ export type UECourseUncheckedUpdateManyWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1187,7 +1187,7 @@ export type $UECoursePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     id: string
     name: string
     description: string | null
-    credits: runtime.Decimal
+    credits: number
     imageUrl: string | null
     duration: number
     settings: runtime.JsonValue | null
@@ -1627,7 +1627,7 @@ export interface UECourseFieldRefs {
   readonly id: Prisma.FieldRef<"UECourse", 'String'>
   readonly name: Prisma.FieldRef<"UECourse", 'String'>
   readonly description: Prisma.FieldRef<"UECourse", 'String'>
-  readonly credits: Prisma.FieldRef<"UECourse", 'Decimal'>
+  readonly credits: Prisma.FieldRef<"UECourse", 'Float'>
   readonly imageUrl: Prisma.FieldRef<"UECourse", 'String'>
   readonly duration: Prisma.FieldRef<"UECourse", 'Int'>
   readonly settings: Prisma.FieldRef<"UECourse", 'Json'>

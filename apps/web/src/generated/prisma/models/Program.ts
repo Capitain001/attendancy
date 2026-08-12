@@ -32,6 +32,8 @@ export type ProgramMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
+  isActive: boolean | null
+  isLocked: boolean | null
   programTrackId: string | null
 }
 
@@ -43,6 +45,8 @@ export type ProgramMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
+  isActive: boolean | null
+  isLocked: boolean | null
   programTrackId: string | null
 }
 
@@ -54,6 +58,8 @@ export type ProgramCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   deletedAt: number
+  isActive: number
+  isLocked: number
   programTrackId: number
   _all: number
 }
@@ -67,6 +73,8 @@ export type ProgramMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
+  isActive?: true
+  isLocked?: true
   programTrackId?: true
 }
 
@@ -78,6 +86,8 @@ export type ProgramMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
+  isActive?: true
+  isLocked?: true
   programTrackId?: true
 }
 
@@ -89,6 +99,8 @@ export type ProgramCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
+  isActive?: true
+  isLocked?: true
   programTrackId?: true
   _all?: true
 }
@@ -173,6 +185,8 @@ export type ProgramGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
+  isActive: boolean
+  isLocked: boolean
   programTrackId: string
   _count: ProgramCountAggregateOutputType | null
   _min: ProgramMinAggregateOutputType | null
@@ -205,6 +219,8 @@ export type ProgramWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Program"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Program"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Program"> | Date | string | null
+  isActive?: Prisma.BoolFilter<"Program"> | boolean
+  isLocked?: Prisma.BoolFilter<"Program"> | boolean
   programTrackId?: Prisma.UuidFilter<"Program"> | string
   classes?: Prisma.ClassListRelationFilter
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
@@ -220,6 +236,8 @@ export type ProgramOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  isLocked?: Prisma.SortOrder
   programTrackId?: Prisma.SortOrder
   classes?: Prisma.ClassOrderByRelationAggregateInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
@@ -239,6 +257,8 @@ export type ProgramWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Program"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Program"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Program"> | Date | string | null
+  isActive?: Prisma.BoolFilter<"Program"> | boolean
+  isLocked?: Prisma.BoolFilter<"Program"> | boolean
   programTrackId?: Prisma.UuidFilter<"Program"> | string
   classes?: Prisma.ClassListRelationFilter
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
@@ -254,6 +274,8 @@ export type ProgramOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  isLocked?: Prisma.SortOrder
   programTrackId?: Prisma.SortOrder
   _count?: Prisma.ProgramCountOrderByAggregateInput
   _max?: Prisma.ProgramMaxOrderByAggregateInput
@@ -271,6 +293,8 @@ export type ProgramScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Program"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Program"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Program"> | Date | string | null
+  isActive?: Prisma.BoolWithAggregatesFilter<"Program"> | boolean
+  isLocked?: Prisma.BoolWithAggregatesFilter<"Program"> | boolean
   programTrackId?: Prisma.UuidWithAggregatesFilter<"Program"> | string
 }
 
@@ -281,6 +305,8 @@ export type ProgramCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  isActive?: boolean
+  isLocked?: boolean
   classes?: Prisma.ClassCreateNestedManyWithoutProgramInput
   organization: Prisma.OrganizationCreateNestedOneWithoutProgramsInput
   programTrack: Prisma.ProgramTrackCreateNestedOneWithoutProgramsInput
@@ -295,6 +321,8 @@ export type ProgramUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  isActive?: boolean
+  isLocked?: boolean
   programTrackId: string
   classes?: Prisma.ClassUncheckedCreateNestedManyWithoutProgramInput
   programUEs?: Prisma.ProgramUEUncheckedCreateNestedManyWithoutProgramInput
@@ -307,6 +335,8 @@ export type ProgramUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   classes?: Prisma.ClassUpdateManyWithoutProgramNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutProgramsNestedInput
   programTrack?: Prisma.ProgramTrackUpdateOneRequiredWithoutProgramsNestedInput
@@ -321,6 +351,8 @@ export type ProgramUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   programTrackId?: Prisma.StringFieldUpdateOperationsInput | string
   classes?: Prisma.ClassUncheckedUpdateManyWithoutProgramNestedInput
   programUEs?: Prisma.ProgramUEUncheckedUpdateManyWithoutProgramNestedInput
@@ -334,6 +366,8 @@ export type ProgramCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  isActive?: boolean
+  isLocked?: boolean
   programTrackId: string
 }
 
@@ -344,6 +378,8 @@ export type ProgramUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type ProgramUncheckedUpdateManyInput = {
@@ -354,6 +390,8 @@ export type ProgramUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   programTrackId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -380,6 +418,8 @@ export type ProgramCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  isLocked?: Prisma.SortOrder
   programTrackId?: Prisma.SortOrder
 }
 
@@ -391,6 +431,8 @@ export type ProgramMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  isLocked?: Prisma.SortOrder
   programTrackId?: Prisma.SortOrder
 }
 
@@ -402,6 +444,8 @@ export type ProgramMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  isLocked?: Prisma.SortOrder
   programTrackId?: Prisma.SortOrder
 }
 
@@ -540,6 +584,8 @@ export type ProgramCreateWithoutProgramTrackInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  isActive?: boolean
+  isLocked?: boolean
   classes?: Prisma.ClassCreateNestedManyWithoutProgramInput
   organization: Prisma.OrganizationCreateNestedOneWithoutProgramsInput
   programUEs?: Prisma.ProgramUECreateNestedManyWithoutProgramInput
@@ -553,6 +599,8 @@ export type ProgramUncheckedCreateWithoutProgramTrackInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  isActive?: boolean
+  isLocked?: boolean
   classes?: Prisma.ClassUncheckedCreateNestedManyWithoutProgramInput
   programUEs?: Prisma.ProgramUEUncheckedCreateNestedManyWithoutProgramInput
 }
@@ -594,6 +642,8 @@ export type ProgramScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Program"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Program"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Program"> | Date | string | null
+  isActive?: Prisma.BoolFilter<"Program"> | boolean
+  isLocked?: Prisma.BoolFilter<"Program"> | boolean
   programTrackId?: Prisma.UuidFilter<"Program"> | string
 }
 
@@ -604,6 +654,8 @@ export type ProgramCreateWithoutProgramUEsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  isActive?: boolean
+  isLocked?: boolean
   classes?: Prisma.ClassCreateNestedManyWithoutProgramInput
   organization: Prisma.OrganizationCreateNestedOneWithoutProgramsInput
   programTrack: Prisma.ProgramTrackCreateNestedOneWithoutProgramsInput
@@ -617,6 +669,8 @@ export type ProgramUncheckedCreateWithoutProgramUEsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  isActive?: boolean
+  isLocked?: boolean
   programTrackId: string
   classes?: Prisma.ClassUncheckedCreateNestedManyWithoutProgramInput
 }
@@ -644,6 +698,8 @@ export type ProgramUpdateWithoutProgramUEsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   classes?: Prisma.ClassUpdateManyWithoutProgramNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutProgramsNestedInput
   programTrack?: Prisma.ProgramTrackUpdateOneRequiredWithoutProgramsNestedInput
@@ -657,6 +713,8 @@ export type ProgramUncheckedUpdateWithoutProgramUEsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   programTrackId?: Prisma.StringFieldUpdateOperationsInput | string
   classes?: Prisma.ClassUncheckedUpdateManyWithoutProgramNestedInput
 }
@@ -668,6 +726,8 @@ export type ProgramCreateWithoutClassesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  isActive?: boolean
+  isLocked?: boolean
   organization: Prisma.OrganizationCreateNestedOneWithoutProgramsInput
   programTrack: Prisma.ProgramTrackCreateNestedOneWithoutProgramsInput
   programUEs?: Prisma.ProgramUECreateNestedManyWithoutProgramInput
@@ -681,6 +741,8 @@ export type ProgramUncheckedCreateWithoutClassesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  isActive?: boolean
+  isLocked?: boolean
   programTrackId: string
   programUEs?: Prisma.ProgramUEUncheckedCreateNestedManyWithoutProgramInput
 }
@@ -708,6 +770,8 @@ export type ProgramUpdateWithoutClassesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutProgramsNestedInput
   programTrack?: Prisma.ProgramTrackUpdateOneRequiredWithoutProgramsNestedInput
   programUEs?: Prisma.ProgramUEUpdateManyWithoutProgramNestedInput
@@ -721,6 +785,8 @@ export type ProgramUncheckedUpdateWithoutClassesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   programTrackId?: Prisma.StringFieldUpdateOperationsInput | string
   programUEs?: Prisma.ProgramUEUncheckedUpdateManyWithoutProgramNestedInput
 }
@@ -732,6 +798,8 @@ export type ProgramCreateWithoutOrganizationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  isActive?: boolean
+  isLocked?: boolean
   classes?: Prisma.ClassCreateNestedManyWithoutProgramInput
   programTrack: Prisma.ProgramTrackCreateNestedOneWithoutProgramsInput
   programUEs?: Prisma.ProgramUECreateNestedManyWithoutProgramInput
@@ -744,6 +812,8 @@ export type ProgramUncheckedCreateWithoutOrganizationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  isActive?: boolean
+  isLocked?: boolean
   programTrackId: string
   classes?: Prisma.ClassUncheckedCreateNestedManyWithoutProgramInput
   programUEs?: Prisma.ProgramUEUncheckedCreateNestedManyWithoutProgramInput
@@ -783,6 +853,8 @@ export type ProgramCreateManyProgramTrackInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  isActive?: boolean
+  isLocked?: boolean
 }
 
 export type ProgramUpdateWithoutProgramTrackInput = {
@@ -792,6 +864,8 @@ export type ProgramUpdateWithoutProgramTrackInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   classes?: Prisma.ClassUpdateManyWithoutProgramNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutProgramsNestedInput
   programUEs?: Prisma.ProgramUEUpdateManyWithoutProgramNestedInput
@@ -805,6 +879,8 @@ export type ProgramUncheckedUpdateWithoutProgramTrackInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   classes?: Prisma.ClassUncheckedUpdateManyWithoutProgramNestedInput
   programUEs?: Prisma.ProgramUEUncheckedUpdateManyWithoutProgramNestedInput
 }
@@ -817,6 +893,8 @@ export type ProgramUncheckedUpdateManyWithoutProgramTrackInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type ProgramCreateManyOrganizationInput = {
@@ -826,6 +904,8 @@ export type ProgramCreateManyOrganizationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  isActive?: boolean
+  isLocked?: boolean
   programTrackId: string
 }
 
@@ -836,6 +916,8 @@ export type ProgramUpdateWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   classes?: Prisma.ClassUpdateManyWithoutProgramNestedInput
   programTrack?: Prisma.ProgramTrackUpdateOneRequiredWithoutProgramsNestedInput
   programUEs?: Prisma.ProgramUEUpdateManyWithoutProgramNestedInput
@@ -848,6 +930,8 @@ export type ProgramUncheckedUpdateWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   programTrackId?: Prisma.StringFieldUpdateOperationsInput | string
   classes?: Prisma.ClassUncheckedUpdateManyWithoutProgramNestedInput
   programUEs?: Prisma.ProgramUEUncheckedUpdateManyWithoutProgramNestedInput
@@ -860,6 +944,8 @@ export type ProgramUncheckedUpdateManyWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   programTrackId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -911,6 +997,8 @@ export type ProgramSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
+  isActive?: boolean
+  isLocked?: boolean
   programTrackId?: boolean
   classes?: boolean | Prisma.Program$classesArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
@@ -927,6 +1015,8 @@ export type ProgramSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
+  isActive?: boolean
+  isLocked?: boolean
   programTrackId?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   programTrack?: boolean | Prisma.ProgramTrackDefaultArgs<ExtArgs>
@@ -940,6 +1030,8 @@ export type ProgramSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
+  isActive?: boolean
+  isLocked?: boolean
   programTrackId?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   programTrack?: boolean | Prisma.ProgramTrackDefaultArgs<ExtArgs>
@@ -953,10 +1045,12 @@ export type ProgramSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
+  isActive?: boolean
+  isLocked?: boolean
   programTrackId?: boolean
 }
 
-export type ProgramOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "orgId" | "createdAt" | "updatedAt" | "deletedAt" | "programTrackId", ExtArgs["result"]["program"]>
+export type ProgramOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "orgId" | "createdAt" | "updatedAt" | "deletedAt" | "isActive" | "isLocked" | "programTrackId", ExtArgs["result"]["program"]>
 export type ProgramInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   classes?: boolean | Prisma.Program$classesArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
@@ -989,6 +1083,8 @@ export type $ProgramPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
+    isActive: boolean
+    isLocked: boolean
     programTrackId: string
   }, ExtArgs["result"]["program"]>
   composites: {}
@@ -1424,6 +1520,8 @@ export interface ProgramFieldRefs {
   readonly createdAt: Prisma.FieldRef<"Program", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Program", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Program", 'DateTime'>
+  readonly isActive: Prisma.FieldRef<"Program", 'Boolean'>
+  readonly isLocked: Prisma.FieldRef<"Program", 'Boolean'>
   readonly programTrackId: Prisma.FieldRef<"Program", 'String'>
 }
     

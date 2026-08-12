@@ -69,6 +69,12 @@ model Program {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   deletedAt      DateTime?
+
+    // Disponible pour l'application à de nouvelles classes.
+  isActive       Boolean      @default(false)
+
+  // Maquette figée : les ProgramUE ne peuvent plus être modifiés.
+  isLocked       Boolean      @default(false)
   programTrackId String       @db.Uuid
   classes        Class[]
   organization   Organization @relation(fields: [orgId], references: [id])
@@ -120,8 +126,11 @@ model UE {
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   deletedAt    DateTime?
-  isOptional   Boolean      @default(false)
-  optionalUEs  OptionalUE[]
+  isOptional   Boolean      @default(false) // consever pr ne pas casser l'existant sera progressivement retirer puis suprimer , l,info de l optionel est gerer dans program UE
+  //une UE peut etre optionel dans un program et pas dans un autre
+
+   type UEType @default(FONDAMENTALE)
+  optionalUEs  OptionalUE[] 
   programUEs   ProgramUE[]
   department   Department?  @relation(fields: [departmentId], references: [id], onDelete: SetNull)
   organization Organization @relation(fields: [orgId], references: [id])
@@ -143,10 +152,10 @@ model UECourse {
   id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name         String
   description  String?
-  credits      Decimal      @default(2) @db.Decimal(4, 2)
+  credits      Float        @default(2)
   imageUrl     String?
-  duration     Int          @default(10)
-  settings     Json?
+  duration     Int          @default(24)
+  settings     Json? //Détails  { hours: { CM: 10, TD: 15, TP: 5 } }
   orgId        String       @db.Uuid
   ueId         String       @db.Uuid
   createdAt    DateTime     @default(now())
@@ -239,7 +248,7 @@ model Course {
   durationTotal Int             @default(0)
   orgId         String          @db.Uuid
   name          String
-  credits       Int
+  credits       Float           @default(2)
   description   String?
   ueCourseId    String          @db.Uuid
   termId        String?         @db.Uuid
@@ -368,6 +377,17 @@ enum Level {
   D1
   D2
   D3
+
+  @@schema("public")
+}
+
+enum UEType {
+  FONDAMENTALE
+  COMPLEMENTAIRE
+  APPROFONDISSEMENT
+  SPECIALITE
+  TRANSVERSALE
+  LIBRE
 
   @@schema("public")
 }

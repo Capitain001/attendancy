@@ -39,7 +39,7 @@ export default function UserIcon({
     >
       <Avatar className="w-full h-full">
         <AvatarImage
-          src={avatarUrl || "/avatar.png"}
+          src={avatarUrl ?? undefined}
           alt={name || "User"}
           className="object-cover w-full h-full filter-[inherit]  "
         />

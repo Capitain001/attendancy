@@ -27,109 +27,75 @@ export type AggregateUETemplate = {
 }
 
 export type UETemplateAvgAggregateOutputType = {
-  semester: number | null
-  credits: runtime.Decimal | null
+  totalCredits: number | null
 }
 
 export type UETemplateSumAggregateOutputType = {
-  semester: number | null
-  credits: runtime.Decimal | null
+  totalCredits: number | null
 }
 
 export type UETemplateMinAggregateOutputType = {
   id: string | null
   referentialId: string | null
-  domain: string | null
-  degree: string | null
-  mention: string | null
-  speciality: string | null
-  semester: number | null
   code: string | null
   name: string | null
-  type: $Enums.UETemplateType | null
-  credits: runtime.Decimal | null
+  description: string | null
+  totalCredits: number | null
 }
 
 export type UETemplateMaxAggregateOutputType = {
   id: string | null
   referentialId: string | null
-  domain: string | null
-  degree: string | null
-  mention: string | null
-  speciality: string | null
-  semester: number | null
   code: string | null
   name: string | null
-  type: $Enums.UETemplateType | null
-  credits: runtime.Decimal | null
+  description: string | null
+  totalCredits: number | null
 }
 
 export type UETemplateCountAggregateOutputType = {
   id: number
   referentialId: number
-  domain: number
-  degree: number
-  mention: number
-  speciality: number
-  semester: number
   code: number
   name: number
-  type: number
-  credits: number
+  description: number
+  totalCredits: number
   _all: number
 }
 
 
 export type UETemplateAvgAggregateInputType = {
-  semester?: true
-  credits?: true
+  totalCredits?: true
 }
 
 export type UETemplateSumAggregateInputType = {
-  semester?: true
-  credits?: true
+  totalCredits?: true
 }
 
 export type UETemplateMinAggregateInputType = {
   id?: true
   referentialId?: true
-  domain?: true
-  degree?: true
-  mention?: true
-  speciality?: true
-  semester?: true
   code?: true
   name?: true
-  type?: true
-  credits?: true
+  description?: true
+  totalCredits?: true
 }
 
 export type UETemplateMaxAggregateInputType = {
   id?: true
   referentialId?: true
-  domain?: true
-  degree?: true
-  mention?: true
-  speciality?: true
-  semester?: true
   code?: true
   name?: true
-  type?: true
-  credits?: true
+  description?: true
+  totalCredits?: true
 }
 
 export type UETemplateCountAggregateInputType = {
   id?: true
   referentialId?: true
-  domain?: true
-  degree?: true
-  mention?: true
-  speciality?: true
-  semester?: true
   code?: true
   name?: true
-  type?: true
-  credits?: true
+  description?: true
+  totalCredits?: true
   _all?: true
 }
 
@@ -222,15 +188,10 @@ export type UETemplateGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inter
 export type UETemplateGroupByOutputType = {
   id: string
   referentialId: string
-  domain: string
-  degree: string
-  mention: string
-  speciality: string | null
-  semester: number
   code: string | null
   name: string
-  type: $Enums.UETemplateType
-  credits: runtime.Decimal
+  description: string | null
+  totalCredits: number | null
   _count: UETemplateCountAggregateOutputType | null
   _avg: UETemplateAvgAggregateOutputType | null
   _sum: UETemplateSumAggregateOutputType | null
@@ -259,69 +220,53 @@ export type UETemplateWhereInput = {
   NOT?: Prisma.UETemplateWhereInput | Prisma.UETemplateWhereInput[]
   id?: Prisma.UuidFilter<"UETemplate"> | string
   referentialId?: Prisma.UuidFilter<"UETemplate"> | string
-  domain?: Prisma.StringFilter<"UETemplate"> | string
-  degree?: Prisma.StringFilter<"UETemplate"> | string
-  mention?: Prisma.StringFilter<"UETemplate"> | string
-  speciality?: Prisma.StringNullableFilter<"UETemplate"> | string | null
-  semester?: Prisma.IntFilter<"UETemplate"> | number
   code?: Prisma.StringNullableFilter<"UETemplate"> | string | null
   name?: Prisma.StringFilter<"UETemplate"> | string
-  type?: Prisma.EnumUETemplateTypeFilter<"UETemplate"> | $Enums.UETemplateType
-  credits?: Prisma.DecimalFilter<"UETemplate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  referential?: Prisma.XOR<Prisma.NationalReferentialScalarRelationFilter, Prisma.NationalReferentialWhereInput>
+  description?: Prisma.StringNullableFilter<"UETemplate"> | string | null
+  totalCredits?: Prisma.FloatNullableFilter<"UETemplate"> | number | null
+  referential?: Prisma.XOR<Prisma.ReferentialScalarRelationFilter, Prisma.ReferentialWhereInput>
   elements?: Prisma.UETemplateECListRelationFilter
-  imports?: Prisma.UETemplateImportListRelationFilter
+  programUEs?: Prisma.ProgramUETemplateListRelationFilter
+  orgUETemplates?: Prisma.OrgUETemplateListRelationFilter
 }
 
 export type UETemplateOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   referentialId?: Prisma.SortOrder
-  domain?: Prisma.SortOrder
-  degree?: Prisma.SortOrder
-  mention?: Prisma.SortOrder
-  speciality?: Prisma.SortOrderInput | Prisma.SortOrder
-  semester?: Prisma.SortOrder
   code?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
-  type?: Prisma.SortOrder
-  credits?: Prisma.SortOrder
-  referential?: Prisma.NationalReferentialOrderByWithRelationInput
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  totalCredits?: Prisma.SortOrderInput | Prisma.SortOrder
+  referential?: Prisma.ReferentialOrderByWithRelationInput
   elements?: Prisma.UETemplateECOrderByRelationAggregateInput
-  imports?: Prisma.UETemplateImportOrderByRelationAggregateInput
+  programUEs?: Prisma.ProgramUETemplateOrderByRelationAggregateInput
+  orgUETemplates?: Prisma.OrgUETemplateOrderByRelationAggregateInput
 }
 
 export type UETemplateWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  referentialId_code?: Prisma.UETemplateReferentialIdCodeCompoundUniqueInput
   AND?: Prisma.UETemplateWhereInput | Prisma.UETemplateWhereInput[]
   OR?: Prisma.UETemplateWhereInput[]
   NOT?: Prisma.UETemplateWhereInput | Prisma.UETemplateWhereInput[]
   referentialId?: Prisma.UuidFilter<"UETemplate"> | string
-  domain?: Prisma.StringFilter<"UETemplate"> | string
-  degree?: Prisma.StringFilter<"UETemplate"> | string
-  mention?: Prisma.StringFilter<"UETemplate"> | string
-  speciality?: Prisma.StringNullableFilter<"UETemplate"> | string | null
-  semester?: Prisma.IntFilter<"UETemplate"> | number
   code?: Prisma.StringNullableFilter<"UETemplate"> | string | null
   name?: Prisma.StringFilter<"UETemplate"> | string
-  type?: Prisma.EnumUETemplateTypeFilter<"UETemplate"> | $Enums.UETemplateType
-  credits?: Prisma.DecimalFilter<"UETemplate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  referential?: Prisma.XOR<Prisma.NationalReferentialScalarRelationFilter, Prisma.NationalReferentialWhereInput>
+  description?: Prisma.StringNullableFilter<"UETemplate"> | string | null
+  totalCredits?: Prisma.FloatNullableFilter<"UETemplate"> | number | null
+  referential?: Prisma.XOR<Prisma.ReferentialScalarRelationFilter, Prisma.ReferentialWhereInput>
   elements?: Prisma.UETemplateECListRelationFilter
-  imports?: Prisma.UETemplateImportListRelationFilter
-}, "id">
+  programUEs?: Prisma.ProgramUETemplateListRelationFilter
+  orgUETemplates?: Prisma.OrgUETemplateListRelationFilter
+}, "id" | "referentialId_code">
 
 export type UETemplateOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   referentialId?: Prisma.SortOrder
-  domain?: Prisma.SortOrder
-  degree?: Prisma.SortOrder
-  mention?: Prisma.SortOrder
-  speciality?: Prisma.SortOrderInput | Prisma.SortOrder
-  semester?: Prisma.SortOrder
   code?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
-  type?: Prisma.SortOrder
-  credits?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  totalCredits?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UETemplateCountOrderByAggregateInput
   _avg?: Prisma.UETemplateAvgOrderByAggregateInput
   _max?: Prisma.UETemplateMaxOrderByAggregateInput
@@ -335,120 +280,84 @@ export type UETemplateScalarWhereWithAggregatesInput = {
   NOT?: Prisma.UETemplateScalarWhereWithAggregatesInput | Prisma.UETemplateScalarWhereWithAggregatesInput[]
   id?: Prisma.UuidWithAggregatesFilter<"UETemplate"> | string
   referentialId?: Prisma.UuidWithAggregatesFilter<"UETemplate"> | string
-  domain?: Prisma.StringWithAggregatesFilter<"UETemplate"> | string
-  degree?: Prisma.StringWithAggregatesFilter<"UETemplate"> | string
-  mention?: Prisma.StringWithAggregatesFilter<"UETemplate"> | string
-  speciality?: Prisma.StringNullableWithAggregatesFilter<"UETemplate"> | string | null
-  semester?: Prisma.IntWithAggregatesFilter<"UETemplate"> | number
   code?: Prisma.StringNullableWithAggregatesFilter<"UETemplate"> | string | null
   name?: Prisma.StringWithAggregatesFilter<"UETemplate"> | string
-  type?: Prisma.EnumUETemplateTypeWithAggregatesFilter<"UETemplate"> | $Enums.UETemplateType
-  credits?: Prisma.DecimalWithAggregatesFilter<"UETemplate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.StringNullableWithAggregatesFilter<"UETemplate"> | string | null
+  totalCredits?: Prisma.FloatNullableWithAggregatesFilter<"UETemplate"> | number | null
 }
 
 export type UETemplateCreateInput = {
   id?: string
-  domain: string
-  degree: string
-  mention: string
-  speciality?: string | null
-  semester: number
   code?: string | null
   name: string
-  type: $Enums.UETemplateType
-  credits: runtime.Decimal | runtime.DecimalJsLike | number | string
-  referential: Prisma.NationalReferentialCreateNestedOneWithoutTemplatesInput
+  description?: string | null
+  totalCredits?: number | null
+  referential: Prisma.ReferentialCreateNestedOneWithoutUesInput
   elements?: Prisma.UETemplateECCreateNestedManyWithoutTemplateInput
-  imports?: Prisma.UETemplateImportCreateNestedManyWithoutTemplateInput
+  programUEs?: Prisma.ProgramUETemplateCreateNestedManyWithoutUeTemplateInput
+  orgUETemplates?: Prisma.OrgUETemplateCreateNestedManyWithoutTemplateInput
 }
 
 export type UETemplateUncheckedCreateInput = {
   id?: string
   referentialId: string
-  domain: string
-  degree: string
-  mention: string
-  speciality?: string | null
-  semester: number
   code?: string | null
   name: string
-  type: $Enums.UETemplateType
-  credits: runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: string | null
+  totalCredits?: number | null
   elements?: Prisma.UETemplateECUncheckedCreateNestedManyWithoutTemplateInput
-  imports?: Prisma.UETemplateImportUncheckedCreateNestedManyWithoutTemplateInput
+  programUEs?: Prisma.ProgramUETemplateUncheckedCreateNestedManyWithoutUeTemplateInput
+  orgUETemplates?: Prisma.OrgUETemplateUncheckedCreateNestedManyWithoutTemplateInput
 }
 
 export type UETemplateUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  degree?: Prisma.StringFieldUpdateOperationsInput | string
-  mention?: Prisma.StringFieldUpdateOperationsInput | string
-  speciality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  semester?: Prisma.IntFieldUpdateOperationsInput | number
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumUETemplateTypeFieldUpdateOperationsInput | $Enums.UETemplateType
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  referential?: Prisma.NationalReferentialUpdateOneRequiredWithoutTemplatesNestedInput
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalCredits?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  referential?: Prisma.ReferentialUpdateOneRequiredWithoutUesNestedInput
   elements?: Prisma.UETemplateECUpdateManyWithoutTemplateNestedInput
-  imports?: Prisma.UETemplateImportUpdateManyWithoutTemplateNestedInput
+  programUEs?: Prisma.ProgramUETemplateUpdateManyWithoutUeTemplateNestedInput
+  orgUETemplates?: Prisma.OrgUETemplateUpdateManyWithoutTemplateNestedInput
 }
 
 export type UETemplateUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   referentialId?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  degree?: Prisma.StringFieldUpdateOperationsInput | string
-  mention?: Prisma.StringFieldUpdateOperationsInput | string
-  speciality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  semester?: Prisma.IntFieldUpdateOperationsInput | number
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumUETemplateTypeFieldUpdateOperationsInput | $Enums.UETemplateType
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalCredits?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   elements?: Prisma.UETemplateECUncheckedUpdateManyWithoutTemplateNestedInput
-  imports?: Prisma.UETemplateImportUncheckedUpdateManyWithoutTemplateNestedInput
+  programUEs?: Prisma.ProgramUETemplateUncheckedUpdateManyWithoutUeTemplateNestedInput
+  orgUETemplates?: Prisma.OrgUETemplateUncheckedUpdateManyWithoutTemplateNestedInput
 }
 
 export type UETemplateCreateManyInput = {
   id?: string
   referentialId: string
-  domain: string
-  degree: string
-  mention: string
-  speciality?: string | null
-  semester: number
   code?: string | null
   name: string
-  type: $Enums.UETemplateType
-  credits: runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: string | null
+  totalCredits?: number | null
 }
 
 export type UETemplateUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  degree?: Prisma.StringFieldUpdateOperationsInput | string
-  mention?: Prisma.StringFieldUpdateOperationsInput | string
-  speciality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  semester?: Prisma.IntFieldUpdateOperationsInput | number
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumUETemplateTypeFieldUpdateOperationsInput | $Enums.UETemplateType
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalCredits?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type UETemplateUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   referentialId?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  degree?: Prisma.StringFieldUpdateOperationsInput | string
-  mention?: Prisma.StringFieldUpdateOperationsInput | string
-  speciality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  semester?: Prisma.IntFieldUpdateOperationsInput | number
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumUETemplateTypeFieldUpdateOperationsInput | $Enums.UETemplateType
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalCredits?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type UETemplateListRelationFilter = {
@@ -461,56 +370,44 @@ export type UETemplateOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type UETemplateReferentialIdCodeCompoundUniqueInput = {
+  referentialId: string
+  code: string
+}
+
 export type UETemplateCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   referentialId?: Prisma.SortOrder
-  domain?: Prisma.SortOrder
-  degree?: Prisma.SortOrder
-  mention?: Prisma.SortOrder
-  speciality?: Prisma.SortOrder
-  semester?: Prisma.SortOrder
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  type?: Prisma.SortOrder
-  credits?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  totalCredits?: Prisma.SortOrder
 }
 
 export type UETemplateAvgOrderByAggregateInput = {
-  semester?: Prisma.SortOrder
-  credits?: Prisma.SortOrder
+  totalCredits?: Prisma.SortOrder
 }
 
 export type UETemplateMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   referentialId?: Prisma.SortOrder
-  domain?: Prisma.SortOrder
-  degree?: Prisma.SortOrder
-  mention?: Prisma.SortOrder
-  speciality?: Prisma.SortOrder
-  semester?: Prisma.SortOrder
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  type?: Prisma.SortOrder
-  credits?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  totalCredits?: Prisma.SortOrder
 }
 
 export type UETemplateMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   referentialId?: Prisma.SortOrder
-  domain?: Prisma.SortOrder
-  degree?: Prisma.SortOrder
-  mention?: Prisma.SortOrder
-  speciality?: Prisma.SortOrder
-  semester?: Prisma.SortOrder
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  type?: Prisma.SortOrder
-  credits?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  totalCredits?: Prisma.SortOrder
 }
 
 export type UETemplateSumOrderByAggregateInput = {
-  semester?: Prisma.SortOrder
-  credits?: Prisma.SortOrder
+  totalCredits?: Prisma.SortOrder
 }
 
 export type UETemplateScalarRelationFilter = {
@@ -560,8 +457,12 @@ export type UETemplateUncheckedUpdateManyWithoutReferentialNestedInput = {
   deleteMany?: Prisma.UETemplateScalarWhereInput | Prisma.UETemplateScalarWhereInput[]
 }
 
-export type EnumUETemplateTypeFieldUpdateOperationsInput = {
-  set?: $Enums.UETemplateType
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type UETemplateCreateNestedOneWithoutElementsInput = {
@@ -578,48 +479,54 @@ export type UETemplateUpdateOneRequiredWithoutElementsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UETemplateUpdateToOneWithWhereWithoutElementsInput, Prisma.UETemplateUpdateWithoutElementsInput>, Prisma.UETemplateUncheckedUpdateWithoutElementsInput>
 }
 
-export type UETemplateCreateNestedOneWithoutImportsInput = {
-  create?: Prisma.XOR<Prisma.UETemplateCreateWithoutImportsInput, Prisma.UETemplateUncheckedCreateWithoutImportsInput>
-  connectOrCreate?: Prisma.UETemplateCreateOrConnectWithoutImportsInput
+export type UETemplateCreateNestedOneWithoutProgramUEsInput = {
+  create?: Prisma.XOR<Prisma.UETemplateCreateWithoutProgramUEsInput, Prisma.UETemplateUncheckedCreateWithoutProgramUEsInput>
+  connectOrCreate?: Prisma.UETemplateCreateOrConnectWithoutProgramUEsInput
   connect?: Prisma.UETemplateWhereUniqueInput
 }
 
-export type UETemplateUpdateOneRequiredWithoutImportsNestedInput = {
-  create?: Prisma.XOR<Prisma.UETemplateCreateWithoutImportsInput, Prisma.UETemplateUncheckedCreateWithoutImportsInput>
-  connectOrCreate?: Prisma.UETemplateCreateOrConnectWithoutImportsInput
-  upsert?: Prisma.UETemplateUpsertWithoutImportsInput
+export type UETemplateUpdateOneRequiredWithoutProgramUEsNestedInput = {
+  create?: Prisma.XOR<Prisma.UETemplateCreateWithoutProgramUEsInput, Prisma.UETemplateUncheckedCreateWithoutProgramUEsInput>
+  connectOrCreate?: Prisma.UETemplateCreateOrConnectWithoutProgramUEsInput
+  upsert?: Prisma.UETemplateUpsertWithoutProgramUEsInput
   connect?: Prisma.UETemplateWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UETemplateUpdateToOneWithWhereWithoutImportsInput, Prisma.UETemplateUpdateWithoutImportsInput>, Prisma.UETemplateUncheckedUpdateWithoutImportsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UETemplateUpdateToOneWithWhereWithoutProgramUEsInput, Prisma.UETemplateUpdateWithoutProgramUEsInput>, Prisma.UETemplateUncheckedUpdateWithoutProgramUEsInput>
+}
+
+export type UETemplateCreateNestedOneWithoutOrgUETemplatesInput = {
+  create?: Prisma.XOR<Prisma.UETemplateCreateWithoutOrgUETemplatesInput, Prisma.UETemplateUncheckedCreateWithoutOrgUETemplatesInput>
+  connectOrCreate?: Prisma.UETemplateCreateOrConnectWithoutOrgUETemplatesInput
+  connect?: Prisma.UETemplateWhereUniqueInput
+}
+
+export type UETemplateUpdateOneRequiredWithoutOrgUETemplatesNestedInput = {
+  create?: Prisma.XOR<Prisma.UETemplateCreateWithoutOrgUETemplatesInput, Prisma.UETemplateUncheckedCreateWithoutOrgUETemplatesInput>
+  connectOrCreate?: Prisma.UETemplateCreateOrConnectWithoutOrgUETemplatesInput
+  upsert?: Prisma.UETemplateUpsertWithoutOrgUETemplatesInput
+  connect?: Prisma.UETemplateWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UETemplateUpdateToOneWithWhereWithoutOrgUETemplatesInput, Prisma.UETemplateUpdateWithoutOrgUETemplatesInput>, Prisma.UETemplateUncheckedUpdateWithoutOrgUETemplatesInput>
 }
 
 export type UETemplateCreateWithoutReferentialInput = {
   id?: string
-  domain: string
-  degree: string
-  mention: string
-  speciality?: string | null
-  semester: number
   code?: string | null
   name: string
-  type: $Enums.UETemplateType
-  credits: runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: string | null
+  totalCredits?: number | null
   elements?: Prisma.UETemplateECCreateNestedManyWithoutTemplateInput
-  imports?: Prisma.UETemplateImportCreateNestedManyWithoutTemplateInput
+  programUEs?: Prisma.ProgramUETemplateCreateNestedManyWithoutUeTemplateInput
+  orgUETemplates?: Prisma.OrgUETemplateCreateNestedManyWithoutTemplateInput
 }
 
 export type UETemplateUncheckedCreateWithoutReferentialInput = {
   id?: string
-  domain: string
-  degree: string
-  mention: string
-  speciality?: string | null
-  semester: number
   code?: string | null
   name: string
-  type: $Enums.UETemplateType
-  credits: runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: string | null
+  totalCredits?: number | null
   elements?: Prisma.UETemplateECUncheckedCreateNestedManyWithoutTemplateInput
-  imports?: Prisma.UETemplateImportUncheckedCreateNestedManyWithoutTemplateInput
+  programUEs?: Prisma.ProgramUETemplateUncheckedCreateNestedManyWithoutUeTemplateInput
+  orgUETemplates?: Prisma.OrgUETemplateUncheckedCreateNestedManyWithoutTemplateInput
 }
 
 export type UETemplateCreateOrConnectWithoutReferentialInput = {
@@ -654,45 +561,32 @@ export type UETemplateScalarWhereInput = {
   NOT?: Prisma.UETemplateScalarWhereInput | Prisma.UETemplateScalarWhereInput[]
   id?: Prisma.UuidFilter<"UETemplate"> | string
   referentialId?: Prisma.UuidFilter<"UETemplate"> | string
-  domain?: Prisma.StringFilter<"UETemplate"> | string
-  degree?: Prisma.StringFilter<"UETemplate"> | string
-  mention?: Prisma.StringFilter<"UETemplate"> | string
-  speciality?: Prisma.StringNullableFilter<"UETemplate"> | string | null
-  semester?: Prisma.IntFilter<"UETemplate"> | number
   code?: Prisma.StringNullableFilter<"UETemplate"> | string | null
   name?: Prisma.StringFilter<"UETemplate"> | string
-  type?: Prisma.EnumUETemplateTypeFilter<"UETemplate"> | $Enums.UETemplateType
-  credits?: Prisma.DecimalFilter<"UETemplate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.StringNullableFilter<"UETemplate"> | string | null
+  totalCredits?: Prisma.FloatNullableFilter<"UETemplate"> | number | null
 }
 
 export type UETemplateCreateWithoutElementsInput = {
   id?: string
-  domain: string
-  degree: string
-  mention: string
-  speciality?: string | null
-  semester: number
   code?: string | null
   name: string
-  type: $Enums.UETemplateType
-  credits: runtime.Decimal | runtime.DecimalJsLike | number | string
-  referential: Prisma.NationalReferentialCreateNestedOneWithoutTemplatesInput
-  imports?: Prisma.UETemplateImportCreateNestedManyWithoutTemplateInput
+  description?: string | null
+  totalCredits?: number | null
+  referential: Prisma.ReferentialCreateNestedOneWithoutUesInput
+  programUEs?: Prisma.ProgramUETemplateCreateNestedManyWithoutUeTemplateInput
+  orgUETemplates?: Prisma.OrgUETemplateCreateNestedManyWithoutTemplateInput
 }
 
 export type UETemplateUncheckedCreateWithoutElementsInput = {
   id?: string
   referentialId: string
-  domain: string
-  degree: string
-  mention: string
-  speciality?: string | null
-  semester: number
   code?: string | null
   name: string
-  type: $Enums.UETemplateType
-  credits: runtime.Decimal | runtime.DecimalJsLike | number | string
-  imports?: Prisma.UETemplateImportUncheckedCreateNestedManyWithoutTemplateInput
+  description?: string | null
+  totalCredits?: number | null
+  programUEs?: Prisma.ProgramUETemplateUncheckedCreateNestedManyWithoutUeTemplateInput
+  orgUETemplates?: Prisma.OrgUETemplateUncheckedCreateNestedManyWithoutTemplateInput
 }
 
 export type UETemplateCreateOrConnectWithoutElementsInput = {
@@ -713,164 +607,182 @@ export type UETemplateUpdateToOneWithWhereWithoutElementsInput = {
 
 export type UETemplateUpdateWithoutElementsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  degree?: Prisma.StringFieldUpdateOperationsInput | string
-  mention?: Prisma.StringFieldUpdateOperationsInput | string
-  speciality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  semester?: Prisma.IntFieldUpdateOperationsInput | number
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumUETemplateTypeFieldUpdateOperationsInput | $Enums.UETemplateType
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  referential?: Prisma.NationalReferentialUpdateOneRequiredWithoutTemplatesNestedInput
-  imports?: Prisma.UETemplateImportUpdateManyWithoutTemplateNestedInput
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalCredits?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  referential?: Prisma.ReferentialUpdateOneRequiredWithoutUesNestedInput
+  programUEs?: Prisma.ProgramUETemplateUpdateManyWithoutUeTemplateNestedInput
+  orgUETemplates?: Prisma.OrgUETemplateUpdateManyWithoutTemplateNestedInput
 }
 
 export type UETemplateUncheckedUpdateWithoutElementsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   referentialId?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  degree?: Prisma.StringFieldUpdateOperationsInput | string
-  mention?: Prisma.StringFieldUpdateOperationsInput | string
-  speciality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  semester?: Prisma.IntFieldUpdateOperationsInput | number
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumUETemplateTypeFieldUpdateOperationsInput | $Enums.UETemplateType
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  imports?: Prisma.UETemplateImportUncheckedUpdateManyWithoutTemplateNestedInput
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalCredits?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  programUEs?: Prisma.ProgramUETemplateUncheckedUpdateManyWithoutUeTemplateNestedInput
+  orgUETemplates?: Prisma.OrgUETemplateUncheckedUpdateManyWithoutTemplateNestedInput
 }
 
-export type UETemplateCreateWithoutImportsInput = {
+export type UETemplateCreateWithoutProgramUEsInput = {
   id?: string
-  domain: string
-  degree: string
-  mention: string
-  speciality?: string | null
-  semester: number
   code?: string | null
   name: string
-  type: $Enums.UETemplateType
-  credits: runtime.Decimal | runtime.DecimalJsLike | number | string
-  referential: Prisma.NationalReferentialCreateNestedOneWithoutTemplatesInput
+  description?: string | null
+  totalCredits?: number | null
+  referential: Prisma.ReferentialCreateNestedOneWithoutUesInput
   elements?: Prisma.UETemplateECCreateNestedManyWithoutTemplateInput
+  orgUETemplates?: Prisma.OrgUETemplateCreateNestedManyWithoutTemplateInput
 }
 
-export type UETemplateUncheckedCreateWithoutImportsInput = {
+export type UETemplateUncheckedCreateWithoutProgramUEsInput = {
   id?: string
   referentialId: string
-  domain: string
-  degree: string
-  mention: string
-  speciality?: string | null
-  semester: number
   code?: string | null
   name: string
-  type: $Enums.UETemplateType
-  credits: runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: string | null
+  totalCredits?: number | null
   elements?: Prisma.UETemplateECUncheckedCreateNestedManyWithoutTemplateInput
+  orgUETemplates?: Prisma.OrgUETemplateUncheckedCreateNestedManyWithoutTemplateInput
 }
 
-export type UETemplateCreateOrConnectWithoutImportsInput = {
+export type UETemplateCreateOrConnectWithoutProgramUEsInput = {
   where: Prisma.UETemplateWhereUniqueInput
-  create: Prisma.XOR<Prisma.UETemplateCreateWithoutImportsInput, Prisma.UETemplateUncheckedCreateWithoutImportsInput>
+  create: Prisma.XOR<Prisma.UETemplateCreateWithoutProgramUEsInput, Prisma.UETemplateUncheckedCreateWithoutProgramUEsInput>
 }
 
-export type UETemplateUpsertWithoutImportsInput = {
-  update: Prisma.XOR<Prisma.UETemplateUpdateWithoutImportsInput, Prisma.UETemplateUncheckedUpdateWithoutImportsInput>
-  create: Prisma.XOR<Prisma.UETemplateCreateWithoutImportsInput, Prisma.UETemplateUncheckedCreateWithoutImportsInput>
+export type UETemplateUpsertWithoutProgramUEsInput = {
+  update: Prisma.XOR<Prisma.UETemplateUpdateWithoutProgramUEsInput, Prisma.UETemplateUncheckedUpdateWithoutProgramUEsInput>
+  create: Prisma.XOR<Prisma.UETemplateCreateWithoutProgramUEsInput, Prisma.UETemplateUncheckedCreateWithoutProgramUEsInput>
   where?: Prisma.UETemplateWhereInput
 }
 
-export type UETemplateUpdateToOneWithWhereWithoutImportsInput = {
+export type UETemplateUpdateToOneWithWhereWithoutProgramUEsInput = {
   where?: Prisma.UETemplateWhereInput
-  data: Prisma.XOR<Prisma.UETemplateUpdateWithoutImportsInput, Prisma.UETemplateUncheckedUpdateWithoutImportsInput>
+  data: Prisma.XOR<Prisma.UETemplateUpdateWithoutProgramUEsInput, Prisma.UETemplateUncheckedUpdateWithoutProgramUEsInput>
 }
 
-export type UETemplateUpdateWithoutImportsInput = {
+export type UETemplateUpdateWithoutProgramUEsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  degree?: Prisma.StringFieldUpdateOperationsInput | string
-  mention?: Prisma.StringFieldUpdateOperationsInput | string
-  speciality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  semester?: Prisma.IntFieldUpdateOperationsInput | number
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumUETemplateTypeFieldUpdateOperationsInput | $Enums.UETemplateType
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  referential?: Prisma.NationalReferentialUpdateOneRequiredWithoutTemplatesNestedInput
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalCredits?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  referential?: Prisma.ReferentialUpdateOneRequiredWithoutUesNestedInput
   elements?: Prisma.UETemplateECUpdateManyWithoutTemplateNestedInput
+  orgUETemplates?: Prisma.OrgUETemplateUpdateManyWithoutTemplateNestedInput
 }
 
-export type UETemplateUncheckedUpdateWithoutImportsInput = {
+export type UETemplateUncheckedUpdateWithoutProgramUEsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   referentialId?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  degree?: Prisma.StringFieldUpdateOperationsInput | string
-  mention?: Prisma.StringFieldUpdateOperationsInput | string
-  speciality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  semester?: Prisma.IntFieldUpdateOperationsInput | number
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumUETemplateTypeFieldUpdateOperationsInput | $Enums.UETemplateType
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalCredits?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   elements?: Prisma.UETemplateECUncheckedUpdateManyWithoutTemplateNestedInput
+  orgUETemplates?: Prisma.OrgUETemplateUncheckedUpdateManyWithoutTemplateNestedInput
+}
+
+export type UETemplateCreateWithoutOrgUETemplatesInput = {
+  id?: string
+  code?: string | null
+  name: string
+  description?: string | null
+  totalCredits?: number | null
+  referential: Prisma.ReferentialCreateNestedOneWithoutUesInput
+  elements?: Prisma.UETemplateECCreateNestedManyWithoutTemplateInput
+  programUEs?: Prisma.ProgramUETemplateCreateNestedManyWithoutUeTemplateInput
+}
+
+export type UETemplateUncheckedCreateWithoutOrgUETemplatesInput = {
+  id?: string
+  referentialId: string
+  code?: string | null
+  name: string
+  description?: string | null
+  totalCredits?: number | null
+  elements?: Prisma.UETemplateECUncheckedCreateNestedManyWithoutTemplateInput
+  programUEs?: Prisma.ProgramUETemplateUncheckedCreateNestedManyWithoutUeTemplateInput
+}
+
+export type UETemplateCreateOrConnectWithoutOrgUETemplatesInput = {
+  where: Prisma.UETemplateWhereUniqueInput
+  create: Prisma.XOR<Prisma.UETemplateCreateWithoutOrgUETemplatesInput, Prisma.UETemplateUncheckedCreateWithoutOrgUETemplatesInput>
+}
+
+export type UETemplateUpsertWithoutOrgUETemplatesInput = {
+  update: Prisma.XOR<Prisma.UETemplateUpdateWithoutOrgUETemplatesInput, Prisma.UETemplateUncheckedUpdateWithoutOrgUETemplatesInput>
+  create: Prisma.XOR<Prisma.UETemplateCreateWithoutOrgUETemplatesInput, Prisma.UETemplateUncheckedCreateWithoutOrgUETemplatesInput>
+  where?: Prisma.UETemplateWhereInput
+}
+
+export type UETemplateUpdateToOneWithWhereWithoutOrgUETemplatesInput = {
+  where?: Prisma.UETemplateWhereInput
+  data: Prisma.XOR<Prisma.UETemplateUpdateWithoutOrgUETemplatesInput, Prisma.UETemplateUncheckedUpdateWithoutOrgUETemplatesInput>
+}
+
+export type UETemplateUpdateWithoutOrgUETemplatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalCredits?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  referential?: Prisma.ReferentialUpdateOneRequiredWithoutUesNestedInput
+  elements?: Prisma.UETemplateECUpdateManyWithoutTemplateNestedInput
+  programUEs?: Prisma.ProgramUETemplateUpdateManyWithoutUeTemplateNestedInput
+}
+
+export type UETemplateUncheckedUpdateWithoutOrgUETemplatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  referentialId?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalCredits?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  elements?: Prisma.UETemplateECUncheckedUpdateManyWithoutTemplateNestedInput
+  programUEs?: Prisma.ProgramUETemplateUncheckedUpdateManyWithoutUeTemplateNestedInput
 }
 
 export type UETemplateCreateManyReferentialInput = {
   id?: string
-  domain: string
-  degree: string
-  mention: string
-  speciality?: string | null
-  semester: number
   code?: string | null
   name: string
-  type: $Enums.UETemplateType
-  credits: runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: string | null
+  totalCredits?: number | null
 }
 
 export type UETemplateUpdateWithoutReferentialInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  degree?: Prisma.StringFieldUpdateOperationsInput | string
-  mention?: Prisma.StringFieldUpdateOperationsInput | string
-  speciality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  semester?: Prisma.IntFieldUpdateOperationsInput | number
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumUETemplateTypeFieldUpdateOperationsInput | $Enums.UETemplateType
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalCredits?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   elements?: Prisma.UETemplateECUpdateManyWithoutTemplateNestedInput
-  imports?: Prisma.UETemplateImportUpdateManyWithoutTemplateNestedInput
+  programUEs?: Prisma.ProgramUETemplateUpdateManyWithoutUeTemplateNestedInput
+  orgUETemplates?: Prisma.OrgUETemplateUpdateManyWithoutTemplateNestedInput
 }
 
 export type UETemplateUncheckedUpdateWithoutReferentialInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  degree?: Prisma.StringFieldUpdateOperationsInput | string
-  mention?: Prisma.StringFieldUpdateOperationsInput | string
-  speciality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  semester?: Prisma.IntFieldUpdateOperationsInput | number
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumUETemplateTypeFieldUpdateOperationsInput | $Enums.UETemplateType
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalCredits?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   elements?: Prisma.UETemplateECUncheckedUpdateManyWithoutTemplateNestedInput
-  imports?: Prisma.UETemplateImportUncheckedUpdateManyWithoutTemplateNestedInput
+  programUEs?: Prisma.ProgramUETemplateUncheckedUpdateManyWithoutUeTemplateNestedInput
+  orgUETemplates?: Prisma.OrgUETemplateUncheckedUpdateManyWithoutTemplateNestedInput
 }
 
 export type UETemplateUncheckedUpdateManyWithoutReferentialInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  degree?: Prisma.StringFieldUpdateOperationsInput | string
-  mention?: Prisma.StringFieldUpdateOperationsInput | string
-  speciality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  semester?: Prisma.IntFieldUpdateOperationsInput | number
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumUETemplateTypeFieldUpdateOperationsInput | $Enums.UETemplateType
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalCredits?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 
@@ -880,12 +792,14 @@ export type UETemplateUncheckedUpdateManyWithoutReferentialInput = {
 
 export type UETemplateCountOutputType = {
   elements: number
-  imports: number
+  programUEs: number
+  orgUETemplates: number
 }
 
 export type UETemplateCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   elements?: boolean | UETemplateCountOutputTypeCountElementsArgs
-  imports?: boolean | UETemplateCountOutputTypeCountImportsArgs
+  programUEs?: boolean | UETemplateCountOutputTypeCountProgramUEsArgs
+  orgUETemplates?: boolean | UETemplateCountOutputTypeCountOrgUETemplatesArgs
 }
 
 /**
@@ -908,106 +822,91 @@ export type UETemplateCountOutputTypeCountElementsArgs<ExtArgs extends runtime.T
 /**
  * UETemplateCountOutputType without action
  */
-export type UETemplateCountOutputTypeCountImportsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.UETemplateImportWhereInput
+export type UETemplateCountOutputTypeCountProgramUEsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProgramUETemplateWhereInput
+}
+
+/**
+ * UETemplateCountOutputType without action
+ */
+export type UETemplateCountOutputTypeCountOrgUETemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrgUETemplateWhereInput
 }
 
 
 export type UETemplateSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   referentialId?: boolean
-  domain?: boolean
-  degree?: boolean
-  mention?: boolean
-  speciality?: boolean
-  semester?: boolean
   code?: boolean
   name?: boolean
-  type?: boolean
-  credits?: boolean
-  referential?: boolean | Prisma.NationalReferentialDefaultArgs<ExtArgs>
+  description?: boolean
+  totalCredits?: boolean
+  referential?: boolean | Prisma.ReferentialDefaultArgs<ExtArgs>
   elements?: boolean | Prisma.UETemplate$elementsArgs<ExtArgs>
-  imports?: boolean | Prisma.UETemplate$importsArgs<ExtArgs>
+  programUEs?: boolean | Prisma.UETemplate$programUEsArgs<ExtArgs>
+  orgUETemplates?: boolean | Prisma.UETemplate$orgUETemplatesArgs<ExtArgs>
   _count?: boolean | Prisma.UETemplateCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["uETemplate"]>
 
 export type UETemplateSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   referentialId?: boolean
-  domain?: boolean
-  degree?: boolean
-  mention?: boolean
-  speciality?: boolean
-  semester?: boolean
   code?: boolean
   name?: boolean
-  type?: boolean
-  credits?: boolean
-  referential?: boolean | Prisma.NationalReferentialDefaultArgs<ExtArgs>
+  description?: boolean
+  totalCredits?: boolean
+  referential?: boolean | Prisma.ReferentialDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["uETemplate"]>
 
 export type UETemplateSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   referentialId?: boolean
-  domain?: boolean
-  degree?: boolean
-  mention?: boolean
-  speciality?: boolean
-  semester?: boolean
   code?: boolean
   name?: boolean
-  type?: boolean
-  credits?: boolean
-  referential?: boolean | Prisma.NationalReferentialDefaultArgs<ExtArgs>
+  description?: boolean
+  totalCredits?: boolean
+  referential?: boolean | Prisma.ReferentialDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["uETemplate"]>
 
 export type UETemplateSelectScalar = {
   id?: boolean
   referentialId?: boolean
-  domain?: boolean
-  degree?: boolean
-  mention?: boolean
-  speciality?: boolean
-  semester?: boolean
   code?: boolean
   name?: boolean
-  type?: boolean
-  credits?: boolean
+  description?: boolean
+  totalCredits?: boolean
 }
 
-export type UETemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "referentialId" | "domain" | "degree" | "mention" | "speciality" | "semester" | "code" | "name" | "type" | "credits", ExtArgs["result"]["uETemplate"]>
+export type UETemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "referentialId" | "code" | "name" | "description" | "totalCredits", ExtArgs["result"]["uETemplate"]>
 export type UETemplateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  referential?: boolean | Prisma.NationalReferentialDefaultArgs<ExtArgs>
+  referential?: boolean | Prisma.ReferentialDefaultArgs<ExtArgs>
   elements?: boolean | Prisma.UETemplate$elementsArgs<ExtArgs>
-  imports?: boolean | Prisma.UETemplate$importsArgs<ExtArgs>
+  programUEs?: boolean | Prisma.UETemplate$programUEsArgs<ExtArgs>
+  orgUETemplates?: boolean | Prisma.UETemplate$orgUETemplatesArgs<ExtArgs>
   _count?: boolean | Prisma.UETemplateCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UETemplateIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  referential?: boolean | Prisma.NationalReferentialDefaultArgs<ExtArgs>
+  referential?: boolean | Prisma.ReferentialDefaultArgs<ExtArgs>
 }
 export type UETemplateIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  referential?: boolean | Prisma.NationalReferentialDefaultArgs<ExtArgs>
+  referential?: boolean | Prisma.ReferentialDefaultArgs<ExtArgs>
 }
 
 export type $UETemplatePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "UETemplate"
   objects: {
-    referential: Prisma.$NationalReferentialPayload<ExtArgs>
+    referential: Prisma.$ReferentialPayload<ExtArgs>
     elements: Prisma.$UETemplateECPayload<ExtArgs>[]
-    imports: Prisma.$UETemplateImportPayload<ExtArgs>[]
+    programUEs: Prisma.$ProgramUETemplatePayload<ExtArgs>[]
+    orgUETemplates: Prisma.$OrgUETemplatePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     referentialId: string
-    domain: string
-    degree: string
-    mention: string
-    speciality: string | null
-    semester: number
     code: string | null
     name: string
-    type: $Enums.UETemplateType
-    credits: runtime.Decimal
+    description: string | null
+    totalCredits: number | null
   }, ExtArgs["result"]["uETemplate"]>
   composites: {}
 }
@@ -1402,9 +1301,10 @@ readonly fields: UETemplateFieldRefs;
  */
 export interface Prisma__UETemplateClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  referential<T extends Prisma.NationalReferentialDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.NationalReferentialDefaultArgs<ExtArgs>>): Prisma.Prisma__NationalReferentialClient<runtime.Types.Result.GetResult<Prisma.$NationalReferentialPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  referential<T extends Prisma.ReferentialDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReferentialDefaultArgs<ExtArgs>>): Prisma.Prisma__ReferentialClient<runtime.Types.Result.GetResult<Prisma.$ReferentialPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   elements<T extends Prisma.UETemplate$elementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UETemplate$elementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UETemplateECPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  imports<T extends Prisma.UETemplate$importsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UETemplate$importsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UETemplateImportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  programUEs<T extends Prisma.UETemplate$programUEsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UETemplate$programUEsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProgramUETemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  orgUETemplates<T extends Prisma.UETemplate$orgUETemplatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UETemplate$orgUETemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrgUETemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1436,15 +1336,10 @@ export interface Prisma__UETemplateClient<T, Null = never, ExtArgs extends runti
 export interface UETemplateFieldRefs {
   readonly id: Prisma.FieldRef<"UETemplate", 'String'>
   readonly referentialId: Prisma.FieldRef<"UETemplate", 'String'>
-  readonly domain: Prisma.FieldRef<"UETemplate", 'String'>
-  readonly degree: Prisma.FieldRef<"UETemplate", 'String'>
-  readonly mention: Prisma.FieldRef<"UETemplate", 'String'>
-  readonly speciality: Prisma.FieldRef<"UETemplate", 'String'>
-  readonly semester: Prisma.FieldRef<"UETemplate", 'Int'>
   readonly code: Prisma.FieldRef<"UETemplate", 'String'>
   readonly name: Prisma.FieldRef<"UETemplate", 'String'>
-  readonly type: Prisma.FieldRef<"UETemplate", 'UETemplateType'>
-  readonly credits: Prisma.FieldRef<"UETemplate", 'Decimal'>
+  readonly description: Prisma.FieldRef<"UETemplate", 'String'>
+  readonly totalCredits: Prisma.FieldRef<"UETemplate", 'Float'>
 }
     
 
@@ -1870,27 +1765,51 @@ export type UETemplate$elementsArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
- * UETemplate.imports
+ * UETemplate.programUEs
  */
-export type UETemplate$importsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type UETemplate$programUEsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the UETemplateImport
+   * Select specific fields to fetch from the ProgramUETemplate
    */
-  select?: Prisma.UETemplateImportSelect<ExtArgs> | null
+  select?: Prisma.ProgramUETemplateSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the UETemplateImport
+   * Omit specific fields from the ProgramUETemplate
    */
-  omit?: Prisma.UETemplateImportOmit<ExtArgs> | null
+  omit?: Prisma.ProgramUETemplateOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.UETemplateImportInclude<ExtArgs> | null
-  where?: Prisma.UETemplateImportWhereInput
-  orderBy?: Prisma.UETemplateImportOrderByWithRelationInput | Prisma.UETemplateImportOrderByWithRelationInput[]
-  cursor?: Prisma.UETemplateImportWhereUniqueInput
+  include?: Prisma.ProgramUETemplateInclude<ExtArgs> | null
+  where?: Prisma.ProgramUETemplateWhereInput
+  orderBy?: Prisma.ProgramUETemplateOrderByWithRelationInput | Prisma.ProgramUETemplateOrderByWithRelationInput[]
+  cursor?: Prisma.ProgramUETemplateWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.UETemplateImportScalarFieldEnum | Prisma.UETemplateImportScalarFieldEnum[]
+  distinct?: Prisma.ProgramUETemplateScalarFieldEnum | Prisma.ProgramUETemplateScalarFieldEnum[]
+}
+
+/**
+ * UETemplate.orgUETemplates
+ */
+export type UETemplate$orgUETemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrgUETemplate
+   */
+  select?: Prisma.OrgUETemplateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrgUETemplate
+   */
+  omit?: Prisma.OrgUETemplateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrgUETemplateInclude<ExtArgs> | null
+  where?: Prisma.OrgUETemplateWhereInput
+  orderBy?: Prisma.OrgUETemplateOrderByWithRelationInput | Prisma.OrgUETemplateOrderByWithRelationInput[]
+  cursor?: Prisma.OrgUETemplateWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrgUETemplateScalarFieldEnum | Prisma.OrgUETemplateScalarFieldEnum[]
 }
 
 /**

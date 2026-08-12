@@ -1,61 +1,4 @@
-// ─── Référentiel UEs ─────────────────────────────────────────────────────
-// Modèles globaux (sans orgId) : catalogue des UE standardisées par pays.
-// Referential → UETemplate → UETemplateEC  (lecture seule en prod)
-// UETemplateImport  trace les imports par organisation.
-
-model Referential {
-  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  country     String ?      // ISO 3166-1 alpha-2 : "TG", "BJ"…
-  issuer      String ?      // "MESRS-Togo"
-  name        String       // "Curricula harmonisés 2022"
-  version     String       // "2022-04"
-  isActive    Boolean      @default(true)
-  publishedAt DateTime
-
-  templates   UETemplate[]
-
-  createdAt   DateTime     @default(now())
-
-  @@index([country])
-  @@schema("public")
-}
-
-model UETemplate {
-  id            String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  referentialId String              @db.Uuid
-  referential   Referential @relation(fields: [referentialId], references: [id])
-
-  domain        String              // "LLA", "SHS", "ST"…
-  degree        String              // "LICENCE", "MASTER"
-  mention       String
-  speciality    String?
-  semester      Int                 // 1–6
-  code          String?             // nullable pour type LIBRE
-  name          String
-  type          UETemplateType
-  credits       Decimal             @db.Decimal(4, 2)
-
-  elements      UETemplateEC[]
-  imports       UETemplateImport[]
-
-  // @@unique sur (referentialId, code) seulement si code non null — géré applicativement
-  // Pour les cas code non-null, contrainte DB partielle via post-migrate si nécessaire
-  @@index([referentialId, domain, mention, semester])
-  @@schema("public")
-}
-
-model UETemplateEC {
-  id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  templateId String     @db.Uuid
-  template   UETemplate @relation(fields: [templateId], references: [id])
-
-  code       String
-  name       String?
-  credits    Decimal    @db.Decimal(4, 2)
-
-  @@unique([templateId, code])
-  @@schema("public")
-}
+// ─── Énumérations ─────────────────────────────────────────────
 
 enum UETemplateType {
   FONDAMENTALE
@@ -68,16 +11,174 @@ enum UETemplateType {
   @@schema("public")
 }
 
-//table de liaison entre un template d'UE et org (université).
-model UETemplateImport {
+enum DegreeType {
+  LICENCE_PROFESSIONNELLE
+  LICENCE_FONDAMENTALE
+  MASTER
+
+  @@schema("public")
+}
+
+// ─── Référentiel (version du catalogue national) ─────────────────
+
+model Referential {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  country     String // "TG" (ISO 3166-1 alpha-2)
+  issuer      String // "MESRS-Togo"
+  name        String // "Curricula harmonisés 2022"
+  version     String // "2022-04"
+  isActive    Boolean  @default(true)
+  publishedAt DateTime
+  createdAt   DateTime @default(now())
+
+  programs ProgramTemplate[]
+  ues      UETemplate[]
+
+  @@index([country])
+  @@schema("public")
+}
+
+// ─── Programme national (Mention + Spécialité) ─────────────────
+
+model ProgramTemplate {
+  id            String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  referentialId String      @db.Uuid
+  referential   Referential @relation(fields: [referentialId], references: [id])
+
+  domain    String // "SHS", "LLA", "ST"…
+  mention   String // "Travail Social"
+  specialty String // "Assistance Sociale"
+  degree    DegreeType @default(LICENCE_PROFESSIONNELLE)
+
+  // Métadonnées issues du document officiel
+  profile      String? // Profil d'entrée (BAC2 toutes séries…)
+  competencies String? // Compétences visées
+  outcomes     String? // Débouchés
+  level        Level    @default(L1)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  programUEs          ProgramUETemplate[]
+  orgProgramTemplates OrgProgramTemplate[]
+
+  @@unique([referentialId, domain, mention, specialty])
+  @@index([referentialId, domain])
+  @@schema("public")
+}
+
+// ─── UE nationale (catalogue partagé) ─────────────────────────
+
+model UETemplate {
+  id            String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  referentialId String      @db.Uuid
+  referential   Referential @relation(fields: [referentialId], references: [id])
+
+  code         String? // "ANG1160" — code REESAO unique nationalement
+  name         String // "Grammaire anglaise"
+  description  String?
+  totalCredits Float? // utile pour les UE non composées d'EC
+
+  elements       UETemplateEC[]
+  programUEs     ProgramUETemplate[]
+  orgUETemplates OrgUETemplate[]
+
+  @@unique([referentialId, code])
+  @@schema("public")
+}
+
+// ─── Élément constitutif (EC) national ─────────────────────────
+
+model UETemplateEC {
   id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   templateId String     @db.Uuid
+  template   UETemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  order       Int // 1, 2 ou 3
+  code        String // "1ANG1160"
+  name        String // "Grammaire de base"
+  credits     Float
+  description String?
+  duration Int? @default(24)    // Total des heures
+  settings Json?               // Détails { hours: { CM: 10, TD: 15, TP: 5 } }
+
+  @@unique([templateId, code])
+  @@unique([templateId, order])
+  @@schema("public")
+}
+
+// ─── Lien UE ↔ Programme (position dans le semestre) ──────────
+
+model ProgramUETemplate {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  programId String          @db.Uuid
+  program   ProgramTemplate @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  ueTemplateId String     @db.Uuid
+  ueTemplate   UETemplate @relation(fields: [ueTemplateId], references: [id], onDelete: Restrict)
+
+  semester Int // 1 à 6
+  order    Int? // position dans le semestre (document officiel)
+  type     UETemplateType // F, C, A, S, T, L
+
+  @@unique([programId, ueTemplateId])
+  @@unique([programId, semester, order])
+  @@schema("public")
+}
+
+// ─── Programme national utilisé par une organisation ──────────
+//
+// Cette table permet de conserver la correspondance entre un
+// programme national et les entités métier créées dans
+// l'organisation.
+//
+// orgId et les IDs métier sont de simples UUID de traçage.
+// SANS FK vers Organization ni vers les entités métier.
+
+model OrgProgramTemplate {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  orgId             String @db.Uuid // pas de FK vers Organization
+  programTemplateId String @db.Uuid
+
+  programTemplate ProgramTemplate @relation(fields: [programTemplateId], references: [id])
+
+  // IDs des entités métier générées (SANS FK, simples champs de traçage)
+  departmentId String? @db.Uuid // Department créé
+  trackId      String? @db.Uuid // ProgramTrack créé
+  programId    String? @db.Uuid // Program créé
+
+  createdAt DateTime @default(now())
+
+  @@unique([orgId, programTemplateId])
+  @@index([orgId])
+  @@index([programTemplateId])
+  @@schema("public")
+}
+
+// ─── UE nationale utilisée par une organisation ────────────────
+//
+// Cette table permet de conserver la correspondance entre une
+// UE nationale et l'UE métier créée dans l'organisation.
+//
+// orgId et ueId sont de simples UUID de traçage.
+// SANS FK vers Organization ni vers UE métier.
+//
+// La seule relation FK est celle vers UETemplate.
+
+model OrgUETemplate {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  templateId String     @db.Uuid
   template   UETemplate @relation(fields: [templateId], references: [id])
-  orgId      String     @db.Uuid
-  ueId       String     @db.Uuid   // UE créée dans l'org
-  importedAt DateTime   @default(now())
+
+  orgId String @db.Uuid // pas de FK vers Organization
+  ueId  String @db.Uuid // UE métier créée (SANS FK)
+
+  createdAt DateTime @default(now())
 
   @@unique([templateId, orgId])
   @@index([orgId])
+  @@index([templateId])
   @@schema("public")
 }

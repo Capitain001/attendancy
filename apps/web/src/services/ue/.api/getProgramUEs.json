@@ -1,7 +1,7 @@
 {
   "name": "getProgramUEs",
   "file": "src/services/ue/database/ue.queries.ts",
-  "sig": "(programId: string, orgId: string) => Promise<{ id: string; semester: number; order: number | null; ue: { name: string; id: string; code: string | null; description: string | null; imageUrl: string | null; departmentId: string | null; department: { ...; } | null; ueCourses: { ...; }[]; }; }[]>",
+  "sig": "(programId: string, orgId: string) => Promise<{ id: string; semester: number; order: number | null; ue: { name: string; id: string; code: string | null; description: string | null; imageUrl: string | null; departmentId: string | null; type: UEType; department: { ...; } | null; ueCourses: { ...; }[]; }; }[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

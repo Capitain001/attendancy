@@ -70,6 +70,16 @@ export function getRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)]
 }
 
+export function getInitials(first?: string, last?: string) {
+  return `${first?.[0] ?? ''}${last?.[0] ?? ''}`.toUpperCase()
+}
+
+export function getUserInitials(name?: string, email?: string): string {
+  if (name) return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
+  if (email) return email[0].toUpperCase()
+  return '?'
+}
+
 export * from "./date"
 
 

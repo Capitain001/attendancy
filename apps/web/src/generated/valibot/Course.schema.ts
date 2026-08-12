@@ -23,7 +23,6 @@ export const CreateCourseSchema = v.object({
   classId: v.string(),
   orgId: v.string(),
   name: v.string(),
-  credits: v.number(),
   ueCourseId: v.string()
 });
 export type CreateCourseSchemaType = v.InferOutput<typeof CreateCourseSchema>;

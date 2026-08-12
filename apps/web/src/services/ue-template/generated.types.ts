@@ -2,10 +2,10 @@
 // Régénérer : npx tsx scripts/generate/types/types.ts ue-template
 // Pour surcharger un type, définissez-le dans ./types.ts (jamais écrasé).
 
-import { getReferentials, getUETemplates, getUETemplate, getUETemplateImport, getUETemplateImportsByOrg } from './database'
+import { getReferentials, getReferential, getReferentialWithPrograms, getProgramTemplates, getOrgProgramTemplates } from './database'
 
 export type GetReferentialsDto = Awaited<ReturnType<typeof getReferentials>>
-export type GetUETemplatesDto = Awaited<ReturnType<typeof getUETemplates>>
-export type GetUETemplateDto = Awaited<ReturnType<typeof getUETemplate>>
-export type GetUETemplateImportDto = Awaited<ReturnType<typeof getUETemplateImport>>
-export type GetUETemplateImportsByOrgDto = Awaited<ReturnType<typeof getUETemplateImportsByOrg>>
+export type GetReferentialDto = Awaited<ReturnType<typeof getReferential>>
+export type GetReferentialWithProgramsDto = Awaited<ReturnType<typeof getReferentialWithPrograms>>
+export type GetProgramTemplatesDto = Awaited<ReturnType<typeof getProgramTemplates>>
+export type GetOrgProgramTemplatesDto = Awaited<ReturnType<typeof getOrgProgramTemplates>>

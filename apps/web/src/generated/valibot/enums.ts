@@ -6,6 +6,11 @@ export type LevelValue = typeof LevelValues[number];
 export const LevelEnum = v.picklist(LevelValues);
 export type LevelType = v.InferOutput<typeof LevelEnum>;
 
+export const UETypeValues = ['FONDAMENTALE', 'COMPLEMENTAIRE', 'APPROFONDISSEMENT', 'SPECIALITE', 'TRANSVERSALE', 'LIBRE'] as const;
+export type UETypeValue = typeof UETypeValues[number];
+export const UETypeEnum = v.picklist(UETypeValues);
+export type UETypeType = v.InferOutput<typeof UETypeEnum>;
+
 export const JustificationStatusValues = ['PENDING', 'APPROVED', 'REJECTED', 'CANCELED'] as const;
 export type JustificationStatusValue = typeof JustificationStatusValues[number];
 export const JustificationStatusEnum = v.picklist(JustificationStatusValues);
@@ -55,6 +60,11 @@ export const UETemplateTypeValues = ['FONDAMENTALE', 'COMPLEMENTAIRE', 'APPROFON
 export type UETemplateTypeValue = typeof UETemplateTypeValues[number];
 export const UETemplateTypeEnum = v.picklist(UETemplateTypeValues);
 export type UETemplateTypeType = v.InferOutput<typeof UETemplateTypeEnum>;
+
+export const DegreeTypeValues = ['LICENCE_PROFESSIONNELLE', 'LICENCE_FONDAMENTALE', 'MASTER'] as const;
+export type DegreeTypeValue = typeof DegreeTypeValues[number];
+export const DegreeTypeEnum = v.picklist(DegreeTypeValues);
+export type DegreeTypeType = v.InferOutput<typeof DegreeTypeEnum>;
 
 export const UnavailabilityTypeValues = ['WEEKLY', 'DATE_RANGE'] as const;
 export type UnavailabilityTypeValue = typeof UnavailabilityTypeValues[number];

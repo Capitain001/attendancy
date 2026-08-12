@@ -41,16 +41,16 @@ export async function DirectionClassDetailPage({ classId, slug }: DirectionClass
 
   const schedules = schedRes.data ? mapSchedulesForClassSection(schedRes.data) : []
 
-  const programHref    = `/${slug}/direction/classes/${classId}/program`
+  const programHref    = `/${slug}/direction/academic/classes/${classId}/program`
   const planningHref   = `/${slug}/direction/planning/classe/${classId}`
   const invitationsHref = `./${classId}/invitations`
-  const enrollmentHref = `/${slug}/direction/classes/${classId}/enrollment`
-  const groupsHref     = `/${slug}/direction/classes/${classId}/groups`
+  const enrollmentHref = `/${slug}/direction/academic/classes/${classId}/enrollment`
+  const groupsHref     = `/${slug}/direction/academic/classes/${classId}/groups`
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-2 w-full flex-wrap items-center justify-between">
-        <div className="flex scrollbar-hidden rounded-2xl gap-2 max-w-95 md:max-w-full overflow-x-auto">
+        <div className="flex scrollbar-hidden rounded-lg gap-2 max-w-98 md:max-w-full overflow-x-auto">
           <ButtonX className="w-fit" href={programHref}>Programme</ButtonX>
           <ButtonX className="w-fit" href={planningHref}>Planning</ButtonX>
           <ButtonX className="w-fit" href={invitationsHref}>Invitations</ButtonX>

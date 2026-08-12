@@ -4,7 +4,7 @@ import { Users, GraduationCap } from "lucide-react";
 
 export  function ClassBanner({ class_ }: { class_?: GetClassDto }) {
   return (
-    <div className="relative w-full h-32 md:h-36 overflow-hidden rounded-2xl border bg-card">
+    <div className="relative w-full h-24 md:h-36 overflow-hidden rounded-md border bg-card">
       <BackgroundPattern className="opacity-25 dark:opacity-10" />
 
       {/* Level badge — top-right */}

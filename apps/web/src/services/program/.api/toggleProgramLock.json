@@ -1,0 +1,8 @@
+{
+  "name": "toggleProgramLock",
+  "file": "src/services/program/database/program.mutations.ts",
+  "sig": "({ programId, orgId, isLocked }: { programId: string orgId: string isLocked: boolean }) => Promise<{ id: string; isLocked: boolean; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

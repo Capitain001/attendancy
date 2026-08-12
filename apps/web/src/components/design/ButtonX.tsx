@@ -29,10 +29,10 @@ export function ButtonX({
   return (
     <Button
       className={cn(
-        "relative overflow-hidden rounded-xl border bg-card px-4 py-2",
+        "relative overflow-hidden rounded-md border bg-card px-4 py-2",
         "text-sm font-medium text-foreground",
         "transition-all duration-200",
-        "hover:bg-background/70 hover:backdrop-blur-sm",
+        "hover:bg-accent hover:backdrop-blur-sm",
         "active:scale-[0.98]",
         className
       )}

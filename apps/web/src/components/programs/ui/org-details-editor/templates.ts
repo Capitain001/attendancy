@@ -1,0 +1,70 @@
+import { BlockTemplate } from "./types";
+
+export const BUILT_IN_TEMPLATES: BlockTemplate[] = [
+  {
+    id: "tpl_contact",
+    label: "Contact",
+    description: "Sites / villes avec BP, indicatif, téléphones et emails",
+    icon: "📍",
+    key: "contact",
+    isList: true,
+    fields: [
+      { key: "ville",           type: "text",  placeholder: "ex: Lomé" },
+      { key: "adresse-postale", type: "text",  placeholder: "ex: 07 BP 13517" },
+      { key: "indicatif",       type: "text",  placeholder: "ex: 228" },
+      { key: "phones",          type: "multi", placeholder: "ex: 22 23 50 17" },
+      { key: "emails",          type: "multi", placeholder: "ex: contact@org.com" },
+    ],
+  },
+  {
+    id: "tpl_social",
+    label: "Réseaux & Web",
+    description: "Site web, réseaux sociaux et présence en ligne",
+    icon: "🌐",
+    key: "social",
+    isList: false,
+    fields: [
+      { key: "site-web",  type: "text", placeholder: "https://..." },
+      { key: "facebook",  type: "text", placeholder: "https://facebook.com/..." },
+      { key: "linkedin",  type: "text", placeholder: "https://linkedin.com/..." },
+      { key: "twitter",   type: "text", placeholder: "@handle" },
+      { key: "youtube",   type: "text", placeholder: "https://youtube.com/..." },
+    ],
+  },
+  {
+    id: "tpl_hours",
+    label: "Horaires",
+    description: "Jours et heures d'ouverture",
+    icon: "🕐",
+    key: "horaires",
+    isList: false,
+    fields: [
+      { key: "lundi-vendredi", type: "text", placeholder: "08h00 – 18h00" },
+      { key: "samedi",         type: "text", placeholder: "08h00 – 13h00" },
+      { key: "dimanche",       type: "text", placeholder: "Fermé" },
+    ],
+  },
+  {
+    id: "tpl_legal",
+    label: "Informations légales",
+    description: "RCCM, NIF, agrément et autres références officielles",
+    icon: "🏛️",
+    key: "legal",
+    isList: false,
+    fields: [
+      { key: "rccm",            type: "text", placeholder: "ex: TG-LOM-01-2023-B12-00123" },
+      { key: "nif",             type: "text", placeholder: "ex: 1234567890" },
+      { key: "agrement",        type: "text", placeholder: "Numéro d'agrément" },
+      { key: "forme-juridique", type: "text", placeholder: "ex: SA, SARL, Association..." },
+    ],
+  },
+  {
+    id: "tpl_custom",
+    label: "Personnalisé",
+    description: "Bloc libre avec vos propres clés / valeurs",
+    icon: "✏️",
+    key: "custom",
+    isList: false,
+    fields: [],
+  },
+];

@@ -1,4 +1,6 @@
 'use client'
+import Link from 'next/link'
+import { useParams } from 'next/navigation'
 import { BookMarked } from 'lucide-react'
 import { CollapseSection } from '@/components/layout/CollapseSection'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
@@ -21,21 +23,40 @@ function ProgramRow({
   tracks: TrackItem[]
 }) {
   const { remove } = useManagePrograms()
+  const params = useParams<{ slug: string }>()
+  const slug = params?.slug ?? ''
 
   return (
     <div className={cn(card.base, 'flex items-center gap-3')}>
       <BookMarked className="size-4 shrink-0 text-primary" strokeWidth={1.5} />
 
       <div className="min-w-0 flex-1 flex flex-col gap-0.5">
-        <span className="text-sm font-medium text-text-primary">{program.name}</span>
+        <Link
+          href={`/${slug}/direction/academic/programs/${program.id}`}
+          className="text-sm font-medium text-text-primary hover:text-primary transition-colors truncate"
+        >
+          {program.name}
+        </Link>
         {program.programTrack && (
           <span className={typography.small}>{program.programTrack.name}</span>
         )}
       </div>
 
-      <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
-        {program.classes.length} classe{program.classes.length !== 1 ? 's' : ''}
-      </span>
+      <div className="flex items-center gap-1.5 shrink-0 flex-wrap">
+        {program.isLocked && (
+          <span className="rounded-sm bg-amber-500/10 border border-dashed border-amber-500/30 px-1.5 py-0.5 text-[9px] font-medium text-amber-600">
+            Verrouillé
+          </span>
+        )}
+        {!program.isActive && (
+          <span className="rounded-sm bg-muted border border-dashed border-muted-foreground/30 px-1.5 py-0.5 text-[9px] font-medium text-muted-foreground">
+            Inactif
+          </span>
+        )}
+        <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
+          {program.classes.length} classe{program.classes.length !== 1 ? 's' : ''}
+        </span>
+      </div>
 
       <div className="flex shrink-0 items-center gap-1">
         <ProgramEditButton

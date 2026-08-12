@@ -1,6 +1,16 @@
-// Pas d'import depuis @/cache/server/key — évite le cycle key.ts ↔ cache.ts.
-// Format du tag : "ue-template-import:<orgId>" (identique à key("ue-template-import")(orgId)).
+import { CACHE } from '@/cache/server/key'
+
 export const UE_TEMPLATE_GRAPH = {
-  UE_TEMPLATE_IMPORTED:      (orgId: string) => [`ue-template-import:${orgId}`],
-  UE_TEMPLATE_IMPORT_DELETED:(orgId: string) => [`ue-template-import:${orgId}`],
+  // L'importation d'un programme invalide la liste des programmes et UEs
+  // de l'organisation concernée, pour rafraîchir l'interface (Program, UE).
+  // La liste des templates n'est jamais invalidée car elle est globale
+  // et immutable côté utilisateur.
+  PROGRAM_TEMPLATE_APPLIED: (orgId: string) => [
+    CACHE.ORG_PROGRAM_TEMPLATE(orgId),
+    CACHE.ORG_UE_TEMPLATE(orgId),
+    CACHE.PROGRAM(orgId),
+    CACHE.UE(orgId),
+    CACHE.DEPARTMENT(orgId),
+    CACHE.PROGRAM_TRACK(orgId),
+  ],
 } as const

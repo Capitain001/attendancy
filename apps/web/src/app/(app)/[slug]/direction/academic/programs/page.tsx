@@ -7,8 +7,16 @@ import { ProgramList } from '@/components/direction/academic/ProgramList'
 import { ProgramCreateButton } from '@/components/direction/academic/ProgramForm'
 import { typography } from '@/styles'
 
-export default async function ProgramsPage() {
+import Link from 'next/link'
+import { BookOpen } from 'lucide-react'
+
+export default async function ProgramsPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
   await connection()
+  const { slug } = await params
 
   const [programsResult, tracksResult] = await Promise.all([
     getProgramsAction({}),
@@ -28,7 +36,18 @@ export default async function ProgramsPage() {
     <div className="flex flex-col gap-y-4">
       <SectionHeader
         title="Programmes"
-        action={<ProgramCreateButton tracks={tracks} />}
+        action={
+          <div className="flex items-center gap-2">
+            <Link
+              href={`/${slug}/direction/academic/ues/templates`}
+              className="inline-flex items-center gap-1.5 h-8 px-3 text-xs border border-dashed border-foreground/30 hover:border-foreground/60 rounded-sm text-foreground transition-colors font-medium"
+            >
+              <BookOpen className="size-3.5" />
+              Référentiels nationaux
+            </Link>
+            <ProgramCreateButton tracks={tracks} />
+          </div>
+        }
       />
 
       <section className="grid grid-cols-2 gap-3 lg:grid-cols-3">

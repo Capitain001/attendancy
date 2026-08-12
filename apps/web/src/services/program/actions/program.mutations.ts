@@ -4,7 +4,7 @@ import * as v from 'valibot'
 import { authAccess } from '@/services/auth'
 
 import { ERRORS } from '@/config'
-import { createProgram, updateProgram, removeProgram } from '../database'
+import { createProgram, updateProgram, removeProgram, toggleProgramLock, toggleProgramActive } from '../database'
 import { CreateProgramSchema, UpdateProgramSchema, type CreateProgramInput, type UpdateProgramInput } from '../validation'
 import { logAuditAsync } from '@/services/audit'
 
@@ -87,6 +87,46 @@ export async function removeProgramAction(programId: string) {
     return { data: result }
   } catch (error) {
     console.error('removeProgramAction:', error)
+    return { error: error instanceof Error ? error.message : ERRORS.SERVER }
+  }
+}
+
+export async function toggleProgramLockAction({
+  programId,
+  isLocked,
+}: {
+  programId: string
+  isLocked: boolean
+}) {
+  try {
+    const auth = await authAccess({ requiredRole: 'DIRECTION', requiredFunction: 'PRINCIPAL' })
+    if (!auth.data) return { error: auth.error }
+    const { orgId } = auth.data
+
+    const result = await toggleProgramLock({ programId, orgId, isLocked })
+    return { data: result }
+  } catch (error) {
+    console.error('toggleProgramLockAction:', error)
+    return { error: error instanceof Error ? error.message : ERRORS.SERVER }
+  }
+}
+
+export async function toggleProgramActiveAction({
+  programId,
+  isActive,
+}: {
+  programId: string
+  isActive: boolean
+}) {
+  try {
+    const auth = await authAccess({ requiredRole:'DIRECTION', requiredFunction: 'PRINCIPAL' })
+    if (!auth.data) return { error: auth.error }
+    const { orgId } = auth.data
+
+    const result = await toggleProgramActive({ programId, orgId, isActive })
+    return { data: result }
+  } catch (error) {
+    console.error('toggleProgramActiveAction:', error)
     return { error: error instanceof Error ? error.message : ERRORS.SERVER }
   }
 }

@@ -1,0 +1,11 @@
+{
+  "name": "applyProgramsAction",
+  "file": "src/services/ue-template/actions/import.mutations.ts",
+  "sig": "(input: ApplyProgramsInput) => Promise<{ error: any; data?: undefined; } | { data: boolean; error?: undefined; }>",
+  "calls": [
+    "applyProgramTemplate"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

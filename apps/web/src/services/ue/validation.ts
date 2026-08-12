@@ -20,6 +20,7 @@ export const linkUESchema = object({
   programId: pipe(string(), uuid('ID programme invalide')),
   semester:  optional(pipe(number(), minValue(1), maxValue(8))),
   order:     optional(number()),
+  description: optional(pipe(string(), trim(), maxLength(200))),
 })
 export type LinkUEInput = InferInput<typeof linkUESchema>
 

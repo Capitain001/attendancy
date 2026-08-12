@@ -1,0 +1,8 @@
+{
+  "name": "getOrgProgramTemplates",
+  "file": "src/services/ue-template/database/template.queries.ts",
+  "sig": "(orgId: string) => Promise<({ programTemplate: { level: Level; id: string; createdAt: Date; referentialId: string; domain: string; mention: string; specialty: string; degree: DegreeType; profile: string | null; competencies: string | null; outcomes: string | null; updatedAt: Date; }; } & { ...; })[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

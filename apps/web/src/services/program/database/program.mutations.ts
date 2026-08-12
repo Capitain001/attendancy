@@ -126,3 +126,43 @@ export async function removeProgram({
   await invalidateEvent("PROGRAM_DELETED", orgId, programId)
   return result
 }
+
+export async function toggleProgramLock({
+  programId,
+  orgId,
+  isLocked,
+}: {
+  programId: string
+  orgId: string
+  isLocked: boolean
+}) {
+  const result = await tryConstraint(
+    prisma.program.update({
+      where: { id: programId, orgId },
+      data: { isLocked },
+      select: { id: true, isLocked: true },
+    })
+  )
+  await invalidateEvent("PROGRAM_UPDATED", orgId, programId)
+  return result
+}
+
+export async function toggleProgramActive({
+  programId,
+  orgId,
+  isActive,
+}: {
+  programId: string
+  orgId: string
+  isActive: boolean
+}) {
+  const result = await tryConstraint(
+    prisma.program.update({
+      where: { id: programId, orgId },
+      data: { isActive },
+      select: { id: true, isActive: true },
+    })
+  )
+  await invalidateEvent("PROGRAM_UPDATED", orgId, programId)
+  return result
+}

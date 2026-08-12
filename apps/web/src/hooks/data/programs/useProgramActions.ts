@@ -26,8 +26,7 @@ import { CACHE_KEYS } from "@/config/client_cache";
 
 interface UseProgramActionsOptions {
   programId: string;
-  classId: string;
-//   slug: string;
+  classId?: string;
 }
 
 type UndoAction = {
@@ -138,6 +137,7 @@ export function useProgramActions({ programId, classId }: UseProgramActionsOptio
                 order,
                 ue: {
                   ...ue,
+                  type: (ue as any).type ?? 'FONDAMENTALE',
                   description: null,
                   imageUrl: null,
                   departmentId: null,
@@ -163,6 +163,7 @@ export function useProgramActions({ programId, classId }: UseProgramActionsOptio
                 order,
                 ue: {
                   ...ue,
+                  type: (ue as any).type ?? 'FONDAMENTALE',
                   description: null,
                   imageUrl: null,
                   departmentId: null,

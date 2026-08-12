@@ -4,19 +4,34 @@ import { tryConstraint } from '@/utils/server/prisma'
 import { invalidateEvent } from '@/cache/server/key'
 import type { CreateUEOutput } from '../validation'
 import type { UEOrder, CourseOrder } from '../validation'
+import { UE } from '@/generated/prisma/client'
 
 // Ré-export depuis la couche database de program-track (jamais depuis actions/,
 // voir SKILL.md service-module-pattern — "un service peut importer les fonctions
 // database/ d'un autre service, mais uniquement depuis sa propre couche database/").
 export { addUEToProgram } from '@/services/program-ue/database'
 
-export type UpdateUEData = {
-  name?: string
-  code?: string
-  description?: string
-  departmentId?: string | null
-  isOptional?: boolean
-}
+export type AddUEData = Pick<
+  UE,
+  | "name"
+  | "departmentId"
+  | "orgId"
+  | "code"
+  | "description"
+  | "imageUrl"
+  | "isOptional"
+>;
+
+// export type UpdateUEData = {
+//   name?: string
+//   code?: string
+//   description?: string
+//   departmentId?: string | null
+//   isOptional?: boolean
+// }
+
+export type CreateUeData = Omit<AddUEData, "orgId">;
+export type UpdateUEData = Partial<CreateUeData>;
 
 export async function createUE(data: CreateUEOutput & { orgId: string }) {
   const result = await tryConstraint(

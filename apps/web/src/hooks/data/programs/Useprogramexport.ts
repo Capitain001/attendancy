@@ -2,18 +2,27 @@
 
 import { useCallback, useState } from "react";
 import type { ProgramSemesterDTO } from "@/services/ue/types";
-import { ProgramPageData } from "@/components/programs/program/types";
+import { ProgramPageData } from "@/components/programs copy/types";
 
 // ==================== TYPES ====================
 
 export type ExportFormat = "pdf" | "csv" | "json";
+export type ExportTemplate = "official" | "synthetic" | "teaching_load";
 export type ExportStatus = "idle" | "loading" | "done" | "error";
+
+export interface ProgramExportConfig {
+  format: ExportFormat;
+  template?: ExportTemplate;
+  watermark?: string;
+  showSignatures?: boolean;
+  showHoursBreakdown?: boolean;
+}
 
 type RGB = [number, number, number];
 
 export interface UseProgramExportReturn {
   status: ExportStatus;
-  exportAs: (format: ExportFormat) => Promise<void>;
+  exportAs: (formatOrConfig: ExportFormat | ProgramExportConfig) => Promise<void>;
 }
 
 // ==================== HELPERS ====================
@@ -42,7 +51,7 @@ function flattenRows(semesters: ProgramSemesterDTO[]) {
 
 // ==================== PDF ====================
 
-async function buildAndDownloadPDF(data: ProgramPageData) {
+async function buildAndDownloadPDF(data: ProgramPageData, config: ProgramExportConfig) {
   const [{ default: jsPDF }, { default: autoTable }] = await Promise.all([
     import("jspdf"),
     import("jspdf-autotable"),
@@ -54,14 +63,13 @@ async function buildAndDownloadPDF(data: ProgramPageData) {
   const PAGE_H = 210;
   const MARGIN = 18;
 
-  // Couleurs Grises plus saturées (plus sombres) pour éviter l'effet "trop clair"
   const C: Record<string, RGB> = {
     text: [20, 20, 22],
     muted: [80, 80, 85],
     border: [160, 160, 165],
-    headerBg: [215, 215, 220], // Gris d'entête plus marqué
-    ueBg: [230, 230, 235],     // Gris d'UE plus marqué
-    rowAlt: [242, 242, 245],   // Gris alterné
+    headerBg: [215, 215, 220],
+    ueBg: [230, 230, 235],
+    rowAlt: [242, 242, 245],
   };
 
   const org = data.organization;
@@ -81,13 +89,10 @@ async function buildAndDownloadPDF(data: ProgramPageData) {
   }
 
   const drawHeader = (yStart: number) => {
-        // 1. Logo à GAUCHE uniquement
-        if (logoData) {
-          doc.addImage(logoData, "PNG", MARGIN, yStart - 5, 16, 16);
-        }
+    if (logoData) {
+      doc.addImage(logoData, "PNG", MARGIN, yStart - 5, 16, 16);
+    }
 
-        
-    // Info Université : Toujours centrées
     doc.setFont("helvetica", "bold");
     doc.setFontSize(15);
     doc.setTextColor(...C.text);
@@ -104,12 +109,32 @@ async function buildAndDownloadPDF(data: ProgramPageData) {
     doc.setTextColor(...C.muted);
     doc.text(contactLine, PAGE_W / 2, yStart + 5, { align: "center" });
 
-
     doc.setDrawColor(...C.border);
     doc.setLineWidth(0.2);
     doc.line(MARGIN, yStart + 10, PAGE_W - MARGIN, yStart + 10);
 
     return yStart + 18;
+  };
+
+  const drawWatermark = () => {
+    if (!config.watermark) return;
+    try {
+      const gState = new (doc as any).GState({ opacity: 0.07 });
+      doc.setGState(gState);
+    } catch {}
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(50);
+    doc.setTextColor(160, 160, 170);
+    doc.text(config.watermark.toUpperCase(), PAGE_W / 2, PAGE_H / 2, {
+      align: "center",
+      angle: 30,
+    });
+
+    try {
+      const resetGState = new (doc as any).GState({ opacity: 1 });
+      doc.setGState(resetGState);
+    } catch {}
   };
 
   let y = drawHeader(18);
@@ -118,7 +143,6 @@ async function buildAndDownloadPDF(data: ProgramPageData) {
   const centerX = PAGE_W / 2;
   const totalCredits = data.semesters.reduce((s, sem) => s + sem.totalCredits, 0);
 
-  // Footer
   const drawFooter = (page: number, total: number) => {
     doc.setFontSize(7);
     doc.setTextColor(...C.muted);
@@ -126,12 +150,12 @@ async function buildAndDownloadPDF(data: ProgramPageData) {
     doc.text(`Page ${page} / ${total}`, PAGE_W - MARGIN, PAGE_H - 8, { align: "right" });
   };
 
-  // Rectangle infos programme (Gris saturé, sans ombre)
+  // En-tête programme
   doc.setFillColor(...C.ueBg);
-  doc.rect(centerX - 60, y - 6, 120, 10, "F");
+  doc.rect(centerX - 70, y - 6, 140, 10, "F");
 
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(14);
+  doc.setFontSize(13);
   doc.setTextColor(...C.text);
   doc.text(data.class.program.toUpperCase(), centerX, y, { align: "center" });
 
@@ -151,7 +175,6 @@ async function buildAndDownloadPDF(data: ProgramPageData) {
   doc.text(`Total de crédits : ${totalCredits}`, centerX, y, { align: "center" });
 
   y += 6;
-  // LIGNE SÉPARATRICE RÉDUITE DE 70% (Largeur = 30% du contenu)
   const separatorWidth = (PAGE_W - MARGIN * 2) * 0.3; 
   doc.setDrawColor(...C.border);
   doc.setLineWidth(0.5);
@@ -160,7 +183,7 @@ async function buildAndDownloadPDF(data: ProgramPageData) {
   y += 8;
 
   for (const sem of data.semesters) {
-    if (y > PAGE_H - 40) {
+    if (y > PAGE_H - 45) {
       doc.addPage();
       y = drawHeader(18) + 6;
     }
@@ -173,7 +196,6 @@ async function buildAndDownloadPDF(data: ProgramPageData) {
 
     const body: any[] = [];
     for (const pue of sem.ues) {
-      // Ligne UE (Hiérarchie visuelle)
       body.push([
         { content: pue.order ?? "", styles: { fontStyle: 'bold', fillColor: C.ueBg } },
         { content: pue.ue.code ?? "", styles: { fontStyle: 'bold', fillColor: C.ueBg } },
@@ -182,12 +204,11 @@ async function buildAndDownloadPDF(data: ProgramPageData) {
         { content: pue.ueTotalCredits, styles: { fontStyle: 'bold', halign: 'center', fillColor: C.ueBg } }
       ]);
       
-      // Lignes Cours
       for (const course of pue.ue.ueCourses) {
         body.push([
           `${pue.order}.${course.order}`,
           course.code,
-          `      ${course.name}`, // Indentation pour la hiérarchie
+          `      ${course.name}`,
           `${course.duration}h`,
           course.credits
         ]);
@@ -213,7 +234,7 @@ async function buildAndDownloadPDF(data: ProgramPageData) {
         fontStyle: "bold",
       },
       columnStyles: {
-        0: { cellWidth: 18,  },
+        0: { cellWidth: 18 },
         1: { cellWidth: 30 },
         3: { cellWidth: 22, halign: "center" },
         4: { cellWidth: 18, halign: "center" },
@@ -223,13 +244,38 @@ async function buildAndDownloadPDF(data: ProgramPageData) {
     y = (doc as any).lastAutoTable.finalY + 12;
   }
 
-  // Footer
+  // Grille de signatures si demandée (Modèle Officiel)
+  if (config.showSignatures) {
+    if (y > PAGE_H - 45) {
+      doc.addPage();
+      y = drawHeader(18) + 10;
+    }
+    y += 5;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    doc.setTextColor(...C.text);
+
+    const sigW = (PAGE_W - MARGIN * 2) / 3;
+    doc.text("Le Chef de Département", MARGIN + 10, y);
+    doc.text("Le Directeur des Études", MARGIN + sigW + 10, y);
+    doc.text("Le Recteur / Directeur", MARGIN + sigW * 2 + 10, y);
+
+    y += 18;
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(8);
+    doc.setTextColor(...C.muted);
+    doc.text("(Signature et Cachet)", MARGIN + 10, y);
+    doc.text("(Signature et Cachet)", MARGIN + sigW + 10, y);
+    doc.text("(Signature et Cachet)", MARGIN + sigW * 2 + 10, y);
+  }
+
+  // Appliquer le filigrane et les pieds de page sur toutes les pages
   const totalPages = doc.getNumberOfPages();
   for (let i = 1; i <= totalPages; i++) {
     doc.setPage(i);
+    drawWatermark();
     drawFooter(i, totalPages);
   }
-
 
   doc.save(`programme_${data.class.name}.pdf`);
 }
@@ -262,13 +308,19 @@ function triggerDownload(blob: Blob, filename: string) {
 export function useProgramExport(data: ProgramPageData): UseProgramExportReturn {
   const [status, setStatus] = useState<ExportStatus>("idle");
 
-  const exportAs = useCallback(async (format: ExportFormat) => {
+  const exportAs = useCallback(async (formatOrConfig: ExportFormat | ProgramExportConfig) => {
     setStatus("loading");
     try {
+      const config: ProgramExportConfig = typeof formatOrConfig === "string"
+        ? { format: formatOrConfig }
+        : formatOrConfig;
+
       const filename = `programme_${data.class.name}`.replace(/\s+/g, "_").toLowerCase();
-      if (format === "pdf") await buildAndDownloadPDF(data);
-      else if (format === "csv") triggerDownload(new Blob(["\uFEFF" + buildCSV(data.semesters)], { type: "text/csv" }), `${filename}.csv`);
-      else if (format === "json") triggerDownload(new Blob([buildJSON(data)], { type: "application/json" }), `${filename}.json`);
+
+      if (config.format === "pdf") await buildAndDownloadPDF(data, config);
+      else if (config.format === "csv") triggerDownload(new Blob(["\uFEFF" + buildCSV(data.semesters)], { type: "text/csv" }), `${filename}.csv`);
+      else if (config.format === "json") triggerDownload(new Blob([buildJSON(data)], { type: "application/json" }), `${filename}.json`);
+
       setStatus("done");
       setTimeout(() => setStatus("idle"), 2000);
     } catch (err) {

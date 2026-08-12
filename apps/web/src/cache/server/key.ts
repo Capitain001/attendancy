@@ -81,7 +81,10 @@ export const CACHE = {
   PROGRAM: key("program"),
   COURSE_TEACHER: key("course-teacher"),
   UE_TEMPLATE: key("ue-template"),
-  UE_TEMPLATE_IMPORT: key("ue-template-import"),
+  REFERENTIAL: key("referential"),
+  PROGRAM_TEMPLATE: key("program-template"),
+  ORG_PROGRAM_TEMPLATE: key("org-program-template"),
+  ORG_UE_TEMPLATE: key("org-ue-template"),
 // ⚠ À ÉTENDRE PAR PROJET — une entrée par entité cachée :
   // ENTITY: key("entity"),
   // RESOURCE: key("resource", CACHE_LIFE.SHORT),

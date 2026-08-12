@@ -1,0 +1,8 @@
+{
+  "name": "toggleProgramActive",
+  "file": "src/services/program/database/program.mutations.ts",
+  "sig": "({ programId, orgId, isActive }: { programId: string orgId: string isActive: boolean }) => Promise<{ id: string; isActive: boolean; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -34,15 +34,21 @@ export default async function ClassesPage() {
     <div className="flex flex-col gap-y-4">
       <SectionHeader
         title="Classes"
-        action={
-          <ClassCreateButton
-            programTracks={programTracks}
-            currentYear={currentYear}
-          />
-        }
+        // action={
+        //   <ClassCreateButton
+        //     programTracks={programTracks}
+          //   currentYear={currentYear}
+          // />
+        // }
       />
+      {(programTracks && currentYear)&& (
+        <ClassCreateButton
+          programTracks={programTracks}
+          currentYear={currentYear}
+        />
+      )}
 
-      <section className="grid grid-cols-2 gap-3 lg:grid-cols-3">
+      {/* <section className="grid grid-cols-2 gap-3 lg:grid-cols-3">
         <MetricCard
           label="Classes actives"
           value={String(classes.length)}
@@ -60,7 +66,7 @@ export default async function ClassesPage() {
             sub="en cours"
           />
         )}
-      </section>
+      </section> */}
 
       <ClassList initialClasses={classes} />
     </div>

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { GridDeco } from './GridDeco'
+import { GridDeco } from '../../../../design/GridDeco'
 import { cn } from '@/lib/utils'
 
 type EmptyPlanningProps = {

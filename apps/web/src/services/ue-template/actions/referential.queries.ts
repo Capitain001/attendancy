@@ -1,11 +1,10 @@
 'use server'
 import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
-import { getReferentials, getUETemplates, getUETemplateImportsByOrg } from '../database'
-import type { GetUETemplatesParams } from '../database'
+import { getReferentials, getReferentialWithPrograms } from '../database/referential.queries'
 
 export async function getReferentialsAction() {
-  const auth = await authAccess() //pas necessaire car donner public
+  const auth = await authAccess()
   if (!auth.data) return { error: auth.error }
 
   try {
@@ -15,24 +14,12 @@ export async function getReferentialsAction() {
   }
 }
 
-export async function getUETemplatesAction(params: GetUETemplatesParams) {
+export async function getReferentialAction(referentialId: string) {
   const auth = await authAccess()
   if (!auth.data) return { error: auth.error }
 
   try {
-    return { data: await getUETemplates(params) }
-  } catch (e) {
-    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
-  }
-}
-
-export async function getUETemplateImportsByOrgAction() {
-  const auth = await authAccess()
-  if (!auth.data) return { error: auth.error }
-  const { orgId } = auth.data
-
-  try {
-    return { data: await getUETemplateImportsByOrg(orgId) }
+    return { data: await getReferentialWithPrograms(referentialId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

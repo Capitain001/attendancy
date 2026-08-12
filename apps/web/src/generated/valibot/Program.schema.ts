@@ -9,6 +9,8 @@ export const ProgramSchema = v.object({
   createdAt: v.union([v.date(), v.string()]),
   updatedAt: v.union([v.date(), v.string()]),
   deletedAt: v.nullable(v.union([v.date(), v.string()])),
+  isActive: v.boolean(),
+  isLocked: v.boolean(),
   programTrackId: v.string()
 });
 export type ProgramSchemaType = v.InferOutput<typeof ProgramSchema>;
@@ -28,6 +30,8 @@ export const UpdateProgramSchema = v.object({
   createdAt: v.optional(v.union([v.date(), v.string()])),
   updatedAt: v.optional(v.union([v.date(), v.string()])),
   deletedAt: v.optional(v.union([v.date(), v.string()])),
+  isActive: v.optional(v.boolean()),
+  isLocked: v.optional(v.boolean()),
   programTrackId: v.optional(v.string())
 });
 export type UpdateProgramSchemaType = v.InferOutput<typeof UpdateProgramSchema>;

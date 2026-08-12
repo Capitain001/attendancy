@@ -1,0 +1,8 @@
+{
+  "name": "applyProgramTemplate",
+  "file": "src/services/ue-template/database/import.mutations.ts",
+  "sig": "(orgId: string, programTemplateId: string) => Promise<{ id: string; orgId: string; programTemplateId: string; departmentId: string | null; trackId: string | null; programId: string | null; createdAt: Date; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

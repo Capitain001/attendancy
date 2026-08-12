@@ -2,7 +2,7 @@
   "service": "ue",
   "path": "src/services/ue/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "9a40932",
+  "derived_at": "d07c3a8",
   "utils_dir": null,
   "fns": {
     "createUE": {

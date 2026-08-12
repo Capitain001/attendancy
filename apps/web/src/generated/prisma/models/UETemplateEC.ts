@@ -27,69 +27,97 @@ export type AggregateUETemplateEC = {
 }
 
 export type UETemplateECAvgAggregateOutputType = {
-  credits: runtime.Decimal | null
+  order: number | null
+  credits: number | null
+  duration: number | null
 }
 
 export type UETemplateECSumAggregateOutputType = {
-  credits: runtime.Decimal | null
+  order: number | null
+  credits: number | null
+  duration: number | null
 }
 
 export type UETemplateECMinAggregateOutputType = {
   id: string | null
   templateId: string | null
+  order: number | null
   code: string | null
   name: string | null
-  credits: runtime.Decimal | null
+  credits: number | null
+  description: string | null
+  duration: number | null
 }
 
 export type UETemplateECMaxAggregateOutputType = {
   id: string | null
   templateId: string | null
+  order: number | null
   code: string | null
   name: string | null
-  credits: runtime.Decimal | null
+  credits: number | null
+  description: string | null
+  duration: number | null
 }
 
 export type UETemplateECCountAggregateOutputType = {
   id: number
   templateId: number
+  order: number
   code: number
   name: number
   credits: number
+  description: number
+  duration: number
+  settings: number
   _all: number
 }
 
 
 export type UETemplateECAvgAggregateInputType = {
+  order?: true
   credits?: true
+  duration?: true
 }
 
 export type UETemplateECSumAggregateInputType = {
+  order?: true
   credits?: true
+  duration?: true
 }
 
 export type UETemplateECMinAggregateInputType = {
   id?: true
   templateId?: true
+  order?: true
   code?: true
   name?: true
   credits?: true
+  description?: true
+  duration?: true
 }
 
 export type UETemplateECMaxAggregateInputType = {
   id?: true
   templateId?: true
+  order?: true
   code?: true
   name?: true
   credits?: true
+  description?: true
+  duration?: true
 }
 
 export type UETemplateECCountAggregateInputType = {
   id?: true
   templateId?: true
+  order?: true
   code?: true
   name?: true
   credits?: true
+  description?: true
+  duration?: true
+  settings?: true
   _all?: true
 }
 
@@ -182,9 +210,13 @@ export type UETemplateECGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
 export type UETemplateECGroupByOutputType = {
   id: string
   templateId: string
+  order: number
   code: string
-  name: string | null
-  credits: runtime.Decimal
+  name: string
+  credits: number
+  description: string | null
+  duration: number | null
+  settings: runtime.JsonValue | null
   _count: UETemplateECCountAggregateOutputType | null
   _avg: UETemplateECAvgAggregateOutputType | null
   _sum: UETemplateECSumAggregateOutputType | null
@@ -213,40 +245,57 @@ export type UETemplateECWhereInput = {
   NOT?: Prisma.UETemplateECWhereInput | Prisma.UETemplateECWhereInput[]
   id?: Prisma.UuidFilter<"UETemplateEC"> | string
   templateId?: Prisma.UuidFilter<"UETemplateEC"> | string
+  order?: Prisma.IntFilter<"UETemplateEC"> | number
   code?: Prisma.StringFilter<"UETemplateEC"> | string
-  name?: Prisma.StringNullableFilter<"UETemplateEC"> | string | null
-  credits?: Prisma.DecimalFilter<"UETemplateEC"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  name?: Prisma.StringFilter<"UETemplateEC"> | string
+  credits?: Prisma.FloatFilter<"UETemplateEC"> | number
+  description?: Prisma.StringNullableFilter<"UETemplateEC"> | string | null
+  duration?: Prisma.IntNullableFilter<"UETemplateEC"> | number | null
+  settings?: Prisma.JsonNullableFilter<"UETemplateEC">
   template?: Prisma.XOR<Prisma.UETemplateScalarRelationFilter, Prisma.UETemplateWhereInput>
 }
 
 export type UETemplateECOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   templateId?: Prisma.SortOrder
+  order?: Prisma.SortOrder
   code?: Prisma.SortOrder
-  name?: Prisma.SortOrderInput | Prisma.SortOrder
+  name?: Prisma.SortOrder
   credits?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  duration?: Prisma.SortOrderInput | Prisma.SortOrder
+  settings?: Prisma.SortOrderInput | Prisma.SortOrder
   template?: Prisma.UETemplateOrderByWithRelationInput
 }
 
 export type UETemplateECWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   templateId_code?: Prisma.UETemplateECTemplateIdCodeCompoundUniqueInput
+  templateId_order?: Prisma.UETemplateECTemplateIdOrderCompoundUniqueInput
   AND?: Prisma.UETemplateECWhereInput | Prisma.UETemplateECWhereInput[]
   OR?: Prisma.UETemplateECWhereInput[]
   NOT?: Prisma.UETemplateECWhereInput | Prisma.UETemplateECWhereInput[]
   templateId?: Prisma.UuidFilter<"UETemplateEC"> | string
+  order?: Prisma.IntFilter<"UETemplateEC"> | number
   code?: Prisma.StringFilter<"UETemplateEC"> | string
-  name?: Prisma.StringNullableFilter<"UETemplateEC"> | string | null
-  credits?: Prisma.DecimalFilter<"UETemplateEC"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  name?: Prisma.StringFilter<"UETemplateEC"> | string
+  credits?: Prisma.FloatFilter<"UETemplateEC"> | number
+  description?: Prisma.StringNullableFilter<"UETemplateEC"> | string | null
+  duration?: Prisma.IntNullableFilter<"UETemplateEC"> | number | null
+  settings?: Prisma.JsonNullableFilter<"UETemplateEC">
   template?: Prisma.XOR<Prisma.UETemplateScalarRelationFilter, Prisma.UETemplateWhereInput>
-}, "id" | "templateId_code">
+}, "id" | "templateId_code" | "templateId_order">
 
 export type UETemplateECOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   templateId?: Prisma.SortOrder
+  order?: Prisma.SortOrder
   code?: Prisma.SortOrder
-  name?: Prisma.SortOrderInput | Prisma.SortOrder
+  name?: Prisma.SortOrder
   credits?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  duration?: Prisma.SortOrderInput | Prisma.SortOrder
+  settings?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UETemplateECCountOrderByAggregateInput
   _avg?: Prisma.UETemplateECAvgOrderByAggregateInput
   _max?: Prisma.UETemplateECMaxOrderByAggregateInput
@@ -260,64 +309,96 @@ export type UETemplateECScalarWhereWithAggregatesInput = {
   NOT?: Prisma.UETemplateECScalarWhereWithAggregatesInput | Prisma.UETemplateECScalarWhereWithAggregatesInput[]
   id?: Prisma.UuidWithAggregatesFilter<"UETemplateEC"> | string
   templateId?: Prisma.UuidWithAggregatesFilter<"UETemplateEC"> | string
+  order?: Prisma.IntWithAggregatesFilter<"UETemplateEC"> | number
   code?: Prisma.StringWithAggregatesFilter<"UETemplateEC"> | string
-  name?: Prisma.StringNullableWithAggregatesFilter<"UETemplateEC"> | string | null
-  credits?: Prisma.DecimalWithAggregatesFilter<"UETemplateEC"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  name?: Prisma.StringWithAggregatesFilter<"UETemplateEC"> | string
+  credits?: Prisma.FloatWithAggregatesFilter<"UETemplateEC"> | number
+  description?: Prisma.StringNullableWithAggregatesFilter<"UETemplateEC"> | string | null
+  duration?: Prisma.IntNullableWithAggregatesFilter<"UETemplateEC"> | number | null
+  settings?: Prisma.JsonNullableWithAggregatesFilter<"UETemplateEC">
 }
 
 export type UETemplateECCreateInput = {
   id?: string
+  order: number
   code: string
-  name?: string | null
-  credits: runtime.Decimal | runtime.DecimalJsLike | number | string
+  name: string
+  credits: number
+  description?: string | null
+  duration?: number | null
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   template: Prisma.UETemplateCreateNestedOneWithoutElementsInput
 }
 
 export type UETemplateECUncheckedCreateInput = {
   id?: string
   templateId: string
+  order: number
   code: string
-  name?: string | null
-  credits: runtime.Decimal | runtime.DecimalJsLike | number | string
+  name: string
+  credits: number
+  description?: string | null
+  duration?: number | null
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type UETemplateECUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
   code?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   template?: Prisma.UETemplateUpdateOneRequiredWithoutElementsNestedInput
 }
 
 export type UETemplateECUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   templateId?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
   code?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type UETemplateECCreateManyInput = {
   id?: string
   templateId: string
+  order: number
   code: string
-  name?: string | null
-  credits: runtime.Decimal | runtime.DecimalJsLike | number | string
+  name: string
+  credits: number
+  description?: string | null
+  duration?: number | null
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type UETemplateECUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
   code?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type UETemplateECUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   templateId?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
   code?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type UETemplateECListRelationFilter = {
@@ -335,36 +416,55 @@ export type UETemplateECTemplateIdCodeCompoundUniqueInput = {
   code: string
 }
 
+export type UETemplateECTemplateIdOrderCompoundUniqueInput = {
+  templateId: string
+  order: number
+}
+
 export type UETemplateECCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   templateId?: Prisma.SortOrder
+  order?: Prisma.SortOrder
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
   credits?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  duration?: Prisma.SortOrder
+  settings?: Prisma.SortOrder
 }
 
 export type UETemplateECAvgOrderByAggregateInput = {
+  order?: Prisma.SortOrder
   credits?: Prisma.SortOrder
+  duration?: Prisma.SortOrder
 }
 
 export type UETemplateECMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   templateId?: Prisma.SortOrder
+  order?: Prisma.SortOrder
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
   credits?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  duration?: Prisma.SortOrder
 }
 
 export type UETemplateECMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   templateId?: Prisma.SortOrder
+  order?: Prisma.SortOrder
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
   credits?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  duration?: Prisma.SortOrder
 }
 
 export type UETemplateECSumOrderByAggregateInput = {
+  order?: Prisma.SortOrder
   credits?: Prisma.SortOrder
+  duration?: Prisma.SortOrder
 }
 
 export type UETemplateECCreateNestedManyWithoutTemplateInput = {
@@ -411,16 +511,24 @@ export type UETemplateECUncheckedUpdateManyWithoutTemplateNestedInput = {
 
 export type UETemplateECCreateWithoutTemplateInput = {
   id?: string
+  order: number
   code: string
-  name?: string | null
-  credits: runtime.Decimal | runtime.DecimalJsLike | number | string
+  name: string
+  credits: number
+  description?: string | null
+  duration?: number | null
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type UETemplateECUncheckedCreateWithoutTemplateInput = {
   id?: string
+  order: number
   code: string
-  name?: string | null
-  credits: runtime.Decimal | runtime.DecimalJsLike | number | string
+  name: string
+  credits: number
+  description?: string | null
+  duration?: number | null
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type UETemplateECCreateOrConnectWithoutTemplateInput = {
@@ -455,37 +563,57 @@ export type UETemplateECScalarWhereInput = {
   NOT?: Prisma.UETemplateECScalarWhereInput | Prisma.UETemplateECScalarWhereInput[]
   id?: Prisma.UuidFilter<"UETemplateEC"> | string
   templateId?: Prisma.UuidFilter<"UETemplateEC"> | string
+  order?: Prisma.IntFilter<"UETemplateEC"> | number
   code?: Prisma.StringFilter<"UETemplateEC"> | string
-  name?: Prisma.StringNullableFilter<"UETemplateEC"> | string | null
-  credits?: Prisma.DecimalFilter<"UETemplateEC"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  name?: Prisma.StringFilter<"UETemplateEC"> | string
+  credits?: Prisma.FloatFilter<"UETemplateEC"> | number
+  description?: Prisma.StringNullableFilter<"UETemplateEC"> | string | null
+  duration?: Prisma.IntNullableFilter<"UETemplateEC"> | number | null
+  settings?: Prisma.JsonNullableFilter<"UETemplateEC">
 }
 
 export type UETemplateECCreateManyTemplateInput = {
   id?: string
+  order: number
   code: string
-  name?: string | null
-  credits: runtime.Decimal | runtime.DecimalJsLike | number | string
+  name: string
+  credits: number
+  description?: string | null
+  duration?: number | null
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type UETemplateECUpdateWithoutTemplateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
   code?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type UETemplateECUncheckedUpdateWithoutTemplateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
   code?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type UETemplateECUncheckedUpdateManyWithoutTemplateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
   code?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  credits?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  credits?: Prisma.FloatFieldUpdateOperationsInput | number
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 
@@ -493,39 +621,55 @@ export type UETemplateECUncheckedUpdateManyWithoutTemplateInput = {
 export type UETemplateECSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   templateId?: boolean
+  order?: boolean
   code?: boolean
   name?: boolean
   credits?: boolean
+  description?: boolean
+  duration?: boolean
+  settings?: boolean
   template?: boolean | Prisma.UETemplateDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["uETemplateEC"]>
 
 export type UETemplateECSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   templateId?: boolean
+  order?: boolean
   code?: boolean
   name?: boolean
   credits?: boolean
+  description?: boolean
+  duration?: boolean
+  settings?: boolean
   template?: boolean | Prisma.UETemplateDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["uETemplateEC"]>
 
 export type UETemplateECSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   templateId?: boolean
+  order?: boolean
   code?: boolean
   name?: boolean
   credits?: boolean
+  description?: boolean
+  duration?: boolean
+  settings?: boolean
   template?: boolean | Prisma.UETemplateDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["uETemplateEC"]>
 
 export type UETemplateECSelectScalar = {
   id?: boolean
   templateId?: boolean
+  order?: boolean
   code?: boolean
   name?: boolean
   credits?: boolean
+  description?: boolean
+  duration?: boolean
+  settings?: boolean
 }
 
-export type UETemplateECOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "templateId" | "code" | "name" | "credits", ExtArgs["result"]["uETemplateEC"]>
+export type UETemplateECOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "templateId" | "order" | "code" | "name" | "credits" | "description" | "duration" | "settings", ExtArgs["result"]["uETemplateEC"]>
 export type UETemplateECInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   template?: boolean | Prisma.UETemplateDefaultArgs<ExtArgs>
 }
@@ -544,9 +688,13 @@ export type $UETemplateECPayload<ExtArgs extends runtime.Types.Extensions.Intern
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     templateId: string
+    order: number
     code: string
-    name: string | null
-    credits: runtime.Decimal
+    name: string
+    credits: number
+    description: string | null
+    duration: number | null
+    settings: runtime.JsonValue | null
   }, ExtArgs["result"]["uETemplateEC"]>
   composites: {}
 }
@@ -973,9 +1121,13 @@ export interface Prisma__UETemplateECClient<T, Null = never, ExtArgs extends run
 export interface UETemplateECFieldRefs {
   readonly id: Prisma.FieldRef<"UETemplateEC", 'String'>
   readonly templateId: Prisma.FieldRef<"UETemplateEC", 'String'>
+  readonly order: Prisma.FieldRef<"UETemplateEC", 'Int'>
   readonly code: Prisma.FieldRef<"UETemplateEC", 'String'>
   readonly name: Prisma.FieldRef<"UETemplateEC", 'String'>
-  readonly credits: Prisma.FieldRef<"UETemplateEC", 'Decimal'>
+  readonly credits: Prisma.FieldRef<"UETemplateEC", 'Float'>
+  readonly description: Prisma.FieldRef<"UETemplateEC", 'String'>
+  readonly duration: Prisma.FieldRef<"UETemplateEC", 'Int'>
+  readonly settings: Prisma.FieldRef<"UETemplateEC", 'Json'>
 }
     
 

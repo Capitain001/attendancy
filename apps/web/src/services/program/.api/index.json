@@ -2,7 +2,7 @@
   "service": "program",
   "path": "src/services/program/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "2dc6b24",
+  "derived_at": "d07c3a8",
   "utils_dir": null,
   "fns": {
     "createProgram": {
@@ -17,6 +17,16 @@
     },
     "removeProgram": {
       "f": ".api/removeProgram.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "toggleProgramLock": {
+      "f": ".api/toggleProgramLock.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "toggleProgramActive": {
+      "f": ".api/toggleProgramActive.json",
       "layer": "db",
       "kind": "mutation"
     },
@@ -60,6 +70,16 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "toggleProgramLockAction": {
+      "f": ".api/toggleProgramLockAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "toggleProgramActiveAction": {
+      "f": ".api/toggleProgramActiveAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "getProgramsAction": {
       "f": ".api/getProgramsAction.json",
       "layer": "action",
@@ -92,6 +112,12 @@
     "removeProgram": [
       "removeProgramAction"
     ],
+    "toggleProgramLock": [
+      "toggleProgramLockAction"
+    ],
+    "toggleProgramActive": [
+      "toggleProgramActiveAction"
+    ],
     "getPrograms": [
       "getProgramsAction"
     ],
@@ -108,6 +134,8 @@
     "updateProgramAction": [],
     "linkProgramToClassAction": [],
     "removeProgramAction": [],
+    "toggleProgramLockAction": [],
+    "toggleProgramActiveAction": [],
     "getProgramsAction": [],
     "getProgramsByTrackAction": [],
     "getClassProgramAction": [],

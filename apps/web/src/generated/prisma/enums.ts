@@ -23,6 +23,18 @@ export const Level = {
 export type Level = (typeof Level)[keyof typeof Level]
 
 
+export const UEType = {
+  FONDAMENTALE: 'FONDAMENTALE',
+  COMPLEMENTAIRE: 'COMPLEMENTAIRE',
+  APPROFONDISSEMENT: 'APPROFONDISSEMENT',
+  SPECIALITE: 'SPECIALITE',
+  TRANSVERSALE: 'TRANSVERSALE',
+  LIBRE: 'LIBRE'
+} as const
+
+export type UEType = (typeof UEType)[keyof typeof UEType]
+
+
 export const JustificationStatus = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',
@@ -126,6 +138,15 @@ export const UETemplateType = {
 } as const
 
 export type UETemplateType = (typeof UETemplateType)[keyof typeof UETemplateType]
+
+
+export const DegreeType = {
+  LICENCE_PROFESSIONNELLE: 'LICENCE_PROFESSIONNELLE',
+  LICENCE_FONDAMENTALE: 'LICENCE_FONDAMENTALE',
+  MASTER: 'MASTER'
+} as const
+
+export type DegreeType = (typeof DegreeType)[keyof typeof DegreeType]
 
 
 export const UnavailabilityType = {

@@ -88,10 +88,13 @@ export const ModelName = {
   Parent: 'Parent',
   Direction: 'Direction',
   ParentRelation: 'ParentRelation',
-  NationalReferential: 'NationalReferential',
+  Referential: 'Referential',
+  ProgramTemplate: 'ProgramTemplate',
   UETemplate: 'UETemplate',
   UETemplateEC: 'UETemplateEC',
-  UETemplateImport: 'UETemplateImport',
+  ProgramUETemplate: 'ProgramUETemplate',
+  OrgProgramTemplate: 'OrgProgramTemplate',
+  OrgUETemplate: 'OrgUETemplate',
   Schedule: 'Schedule',
   WeeklyTemplate: 'WeeklyTemplate',
   WeeklySlot: 'WeeklySlot',
@@ -173,6 +176,8 @@ export const ProgramScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
+  isActive: 'isActive',
+  isLocked: 'isLocked',
   programTrackId: 'programTrackId'
 } as const
 
@@ -205,7 +210,8 @@ export const UEScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
-  isOptional: 'isOptional'
+  isOptional: 'isOptional',
+  type: 'type'
 } as const
 
 export type UEScalarFieldEnum = (typeof UEScalarFieldEnum)[keyof typeof UEScalarFieldEnum]
@@ -652,7 +658,7 @@ export const ParentRelationScalarFieldEnum = {
 export type ParentRelationScalarFieldEnum = (typeof ParentRelationScalarFieldEnum)[keyof typeof ParentRelationScalarFieldEnum]
 
 
-export const NationalReferentialScalarFieldEnum = {
+export const ReferentialScalarFieldEnum = {
   id: 'id',
   country: 'country',
   issuer: 'issuer',
@@ -663,21 +669,34 @@ export const NationalReferentialScalarFieldEnum = {
   createdAt: 'createdAt'
 } as const
 
-export type NationalReferentialScalarFieldEnum = (typeof NationalReferentialScalarFieldEnum)[keyof typeof NationalReferentialScalarFieldEnum]
+export type ReferentialScalarFieldEnum = (typeof ReferentialScalarFieldEnum)[keyof typeof ReferentialScalarFieldEnum]
+
+
+export const ProgramTemplateScalarFieldEnum = {
+  id: 'id',
+  referentialId: 'referentialId',
+  domain: 'domain',
+  mention: 'mention',
+  specialty: 'specialty',
+  degree: 'degree',
+  profile: 'profile',
+  competencies: 'competencies',
+  outcomes: 'outcomes',
+  level: 'level',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProgramTemplateScalarFieldEnum = (typeof ProgramTemplateScalarFieldEnum)[keyof typeof ProgramTemplateScalarFieldEnum]
 
 
 export const UETemplateScalarFieldEnum = {
   id: 'id',
   referentialId: 'referentialId',
-  domain: 'domain',
-  degree: 'degree',
-  mention: 'mention',
-  speciality: 'speciality',
-  semester: 'semester',
   code: 'code',
   name: 'name',
-  type: 'type',
-  credits: 'credits'
+  description: 'description',
+  totalCredits: 'totalCredits'
 } as const
 
 export type UETemplateScalarFieldEnum = (typeof UETemplateScalarFieldEnum)[keyof typeof UETemplateScalarFieldEnum]
@@ -686,23 +705,52 @@ export type UETemplateScalarFieldEnum = (typeof UETemplateScalarFieldEnum)[keyof
 export const UETemplateECScalarFieldEnum = {
   id: 'id',
   templateId: 'templateId',
+  order: 'order',
   code: 'code',
   name: 'name',
-  credits: 'credits'
+  credits: 'credits',
+  description: 'description',
+  duration: 'duration',
+  settings: 'settings'
 } as const
 
 export type UETemplateECScalarFieldEnum = (typeof UETemplateECScalarFieldEnum)[keyof typeof UETemplateECScalarFieldEnum]
 
 
-export const UETemplateImportScalarFieldEnum = {
+export const ProgramUETemplateScalarFieldEnum = {
+  id: 'id',
+  programId: 'programId',
+  ueTemplateId: 'ueTemplateId',
+  semester: 'semester',
+  order: 'order',
+  type: 'type'
+} as const
+
+export type ProgramUETemplateScalarFieldEnum = (typeof ProgramUETemplateScalarFieldEnum)[keyof typeof ProgramUETemplateScalarFieldEnum]
+
+
+export const OrgProgramTemplateScalarFieldEnum = {
+  id: 'id',
+  orgId: 'orgId',
+  programTemplateId: 'programTemplateId',
+  departmentId: 'departmentId',
+  trackId: 'trackId',
+  programId: 'programId',
+  createdAt: 'createdAt'
+} as const
+
+export type OrgProgramTemplateScalarFieldEnum = (typeof OrgProgramTemplateScalarFieldEnum)[keyof typeof OrgProgramTemplateScalarFieldEnum]
+
+
+export const OrgUETemplateScalarFieldEnum = {
   id: 'id',
   templateId: 'templateId',
   orgId: 'orgId',
   ueId: 'ueId',
-  importedAt: 'importedAt'
+  createdAt: 'createdAt'
 } as const
 
-export type UETemplateImportScalarFieldEnum = (typeof UETemplateImportScalarFieldEnum)[keyof typeof UETemplateImportScalarFieldEnum]
+export type OrgUETemplateScalarFieldEnum = (typeof OrgUETemplateScalarFieldEnum)[keyof typeof OrgUETemplateScalarFieldEnum]
 
 
 export const ScheduleScalarFieldEnum = {

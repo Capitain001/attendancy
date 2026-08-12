@@ -19,7 +19,18 @@ export async function getUEs(orgId: string, departmentId?: string) {
       code: true,
       isOptional: true,
       departmentId: true,
+      description:true,
       department: { select: { id: true, name: true } },
+      ueCourses: {
+            select: {
+              id: true,
+              name: true,
+              code: true,
+              credits: true,
+              duration: true,
+              order: true,
+            },
+          },
     },
     orderBy: { name: 'asc' },
   })
@@ -43,6 +54,7 @@ export async function getProgramUEs(programId: string, orgId: string) {
           description: true,
           imageUrl: true,
           departmentId: true,
+          type:true,
           department: { select: { id: true, name: true } },
           ueCourses: {
             where: { deletedAt: null },

@@ -36,6 +36,7 @@ export type UEMinAggregateOutputType = {
   updatedAt: Date | null
   deletedAt: Date | null
   isOptional: boolean | null
+  type: $Enums.UEType | null
 }
 
 export type UEMaxAggregateOutputType = {
@@ -50,6 +51,7 @@ export type UEMaxAggregateOutputType = {
   updatedAt: Date | null
   deletedAt: Date | null
   isOptional: boolean | null
+  type: $Enums.UEType | null
 }
 
 export type UECountAggregateOutputType = {
@@ -64,6 +66,7 @@ export type UECountAggregateOutputType = {
   updatedAt: number
   deletedAt: number
   isOptional: number
+  type: number
   _all: number
 }
 
@@ -80,6 +83,7 @@ export type UEMinAggregateInputType = {
   updatedAt?: true
   deletedAt?: true
   isOptional?: true
+  type?: true
 }
 
 export type UEMaxAggregateInputType = {
@@ -94,6 +98,7 @@ export type UEMaxAggregateInputType = {
   updatedAt?: true
   deletedAt?: true
   isOptional?: true
+  type?: true
 }
 
 export type UECountAggregateInputType = {
@@ -108,6 +113,7 @@ export type UECountAggregateInputType = {
   updatedAt?: true
   deletedAt?: true
   isOptional?: true
+  type?: true
   _all?: true
 }
 
@@ -195,6 +201,7 @@ export type UEGroupByOutputType = {
   updatedAt: Date
   deletedAt: Date | null
   isOptional: boolean
+  type: $Enums.UEType
   _count: UECountAggregateOutputType | null
   _min: UEMinAggregateOutputType | null
   _max: UEMaxAggregateOutputType | null
@@ -230,6 +237,7 @@ export type UEWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"UE"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"UE"> | Date | string | null
   isOptional?: Prisma.BoolFilter<"UE"> | boolean
+  type?: Prisma.EnumUETypeFilter<"UE"> | $Enums.UEType
   optionalUEs?: Prisma.OptionalUEListRelationFilter
   programUEs?: Prisma.ProgramUEListRelationFilter
   department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
@@ -249,6 +257,7 @@ export type UEOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   isOptional?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   optionalUEs?: Prisma.OptionalUEOrderByRelationAggregateInput
   programUEs?: Prisma.ProgramUEOrderByRelationAggregateInput
   department?: Prisma.DepartmentOrderByWithRelationInput
@@ -273,6 +282,7 @@ export type UEWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"UE"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"UE"> | Date | string | null
   isOptional?: Prisma.BoolFilter<"UE"> | boolean
+  type?: Prisma.EnumUETypeFilter<"UE"> | $Enums.UEType
   optionalUEs?: Prisma.OptionalUEListRelationFilter
   programUEs?: Prisma.ProgramUEListRelationFilter
   department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
@@ -292,6 +302,7 @@ export type UEOrderByWithAggregationInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   isOptional?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   _count?: Prisma.UECountOrderByAggregateInput
   _max?: Prisma.UEMaxOrderByAggregateInput
   _min?: Prisma.UEMinOrderByAggregateInput
@@ -312,6 +323,7 @@ export type UEScalarWhereWithAggregatesInput = {
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"UE"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"UE"> | Date | string | null
   isOptional?: Prisma.BoolWithAggregatesFilter<"UE"> | boolean
+  type?: Prisma.EnumUETypeWithAggregatesFilter<"UE"> | $Enums.UEType
 }
 
 export type UECreateInput = {
@@ -324,6 +336,7 @@ export type UECreateInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   isOptional?: boolean
+  type?: $Enums.UEType
   optionalUEs?: Prisma.OptionalUECreateNestedManyWithoutUeInput
   programUEs?: Prisma.ProgramUECreateNestedManyWithoutUeInput
   department?: Prisma.DepartmentCreateNestedOneWithoutUesInput
@@ -343,6 +356,7 @@ export type UEUncheckedCreateInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   isOptional?: boolean
+  type?: $Enums.UEType
   optionalUEs?: Prisma.OptionalUEUncheckedCreateNestedManyWithoutUeInput
   programUEs?: Prisma.ProgramUEUncheckedCreateNestedManyWithoutUeInput
   ueCourses?: Prisma.UECourseUncheckedCreateNestedManyWithoutUeInput
@@ -358,6 +372,7 @@ export type UEUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  type?: Prisma.EnumUETypeFieldUpdateOperationsInput | $Enums.UEType
   optionalUEs?: Prisma.OptionalUEUpdateManyWithoutUeNestedInput
   programUEs?: Prisma.ProgramUEUpdateManyWithoutUeNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutUesNestedInput
@@ -377,6 +392,7 @@ export type UEUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  type?: Prisma.EnumUETypeFieldUpdateOperationsInput | $Enums.UEType
   optionalUEs?: Prisma.OptionalUEUncheckedUpdateManyWithoutUeNestedInput
   programUEs?: Prisma.ProgramUEUncheckedUpdateManyWithoutUeNestedInput
   ueCourses?: Prisma.UECourseUncheckedUpdateManyWithoutUeNestedInput
@@ -394,6 +410,7 @@ export type UECreateManyInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   isOptional?: boolean
+  type?: $Enums.UEType
 }
 
 export type UEUpdateManyMutationInput = {
@@ -406,6 +423,7 @@ export type UEUpdateManyMutationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  type?: Prisma.EnumUETypeFieldUpdateOperationsInput | $Enums.UEType
 }
 
 export type UEUncheckedUpdateManyInput = {
@@ -420,6 +438,7 @@ export type UEUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  type?: Prisma.EnumUETypeFieldUpdateOperationsInput | $Enums.UEType
 }
 
 export type UEListRelationFilter = {
@@ -459,6 +478,7 @@ export type UECountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   isOptional?: Prisma.SortOrder
+  type?: Prisma.SortOrder
 }
 
 export type UEMaxOrderByAggregateInput = {
@@ -473,6 +493,7 @@ export type UEMaxOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   isOptional?: Prisma.SortOrder
+  type?: Prisma.SortOrder
 }
 
 export type UEMinOrderByAggregateInput = {
@@ -487,6 +508,7 @@ export type UEMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   isOptional?: Prisma.SortOrder
+  type?: Prisma.SortOrder
 }
 
 export type UECreateNestedManyWithoutDepartmentInput = {
@@ -543,6 +565,10 @@ export type UEUpdateOneRequiredWithoutProgramUEsNestedInput = {
   upsert?: Prisma.UEUpsertWithoutProgramUEsInput
   connect?: Prisma.UEWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UEUpdateToOneWithWhereWithoutProgramUEsInput, Prisma.UEUpdateWithoutProgramUEsInput>, Prisma.UEUncheckedUpdateWithoutProgramUEsInput>
+}
+
+export type EnumUETypeFieldUpdateOperationsInput = {
+  set?: $Enums.UEType
 }
 
 export type UECreateNestedOneWithoutUeCoursesInput = {
@@ -625,6 +651,7 @@ export type UECreateWithoutDepartmentInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   isOptional?: boolean
+  type?: $Enums.UEType
   optionalUEs?: Prisma.OptionalUECreateNestedManyWithoutUeInput
   programUEs?: Prisma.ProgramUECreateNestedManyWithoutUeInput
   organization: Prisma.OrganizationCreateNestedOneWithoutUesInput
@@ -642,6 +669,7 @@ export type UEUncheckedCreateWithoutDepartmentInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   isOptional?: boolean
+  type?: $Enums.UEType
   optionalUEs?: Prisma.OptionalUEUncheckedCreateNestedManyWithoutUeInput
   programUEs?: Prisma.ProgramUEUncheckedCreateNestedManyWithoutUeInput
   ueCourses?: Prisma.UECourseUncheckedCreateNestedManyWithoutUeInput
@@ -688,6 +716,7 @@ export type UEScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"UE"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"UE"> | Date | string | null
   isOptional?: Prisma.BoolFilter<"UE"> | boolean
+  type?: Prisma.EnumUETypeFilter<"UE"> | $Enums.UEType
 }
 
 export type UECreateWithoutProgramUEsInput = {
@@ -700,6 +729,7 @@ export type UECreateWithoutProgramUEsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   isOptional?: boolean
+  type?: $Enums.UEType
   optionalUEs?: Prisma.OptionalUECreateNestedManyWithoutUeInput
   department?: Prisma.DepartmentCreateNestedOneWithoutUesInput
   organization: Prisma.OrganizationCreateNestedOneWithoutUesInput
@@ -718,6 +748,7 @@ export type UEUncheckedCreateWithoutProgramUEsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   isOptional?: boolean
+  type?: $Enums.UEType
   optionalUEs?: Prisma.OptionalUEUncheckedCreateNestedManyWithoutUeInput
   ueCourses?: Prisma.UECourseUncheckedCreateNestedManyWithoutUeInput
 }
@@ -748,6 +779,7 @@ export type UEUpdateWithoutProgramUEsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  type?: Prisma.EnumUETypeFieldUpdateOperationsInput | $Enums.UEType
   optionalUEs?: Prisma.OptionalUEUpdateManyWithoutUeNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutUesNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutUesNestedInput
@@ -766,6 +798,7 @@ export type UEUncheckedUpdateWithoutProgramUEsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  type?: Prisma.EnumUETypeFieldUpdateOperationsInput | $Enums.UEType
   optionalUEs?: Prisma.OptionalUEUncheckedUpdateManyWithoutUeNestedInput
   ueCourses?: Prisma.UECourseUncheckedUpdateManyWithoutUeNestedInput
 }
@@ -780,6 +813,7 @@ export type UECreateWithoutUeCoursesInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   isOptional?: boolean
+  type?: $Enums.UEType
   optionalUEs?: Prisma.OptionalUECreateNestedManyWithoutUeInput
   programUEs?: Prisma.ProgramUECreateNestedManyWithoutUeInput
   department?: Prisma.DepartmentCreateNestedOneWithoutUesInput
@@ -798,6 +832,7 @@ export type UEUncheckedCreateWithoutUeCoursesInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   isOptional?: boolean
+  type?: $Enums.UEType
   optionalUEs?: Prisma.OptionalUEUncheckedCreateNestedManyWithoutUeInput
   programUEs?: Prisma.ProgramUEUncheckedCreateNestedManyWithoutUeInput
 }
@@ -828,6 +863,7 @@ export type UEUpdateWithoutUeCoursesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  type?: Prisma.EnumUETypeFieldUpdateOperationsInput | $Enums.UEType
   optionalUEs?: Prisma.OptionalUEUpdateManyWithoutUeNestedInput
   programUEs?: Prisma.ProgramUEUpdateManyWithoutUeNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutUesNestedInput
@@ -846,6 +882,7 @@ export type UEUncheckedUpdateWithoutUeCoursesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  type?: Prisma.EnumUETypeFieldUpdateOperationsInput | $Enums.UEType
   optionalUEs?: Prisma.OptionalUEUncheckedUpdateManyWithoutUeNestedInput
   programUEs?: Prisma.ProgramUEUncheckedUpdateManyWithoutUeNestedInput
 }
@@ -860,6 +897,7 @@ export type UECreateWithoutOptionalUEsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   isOptional?: boolean
+  type?: $Enums.UEType
   programUEs?: Prisma.ProgramUECreateNestedManyWithoutUeInput
   department?: Prisma.DepartmentCreateNestedOneWithoutUesInput
   organization: Prisma.OrganizationCreateNestedOneWithoutUesInput
@@ -878,6 +916,7 @@ export type UEUncheckedCreateWithoutOptionalUEsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   isOptional?: boolean
+  type?: $Enums.UEType
   programUEs?: Prisma.ProgramUEUncheckedCreateNestedManyWithoutUeInput
   ueCourses?: Prisma.UECourseUncheckedCreateNestedManyWithoutUeInput
 }
@@ -908,6 +947,7 @@ export type UEUpdateWithoutOptionalUEsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  type?: Prisma.EnumUETypeFieldUpdateOperationsInput | $Enums.UEType
   programUEs?: Prisma.ProgramUEUpdateManyWithoutUeNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutUesNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutUesNestedInput
@@ -926,6 +966,7 @@ export type UEUncheckedUpdateWithoutOptionalUEsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  type?: Prisma.EnumUETypeFieldUpdateOperationsInput | $Enums.UEType
   programUEs?: Prisma.ProgramUEUncheckedUpdateManyWithoutUeNestedInput
   ueCourses?: Prisma.UECourseUncheckedUpdateManyWithoutUeNestedInput
 }
@@ -940,6 +981,7 @@ export type UECreateWithoutOrganizationInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   isOptional?: boolean
+  type?: $Enums.UEType
   optionalUEs?: Prisma.OptionalUECreateNestedManyWithoutUeInput
   programUEs?: Prisma.ProgramUECreateNestedManyWithoutUeInput
   department?: Prisma.DepartmentCreateNestedOneWithoutUesInput
@@ -957,6 +999,7 @@ export type UEUncheckedCreateWithoutOrganizationInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   isOptional?: boolean
+  type?: $Enums.UEType
   optionalUEs?: Prisma.OptionalUEUncheckedCreateNestedManyWithoutUeInput
   programUEs?: Prisma.ProgramUEUncheckedCreateNestedManyWithoutUeInput
   ueCourses?: Prisma.UECourseUncheckedCreateNestedManyWithoutUeInput
@@ -999,6 +1042,7 @@ export type UECreateManyDepartmentInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   isOptional?: boolean
+  type?: $Enums.UEType
 }
 
 export type UEUpdateWithoutDepartmentInput = {
@@ -1011,6 +1055,7 @@ export type UEUpdateWithoutDepartmentInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  type?: Prisma.EnumUETypeFieldUpdateOperationsInput | $Enums.UEType
   optionalUEs?: Prisma.OptionalUEUpdateManyWithoutUeNestedInput
   programUEs?: Prisma.ProgramUEUpdateManyWithoutUeNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutUesNestedInput
@@ -1028,6 +1073,7 @@ export type UEUncheckedUpdateWithoutDepartmentInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  type?: Prisma.EnumUETypeFieldUpdateOperationsInput | $Enums.UEType
   optionalUEs?: Prisma.OptionalUEUncheckedUpdateManyWithoutUeNestedInput
   programUEs?: Prisma.ProgramUEUncheckedUpdateManyWithoutUeNestedInput
   ueCourses?: Prisma.UECourseUncheckedUpdateManyWithoutUeNestedInput
@@ -1044,6 +1090,7 @@ export type UEUncheckedUpdateManyWithoutDepartmentInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  type?: Prisma.EnumUETypeFieldUpdateOperationsInput | $Enums.UEType
 }
 
 export type UECreateManyOrganizationInput = {
@@ -1057,6 +1104,7 @@ export type UECreateManyOrganizationInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   isOptional?: boolean
+  type?: $Enums.UEType
 }
 
 export type UEUpdateWithoutOrganizationInput = {
@@ -1069,6 +1117,7 @@ export type UEUpdateWithoutOrganizationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  type?: Prisma.EnumUETypeFieldUpdateOperationsInput | $Enums.UEType
   optionalUEs?: Prisma.OptionalUEUpdateManyWithoutUeNestedInput
   programUEs?: Prisma.ProgramUEUpdateManyWithoutUeNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutUesNestedInput
@@ -1086,6 +1135,7 @@ export type UEUncheckedUpdateWithoutOrganizationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  type?: Prisma.EnumUETypeFieldUpdateOperationsInput | $Enums.UEType
   optionalUEs?: Prisma.OptionalUEUncheckedUpdateManyWithoutUeNestedInput
   programUEs?: Prisma.ProgramUEUncheckedUpdateManyWithoutUeNestedInput
   ueCourses?: Prisma.UECourseUncheckedUpdateManyWithoutUeNestedInput
@@ -1102,6 +1152,7 @@ export type UEUncheckedUpdateManyWithoutOrganizationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  type?: Prisma.EnumUETypeFieldUpdateOperationsInput | $Enums.UEType
 }
 
 
@@ -1165,6 +1216,7 @@ export type UESelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
   updatedAt?: boolean
   deletedAt?: boolean
   isOptional?: boolean
+  type?: boolean
   optionalUEs?: boolean | Prisma.UE$optionalUEsArgs<ExtArgs>
   programUEs?: boolean | Prisma.UE$programUEsArgs<ExtArgs>
   department?: boolean | Prisma.UE$departmentArgs<ExtArgs>
@@ -1185,6 +1237,7 @@ export type UESelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions
   updatedAt?: boolean
   deletedAt?: boolean
   isOptional?: boolean
+  type?: boolean
   department?: boolean | Prisma.UE$departmentArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["uE"]>
@@ -1201,6 +1254,7 @@ export type UESelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions
   updatedAt?: boolean
   deletedAt?: boolean
   isOptional?: boolean
+  type?: boolean
   department?: boolean | Prisma.UE$departmentArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["uE"]>
@@ -1217,9 +1271,10 @@ export type UESelectScalar = {
   updatedAt?: boolean
   deletedAt?: boolean
   isOptional?: boolean
+  type?: boolean
 }
 
-export type UEOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "code" | "description" | "imageUrl" | "departmentId" | "orgId" | "createdAt" | "updatedAt" | "deletedAt" | "isOptional", ExtArgs["result"]["uE"]>
+export type UEOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "code" | "description" | "imageUrl" | "departmentId" | "orgId" | "createdAt" | "updatedAt" | "deletedAt" | "isOptional" | "type", ExtArgs["result"]["uE"]>
 export type UEInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   optionalUEs?: boolean | Prisma.UE$optionalUEsArgs<ExtArgs>
   programUEs?: boolean | Prisma.UE$programUEsArgs<ExtArgs>
@@ -1258,6 +1313,7 @@ export type $UEPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
     updatedAt: Date
     deletedAt: Date | null
     isOptional: boolean
+    type: $Enums.UEType
   }, ExtArgs["result"]["uE"]>
   composites: {}
 }
@@ -1697,6 +1753,7 @@ export interface UEFieldRefs {
   readonly updatedAt: Prisma.FieldRef<"UE", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"UE", 'DateTime'>
   readonly isOptional: Prisma.FieldRef<"UE", 'Boolean'>
+  readonly type: Prisma.FieldRef<"UE", 'UEType'>
 }
     
 

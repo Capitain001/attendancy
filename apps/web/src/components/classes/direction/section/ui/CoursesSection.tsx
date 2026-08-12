@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import type { ClassProfileData } from './types'
 import { getInitials } from './helpers'
-import { GridDeco } from './GridDeco'
+import { GridDeco } from '../../../../design/GridDeco'
 import Link from 'next/link'
 
 type Course = ClassProfileData['courses'][number]

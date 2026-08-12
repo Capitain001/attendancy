@@ -29,10 +29,11 @@ export default async function CoursesPage() {
   return (
     <div className="flex flex-col gap-y-4">
 
-      {/* affiche le template de l org pour les UEs */}
+    
       <div className="p-0.5 w-full bg-muted rounded " >
         <span className=" w-1/2 mx-auto bg-primary rounded block text-center text-sm font-medium text-primary-foreground" >
           MESRS-Togo · 2022-04
+          {/* a remplacer par autre info */}
         </span>
       </div>
       <SectionHeader
@@ -75,8 +76,7 @@ export default async function CoursesPage() {
 
 
       <span className="text-sm text-muted-foreground">
-        {/* {JSON.stringify(ues, null, 2)} */}
-        {/* {JSON.stringify(ues.map((u) => ({ id: u.id, name: u.name, department: u.department?.name ?? null })), null, 2)} */}
+
       </span>
 
       {/* <UEList initialUEs={ues} /> */}

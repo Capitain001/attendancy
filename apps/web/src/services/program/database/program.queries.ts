@@ -7,10 +7,12 @@ export async function getPrograms({
   orgId,
   classId,
   programTrackId,
+  onlyActive,
 }: {
   orgId: string
   classId?: string
   programTrackId?: string
+  onlyActive?: boolean
 }) {
   'use cache'
   cacheTag(CACHE.PROGRAM(orgId))
@@ -22,6 +24,7 @@ export async function getPrograms({
     where: {
       orgId,
       deletedAt: null,
+      ...(onlyActive ? { isActive: true } : {}),
       ...(classId ? { classes: { some: { id: classId } } } : {}),
       ...(programTrackId ? { programTrackId } : {}),
     },
@@ -29,6 +32,8 @@ export async function getPrograms({
       id: true,
       name: true,
       description: true,
+      isActive: true,
+      isLocked: true,
       classes: {
         select: {
           id: true,
@@ -66,6 +71,8 @@ export async function getProgramById({
       id: true,
       name: true,
       description: true,
+      isActive: true,
+      isLocked: true,
       programTrack: {
         select: {
           id: true,
@@ -89,10 +96,12 @@ export async function getProgramList({
   orgId,
   classId,
   programTrackId,
+  onlyActive,
 }: {
   orgId: string
   classId?: string
   programTrackId?: string
+  onlyActive?: boolean
 }) {
   'use cache'
   cacheTag(CACHE.PROGRAM(orgId))
@@ -104,6 +113,7 @@ export async function getProgramList({
     where: {
       orgId,
       deletedAt: null,
+      ...(onlyActive ? { isActive: true } : {}),
       ...(classId ? { classes: { some: { id: classId } } } : {}),
       ...(programTrackId ? { programTrackId } : {}),
     },
@@ -111,6 +121,8 @@ export async function getProgramList({
       id: true,
       name: true,
       description: true,
+      isActive: true,
+      isLocked: true,
       _count: { select: { classes: true } },
       programTrack: { select: { id: true, name: true } },
     },
