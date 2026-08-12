@@ -304,38 +304,53 @@ async function buildAndDownloadXLSX(data: ProgramPageData) {
 
   sheet.columns = [
     { header: "Semestre",       key: "semesterLabel", width: 14 },
-    { header: "N° UE",          key: "ueOrder",        width: 8  },
+    { header: "N° UE",          key: "ueOrder",        width: 8 },
     { header: "Code UE",        key: "ueCode",         width: 14 },
     { header: "Intitulé UE",    key: "ueName",         width: 42 },
     { header: "N° Cours",       key: "courseOrder",    width: 10 },
     { header: "Code Cours",     key: "courseCode",     width: 16 },
     { header: "Intitulé Cours", key: "courseName",     width: 42 },
-    { header: "Volume",         key: "duration",        width: 10 },
-    { header: "Crédits",        key: "credits",         width: 10 },
+    { header: "Volume",         key: "duration",       width: 10 },
+    { header: "Crédits",        key: "credits",        width: 10 },
   ];
 
+  const colCount = sheet.columns.length;
+
   const THIN_BORDER = {
-    top:    { style: "thin", color: { argb: "FFB0B0B5" } },
+    top: { style: "thin", color: { argb: "FFB0B0B5" } },
     bottom: { style: "thin", color: { argb: "FFB0B0B5" } },
-    left:   { style: "thin", color: { argb: "FFB0B0B5" } },
-    right:  { style: "thin", color: { argb: "FFB0B0B5" } },
+    left: { style: "thin", color: { argb: "FFB0B0B5" } },
+    right: { style: "thin", color: { argb: "FFB0B0B5" } },
   } as const;
+
+  const ROW_A = "FFFFFFFF";
+  const ROW_B = "FFFCFCFD";
+  const TOTAL_FILL = "FFE9E9EB";
 
   // Style de l'en-tête
   sheet.getRow(1).eachCell((cell) => {
-    cell.font = { bold: true };
+    cell.font = { bold: true, size: 11, name: "Calibri" };
     cell.alignment = { horizontal: "left", vertical: "middle" };
-    cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFD7D7DC" } };
+    cell.fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "FFD7D7DC" },
+    };
     cell.border = THIN_BORDER;
   });
 
+  sheet.getRow(1).height = 20;
+
   let rowIndex = 2;
+  let ueZebraToggle = false;
 
   for (const sem of data.semesters) {
     const semStartRow = rowIndex;
 
     for (const pue of sem.ues) {
       const ueStartRow = rowIndex;
+      ueZebraToggle = !ueZebraToggle;
+      const zebraFill = ueZebraToggle ? ROW_A : ROW_B;
 
       for (const course of pue.ue.ueCourses) {
         const row = sheet.addRow({
@@ -349,19 +364,37 @@ async function buildAndDownloadXLSX(data: ProgramPageData) {
           duration: course.duration,
           credits: course.credits,
         });
+
         row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
-          // Colonnes A, B, C, D = Semestre, N° UE, Code UE, Intitulé UE (cellules fusionnées)
+          // Colonnes A, B, C, D = Semestre, N° UE, Code UE, Intitulé UE
           const isMergedGroupColumn = colNumber >= 1 && colNumber <= 4;
+
           cell.alignment = {
             horizontal: "left",
             vertical: isMergedGroupColumn ? "top" : "middle",
           };
+
           cell.border = THIN_BORDER;
+
+          cell.fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb: zebraFill },
+          };
+
+          cell.font = {
+            size: 10.5,
+            name: "Calibri",
+          };
         });
+
+        row.getCell(8).numFmt = "0";
+
         rowIndex++;
       }
 
       const ueEndRow = rowIndex - 1;
+
       if (ueEndRow > ueStartRow) {
         sheet.mergeCells(`B${ueStartRow}:B${ueEndRow}`);
         sheet.mergeCells(`C${ueStartRow}:C${ueEndRow}`);
@@ -370,40 +403,68 @@ async function buildAndDownloadXLSX(data: ProgramPageData) {
     }
 
     const semEndRow = rowIndex - 1;
+
     if (semEndRow > semStartRow) {
       sheet.mergeCells(`A${semStartRow}:A${semEndRow}`);
     }
 
     // Ligne "total" du semestre
-    const totalRow = sheet.addRow({
-      semesterLabel: "total",
-      ueOrder: "",
-      ueCode: "",
-      ueName: "",
-      courseOrder: "",
-      courseCode: "",
-      courseName: "",
-      duration: sem.totalDuration,
-      credits: sem.totalCredits,
-    });
-    totalRow.eachCell({ includeEmpty: true }, (cell) => {
-      cell.alignment = { horizontal: "left", vertical: "middle" };
-      cell.border = THIN_BORDER;
-      cell.font = { bold: true };
-    });
+    sheet.mergeCells(rowIndex, 1, rowIndex, 7);
+
+    const totalRow = sheet.getRow(rowIndex);
+
+    totalRow.getCell(1).value = "Total";
+    totalRow.getCell(8).value = sem.totalDuration;
+    totalRow.getCell(8).numFmt = "0";
+    totalRow.getCell(9).value = sem.totalCredits;
+
+    for (let c = 1; c <= colCount; c++) {
+      const cell = totalRow.getCell(c);
+
+      cell.font = {
+        bold: true,
+        size: 10.5,
+        name: "Calibri",
+      };
+
+      cell.alignment = {
+        horizontal: "left",
+        vertical: "middle",
+      };
+
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: TOTAL_FILL },
+      };
+
+      cell.border = {
+        ...THIN_BORDER,
+        top: {
+          style: "medium",
+          color: { argb: "FFA0A0A5" },
+        },
+      };
+    }
+
     rowIndex++;
   }
 
   sheet.views = [{ state: "frozen", ySplit: 1 }];
 
   const buffer = await workbook.xlsx.writeBuffer();
-  const filename = `programme_${data.class.name}`.replace(/\s+/g, "_").toLowerCase();
+
+  const filename = `programme_${data.class.name}`
+    .replace(/\s+/g, "_")
+    .toLowerCase();
+
   triggerDownload(
-    new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),
-    `${filename}.xlsx`
+    new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    }),
+    `${filename}.xlsx`,
   );
 }
-
 function buildJSON(data: ProgramPageData): string {
   return JSON.stringify(data, null, 2);
 }
