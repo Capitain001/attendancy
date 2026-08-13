@@ -19,13 +19,13 @@ import type {
   AddClassData,
   UpdateClassData,
 } from "@/services/class/database";
-import { ClasseDTo } from "@/services/class/types";
+import { GetClassesDto } from "@/services/class/types";
 import { Level } from "@/generated/prisma";
 
 // Inputs
 export type CreateClassInput = AddClassData;
 export type UpdateClassInput = UpdateClassData;
-
+export type ClassDto  =GetClassesDto[number]
 export interface UseClassesOptions {
   yearId?: string;
   programTrackId?: string;
@@ -88,7 +88,7 @@ export function useClasses(options: UseClassesOptions = {}) {
   const update = toUpdateFn(updateClassAction);
   const deleteClass = toDeleteFn(removeClassAction);
 
-  return useCrudEntity<ClasseDTo, CreateClassInput, UpdateClassInput>({
+  return useCrudEntity<ClassDto, CreateClassInput, UpdateClassInput>({
     entityName: "classes",
     fetchFn,
     staleTime,

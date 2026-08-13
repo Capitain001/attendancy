@@ -76,6 +76,32 @@ export async function getEntitiesAction() {
   `v.safeParse` (Valibot) → `database/` → audit si critique.
 - Pas de Prisma direct. Pas de logique métier — orchestre seulement.
 
+```ts
+'use server'
+import * as v from 'valibot'
+import { authAccess } from '@/services/auth'
+import { createEntitySchema } from '../validation'
+import type { CreateEntityInput } from '../validation'
+import { createEntity } from '../database'
+
+// ✅ correct
+export async function createEntityAction(input: CreateEntityInput) {
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
+  const parsed = v.safeParse(createEntitySchema, input)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+  // parsed.output: CreateEntityOutput
+
+  const entity = await createEntity({ ...parsed.output, orgId })
+  return { data: entity }
+}
+
+// ❌ à éviter
+export async function createEntityAction(input: unknown) { ... }
+```
+
 ### `authAccess` — helper d'auth pour le cas courant
 
 Couvre le cas standard : auth + `orgId` + rôle/fonction requis en un appel.
@@ -130,6 +156,24 @@ Appelé **après** le retour de la mutation, avant le `return { data }`.
 - `remove*` = soft delete (`deletedAt: new Date()`), `delete*` = hard delete (rare).
 - Pas de `Promise<>` explicite — TypeScript infère.
 
+```ts
+// reçoit directement le type Output de validation.ts
+import { prisma } from '@/lib/prisma'
+import { tryConstraint } from '@/utils/server/prisma'
+import { invalidateEvent } from '@/cache/server/key'
+import type { CreateEntityOutput } from '../validation'
+
+export async function createEntity(data: CreateEntityOutput & { orgId: string }) {
+  const entity = await tryConstraint(prisma.entity.create({
+    data,
+    select: { id: true, name: true },
+  }))
+
+  await invalidateEvent('ENTITY_CREATED', data.orgId)
+  return entity
+}
+```
+
 ### `cache.ts`
 
 - `<SERVICE>_GRAPH` : map événement → tableau de tags à invalider.
@@ -146,56 +190,71 @@ Appelé **après** le retour de la mutation, avant le `return { data }`.
 
 - **Valibot uniquement** — jamais Zod.
 - IDs : `pipe(string(), uuid('Message'))` — tous les IDs sont UUID.
-- Toujours exporter **`InferInput` et `InferOutput`** pour chaque schéma :
+- Schéma typé par `types.ts` : `satisfies Record<keyof CreateEntityData, unknown>` — toute divergence avec le modèle Prisma casse la compilation.
+- Champ optionnel/nullable en DB → `v.optional(v.nullable(...))`.
+- Champ JSON : pas de `v.nullable()` — Prisma type le null JSON via un sentinel (`NullableJsonNullValueInput`), pas `null` littéral.
+- Toujours exporter **`InferInput` et `InferOutput`** pour chaque schéma.
 
 ```ts
 import * as v from 'valibot'
+import type { Prisma } from '@/generated/prisma/client'
+import type { CreateEntityData, UpdateEntityData } from './types'
 
-export const CreateEntitySchema = v.object({
-  name: v.pipe(v.string(), v.trim(), v.minLength(1)),
-  // ...champs du modèle
-})
+const jsonValue = v.custom<Prisma.InputJsonValue>(() => true) // JSON libre, pas de schéma de forme imposé
 
-// Input  = ce que l'UI envoie (avant transformations — ex. trim, coerce)
-// Output = ce que le service reçoit après v.safeParse() (valeurs transformées)
-export type CreateEntityInput  = v.InferInput<typeof CreateEntitySchema>
-export type CreateEntityOutput = v.InferOutput<typeof CreateEntitySchema>
+export const createEntitySchema = v.object({
+  name: v.pipe(v.string(), v.trim(), v.minLength(1, 'Nom requis'), v.maxLength(100)),
+  code: v.optional(v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(20)))),
+  credits: v.pipe(v.number(), v.minValue(1), v.maxValue(10)),
+  parentId: v.pipe(v.string(), v.uuid('ID invalide')),
+  settings: v.optional(jsonValue),
+} satisfies Record<keyof CreateEntityData, unknown>)
+
+export type CreateEntityInput  = v.InferInput<typeof createEntitySchema>  // Input UI
+export type CreateEntityOutput = v.InferOutput<typeof createEntitySchema> // Output validé
+
+export const updateEntitySchema = v.object({
+  name: v.optional(v.pipe(v.string(), v.trim(), v.minLength(1, 'Nom requis'), v.maxLength(100))),
+  code: v.optional(v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(20)))),
+  credits: v.optional(v.pipe(v.number(), v.minValue(1), v.maxValue(10))),
+  parentId: v.optional(v.pipe(v.string(), v.uuid('ID invalide'))),
+  settings: v.optional(jsonValue),
+} satisfies Record<keyof UpdateEntityData, unknown>)
+
+export type UpdateEntityInput  = v.InferInput<typeof updateEntitySchema>
+export type UpdateEntityOutput = v.InferOutput<typeof updateEntitySchema>
 ```
 
 - L'action accepte `Input` comme paramètre — le formulaire est typé côté UI.
 - Après `v.safeParse()` réussi, la valeur locale est typée `Output` — plus précis que `Input`.
 - **Jamais `input: unknown`** sur une action — toujours le type `Input` du schéma.
-- **`v.safeParse` uniquement** — jamais `v.parse`, qui lève une exception au
-  lieu de retourner `{ success, issues }` exploitable dans le flux normal.
-
-```ts
-// ✅ correct
-export async function createEntityAction(input: CreateEntityInput) {
-  const auth = await authAccess({ requiredRole: 'DIRECTION' })
-  if (!auth.data) return { error: auth.error }
-  const { orgId } = auth.data
-
-  const parsed = v.safeParse(CreateEntitySchema, input)
-  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
-  // parsed.output: CreateEntityOutput
-
-  const entity = await createEntity({ ...parsed.output, orgId })
-  return { data: entity }
-}
-
-// ❌ à éviter
-export async function createEntityAction(input: unknown) { ... }
-```
+- Format attendu : `v.safeParse`, pas `v.parse`.
 
 ### `types.ts`
 
-- Naming : **nom de la fonction + `Dto`** — ex. `getEntity` → `GetEntityDto`.
-- `Awaited<ReturnType<typeof fn>>` — inféré depuis la query, aligné sur le `select`.
-- Générable : `npx tsx scripts/generate/types/types.ts <service>`.
+- Naming DTO : **nom de la fonction + `Dto`** — ex. `getEntity` → `GetEntityDto`.
+- `generated.types.ts` : auto-généré (`npx tsx scripts/generate/types/types.ts <service>`), source des DTOs de lecture.
+- `types.ts` : re-export des générés + types manuels — notamment `CreateEntityData`/`UpdateEntityData`, dérivés de Prisma, qui typent ensuite `validation.ts`.
 
-src/services/<module>/
-  types.ts              # Types manuels (écrits à la main)
-  generated.types.ts    # les types auto-générés
+```ts
+// generated.types.ts
+import { getEntities } from './database'
+
+export type GetEntitiesDto = Awaited<ReturnType<typeof getEntities>>
+```
+
+```ts
+// types.ts
+export * from './generated.types'
+
+import type { Prisma } from '@/generated/prisma/client'
+
+export type CreateEntityData = Pick<
+  Prisma.EntityUncheckedCreateInput,
+  'name' | 'code' | 'credits' | 'parentId' | 'settings'
+>
+export type UpdateEntityData = Partial<CreateEntityData>
+```
 
 ### `CLAUDE.md`
 

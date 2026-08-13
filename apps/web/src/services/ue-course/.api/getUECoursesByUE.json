@@ -1,7 +1,7 @@
 {
   "name": "getUECoursesByUE",
   "file": "src/services/ue-course/database/ue-course.queries.ts",
-  "sig": "(ueId: string, orgId: string) => Promise<{ name: string; id: string; credits: number; description: string | null; duration: number; code: string | null; order: number | null; }[]>",
+  "sig": "(ueId: string, orgId: string) => Promise<{ name: string; id: string; description: string | null; credits: number; duration: number; code: string | null; order: number | null; }[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

@@ -20,7 +20,7 @@ import {
   CreateUECourseInput,
 } from "@/services/ue/validation";
 import { UpdateUEData } from "@/services/ue/database";
-import type { UpdateUECourseData } from "@/services/ue-course";
+import type { UpdateUECourseInput } from "@/services/ue-course/validation";
 import { ProgramTable } from "@/services/ue/types";
 import { CACHE_KEYS } from "@/config/client_cache";
 
@@ -433,8 +433,8 @@ export function useProgramActions({ programId, classId }: UseProgramActionsOptio
       });
       return { previous, snapshot: cloneProgramSnapshot(previousProgram) };
     },
-    mutationFn: async ({ ueCourseId, data }: { ueCourseId: string; data: UpdateUECourseData }) => {
-      const updateResult = await updateUECourseAction(ueCourseId, data);
+    mutationFn: async ({ ueCourseId, data }: { ueCourseId: string; data: UpdateUECourseInput }) => {
+      const updateResult = await updateUECourseAction({ueCourseId, data});
       if ('error' in updateResult) throw new Error(updateResult.error);
       return { ueCourseId, data };
     },
@@ -488,12 +488,12 @@ export function useProgramActions({ programId, classId }: UseProgramActionsOptio
           label: "Modification cours",
           snapshot: (context as any)?.snapshot,
           run: async () => {
-            const revertResult = await updateUECourseAction(ueCourseId, {
+            const revertResult = await updateUECourseAction({ueCourseId, data:{
               name: previous.name,
               credits: previous.credits,
               duration: previous.duration,
               code: previous.code ?? undefined,
-            });
+            }});
             if ('error' in revertResult) throw new Error(revertResult.error);
           },
         });
@@ -659,7 +659,7 @@ export function useProgramActions({ programId, classId }: UseProgramActionsOptio
   const updateUE = (ueId: string, data: UpdateUEData) =>
     toResult(() => updateUEMutation.mutateAsync({ ueId, data }));
 
-  const updateCourse = (ueCourseId: string, data: UpdateUECourseData) =>
+  const updateCourse = (ueCourseId: string, data: UpdateUECourseInput) =>
     toResult(() => updateCourseMutation.mutateAsync({ ueCourseId, data }));
 
   const requestRemoveCourse = (ueCourseId: string) => {

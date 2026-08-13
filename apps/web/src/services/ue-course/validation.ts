@@ -1,16 +1,40 @@
 // src/services/ue-course/validation.ts
-import { object, optional, pipe, string, trim, minLength, maxLength, number, minValue, maxValue, integer, uuid, nullable } from 'valibot'
+
+import * as v from 'valibot'
 import type { InferInput, InferOutput } from 'valibot'
+import type { Prisma } from '@/generated/prisma/client'
+import { CreateUECourseData, UpdateUECourseData } from './types'
 
-export const createUECourseSchema = object({
-  name:        pipe(string(), trim(), minLength(1, 'Nom requis'), maxLength(100)),
-  code:        optional(pipe(string(), trim(), maxLength(20))),
-  description: optional(pipe(string(), trim(), maxLength(500))),
-  credits:     pipe(number(), integer(), minValue(1), maxValue(10)),
-  duration:    pipe(number(), integer(), minValue(1), maxValue(200)),
-  ueId:        pipe(string(), uuid('ID UE invalide')),
-  order:       optional(nullable(number())),
-})
 
-export type CreateUECourseInput  = InferInput<typeof createUECourseSchema>
+// Aucun schéma imposé sur le contenu du JSON.
+const jsonValue = v.custom<Prisma.InputJsonValue>(() => true)
+
+// --- CREATE ---
+export const createUECourseSchema = v.object({
+  name: v.pipe(v.string(), v.trim(), v.minLength(1, 'Nom requis'), v.maxLength(100)),
+  code: v.optional(v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(20)))),
+  description: v.optional(v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(500)))),
+  credits: v.pipe(v.number(), v.minValue(1), v.maxValue(10)),
+  duration: v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(200)),
+  ueId: v.pipe(v.string(), v.uuid('ID UE invalide')),
+  order: v.optional(v.nullable(v.number())),
+  settings: v.optional(jsonValue),
+} satisfies Record<keyof CreateUECourseData, unknown>)
+
+export type CreateUECourseInput = InferInput<typeof createUECourseSchema>
 export type CreateUECourseOutput = InferOutput<typeof createUECourseSchema>
+
+// --- UPDATE ---
+export const updateUECourseSchema = v.object({
+  name: v.optional(v.pipe(v.string(), v.trim(), v.minLength(1, 'Nom requis'), v.maxLength(100))),
+  code: v.optional(v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(20)))),
+  description: v.optional(v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(500)))),
+  credits: v.optional(v.pipe(v.number(), v.minValue(1), v.maxValue(10))),
+  duration: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(200))),
+  ueId: v.optional(v.pipe(v.string(), v.uuid('ID UE invalide'))),
+  order: v.optional(v.nullable(v.number())),
+  settings: v.optional(jsonValue),
+}satisfies Record<keyof UpdateUECourseData, unknown>)
+
+export type UpdateUECourseInput = InferInput<typeof updateUECourseSchema>
+export type UpdateUECourseOutput = InferOutput<typeof updateUECourseSchema>

@@ -1,7 +1,7 @@
 {
   "name": "getUECoursesAction",
   "file": "src/services/ue-course/actions/ue-course.queries.ts",
-  "sig": "(ueId: string) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; credits: number; description: string | null; duration: number; code: string | null; order: number | null; }[]; error?: undefined; }>",
+  "sig": "(ueId: string) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; credits: number; duration: number; code: string | null; order: number | null; }[]; error?: undefined; }>",
   "calls": [
     "getUECoursesByUE"
   ],

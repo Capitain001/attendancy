@@ -1,8 +1,17 @@
-import type { CreateUECourseInput } from './validation'
-import type { getUECoursesByUE, UpdateUECourseData } from './database'
+//src/services/ue-course/types.ts
+export * from './generated.types' //generated types
+import type { Prisma } from '@/generated/prisma/client'
 
-export type { CreateUECourseInput }
-export type { UpdateUECourseData }
+export type CreateUECourseData = Pick<
+    Prisma.UECourseUncheckedCreateInput,
+    'name' | 'code' | 'description' | 'credits' | 'duration' | 'ueId' | 'settings' | 'order'
+>
+export type UpdateUECourseData = Partial<CreateUECourseData>
 
-export type UECourseItem    = GetUECoursesDto[number]
-export * from './generated.types'
+
+
+import { GetUECoursesByUEDto } from './generated.types'
+export type UECourseItem = GetUECoursesByUEDto[number]
+
+
+

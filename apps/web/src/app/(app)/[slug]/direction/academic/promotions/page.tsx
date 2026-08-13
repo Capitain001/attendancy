@@ -8,6 +8,7 @@ import { PromotionList } from '@/components/direction/academic/PromotionList'
 import { ClassCreateButton } from '@/components/direction/academic/ClassForm'
 import { PromotionBanner } from '@/components/classes/direction/section/ui/PromotionBanner'
 import { BookOpen } from 'lucide-react'
+import { DirectionPromotionsList } from '@/components/direction/academic/promotion/DirectionPromotionsList'
 
 export default async function PromotionsPage() {
   await connection()
@@ -49,12 +50,14 @@ export default async function PromotionsPage() {
         }
       />
 
-      <PromotionList
+      {/* <PromotionList
         initialClasses={classes}
         programTracks={programTracks}
         years={years}
         currentYearId={currentYear?.id}
-      />
+      /> */}
+
+      <DirectionPromotionsList years={years} initialClasses={classes} currentYearId={currentYear?.id}  programTracks={programTracks}/>
     </div>
   )
 }

@@ -3,13 +3,22 @@
 // RÉFÉRENCE COMMENTÉE — voir database/entity.queries.ts pour le mode d'emploi.
 // ═══════════════════════════════════════════════════════════════════════════
 //
-// DTOs inférés depuis database/ — nom de fonction + Dto. Jamais de type
-// manuel : le DTO suit automatiquement le select de la query.
-// GÉNÉRABLE : npx tsx scripts/generate/types/types.ts entity
+// DTOs de lecture : re-export du fichier généré.
 //
-// import type { getEntities, getEntity } from './database'
+// export * from './generated.types'
 //
-// export type GetEntitiesDto = Awaited<ReturnType<typeof getEntities>>
-// export type GetEntityDto = Awaited<ReturnType<typeof getEntity>>
-
+// Types d'écriture — dérivés de Prisma, jamais du DTO de lecture (les
+// nullabilités create/update diffèrent d'une lecture). Source de vérité
+// pour validation.ts.
+//
+// import type { Prisma } from '@/generated/prisma/client'
+//
+// export type CreateEntityData = Pick<
+//   Prisma.EntityUncheckedCreateInput,
+//   'name' | 'parentId'
+// >
+// export type UpdateEntityData = Partial<CreateEntityData>
+ 
 export {}
+ 
+ 

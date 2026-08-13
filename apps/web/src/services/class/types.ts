@@ -6,7 +6,7 @@ export * from './generated.types'
 export type { CreateClassInput }
 
 export type ClassItem     = GetClassesDto[number]
-
+export type GetClassesItem = GetClassesDto[number]
 
 // Source de vérité : le modèle Prisma.
 export type CreateClassData = Pick<Class, 'name' | 'programTrackId' | 'level' | 'academicYearId'>

@@ -1,7 +1,8 @@
-import { Search } from 'lucide-react'
+import { Search, X } from 'lucide-react'
 import { input } from '@/styles'
 import { LEVEL_LABEL } from '@/services/class/constants'
 import { SelectYear } from './year/SelectYear'
+import { Button } from '@/components/ui/button'
 
 export type ProgramTrack = { id: string; name: string }
 
@@ -19,7 +20,7 @@ interface PromotionFilterProps {
   level: string
   setLevel: (lvl: string) => void
   programTracks: ProgramTrack[]
-  yearId: string
+  yearId?: string
   setYearId: (id: string) => void
   years: YearDTO[]
 }
@@ -36,6 +37,18 @@ export function PromotionFilter({
   setYearId,
   years,
 }: PromotionFilterProps) {
+  const defaultYear = years.find((y) => y.isCurrent)?.id ?? years[0]?.id;
+  const hasActiveFilters = Boolean(query || trackId || level || (yearId && yearId !== defaultYear));
+
+  const clearFilters = () => {
+    setQuery('');
+    setTrackId('');
+    setLevel('');
+    if (defaultYear) {
+      setYearId(defaultYear);
+    }
+  };
+
   return (
     <div className="flex flex-col sm:flex-row gap-3 mb-4">
       <div className="relative flex-1">
@@ -48,7 +61,7 @@ export function PromotionFilter({
           onChange={(e) => setQuery(e.target.value)}
         />
       </div>
-      <div className="flex flex-end max-w-[500px] gap-2 flex-wrap sm:flex-nowrap">
+      <div className="flex flex-end max-w-[600px] gap-2 flex-wrap sm:flex-nowrap items-center">
         {years.length > 0 && (
           <SelectYear 
             years={years}
@@ -76,6 +89,17 @@ export function PromotionFilter({
             <option key={key} value={key}>{val}</option>
           ))}
         </select>
+        {hasActiveFilters && (
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={clearFilters} 
+            className="shrink-0 h-10 w-10 text-muted-foreground hover:text-foreground" 
+            title="Effacer les filtres"
+          >
+            <X className="size-4" />
+          </Button>
+        )}
       </div>
     </div>
   )
