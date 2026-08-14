@@ -102,6 +102,43 @@ export async function createEntityAction(input: CreateEntityInput) {
 export async function createEntityAction(input: unknown) { ... }
 ```
 
+#### Update — id + payload validés ensemble
+
+- Norme V2 : l'action `update` reçoit `{ <model>Id, data }` — jamais l'id
+  et le payload séparés en deux paramètres de fonction.
+- L'`Input` de l'action est le type **englobant** exporté par
+  `validation.ts` (`UpdateEntityInput`, id compris) — jamais
+  `{ entityId: string; data: unknown }`. Le compilateur doit pouvoir
+  vérifier la forme de l'appel côté hook, avant même `v.safeParse`.
+- Un seul `v.safeParse` sur l'input entier (id + data) — l'id ne doit
+  jamais traverser l'action comme simple `string` non vérifiée.
+
+```ts
+'use server'
+import * as v from 'valibot'
+import { authAccess } from '@/services/auth'
+import { updateEntitySchema } from '../validation'
+import type { UpdateEntityInput } from '../validation'
+import { updateEntity } from '../database'
+
+// ✅ correct — id validé (uuid) au même titre que data
+export async function updateEntityAction(input: UpdateEntityInput) {
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
+  const parsed = v.safeParse(updateEntitySchema, input)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+  // parsed.output: { entityId: string; data: UpdateEntityDataOutput }
+
+  const entity = await updateEntity(parsed.output.entityId, orgId, parsed.output.data)
+  return { data: entity }
+}
+
+// ❌ à éviter — id non typé/non validé, data non typée
+export async function updateEntityAction(input: { entityId: string; data: unknown }) { ... }
+```
+
 ### `authAccess` — helper d'auth pour le cas courant
 
 Couvre le cas standard : auth + `orgId` + rôle/fonction requis en un appel.
@@ -155,6 +192,10 @@ Appelé **après** le retour de la mutation, avant le `return { data }`.
 - `orgId` dans le `where` (multi-tenant strict).
 - `remove*` = soft delete (`deletedAt: new Date()`), `delete*` = hard delete (rare).
 - Pas de `Promise<>` explicite — TypeScript infère.
+- `update<Model>` prend `(entityId, orgId, data)` en paramètres séparés —
+  `data` est typé `UpdateEntityDataOutput` (le payload seul, sans id),
+  jamais `UpdateEntityOutput` (qui désigne la forme englobante
+  `{ entityId, data }` côté validation — cf. `validation.ts`).
 
 ```ts
 // reçoit directement le type Output de validation.ts
@@ -170,6 +211,22 @@ export async function createEntity(data: CreateEntityOutput & { orgId: string })
   }))
 
   await invalidateEvent('ENTITY_CREATED', data.orgId)
+  return entity
+}
+```
+
+```ts
+// update — data typé UpdateEntityDataOutput (payload seul, sans id)
+import type { UpdateEntityDataOutput } from '../validation'
+
+export async function updateEntity(entityId: string, orgId: string, data: UpdateEntityDataOutput) {
+  const entity = await tryConstraint(prisma.entity.update({
+    where: { id: entityId, orgId },
+    data,
+    select: { id: true, name: true },
+  }))
+
+  await invalidateEvent('ENTITY_UPDATED', orgId, entityId)
   return entity
 }
 ```
@@ -212,8 +269,42 @@ export const createEntitySchema = v.object({
 
 export type CreateEntityInput  = v.InferInput<typeof createEntitySchema>  // Input UI
 export type CreateEntityOutput = v.InferOutput<typeof createEntitySchema> // Output validé
+```
 
-export const updateEntitySchema = v.object({
+#### Update — `validateWithId` (norme V2)
+
+Un update touche toujours deux choses de nature différente : un **id**
+(identité, jamais un champ métier) et un **payload** (champs métier
+modifiables, tous `optional`). Ces deux éléments sont validés **ensemble**,
+dans un seul `v.safeParse`, via le helper `validateWithId` :
+
+```ts
+// @/utils/server/validation.ts
+export function validateWithId<
+  const TIdField extends string,
+  TDataSchema extends v.GenericSchema
+>(idField: TIdField, dataSchema: TDataSchema) { /* ... */ }
+```
+
+- **Deux schémas exportés, jamais un seul** :
+  1. `update<Entity>DataSchema` — le **payload seul** (sans id), typé
+     Prisma via `satisfies Record<keyof UpdateEntityData, unknown>`, tous
+     champs `optional` (update partiel).
+  2. `update<Entity>Schema` — le schéma **englobant**, construit via
+     `validateWithId('<entity>Id', update<Entity>DataSchema)`. C'est LUI
+     que l'action passe à `v.safeParse`.
+- **Quatre types exportés** pour l'update, pas deux :
+  `UpdateEntityDataInput` / `UpdateEntityDataOutput` (payload seul) et
+  `UpdateEntityInput` / `UpdateEntityOutput` (forme englobante
+  `{ entityId, data }`). Ne jamais réutiliser le même nom pour les deux
+  formes ailleurs dans le service (hooks compris) — cf. anti-pattern
+  dédié plus bas.
+- `entityId` n'appartient jamais à `UpdateEntityData` (dérivé de Prisma,
+  ne contient jamais l'id) — c'est pour ça qu'il est validé à part, dans
+  le schéma englobant, pas dans le schéma data.
+
+```ts
+export const updateEntityDataSchema = v.object({
   name: v.optional(v.pipe(v.string(), v.trim(), v.minLength(1, 'Nom requis'), v.maxLength(100))),
   code: v.optional(v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(20)))),
   credits: v.optional(v.pipe(v.number(), v.minValue(1), v.maxValue(10))),
@@ -221,12 +312,21 @@ export const updateEntitySchema = v.object({
   settings: v.optional(jsonValue),
 } satisfies Record<keyof UpdateEntityData, unknown>)
 
-export type UpdateEntityInput  = v.InferInput<typeof updateEntitySchema>
-export type UpdateEntityOutput = v.InferOutput<typeof updateEntitySchema>
+export type UpdateEntityDataInput  = v.InferInput<typeof updateEntityDataSchema>
+export type UpdateEntityDataOutput = v.InferOutput<typeof updateEntityDataSchema>
+
+export const updateEntitySchema = validateWithId('entityId', updateEntityDataSchema)
+
+export type UpdateEntityInput  = v.InferInput<typeof updateEntitySchema>  // { entityId: string; data: UpdateEntityDataInput }
+export type UpdateEntityOutput = v.InferOutput<typeof updateEntitySchema> // { entityId: string; data: UpdateEntityDataOutput }
 ```
 
-- L'action accepte `Input` comme paramètre — le formulaire est typé côté UI.
-- Après `v.safeParse()` réussi, la valeur locale est typée `Output` — plus précis que `Input`.
+- L'action accepte `UpdateEntityInput` (forme englobante) comme paramètre
+  — jamais `{ entityId: string; data: unknown }`.
+- Après `v.safeParse()` réussi, `parsed.output.entityId` et
+  `parsed.output.data` sont typés précisément — passés séparément à
+  `database/` (`updateEntity(entityId, orgId, data)`), jamais en un seul
+  objet imbriqué côté DB.
 - **Jamais `input: unknown`** sur une action — toujours le type `Input` du schéma.
 - Format attendu : `v.safeParse`, pas `v.parse`.
 
@@ -285,6 +385,9 @@ export * from './types'
   `auth` — documentée dans leur CLAUDE.md.)
 - **Jamais de type de retour explicite `Promise<...>` sur les actions** —
   laisser TypeScript inférer.
+- **Update : id + data validés dans un seul `v.safeParse`**, via
+  `validateWithId` — jamais deux paramètres de fonction séparés
+  (`(entityId: string, data: unknown)`) sur une action.
 - Pas d'imports/variables inutilisés.
 - Variables locales : `entity_` quand le nom naturel est un mot réservé.
 
@@ -295,7 +398,7 @@ export * from './types'
 3. `database/index.ts` — `export *`.
 4. `cache.ts` — `<SERVICE>_GRAPH` + enregistrement dans `src/cache/server/key.ts`.
 5. `constants.ts` — si enums ou labels.
-6. `validation.ts` — schémas Valibot pour les entrées mutables.
+6. `validation.ts` — schémas Valibot pour les entrées mutables (update via `validateWithId`).
 7. `actions/<model>.queries.ts` + `actions/<model>.mutations.ts`.
 8. `actions/index.ts` — `export *`.
 9. `types.ts` — DTOs `<FnName>Dto` .
@@ -319,3 +422,13 @@ export * from './types'
 - Service sans `CLAUDE.md` ou avec un `CLAUDE.md` obsolète.
 - `v.parse` dans une action (préférer `v.safeParse` pour un retour d'erreur explicite).
 - `if (auth.error)` au lieu de `if (!auth.data)` pour discriminer le retour de `authAccess`.
+- **Update sans `validateWithId`** : id passé en `string` brute non validée
+  au lieu d'être vérifiée `uuid()` au même titre que `data`.
+- **`data: unknown`** (ou tout paramètre d'action non typé par l'`Input`
+  du schéma) — le compilateur doit pouvoir vérifier l'appel avant même
+  `v.safeParse`.
+- **Réutiliser le même nom de type pour la forme englobante et le payload
+  seul** d'un update (ex. `UpdateEntityInput` désignant tantôt
+  `{ entityId, data }`, tantôt juste les champs métier selon le fichier) —
+  toujours distinguer `UpdateEntityInput`/`Output` (englobant) de
+  `UpdateEntityDataInput`/`DataOutput` (payload seul).

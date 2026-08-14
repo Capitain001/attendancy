@@ -147,11 +147,11 @@ export function UEBlock({ ue, semesterIndex, isDragging, onCoursesChange, isEdit
       {/* Courses */}
       <AnimatePresence initial={false}>
         {expanded && (
-          <motion.div
-            initial={{ height: 0 }} animate={{ height: 'auto' }}
-            exit={{ height: 0 }} transition={{ duration: 0.2, ease: 'easeInOut' }}
-            className="overflow-hidden"
-          >
+          // <motion.div
+          //   initial={{ height: 0 }} animate={{ height: 'auto' }}
+          //   exit={{ height: 0 }} transition={{ duration: 0.2, ease: 'easeInOut' }}
+          //   className="overflow-hidden"
+          // >
             <DndContext
               sensors={courseSensors}
               collisionDetection={closestCenter}
@@ -170,11 +170,11 @@ export function UEBlock({ ue, semesterIndex, isDragging, onCoursesChange, isEdit
                 ))}
               </SortableContext>
 
-              <DragOverlay dropAnimation={null}>
+              {/* <DragOverlay dropAnimation={null}>
                 {activeCourse && <CourseGhost course={activeCourse} />}
-              </DragOverlay>
+              </DragOverlay> */}
             </DndContext>
-          </motion.div>
+          // </motion.div>
         )}
       </AnimatePresence>
     </div>

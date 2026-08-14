@@ -2,7 +2,7 @@
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
 import { invalidateEvent } from '@/cache/server/key'
-import type { CreateScheduleOutput, UpdateScheduleOutput } from '../validation'
+import type { CreateScheduleOutput, UpdateScheduleDataOutput } from '../validation'
 
 const scheduleSelect = {
   course: { select: { id: true, name: true } },
@@ -12,7 +12,7 @@ const scheduleSelect = {
   teacher: {
     select: {
       id: true,
-      user: { select: { firstName: true, lastName: true } },
+      user: { select: { firstName: true, lastName: true, avatar_url: true } },
     },
   },
 } as const
@@ -48,7 +48,7 @@ export async function createSchedule(data: CreateScheduleOutput & { orgId: strin
   return result
 }
 
-export async function updateSchedule(scheduleId: string, orgId: string, data: UpdateScheduleOutput) {
+export async function updateSchedule(scheduleId: string, orgId: string, data: UpdateScheduleDataOutput) {
   const schedule = await tryConstraint(
     prisma.schedule.update({
       where: { id: scheduleId, orgId, deletedAt: null },

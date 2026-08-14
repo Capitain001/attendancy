@@ -2,10 +2,9 @@
 import * as v from 'valibot'
 import { authAccess } from '@/modules/auth'
 import { ERRORS } from '@/config'
-import { createAcademicYearSchema, setCurrentYearSchema } from '../validation'
-import type { CreateAcademicYearInput, SetCurrentYearInput } from '../validation'
+import { createAcademicYearSchema, setCurrentYearSchema, updateAcademicYearSchema } from '../validation'
+import type { CreateAcademicYearInput, SetCurrentYearInput, UpdateAcademicYearInput } from '../validation'
 import { createAcademicYear, setCurrentYear, removeAcademicYear, updateAcademicYear } from '../database'
-import type { UpdateAcademicYearData } from '../database'
 
 export async function createAcademicYearAction(input: CreateAcademicYearInput) {
   const parsed = v.safeParse(createAcademicYearSchema, input)
@@ -45,13 +44,18 @@ export async function setCurrentYearAction(input: SetCurrentYearInput) {
   }
 }
 
-export async function updateAcademicYearAction(academicYearId: string, data: UpdateAcademicYearData) {
+export async function updateAcademicYearAction(input: UpdateAcademicYearInput) {
   const auth = await authAccess({ requiredRole: 'DIRECTION' })
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
 
+  const parsed = v.safeParse(updateAcademicYearSchema, input)
+  if (!parsed.success) {
+    return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+  }
+
   try {
-    return { data: await updateAcademicYear(academicYearId, orgId, data) }
+    return { data: await updateAcademicYear(parsed.output.academicYearId, orgId, parsed.output.data) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

@@ -13,7 +13,7 @@ import {
   markScheduleCreationNotified,
   getScheduleForNotify,
 } from '../database'
-import { CreateScheduleOutput, UpdateScheduleOutput, createScheduleSchema, updateScheduleSchema } from '../validation'
+import { CreateScheduleOutput, UpdateScheduleDataOutput, createScheduleSchema, updateScheduleSchema, UpdateScheduleInput } from '../validation'
 import { logAuditAsync } from '@/modules/audit'
 import { INVALID_TIME_ORDER_ERROR, isSlotElapsed, isValidTimeOrder, PAST_SLOT_ERROR } from '@/services/planning/policy' 
 import { getExpectedAttendees } from '@/services/attendance/database'
@@ -33,7 +33,7 @@ const PLANNING_ROLES = "DIRECTION" as const;
 async function notifyScheduleChange(
   scheduleId: string,
   orgId: string,
-  changed: UpdateScheduleOutput,
+  changed: UpdateScheduleDataOutput,
   schedule: { startTime: Date; course: { name: string } },
 ) {
   const canceled = changed.status === 'CANCELED'
@@ -127,25 +127,28 @@ export async function createScheduleAction(data: CreateScheduleOutput) {
   }
 }
 
-export async function updateScheduleAction(scheduleId: string, data: UpdateScheduleOutput) {
+export async function updateScheduleAction(input: UpdateScheduleInput) {
   const auth = await authAccess({ requiredRole: PLANNING_ROLES })
   if (!auth.data) return { error: auth.error }
   const { orgId, user } = auth.data
 
-  if (data.startTime && isSlotElapsed({ start: data.startTime, end: data.endTime })) {
+  const parsed = v.safeParse(updateScheduleSchema, input)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+
+  const scheduleId = parsed.output.scheduleId
+  const data = parsed.output.data
+
+  if (data.startTime && data.endTime && isSlotElapsed({ start: data.startTime, end: data.endTime })) {
     return { error: PAST_SLOT_ERROR }
   }
 
-  const parsed = v.safeParse(updateScheduleSchema, data)
-  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
-
   try {
-    const schedule = await updateSchedule(scheduleId, orgId, parsed.output)
-    await notifyScheduleChange(scheduleId, orgId, parsed.output, schedule)
+    const schedule = await updateSchedule(scheduleId, orgId, data)
+    await notifyScheduleChange(scheduleId, orgId, data, schedule)
 
-    const canceled = parsed.output.status === 'CANCELED'
+    const canceled = data.status === 'CANCELED'
     const changedFields = (['roomId', 'teacherId', 'startTime', 'endTime'] as const)
-      .filter((key) => parsed.output[key] !== undefined)
+      .filter((key) => data[key] !== undefined)
 
     if (canceled || changedFields.length > 0) {
       logAuditAsync({

@@ -1,5 +1,4 @@
 // src/hooks/data/classes/useClasses.ts
-//@ts-nocheck
 "use client";
 
 import { useCrudEntity } from "@/hooks/entity/useCrudEntity";
@@ -14,18 +13,17 @@ import {
   updateClassAction,
   removeClassAction,
   getClassesAction,
-} from "@/services/class/actions";
+} from "@/services/class";
 import type {
-  AddClassData,
-  UpdateClassData,
-} from "@/services/class/database";
-import { GetClassesDto } from "@/services/class/types";
+  CreateClassInput,
+  UpdateClassDataInput,
+} from "@/services/class";
+import { GetClassesDto } from "@/services/class";
 import { Level } from "@/generated/prisma";
 
 // Inputs
-export type CreateClassInput = AddClassData;
-export type UpdateClassInput = UpdateClassData;
-export type ClassDto  =GetClassesDto[number]
+// export type CreateClassInput;
+export type ClassDto = GetClassesDto[number];
 export interface UseClassesOptions {
   yearId?: string;
   programTrackId?: string;
@@ -82,13 +80,16 @@ export function useClasses(options: UseClassesOptions = {}) {
     level,
   })
 
-
-
   const create = toCreateFn(createClassAction);
-  const update = toUpdateFn(updateClassAction);
+
+  // updateClassAction suit la norme V2 : id + payload imbriqué sous `data`
+  // ({ classId, data: {...} }) — c'est cette forme qui sert désormais de
+  // référence pour toUpdateFn (cf. actionHelpers.ts).
+  const update = toUpdateFn(updateClassAction, "classId");
+
   const deleteClass = toDeleteFn(removeClassAction);
 
-  return useCrudEntity<ClassDto, CreateClassInput, UpdateClassInput>({
+  return useCrudEntity<ClassDto, CreateClassInput, UpdateClassDataInput>({
     entityName: "classes",
     fetchFn,
     staleTime,

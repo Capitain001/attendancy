@@ -1,7 +1,7 @@
 {
   "name": "createClass",
   "file": "src/services/class/database/class.mutations.ts",
-  "sig": "(data: CreateClassOutput & { orgId: string }) => Promise<{ level: Level; name: string; id: string; academicYearId: string; programTrackId: string; }>",
+  "sig": "(data: CreateClassOutput & { orgId: string }) => Promise<{ level: Level; name: string; id: string; programTrackId: string; academicYearId: string; }>",
   "composes": [
     "getCurrentYear"
   ],

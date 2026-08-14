@@ -1,9 +1,14 @@
 //src/services/course/types.ts
+import type { Prisma } from '@/generated/prisma/client'
 import type { CreateCourseInput } from './validation'
-import type { GetCoursesByClassDto } from './generated.types'
+import type {  GetCoursesDto } from './generated.types'
 
 export * from './generated.types'
 export type { CreateCourseInput }
 
+export type CreateCourseData = Pick<Prisma.CourseUncheckedCreateInput, 'ueCourseId' | 'classId' | 'termId' | 'name'>
+export type UpdateCourseData = Partial<Pick<Prisma.CourseUncheckedCreateInput, 'name' | 'description'>>
+
 /** Cours d'une classe avec ses enseignants — élément de getCoursesByClass. */
-export type CourseDTO = GetCoursesByClassDto[number]
+export type GetCoursesItem = GetCoursesDto[number]
+export type CourseDTO = GetCoursesItem

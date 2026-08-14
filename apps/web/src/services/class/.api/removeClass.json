@@ -1,7 +1,7 @@
 {
   "name": "removeClass",
   "file": "src/services/class/database/class.mutations.ts",
-  "sig": "(classId: string, orgId: string) => Promise<{ level: Level; name: string; id: string; academicYearId: string; createdAt: Date; updatedAt: Date; deletedAt: Date | null; programTrackId: string; programId: string | null; }>",
+  "sig": "(classId: string, orgId: string) => Promise<{ level: Level; name: string; id: string; createdAt: Date; updatedAt: Date; deletedAt: Date | null; programTrackId: string; programId: string | null; academicYearId: string; }>",
   "composes": [],
   "rules": [],
   "why_ref": ""

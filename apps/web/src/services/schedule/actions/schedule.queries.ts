@@ -11,8 +11,8 @@ import {
   getTodayClassSchedules,
   type ScheduleFilterParams,
 } from '../database'
-import { getCoursesByClass } from '@/services/course/database'
-import { getGroupsByClass } from '@/services/group/database'
+import { getCourses } from '@/services/course/database'
+// import { getGroupsByClass } from '@/services/group/database'
 import { getRooms } from '@/services/room/database'
 
 export async function getClassSchedulesAction(
@@ -114,9 +114,9 @@ export async function getClassScheduleOptionsAction(classId: string) {
 
   try {
     const [courses, rooms, groups] = await Promise.all([
-      getCoursesByClass(classId, orgId),
+      getCourses(classId, orgId),
       getRooms(orgId),
-      getGroupsByClass(classId, orgId),
+      getCourses(classId, orgId),
     ])
 
     return {

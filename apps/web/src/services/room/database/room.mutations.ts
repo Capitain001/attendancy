@@ -2,13 +2,9 @@
 import { prisma } from '@/lib/prisma'
 import { invalidateEvent } from '@/cache/server/key'
 
-export async function createRoom(data: {
-  name: string
-  capacity?: number
-  locationId?: string
-  equipment?: string[]
-  orgId: string
-}) {
+import type { UpdateRoomDataOutput, CreateRoomOutput, CreateLocationOutput } from '../validation'
+
+export async function createRoom(data: CreateRoomOutput & { orgId: string }) {
   const result = await prisma.room.create({
     data: {
       name: data.name,
@@ -36,14 +32,7 @@ export async function removeRoom(id: string, orgId: string) {
   return result
 }
 
-export async function createLocation(data: {
-  name: string
-  address: string
-  latitude: number
-  longitude: number
-  radius?: number
-  orgId: string
-}) {
+export async function createLocation(data: CreateLocationOutput & { orgId: string }) {
   const result = await prisma.location.create({
     data: {
       name: data.name,
@@ -62,7 +51,7 @@ export async function createLocation(data: {
 export async function updateRoom(
   id: string,
   orgId: string,
-  data: { name?: string; capacity?: number; locationId?: string; equipment?: string[] },
+  data: UpdateRoomDataOutput,
 ) {
   const existing = await prisma.room.findFirst({ where: { id, orgId, deletedAt: null } })
   if (!existing) throw new Error('Salle introuvable')

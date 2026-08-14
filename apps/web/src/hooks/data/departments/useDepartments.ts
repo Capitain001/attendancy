@@ -9,16 +9,19 @@ import {
 } from "@/hooks/entity/actionHelpers";
 
 import {
-  addDepartmentAction,
+  createDepartmentAction,
   getDepartmentsAction,
-  updateDepartmentByIdAction as updateDepartmentAction,
-  removeDepartmentAction,
+  updateDepartmentAction,
+  deleteDepartmentAction,
 } from "@/services/department/actions";
 
-import type { CreateDepartmentInput, DepartmentDto } from "@/services/department";
+import type { CreateDepartmentInput } from "@/services/department/validation";
+import type { UpdateDepartmentDataInput } from "@/services/department/validation";
+import type { DepartmentDto } from "@/services/department/types";
 
 // Types pour les inputs du hook
-export type UpdateDepartmentInput = Pick<CreateDepartmentInput, 'name'>;
+export type { CreateDepartmentInput };
+export type UpdateDepartmentInput = UpdateDepartmentDataInput;
 
 export interface UseDepartmentsOptions {
   staleTime?: number;
@@ -41,9 +44,9 @@ export function useDepartments(options: UseDepartmentsOptions = {}) {
   const { staleTime, enabled } = options;
 
   const fetchFn = toFetchFn(getDepartmentsAction);
-  const create = toCreateFn(addDepartmentAction);
-  const update = toUpdateFn(updateDepartmentAction);
-  const remove = toDeleteFn(removeDepartmentAction);
+  const create = toCreateFn(createDepartmentAction);
+  const update = toUpdateFn(updateDepartmentAction, "departmentId");
+  const remove = toDeleteFn(deleteDepartmentAction);
 
   return useCrudEntity<
     DepartmentDto,

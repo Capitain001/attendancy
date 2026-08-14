@@ -8,9 +8,8 @@ import {
   updateMessageAction,
   removeMessageAction,
 } from "@/services/chat/actions";
-import type { AddMessageData, ChatMessage, UpdateMessageData } from "@/services/chat";
-
-export type CreateMessageInput = Omit<AddMessageData, "userId">;
+import type { ChatMessage } from "@/services/chat";
+import type { CreateMessageInput, UpdateMessageDataInput } from "@/services/chat/validation";
 
 interface UseMessagesOptions {
   roomName: string;
@@ -46,13 +45,10 @@ interface UseMessagesOptions {
 export function useMessages({ roomName, staleTime, enabled }: UseMessagesOptions) {
   const fetchFn = toFetchFn(getMessagesAction, roomName);
   const create = toCreateFn(sendMessageAction);
-  const update = toUpdateFn(updateMessageAction);
-  const deleteMessage = toDeleteFn<string>(async (id) => {
-    const r = await removeMessageAction(id);
-    return 'error' in r ? { success: false as const, error: r.error } : { success: true as const };
-  });
+  const update = toUpdateFn(updateMessageAction, "messageId");
+    const removeMessage = toDeleteFn(removeMessageAction);
 
-  return useCrudEntity<ChatMessage, CreateMessageInput>({
+  return useCrudEntity<ChatMessage, CreateMessageInput, UpdateMessageDataInput>({
     entityName: `messages:${roomName}`,
     fetchFn,
     staleTime,
@@ -60,7 +56,7 @@ export function useMessages({ roomName, staleTime, enabled }: UseMessagesOptions
     crud: {
       create,
       update,
-      delete: deleteMessage,
+      delete: removeMessage,
       messages: {
         create: "Message envoyé",
         update: "Message modifié",

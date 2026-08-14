@@ -2,7 +2,7 @@
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
 import { invalidateEvent } from '@/cache/server/key'
-import type { CreateCourseOutput } from '../validation'
+import type { CreateCourseOutput, UpdateCourseDataOutput } from '../validation'
 
 export async function createCourse(data: CreateCourseOutput & { orgId: string }) {
   // Verify class belongs to org
@@ -42,9 +42,10 @@ export async function createCourse(data: CreateCourseOutput & { orgId: string })
   return result
 }
 
+
 export async function updateCourse(
   courseId: string,
-  data: { name?: string; description?: string | null },
+  data: UpdateCourseDataOutput,
   orgId: string,
 ) {
   const course = await prisma.course.findFirst({

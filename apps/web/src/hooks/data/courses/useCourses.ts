@@ -1,21 +1,21 @@
 // src/hooks/data/courses/useCourses.ts
-//@ts-nocheck
+
 "use client";
 
 import { useCrudEntity } from "@/hooks/entity/useCrudEntity";
 import { toFetchFn, toCreateFn, toUpdateFn, toDeleteFn } from "@/hooks/entity/actionHelpers";
-import { 
-  addCourseAction, 
-  updateCourseAction, 
-  removeCourseAction, 
-  getCoursesAction 
-} from "@/services/course";
-import type { AddCourseData, UpdateCourseData } from "@/services/course";
-import type { CourseDTO } from "@/services/course";
+import {
+  createCourseAction,
+  updateCourseAction,
+  removeCourseAction,
+  getCoursesAction
+} from "@/services/course/actions";
+import type { CreateCourseInput, UpdateCourseDataInput } from "@/services/course/validation";
+import type { GetCoursesItem } from "@/services/course/types";
 
 // Types pour les inputs du hook
-export type CreateCourseInput = Omit<AddCourseData, "orgId">;
-export type UpdateCourseInput = UpdateCourseData;
+export type { CreateCourseInput };
+export type UpdateCourseInput = UpdateCourseDataInput;
 
 export interface UseCoursesOptions {
   classId?: string;
@@ -69,11 +69,11 @@ export function useCourses(options: UseCoursesOptions = {}) {
 
   // ✅ Utilisation des helpers réutilisables
   const fetchFn = toFetchFn(getCoursesAction, { classId });
-  const create = toCreateFn(addCourseAction);
-  const update = toUpdateFn(updateCourseAction);
+  const create = toCreateFn(createCourseAction);
+  const update = toUpdateFn(updateCourseAction, "courseId");
   const deleteCourse = toDeleteFn(removeCourseAction);
 
-  return useCrudEntity<CourseDTO, CreateCourseInput, UpdateCourseInput>({
+  return useCrudEntity<GetCoursesItem, CreateCourseInput, UpdateCourseInput>({
     entityName: "courses",
     fetchFn,
     staleTime,

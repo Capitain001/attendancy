@@ -1,7 +1,7 @@
 {
   "name": "updateDepartment",
   "file": "src/services/department/database/department.mutations.ts",
-  "sig": "({ departmentId, orgId, name }: UpdateDepartmentOutput & { orgId: string }) => Promise<{ name: string; id: string; _count: { teachers: number; programTracks: number; ues: number; }; }>",
+  "sig": "(departmentId: string, orgId: string, data: UpdateDepartmentDataOutput) => Promise<{ name: string; id: string; _count: { programTracks: number; teachers: number; ues: number; }; }>",
   "composes": [],
   "rules": [],
   "why_ref": ""

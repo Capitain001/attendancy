@@ -20,7 +20,6 @@ export async function createProgramAction(input: CreateProgramInput) {
     const program = await createProgram({
       data: {
         ...parsed.output,
-        description: parsed.output.description ?? null,
       },
       orgId,
     })
@@ -31,7 +30,7 @@ export async function createProgramAction(input: CreateProgramInput) {
   }
 }
 
-export async function updateProgramAction(programId: string, input: UpdateProgramInput) {
+export async function updateProgramAction(input: UpdateProgramInput) {
   try {
     const auth = await authAccess({ requiredRole: 'DIRECTION', requiredFunction: 'PRINCIPAL' })
     if (!auth.data) return { error: auth.error }
@@ -40,7 +39,7 @@ export async function updateProgramAction(programId: string, input: UpdateProgra
     const parsed = v.safeParse(UpdateProgramSchema, input)
     if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
 
-    const program = await updateProgram({ programId, orgId }, parsed.output)
+    const program = await updateProgram({ programId: parsed.output.programId, orgId }, parsed.output.data)
     return { data: program }
   } catch (error) {
     console.error('updateProgramAction:', error)

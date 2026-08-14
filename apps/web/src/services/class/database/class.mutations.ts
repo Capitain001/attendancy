@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
 import { invalidateEvent } from '@/cache/server/key'
 import { getCurrentYear } from '@/services/academic-year/database'
-import type { CreateClassOutput, UpdateClassOutput } from '../validation'
+import type { CreateClassOutput, UpdateClassDataOutput, UpdateClassOutput } from '../validation'
 
 export async function createClass(data: CreateClassOutput & { orgId: string }) {
   const track = await prisma.programTrack.findFirst({
@@ -32,7 +32,7 @@ export async function createClass(data: CreateClassOutput & { orgId: string }) {
 }
 
 
-export async function updateClass(classId: string, orgId: string, data: UpdateClassOutput) {
+export async function updateClass(classId: string, orgId: string, data: UpdateClassDataOutput) {
   const updated = await tryConstraint(prisma.class.update({
     where: {
       id: classId,
@@ -47,10 +47,11 @@ export async function updateClass(classId: string, orgId: string, data: UpdateCl
       academicYearId: true,
     },
   }))
-
+ 
   await invalidateEvent('CLASS_UPDATED', orgId, classId)
   return updated
 }
+ 
 
 export async function removeClass(classId: string, orgId: string) {
   const result = await tryConstraint(prisma.class.update({

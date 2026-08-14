@@ -1,3 +1,5 @@
+// src/services/class/types.ts
+
 import type { CreateClassInput } from './validation'
 import { GetClassesDto } from './generated.types'
 import { Class } from '@/generated/prisma/client'

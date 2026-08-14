@@ -1,9 +1,18 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
-import { MoreHorizontal, BookOpen, Archive } from 'lucide-react'
+import { MoreHorizontal, BookOpen, Archive, Pencil } from 'lucide-react'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,8 +24,61 @@ import { typography } from '@/styles'
 import { LEVEL_LABEL } from '@/services/class/constants'
 import { GetClassesDto } from '@/services/class'
 
+function RenameDialog({
+  cls,
+  open,
+  onOpenChange,
+  onConfirm,
+}: {
+  cls: GetClassesDto[number]
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  onConfirm: (name: string) => void
+}) {
+  const [name, setName] = useState(cls.name)
+  const trimmed = name.trim()
+  const isValid = trimmed.length > 0 && trimmed !== cls.name
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Renommer &quot;{cls.name}&quot;</DialogTitle>
+        </DialogHeader>
+
+        <Input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Nom de la promotion"
+          autoFocus
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && isValid) {
+              onConfirm(trimmed)
+            }
+          }}
+        />
+
+        <DialogFooter>
+          <Button variant="ghost" onClick={() => onOpenChange(false)}>
+            Annuler
+          </Button>
+          <Button disabled={!isValid} onClick={() => onConfirm(trimmed)}>
+            Renommer
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
 function PromotionItem({ cls }: { cls: GetClassesDto[number] }) {
-  const { delete: remove , update } = useClasses()
+  const { delete: remove, update } = useClasses()
+  const [renameOpen, setRenameOpen] = useState(false)
+
+  const handleRename = (name: string) => {
+    update && update({ id: cls.id, data: { name } })
+    setRenameOpen(false)
+  }
 
   return (
     <tr className="border-b border-border/20 last:border-0 hover:bg-muted/20 transition-colors">
@@ -69,6 +131,16 @@ function PromotionItem({ cls }: { cls: GetClassesDto[number] }) {
               </Link>
             </DropdownMenuItem>
 
+            <DropdownMenuItem
+              onSelect={(event) => {
+                event.preventDefault()
+                setRenameOpen(true)
+              }}
+            >
+              <Pencil className="mr-2 size-4" />
+              Renommer
+            </DropdownMenuItem>
+
             <ConfirmDialog
               trigger={
                 <DropdownMenuItem
@@ -87,6 +159,13 @@ function PromotionItem({ cls }: { cls: GetClassesDto[number] }) {
             />
           </DropdownMenuContent>
         </DropdownMenu>
+
+        <RenameDialog
+          cls={cls}
+          open={renameOpen}
+          onOpenChange={setRenameOpen}
+          onConfirm={handleRename}
+        />
       </td>
     </tr>
   )

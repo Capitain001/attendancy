@@ -1,7 +1,7 @@
 {
   "name": "getMessages",
   "file": "src/services/chat/database/message.queries.ts",
-  "sig": "(channelId: string, limit = 50) => Promise<{ id: string; user: { id: string; avatar_url: string | null; firstName: string | null; lastName: string | null; } | null; createdAt: Date; updatedAt: Date; content: string; channelId: string; parentId: string | null; }[]>",
+  "sig": "(channelId: string, limit = 50) => Promise<{ id: string; content: string; createdAt: Date; channelId: string; parentId: string | null; updatedAt: Date; user: { id: string; firstName: string | null; lastName: string | null; avatar_url: string | null; } | null; }[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

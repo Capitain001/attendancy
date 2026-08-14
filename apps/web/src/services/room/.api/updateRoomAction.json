@@ -1,7 +1,7 @@
 {
   "name": "updateRoomAction",
   "file": "src/services/room/actions/room.mutations.ts",
-  "sig": "(roomId: string, data: { name?: string; capacity?: number; locationId?: string; equipment?: string[] }) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; location: { name: string; id: string; } | null; capacity: number | null; locationId: string | null; equipment: string[]; }; error?: undefined; }>",
+  "sig": "(input: UpdateRoomInput) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; capacity: number | null; equipment: string[]; location: { id: string; name: string; } | null; locationId: string | null; }; error?: undefined; }>",
   "calls": [
     "updateRoom"
   ],

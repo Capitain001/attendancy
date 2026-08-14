@@ -40,7 +40,7 @@ export async function updateDepartmentAction(input: UpdateDepartmentInput) {
 
   // 3. Requête database (dans try/catch)
   try {
-    return { data: await updateDepartment({ ...parsed.output, orgId }) }
+    return { data: await updateDepartment(parsed.output.departmentId, orgId, parsed.output.data) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
@@ -58,19 +58,4 @@ export async function deleteDepartmentAction(departmentId: string) {
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
-}
-
-export const addDepartmentAction = createDepartmentAction
-
-export async function removeDepartmentAction(departmentId: string): Promise<{ success: boolean; error?: string }> {
-  const result = await deleteDepartmentAction(departmentId)
-  if ('error' in result) return { success: false, error: result.error }
-  return { success: true }
-}
-
-export async function updateDepartmentByIdAction(
-  departmentId: string,
-  data: { name: string },
-): ReturnType<typeof updateDepartmentAction> {
-  return updateDepartmentAction({ departmentId, name: data.name })
 }

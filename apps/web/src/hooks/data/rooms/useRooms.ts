@@ -10,9 +10,9 @@ import {
   getRoomsAction 
 } from "@/services/room/actions";
 import type { CreateRoomInput as RoomCreateInput, RoomDTo } from "@/services/room";
+import type { UpdateRoomDataInput } from "@/services/room/validation";
 
 export type CreateRoomInput = Omit<RoomCreateInput, "orgId">;
-export type UpdateRoomInput = { name?: string; capacity?: number; locationId?: string; equipment?: string[] };
 
 export interface UseRoomsOptions {
   locationId?: string;
@@ -43,10 +43,10 @@ export function useRooms(options: UseRoomsOptions = {}) {
   // ✅ Utilisation des helpers réutilisables
   const fetchFn = toFetchFn(getRoomsAction, { locationId });
   const create = toCreateFn(addRoomAction);
-  const update = toUpdateFn(updateRoomAction);
+  const update = toUpdateFn(updateRoomAction, "roomId");
   const deleteRoom = toDeleteFn(removeRoomAction);
 
-  return useCrudEntity<RoomDTo, CreateRoomInput, UpdateRoomInput>({
+  return useCrudEntity<RoomDTo, CreateRoomInput, UpdateRoomDataInput>({
     entityName: "rooms",
     fetchFn,
     staleTime,

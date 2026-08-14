@@ -2,7 +2,7 @@
   "service": "department",
   "path": "src/services/department/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "5a9e707",
+  "derived_at": "0328a03",
   "utils_dir": null,
   "fns": {
     "createDepartment": {
@@ -40,16 +40,6 @@
       "layer": "action",
       "kind": "server-action"
     },
-    "removeDepartmentAction": {
-      "f": ".api/removeDepartmentAction.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "updateDepartmentByIdAction": {
-      "f": ".api/updateDepartmentByIdAction.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
     "getDepartmentsAction": {
       "f": ".api/getDepartmentsAction.json",
       "layer": "action",
@@ -70,14 +60,8 @@
       "getDepartmentsAction"
     ],
     "createDepartmentAction": [],
-    "updateDepartmentAction": [
-      "updateDepartmentByIdAction"
-    ],
-    "deleteDepartmentAction": [
-      "removeDepartmentAction"
-    ],
-    "removeDepartmentAction": [],
-    "updateDepartmentByIdAction": [],
+    "updateDepartmentAction": [],
+    "deleteDepartmentAction": [],
     "getDepartmentsAction": []
   },
   "deps": {}

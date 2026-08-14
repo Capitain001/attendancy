@@ -1,7 +1,8 @@
+//src/services/course/actions/course.queries.ts
 'use server'
 import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
-import { getCourse, getCourseDetail, getCourses, getCoursesByClass } from '../database'
+import { getCourse, getCourseDetail, getAllCourses, getCourses } from '../database'
 
 export async function getCourseAction(courseId: string) {
   const auth = await authAccess()
@@ -21,19 +22,19 @@ export async function getAllCoursesAction() {
   const { orgId } = auth.data
 
   try {
-    return { data: await getCourses(orgId) }
+    return { data: await getAllCourses(orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 
-export async function getCoursesAction(classId: string) {
+export async function getCoursesAction(classId?: string) {
   const auth = await authAccess()
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
 
   try {
-    return { data: await getCoursesByClass(classId, orgId) }
+    return { data: await getCourses(orgId, classId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

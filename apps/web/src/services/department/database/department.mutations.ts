@@ -2,7 +2,7 @@
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
 import { invalidateEvent } from '@/cache/server/key'
-import type { CreateDepartmentOutput, UpdateDepartmentOutput } from '../validation'
+import type { CreateDepartmentOutput, UpdateDepartmentDataOutput } from '../validation'
 
 export async function createDepartment(data: CreateDepartmentOutput & { orgId: string }) {
   const result = await tryConstraint(
@@ -15,11 +15,13 @@ export async function createDepartment(data: CreateDepartmentOutput & { orgId: s
   return result
 }
 
-export async function updateDepartment({ departmentId, orgId, name }: UpdateDepartmentOutput & { orgId: string }) {
+export async function updateDepartment(departmentId: string, orgId: string, data: UpdateDepartmentDataOutput) {
   const result = await tryConstraint(
     prisma.department.update({
       where: { id: departmentId, orgId },
-      data: { name },
+      data: {
+        ...(data.name !== undefined ? { name: data.name } : {}),
+      },
       select: { id: true, name: true, _count: { select: { programTracks: true, teachers: true, ues: true } } },
     })
   )

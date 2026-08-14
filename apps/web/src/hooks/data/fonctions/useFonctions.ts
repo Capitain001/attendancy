@@ -10,11 +10,12 @@ import {
   getFunctionsAction
 } from "@/services/function/actions";
 import type { FunctionItem } from "@/services/function/types";
-import type { CreateFunctionInput as ServiceCreateInput, UpdateFunctionInput as ServiceUpdateInput } from "@/services/function/validation";
+import type { CreateFunctionInput as ServiceCreateInput } from "@/services/function/validation";
+import type { UpdateFunctionDataInput } from "@/services/function/validation";
 
 // Types pour les inputs du hook
 export type CreateFunctionInput = ServiceCreateInput;
-export type UpdateFunctionInput = Omit<ServiceUpdateInput, 'functionId'>;
+export type UpdateFunctionInput = UpdateFunctionDataInput;
 
 export interface UseFonctionsOptions {
   isMain?: boolean;

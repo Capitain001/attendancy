@@ -4,7 +4,11 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useEntity, BaseEntityResult, EntityResultWithCRUD } from "./useEntity";
 
-interface CrudConfig<T, CreateInput = any, UpdateInput extends Partial<T> = Partial<T>> {
+export type FlexiblePartial<T> = {
+  [P in keyof T]?: T[P] extends Date ? Date | string : T[P] extends Date | null ? Date | string | null : T[P];
+};
+
+interface CrudConfig<T, CreateInput = any, UpdateInput extends FlexiblePartial<T> = FlexiblePartial<T>> {
   // ✅ create peut ne retourner qu'un sous-ensemble de champs (+ id), au même
   // titre que update : un objet fraîchement créé n'a souvent pas besoin de
   // renvoyer les champs calculés/relationnels (ex: compteurs de relations)
@@ -40,7 +44,7 @@ interface CrudConfig<T, CreateInput = any, UpdateInput extends Partial<T> = Part
   };
 }
 
-interface UseCrudEntityOptions<T, CreateInput = any, UpdateInput extends Partial<T> = Partial<T>> {
+interface UseCrudEntityOptions<T, CreateInput = any, UpdateInput extends FlexiblePartial<T> = FlexiblePartial<T>> {
   entityName: string;
   fetchFn: () => Promise<T[]>;
   crud?: CrudConfig<T, CreateInput, UpdateInput>;
@@ -54,7 +58,7 @@ interface UseCrudEntityOptions<T, CreateInput = any, UpdateInput extends Partial
 export function useCrudEntity<
   T extends { id: string },
   CreateInput = any,
-  UpdateInput extends Partial<T> = Partial<T>
+  UpdateInput extends FlexiblePartial<T> = FlexiblePartial<T>
 >(options: UseCrudEntityOptions<T, CreateInput, UpdateInput>) {
   const { entityName, fetchFn, crud, ...entityOptions } = options;
 

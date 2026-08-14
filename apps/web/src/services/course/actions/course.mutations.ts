@@ -2,8 +2,8 @@
 import * as v from 'valibot'
 import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
-import { createCourseSchema } from '../validation'
-import type { CreateCourseInput } from '../validation'
+import { createCourseSchema, updateCourseSchema } from '../validation'
+import type { CreateCourseInput, UpdateCourseInput } from '../validation'
 import { createCourse, removeCourse, updateCourse } from '../database'
 
 export async function createCourseAction(input: CreateCourseInput) {
@@ -21,16 +21,16 @@ export async function createCourseAction(input: CreateCourseInput) {
   }
 }
 
-export async function updateCourseAction(
-  courseId: string,
-  updates: { name?: string; description?: string | null },
-) {
+export async function updateCourseAction(input: UpdateCourseInput) {
   const auth = await authAccess({ requiredRole: 'DIRECTION' })
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
 
+  const parsed = v.safeParse(updateCourseSchema, input)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+
   try {
-    return { data: await updateCourse(courseId, updates, orgId) }
+    return { data: await updateCourse(parsed.output.courseId, parsed.output.data, orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

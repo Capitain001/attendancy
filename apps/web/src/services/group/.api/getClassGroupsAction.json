@@ -1,7 +1,7 @@
 {
   "name": "getClassGroupsAction",
   "file": "src/services/group/actions/group.queries.ts",
-  "sig": "(input: { classId: string }) => Promise<{ error: any; data?: undefined; } | { data: { groups: { name: string; id: string; _count: { studentGroups: number; }; description: string | null; }[]; class: { level: Level; name: string; academicYear: { ...; }; ... 5 more ...; groups: { ...; }[]; } | null | undefined; }; error?: undefined; }>",
+  "sig": "(input: { classId: string }) => Promise<{ error: any; data?: undefined; } | { data: { groups: { name: string; id: string; description: string | null; _count: { studentGroups: number; }; }[]; class: { level: Level; name: string; id: string; ... 5 more ...; groups: { ...; }[]; } | null | undefined; }; error?: undefined; }>",
   "calls": [
     "getGroupsByClass",
     "getClassAction"

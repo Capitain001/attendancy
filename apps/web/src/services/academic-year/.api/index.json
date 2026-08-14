@@ -2,7 +2,7 @@
   "service": "academic-year",
   "path": "src/services/academic-year/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "5a9e707",
+  "derived_at": "0328a03",
   "utils_dir": null,
   "fns": {
     "createAcademicYear": {

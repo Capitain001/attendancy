@@ -1,3 +1,4 @@
+//src/
 'use server'
 import * as v from 'valibot'
 import { authAccess } from '@/services/auth'
@@ -37,7 +38,7 @@ export async function updateFunctionAction(input: UpdateFunctionInput) {
   if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
 
   try {
-    return { data: await updateFunction({ ...parsed.output, orgId }) }
+    return { data: await updateFunction(parsed.output.functionId, orgId, parsed.output.data) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

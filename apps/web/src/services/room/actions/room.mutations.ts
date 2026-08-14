@@ -3,8 +3,8 @@
 import * as v from 'valibot'
 import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
-import { createRoomSchema, createLocationSchema } from '../validation'
-import type { CreateRoomInput, CreateLocationInput } from '../validation'
+import { createRoomSchema, createLocationSchema, updateRoomSchema } from '../validation'
+import type { CreateRoomInput, CreateLocationInput, UpdateRoomInput } from '../validation'
 import { createRoom, removeRoom, updateRoom, createLocation, toggleLocationActive } from '../database'
 
 export async function createRoomAction(input: CreateRoomInput) {
@@ -39,13 +39,16 @@ export async function removeRoomAction(roomId: string) {
 
 export const addRoomAction = createRoomAction
 
-export async function updateRoomAction(roomId: string, data: { name?: string; capacity?: number; locationId?: string; equipment?: string[] }) {
+export async function updateRoomAction(input: UpdateRoomInput) {
   const auth = await authAccess({ requiredRole: 'DIRECTION' })
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
 
+  const parsed = v.safeParse(updateRoomSchema, input)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+
   try {
-    return { data: await updateRoom(roomId, orgId, data) }
+    return { data: await updateRoom(parsed.output.roomId, orgId, parsed.output.data) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

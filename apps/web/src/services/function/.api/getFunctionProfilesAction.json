@@ -1,7 +1,7 @@
 {
   "name": "getFunctionProfilesAction",
   "file": "src/services/function/actions/function.queries.ts",
-  "sig": "(functionId: string) => Promise<{ error: any; data?: undefined; } | { data: { function: { name: string; isMain: boolean; }; id: string; user: { id: string; email: string; avatar_url: string | null; phone: string | null; status: UserStatus; ... 5 more ...; dateOfBirth: Date | null; }; assignedAt: Date; assignedBy: string | null; }[]; error?...",
+  "sig": "(functionId: string) => Promise<{ error: any; data?: undefined; } | { data: { function: { name: string; isMain: boolean; }; id: string; assignedAt: Date; assignedBy: string | null; user: { id: string; createdAt: Date; ... 8 more ...; details: JsonValue; }; }[]; error?: undefined; }>",
   "calls": [
     "getFunctionProfiles"
   ],

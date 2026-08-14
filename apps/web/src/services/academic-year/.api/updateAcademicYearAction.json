@@ -1,7 +1,7 @@
 {
   "name": "updateAcademicYearAction",
   "file": "src/services/academic-year/actions/academic-year.mutations.ts",
-  "sig": "(academicYearId: string, data: UpdateAcademicYearData) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; startDate: Date; endDate: Date; isCurrent: boolean; }; error?: undefined; }>",
+  "sig": "(input: UpdateAcademicYearInput) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; startDate: Date; endDate: Date; isCurrent: boolean; }; error?: undefined; }>",
   "calls": [
     "updateAcademicYear"
   ],

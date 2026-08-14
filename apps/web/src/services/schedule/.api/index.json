@@ -2,7 +2,7 @@
   "service": "schedule",
   "path": "src/services/schedule/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "5a9e707",
+  "derived_at": "0328a03",
   "utils_dir": null,
   "fns": {
     "createSchedule": {
@@ -252,19 +252,15 @@
     "getTeacherNextScheduleAction": [],
     "getTodayClassSchedulesAction": [],
     "getClassScheduleOptionsAction": [],
-    "getCoursesByClass": [
+    "getCourses": [
       "getClassScheduleOptionsAction"
     ],
     "getRooms": [
       "getClassScheduleOptionsAction"
-    ],
-    "getGroupsByClass": [
-      "getClassScheduleOptionsAction"
     ]
   },
   "deps": {
-    "getCoursesByClass": "course",
-    "getRooms": "room",
-    "getGroupsByClass": "group"
+    "getCourses": "course",
+    "getRooms": "room"
   }
 }

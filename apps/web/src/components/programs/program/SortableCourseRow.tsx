@@ -16,7 +16,7 @@ export function SortableCourseRow({ course, ueOrder, programUEId, isEditing, onD
   const {
     attributes, listeners, setNodeRef,
     transform, transition, isDragging, isOver,
-  } = useSortable({ id, disabled: !isEditing });
+  } = useSortable({ id});
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),

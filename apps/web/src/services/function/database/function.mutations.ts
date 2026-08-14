@@ -2,7 +2,7 @@
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
 import { invalidateEvent } from '@/cache/server/key'
-import type { CreateFunctionOutput, UpdateFunctionOutput } from '../validation'
+import type { CreateFunctionOutput, UpdateFunctionDataOutput } from '../validation'
 
 export async function createFunction(data: CreateFunctionOutput & { orgId: string }) {
   const result = await tryConstraint(
@@ -21,22 +21,22 @@ export async function createFunction(data: CreateFunctionOutput & { orgId: strin
   return result
 }
 
-export async function updateFunction(data: UpdateFunctionOutput & { orgId: string }) {
+export async function updateFunction(functionId: string, orgId: string, data: UpdateFunctionDataOutput) {
   const result = await tryConstraint(
     prisma.function.update({
-      where: { id: data.functionId, orgId: data.orgId },
+      where: { id: functionId, orgId },
       data: {
         ...(data.name !== undefined ? { name: data.name } : {}),
         ...(data.description !== undefined ? { description: data.description } : {}),
         ...(data.icon !== undefined ? { icon: data.icon } : {}),
+        ...(data.isMain !== undefined ? { isMain: data.isMain } : {}),
       },
       select: { id: true, name: true, description: true, icon: true, isMain: true },
     })
   )
-  await invalidateEvent('FUNCTION_UPDATED', data.orgId)
+  await invalidateEvent('FUNCTION_UPDATED', orgId)
   return result
 }
-
 export async function deleteFunction(functionId: string, orgId: string) {
   await tryConstraint(
     prisma.function.delete({ where: { id: functionId, orgId } })

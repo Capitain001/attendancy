@@ -26,7 +26,7 @@ export async function getClassGroupsAction(input: { classId: string }) {
   try {
     const [groups, classRes] = await Promise.all([
       getGroupsByClass(input.classId, orgId),
-      getClassAction(input.classId),
+      getClassAction({classId: input.classId}),
     ])
     const cls = 'data' in classRes ? classRes.data : null
     return { data: { groups, class: cls } }

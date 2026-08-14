@@ -1,7 +1,7 @@
 {
   "name": "getGroupEligibleStudentsAction",
   "file": "src/services/group/actions/group.queries.ts",
-  "sig": "(input: { classId: string; groupId: string }) => Promise<{ error: any; data?: undefined; } | { data: { students: { enrollmentId: string; inGroup: boolean; student: { id: string; user: { firstName: string | null; lastName: string | null; }; userId: string; }; }[]; }; error?: undefined; }>",
+  "sig": "(input: { classId: string; groupId: string }) => Promise<{ error: any; data?: undefined; } | { data: { students: { enrollmentId: string; inGroup: boolean; student: { id: string; userId: string; user: { firstName: string | null; lastName: string | null; }; }; }[]; }; error?: undefined; }>",
   "calls": [
     "getGroupEligibleStudents"
   ],

@@ -1,7 +1,7 @@
 {
   "name": "getRoomById",
   "file": "src/services/room/database/room.queries.ts",
-  "sig": "(id: string, orgId: string) => Promise<{ name: string; id: string; location: { name: string; id: string; address: string; } | null; capacity: number | null; locationId: string | null; equipment: string[]; } | null>",
+  "sig": "(id: string, orgId: string) => Promise<{ id: string; name: string; capacity: number | null; equipment: string[]; location: { id: string; name: string; address: string; } | null; locationId: string | null; } | null>",
   "composes": [],
   "rules": [],
   "why_ref": ""

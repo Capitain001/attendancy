@@ -16,11 +16,11 @@ import {
 } from "@/services/program/actions";
 import type {
   CreateProgramInput,
-  UpdateProgramInput,
 } from "@/services/program/validation";
+import type { UpdateProgramDataInput } from "@/services/program/validation";
 import type { GetProgramsDto } from "@/services/program/types";
 
-export type { CreateProgramInput, UpdateProgramInput };
+export type { CreateProgramInput };
 
 type ProgramDto = GetProgramsDto[number]
 
@@ -36,12 +36,10 @@ export function usePrograms(options: UseProgramsOptions = {}) {
 
   const fetchFn = toFetchFn(getProgramsAction, { classId, programTrackId });
   const create = toCreateFn(createProgramAction);
-  const update = toUpdateFn(updateProgramAction);
-  const remove = toDeleteFn(
-    removeProgramAction as (id: string) => Promise<ActionDeleteResponse>
-  );
+  const update = toUpdateFn(updateProgramAction, "programId");
+  const remove = toDeleteFn(removeProgramAction);
 
-  return useCrudEntity<ProgramDto, CreateProgramInput, UpdateProgramInput>({
+  return useCrudEntity<ProgramDto, CreateProgramInput, UpdateProgramDataInput>({
     entityName: "programs",
     fetchFn,
     staleTime,

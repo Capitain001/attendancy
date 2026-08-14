@@ -2,7 +2,7 @@
 "use client";
 
 import { useCrudEntity } from "@/hooks/entity/useCrudEntity";
-import { toFetchFn, toCreateFn, toDeleteFn } from "@/hooks/entity/actionHelpers";
+import { toFetchFn, toCreateFn, toUpdateFn, toDeleteFn } from "@/hooks/entity/actionHelpers";
 import {
   getSchedulesAction,
   createScheduleAction,
@@ -10,11 +10,12 @@ import {
   deleteScheduleAction,
 } from "@/services/schedule/actions";
 
-import type { CreateScheduleInput as AddScheduleData, GetSchedulesReturn, UpdateScheduleInput as UpdateScheduleData } from "@/services/schedule";
+import type { CreateScheduleInput as AddScheduleData, GetSchedulesReturn } from "@/services/schedule";
+import type { UpdateScheduleDataInput } from "@/services/schedule/validation";
 
 // Types pour les inputs du hook
 export type CreateScheduleInput = Omit<AddScheduleData, "orgId">;
-export type UpdateScheduleInput = UpdateScheduleData;
+export type UpdateScheduleInput = UpdateScheduleDataInput;
 
 export interface UseSchedulesOptions {
   ruleId?: string;
@@ -60,23 +61,7 @@ export function useSchedules(options: UseSchedulesOptions = {}) {
   // ✅ Utilisation des helpers réutilisables
   const fetchFn = toFetchFn(getSchedulesAction, { ruleId, academicYearId });
   const create = toCreateFn(createScheduleAction);
-
-  // ⚠️ updateScheduleAction a une signature différente de updateFunctionAction :
-  // l'id est un paramètre SÉPARÉ (scheduleId, input), pas fusionné dans un
-  // objet unique. toUpdateFn (dans actionHelpers.ts) ne supporte que le
-  // pattern "id fusionné" — on écrit donc ici un adaptateur minimal, local à
-  // ce hook, plutôt que de forcer toUpdateFn à s'appliquer avec un cast.
-  //
-  // Le retour n'est PAS casté en entité complète (contrairement à avant) :
-  // updateScheduleAction renvoie volontairement { id } seul, ce qui est
-  // maintenant un cas normal et géré par useCrudEntity — il merge
-  // {existant en cache} + {data envoyée par l'UI} + {retour serveur}, donc
-  // { id } seul suffit pour que le cache reflète correctement le changement.
-  const update = async (id: string, data: UpdateScheduleInput) => {
-    const response = await updateScheduleAction(id, data);
-    if ('error' in response) throw new Error(response.error);
-    return response.data; // { id: string } — partiel, voir commentaire ci-dessus
-  };
+  const update = toUpdateFn(updateScheduleAction, "scheduleId");
 
   // ✅ Simplifié : deleteScheduleAction renvoie { data: true } | { error },
   // ce qui correspond directement au contrat de toDeleteFn (n'importe quelle

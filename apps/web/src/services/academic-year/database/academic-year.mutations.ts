@@ -2,7 +2,7 @@
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
 import { invalidateEvent } from '@/cache/server/key'
-import type { CreateAcademicYearOutput } from '../validation'
+import type { CreateAcademicYearOutput, UpdateAcademicYearDataOutput } from '../validation'
 
 export async function createAcademicYear(data: CreateAcademicYearOutput & { orgId: string }) {
   const result = await tryConstraint(
@@ -39,13 +39,7 @@ export async function setCurrentYear(academicYearId: string, orgId: string) {
   return result
 }
 
-export type UpdateAcademicYearData = {
-  name?: string
-  startDate?: Date
-  endDate?: Date
-}
-
-export async function updateAcademicYear(academicYearId: string, orgId: string, data: UpdateAcademicYearData) {
+export async function updateAcademicYear(academicYearId: string, orgId: string, data: UpdateAcademicYearDataOutput) {
   const result = await tryConstraint(
     prisma.academicYear.update({
       where: { id: academicYearId, orgId },

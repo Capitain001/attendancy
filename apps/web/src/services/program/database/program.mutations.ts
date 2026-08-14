@@ -4,19 +4,13 @@ import { Program } from '@/generated/prisma/client'
 import { invalidateEvent } from '@/cache/server/key'
 import { tryConstraint } from '@/utils/server/prisma'
 import { PROGRAM_GRAPH } from '../cache'
-
-export type AddProgramData = Pick<Program, 'name' | 'description' | 'programTrackId'> & {
-  classId?: string
-}
-export type UpdateProgramData = Partial<Pick<Program, 'name' | 'description' | 'programTrackId'>> & {
-  classId?: string
-}
+import type { CreateProgramOutput, UpdateProgramDataOutput } from '../validation'
 
 export async function createProgram({
   data,
   orgId,
 }: {
-  data: AddProgramData
+  data: CreateProgramOutput
   orgId: string
 }) {
   const program = await tryConstraint(
@@ -65,7 +59,7 @@ export async function createProgram({
 
 export async function updateProgram(
   { programId, orgId }: { programId: string; orgId: string },
-  data: UpdateProgramData
+  data: UpdateProgramDataOutput
 ) {
   const { classId, ...programData } = data
 

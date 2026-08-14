@@ -1,7 +1,7 @@
 {
   "name": "createGroup",
   "file": "src/services/group/database/group.mutations.ts",
-  "sig": "(data: CreateGroupOutput & { orgId: string }) => Promise<{ name: string; id: string; _count: { studentGroups: number; }; description: string | null; }>",
+  "sig": "(data: CreateGroupOutput & { orgId: string }) => Promise<{ name: string; id: string; description: string | null; _count: { studentGroups: number; }; }>",
   "composes": [],
   "rules": [],
   "why_ref": ""

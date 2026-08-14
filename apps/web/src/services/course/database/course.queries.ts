@@ -3,7 +3,12 @@ import { cacheTag, cacheLife } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { CACHE } from '@/cache/server/key'
 
-export async function getCourses(orgId: string) {
+/**
+ * Liste légère de tous les cours de l'org (pour sélecteurs, exports…).
+ * Ex-`getCourses` — renommé pour que le nom reflète l'action : PAS de
+ * filtre classId, contrairement à getCourses désormais.
+ */
+export async function getAllCourses(orgId: string) {
   'use cache'
   cacheTag(CACHE.COURSE(orgId))
   cacheLife(CACHE.COURSE.life)
@@ -23,7 +28,7 @@ export async function getCourses(orgId: string) {
 export async function getCourseClassId(courseId: string, orgId: string) {
   return prisma.course.findFirst({
     where: { id: courseId, orgId, deletedAt: null },
-    select: { id: true, classId: true },
+    select: { classId: true },
   })
 }
 
@@ -110,17 +115,24 @@ export async function getCourseDetail(courseId: string, orgId: string) {
   })
 }
 
-export async function getCoursesByClass(classId: string, orgId: string) {
+/**
+ * Liste enrichie des cours (ueCourse + teachers). classId optionnel :
+ * fourni → scope classe (ex-getCoursesByClass) ; omis → toute l'org.
+ * Ex-`getCoursesByClass`, fusionné ici pour que le nom reflète l'action
+ * réelle (getCourses = "les cours, éventuellement filtrés"), symétrique
+ * à getAllCourses (jamais filtré).
+ */
+export async function getCourses(orgId: string, classId?: string) {
   'use cache'
   cacheTag(CACHE.COURSE(orgId))
-  cacheTag(CACHE.COURSE(orgId, classId))
+  if (classId) cacheTag(CACHE.COURSE(orgId, classId))
   cacheLife(CACHE.COURSE.life)
   return prisma.course.findMany({
-    where: { classId, orgId, deletedAt: null },
+    where: { orgId, deletedAt: null, ...(classId ? { classId } : {}) },
     select: {
       id: true, name: true, credits: true,
       durationDone: true, durationTotal: true,
-      termId: true,
+      classId: true, termId: true,
       ueCourse: {
         select: { id: true, name: true, code: true },
       },

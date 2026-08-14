@@ -54,11 +54,22 @@ export function toCreateFn<TInput, TResponse extends ActionResponse<any>>(
 }
 
 /**
- * Convertit une action serveur V2 (id fusionné dans un objet unique)
+ * Convertit une action serveur V2 (id + payload NESTED sous `data`)
  * en fonction (id, data) => Promise<T>.
  *
- * `updateFunctionAction({ functionId, ...data })`
- * → `toUpdateFn(updateFunctionAction, "functionId")`
+ * Norme V2 : `updateXxxAction({ xxxId, data: {...} })`
+ * → `toUpdateFn(updateXxxAction, "xxxId")`
+ *
+ * ⚠️ NORME (depuis ce fix) : le payload est TOUJOURS imbriqué sous la clé
+ * `data`, jamais étalé à plat au même niveau que l'id — cf. updateClassAction
+ * qui a servi de référence pour fixer ce helper :
+ *   updateClassAction({ classId, data: { name, ... } })
+ * Toute action `updateXxxAction` câblée via ce helper DOIT suivre cette
+ * même forme `{ [idField]: id, data }`. Un ancien pattern flat
+ * (`{ xxxId, ...data }`, ex: l'ancienne version de updateFunctionAction)
+ * n'est PLUS supporté — l'action doit être migrée vers le format nested
+ * avant d'être branchée ici, sous peine de recevoir `data: undefined`
+ * côté validation serveur.
  *
  * Aucun générique explicite n'est nécessaire à l'appel : TResponse
  * s'infère directement depuis `action` (placé en premier paramètre de
@@ -67,13 +78,6 @@ export function toCreateFn<TInput, TResponse extends ActionResponse<any>>(
  * consommateur attend un type plus précis (contravariance des paramètres
  * de fonction : accepter `object` est toujours valide là où `UpdateInput`
  * est attendu).
- *
- * ⚠️ Le pattern V1 (action(id, data) avec deux paramètres séparés) n'est
- * plus supporté : le garder en union avec le pattern V2 rendait
- * l'inférence de type ambiguë pour TS (il pouvait confondre le paramètre
- * `id` avec l'objet `input` du pattern V2, produisant des signatures
- * absurdes du type `(id: { functionId, name?, ... }, data: object) => ...`).
- * Le projet étant entièrement migré en V2, `idField` est obligatoire.
  *
  * @example
  * const update = toUpdateFn(updateFunctionAction, "functionId");
@@ -87,7 +91,7 @@ export function toUpdateFn<
   idField: string
 ): (id: TId, data: TInput) => Promise<ExtractData<TResponse>> {
   return async (id: TId, data: TInput) => {
-    const response = await action({ [idField]: id, ...data });
+    const response = await action({ [idField]: id, data });
     if ('error' in response) throw new Error(response.error);
     return (response as { data: ExtractData<TResponse> }).data;
   };
@@ -122,7 +126,7 @@ export function toDeleteFn<TId>(
  *   delete: removeCourseAction
  * }, { classId: "123" });
  *
- * // Pattern V2 (id fusionné dans l'objet), passer idField :
+ * // Pattern V2 (id + data imbriqués), passer idField :
  * const { update } = createActionWrappers({ ... }, args, { updateIdField: "functionId" });
  */
 export function createActionWrappers<

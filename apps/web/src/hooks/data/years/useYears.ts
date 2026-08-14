@@ -11,12 +11,12 @@ import {
 
 
 
-import type { AcademicYearItem, CreateAcademicYearInput, UpdateAcademicYearData } from "@/services/academic-year";
-import { createYearAction, deleteYearAction, getYearsAction, updateYearAction } from "@/services/academic-year";
+import type { AcademicYearItem, CreateAcademicYearInput } from "@/services/academic-year";
+import type { UpdateAcademicYearDataInput } from "@/services/academic-year/validation";
+import { createAcademicYearAction, removeAcademicYearAction, getAcademicYearsAction, updateAcademicYearAction } from "@/services/academic-year";
 
 // Types Input : on retire orgId car il est trouvé via getUserInfo()
 export type CreateYearInput = Omit<CreateAcademicYearInput, "orgId">;
-export type UpdateYearInput = UpdateAcademicYearData;
 
 export interface UseYearsOptions {
   staleTime?: number;
@@ -27,15 +27,12 @@ export function useYears(options: UseYearsOptions = {}) {
   const { staleTime, enabled } = options;
 
   // Helpers CRUD
-  const fetchFn = toFetchFn(getYearsAction);
-  const create = toCreateFn(createYearAction);
-  const update = toUpdateFn(updateYearAction);
-  const deleteYear = toDeleteFn<string>(async (id) => {
-    const r = await deleteYearAction(id);
-    return { success: !('error' in r), error: 'error' in r ? r.error : undefined };
-  });
+  const fetchFn = toFetchFn(getAcademicYearsAction);
+  const create = toCreateFn(createAcademicYearAction);
+  const update = toUpdateFn(updateAcademicYearAction, "academicYearId");
+  const deleteYear = toDeleteFn(removeAcademicYearAction);
 
-  return useCrudEntity<AcademicYearItem, CreateYearInput, UpdateYearInput>({
+  return useCrudEntity<AcademicYearItem, CreateYearInput, UpdateAcademicYearDataInput>({
     entityName: "years",
     fetchFn,
     staleTime,

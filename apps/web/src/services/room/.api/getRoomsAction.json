@@ -1,7 +1,7 @@
 {
   "name": "getRoomsAction",
   "file": "src/services/room/actions/room.queries.ts",
-  "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; location: { name: string; id: string; } | null; capacity: number | null; locationId: string | null; equipment: string[]; }[]; error?: undefined; }>",
+  "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; capacity: number | null; equipment: string[]; location: { id: string; name: string; } | null; locationId: string | null; }[]; error?: undefined; }>",
   "calls": [
     "getRooms"
   ],
