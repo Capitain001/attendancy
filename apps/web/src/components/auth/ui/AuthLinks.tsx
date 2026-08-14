@@ -6,9 +6,10 @@ import { UserPlus, Users } from "lucide-react";
 interface AuthLinksProps {
   className?: string;
 }
-
+//               className="rounded-md px-3 py-1.5 text-sm text-text-secondary transition-colors hover:bg-fill-faint hover:text-text-primary flex items-center gap-2 px-3 py-2"
 const LINK_CLASS =
-  "bg-foreground/10 hover:bg-btn-background-hover flex items-center gap-2 rounded-md rounded-r-2xl border border-foreground/30 px-3 py-2 no-underline hover:border-foreground/70";
+ "rounded-md px-3 py-1.5 text-sm text-text-secondary transition-colors hover:bg-fill-faint hover:text-text-primary flex items-center gap-2 px-3 py-2"
+  // "bg-foreground/10 hover:bg-btn-background-hover flex items-center gap-2 rounded-md rounded-r-2xl border border-foreground/30 px-3 py-2 no-underline hover:border-foreground/70";
 
 export default async function AuthLinks({
   className = "",

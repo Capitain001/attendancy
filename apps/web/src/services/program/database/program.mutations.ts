@@ -116,6 +116,14 @@ export async function removeProgram({
   programId: string
   orgId: string
 }) {
+  const program = await prisma.program.findUnique({
+    where: { id: programId, orgId },
+    include: { classes: { select: { id: true } } }
+  })
+  if (program && program.classes.length > 0) {
+    throw new Error("Impossible de supprimer ce programme car il est lié à des classes existantes.")
+  }
+
   const result = await tryConstraint(
     prisma.program.update({
       where: { id: programId, orgId },
@@ -166,3 +174,48 @@ export async function toggleProgramActive({
   await invalidateEvent("PROGRAM_UPDATED", orgId, programId)
   return result
 }
+
+export async function duplicateProgram({
+  programId,
+  orgId,
+  newName,
+  programTrackId,
+}: {
+  programId: string
+  orgId: string
+  newName: string
+  programTrackId: string
+}) {
+  const sourceProgram = await prisma.program.findUniqueOrThrow({
+    where: { id: programId, orgId },
+    include: {
+      programUEs: true,
+    },
+  })
+
+  const newProgram = await tryConstraint(
+    prisma.program.create({
+      data: {
+        name: newName,
+        description: sourceProgram.description,
+        programTrackId,
+        orgId,
+        isActive: false,
+        isLocked: false,
+        programUEs: {
+          create: sourceProgram.programUEs.map((pUe) => ({
+            ueId: pUe.ueId,
+            semester: pUe.semester,
+            order: pUe.order,
+            isCompleted: pUe.isCompleted,
+            isOptional: pUe.isOptional,
+          })),
+        },
+      },
+      select: { id: true },
+    })
+  )
+
+  await invalidateEvent('PROGRAM_CREATED', orgId)
+  return newProgram
+}

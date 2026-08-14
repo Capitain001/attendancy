@@ -34,11 +34,11 @@ export const FormButton: React.FC<FormButtonProps> = ({
       variant="ghost"
       disabled={disabled}
       className={clsx(
-        "px-1 py-1 border  bg-accent/70 group  h-14 aspect-video dark:bg-accent",
+        "px-1 py-1 border  bg-accent/70 group hover:bg-accent/70 h-14 aspect-video dark:bg-accent",
         className
       )}
     >
-      <div className="border rounded-xs h-full  w-full px-2 flex justify-center items-center gap-2">
+      <div className="border rounded-xs h-full group-hover:bg-accent w-full px-2 flex justify-center items-center gap-2">
         {!loading ? (
           <>
             {icon && <span className="flex items-center">{icon}</span>}

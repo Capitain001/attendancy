@@ -2,7 +2,7 @@
   "service": "program",
   "path": "src/services/program/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "5a9e707",
+  "derived_at": "8abf764",
   "utils_dir": null,
   "fns": {
     "createProgram": {
@@ -27,6 +27,11 @@
     },
     "toggleProgramActive": {
       "f": ".api/toggleProgramActive.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "duplicateProgram": {
+      "f": ".api/duplicateProgram.json",
       "layer": "db",
       "kind": "mutation"
     },
@@ -80,6 +85,11 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "duplicateProgramAction": {
+      "f": ".api/duplicateProgramAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "getProgramsAction": {
       "f": ".api/getProgramsAction.json",
       "layer": "action",
@@ -118,6 +128,7 @@
     "toggleProgramActive": [
       "toggleProgramActiveAction"
     ],
+    "duplicateProgram": [],
     "getPrograms": [
       "getProgramsAction"
     ],
@@ -136,6 +147,7 @@
     "removeProgramAction": [],
     "toggleProgramLockAction": [],
     "toggleProgramActiveAction": [],
+    "duplicateProgramAction": [],
     "getProgramsAction": [],
     "getProgramsByTrackAction": [],
     "getClassProgramAction": [],

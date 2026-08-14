@@ -52,7 +52,7 @@ Les cours (`UECourse`) disposent d'un volume horaire total (`duration`), mais le
 ### Besoins & Contexte
 Un programme d'études ne se limite pas à sa grille d'UEs : il définit le profil des étudiants visés, les compétences acquises et les débouchés professionnels (champs `profile`, `competencies`, `outcomes`).
 
-### Évolution à implémenter
+### Évolution à implémenter : non valider pour le moment 
 1. **Bannière d'en-tête enrichie (`ProgramHero.tsx`)** :
    - Section rétractable (Accordion/Modal) affichant le profil d'entrée, les compétences visées et les débouchés.
 2. **Formulaire d'édition des métadonnées du programme (`ProgramForm.tsx` / `updateProgramAction`)** :
@@ -68,7 +68,7 @@ Le service `ue-template` permet d'importer des modèles nationaux issus de `refe
 ### Évolution à implémenter
 1. **Bouton & Modal "Importer un modèle national"** dans la page `/direction/academic/programs` :
    - Permet à la Direction de choisir un modèle du référentiel (ex: Togo MESRS 2022) et d'instancier automatiquement un `Program` avec toutes ses UEs, ses cours, ses crédits et ses heures pré-remplis.
-2. **Action d'importation côté serveur (`importProgramFromReferentialAction`)** :
+2. **Action d'importation côté serveur (`getReferentialProgramsAction et createProgramByTemplateAction`)** :
    - Transaction idempotente créant le `Program`, les `ProgramUE`, les `UE` et les `UECourse` correspondants dans le contexte de l'établissement (`orgId`).
 
 ---

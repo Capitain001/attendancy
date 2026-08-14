@@ -65,6 +65,7 @@ export type CourseRow = {
   name: string;
   duration: number;
   credits: number;
+  settings?: any; // To hold { hours: ... }
 };
 
 export type TableRow = UERow | CourseRow;

@@ -1,7 +1,7 @@
 {
   "name": "updateUEAction",
   "file": "src/services/ue/actions/ue.mutations.ts",
-  "sig": "({ ueId, data }: { ueId: string; data: UpdateUEData }) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; departmentId: string | null; code: string | null; isOptional: boolean; }; error?: undefined; }>",
+  "sig": "({ ueId, data }: { ueId: string; data: UpdateUEData }) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; code: string | null; description: string | null; departmentId: string | null; isOptional: boolean; }; error?: undefined; }>",
   "calls": [
     "updateUE"
   ],

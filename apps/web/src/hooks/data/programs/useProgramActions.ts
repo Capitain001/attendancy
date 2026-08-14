@@ -7,20 +7,20 @@ import {
   createUEAction,
   addUEToProgramAction,
   updateUEAction,
-} from "@/services/ue/actions";
+} from "@/services/ue";
 import {
   createUECourseAction,
   removeUECourseAction,
   updateUECourseAction,
 } from "@/services/ue-course";
-import { removeUEFromProgramAction } from "@/services/program-ue/actions";
+import { removeUEFromProgramAction } from "@/services/program-ue";
 import {
   CreateUEInput,
   LinkUEInput,
   CreateUECourseInput,
 } from "@/services/ue/validation";
 import { UpdateUEData } from "@/services/ue/database";
-import type { UpdateUECourseInput } from "@/services/ue-course/validation";
+import type { UpdateUECourseInput } from "@/services/ue-course";
 import { ProgramTable } from "@/services/ue/types";
 import { CACHE_KEYS } from "@/config/client_cache";
 

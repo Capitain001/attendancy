@@ -12,7 +12,7 @@ interface HeaderProps {
 }
 
 export default function Header({ user }: HeaderProps) {
-  const orgHref  = orgPath(user)
+  const orgHref = orgPath(user)
   const orgLabel = user?.organization?.name ?? 'Attendancy'
 
   return (
@@ -27,7 +27,7 @@ export default function Header({ user }: HeaderProps) {
           </span>
           <span className="text-sm font-medium text-text-primary">{orgLabel}</span>
         </Link>
-{/* <p>{orgHref}</p> */}
+        {/* <p>{orgHref}</p> */}
         <div className="flex items-center gap-1">
           <ModeToggle />
           {/* {user ? (
@@ -41,8 +41,8 @@ export default function Header({ user }: HeaderProps) {
             </Link>
           )} */}
 
-            {user && <NotificationsPopover />}
-  <AuthButton user={user} />
+          {user && <NotificationsPopover />}
+          <AuthButton user={user} />
         </div>
       </div>
     </header>

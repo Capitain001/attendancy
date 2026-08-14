@@ -1,8 +1,7 @@
-// src/hooks/data/programs/useProgramReorder.ts
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import type { ProgramTable, CourseOrder, UEOrder, ReorderProgramPayload } from "@/services/ue/types";
 import { reorderProgramAction } from "@/services/ue/actions";
@@ -12,7 +11,8 @@ export type ReorderStatus = "idle" | "saving" | "success" | "error";
 function snapshotProgramOrder(program: ProgramTable) {
   // Snapshot minimal & stable pour détecter les changements d’ordre
   // UE: (programUEId, semester, order)
-  // Cours: (ueCourseId, order)
+  // Cours: (ueCourseId, programUEId, order) — le programUEId est inclus
+  // pour détecter un changement d'UE parente (drag cross-UE) : plus gerer niveau projet
   const ueParts: string[] = [];
   const courseParts: string[] = [];
 
@@ -64,8 +64,6 @@ export function useProgramReorder({
   programId: string;
   program: ProgramTable;
 }) {
-  const queryClient = useQueryClient();
-
   const currentSnapshot = useMemo(() => snapshotProgramOrder(program ?? []), [program]);
   const baseSnapshotRef = useRef<string | null>(null);
   const lastProgramIdRef = useRef<string | null>(null);
@@ -98,7 +96,6 @@ export function useProgramReorder({
     },
     onSuccess: async () => {
       baseSnapshotRef.current = currentSnapshot;
-      // await queryClient.invalidateQueries({ queryKey: ["program", programId] });
       toast.success("Nouvelle disposition enregistrée");
     },
     onError: (err: unknown) => {
@@ -107,7 +104,12 @@ export function useProgramReorder({
   });
 
   const save = useCallback(async () => {
-    await mutation.mutateAsync();
+    try {
+      await mutation.mutateAsync();
+    } catch {
+      // déjà géré par onError (toast) — on avale ici pour éviter
+      // une unhandled promise rejection côté onClick.
+    }
   }, [mutation]);
 
   const status: ReorderStatus = mutation.isPending

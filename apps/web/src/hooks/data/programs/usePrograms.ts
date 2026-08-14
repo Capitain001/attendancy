@@ -18,9 +18,11 @@ import type {
   CreateProgramInput,
   UpdateProgramInput,
 } from "@/services/program/validation";
-import type { ProgramDto } from "@/services/program/types";
+import type { GetProgramsDto } from "@/services/program/types";
 
 export type { CreateProgramInput, UpdateProgramInput };
+
+type ProgramDto = GetProgramsDto[number]
 
 export interface UseProgramsOptions {
   classId?: string;

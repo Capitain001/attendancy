@@ -20,16 +20,7 @@ return (
     <PopoverTrigger>
       <MirrorHover className="flex items-center rounded-full ">
       {/* if demo : grayscale */}
-
-        {/* 
-        <span className="duration-800 max-w-0 overflow-hidden text-sm font-medium opacity-0 transition-all group-hover:mr-4 group-hover:max-w-[150px] group-hover:opacity-100">
-          <h1 className="mx-1 truncate text-sm font-medium">{user.name}</h1>
-          <h1 className="mx-1 text-center text-xs font-bold text-muted-foreground/70">
-            {user.role}
-          </h1>
-        </span> */}
-        <UserIcon name={user.name} className="size-9 border-1 border-border/40 bg-muted ring-0" />
-
+        <UserIcon name={user.name} status={"PENDING"} className="size-9 border-1 border-border/40 bg-muted ring-0" />
       </MirrorHover>
     </PopoverTrigger>
 

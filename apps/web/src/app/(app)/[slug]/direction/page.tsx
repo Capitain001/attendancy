@@ -79,7 +79,7 @@ export default async function DirectionDashboard({
           sub="complétées aujourd'hui"
           href={`${base}/schedule`}
           
-          max={String(metrics?.todaySchedules ?? undefined)}
+          max={metrics?.todaySchedules}
         />
         <MetricCard
           label="Sessions en cours"

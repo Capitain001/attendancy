@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { UserStatus } from "@/types";
 import { BadgeCheckIcon } from "lucide-react";
 
 type UserInfo = {
@@ -11,7 +12,7 @@ type UserInfo = {
   fill?: boolean;
   size?: "sm" | "md" | "lg" | "xl";
   showOnline?: boolean;
-  
+  status?:UserStatus
 };
 
 export default function UserIcon({ 
@@ -21,7 +22,7 @@ export default function UserIcon({
   className, 
   style,
   fill,
-
+  status,
   showOnline 
 }: UserInfo) {
 
@@ -33,6 +34,7 @@ export default function UserIcon({
         "relative group cursor-pointer aspect-square rounded-full border-2 overflow-hidden",
         !fill && "size-10",   
         fill && "w-full h-full",
+        status==="PENDING" && "grayscale",
         className,       
       )}
       style={style}

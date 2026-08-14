@@ -40,7 +40,7 @@ export default async function ProgramDetailPage({
   const org = ('data' in orgResult && orgResult.data) ? orgResult.data : undefined
 
   const classInfo = {
-    name: program.classes.length > 0 ? `${program.classes.length} classe(s) associée(s)` : 'Aucune classe liée',
+    name: program.classes.length === 1 ? `Program - ${program.classes[0].name}` : '—',
     level: program.classes[0]?.level ?? '—',
     programTrack: program.programTrack?.name ?? 'Filière non définie',
     program: program.name,
@@ -58,9 +58,7 @@ export default async function ProgramDetailPage({
           Retour aux programmes
         </Link>
       </div>
-{/* <span>
-  {JSON.stringify(allUes, null, 2)}
-</span> */}
+
       <DirectionProgramPage
         programId={programId}
         allUes={allUes}
@@ -69,7 +67,9 @@ export default async function ProgramDetailPage({
         programDetails={{
           isActive: program.isActive,
           isLocked: program.isLocked,
+          programTrackId: program.programTrack.id,
         }}
+        programClasses={program.classes}
       />
     </div>
   )

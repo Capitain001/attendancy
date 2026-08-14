@@ -1,0 +1,9 @@
+{
+  "name": "duplicateProgramAction",
+  "file": "src/services/program/actions/program.mutations.ts",
+  "sig": "({ programId, newName, programTrackId }: { programId: string newName: string programTrackId: string }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

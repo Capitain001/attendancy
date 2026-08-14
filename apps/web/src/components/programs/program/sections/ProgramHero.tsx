@@ -26,7 +26,7 @@ export function ProgramHero({
   totalDuration: number;
 }) {
   return (
-    <div className="relative overflow-hidden bg-card/70 border border-dashed border-foreground/25 p-4 sm:p-5">
+    <div className="relative overflow-hidden bg-card/70 border border-dashed border-foreground/25 p-4 rounded-xs sm:p-5">
       <GridDeco />
       <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">

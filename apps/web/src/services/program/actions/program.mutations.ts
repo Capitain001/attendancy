@@ -126,7 +126,34 @@ export async function toggleProgramActiveAction({
     const result = await toggleProgramActive({ programId, orgId, isActive })
     return { data: result }
   } catch (error) {
-    console.error('toggleProgramActiveAction:', error)
+    return { error: error instanceof Error ? error.message : ERRORS.SERVER }
+  }
+}
+
+export async function duplicateProgramAction({
+  programId,
+  newName,
+  programTrackId,
+}: {
+  programId: string
+  newName: string
+  programTrackId: string
+}) {
+  try {
+    const auth = await authAccess({ requiredRole: 'DIRECTION' })
+    if (!auth.data) return { error: auth.error }
+    const { orgId } = auth.data
+
+    const { duplicateProgram } = await import('../database')
+    const result = await duplicateProgram({
+      programId,
+      orgId,
+      newName,
+      programTrackId,
+    })
+    return { data: result }
+  } catch (error) {
+    console.error('duplicateProgramAction:', error)
     return { error: error instanceof Error ? error.message : ERRORS.SERVER }
   }
 }

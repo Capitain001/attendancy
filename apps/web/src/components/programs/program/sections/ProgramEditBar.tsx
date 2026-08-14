@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Lock, Unlock, CheckCircle, XCircle } from "lucide-react";
+import { Lock, Unlock, CheckCircle, XCircle, Copy } from "lucide-react";
 
 export function ProgramEditBar({
   isEditing,
@@ -13,6 +13,7 @@ export function ProgramEditBar({
   onSaveOrder,
   onToggleLock,
   onToggleActive,
+  onDuplicate,
 }: {
   isEditing: boolean;
   isDirty: boolean;
@@ -23,6 +24,7 @@ export function ProgramEditBar({
   onSaveOrder: () => void;
   onToggleLock?: () => void;
   onToggleActive?: () => void;
+  onDuplicate?: () => void;
 }) {
   return (
     <div className="flex items-center justify-end gap-2 flex-wrap">
@@ -52,9 +54,19 @@ export function ProgramEditBar({
           title={isLocked ? "Déverrouiller la maquette pédagogique" : "Verrouiller la maquette pédagogique"}
         >
           {isLocked ? <Lock className="size-3.5" /> : <Unlock className="size-3.5" />}
-          {/* {isLocked ? "Verrouillé" : "Déverrouillé"} */}
         </button>
       )}
+{/* 
+      {onDuplicate && (
+        <button
+          onClick={onDuplicate}
+          className="h-8 px-3 text-[11px] font-medium border border-dashed rounded-sm flex items-center gap-1.5 transition-colors border-muted-foreground/30 text-muted-foreground hover:bg-foreground/[0.05]"
+          title="Dupliquer ce programme"
+        >
+          <Copy className="size-3.5" />
+          Dupliquer
+        </button>
+      )} */}
 
       {!isEditing && isDirty && (
         <span className="text-amber-500 text-xs font-medium self-center">

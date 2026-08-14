@@ -16,7 +16,7 @@ import { LEVEL_LABEL } from '@/services/class/constants'
 import { GetClassesDto } from '@/services/class'
 
 function PromotionItem({ cls }: { cls: GetClassesDto[number] }) {
-  const { delete: remove } = useClasses()
+  const { delete: remove , update } = useClasses()
 
   return (
     <tr className="border-b border-border/20 last:border-0 hover:bg-muted/20 transition-colors">
@@ -48,17 +48,23 @@ function PromotionItem({ cls }: { cls: GetClassesDto[number] }) {
             <Button
               variant="ghost"
               size="icon"
-              className="size-8"
+              className="size-8 border border-dashed border-foreground/40 "
               aria-label={`Options pour ${cls.name}`}
             >
               <MoreHorizontal className="size-4" />
             </Button>
+
+            {/* <button className="size-5 sm:size-6 rounded-sm border border-dashed border-foreground/20 flex items-center justify-center text-muted-foreground/40 cursor-default" disabled>
+              <svg className="size-2.5 sm:size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /><circle cx="5" cy="12" r="1" />
+              </svg>
+            </button> */}
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end">
             <DropdownMenuItem asChild>
               <Link href={`./promotions/${cls.id}/program`}>
-               <BookOpen className="mr-2 size-4" />
+                <BookOpen className="mr-2 size-4" />
                 Programme
               </Link>
             </DropdownMenuItem>
@@ -69,7 +75,7 @@ function PromotionItem({ cls }: { cls: GetClassesDto[number] }) {
                   className="text-destructive focus:text-destructive"
                   onSelect={(event) => event.preventDefault()}
                 >
-                   <Archive className="mr-2 size-4" />
+                  <Archive className="mr-2 size-4" />
                   Archiver
                 </DropdownMenuItem>
               }

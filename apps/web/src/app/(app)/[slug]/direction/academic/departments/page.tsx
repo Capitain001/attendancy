@@ -10,8 +10,8 @@ export default async function DepartmentsPage() {
   const result = await getDepartmentsAction()
   const departments = 'data' in result ? result.data : []
 
-  const totalProgramTracks = departments.reduce((s, d) => s + d._count.programTracks, 0)
-  const totalUes           = departments.reduce((s, d) => s + d._count.ues, 0)
+  const totalProgramTracks = departments?.reduce((s, d) => s + d._count.programTracks, 0) || 0;
+  const totalUes           = departments?.reduce((s, d) => s + d._count.ues, 0) || 0;
 
   return (
     <div className="flex flex-col gap-y-4">
@@ -23,7 +23,7 @@ export default async function DepartmentsPage() {
       <section className="grid grid-cols-2 gap-3 lg:grid-cols-3">
         <MetricCard
           label="Départements"
-          value={String(departments.length)}
+          value={String(departments?.length)}
           sub="dans cet établissement"
         />
         <MetricCard
@@ -38,7 +38,7 @@ export default async function DepartmentsPage() {
         />
       </section>
 
-      <DepartmentList initialDepartments={departments} />
+      <DepartmentList initialDepartments={departments??[]} />
     </div>
   )
 }

@@ -37,4 +37,4 @@ export const updateUECourseSchema = v.object({
 }satisfies Record<keyof UpdateUECourseData, unknown>)
 
 export type UpdateUECourseInput = InferInput<typeof updateUECourseSchema>
-export type UpdateUECourseOutput = InferOutput<typeof updateUECourseSchema>
+export type UpdateUECourseOutput = InferOutput<typeof updateUECourseSchema>

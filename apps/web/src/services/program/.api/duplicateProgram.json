@@ -1,0 +1,8 @@
+{
+  "name": "duplicateProgram",
+  "file": "src/services/program/database/program.mutations.ts",
+  "sig": "({ programId, orgId, newName, programTrackId }: { programId: string orgId: string newName: string programTrackId: string }) => Promise<{ id: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,3 +1,4 @@
+//src/components/programs/program/SemesterTable.tsx
 import React from 'react';
 import { DndContext, closestCenter, DragOverlay } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -29,13 +30,14 @@ export function SemesterTable({
 }: SemesterTableProps) {
 
   // ── UE DnD — via hook ──
+  // `enabled` = !!isEditing : le hook gère lui-même sensors=[] quand désactivé
   const {
     sensors,
     activeUE,
     ueIds,
     handlers: ueHandlers,
     handleCoursesChange,
-  } = useUEDnd(ues, semesterIndex, onUEsChange);
+  } = useUEDnd(ues, semesterIndex, onUEsChange, !!isEditing);
 
   const COL = 'grid-cols-[24px_1fr_52px_44px_32px] sm:grid-cols-[28px_90px_1fr_72px_56px_44px]';
   const CELL = 'px-1.5 sm:px-2.5 py-0 flex items-center';
@@ -59,7 +61,7 @@ export function SemesterTable({
 
       {/* UE rows — outer DnD context */}
       <DndContext
-        sensors={isEditing ? sensors : []}
+        sensors={sensors}
         collisionDetection={closestCenter}
         onDragStart={ueHandlers.onDragStart}
         onDragEnd={ueHandlers.onDragEnd}
@@ -72,6 +74,7 @@ export function SemesterTable({
               semesterIndex={semesterIndex}
               isDragging={activeUE?.programUEId === ue.programUEId}
               onCoursesChange={handleCoursesChange}
+              isEditing={isEditing}
             />
           ))}
         </SortableContext>

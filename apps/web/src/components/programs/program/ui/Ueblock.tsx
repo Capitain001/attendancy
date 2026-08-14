@@ -1,16 +1,14 @@
+//src/components/programs/program/ui/Ueblock.tsx
 "use client";
 
 /**
- * UEBlock — version consciente du mode édition.
  *
- * Remplace le bouton ⋯ statique par un ActionMenu contextuel
+ * ActionMenu contextuel
  * quand useEditHandlers() retourne des handlers (mode Direction).
  *
  * En mode lecture (ProgramPage), useEditHandlers() retourne null
  * → le bouton ⋯ original s'affiche, aucune action disponible.
  *
- * Ce fichier remplace UEBlock.tsx existant — seule la cellule "Actions"
- * et l'import du contexte changent, le reste est identique.
  */
 
 import React, { useState } from 'react';
@@ -28,28 +26,32 @@ import { DropLine, OrderHandle, CourseGhost } from '../ui';
 import { SortableCourseRow } from '../SortableCourseRow';
 import { ActionMenu, IconPlus, IconUnlink } from './Actionmenu';
 
-export function UEBlock({ ue, semesterIndex, isDragging, onCoursesChange }: {
+export function UEBlock({ ue, semesterIndex, isDragging, onCoursesChange, isEditing }: {
   ue: ProgramUECourses;
   semesterIndex: number;
   isDragging: boolean;
   onCoursesChange: (programUEId: string, courses: UeCourseDTO[]) => void;
+  isEditing?: boolean;
 }) {
   const ueId = makeUEId(semesterIndex, ue.programUEId);
   const [expanded, setExpanded] = useState(true);
 
   // ── Cours DnD ──
+  // `enabled` = !!isEditing : le hook gère lui-même sensors=[] quand désactivé
   const {
     sensors: courseSensors,
     activeCourse,
     courseIds,
     handlers: courseHandlers,
-  } = useCourseDnd(ue, onCoursesChange);
+  } = useCourseDnd(ue, onCoursesChange, !!isEditing);
 
   // ── UE Sortable ──
+  // `disabled: !isEditing` désactive proprement le handle (aria + cursor)
+  // en cohérence avec les sensors vides côté DndContext parent
   const {
     attributes, listeners, setNodeRef,
     transform, transition, isDragging: isSelfDragging, isOver,
-  } = useSortable({ id: ueId });
+  } = useSortable({ id: ueId, disabled: !isEditing });
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),

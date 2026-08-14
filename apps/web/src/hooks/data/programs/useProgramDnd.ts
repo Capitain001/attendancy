@@ -58,6 +58,18 @@ export function makeCourseId(programUEId: string, courseId: string) {
 }
 
 // ==================== SENSORS FACTORY ====================
+// IMPORTANT : ne JAMAIS faire varier la taille du tableau de sensors
+// retourné entre deux rendus (ex: `enabled ? sensors : []`).
+// DndContext utilise ce tableau comme dépendances d'un useEffect interne
+// à dnd-kit — un changement de longueur (0 -> 3) déclenche le warning
+// React "final argument passed to useEffect changed size" et peut casser
+// le drag. On garde donc toujours les 3 sensors, stables en nombre.
+//
+// La désactivation du drag en mode lecture se fait via
+// `useSortable({ disabled: !isEditing })` dans les composants (UEBlock,
+// SortableCourseRow) : quand `disabled` est vrai, dnd-kit n'attache pas
+// les listeners au handle, donc plus aucune interaction n'est possible,
+// sans jamais toucher à la taille du tableau `sensors`.
 function useProgramSensors() {
   return useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -71,6 +83,7 @@ export function useUEDnd(
   ues: ProgramUECourses[],
   semesterIndex: number,
   onUEsChange: (newUEs: ProgramUECourses[]) => void,
+  enabled = true,
 ): UseUEDndReturn {
   const sensors = useProgramSensors();
   const [activeUE, setActiveUE] = useState<ProgramUECourses | null>(null);
@@ -79,11 +92,12 @@ export function useUEDnd(
 
   const onDragStart = useCallback(
     (event: DragStartEvent) => {
+      if (!enabled) return;
       const id = String(event.active.id);
       const found = ues.find(u => makeUEId(semesterIndex, u.programUEId) === id);
       setActiveUE(found ?? null);
     },
-    [ues, semesterIndex],
+    [ues, semesterIndex, enabled],
   );
 
   const onDragEnd = useCallback(
@@ -91,7 +105,7 @@ export function useUEDnd(
       const { active, over } = event;
       setActiveUE(null);
 
-      if (!over || active.id === over.id) return;
+      if (!enabled || !over || active.id === over.id) return;
 
       const fromIdx = ues.findIndex(u => makeUEId(semesterIndex, u.programUEId) === active.id);
       const toIdx   = ues.findIndex(u => makeUEId(semesterIndex, u.programUEId) === over.id);
@@ -104,7 +118,7 @@ export function useUEDnd(
       // Recalcule order après le déplacement
       onUEsChange(next.map((ue, i) => ({ ...ue, order: i + 1 })));
     },
-    [ues, semesterIndex, onUEsChange],
+    [ues, semesterIndex, onUEsChange, enabled],
   );
 
   const handleCoursesChange = useCallback(
@@ -138,6 +152,7 @@ export function useUEDnd(
 export function useCourseDnd(
   ue: ProgramUECourses,
   onCoursesChange: (programUEId: string, newCourses: UeCourseDTO[]) => void,
+  enabled = true,
 ): UseCourseDndReturn {
   const sensors = useProgramSensors();
   const [activeCourse, setActiveCourse] = useState<UeCourseDTO | null>(null);
@@ -147,11 +162,12 @@ export function useCourseDnd(
 
   const onDragStart = useCallback(
     (event: DragStartEvent) => {
+      if (!enabled) return;
       const id = String(event.active.id);
       const found = courses.find(c => makeCourseId(ue.programUEId, c.id) === id);
       setActiveCourse(found ?? null);
     },
-    [courses, ue.programUEId],
+    [courses, ue.programUEId, enabled],
   );
 
   const onDragEnd = useCallback(
@@ -159,7 +175,7 @@ export function useCourseDnd(
       const { active, over } = event;
       setActiveCourse(null);
 
-      if (!over || active.id === over.id) return;
+      if (!enabled || !over || active.id === over.id) return;
 
       const fromIdx = courses.findIndex(c => makeCourseId(ue.programUEId, c.id) === active.id);
       const toIdx   = courses.findIndex(c => makeCourseId(ue.programUEId, c.id) === over.id);
@@ -172,7 +188,7 @@ export function useCourseDnd(
       // Recalcule order après le déplacement
       onCoursesChange(ue.programUEId, next.map((c, i) => ({ ...c, order: i + 1 })));
     },
-    [courses, ue.programUEId, onCoursesChange],
+    [courses, ue.programUEId, onCoursesChange, enabled],
   );
 
   return {

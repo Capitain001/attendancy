@@ -29,6 +29,7 @@ export async function getUEs(orgId: string, departmentId?: string) {
               credits: true,
               duration: true,
               order: true,
+              settings: true,
             },
           },
     },
@@ -58,7 +59,7 @@ export async function getProgramUEs(programId: string, orgId: string) {
           department: { select: { id: true, name: true } },
           ueCourses: {
             where: { deletedAt: null },
-            select: { id: true, order: true, name: true, code: true, credits: true, duration: true },
+            select: { id: true, order: true, name: true, code: true, credits: true, duration: true, settings: true },
             orderBy: [{ order: 'asc' }, { name: 'asc' }],
           },
         },

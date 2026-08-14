@@ -37,6 +37,8 @@ export default async function Page({
   const programId = classprogram.program?.id;
   const programTrackId = classprogram.programTrack?.id;
 
+  const classInfo = { name: classprogram.name, level: classprogram.level, programTrack: classprogram.programTrack?.name ?? "—", program: classprogram.program?.name ?? "—", academicYear: classprogram.academicYear?.name ?? "—" };
+
   if (!programId) {
     return (
       <EmptyResource
@@ -57,22 +59,15 @@ export default async function Page({
   }
 
   return (
+    
     <div>
+    
       <DirectionProgramPage
         programId={programId}
         classId={classId}
         allUes={orgUes}
         organization={org}
-        classInfo={{
-          name: classprogram.name,
-          level: classprogram.level,
-          programTrack:
-            classprogram.programTrack?.name ?? "—",
-          program:
-            classprogram.program?.name ?? "—",
-          academicYear:
-            classprogram.academicYear?.name ?? "—",
-        }}
+        classInfo={classInfo}
       />
     </div>
   );
