@@ -8,7 +8,7 @@ import {
   DatabaseInvitationDetails,
   AuditLogDetails,
 } from "@/types/invitation";
-import { Action, Prisma, Resource } from "@/generated/prisma/client";
+import { Action, Prisma, Resource, Role } from "@/generated/prisma/client";
 
 function createDatabaseDetails(
   metadata: InvitationMetadata
@@ -137,12 +137,17 @@ export interface InvitationStats {
   accepted: number;
 }
 
-export async function getOrganizationInvitations(
-  orgId: string,
-  limit: number = 25
-) {
+export async function getOrganizationInvitations({
+  orgId,
+  limit = 25,
+  role,
+}: {
+  orgId: string;
+  limit?: number;
+  role?: Role;
+}) {
   const invitations = await prisma.invitation.findMany({
-    where:   { orgId },
+    where:   { orgId, ...(role ? { role } : {}) },
     orderBy: { createdAt: "desc" },
     take:    limit,
   });
@@ -153,6 +158,7 @@ export async function getOrganizationInvitations(
     createdAt: inv.createdAt,
     expiresAt: inv.expiresAt,
     usedAt:    inv.usedAt,
+    role:      inv.role,
     details:   inv.details ? (inv.details as DatabaseInvitationDetails) : null,
   }));
 }

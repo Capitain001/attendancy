@@ -1,3 +1,4 @@
+"use server";
 import { redirect } from "next/navigation";
 import { redirectUser } from "@/config/redirects";
 import { getUserInfo, setUserInfo } from "@/modules/user";

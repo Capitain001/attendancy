@@ -23,6 +23,7 @@ export function AddProgramUe({ departments, availableUes, onCreate, onAttach }: 
     departmentId: "",
     description: "",
     imageUrl: "",
+    isOptional: false // a brancher apres
   });
 
   // 🔹 Selected UE pour le SelectUe
@@ -41,7 +42,8 @@ export function AddProgramUe({ departments, availableUes, onCreate, onAttach }: 
       code: selected.code ?? "",
       departmentId: selected.departmentId ?? "",
       description: selected.description ?? "",
-      imageUrl: selected.imageUrl ?? "",
+      imageUrl: "",//selected.imageUrl ?? 
+      isOptional: false // a brancher apres
     });
   };
 
@@ -57,6 +59,7 @@ export function AddProgramUe({ departments, availableUes, onCreate, onAttach }: 
       departmentId: "",
       description: "",
       imageUrl: "",
+      isOptional: false // a brancher apres
     });
     setSelectedUeId("");
   };
@@ -74,7 +77,7 @@ export function AddProgramUe({ departments, availableUes, onCreate, onAttach }: 
         onChange={(updated) => setForm((prev) => ({ ...prev, ...updated }))}
       />
 
-      {/* 🔹 Bouton submit */} 
+      {/* 🔹 Bouton submit */}
       <ProgramUeAction
         onSubmit={handleSubmit}
         loading={false}

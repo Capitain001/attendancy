@@ -49,3 +49,5 @@ export type ParentOverview = {
   alert: { studentId: string; message: string } | null;
   children: ParentChildOverview[];
 };
+
+export * from './generated.types'

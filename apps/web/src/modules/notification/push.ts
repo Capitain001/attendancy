@@ -1,3 +1,4 @@
+import 'server-only'
 import webpush from 'web-push'
 import { NOTIFICATION_CONFIG, NOTIFICATION_TITLES } from '@/config/notification'
 import type { PushPayload, SendDeviceResult } from './types'

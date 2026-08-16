@@ -1,11 +1,11 @@
 
 
 import { groupByRelation } from "../../lib/filter";
-import { ProgramTracksDto } from "./types";
+import { GetProgramTracksDto } from "./types";
 
 
 export function groupProgramTracksByDepartment(
-  tracks: ProgramTracksDto
+  tracks: GetProgramTracksDto
 ) {
   return groupByRelation(tracks, (track) => track.department)
     .map((group) => ({

@@ -33,6 +33,7 @@ export type InvitationMinAggregateOutputType = {
   usedAt: Date | null
   userId: string | null
   invitationType: $Enums.InvitationType | null
+  role: $Enums.Role | null
   orgId: string | null
   resourceId: string | null
   resourceType: $Enums.Resource | null
@@ -47,6 +48,7 @@ export type InvitationMaxAggregateOutputType = {
   usedAt: Date | null
   userId: string | null
   invitationType: $Enums.InvitationType | null
+  role: $Enums.Role | null
   orgId: string | null
   resourceId: string | null
   resourceType: $Enums.Resource | null
@@ -62,6 +64,7 @@ export type InvitationCountAggregateOutputType = {
   userId: number
   details: number
   invitationType: number
+  role: number
   orgId: number
   resourceId: number
   resourceType: number
@@ -78,6 +81,7 @@ export type InvitationMinAggregateInputType = {
   usedAt?: true
   userId?: true
   invitationType?: true
+  role?: true
   orgId?: true
   resourceId?: true
   resourceType?: true
@@ -92,6 +96,7 @@ export type InvitationMaxAggregateInputType = {
   usedAt?: true
   userId?: true
   invitationType?: true
+  role?: true
   orgId?: true
   resourceId?: true
   resourceType?: true
@@ -107,6 +112,7 @@ export type InvitationCountAggregateInputType = {
   userId?: true
   details?: true
   invitationType?: true
+  role?: true
   orgId?: true
   resourceId?: true
   resourceType?: true
@@ -195,6 +201,7 @@ export type InvitationGroupByOutputType = {
   userId: string | null
   details: runtime.JsonValue | null
   invitationType: $Enums.InvitationType
+  role: $Enums.Role | null
   orgId: string
   resourceId: string | null
   resourceType: $Enums.Resource | null
@@ -231,6 +238,7 @@ export type InvitationWhereInput = {
   userId?: Prisma.UuidNullableFilter<"Invitation"> | string | null
   details?: Prisma.JsonNullableFilter<"Invitation">
   invitationType?: Prisma.EnumInvitationTypeFilter<"Invitation"> | $Enums.InvitationType
+  role?: Prisma.EnumRoleNullableFilter<"Invitation"> | $Enums.Role | null
   orgId?: Prisma.UuidFilter<"Invitation"> | string
   resourceId?: Prisma.UuidNullableFilter<"Invitation"> | string | null
   resourceType?: Prisma.EnumResourceNullableFilter<"Invitation"> | $Enums.Resource | null
@@ -248,6 +256,7 @@ export type InvitationOrderByWithRelationInput = {
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
   details?: Prisma.SortOrderInput | Prisma.SortOrder
   invitationType?: Prisma.SortOrder
+  role?: Prisma.SortOrderInput | Prisma.SortOrder
   orgId?: Prisma.SortOrder
   resourceId?: Prisma.SortOrderInput | Prisma.SortOrder
   resourceType?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -268,6 +277,7 @@ export type InvitationWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.UuidNullableFilter<"Invitation"> | string | null
   details?: Prisma.JsonNullableFilter<"Invitation">
   invitationType?: Prisma.EnumInvitationTypeFilter<"Invitation"> | $Enums.InvitationType
+  role?: Prisma.EnumRoleNullableFilter<"Invitation"> | $Enums.Role | null
   orgId?: Prisma.UuidFilter<"Invitation"> | string
   resourceId?: Prisma.UuidNullableFilter<"Invitation"> | string | null
   resourceType?: Prisma.EnumResourceNullableFilter<"Invitation"> | $Enums.Resource | null
@@ -285,6 +295,7 @@ export type InvitationOrderByWithAggregationInput = {
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
   details?: Prisma.SortOrderInput | Prisma.SortOrder
   invitationType?: Prisma.SortOrder
+  role?: Prisma.SortOrderInput | Prisma.SortOrder
   orgId?: Prisma.SortOrder
   resourceId?: Prisma.SortOrderInput | Prisma.SortOrder
   resourceType?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -306,6 +317,7 @@ export type InvitationScalarWhereWithAggregatesInput = {
   userId?: Prisma.UuidNullableWithAggregatesFilter<"Invitation"> | string | null
   details?: Prisma.JsonNullableWithAggregatesFilter<"Invitation">
   invitationType?: Prisma.EnumInvitationTypeWithAggregatesFilter<"Invitation"> | $Enums.InvitationType
+  role?: Prisma.EnumRoleNullableWithAggregatesFilter<"Invitation"> | $Enums.Role | null
   orgId?: Prisma.UuidWithAggregatesFilter<"Invitation"> | string
   resourceId?: Prisma.UuidNullableWithAggregatesFilter<"Invitation"> | string | null
   resourceType?: Prisma.EnumResourceNullableWithAggregatesFilter<"Invitation"> | $Enums.Resource | null
@@ -320,6 +332,7 @@ export type InvitationCreateInput = {
   usedAt?: Date | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   invitationType?: $Enums.InvitationType
+  role?: $Enums.Role | null
   resourceId?: string | null
   resourceType?: $Enums.Resource | null
   organization: Prisma.OrganizationCreateNestedOneWithoutInvitationsInput
@@ -336,6 +349,7 @@ export type InvitationUncheckedCreateInput = {
   userId?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   invitationType?: $Enums.InvitationType
+  role?: $Enums.Role | null
   orgId: string
   resourceId?: string | null
   resourceType?: $Enums.Resource | null
@@ -350,6 +364,7 @@ export type InvitationUpdateInput = {
   usedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   invitationType?: Prisma.EnumInvitationTypeFieldUpdateOperationsInput | $Enums.InvitationType
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   resourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceType?: Prisma.NullableEnumResourceFieldUpdateOperationsInput | $Enums.Resource | null
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutInvitationsNestedInput
@@ -366,6 +381,7 @@ export type InvitationUncheckedUpdateInput = {
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   invitationType?: Prisma.EnumInvitationTypeFieldUpdateOperationsInput | $Enums.InvitationType
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   resourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceType?: Prisma.NullableEnumResourceFieldUpdateOperationsInput | $Enums.Resource | null
@@ -381,6 +397,7 @@ export type InvitationCreateManyInput = {
   userId?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   invitationType?: $Enums.InvitationType
+  role?: $Enums.Role | null
   orgId: string
   resourceId?: string | null
   resourceType?: $Enums.Resource | null
@@ -395,6 +412,7 @@ export type InvitationUpdateManyMutationInput = {
   usedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   invitationType?: Prisma.EnumInvitationTypeFieldUpdateOperationsInput | $Enums.InvitationType
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   resourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceType?: Prisma.NullableEnumResourceFieldUpdateOperationsInput | $Enums.Resource | null
 }
@@ -409,6 +427,7 @@ export type InvitationUncheckedUpdateManyInput = {
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   invitationType?: Prisma.EnumInvitationTypeFieldUpdateOperationsInput | $Enums.InvitationType
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   resourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceType?: Prisma.NullableEnumResourceFieldUpdateOperationsInput | $Enums.Resource | null
@@ -434,6 +453,7 @@ export type InvitationCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   details?: Prisma.SortOrder
   invitationType?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   orgId?: Prisma.SortOrder
   resourceId?: Prisma.SortOrder
   resourceType?: Prisma.SortOrder
@@ -448,6 +468,7 @@ export type InvitationMaxOrderByAggregateInput = {
   usedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   invitationType?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   orgId?: Prisma.SortOrder
   resourceId?: Prisma.SortOrder
   resourceType?: Prisma.SortOrder
@@ -462,6 +483,7 @@ export type InvitationMinOrderByAggregateInput = {
   usedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   invitationType?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   orgId?: Prisma.SortOrder
   resourceId?: Prisma.SortOrder
   resourceType?: Prisma.SortOrder
@@ -555,6 +577,10 @@ export type EnumInvitationTypeFieldUpdateOperationsInput = {
   set?: $Enums.InvitationType
 }
 
+export type NullableEnumRoleFieldUpdateOperationsInput = {
+  set?: $Enums.Role | null
+}
+
 export type InvitationCreateWithoutUserInput = {
   id?: string
   token: string
@@ -564,6 +590,7 @@ export type InvitationCreateWithoutUserInput = {
   usedAt?: Date | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   invitationType?: $Enums.InvitationType
+  role?: $Enums.Role | null
   resourceId?: string | null
   resourceType?: $Enums.Resource | null
   organization: Prisma.OrganizationCreateNestedOneWithoutInvitationsInput
@@ -578,6 +605,7 @@ export type InvitationUncheckedCreateWithoutUserInput = {
   usedAt?: Date | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   invitationType?: $Enums.InvitationType
+  role?: $Enums.Role | null
   orgId: string
   resourceId?: string | null
   resourceType?: $Enums.Resource | null
@@ -622,6 +650,7 @@ export type InvitationScalarWhereInput = {
   userId?: Prisma.UuidNullableFilter<"Invitation"> | string | null
   details?: Prisma.JsonNullableFilter<"Invitation">
   invitationType?: Prisma.EnumInvitationTypeFilter<"Invitation"> | $Enums.InvitationType
+  role?: Prisma.EnumRoleNullableFilter<"Invitation"> | $Enums.Role | null
   orgId?: Prisma.UuidFilter<"Invitation"> | string
   resourceId?: Prisma.UuidNullableFilter<"Invitation"> | string | null
   resourceType?: Prisma.EnumResourceNullableFilter<"Invitation"> | $Enums.Resource | null
@@ -636,6 +665,7 @@ export type InvitationCreateWithoutOrganizationInput = {
   usedAt?: Date | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   invitationType?: $Enums.InvitationType
+  role?: $Enums.Role | null
   resourceId?: string | null
   resourceType?: $Enums.Resource | null
   user?: Prisma.UserCreateNestedOneWithoutInvitationsInput
@@ -651,6 +681,7 @@ export type InvitationUncheckedCreateWithoutOrganizationInput = {
   userId?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   invitationType?: $Enums.InvitationType
+  role?: $Enums.Role | null
   resourceId?: string | null
   resourceType?: $Enums.Resource | null
 }
@@ -690,6 +721,7 @@ export type InvitationCreateManyUserInput = {
   usedAt?: Date | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   invitationType?: $Enums.InvitationType
+  role?: $Enums.Role | null
   orgId: string
   resourceId?: string | null
   resourceType?: $Enums.Resource | null
@@ -704,6 +736,7 @@ export type InvitationUpdateWithoutUserInput = {
   usedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   invitationType?: Prisma.EnumInvitationTypeFieldUpdateOperationsInput | $Enums.InvitationType
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   resourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceType?: Prisma.NullableEnumResourceFieldUpdateOperationsInput | $Enums.Resource | null
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutInvitationsNestedInput
@@ -718,6 +751,7 @@ export type InvitationUncheckedUpdateWithoutUserInput = {
   usedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   invitationType?: Prisma.EnumInvitationTypeFieldUpdateOperationsInput | $Enums.InvitationType
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   resourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceType?: Prisma.NullableEnumResourceFieldUpdateOperationsInput | $Enums.Resource | null
@@ -732,6 +766,7 @@ export type InvitationUncheckedUpdateManyWithoutUserInput = {
   usedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   invitationType?: Prisma.EnumInvitationTypeFieldUpdateOperationsInput | $Enums.InvitationType
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   resourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceType?: Prisma.NullableEnumResourceFieldUpdateOperationsInput | $Enums.Resource | null
@@ -747,6 +782,7 @@ export type InvitationCreateManyOrganizationInput = {
   userId?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   invitationType?: $Enums.InvitationType
+  role?: $Enums.Role | null
   resourceId?: string | null
   resourceType?: $Enums.Resource | null
 }
@@ -760,6 +796,7 @@ export type InvitationUpdateWithoutOrganizationInput = {
   usedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   invitationType?: Prisma.EnumInvitationTypeFieldUpdateOperationsInput | $Enums.InvitationType
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   resourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceType?: Prisma.NullableEnumResourceFieldUpdateOperationsInput | $Enums.Resource | null
   user?: Prisma.UserUpdateOneWithoutInvitationsNestedInput
@@ -775,6 +812,7 @@ export type InvitationUncheckedUpdateWithoutOrganizationInput = {
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   invitationType?: Prisma.EnumInvitationTypeFieldUpdateOperationsInput | $Enums.InvitationType
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   resourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceType?: Prisma.NullableEnumResourceFieldUpdateOperationsInput | $Enums.Resource | null
 }
@@ -789,6 +827,7 @@ export type InvitationUncheckedUpdateManyWithoutOrganizationInput = {
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   invitationType?: Prisma.EnumInvitationTypeFieldUpdateOperationsInput | $Enums.InvitationType
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   resourceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceType?: Prisma.NullableEnumResourceFieldUpdateOperationsInput | $Enums.Resource | null
 }
@@ -805,6 +844,7 @@ export type InvitationSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   userId?: boolean
   details?: boolean
   invitationType?: boolean
+  role?: boolean
   orgId?: boolean
   resourceId?: boolean
   resourceType?: boolean
@@ -822,6 +862,7 @@ export type InvitationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   userId?: boolean
   details?: boolean
   invitationType?: boolean
+  role?: boolean
   orgId?: boolean
   resourceId?: boolean
   resourceType?: boolean
@@ -839,6 +880,7 @@ export type InvitationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   userId?: boolean
   details?: boolean
   invitationType?: boolean
+  role?: boolean
   orgId?: boolean
   resourceId?: boolean
   resourceType?: boolean
@@ -856,12 +898,13 @@ export type InvitationSelectScalar = {
   userId?: boolean
   details?: boolean
   invitationType?: boolean
+  role?: boolean
   orgId?: boolean
   resourceId?: boolean
   resourceType?: boolean
 }
 
-export type InvitationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "token" | "email" | "createdAt" | "expiresAt" | "usedAt" | "userId" | "details" | "invitationType" | "orgId" | "resourceId" | "resourceType", ExtArgs["result"]["invitation"]>
+export type InvitationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "token" | "email" | "createdAt" | "expiresAt" | "usedAt" | "userId" | "details" | "invitationType" | "role" | "orgId" | "resourceId" | "resourceType", ExtArgs["result"]["invitation"]>
 export type InvitationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   user?: boolean | Prisma.Invitation$userArgs<ExtArgs>
@@ -891,6 +934,7 @@ export type $InvitationPayload<ExtArgs extends runtime.Types.Extensions.Internal
     userId: string | null
     details: runtime.JsonValue | null
     invitationType: $Enums.InvitationType
+    role: $Enums.Role | null
     orgId: string
     resourceId: string | null
     resourceType: $Enums.Resource | null
@@ -1328,6 +1372,7 @@ export interface InvitationFieldRefs {
   readonly userId: Prisma.FieldRef<"Invitation", 'String'>
   readonly details: Prisma.FieldRef<"Invitation", 'Json'>
   readonly invitationType: Prisma.FieldRef<"Invitation", 'InvitationType'>
+  readonly role: Prisma.FieldRef<"Invitation", 'Role'>
   readonly orgId: Prisma.FieldRef<"Invitation", 'String'>
   readonly resourceId: Prisma.FieldRef<"Invitation", 'String'>
   readonly resourceType: Prisma.FieldRef<"Invitation", 'Resource'>

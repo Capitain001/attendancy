@@ -7,9 +7,9 @@ import {
   buildPushPayload,
   sendToDevice,
   analyzeSendResults,
-  subscribeSchema,
-} from '@/modules/notification'
-import type { SerializedPushSubscription, SendDeviceResult } from '@/modules/notification'
+} from '@/modules/notification/server'
+import { subscribeSchema } from '@/modules/notification'
+import type { SerializedPushSubscription, SendDeviceResult } from '@/modules/notification/types'
 import {
   upsertPushSubscription,
   unsubscribeDevice,

@@ -254,6 +254,7 @@ model Invitation {
   userId         String?        @db.Uuid
   details        Json?
   invitationType InvitationType @default(INVITE_ONLY)
+  role           Role?          // dénormalisé pour filtrage
   orgId          String         @db.Uuid
   resourceId     String?        @db.Uuid
   resourceType   Resource?

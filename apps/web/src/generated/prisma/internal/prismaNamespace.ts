@@ -6333,6 +6333,7 @@ export const InvitationScalarFieldEnum = {
   userId: 'userId',
   details: 'details',
   invitationType: 'invitationType',
+  role: 'role',
   orgId: 'orgId',
   resourceId: 'resourceId',
   resourceType: 'resourceType'

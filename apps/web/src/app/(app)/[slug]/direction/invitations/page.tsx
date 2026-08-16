@@ -13,7 +13,7 @@ export default async function Page() {
   const queryClient = getQueryClient()
 
   const [invRes, statsRes, fnRes] = await Promise.all([
-    getOrgInvitationsAction(50),
+    getOrgInvitationsAction({limit:50}),
     getInvitationStatsAction(),
     getFunctionsAction(),
   ])

@@ -35,18 +35,18 @@ export async function updateSession(request: NextRequest) {
   // IMPORTANT : ne rien exécuter entre createServerClient et getClaims() —
   // et ne pas retirer getClaims() : sans lui, les sessions SSR peuvent être
   // déconnectées aléatoirement.
-  const { data } = await supabase.auth.getClaims()
-  const user = data?.claims
+  // const { data } = await supabase.auth.getClaims()
+  // const user = data?.claims
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/auth')
-  ) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/login'
-    return NextResponse.redirect(url)
-  }
+  // if (
+  //   !user &&
+  //   !request.nextUrl.pathname.startsWith('/login') &&
+  //   !request.nextUrl.pathname.startsWith('/auth')
+  // ) {
+  //   const url = request.nextUrl.clone()
+  //   url.pathname = '/login'
+  //   return NextResponse.redirect(url)
+  // }
 
   // IMPORTANT : retourner supabaseResponse tel quel. Si une nouvelle réponse
   // est créée, copier `request` ET les cookies de supabaseResponse — sinon la

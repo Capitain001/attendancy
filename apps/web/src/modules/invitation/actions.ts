@@ -9,6 +9,7 @@ import { prisma } from "@/lib/prisma";
 import { ERRORS } from "@/config";
 import { notifyInvitationStakeholders } from "./notifications";
 import type { DatabaseInvitationDetails } from "@/types/invitation";
+import { Role } from "@/generated/prisma";
 
 function getStudentInvitationNotifyContext(invitation: InvitationListItem, orgId: string) {
   const details = invitation.details as DatabaseInvitationDetails | null;
@@ -226,7 +227,13 @@ export async function getInvitationStatsAction (){
  * Historique des invitations de l'organisation courante (hub Direction).
  * Retour discriminé `{ data } | { error }` — normalisé côté hook `useOrgInvitations`.
  */
-export async function getOrgInvitationsAction(limit = 50) {
+export async function getOrgInvitationsAction({
+  limit = 50,
+  role,
+}: {
+  limit?: number;
+  role?: Role;
+} = {}) {
   try {
     const user = await getUserInfo();
     if (!user) return { error: "Non authentifié" };
@@ -234,7 +241,7 @@ export async function getOrgInvitationsAction(limit = 50) {
     const orgId = user.organization?.id;
     if (!orgId) return { error: "Organisation non trouvée" };
 
-    const data = await getOrganizationInvitations(orgId, limit);
+    const data = await getOrganizationInvitations({ orgId, limit, role });
     return { data };
   } catch (error) {
     return { error: error instanceof Error ? error.message : ERRORS.SERVER };

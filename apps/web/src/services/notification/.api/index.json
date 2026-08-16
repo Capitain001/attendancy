@@ -2,7 +2,7 @@
   "service": "notification",
   "path": "src/services/notification/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "5a9e707",
+  "derived_at": "bcf8b32",
   "utils_dir": null,
   "fns": {
     "createUserNotification": {

@@ -2,8 +2,9 @@
 // Régénérer : npx tsx scripts/generate/types/types.ts teacher
 // Pour surcharger un type, définissez-le dans ./types.ts (jamais écrasé).
 
-import { getTeachers, getTeacherTodaySchedules, getTeacherCourses, getTeacherSchedules, getTeacherStats, getTeacherOrganizationStats, getTeacher } from './database'
+import { updateTeacherDepartment, getTeachers, getTeacherTodaySchedules, getTeacherCourses, getTeacherSchedules, getTeacherStats, getTeacherOrganizationStats, getTeacher } from './database'
 
+export type UpdateTeacherDepartmentDto = Awaited<ReturnType<typeof updateTeacherDepartment>>
 export type GetTeachersDto = Awaited<ReturnType<typeof getTeachers>>
 export type GetTeacherTodaySchedulesDto = Awaited<ReturnType<typeof getTeacherTodaySchedules>>
 export type GetTeacherCoursesDto = Awaited<ReturnType<typeof getTeacherCourses>>

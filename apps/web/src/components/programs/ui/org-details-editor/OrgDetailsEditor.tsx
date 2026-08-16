@@ -6,7 +6,7 @@ import { FieldRow } from "./FieldRow";
 import { RecordCard } from "./RecordCard";
 import { TemplatePicker } from "./TemplatePicker";
 import { useOrgDetailsEditor } from "./useOrgDetailsEditor";
-import { useOrgDetails } from "@/hooks/organization/useOrgDetails";
+import { useOrgDetails } from "@/hooks/data/organization/useOrgDetails";
 import { OrgDetails } from "@/services/organization";
 
 

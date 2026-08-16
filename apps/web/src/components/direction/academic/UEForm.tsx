@@ -6,10 +6,11 @@ import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { FormDialog } from '@/components/ui/FormDialog'
 import { DialogFooter } from '@/components/ui/dialog'
+import { GetDepartmentsDto } from '@/services/department'
 
-type Dept = { id: string; name: string }
 
-function CreateForm({ departments, close }: { departments: Dept[]; close: () => void }) {
+
+function CreateForm({ departments, close }: { departments: GetDepartmentsDto; close: () => void }) {
   const { create } = useManageUEs()
   const ref = useRef<HTMLFormElement>(null)
 
@@ -73,7 +74,7 @@ function CreateForm({ departments, close }: { departments: Dept[]; close: () => 
   )
 }
 
-export function UECreateButton({ departments }: { departments: Dept[] }) {
+export function UECreateButton({ departments }: { departments: GetDepartmentsDto }) {
   return (
     <FormDialog
       trigger={

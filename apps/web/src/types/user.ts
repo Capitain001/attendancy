@@ -99,16 +99,16 @@ export type UserMetadata = Pick<UserInfo,
 >;
 
 
-// src/types/user.ts (ajout)
-export type AuthenticatedUser = UserInfo & {
-  id: string;
-  role: Role;
-  function: Functions;
-  name: string;
-  /** Garanti par le flow d'inscription actuel (owner ou invité — les deux exigent un email).
-   *  À revalider si un nouveau flow d'auth (OAuth, SSO...) est ajouté. */
-  email: string;
-};
+  // src/types/user.ts (ajout)
+  export type AuthenticatedUser = UserInfo & {
+    id: string;
+    role: Role;
+    function: Functions;
+    name: string;
+    /** Garanti par le flow d'inscription actuel (owner ou invité — les deux exigent un email).
+     *  À revalider si un nouveau flow d'auth (OAuth, SSO...) est ajouté. */
+    email: string;
+  };
 
 
 

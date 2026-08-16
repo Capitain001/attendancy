@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { useManageUEs } from '@/hooks/data/ue/useManageUEs'
 import { card, typography } from '@/styles'
 import { cn } from '@/lib/utils'
+import { GetUEsDto } from '@/services/ue'
 
 type UERow = {
   id: string
@@ -15,7 +16,7 @@ type UERow = {
   deletedAt: Date | string | null
 }
 
-function UEItem({ ue }: { ue: UERow }) {
+function UEItem({ ue }: { ue: GetUEsDto[number] }) {
   const { archive } = useManageUEs()
 
   return (
@@ -52,9 +53,9 @@ function UEItem({ ue }: { ue: UERow }) {
   )
 }
 
-export function UEList({ initialUEs }: { initialUEs: UERow[] }) {
+export function UEList({ initialUEs }: { initialUEs: GetUEsDto }) {
   const { ues, isLoading } = useManageUEs()
-  const data = ues.length > 0 ? (ues as UERow[]) : initialUEs
+  const data = ues.length > 0 ? (ues) : initialUEs
 
   return (
     <CollapseSection label="Unités d'enseignement" count={data.length} defaultOpen>

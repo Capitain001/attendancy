@@ -37,7 +37,7 @@ export default async function CoursesPage() {
       </div>
       <SectionHeader
         title="Unités d'enseignement"
-        action={<UECreateButton departments={departments} />}
+        action={<UECreateButton departments={departments ?? []} />}
       />
 
       <section className="grid grid-cols-2 gap-3 lg:grid-cols-3">
@@ -73,13 +73,6 @@ export default async function CoursesPage() {
 
       )}
 
-
-      <span className="text-sm text-muted-foreground">
-        {/* {JSON.stringify(ues, null, 2)} */}
-        {/* {JSON.stringify(ues.map((u) => ({ id: u.id, name: u.name, department: u.department?.name ?? null })), null, 2)} */}
-      </span>
-
-      {/* <UEList initialUEs={ues} /> */}
     </div>
   )
 }

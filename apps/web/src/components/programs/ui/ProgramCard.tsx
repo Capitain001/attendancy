@@ -7,11 +7,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { ProgramDto } from "@/services/program/types";
+import type { GetProgramsDto } from "@/services/program/types";
 import { Layers3, GraduationCap, Eye, Pencil, Trash2 } from "lucide-react";
 
 interface ProgramCardProps {
-  program: ProgramDto;
+  program: GetProgramsDto[number];
   slug: string;
   onDelete: (id: string) => void;
 }

@@ -10,7 +10,7 @@ export default async function AcademicYearsPage() {
   const result = await getAcademicYearsAction()
   const years = 'data' in result ? result.data : []
 
-  const currentYear = years.find((y) => y.isCurrent)
+  const currentYear = years?.find((y) => y.isCurrent)
 
   return (
     <div className="flex flex-col gap-y-4">
@@ -22,7 +22,7 @@ export default async function AcademicYearsPage() {
       <section className="grid grid-cols-2 gap-3 lg:grid-cols-3">
         <MetricCard
           label="Années actives"
-          value={String(years.length)}
+          value={years?.length.toString()??"--"}
           sub="dans cet établissement"
         />
         <MetricCard
@@ -32,7 +32,7 @@ export default async function AcademicYearsPage() {
         />
       </section>
 
-      <AcademicYearList initialYears={years} />
+      <AcademicYearList initialYears={years??[]} />
     </div>
   )
 }

@@ -2,8 +2,13 @@
 // Régénérer : npx tsx scripts/generate/types/types.ts organization
 // Pour surcharger un type, définissez-le dans ./types.ts (jamais écrasé).
 
-import { getOrgIdentity, getOrgUsage, getOrgDetails, getOrgDailyMetrics, getOrgBySlug, getOrgResourcesCounts, getOrganizationBySlug } from './database'
+import { createOrgWithDefaults, updateOrganization, setOrgDetails, updateOrgLogo, setMemberStatusWithAudit, getOrgIdentity, getOrgUsage, getOrgDetails, getOrgDailyMetrics, getOrgBySlug, getOrgResourcesCounts, getOrganizationBySlug } from './database'
 
+export type CreateOrgWithDefaultsDto = Awaited<ReturnType<typeof createOrgWithDefaults>>
+export type UpdateOrganizationDto = Awaited<ReturnType<typeof updateOrganization>>
+export type SetOrgDetailsDto = Awaited<ReturnType<typeof setOrgDetails>>
+export type UpdateOrgLogoDto = Awaited<ReturnType<typeof updateOrgLogo>>
+export type SetMemberStatusWithAuditDto = Awaited<ReturnType<typeof setMemberStatusWithAudit>>
 export type GetOrgIdentityDto = Awaited<ReturnType<typeof getOrgIdentity>>
 export type GetOrgUsageDto = Awaited<ReturnType<typeof getOrgUsage>>
 export type GetOrgDetailsDto = Awaited<ReturnType<typeof getOrgDetails>>

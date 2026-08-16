@@ -1,5 +1,5 @@
 import { getSubscriptionAction, getPlansAction } from '@/services/subscription'
-import type { GetSubscriptionDto, PlanDto } from '@/services/subscription'
+import type { GetSubscriptionDto, GetPlansDto } from '@/services/subscription'
 import { getUserInfo } from '@/modules/user'
 import { SubscribeButton, ManageSubscriptionButton } from '@/components/stripe'
 import { redirect } from 'next/navigation'
@@ -96,7 +96,7 @@ function PlanCard({
   isCurrent,
   hasActiveSubscription,
 }: {
-  plan: PlanDto
+  plan: GetPlansDto[number]
   isCurrent: boolean
   hasActiveSubscription: boolean
 }) {
