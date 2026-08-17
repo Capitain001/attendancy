@@ -21,7 +21,6 @@ export const useUserStore = create<UserState>()(
       user: null,
       isLoading: false,
       error: null,
-      //@ts-ignore
       setUser: (user) => set({ user }),
       setLoading: (isLoading) => set({ isLoading }),
       setError: (error) => set({ error }),
@@ -35,14 +34,19 @@ export const useUserStore = create<UserState>()(
       name: "user-storage",
       storage: {
         getItem: (name) => {
+          if (typeof window === 'undefined') return null
           const str = localStorage.getItem(name) // ← localStorage pour persistance longue
           return str ? JSON.parse(str) : null
         },
         setItem: (name, value) => {
-          localStorage.setItem(name, JSON.stringify(value))
+          if (typeof window !== 'undefined') {
+            localStorage.setItem(name, JSON.stringify(value))
+          }
         },
         removeItem: (name) => {
-          localStorage.removeItem(name)
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem(name)
+          }
         },
       },
     }

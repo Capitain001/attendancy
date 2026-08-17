@@ -1,7 +1,7 @@
 {
   "name": "getClassAttendanceRatesAction",
   "file": "src/services/attendance/actions/analytics.ts",
-  "sig": "({ classId, courseId }: { classId: string; courseId?: string }) => Promise<{ error: any; data?: undefined; } | { data: Map<string, number>; error?: undefined; }>",
+  "sig": "({ classId, courseId }: { classId: string; courseId?: string }) => Promise<{ error: string; data?: undefined; } | { data: Map<string, number>; error?: undefined; }>",
   "calls": [
     "getClassAttendanceRates"
   ],

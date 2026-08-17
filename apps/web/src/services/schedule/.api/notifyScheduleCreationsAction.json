@@ -1,7 +1,7 @@
 {
   "name": "notifyScheduleCreationsAction",
   "file": "src/services/schedule/actions/schedule.mutations.ts",
-  "sig": "(scheduleIds: string[]) => Promise<{ error: any; data?: undefined; } | { data: { succeeded: number; failed: number; }; error?: undefined; }>",
+  "sig": "(scheduleIds: string[]) => Promise<{ error: string; data?: undefined; } | { data: { succeeded: number; failed: number; }; error?: undefined; }>",
   "calls": [
     "getScheduleForNotify",
     "markScheduleCreationNotified"

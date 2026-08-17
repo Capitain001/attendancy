@@ -8,7 +8,7 @@ import { ProgramTrackForm } from "../form/ProgramTrackForm";
 import { addProgramTrackAction } from "@/services/program-track/actions";
 import type { AddProgramTrackData, UpdateProgramTrackData } from "@/services/program-track/database";
 import { toast } from "sonner";
-import { revalidateAction } from "@/utils/server/cach";
+import { revalidateAction } from "@/lib/revalidate";
 import { DepartmentDto } from "@/services/department/types";
 
 interface AddProgramTrackProps {

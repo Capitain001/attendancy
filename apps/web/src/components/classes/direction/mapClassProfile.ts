@@ -1,9 +1,9 @@
 import type { ClassProfileData } from './section/ui/types'
-import type { getCoursesByClass } from '@/services/course/database'
-import type { getTodayClassSchedules } from '@/services/schedule/database'
+import type { GetCoursesDto } from '@/services/course/types'
+import type { GetTodayClassSchedulesDto } from '@/services/schedule/types'
 
-type CourseRow = Awaited<ReturnType<typeof getCoursesByClass>>[number]
-type ScheduleRow = Awaited<ReturnType<typeof getTodayClassSchedules>>[number]
+type CourseRow = GetCoursesDto[number]
+type ScheduleRow = GetTodayClassSchedulesDto[number]
 
 export function mapCoursesForClassSection(rows: CourseRow[]): ClassProfileData['courses'] {
   return rows.map((c) => ({

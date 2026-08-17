@@ -1,7 +1,7 @@
 {
   "name": "getCoursesAction",
   "file": "src/services/course/actions/course.queries.ts",
-  "sig": "(classId?: string) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; classId: string; durationDone: number; durationTotal: number; credits: number; termId: string | null; ueCourse: { name: string; id: string; code: string | null; }; teachers: { ...; }[]; }[]; error?: undefined; }>",
+  "sig": "(classId?: string) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; classId: string; durationDone: number; durationTotal: number; credits: number; termId: string | null; ueCourse: { name: string; id: string; code: string | null; }; teachers: { ...; }[]; }[]; error?: undefined; }>",
   "calls": [
     "getCourses"
   ],

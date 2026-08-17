@@ -54,14 +54,19 @@ export const usePresenceStore = create<PresenceState>()(
       name: "presence-storage",
       storage: {
         getItem: (name) => {
+          if (typeof window === 'undefined') return null
           const str = sessionStorage.getItem(name)
           return str ? JSON.parse(str) : null
         },
         setItem: (name, value) => {
-          sessionStorage.setItem(name, JSON.stringify(value))
+          if (typeof window !== 'undefined') {
+            sessionStorage.setItem(name, JSON.stringify(value))
+          }
         },
         removeItem: (name) => {
-          sessionStorage.removeItem(name)
+          if (typeof window !== 'undefined') {
+            sessionStorage.removeItem(name)
+          }
         },
       },
     }

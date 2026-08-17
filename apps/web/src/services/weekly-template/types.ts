@@ -1,4 +1,5 @@
 import type { getWeeklyTemplates, getWeeklyTemplate } from './database'
+import { GetWeeklyTemplateDto, GetWeeklyTemplatesDto } from './generated.types'
 
 
 export type WeeklyTemplateListItem = GetWeeklyTemplatesDto[number]

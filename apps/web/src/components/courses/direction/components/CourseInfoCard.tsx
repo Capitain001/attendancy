@@ -17,24 +17,30 @@ interface CourseInfoCardProps {
 export function CourseInfoCard({ courseId, fields }: CourseInfoCardProps) {
   const router = useRouter()
   const [editing, setEditing] = useState(false)
-  const [name, setName] = useState(fields.name)
+  const [name, setName] = useState<string>(fields.name ?? '')
   const [descOpen, setDescOpen] = useState(false)
-  const [desc, setDesc] = useState(fields.description ?? '')
+  const [desc, setDesc] = useState<string>(fields.description ?? '')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    setName(fields.name)
+    setName(fields.name ?? '')
     setDesc(fields.description ?? '')
   }, [fields.name, fields.description])
 
   async function persist(updates: { name?: string; description?: string | null }) {
     setSaving(true)
     setError(null)
-    const res = await updateCourseAction(courseId, updates)
+    const res = await updateCourseAction({
+      courseId,
+      data: {
+        name: updates.name,
+        description: updates.description ?? undefined,
+      },
+    })
     setSaving(false)
     if ('error' in res) {
-      setError(res.error)
+      setError(res.error ?? 'Erreur lors de la sauvegarde')
       return false
     }
     router.refresh()
@@ -47,7 +53,7 @@ export function CourseInfoCard({ courseId, fields }: CourseInfoCardProps) {
   }
 
   function handleCancel() {
-    setName(fields.name)
+    setName(fields.name ?? '')
     setEditing(false)
     setError(null)
   }

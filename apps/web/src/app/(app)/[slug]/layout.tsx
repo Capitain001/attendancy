@@ -25,9 +25,9 @@ export default async function OrganizationLayout({
 
   return (
     <div className="scrollbar-hidden h-full overflow-hidden">
-       <UserProvider initialUser={user}>
+       {/* <UserProvider initialUser={user}> */}
           {children}
-        </UserProvider>
+        {/* </UserProvider> */}
     </div>
   );
 }

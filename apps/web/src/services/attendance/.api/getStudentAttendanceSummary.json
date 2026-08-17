@@ -1,7 +1,7 @@
 {
   "name": "getStudentAttendanceSummary",
   "file": "src/services/attendance/database/attendance.queries.ts",
-  "sig": "(studentId: string, orgId: string) => Promise<{ rate: number | null; absences: number; recentAbsences: { id: string; schedule: { id: string; course: { name: string; id: string; }; startTime: Date; endTime: Date; }; status: AttendanceStatus; recordedAt: Date; }[]; }>",
+  "sig": "(studentId: string, orgId: string) => Promise<{ rate: number | null; absences: number; recentAbsences: { id: string; status: AttendanceStatus; recordedAt: Date; schedule: { id: string; startTime: Date; endTime: Date; course: { ...; }; }; }[]; }>",
   "composes": [
     "getStudentAttendanceStatusCounts",
     "getStudentAttendances"

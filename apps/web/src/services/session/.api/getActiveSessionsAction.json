@@ -1,7 +1,7 @@
 {
   "name": "getActiveSessionsAction",
   "file": "src/services/session/actions/session.queries.ts",
-  "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { id: string; schedule: { id: string; class: { name: string; }; course: { name: string; id: string; }; teacher: { id: string; user: { avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; ... 4 more ...; groupId: string | null; }; stat...",
+  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { schedule: { class: { name: string; }; course: { id: string; name: string; }; teacher: { user: { firstName: string | null; lastName: string | null; avatar_url: string | null; }; id: string; }; ... 5 more ...; groupId: string | null; }; id: string; status: Sessi...",
   "calls": [
     "getActiveSessions"
   ],

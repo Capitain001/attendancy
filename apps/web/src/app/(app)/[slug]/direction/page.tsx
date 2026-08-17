@@ -52,14 +52,6 @@ export default async function DirectionDashboard({
     <div className="scroll-smooth flex flex-col gap-y-4 pb-10">
       {year && <AcademicYearBanner year={year} />}
 
-      {/* ── En-tête ── */}
-      {/* <header className="space-y-1">
-        <p className="text-[11px] font-medium uppercase tracking-widest text-muted-foreground">
-          Tableau de bord
-        </p>
-        <h1 className="text-2xl font-semibold tracking-tight">{orgName}</h1>
-      </header> */}
-
       {/* ── Métriques du jour ── */}
       <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <MetricCard

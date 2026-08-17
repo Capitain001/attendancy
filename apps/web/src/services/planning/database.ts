@@ -53,23 +53,24 @@ async function fetchClassPlanningRaw(classId: string, orgId: string) {
 
 type ClassPlanningRaw = Awaited<ReturnType<typeof fetchClassPlanningRaw>>
 
-function mapClassPlanningResources([classRow, rooms]: ClassPlanningRaw) {
+function mapClassPlanningResources([classRow, rooms]: [NonNullable<ClassPlanningRaw[0]>, ClassPlanningRaw[1]]) {
   return {
-    class: { id: classRow!.id, name: classRow!.name },
+    class: { id: classRow.id, name: classRow.name },
     rooms,
-    groups: classRow!.groups,
-    courses: classRow!.courses.map((c) => ({
+    groups: classRow.groups,
+    courses: classRow.courses.map((c) => ({
       id: c.id,
       name: c.name,
       teachers: c.teachers
+        .filter((ct): ct is typeof ct & { teacher: NonNullable<typeof ct.teacher> } => ct.teacher != null)
         .map((ct) => ({
-          id: ct?.teacher?.id,
-          name: [ct.teacher?.user.firstName, ct.teacher?.user.lastName]
+          id: ct.teacher.id,
+          name: [ct.teacher.user.firstName, ct.teacher.user.lastName]
             .filter(Boolean)
             .join(' ')
             .trim() || 'Sans nom',
-          email: ct.teacher?.user.email,
-          avatar_url: ct.teacher?.user.avatar_url,
+          email: ct.teacher.user.email,
+          avatar_url: ct.teacher.user.avatar_url,
           isMain: ct.isMain,
         }))
         .sort((a, b) => {
@@ -89,7 +90,7 @@ export async function getPlanningResources(classId: string, orgId: string) {
 
   const raw = await fetchClassPlanningRaw(classId, orgId)
   if (!raw[0]) return null
-  return mapClassPlanningResources(raw)
+  return mapClassPlanningResources([raw[0], raw[1]])
 }
 
 export type PlanningResources = Awaited<ReturnType<typeof getPlanningResources>>

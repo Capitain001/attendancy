@@ -7,12 +7,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 import type { ProgramDto } from "@/services/program/types";
-import type { CreateProgramInput } from "@/hooks/data/programs/usePrograms";
 
 interface ProgramFormProps {
   program?: ProgramDto;
   onSubmit: (
-    data: Pick<CreateProgramInput, "name" | "description">
+    data: { name: string; description?: string | null | undefined }
   ) => Promise<void>;
   onCancel?: () => void;
   isLoading?: boolean;
@@ -34,7 +33,7 @@ export function ProgramForm({
 
     await onSubmit({
       name,
-      description: description || null,
+      description: description || undefined,
     });
   };
 

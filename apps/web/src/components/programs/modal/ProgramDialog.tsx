@@ -52,7 +52,7 @@ export function ProgramDialog({
 
   const handleSubmit = async (data: {
     name: string;
-    description?: string;
+    description?: string | null;
   }) => {
     if (!isEdit && !selectedProgramTrackId) {
       toast.error("Veuillez sélectionner un parcours");

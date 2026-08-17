@@ -26,7 +26,7 @@ import type { UISessionStatus } from "@/services/session/policy";
 import type { TeacherNextSchedule } from "@/services/schedule";
 
 import { SessionCarousel } from "./SessionCarousel";
-import { CollapsibleSection } from "./ui/CollapsibleSection";
+import { CollapseSection } from "@/components/layout/CollapseSection";
 import { SessionStatusBadge } from "./ui/SessionStatusBadge";
 
 type TeacherSchedule = NonNullable<TeacherNextSchedule>;
@@ -194,12 +194,12 @@ function SessionPageInner({
         </div>
 
         <div className="bg-card border border-border/60 rounded-2xl shadow-sm overflow-hidden">
-          <CollapsibleSection title="Détails de la séance" defaultOpen>
+          <CollapseSection label="Détails de la séance" defaultOpen className="mt-0">
             <SessionCarousel
               schedule={{ ...schedule, startTime: startAt, endTime: endAt, session: activeSession }}
               studentCount={audience}
             />
-          </CollapsibleSection>
+          </CollapseSection>
         </div>
 
         {isLate && (canCheckIn || canCheckOut) && (

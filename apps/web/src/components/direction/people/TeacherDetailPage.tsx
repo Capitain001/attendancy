@@ -45,16 +45,32 @@ export function TeacherDetailPage({
   unavailabilities,
   backHref,
 }: {
-  teacher: TeacherData
+  teacher: TeacherData | null
   courses: TeacherCourse[]
-  schedules: TeacherSchedules
-  unavailabilities: TeacherUnavailabilities
+  schedules: TeacherSchedules | []
+  unavailabilities: TeacherUnavailabilities | []
   backHref: string
 }) {
+  if (!teacher) {
+    return (
+      <div className="flex flex-col gap-4 p-6">
+        <Button variant="ghost" size="sm" className="w-fit gap-1 px-2 h-8" asChild>
+          <Link href={backHref}>
+            <ChevronLeft className="size-4" />
+            Retour
+          </Link>
+        </Button>
+        <div className={cn(card.base, 'p-6 text-sm text-muted-foreground')}>
+          Enseignant introuvable.
+        </div>
+      </div>
+    )
+  }
+
   const name    = [teacher.user.firstName, teacher.user.lastName].filter(Boolean).join(' ') || teacher.user.email
   const now     = new Date()
-  const upcoming = schedules.filter((s) => new Date(s.startTime) >= now)
-  const past     = schedules.filter((s) => new Date(s.startTime) < now)
+  const upcoming = (schedules ?? []).filter((s) => new Date(s.startTime) >= now)
+  const past     = (schedules ?? []).filter((s) => new Date(s.startTime) < now)
 
   return (
     <div className="flex flex-col gap-6">

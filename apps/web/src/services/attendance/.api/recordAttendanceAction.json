@@ -1,7 +1,7 @@
 {
   "name": "recordAttendanceAction",
   "file": "src/services/attendance/actions/attendance.mutations.ts",
-  "sig": "(token: string, coords?: { lat: number; lng: number }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; status: AttendanceStatus; } | { id: string; status: AttendanceStatus; alreadyRecorded: boolean; }; error?: undefined; }>",
+  "sig": "(token: string, coords?: { lat: number; lng: number }) => Promise<{ error: string; data?: undefined; } | { data: { id: string; status: AttendanceStatus; } | { id: string; status: AttendanceStatus; alreadyRecorded: boolean; }; error?: undefined; }>",
   "calls": [
     "validateSessionToken",
     "recordAttendance"

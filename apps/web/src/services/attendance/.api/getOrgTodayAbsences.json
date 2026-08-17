@@ -1,7 +1,7 @@
 {
   "name": "getOrgTodayAbsences",
   "file": "src/services/attendance/database/analytics.ts",
-  "sig": "(orgId: string) => Promise<{ id: string; student: { user: { firstName: string | null; lastName: string | null; }; }; schedule: { class: { name: string; }; course: { name: string; }; group: { name: string; } | null; startTime: Date; }; }[]>",
+  "sig": "(orgId: string) => Promise<{ id: string; schedule: { startTime: Date; class: { name: string; }; course: { name: string; }; group: { name: string; } | null; }; student: { user: { firstName: string | null; lastName: string | null; }; }; }[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

@@ -147,7 +147,7 @@ export async function getClassInvitationsAction({ classId }: { classId: string }
     if (!orgId) throw new Error(ERRORS.ORG.NOT_FOUND);
 
     const auth = await getAuthorization(user, "DIRECTION", "PRINCIPAL");
-    if (auth.success === false) throw new Error(auth.error);
+    if (auth.error) throw new Error(auth.error);
 
 
     const data = await getClassInvitations(classId, orgId);

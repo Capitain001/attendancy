@@ -58,7 +58,7 @@ export function getAuthorization(
   user: Partial<UserInfo>,
   requiredRole?: Role | Role[],
   requiredFunction?: Functions
-): AuthorizationResult {
+) {
   const userRole = user.role;
   const userFunction = user.function;
 

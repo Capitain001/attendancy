@@ -53,7 +53,7 @@ export function ProgramTrackActions({
 
     setLoading(false);
 
-    if (res.success) {
+    if (!res?.error) {
       setOpenDelete(false);
     }
   };

@@ -5,7 +5,7 @@ import { ERRORS } from '@/config'
 import { getCourse, getCourseDetail, getAllCourses, getCourses } from '../database'
 
 export async function getCourseAction(courseId: string) {
-  const auth = await authAccess()
+  const auth = await authAccess({})
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
 

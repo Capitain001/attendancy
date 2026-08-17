@@ -1,7 +1,7 @@
 {
   "name": "confirmAttendanceAction",
   "file": "src/services/attendance/actions/attendance.mutations.ts",
-  "sig": "({ attendanceId }: { attendanceId: string }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; status: AttendanceStatus; userId: string; confirmed: boolean; }; error?: undefined; }>",
+  "sig": "({ attendanceId }: { attendanceId: string }) => Promise<{ error: string; data?: undefined; } | { data: { id: string; status: AttendanceStatus; userId: string; confirmed: boolean; }; error?: undefined; }>",
   "calls": [
     "confirmAttendance"
   ],

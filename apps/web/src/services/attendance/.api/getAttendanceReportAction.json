@@ -1,7 +1,7 @@
 {
   "name": "getAttendanceReportAction",
   "file": "src/services/attendance/actions/attendance.queries.ts",
-  "sig": "(params: { classId?: string startDate?: Date endDate?: Date } = {}) => Promise<{ error: any; data?: undefined; } | { data: { studentId: string; firstName: string | null; lastName: string | null; classId: string | null; className: string | null; absences: number; denominator: number; rate: number | null; }[]; error?: undefined; }>",
+  "sig": "(params: { classId?: string startDate?: Date endDate?: Date } = {}) => Promise<{ error: string; data?: undefined; } | { data: { studentId: string; firstName: string | null; lastName: string | null; classId: string | null; className: string | null; absences: number; denominator: number; rate: number | null; }[]; error?: undefined; }>",
   "calls": [
     "getAttendanceReport"
   ],

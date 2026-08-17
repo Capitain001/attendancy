@@ -16,10 +16,16 @@ export function EditProgramForm({ program, slug }: EditProgramFormProps) {
 
   const handleSubmit = async (data: {
     name: string;
-    description: string | null;
+    description?: string | null;
   }) => {
     try {
-      const res = await updateProgramAction(program.id, data);
+      const res = await updateProgramAction({
+        programId: program.id,
+        data: {
+          name: data.name,
+          description: data.description ?? undefined,
+        },
+      });
       if ("error" in res && res.error) {
         toast.error(res.error);
         return;

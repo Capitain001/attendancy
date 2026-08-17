@@ -1,7 +1,7 @@
 {
   "name": "getProgramTracks",
   "file": "src/services/program-track/database/programTrack.queries.ts",
-  "sig": "({ orgId, departmentId }: { orgId: string; departmentId?: string }) => Promise<{ name: string; id: string; _count: { classes: number; }; department: { name: string; id: string; }; description: string | null; }[]>",
+  "sig": "({ orgId, departmentId }: { orgId: string; departmentId?: string }) => Promise<{ id: string; name: string; description: string | null; department: { id: string; name: string; }; _count: { classes: number; }; }[]>",
   "cache": {
     "strategy": "unstable_cache",
     "keys": [

@@ -7,7 +7,7 @@ import type { CreateCourseInput, UpdateCourseInput } from '../validation'
 import { createCourse, removeCourse, updateCourse } from '../database'
 
 export async function createCourseAction(input: CreateCourseInput) {
-  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  const auth = await authAccess({ requiredRole: 'DIRECTION' , requie})
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
 

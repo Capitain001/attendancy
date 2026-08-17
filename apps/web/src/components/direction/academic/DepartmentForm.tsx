@@ -8,13 +8,15 @@ import { FormDialog } from '@/components/ui/FormDialog'
 import { DialogFooter } from '@/components/ui/dialog'
 
 function CreateForm({ close }: { close: () => void }) {
-  const { create, isCreating } = useDepartments()
+  const { create: createDepartment, isCreating } = useDepartments() as ReturnType<typeof useDepartments> & {
+    create: (input: { name: string }) => Promise<unknown>
+  }
   const ref = useRef<HTMLFormElement>(null)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const fd = new FormData(e.currentTarget)
-    await create({ name: fd.get('name') as string })
+    await createDepartment({ name: fd.get('name') as string })
     ref.current?.reset()
     close()
   }
@@ -44,12 +46,14 @@ function CreateForm({ close }: { close: () => void }) {
 }
 
 function EditForm({ id, currentName, close }: { id: string; currentName: string; close: () => void }) {
-  const { update, isUpdating } = useDepartments()
+  const { update: updateDepartment, isUpdating } = useDepartments() as ReturnType<typeof useDepartments> & {
+    update: (input: { id: string; data: { name: string } }) => Promise<unknown>
+  }
   const [name, setName] = useState(currentName)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    await update({ id, data: { name } })
+    await updateDepartment({ id, data: { name } })
     close()
   }
 

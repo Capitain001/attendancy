@@ -4,15 +4,16 @@
 "use server";
 
 import { InvitationParams, InvitationResult } from "@/types/invitation";
-import { getUserInfo }                        from "../user";
-import { generateInvitationToken }            from "./token";
-import { generateInvitationMetadata }         from "./metadata";
-import { sendSupabaseInvitation }             from "./invitation";
-import { saveInvitationWithAudit }            from "./database";
-import { Action }                             from "@/generated/prisma";
-import { getAuthorization }                   from "../auth/persmission";
+import { getUserInfo } from "../user";
+import { generateInvitationToken } from "./token";
+import { generateInvitationMetadata } from "./metadata";
+import { sendSupabaseInvitation } from "./invitation";
+import { saveInvitationWithAudit } from "./database";
+import { Action } from "@/generated/prisma";
+import { getAuthorization } from "../auth/persmission";
+// : Promise<InvitationResult>
 
-export async function inviteUser(params: InvitationParams): Promise<InvitationResult> {
+export async function inviteUser(params: InvitationParams) {
   try {
     // ---------------------------------------------------------
     // 1. Validation de l'identité (Authentification)
@@ -30,8 +31,8 @@ export async function inviteUser(params: InvitationParams): Promise<InvitationRe
     // Vérifie que l'utilisateur possède au moins le rôle DIRECTION ou TEACHER
     // pour avoir le droit d'émettre des invitations.
     const authCheck = await getAuthorization(user, ["DIRECTION", "TEACHER"]);
-    if (!authCheck.success) {
-      return authCheck;
+    if (authCheck.error) {
+      return { error: authCheck.error };
     }
 
     // ---------------------------------------------------------
@@ -89,16 +90,17 @@ export async function inviteUser(params: InvitationParams): Promise<InvitationRe
     // 7. Retour d'état au client
     // ---------------------------------------------------------
     return {
-      success: true,
-      message: `Invitation envoyée à ${params.email}`,
-      metadata,
+      data: {
+        success: true,
+        message: `Invitation envoyée à ${params.email}`,
+        metadata,
+      }
     };
 
   } catch (error) {
     // Capture globale des exceptions (ex: erreur Prisma, timeout)
     console.error("Invitation error:", error);
     return {
-      success: false,
       error: "Erreur lors du traitement de l'invitation",
     };
   }

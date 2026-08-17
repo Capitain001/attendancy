@@ -1,7 +1,7 @@
 {
   "name": "getClassScheduleOptionsAction",
   "file": "src/services/schedule/actions/schedule.queries.ts",
-  "sig": "(classId: string) => Promise<{ error: any; data?: undefined; } | { data: { courses: { id: string; name: string; teachers: { id: string; name: string; isMain: boolean; }[]; }[]; rooms: { id: string; name: string; }[]; groups: { id: string; name: string; }[]; }; error?: undefined; }>",
+  "sig": "(classId: string) => Promise<{ error: string; data?: undefined; } | { data: { courses: { id: string; name: string; teachers: { id: string; name: string; isMain: boolean; }[]; }[]; rooms: { id: string; name: string; }[]; groups: { id: string; name: string; }[]; }; error?: undefined; }>",
   "calls": [
     "getCourses",
     "getRooms"

@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface CollapseSectionProps {
   label: string;
   children: React.ReactNode;
   defaultOpen?: boolean;
   count?: number;
+  className?: string;
 }
 
 export function CollapseSection({
@@ -15,11 +17,12 @@ export function CollapseSection({
   children,
   defaultOpen = true,
   count,
+  className,
 }: CollapseSectionProps) {
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <div className="mt-6">
+    <div className={cn("mt-6", className)}>
       <button
         onClick={() => setOpen((v) => !v)}
         className="group flex w-full items-center gap-3 text-left"
@@ -59,3 +62,4 @@ export function CollapseSection({
     </div>
   );
 }
+

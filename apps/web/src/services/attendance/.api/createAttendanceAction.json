@@ -1,7 +1,7 @@
 {
   "name": "createAttendanceAction",
   "file": "src/services/attendance/actions/attendance.mutations.ts",
-  "sig": "({ scheduleId, studentId, status, enrollmentId }: { scheduleId: string; studentId: string; status?: AttendanceStatus; enrollmentId: string }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; status: AttendanceStatus; }; error?: undefined; }>",
+  "sig": "({ scheduleId, studentId, status, enrollmentId }: { scheduleId: string; studentId: string; status?: AttendanceStatus; enrollmentId: string }) => Promise<{ error: string; data?: undefined; } | { data: { id: string; status: AttendanceStatus; }; error?: undefined; }>",
   "calls": [
     "createAttendance"
   ],

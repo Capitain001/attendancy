@@ -95,7 +95,7 @@ export async function deleteParentRelationWithAudit(params: {
 
   // Scope org direct (A-XX) : orgId porté par la relation.
   const rel = await prisma.parentRelation.findFirst({
-    where: { id: relationId, orgId, deletedAt: null },
+    where: { id: relationId, orgId},
     select: {
       id: true,
       studentId: true,
@@ -106,11 +106,9 @@ export async function deleteParentRelationWithAudit(params: {
   if (!rel) throw new Error("Relation introuvable");
 
   await prisma.$transaction(async (tx) => {
-    // Soft-delete (A-XX) : la ligne reste tracée ; l'index unique partiel
-    // (deletedAt IS NULL) la libère → relink possible ensuite.
-    await tx.parentRelation.update({
+    // Suppression physique de la relation
+    await tx.parentRelation.delete({
       where: { id: rel.id },
-      data: { deletedAt: new Date() },
     });
     await tx.auditLog.create({
       data: {

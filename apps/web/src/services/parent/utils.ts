@@ -7,7 +7,7 @@
 // présence physique en attente de validation prof. On l'affiche donc "En cours",
 // jamais "absent". Voir ATTENDANCE_CONTEXT.md / policy.ts.
 
-import type { AttendanceStatus, SessionStatus } from "@prisma/client";
+import type { AttendanceStatus, SessionStatus } from "@/generated/prisma/client";
 
 export type ParentStatusInput = {
   courseName?: string | null;

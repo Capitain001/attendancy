@@ -1,7 +1,7 @@
 {
   "name": "getActiveSessions",
   "file": "src/services/session/database/session.queries.ts",
-  "sig": "(orgId: string) => Promise<{ id: string; schedule: { id: string; class: { name: string; }; course: { name: string; id: string; }; teacher: { id: string; user: { avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; ... 4 more ...; groupId: string | null; }; status: SessionStatus; checkIn: Date | null; }[]>",
+  "sig": "(orgId: string) => Promise<{ schedule: { class: { name: string; }; course: { id: string; name: string; }; teacher: { user: { firstName: string | null; lastName: string | null; avatar_url: string | null; }; id: string; }; room: { ...; }; ... 4 more ...; groupId: string | null; }; id: string; status: SessionStatus; checkIn: Date | null;...",
   "composes": [],
   "rules": [],
   "why_ref": ""

@@ -8,7 +8,9 @@ import { FormDialog } from '@/components/ui/FormDialog'
 import { DialogFooter } from '@/components/ui/dialog'
 
 function Form({ close }: { close: () => void }) {
-  const { create, isCreating } = useRooms()
+  const rooms = useRooms()
+  const create = rooms.create
+  const isCreating = rooms.isCreating
   const ref = useRef<HTMLFormElement>(null)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -18,6 +20,7 @@ function Form({ close }: { close: () => void }) {
     const capRaw   = fd.get('capacity') as string
     const capacity = capRaw ? parseInt(capRaw, 10) : undefined
 
+    if (!create) return
     await create({ name, capacity })
     ref.current?.reset()
     close()

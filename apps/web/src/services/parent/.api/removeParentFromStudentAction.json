@@ -1,7 +1,7 @@
 {
   "name": "removeParentFromStudentAction",
   "file": "src/services/parent/actions.ts",
-  "sig": "(input: unknown) => Promise<{ error: any; data?: undefined; } | { data: { relationId: string; studentId: string; parentId: string; }; error?: undefined; }>",
+  "sig": "(input: unknown) => Promise<{ error: string; data?: undefined; } | { data: { relationId: string; studentId: string; parentId: string; }; error?: undefined; }>",
   "calls": [
     "deleteParentRelationWithAudit"
   ],

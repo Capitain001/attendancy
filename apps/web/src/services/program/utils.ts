@@ -1,9 +1,9 @@
 
 import { groupByRelation } from "../../lib/filter";
-import { ProgramListDto } from "./types";
+import { GetProgramListDto } from "./types";
 
 export function groupProgramsByTrack(
-  programs: ProgramListDto
+  programs: GetProgramListDto
 ) {
   return groupByRelation(programs, (p) => p.programTrack)
     .map((group) => ({

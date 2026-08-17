@@ -16,7 +16,9 @@ type RoomItem = {
 }
 
 function RoomRow({ room }: { room: RoomItem }) {
-  const { delete: remove, isDeleting } = useRooms()
+  const rooms = useRooms()
+  const remove = rooms.delete
+  const isDeleting = rooms.isDeleting
 
   return (
     <div className={cn(card.base, 'flex items-center gap-3')}>
@@ -51,7 +53,7 @@ function RoomRow({ room }: { room: RoomItem }) {
           <Button
             variant="ghost"
             size="sm"
-            disabled={isDeleting}
+            disabled={isDeleting || !remove}
             className="shrink-0 text-xs text-destructive hover:text-destructive"
           >
             Retirer
@@ -61,17 +63,19 @@ function RoomRow({ room }: { room: RoomItem }) {
         description="La salle sera désactivée et ne sera plus disponible pour la planification."
         confirmLabel="Retirer"
         destructive
-        onConfirm={() => remove(room.id)}
+        onConfirm={() => {
+          if (remove) void remove(room.id)
+        }}
       />
     </div>
   )
 }
 
 export function RoomList({ initialRooms }: { initialRooms: RoomItem[] }) {
-  const { data: rooms, isLoading } = useRooms()
-  const data = (rooms as RoomItem[] | undefined)?.length
-    ? (rooms as RoomItem[])
-    : initialRooms
+  const roomsHook = useRooms()
+  const rooms = roomsHook.data?.items as RoomItem[] | undefined
+  const isLoading = roomsHook.loading
+  const data = rooms?.length ? rooms : initialRooms
 
   return (
     <CollapseSection label="Salles" count={data.length} defaultOpen>

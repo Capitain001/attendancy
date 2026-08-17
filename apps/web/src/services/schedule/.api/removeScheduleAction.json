@@ -1,7 +1,7 @@
 {
   "name": "removeScheduleAction",
   "file": "src/services/schedule/actions/schedule.mutations.ts",
-  "sig": "(scheduleId: string) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
+  "sig": "(scheduleId: string) => Promise<{ error: string; data?: undefined; } | { data: true; error?: undefined; }>",
   "calls": [
     "removeSchedule"
   ],

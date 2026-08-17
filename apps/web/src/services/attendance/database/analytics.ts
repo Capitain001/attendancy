@@ -119,8 +119,8 @@ export async function getAttendanceReport(
 
   if (rows.length === 0) return []
 
-  const numSet = new Set(ATTENDANCE_NUMERATOR_STATUSES)
-  const denSet = new Set(ATTENDANCE_DENOMINATOR_STATUSES)
+  const numSet: Set<typeof rows[number]['status']> = new Set(ATTENDANCE_NUMERATOR_STATUSES)
+  const denSet: Set<typeof rows[number]['status']> = new Set(ATTENDANCE_DENOMINATOR_STATUSES)
 
   const acc: Record<string, { numerator: number; denominator: number; absences: number }> = {}
   for (const r of rows) {

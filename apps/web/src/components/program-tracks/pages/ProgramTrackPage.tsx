@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 
-import { useProgramTracks } from "@/hooks/data/programTracks/useProgramTracks";
+import { useManageProgramTracks } from "@/hooks/data/program-track/useManageProgramTracks";
 import { useDepartments } from "@/hooks/data/departments/useDepartments";
 
 import { ProgramTrackDialog } from "../dialog/ProgramTrackDialog";
@@ -14,20 +14,10 @@ export default function ProgramTrackPage() {
   // =====================
   // Data
   // =====================
-  const {
-    data,
-    loading,
-    error,
-    delete: remove,
-  } = useProgramTracks({ });
+  const { tracks, isLoading, remove } = useManageProgramTracks();
+  const { data: departmentsData, loading: departmentsLoading } = useDepartments();
 
-  const programTracks = data?.items ?? [];
-
-  const {
-    data: departmentsData,
-    loading: departmentsLoading,
-  } = useDepartments();
-
+  const programTracks = tracks;
   const departments = departmentsData?.items ?? [];
 
   // =====================
@@ -52,12 +42,8 @@ export default function ProgramTrackPage() {
   // =====================
   // Render
   // =====================
-  if (loading || departmentsLoading) {
+  if (isLoading || departmentsLoading) {
     return <div>Chargement...</div>;
-  }
-
-  if (error) {
-    return <div className="text-red-500">Erreur de chargement</div>;
   }
 
   return (

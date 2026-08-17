@@ -26,16 +26,19 @@ export function useManageAcademicYears() {
   const create = useMutation({
     mutationFn: createAcademicYearAction,
     onSuccess: (r) => {
-      if ('error' in r) { customToast.error(r.error); return }
+      if ('error' in r) { customToast.error(r.error ?? 'Erreur inconnue'); return }
       invalidate()
       customToast.success('Année académique créée')
     },
   })
 
   const setCurrent = useMutation({
-    mutationFn: (academicYearId: string) => setCurrentYearAction({ academicYearId }),
+    mutationFn: async (academicYearId: string) => {
+      if (!academicYearId) throw new Error('Aucune année sélectionnée')
+      return setCurrentYearAction({ academicYearId })
+    },
     onSuccess: (r) => {
-      if ('error' in r) { customToast.error(r.error); return }
+      if ('error' in r) { customToast.error(r.error ?? 'Erreur inconnue'); return }
       invalidate()
       customToast.success('Année courante définie')
     },
@@ -44,7 +47,7 @@ export function useManageAcademicYears() {
   const remove = useMutation({
     mutationFn: removeAcademicYearAction,
     onSuccess: (r) => {
-      if ('error' in r) { customToast.error(r.error); return }
+      if ('error' in r) { customToast.error(r.error ?? 'Erreur inconnue'); return }
       invalidate()
       customToast.success('Année archivée')
     },

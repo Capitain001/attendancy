@@ -1,6 +1,6 @@
 import { Layers } from "lucide-react";
 
-import { CollapseSection } from "@/components/courses/pages/DirectionCoursePage";
+import { CollapseSection } from "@/components/layout/CollapseSection";
 import type { ProgramTrackByDepartment } from "@/services/program-track/types";
 
 import { ProgramTrackCard } from "./ProgramTrackCard";

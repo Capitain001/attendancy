@@ -1,7 +1,7 @@
 {
   "name": "generateTokenAction",
   "file": "src/services/session/actions/token.actions.ts",
-  "sig": "(sessionId: string) => Promise<{ error: any; data?: undefined; } | { data: { token: string; expiresAt: Date; url: string; }; error?: undefined; }>",
+  "sig": "(sessionId: string) => Promise<{ error: string; data?: undefined; } | { data: { token: string; expiresAt: Date; url: string; }; error?: undefined; }>",
   "calls": [
     "createSessionToken"
   ],

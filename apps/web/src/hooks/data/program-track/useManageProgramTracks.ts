@@ -26,7 +26,7 @@ export function useManageProgramTracks(departmentId?: string) {
   const create = useMutation({
     mutationFn: createProgramTrackAction,
     onSuccess: (r) => {
-      if ('error' in r) { customToast.error(r.error); return }
+      if ('error' in r) { customToast.error(r.error ?? 'Erreur inconnue'); return }
       invalidate()
       customToast.success('Filière créée')
     },
@@ -36,16 +36,19 @@ export function useManageProgramTracks(departmentId?: string) {
     mutationFn: ({ id, data }: { id: string; data: { name?: string; departmentId?: string } }) =>
       updateProgramTrackAction(id, data),
     onSuccess: (r) => {
-      if ('error' in r) { customToast.error(r.error); return }
+      if ('error' in r) { customToast.error(r.error ?? 'Erreur inconnue'); return }
       invalidate()
       customToast.success('Filière mise à jour')
     },
   })
 
   const remove = useMutation({
-    mutationFn: deleteProgramTrackAction,
+    mutationFn: async (programTrackId: string) => {
+      if (!programTrackId) throw new Error('Aucune filière sélectionnée')
+      return deleteProgramTrackAction(programTrackId)
+    },
     onSuccess: (r) => {
-      if ('error' in r) { customToast.error(r.error); return }
+      if ('error' in r) { customToast.error(r.error ?? 'Erreur inconnue'); return }
       invalidate()
       customToast.success('Filière supprimée')
     },

@@ -1,13 +1,18 @@
-import { DirectionCourseDetailPage } from '@/components/courses/direction'
+
 import { validateUUID } from '@/utils/server/validation'
+import { div } from 'motion/react-client';
 
 interface PageProps {
-  params: Promise<{ courseId: string; slug: string }>
+  params: Promise<{ ueId: string; slug: string }>
 }
 
 export default async function Page({ params }: PageProps) {
-  const { courseId, slug } = await params
+  const { ueId, slug } = await params
   // UUID invalide → notFound() immédiat, avant toute requête DB du détail cours.
-  validateUUID(courseId)
-  return <DirectionCourseDetailPage courseId={courseId} slug={slug} />
+  validateUUID(ueId)
+  return (
+    <div className='p-3'>
+      DetailUE
+    </div>
+  )
 }

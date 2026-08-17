@@ -22,16 +22,19 @@ export function useManageUEs(departmentId?: string) {
     mutationFn: (data: { name: string; code?: string; departmentId?: string }) =>
       createUEAction({ data }),
     onSuccess: (r) => {
-      if ('error' in r) { customToast.error(r.error); return }
+      if ('error' in r) { customToast.error(r.error ?? 'Erreur inconnue'); return }
       invalidate()
       customToast.success('UE créée')
     },
   })
 
   const archive = useMutation({
-    mutationFn: archiveUEAction,
+    mutationFn: async (ueId: string) => {
+      if (!ueId) throw new Error('Aucune UE sélectionnée')
+      return archiveUEAction(ueId)
+    },
     onSuccess: (r) => {
-      if ('error' in r) { customToast.error(r.error); return }
+      if ('error' in r) { customToast.error(r.error ?? 'Erreur inconnue'); return }
       invalidate()
       customToast.success('UE archivée')
     },

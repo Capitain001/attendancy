@@ -1,7 +1,7 @@
 {
   "name": "getPlanningResourcesAction",
   "file": "src/services/planning/actions.ts",
-  "sig": "(classId: string) => Promise<{ error: any; data?: undefined; } | { data: { class: { id: string; name: string; }; rooms: { name: string; id: string; }[]; groups: { name: string; id: string; }[]; courses: { id: string; name: string; teachers: { id: string | undefined; name: string; email: string | undefined; avatar_url: string | ... 1 mor...",
+  "sig": "(classId: string) => Promise<{ error: string; data?: undefined; } | { data: { class: { id: string; name: string; }; rooms: { id: string; name: string; }[]; groups: { id: string; name: string; }[]; courses: { id: string; name: string; teachers: { ...; }[]; }[]; }; error?: undefined; }>",
   "calls": [
     "getPlanningResources"
   ],

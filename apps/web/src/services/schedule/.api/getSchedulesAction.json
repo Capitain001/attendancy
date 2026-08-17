@@ -1,7 +1,7 @@
 {
   "name": "getSchedulesAction",
   "file": "src/services/schedule/actions/schedule.queries.ts",
-  "sig": "(params: Omit<ScheduleFilterParams, 'orgId'>) => Promise<{ error: any; data?: undefined; } | { data: ({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { ...; }; } & { ...; })[]; error?: undefined; }>",
+  "sig": "(params: Omit<ScheduleFilterParams, 'orgId'>) => Promise<{ error: string; data?: undefined; } | { data: ({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { ...; }; } & { ...; })[]; error?: undefined; }>",
   "calls": [
     "getSchedules"
   ],

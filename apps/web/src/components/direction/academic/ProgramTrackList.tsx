@@ -8,7 +8,7 @@ import { useManageProgramTracks } from '@/hooks/data/program-track/useManageProg
 import { card, typography } from '@/styles'
 import { cn } from '@/lib/utils'
 import type { GetProgramTracksDto } from '@/services/program-track'
-import type { DepartmentItem } from '@/services/department'
+import type { DepartmentDto } from '@/services/department/types'
 
 type ProgramTrackItem = NonNullable<GetProgramTracksDto>[number]
 
@@ -17,7 +17,7 @@ function ProgramTrackRow({
   departments,
 }: {
   track: ProgramTrackItem
-  departments: DepartmentItem[]
+  departments: DepartmentDto[]
 }) {
   const { remove } = useManageProgramTracks()
 
@@ -75,7 +75,7 @@ export function ProgramTrackList({
   departments,
 }: {
   initialTracks: ProgramTrackItem[]
-  departments: DepartmentItem[]
+  departments: DepartmentDto[]
 }) {
   const { tracks, isLoading } = useManageProgramTracks()
   const data = tracks.length > 0 ? tracks : initialTracks

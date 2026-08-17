@@ -1,7 +1,7 @@
 {
   "name": "assignParentToStudentAction",
   "file": "src/services/parent/actions.ts",
-  "sig": "(input: unknown) => Promise<{ error: any; data?: undefined; } | { data: { relationId: string; }; error?: undefined; }>",
+  "sig": "(input: unknown) => Promise<{ error: string; data?: undefined; } | { data: { relationId: string; }; error?: undefined; }>",
   "calls": [
     "createParentRelationWithAudit"
   ],

@@ -1,7 +1,7 @@
 {
   "name": "getOrgStudentAttendanceRatesAction",
   "file": "src/services/attendance/actions/attendance.queries.ts",
-  "sig": "() => Promise<{ error: any; data?: undefined; } | { data: Record<string, { rate: number | null; absences: number; denominator: number; }>; error?: undefined; }>",
+  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: Record<string, { rate: number | null; absences: number; denominator: number; }>; error?: undefined; }>",
   "calls": [
     "getOrgStudentAttendanceRates"
   ],

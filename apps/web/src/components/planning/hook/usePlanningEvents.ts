@@ -125,21 +125,21 @@ export function usePlanningEvents(opts: UsePlanningEventsOptions) {
 
       const updatedPayload = {
         courseId, teacherId, roomId,
-        startTime: new Date(e.start), endTime: new Date(e.end),
-        groupId: groupId ?? null, notes: e.description ?? null,
+        startTime: new Date(e.start).toISOString(), endTime: new Date(e.end).toISOString(),
+        groupId: groupId ?? undefined, notes: e.description ?? null,
         confirmed: e.meta.confirmed ?? false, status: e.meta.status ?? "PENDING",
       };
       const initialPayload = previous ? {
         courseId: previous.meta.courseId, teacherId: previous.meta.teacherId, roomId: previous.meta.roomId,
-        startTime: new Date(previous.start), endTime: new Date(previous.end),
-        groupId: previous.meta.groupId ?? null, notes: previous.description ?? null,
+        startTime: new Date(previous.start).toISOString(), endTime: new Date(previous.end).toISOString(),
+        groupId: previous.meta.groupId ?? undefined, notes: previous.description ?? null,
         confirmed: previous.meta.confirmed ?? false, status: previous.meta.status ?? "PENDING",
       } : undefined;
 
       const changedData = diff(updatedPayload, initialPayload);
       if (Object.keys(changedData).length === 0) return true;
 
-      const res = await updateScheduleAction(e.id, changedData);
+      const res = await updateScheduleAction({scheduleId:e.id, data: changedData});
       if (res.error || !res.data) {
         if (previous) setEvents((prev) => prev.map((x) => (x.id === e.id ? previous : x)));
         if (res.error === ERRORS.SCHEDULE.CONFLICT) { await notifyConflict(classId, detailsParams); return false; }
@@ -175,9 +175,10 @@ export function usePlanningEvents(opts: UsePlanningEventsOptions) {
     const { courseId, teacherId, roomId, groupId } = e.meta;
     const res = await createScheduleAction({
       courseId, teacherId, roomId, classId,
-      startTime: new Date(e.start), endTime: new Date(e.end),
-      groupId: groupId ?? null, notes: e.description ?? null,
-      confirmed: e.meta.confirmed ?? false, status: e.meta.status ?? "PENDING",
+      startTime: new Date(e.start).toISOString(), endTime: new Date(e.end).toISOString(),
+      groupId: groupId ?? undefined, notes: e.description ?? null,
+      confirmed: e.meta.confirmed ?? false, 
+      // status: e.meta.status ?? "PENDING",
     });
 
     if (res.error || !res.data) {

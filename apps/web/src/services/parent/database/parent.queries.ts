@@ -22,13 +22,12 @@ export async function getParentStudents(parentId: string, orgId: string) {
       const relations = await prisma.parentRelation.findMany({
         where: {
           parentId,
-          deletedAt: null,
           student: {
             deletedAt: null,
             user: { deletedAt: null },
             // scope org : enfant inscrit dans une classe de cette organisation
             studentEnrollments: {
-              some: { deletedAt: null, class: { programTrack: { orgId } } },
+              some: { endedAt: null, class: { programTrack: { orgId } } },
             },
           },
         },
@@ -51,7 +50,7 @@ export async function getParentStudents(parentId: string, orgId: string) {
               // enrollment actif (scopé org) — uniquement le nom de classe pour le hub.
               // PAS de classId/groupIds ici : le détail les obtient via getStudentProfile.
               studentEnrollments: {
-                where: { deletedAt: null, class: { programTrack: { orgId } } },
+                where: { endedAt: null, class: { programTrack: { orgId } } },
                 orderBy: { createdAt: "desc" },
                 take: 1,
                 select: { class: { select: { name: true } } },
@@ -98,7 +97,6 @@ export const isStudentParent = cache(
       where: {
         parentId,
         studentId,
-        deletedAt: null,
       },
       select: {
         id: true,
@@ -148,7 +146,7 @@ export async function searchEligibleParents(params: {
         ? {
             NOT: {
               parentRelations: {
-                some: { studentId: excludeStudentId, deletedAt: null },
+                some: { studentId: excludeStudentId },
               },
             },
           }
@@ -191,7 +189,6 @@ export async function getParentUserIdsForStudents(
   const relations = await prisma.parentRelation.findMany({
     where: {
       studentId: { in: studentIds },
-      deletedAt: null,
       parent: {
         deletedAt: null,
         user: {
