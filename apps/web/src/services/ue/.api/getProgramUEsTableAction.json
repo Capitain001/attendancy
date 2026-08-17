@@ -1,7 +1,7 @@
 {
   "name": "getProgramUEsTableAction",
   "file": "src/services/ue/actions/ue.queries.ts",
-  "sig": "({ programId }: { programId: string }) => Promise<{ error: any; data?: undefined; } | { data: ProgramTable; error?: undefined; }>",
+  "sig": "({ programId }: { programId: string }) => Promise<{ error: string; data?: undefined; } | { data: ProgramTable; error?: undefined; }>",
   "calls": [
     "getProgramUEs"
   ],

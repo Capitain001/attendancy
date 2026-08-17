@@ -1,7 +1,7 @@
 {
   "name": "archiveUEAction",
   "file": "src/services/ue/actions/ue.mutations.ts",
-  "sig": "(ueId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "sig": "(ueId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
   "calls": [
     "removeUE"
   ],

@@ -1,0 +1,8 @@
+{
+  "name": "getUEById",
+  "file": "src/services/ue/database/ue.queries.ts",
+  "sig": "(id: string, orgId: string) => Promise<{ name: string; id: string; code: string | null; description: string | null; departmentId: string | null; isOptional: boolean; type: UEType; department: { name: string; id: string; } | null; ueCourses: { ...; }[]; } | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

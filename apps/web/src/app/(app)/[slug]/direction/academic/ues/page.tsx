@@ -26,18 +26,16 @@ export default async function CoursesPage() {
 
   return (
     <div className="flex flex-col gap-y-4">
-
+      <SectionHeader
+        title="Unités d'enseignement"
+        action={<UECreateButton departments={departments ?? []} />}
+      />
       <div className="p-0.5 w-full bg-muted rounded">
         <span className="w-1/2 mx-auto bg-primary rounded block text-center text-sm font-medium text-primary-foreground">
           LISTE DES UNITÉS D'ENSEIGNEMENT
           {/* a remplacer par autre info */}
         </span>
       </div>
-
-      <SectionHeader
-        title="Unités d'enseignement"
-        action={<UECreateButton departments={departments ?? []} />}
-      />
 
       <section className="grid grid-cols-2 gap-3 lg:grid-cols-3">
         <MetricCard

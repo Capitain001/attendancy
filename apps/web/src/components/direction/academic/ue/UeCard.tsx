@@ -80,6 +80,12 @@ export const UECard = React.forwardRef<HTMLAnchorElement, UECardProps>(
             {ue.department?.name ?? "Département non renseigné"}
           </p>
 
+          {ue.description && (
+            <p className="mt-3 text-xs text-muted-foreground/80 line-clamp-2 leading-relaxed">
+              {ue.description}
+            </p>
+          )}
+
           <div className="mt-auto flex items-center gap-2 border-t border-border/40 pt-3 text-xs text-muted-foreground">
             <span>{ecCount} EC</span>
             <span className="text-border">·</span>

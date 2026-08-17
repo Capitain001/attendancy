@@ -1,7 +1,7 @@
 'use server'
 import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
-import { getUEs, getProgramUEs } from '../database'
+import { getUEs, getProgramUEs, getUEById } from '../database'
 import { getProgramUEsTable } from '../utils'
 
 export async function getUEsAction(departmentId?: string) {
@@ -40,3 +40,15 @@ export async function getProgramUEsTableAction({ programId }: { programId: strin
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
+
+export async function getUEByIdAction({ ueId }: { ueId: string }) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
+  try {
+    return { data: await getUEById(ueId, orgId) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}

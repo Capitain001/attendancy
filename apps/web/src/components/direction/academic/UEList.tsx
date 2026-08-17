@@ -3,7 +3,7 @@ import { BookOpen } from 'lucide-react'
 import { CollapseSection } from '@/components/layout/CollapseSection'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { Button } from '@/components/ui/button'
-import { useManageUEs } from '@/hooks/data/ue/useManageUEs'
+import { useUEs } from '@/hooks/data/ue/useUEs'
 import { card, typography } from '@/styles'
 import { cn } from '@/lib/utils'
 import { GetUEsDto } from '@/services/ue'
@@ -17,7 +17,7 @@ type UERow = {
 }
 
 function UEItem({ ue }: { ue: GetUEsDto[number] }) {
-  const { archive } = useManageUEs()
+  const { delete: archive } = useUEs()
 
   return (
     <div className={cn(card.base, 'flex items-center gap-3')}>
@@ -47,14 +47,14 @@ function UEItem({ ue }: { ue: GetUEsDto[number] }) {
         description="L'UE sera désactivée. L'historique est conservé."
         confirmLabel="Archiver"
         destructive
-        onConfirm={() => archive.mutate(ue.id)}
+        onConfirm={() => archive?.(ue.id)}
       />
     </div>
   )
 }
 
 export function UEList({ initialUEs }: { initialUEs: GetUEsDto }) {
-  const { ues, isLoading } = useManageUEs()
+  const { data: ues = [], isLoading } = useUEs()
   const data = ues.length > 0 ? (ues) : initialUEs
 
   return (

@@ -1,6 +1,6 @@
 'use client'
 import { useRef } from 'react'
-import { useManageUEs } from '@/hooks/data/ue/useManageUEs'
+import { useUEs } from '@/hooks/data/ue/useUEs'
 import { input } from '@/styles/input'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
@@ -11,7 +11,7 @@ import { GetDepartmentsDto } from '@/services/department'
 
 
 function CreateForm({ departments, close }: { departments: GetDepartmentsDto; close: () => void }) {
-  const { create } = useManageUEs()
+  const { create, isCreating } = useUEs()
   const ref = useRef<HTMLFormElement>(null)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -21,7 +21,7 @@ function CreateForm({ departments, close }: { departments: GetDepartmentsDto; cl
     const code         = (fd.get('code') as string) || undefined
     const departmentId = (fd.get('departmentId') as string) || undefined
 
-    await create.mutateAsync({ name, code, departmentId })
+    await create?.({ data: { name, code, departmentId } })
     ref.current?.reset()
     close()
   }
@@ -66,8 +66,8 @@ function CreateForm({ departments, close }: { departments: GetDepartmentsDto; cl
 
       <DialogFooter>
         <Button type="button" variant="outline" size="sm" onClick={close}>Annuler</Button>
-        <Button type="submit" size="sm" disabled={create.isPending}>
-          {create.isPending ? 'Création…' : 'Créer'}
+        <Button type="submit" size="sm" disabled={isCreating}>
+          {isCreating ? 'Création…' : 'Créer'}
         </Button>
       </DialogFooter>
     </form>

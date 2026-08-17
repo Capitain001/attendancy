@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { LayoutGrid, List, LibraryBig, Download } from "lucide-react"
+import { useLocalStorage } from "@/hooks/use-local-storage"
+import { LayoutGrid, List, LibraryBig, Download, Plus } from "lucide-react"
 import { card, typography } from "@/styles"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -19,7 +20,7 @@ export function UEList({ ues }: { ues: UEItem[] }) {
   const [query, setQuery] = useState("")
   const [departmentId, setDepartmentId] = useState("")
   const [optionalFilter, setOptionalFilter] = useState("")
-  const [viewMode, setViewMode] = useState<ViewMode>("grid")
+  const [viewMode, setViewMode] = useLocalStorage<ViewMode>("attendancy-ue-view-mode", "grid")
 
   const departments = useMemo(() => {
     const map = new Map<string, { name: string; count: number }>()
@@ -85,12 +86,18 @@ export function UEList({ ues }: { ues: UEItem[] }) {
 
   if (ues.length === 0) {
     return (
-      <div className={cn(card.soft, "py-12 text-center")}>
-        <LibraryBig
-          className="mx-auto mb-3 size-8 text-text-subtle"
-          strokeWidth={1}
-        />
-        <p className={typography.body}>Aucune UE créée.</p>
+      <div className={cn(card.soft, "py-16 text-center flex flex-col items-center justify-center")}>
+        <div className="flex size-12 items-center justify-center rounded-full bg-muted/50 mb-4">
+          <LibraryBig className="size-6 text-muted-foreground" strokeWidth={1.5} />
+        </div>
+        <h3 className="text-lg font-medium text-foreground mb-1">Aucune Unité d'Enseignement</h3>
+        <p className={cn(typography.body, "text-muted-foreground max-w-sm mb-6")}>
+          Commencez par créer votre première UE pour structurer les cours et les emplois du temps de votre établissement.
+        </p>
+        <Button className="gap-2">
+          <Plus className="size-4" />
+          Créer une UE
+        </Button>
       </div>
     )
   }

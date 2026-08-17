@@ -75,3 +75,36 @@ export async function getUEByCode(code: string, orgId: string) {
     select: { id: true, name: true, code: true },
   })
 }
+
+export async function getUEById(id: string, orgId: string) {
+  'use cache'
+  cacheTag(CACHE.UE(orgId))
+  cacheLife(CACHE.UE.life)
+  return prisma.uE.findFirst({
+    where: { id, orgId, deletedAt: null },
+    select: {
+      id: true,
+      name: true,
+      code: true,
+      isOptional: true,
+      departmentId: true,
+      description: true,
+      type: true,
+      department: { select: { id: true, name: true } },
+      ueCourses: {
+        where: { deletedAt: null },
+        select: {
+          id: true,
+          name: true,
+          code: true,
+          credits: true,
+          duration: true,
+          order: true,
+          settings: true,
+        },
+        orderBy: [{ order: 'asc' }, { name: 'asc' }],
+      },
+    },
+  })
+}
+
