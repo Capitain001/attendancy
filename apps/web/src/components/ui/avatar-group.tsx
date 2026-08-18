@@ -86,7 +86,7 @@ function AvatarGroup({
   ...props
 }: AvatarGroupProps) {
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider openDelay={0} closeDelay={0}>
       <div
         ref={ref}
         data-slot="avatar-group"

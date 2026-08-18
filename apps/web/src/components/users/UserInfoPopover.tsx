@@ -6,9 +6,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import UserIcon from "./UserIcon";
-import { TeacherIconProps } from "@/types/teacher";
 import { cn } from "@/lib/utils";
 
+export interface TeacherIconProps {
+  avatarUrl?: string | null;
+  name?: string;
+  email?: string | null;
+  className?: string;
+}
 
 export function UserInfoPopover({avatarUrl, name, email, className}:TeacherIconProps) {
   return (

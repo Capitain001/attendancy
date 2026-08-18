@@ -93,7 +93,7 @@ export async function inviteStudent(params: InviteStudentParams) {
         : {}),
     });
 
-    if (!result.success) {
+    if (result.error) {
       return {
         success: false,
         error: result.error || "Échec de l'invitation de l'étudiant",
@@ -101,7 +101,7 @@ export async function inviteStudent(params: InviteStudentParams) {
     }
 
     // ── 6. Notification ───────────────────────────────────────
-    if (result.metadata && currentUser.id) {
+    if (result.data?.metadata && currentUser.id) {
       // Retrouve l'invitation créée pour la notification
       const { prisma } = await import("@/lib/prisma");
       const invitation = await prisma.invitation.findFirst({
@@ -125,7 +125,7 @@ export async function inviteStudent(params: InviteStudentParams) {
     return {
       success: true,
       message: `Une invitation a été envoyée à ${email} pour s'inscrire en tant qu'étudiant`,
-      metadata: result.metadata,
+      metadata: result.data?.metadata,
     };
 
   } catch (error) {

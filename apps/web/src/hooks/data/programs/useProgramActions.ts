@@ -376,6 +376,7 @@ export function useProgramActions({ programId, classId }: UseProgramActionsOptio
               order:
                 input.order ??
                 (ueBlock.ue.ueCourses[ueBlock.ue.ueCourses.length - 1]?.order ?? 0) + 1,
+              settings: {},
             };
             return {
               ...ueBlock,

@@ -22,7 +22,7 @@ export async function inviteUser(params: InvitationParams) {
     // Rejette l'action immédiatement si l'émetteur n'est pas connecté.
     const user = await getUserInfo();
     if (!user) {
-      return { error: "Non authentifié", success: false };
+      return { error: "Non authentifié" };
     }
 
     // ---------------------------------------------------------
@@ -61,7 +61,7 @@ export async function inviteUser(params: InvitationParams) {
     // Si cette étape échoue (ex: email invalide, erreur réseau), on annule le flux.
     const invitationResult = await sendSupabaseInvitation(params.email, metadata);
     if (!invitationResult.success) {
-      return invitationResult;
+      return { error: invitationResult.error || "Erreur Supabase" };
     }
 
     // ---------------------------------------------------------

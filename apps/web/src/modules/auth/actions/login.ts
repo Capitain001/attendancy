@@ -25,6 +25,7 @@ export async function login(
 
   if (signInError) {
     console.error("signin error cause:", signInError.message);
+    // return { error: signInError.message  };
     return { error: "Email ou mot de passe incorrect" };
   }
 

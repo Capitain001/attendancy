@@ -17,10 +17,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import type { ProgramTrackDto } from "@/services/program-track/types";
+import type { GetProgramTracksItem } from "@/services/program-track/types";
 
 interface SelectProgramTrackProps {
-  programTracks: ProgramTrackDto[];
+  programTracks: NonNullable<GetProgramTracksItem>[];
   value?: string;
   onChange?: (value: string) => void;
   placeholder?: string;

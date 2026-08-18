@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { ProgramForm } from "../form/ProgramForm";
 import { usePrograms } from "@/hooks/data/programs/usePrograms";
 import type { GetProgramsDto } from "@/services/program/types";
-import type { GetProgramTrackDto } from "@/services/program-track/types";
+import type { GetProgramTracksItem } from "@/services/program-track/types";
 import { SelectProgramTrack } from "@/components/program-tracks/ui/SelectProgramTrack";
 // import { SelectProgramTrack } from "@/components/program-tracks/ui/SelectProgramTrack";
 
@@ -22,7 +22,7 @@ interface ProgramDialogProps {
   program?: GetProgramsDto[number];
   classId?: string;
   programTrackId?: string;
-  programTracks?: GetProgramTrackDto[];
+  programTracks?: NonNullable<GetProgramTracksItem>[];
 }
 
 export function ProgramDialog({

@@ -8,13 +8,6 @@ import { card, typography } from '@/styles'
 import { cn } from '@/lib/utils'
 import { GetUEsDto } from '@/services/ue'
 
-type UERow = {
-  id: string
-  name: string
-  code: string | null
-  department: { id: string; name: string } | null
-  deletedAt: Date | string | null
-}
 
 function UEItem({ ue }: { ue: GetUEsDto[number] }) {
   const { delete: archive } = useUEs()
@@ -53,20 +46,28 @@ function UEItem({ ue }: { ue: GetUEsDto[number] }) {
   )
 }
 
+
+export function EmptyUE() {
+  return (
+    <div className="py-8 text-center bg-card">
+      <BookOpen className="mx-auto mb-2 size-8 text-text-subtle" strokeWidth={1} />
+      <p className={typography.body}>Aucune UE créée.</p>
+      <p className={typography.small}>Créez la première unité d&apos;enseignement.</p>
+    </div>
+  )
+}
+
 export function UEList({ initialUEs }: { initialUEs: GetUEsDto }) {
-  const { data: ues = [], isLoading } = useUEs()
-  const data = ues.length > 0 ? (ues) : initialUEs
+  const { data: uesData, loading } = useUEs()
+  const ues = uesData?.items || []
+  const data = ues.length > 0 ? ues : initialUEs
 
   return (
     <CollapseSection label="Unités d'enseignement" count={data.length} defaultOpen>
-      {isLoading && data.length === 0 ? (
+      {loading && data.length === 0 ? (
         <p className={typography.small}>Chargement…</p>
       ) : data.length === 0 ? (
-        <div className="py-8 text-center">
-          <BookOpen className="mx-auto mb-2 size-8 text-text-subtle" strokeWidth={1} />
-          <p className={typography.body}>Aucune UE créée.</p>
-          <p className={typography.small}>Créez la première unité d&apos;enseignement.</p>
-        </div>
+        <EmptyUE />
       ) : (
         <div className="flex flex-col gap-2">
           {data.map((ue) => <UEItem key={ue.id} ue={ue} />)}

@@ -24,7 +24,7 @@ export function useOrgInvitations(limit = 50) {
   const { data: invitations = [], isLoading } = useQuery({
     queryKey: CACHE_KEYS.INVITATIONS.ORG,
     queryFn: async () => {
-      const r = await getOrgInvitationsAction(limit)
+      const r = await getOrgInvitationsAction({ limit })
       if ('error' in r) throw new Error(r.error)
       return r.data
     },

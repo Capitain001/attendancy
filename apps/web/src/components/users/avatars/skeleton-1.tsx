@@ -1,11 +1,10 @@
 import React from "react";
 import clsx from "clsx";
-import { Property } from "csstype";
 import { twMerge } from "tailwind-merge";
 
 interface SkeletonProps {
-  width?: Property.Width | number;
-  height?: Property.Height | number;
+  width?: string | number;
+  height?: string | number;
   boxHeight?: number;
   show?: boolean;
   pill?: boolean;

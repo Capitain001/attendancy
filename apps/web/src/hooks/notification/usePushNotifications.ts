@@ -84,7 +84,7 @@ export function usePushNotifications() {
       const reg = await getServiceWorkerRegistration()
       const pushSub = await reg.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(vapidKey),
+        applicationServerKey: urlBase64ToUint8Array(vapidKey) as unknown as BufferSource,
       })
       const serialized = serializeSubscription(pushSub)
       const result = await subscribeUser(serialized, navigator.userAgent)

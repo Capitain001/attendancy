@@ -8,6 +8,6 @@ export async function createTestOrg() {
 }
 
 export async function cleanupTestOrg(orgId: string) {
-  await prisma.uETemplateImport.deleteMany({ where: { orgId } });
+  await prisma.orgUETemplate.deleteMany({ where: { orgId } });
   await prisma.organization.delete({ where: { id: orgId } });
 }

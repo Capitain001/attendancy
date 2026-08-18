@@ -8,7 +8,7 @@ import { checkFunctionsExist } from "./database";
 import { inviteDirectionSchema } from "./validation";
 import { safeParse } from "valibot";
 import { FunctionName, MAIN_FUNCTIONS } from "@/config/data";
-
+//a auditer apres [aaa]
 /**
  * Invite un membre de la direction académique
  * 
@@ -106,7 +106,7 @@ export async function inviteDirection(
       permissions,
     });
 
-    if (!result.success) {
+    if (result.error) {
       return {
         success: false,
         error: result.error || "Échec de l'invitation du membre de la direction",
@@ -115,7 +115,7 @@ export async function inviteDirection(
 
     // 7. Mettre à jour l'invitation pour stocker les fonctions supplémentaires
     // dans les détails de l'invitation pour qu'elles soient assignées lors de l'acceptation
-    if (additionalFunctions.length > 0 && result.metadata) {
+    if (additionalFunctions.length > 0 && result.data?.metadata) {
       try {
         const { prisma } = await import("@/lib/prisma");
         const invitation = await prisma.invitation.findFirst({
@@ -150,7 +150,7 @@ export async function inviteDirection(
     return {
       success: true,
       message: `Une invitation a été envoyée à ${email} pour le poste de direction`,
-      metadata: result.metadata,
+      metadata: result.data?.metadata,
     };
   } catch (error) {
     console.error("Erreur lors de l'invitation du membre de la direction:", error);

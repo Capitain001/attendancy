@@ -20,7 +20,7 @@ export async function inviteTeacher({
   name,
   permissions = [],
   resources
-}: InviteTeacherParams): Promise<InvitationResult> {
+}: InviteTeacherParams) {
   try {
     const result = await inviteUser({
       email,
@@ -30,7 +30,7 @@ export async function inviteTeacher({
       resources,
     });
 
-    if (!result.success) {
+    if (result.error) {
       return {
         success: false,
         error: result.error || "Échec de l'invitation de l'enseignant",
@@ -40,7 +40,7 @@ export async function inviteTeacher({
     return {
       success: true,
       message: `Une invitation a été envoyée à ${email}`,
-      metadata: result.metadata,
+      metadata: result.data?.metadata,
     };
   } catch (error) {
     console.error("Erreur lors de l'invitation de l'enseignant:", error);

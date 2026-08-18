@@ -3,9 +3,18 @@
 import type { ReactNode } from 'react'
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
-import { Users } from 'lucide-react'
+import { Users, MoreHorizontal, User } from 'lucide-react'
 import { card, typography } from '@/styles'
 import { cn } from '@/lib/utils'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
 import UserIcon from '@/components/users/UserIcon'
 import { GetTeachersDto } from '@/services/teacher'
 import { TeacherFilter, STATUS_MAP } from './TeacherFilter'
@@ -72,6 +81,7 @@ export function TeacherList({ teachers, slug }: { teachers: GetTeachersDto; slug
                 <th className={cn(typography.label, 'px-4 py-2 text-left font-medium hidden md:table-cell')}>Département</th>
                 <th className={cn(typography.label, 'px-4 py-2 text-center font-medium')}>Cours</th>
                 <th className={cn(typography.label, 'px-4 py-2 text-center font-medium hidden md:table-cell')}>Statut</th>
+                <th className="w-[50px]"></th>
               </tr>
             </thead>
             <tbody>
@@ -94,6 +104,33 @@ export function TeacherList({ teachers, slug }: { teachers: GetTeachersDto; slug
                   <td className="px-4 py-3 text-center text-text-secondary">{t._count.courses}</td>
                   <td className="px-4 py-3 text-center hidden md:table-cell">
                     <StatusBadge status={t.user.status} />
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <span className="sr-only">Ouvrir le menu</span>
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        {href ? (
+                          <Link href={href}>
+                            <DropdownMenuItem className="cursor-pointer">
+                              <User className="mr-2 h-4 w-4" />
+                              Voir le profil
+                            </DropdownMenuItem>
+                          </Link>
+                        ) : (
+                          <DropdownMenuItem disabled>
+                            <User className="mr-2 h-4 w-4" />
+                            Voir le profil
+                          </DropdownMenuItem>
+                        )}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </td>
                 </tr>
               )})}
