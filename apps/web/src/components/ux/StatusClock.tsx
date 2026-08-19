@@ -1,5 +1,5 @@
 import { CircleCheckBig, Clock, ClockAlert } from "lucide-react";
-import type { ScheduleStatus } from "@/generated/prisma";
+import type { ScheduleStatus } from "@/generated/prisma/browser";
 import { cn } from "@/lib/utils";
 
 const STATUS: Partial<

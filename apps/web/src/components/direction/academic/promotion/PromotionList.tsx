@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { PromotionFilter, ProgramTrack } from "./PromotionFilter";
 import { PromotionTable } from "./PromotionTable";
 import { GetClassesDto } from "@/services/class";
-import { Level } from "@/generated/prisma";
+import { Level } from "@/generated/prisma/browser";
 
 // export type { PromotionRow };
 

@@ -2,7 +2,6 @@ import { Search, X } from "lucide-react";
 import { input } from "@/styles";
 import { LEVEL_LABEL } from "@/services/class/constants";
 import { Button } from "@/components/ui/button";
-import { Level } from "@/generated/prisma";
 
 export type ProgramTrack = { id: string; name: string };
 

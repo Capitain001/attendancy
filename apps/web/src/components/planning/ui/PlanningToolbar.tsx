@@ -1,4 +1,4 @@
-import type { ScheduleStatus } from "@/generated/prisma";
+import type { ScheduleStatus } from "@/generated/prisma/browser";
 import { Loader2, Lock, LockOpen, PencilLine, Trash2, Users } from "lucide-react";
 
 import {

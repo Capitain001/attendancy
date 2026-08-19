@@ -9,7 +9,7 @@ import { prisma } from "@/lib/prisma";
 import { ERRORS } from "@/config";
 import { notifyInvitationStakeholders } from "./notifications";
 import type { DatabaseInvitationDetails } from "@/types/invitation";
-import { Role } from "@/generated/prisma";
+import { Role } from "@/generated/prisma/browser";
 
 function getStudentInvitationNotifyContext(invitation: InvitationListItem, orgId: string) {
   const details = invitation.details as DatabaseInvitationDetails | null;

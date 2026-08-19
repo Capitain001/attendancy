@@ -39,6 +39,7 @@ const IMPORT_REGEX =
 
 function shouldRewrite(spec: string): boolean {
   if (spec === '@/prisma') return true;
+  if (spec === '@/generated/prisma') return true; // import direct depuis l'index.ts généré
   if (/\/generated\/prisma\/enums$/.test(spec)) return true;
   if (/\/generated\/prisma\/models$/.test(spec)) return true;
   return false;

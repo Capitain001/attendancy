@@ -1,5 +1,5 @@
 import { Calendar } from "lucide-react";
-import type { ScheduleStatus } from "@/generated/prisma";
+import type { ScheduleStatus } from "@/generated/prisma/browser";
 import StatusClock from "@/components/ux/StatusClock";
 import { RoomInfo } from "@/components/ux/RoomInfo";
 import UserIcon from "@/components/users/UserIcon";

@@ -1,4 +1,4 @@
-import type { ScheduleStatus } from "@/generated/prisma";
+import type { ScheduleStatus } from "@/generated/prisma/browser";
 
 export type CalendarView = "month" | "week" | "day" | "agenda";
 

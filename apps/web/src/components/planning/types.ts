@@ -1,4 +1,4 @@
-import type { ScheduleStatus } from "@/generated/prisma";
+import type { ScheduleStatus } from "@/generated/prisma/browser";
 
 import type { PlanningResources } from "@/services/planning";
 

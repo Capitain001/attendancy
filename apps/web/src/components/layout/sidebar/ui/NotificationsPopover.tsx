@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/popover";
 // import { NotificationCardData, NotificationCardStack } from "@/components/morphing-card-stack";
 import { useNotifications } from "@/hooks/notification/useNotification";
-import { NotificationType } from "@/generated/prisma";
+import { NotificationType } from "@/generated/prisma/browser";
 import { Loader1 } from "@/components/loaders/Loader";
 // import { NotificationCardStack, NotificationCardData } from "@/components/notification-cardstack";
 type NotificationCardData = { id: string; title: string; description: string; icon: React.ReactNode; unread: boolean }

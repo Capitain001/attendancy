@@ -1,5 +1,5 @@
 import { isBefore } from "date-fns";
-import type { ScheduleStatus } from "@/generated/prisma";
+import type { ScheduleStatus } from "@/generated/prisma/browser";
 
 import type { ScheduleEvent } from "@/components/event-calendar";
 

@@ -19,7 +19,7 @@ import type {
   UpdateClassDataInput,
 } from "@/services/class";
 import { GetClassesDto } from "@/services/class";
-import { Level } from "@/generated/prisma";
+import { Level } from "@/generated/prisma/browser";
 
 // Inputs
 // export type CreateClassInput;

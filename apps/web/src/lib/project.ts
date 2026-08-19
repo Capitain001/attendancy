@@ -1,6 +1,6 @@
 
 import { colors } from "./utils";
-import { Role } from "@/generated/prisma";
+import { Role } from "@/generated/prisma/browser";
 
 
 // Fonction qui retourne une couleur selon le rôle

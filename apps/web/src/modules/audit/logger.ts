@@ -5,7 +5,7 @@ import "server-only";
 import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
 import { ERRORS } from "@/config";
 import { prisma } from "@/lib/prisma";
-import type { Action, Resource } from "@/generated/prisma";
+import type { Action, Resource } from "@/generated/prisma/browser";
 
 /**
  * Actions d'audit définies par le projet (enum Prisma).

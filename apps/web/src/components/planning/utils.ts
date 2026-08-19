@@ -1,4 +1,4 @@
-import type { ScheduleStatus } from "@/generated/prisma";
+import type { ScheduleStatus } from "@/generated/prisma/browser";
 import type { ScheduleEvent, EventColor } from "@/components/event-calendar/types";
 
 const STATUS_COLOR: Record<ScheduleStatus, EventColor> = {

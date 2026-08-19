@@ -7,7 +7,7 @@ import { CACHE_KEYS, QUERY_PRESETS } from '@/cache/client/key'
 import { getPlanningRange } from './utils'
 import { getOrgPlanningResourcesAction } from './actions'
 import type { OrgPlanningResources } from './types'
-import { ScheduleStatus } from '@/generated/prisma'
+import { ScheduleStatus } from '@/generated/prisma/browser'
 
 
 export interface PlanningScheduleFilters {
