@@ -9,7 +9,7 @@ import { generateInvitationToken } from "./token";
 import { generateInvitationMetadata } from "./metadata";
 import { sendSupabaseInvitation } from "./invitation";
 import { saveInvitationWithAudit } from "./database";
-import { Action } from "@/generated/prisma/enums";
+import { Action } from "@/generated/prisma/browser";
 import { getAuthorization } from "../auth/persmission";
 // : Promise<InvitationResult>
 

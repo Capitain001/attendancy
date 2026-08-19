@@ -6,7 +6,7 @@ import { tryConstraint } from '@/utils/server/prisma'
 import { updateUserMetadata } from '@/modules/user/update'
 import type { OrgDetails } from '../types'
 import type { UpdateOrgIdentityInput } from '../validation'
-import type { UserStatus } from '@/prisma'
+import type { UserStatus } from '@/generated/prisma/browser'
 
 export type CreateOrgParams = {
   userId: string

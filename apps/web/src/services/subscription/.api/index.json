@@ -2,7 +2,7 @@
   "service": "subscription",
   "path": "src/services/subscription/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "1d99f82",
+  "derived_at": "41d5524",
   "utils_dir": null,
   "fns": {
     "createSubscription": {

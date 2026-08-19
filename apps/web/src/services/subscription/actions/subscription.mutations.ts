@@ -4,7 +4,7 @@ import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import { createSubscriptionSchema } from '../validation'
 import { createSubscription, updateSubscriptionStatus } from '../database'
-import type { SubscriptionStatus } from '@/prisma'
+import type { SubscriptionStatus } from '@/generated/prisma/browser'
 
 export async function createSubscriptionAction(input: unknown) {
   try {

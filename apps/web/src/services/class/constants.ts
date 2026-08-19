@@ -1,4 +1,4 @@
-import { Level } from '@/generated/prisma/enums'
+import { Level } from '@/generated/prisma/browser'
 
 export const LEVELS = Object.values(Level)
 

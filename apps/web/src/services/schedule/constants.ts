@@ -1,3 +1,3 @@
-import { ScheduleStatus } from '@/generated/prisma/enums'
+import { ScheduleStatus } from '@/generated/prisma/browser'
 
 export const SCHEDULE_STATUSES = Object.values(ScheduleStatus)

@@ -6,7 +6,7 @@
 // Constantes du domaine. Enum aligné compile-time sur Prisma via
 // `as const satisfies readonly EnumType[]` + labels en Record.
 //
-// import type { EntityKind } from '@/generated/prisma/enums'
+// import type { EntityKind } from '@/generated/prisma/browser'
 //
 // export const ENTITY_KINDS = ['KIND_A', 'KIND_B'] as const satisfies readonly EntityKind[]
 // export type EntityKindValue = (typeof ENTITY_KINDS)[number]

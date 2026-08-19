@@ -4,7 +4,7 @@
 // Fichier de référence — logique métier de la gestion de présence.
 // Branché sur les types et constantes du projet pour rester vivant.
 
-import type { AttendanceStatus, SessionStatus } from "@/generated/prisma/client";
+import type { AttendanceStatus, SessionStatus } from "@/generated/prisma/browser";
 import {
   SESSION_ATTENDANCE_URL,
   buildSessionUrl,

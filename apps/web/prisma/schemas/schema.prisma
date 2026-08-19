@@ -3,12 +3,13 @@ generator client {
   output   = "../../src/generated/prisma"
 
 }
+datasource db {
+  provider = "postgresql"
+  schemas  = ["public", "billing"]
+}
+
 /* depreciate */
 // generator valibot {
 //   provider = "prisma-valibot-generator"
 //   output   = "../../src/generated/valibot"  
 // }
-datasource db {
-  provider = "postgresql"
-  schemas  = ["public", "billing"]
-}

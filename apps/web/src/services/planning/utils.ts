@@ -1,5 +1,5 @@
 import { startOfMonth, endOfMonth } from 'date-fns'
-import type { ScheduleStatus } from '@/prisma'
+import type { ScheduleStatus } from '@/generated/prisma/browser'
 import type { EventColor, ScheduleEvent } from '@/components/event-calendar/types'
 import type { GetSchedulesReturn } from '@/services/schedule'
 
