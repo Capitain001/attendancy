@@ -4,7 +4,21 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "env": [
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "DATABASE_URL",
+        "DIRECT_URL",
+        "TEST_DATABASE_URL",
+        "SUPABASE_SECRET_KEY",
+        "SUPABASE_JWKS_URL",
+        "STRIPE_PRO_PRICE_ID",
+        "STRIPE_PREMIUM_PRICE_ID",
+        "STRIPE_SECRET_KEY",
+        "STRIPE_WEBHOOK_SECRET",
+        "STRIPE_ENDPOINT_SECRET",
+        "VAPID_PRIVATE_KEY"
+      ]
     },
     "dev": {
       "cache": false,
