@@ -23,6 +23,7 @@ export function GlobalInviteStudentDialog() {
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1)
   
   // Data & form state
+  
   const { data: classesData, loading: classesLoading } = useClasses({ enabled: open })
   const classes = classesData?.items ?? []
   const [availableGroups, setAvailableGroups] = useState<{ id: string; name: string }[]>([])
