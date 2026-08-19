@@ -5,6 +5,7 @@ import { MetricCard } from '@/components/stats/ui/MetricCard'
 import { CollapseSection } from '@/components/layout/CollapseSection'
 import { useOrgInvitations, useInvitationStats } from '@/hooks/data/invitation/use-org-invitations'
 import { InviteDialog } from './InviteDialog'
+import { GlobalInviteStudentDialog } from './GlobalInviteStudentDialog'
 import { InvitationTable } from './InvitationTable'
 
 interface DirectionInvitationsPageProps {
@@ -24,17 +25,20 @@ export function DirectionInvitationsPage({ functions }: DirectionInvitationsPage
             Invitez le personnel et suivez l'onboarding.
           </p>
         </div>
-        <InviteDialog
-          functions={functions}
-          onInviteTeacher={(input) => inviteTeacher.mutateAsync(input)}
-          onInviteDirection={(input) =>
-            inviteDirection.mutateAsync({
-              email: input.email,
-              name: input.name,
-              functions: input.functions ?? [],
-            })
-          }
-        />
+        <div className="flex items-center gap-2">
+          <GlobalInviteStudentDialog />
+          <InviteDialog
+            functions={functions}
+            onInviteTeacher={(input) => inviteTeacher.mutateAsync(input)}
+            onInviteDirection={(input) =>
+              inviteDirection.mutateAsync({
+                email: input.email,
+                name: input.name,
+                functions: input.functions ?? [],
+              })
+            }
+          />
+        </div>
       </header>
 
       <section className="grid grid-cols-2 gap-3 md:grid-cols-4">

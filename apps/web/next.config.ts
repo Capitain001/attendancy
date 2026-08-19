@@ -19,6 +19,14 @@ module.exports = {
       // ⚠ À ÉTENDRE PAR PROJET — ajouter les hosts d'images du projet
       // (ex : le domaine de stockage Supabase du projet)
       // { protocol: 'https', hostname: '<project>.supabase.co' },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      }
     ],
   },
 

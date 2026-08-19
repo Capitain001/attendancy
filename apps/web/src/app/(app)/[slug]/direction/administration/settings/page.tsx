@@ -1,10 +1,11 @@
 import { connection } from 'next/server'
 import { getOrgIdentityAction, getOrgDetailsAction } from '@/services/organization'
-import { typography, card } from '@/styles'
-import { cn } from '@/lib/utils'
-import { Building2, Globe, Mail } from 'lucide-react'
+import { typography } from '@/styles'
+import { OrgIdentityForm } from '@/components/organization/settings/OrgIdentityForm'
+import { OrgSitesForm } from '@/components/organization/settings/OrgSitesForm'
 
 export default async function SettingsPage() {
+  // Respecter la contrainte PPR (cacheComponents: true)
   await connection()
 
   const [identityResult, detailsResult] = await Promise.all([
@@ -16,50 +17,34 @@ export default async function SettingsPage() {
     return <p className={typography.body}>{identityResult.error}</p>
   }
 
-  const org     = identityResult.data
-  const details = 'data' in detailsResult ? detailsResult.data : null
+  const org = identityResult.data
+  if (!org) {
+    return <p className={typography.body}>Organisation introuvable.</p>
+  }
+
+  const details = ('data' in detailsResult && detailsResult.data) ? detailsResult.data.details : null
 
   return (
-    <div className="flex flex-col gap-6 max-w-2xl">
-      <h1 className="text-base font-semibold text-text-primary">Paramètres de l'organisation</h1>
-
-      <div className={cn(card.base, 'flex flex-col gap-4')}>
-        <span className={typography.label}>Identité</span>
-
-        <div className="flex flex-col gap-3">
-          <Row icon={Building2} label="Nom" value={org?.name} />
-          <Row icon={Mail}      label="Email" value={org?.email} />
-          <Row icon={Globe}     label="Domaine" value={org?.domain} />
-          <Row icon={Globe}     label="Slug" value={org?.slug} />
-        </div>
+    <div className="flex flex-col gap-8 max-w-3xl">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight text-text-primary">
+          Paramètres de l'organisation
+        </h1>
+        <p className={typography.body}>
+          Gérez les paramètres, l'identité et les adresses de votre organisation.
+        </p>
       </div>
 
-      {details && Object.keys(details).length > 0 && (
-        <div className={cn(card.base, 'flex flex-col gap-4')}>
-          <span className={typography.label}>Détails</span>
-          <pre className={cn(typography.small, 'whitespace-pre-wrap break-all')}>
-            {JSON.stringify(details, null, 2)}
-          </pre>
-        </div>
-      )}
-    </div>
-  )
-}
+      <OrgIdentityForm 
+        initialData={{
+          name: org.name,
+          email: org.email,
+          domain: org.domain,
+          slug: org.slug
+        }} 
+      />
 
-function Row({
-  icon: Icon,
-  label,
-  value,
-}: {
-  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>
-  label: string
-  value: string | null | undefined
-}) {
-  return (
-    <div className="flex items-center gap-3">
-      <Icon className="size-4 shrink-0 text-text-subtle" strokeWidth={1.5} />
-      <span className={cn(typography.small, 'w-20 shrink-0')}>{label}</span>
-      <span className="text-sm text-text-primary">{value ?? '—'}</span>
+      <OrgSitesForm initialDetails={details} />
     </div>
   )
 }

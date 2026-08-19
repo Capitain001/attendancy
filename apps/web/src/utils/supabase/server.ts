@@ -13,9 +13,9 @@ async function cookieStore() {
 export async function createClient() {
   const store = await cookieStore()
 
-  return createServerClient(
+    return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
       cookies: {
         getAll() {
@@ -26,13 +26,31 @@ export async function createClient() {
             cookiesToSet.forEach(({ name, value, options }) =>
               store.set(name, value, options)
             )
-          } catch {
-            // Ignoré depuis un Server Component en lecture seule
-          }
+          } catch {}
         },
       },
     }
   )
+  // return createServerClient(
+  //   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  //   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  //   {
+  //     cookies: {
+  //       getAll() {
+  //         return store.getAll()
+  //       },
+  //       setAll(cookiesToSet) {
+  //         try {
+  //           cookiesToSet.forEach(({ name, value, options }) =>
+  //             store.set(name, value, options)
+  //           )
+  //         } catch {
+  //           // Ignoré depuis un Server Component en lecture seule
+  //         }
+  //       },
+  //     },
+  //   }
+  // )
 }
 
 // Client Service Role — opérations admin UNIQUEMENT, jamais exposé au client :
