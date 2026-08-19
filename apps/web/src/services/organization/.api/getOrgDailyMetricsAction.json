@@ -1,7 +1,7 @@
 {
   "name": "getOrgDailyMetricsAction",
   "file": "src/services/organization/actions/organization.queries.ts",
-  "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { activeSessions: number; todaySchedules: number; todayAbsences: number; completedSchedules: number; }; error?: undefined; }>",
+  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { activeSessions: number; todaySchedules: number; todayAbsences: number; completedSchedules: number; }; error?: undefined; }>",
   "calls": [
     "getOrgDailyMetrics"
   ],

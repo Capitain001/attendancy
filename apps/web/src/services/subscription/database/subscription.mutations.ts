@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
 import { invalidateEvent } from '@/cache/server/key'
-import type { SubscriptionStatus } from '@/generated/prisma'
+import type { SubscriptionStatus } from '@/prisma'
 
 export type CreateSubscriptionData = {
   orgId: string

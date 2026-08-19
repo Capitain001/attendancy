@@ -1,4 +1,4 @@
-﻿// src/services/auth/supabase.ts
+// src/services/auth/supabase.ts
 // Opérations Supabase Auth — seule couche qui parle à supabase.auth.
 // Les actions (actions.ts) orchestrent par-dessus.
 
@@ -8,7 +8,7 @@ import { createClient, createAdminClient } from '@/utils/supabase/server';
 import { CALL_BACK, SITE_URL } from '@/config/url';
 // import { UserStatus } from '@/types';
 import { Functions, UserStatus, UserInfo } from '@/types/user';
-import { Role } from '@/generated/prisma';
+import { Role } from '@/prisma';
 
 
 interface SignUpParams {

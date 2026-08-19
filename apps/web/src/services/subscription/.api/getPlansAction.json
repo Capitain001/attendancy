@@ -1,7 +1,7 @@
 {
   "name": "getPlansAction",
   "file": "src/services/subscription/actions/subscription.queries.ts",
-  "sig": "() => Promise<{ data: { name: string; id: string; code: string; currency: string; priceMonthly: Decimal | null; features: JsonValue; }[]; error?: undefined; } | { error: string; data?: undefined; }>",
+  "sig": "() => Promise<{ data: { name: string; id: string; code: string; priceMonthly: Decimal | null; currency: string; features: JsonValue; }[]; error?: undefined; } | { error: string; data?: undefined; }>",
   "calls": [
     "getPlans"
   ],

@@ -1,7 +1,7 @@
 {
   "name": "updateOrgLogoAction",
   "file": "src/services/organization/actions/organization.mutations.ts",
-  "sig": "(logoUrl: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; logo: string | null; }; error?: undefined; }>",
+  "sig": "(logoUrl: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; logo: string | null; }; error?: undefined; }>",
   "calls": [
     "updateOrgLogo"
   ],

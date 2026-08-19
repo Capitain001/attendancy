@@ -1,7 +1,7 @@
 {
   "name": "createSubscriptionAction",
   "file": "src/services/subscription/actions/subscription.mutations.ts",
-  "sig": "(input: unknown) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "sig": "(input: unknown) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
   "calls": [
     "createSubscription"
   ],

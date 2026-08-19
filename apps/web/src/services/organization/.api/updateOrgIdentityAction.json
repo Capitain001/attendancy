@@ -1,7 +1,7 @@
 {
   "name": "updateOrgIdentityAction",
   "file": "src/services/organization/actions/organization.mutations.ts",
-  "sig": "(input: UpdateOrgIdentityInput) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; slug: string | null; }; error?: undefined; }>",
+  "sig": "(input: UpdateOrgIdentityInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; name: string; slug: string | null; }; error?: undefined; }>",
   "calls": [
     "updateOrganization"
   ],

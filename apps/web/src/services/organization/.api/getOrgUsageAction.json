@@ -1,7 +1,7 @@
 {
   "name": "getOrgUsageAction",
   "file": "src/services/organization/actions/organization.queries.ts",
-  "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { updatedAt: Date; currentUsers: number; usedStorage: bigint; activeCourses: number; activeRooms: number; } | null; error?: undefined; }>",
+  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { updatedAt: Date; currentUsers: number; usedStorage: bigint; activeCourses: number; activeRooms: number; } | null; error?: undefined; }>",
   "calls": [
     "getOrgUsage"
   ],

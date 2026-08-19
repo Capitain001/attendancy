@@ -1,7 +1,7 @@
 {
   "name": "getOrgResourcesCountsAction",
   "file": "src/services/organization/actions/organization.queries.ts",
-  "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { courses: number; classes: number; rooms: number; teachers: number; students: number; }; error?: undefined; }>",
+  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { courses: number; classes: number; rooms: number; teachers: number; students: number; }; error?: undefined; }>",
   "calls": [
     "getOrgResourcesCounts"
   ],

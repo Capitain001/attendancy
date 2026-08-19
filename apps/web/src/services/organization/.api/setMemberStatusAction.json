@@ -1,7 +1,7 @@
 {
   "name": "setMemberStatusAction",
   "file": "src/services/organization/actions/organization.mutations.ts",
-  "sig": "(params: { userId: string role: 'STUDENT' | 'TEACHER' status: 'ACTIVE' | 'INACTIVE' profileId?: string }) => Promise<{ error: any; data?: undefined; } | { data: { userId: string; status: \"ACTIVE\" | \"INACTIVE\"; }; error?: undefined; }>",
+  "sig": "(params: { userId: string role: 'STUDENT' | 'TEACHER' status: 'ACTIVE' | 'INACTIVE' profileId?: string }) => Promise<{ error: string; data?: undefined; } | { data: { userId: string; status: any; }; error?: undefined; }>",
   "calls": [
     "setMemberStatusWithAudit"
   ],
