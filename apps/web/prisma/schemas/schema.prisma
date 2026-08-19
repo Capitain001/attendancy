@@ -3,6 +3,7 @@ generator client {
   output   = "../../src/generated/prisma"
 
 }
+/* depreciate */
 // generator valibot {
 //   provider = "prisma-valibot-generator"
 //   output   = "../../src/generated/valibot"  
