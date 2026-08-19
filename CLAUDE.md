@@ -42,7 +42,7 @@ Les chemins ci-dessous sont **relatifs à `apps/web/`**.
 ### apps/web
 Next.js 16 (`cacheComponents: true` — PPR actif) · React 19 · Prisma v7
 multi-schema (adapter pg) · Supabase (auth) · Tailwind v4 + shadcn/ui + base-ui ·
-TypeScript strict · Valibot · Vitest.
+TypeScript strict · Valibot · Vitest .
 
 ### apps/desktop
 Vite 6 · React 19 · Tauri v2 · @attendancy/planning · @attendancy/types.
