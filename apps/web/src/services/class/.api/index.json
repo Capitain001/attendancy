@@ -2,7 +2,7 @@
   "service": "class",
   "path": "src/services/class/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "1d99f82",
+  "derived_at": "6d90ef3",
   "utils_dir": null,
   "fns": {
     "createClass": {

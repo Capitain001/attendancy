@@ -2,11 +2,12 @@
 // Factory pure réutilisable côté serveur (prefetch) ET client (hook).
 import { getSchedulesAction, getScheduleDaysAction } from '@/services/schedule/actions'
 import type { GetSchedulesReturn } from '@/services/schedule'
-import { Prisma } from '@/prisma';
+
 import { CACHE_KEYS, QUERY_PRESETS } from '@/cache/client/key'
 import { getPlanningRange } from './utils'
 import { getOrgPlanningResourcesAction } from './actions'
 import type { OrgPlanningResources } from './types'
+import { ScheduleStatus } from '@/generated/prisma'
 
 
 export interface PlanningScheduleFilters {
