@@ -13,7 +13,7 @@ export interface GetUserInfoOptions {
    * cache = false : ignorer complètement le cache LRU (lecture et écriture)
    */
   cache?: boolean
-  
+
   /**
    * refresh = true : forcer la récupération des données fraîches et mettre à jour le cache
    * refresh = false (défaut) : utiliser le cache si disponible
@@ -64,7 +64,7 @@ const getUserId = cache(async (): Promise<string | null> => {
  */
 const fetchUserFromSupabase = cache(async (userId: string): Promise<Partial<UserInfo> | null> => {
   const supabase = await createClient()
-  
+
   const { data: { user }, error } = await supabase.auth.getUser()
   if (error || !user) return null
 
@@ -74,22 +74,24 @@ const fetchUserFromSupabase = cache(async (userId: string): Promise<Partial<User
     return null
   }
 
-  const userMetadata:UserMetadata = user.user_metadata || {}
-  
+  const userMetadata: UserMetadata = user.user_metadata || {}
+
   return {
     id: user.id,
     email: user.email ?? undefined,
     role: userMetadata.role || UserRoles.GUEST,
     name: userMetadata.name || user.email?.split("@")[0] || "",
-    avatar_url: userMetadata.avatar_url || "/avatar.png",
-    function: userMetadata.function || Functions.MEMBER ,
+    avatar_url: userMetadata.avatar_url,
+    // || "/avatar.png"
+    function: userMetadata.function || Functions.MEMBER,
     organization: userMetadata.organization ?? undefined,
     organizations: userMetadata.organizations || [],
     invited_by: userMetadata.invited_by ?? undefined,
     status: userMetadata.status || UserStatus.PENDING,
     invitationToken: userMetadata.invitationToken ?? undefined,
     invitationType: userMetadata.invitationType ?? undefined,
-    isConnected: userMetadata.isConnected || true
+    isConnected: userMetadata.isConnected || true,
+    updated_at: user.updated_at, // ← champ racine Supabase, pas user_metadata
   }
 })
 
@@ -120,7 +122,7 @@ const getUserInfoWithCache = cache(async (
   // CAS 2: Refresh forcé - récupérer les données fraîches et mettre à jour le cache LRU
   if (refresh) {
     const freshUserInfo = await fetchUserFromSupabase(userId)
-    
+
     if (freshUserInfo) {
       // Mettre à jour le cache LRU avec les nouvelles données
       setUser(userId, freshUserInfo)
@@ -128,7 +130,7 @@ const getUserInfoWithCache = cache(async (
       // Si Supabase retourne null, invalider le cache LRU
       removeUser(userId)
     }
-    
+
     return freshUserInfo
   }
 
@@ -143,7 +145,7 @@ const getUserInfoWithCache = cache(async (
   if (userInfo) {
     setUser(userId, userInfo)
   }
-  
+
   return userInfo
 })
 
@@ -191,7 +193,7 @@ const getUserInfoWithCache = cache(async (
  */
 export async function getUserInfo(
   options: GetUserInfoOptions = {}
-): Promise<Partial<UserInfo> | null > {
+): Promise<Partial<UserInfo> | null> {
   // Récupérer l'userId AVANT d'utiliser le cache
   const userId = await getUserId()
   if (!userId) return null

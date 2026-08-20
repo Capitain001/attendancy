@@ -77,6 +77,9 @@ export interface UserInfo {
   invitationType?: string;
   isConnected?: boolean;
   online_at?: string;
+    /** Fourni nativement par Supabase Auth (user.updated_at), pas par user_metadata.
+   *  Se met à jour automatiquement à chaque updateUser/updateUserById. */
+  updated_at?: string;
 }
 
 

@@ -24,7 +24,7 @@ return (
       </MirrorHover>
     </PopoverTrigger>
 
-    <PopoverContent align="start" showArrow={false} side="bottom" sideOffset={16} alignOffset={10} className="p-0 pattern-noise border-0 w-64">
+    <PopoverContent align="start" showArrow={false} side="bottom" sideOffset={16} alignOffset={10} className="p-0 pattern-noise border-0 w-full">
       <AuthMenu user={user} />
     </PopoverContent>
   </Popover>

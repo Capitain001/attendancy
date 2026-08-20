@@ -6,19 +6,32 @@
 // SANS accès direct aux cookies (via getUserInfo → Supabase) doit appeler
 // `await connection()` (next/server) en tête de fonction, sinon Next lève
 // "Uncached data was accessed outside of <Suspense>".
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
 module.exports = {
   // Packages workspace partagés — nécessaire pour que Next.js transpile leurs sources
   transpilePackages: ['@attendancy/types', '@attendancy/planning'],
+
   experimental: {
     // Transforme les imports barrel en imports directs au build (bundle size)
     optimizePackageImports: ['lucide-react'],
   },
-  cacheComponents: true, 
+
+  cacheComponents: true,
+
   images: {
     remotePatterns: [
       // ⚠ À ÉTENDRE PAR PROJET — ajouter les hosts d'images du projet
       // (ex : le domaine de stockage Supabase du projet)
-      // { protocol: 'https', hostname: '<project>.supabase.co' },
+      ...(supabaseUrl
+        ? [
+            {
+              protocol: 'https',
+              hostname: new URL(supabaseUrl).hostname,
+            },
+          ]
+        : []),
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',

@@ -57,7 +57,7 @@ export const AuthMenu: React.FC<AuthMenuProps> = ({ user, className }) => {
     {
       icon: <BadgeCheckIcon />,
       label: "Profile",
-      href: "#",
+      href: user?.organization?.slug ? `/${user.organization.slug}/profile` : "#",
       active: true,
     },
     {
@@ -87,8 +87,8 @@ export const AuthMenu: React.FC<AuthMenuProps> = ({ user, className }) => {
       
       {/* Header */}
       <div className="flex items-center gap-3 py-1 px-3 bg-foreground/[0.01] border-b border-border/50">
-        <UserIcon avatarUrl={user?.avatar_url ?? null} />
-
+      
+        <UserIcon avatarUrl={user?.avatar_url ?? null} updatedAt={user?.updated_at}   />
         <div className="min-w-0 flex-1">
           <p className="text-[14px] font-semibold text-foreground truncate leading-tight">
             {user?.name || "Invité"}

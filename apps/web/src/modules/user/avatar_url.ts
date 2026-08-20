@@ -15,7 +15,7 @@ export async function updateAvatar(avatarUrl: string) {
     await setUserInfo({ avatar_url: avatarUrl })
 
     await prisma.user.upsert({
-      where: { email: user.email },
+      where: { id: user.id },
       update: { avatar_url: avatarUrl },
       create: {
         id: user.id,
@@ -31,5 +31,3 @@ export async function updateAvatar(avatarUrl: string) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
-
-

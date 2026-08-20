@@ -8,11 +8,11 @@ versionnés, appliqués APRÈS les migrations :
 - triggers et fonctions Postgres
 - extensions (PostGIS…)
 
-## Structure
+## Structure interne des fichiers
 
 ```
 post-migrate/
-  indexes/    *.sql — index avancés
+  indexes   *.sql — index avancés
   triggers/   *.sql — triggers et fonctions (créer au besoin)
 ```
 

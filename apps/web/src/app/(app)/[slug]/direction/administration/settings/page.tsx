@@ -37,10 +37,12 @@ export default async function SettingsPage() {
 
       <OrgIdentityForm 
         initialData={{
+          id: org.id,
           name: org.name,
           email: org.email,
           domain: org.domain,
-          slug: org.slug
+          slug: org.slug,
+          logo: org.logo
         }} 
       />
 

@@ -125,6 +125,31 @@ WHERE table_schema = 'public'
   AND table_name = 'session_presence_map';
 -- Attendu : 1 ligne
 
+-- ─── Storage (buckets + policies) ────────────────────────────────────────────
+
+SELECT id AS bucket_ok, public
+FROM storage.buckets
+WHERE id IN (
+    -- storage/avatar.sql
+    'avatars'
+  )
+ORDER BY id;
+-- Attendu : 1 ligne
+
+SELECT policyname AS storage_policy_ok, cmd
+FROM pg_policies
+WHERE schemaname = 'storage'
+  AND tablename = 'objects'
+  AND policyname IN (
+    -- storage/avatar.sql
+    'avatars_public_read',
+    'avatars_owner_insert',
+    'avatars_owner_update',
+    'avatars_owner_delete'
+  )
+ORDER BY policyname;
+-- Attendu : 4 lignes
+
 -- ─── Bonus : doublons d'index physiques (dérive migrations) ──────────────────
 
 SELECT tablename, array_agg(indexname) AS duplicated_indexes
