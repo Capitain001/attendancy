@@ -17,11 +17,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { typography } from "@/styles";
 import { cn } from "@/lib/utils";
 import AvatarUploader from "@/components/users/AvatarUploader";
-import { updateUserProfileAction, updateUserDataSchema } from "@/services/user";
-import type { UpdateCurrentUserInput } from "@/services/user";
+
+import { updateUserProfileAction } from "@/services/user/actions/user.mutations";
+import { updateUserDataSchema } from "@/services/user/validation";
+import type { UpdateCurrentUserInput } from "@/services/user/validation";
 import type { UserInfo } from "@/types/user";
 
 interface EditProfileFormProps {
@@ -90,9 +91,9 @@ export function EditProfileForm({ user, onCancel, onSuccess, className }: EditPr
 
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 flex flex-col gap-6">
-                <div className="flex flex-col gap-2 rounded-lg border border-border bg-muted/30 p-4">
+                <div className="flex flex-col gap-2">
                   <span className="text-xs text-muted-foreground">Adresse e-mail (connexion)</span>
-                  <span className="text-sm font-medium text-heading">{user.email}</span>
+                  <span className="text-sm font-medium text-heading  rounded-lg border border-border bg-muted/30 p-2">{user.email}</span>
                 </div>
 
                 <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
@@ -140,10 +141,10 @@ export function EditProfileForm({ user, onCancel, onSuccess, className }: EditPr
                 </div>
 
                 <div className="flex justify-end pt-2 gap-3">
-                  <Button type="button" variant="outline" onClick={onCancel} disabled={isPending} className="rounded-full">
+                  <Button type="button" variant="outline" onClick={onCancel} disabled={isPending} className="rounded-xs">
                     Annuler
                   </Button>
-                  <Button type="submit" disabled={isPending || !form.formState.isDirty} className="rounded-full">
+                  <Button type="submit" disabled={isPending || !form.formState.isDirty} className="rounded-xs">
                     <Save className="mr-2 h-4 w-4" />
                     {isPending ? "Enregistrement..." : "Enregistrer"}
                   </Button>

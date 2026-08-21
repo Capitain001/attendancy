@@ -50,7 +50,7 @@ import { DIRECTION_GRAPH } from "@/services/direction/cache";
 import { PROGRAM_GRAPH } from "@/services/program/cache";
 import { COURSE_TEACHER_GRAPH } from "@/services/course-teacher/cache";
 import { UE_TEMPLATE_GRAPH } from "@/services/ue-template/cache";
-import { USER_GRAPH } from "@/services/user/cache";
+// import { USER_GRAPH } from "@/services/user/cache";
 // ⚠ À ÉTENDRE PAR PROJET — un import par service à données cachées :
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -121,7 +121,7 @@ export const CACHE_GRAPH = {
   ...NOTIFICATION_GRAPH,
   ...COURSE_TEACHER_GRAPH,
   ...UE_TEMPLATE_GRAPH,
-  ...USER_GRAPH,
+  // ...USER_GRAPH,
 // ⚠ À ÉTENDRE PAR PROJET — spreader chaque <SERVICE>_GRAPH importé :
 } as const;
 

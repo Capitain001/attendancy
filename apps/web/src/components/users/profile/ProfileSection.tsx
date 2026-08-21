@@ -6,7 +6,7 @@ import type { UserInfo } from "@/types/user";
 import { UserProfileCard } from "./UserProfileCard";
 import { EditProfileForm } from "./EditProfileForm";
 
-export function ProfileSection({ user }: { user: UserInfo }) {
+export function ProfileSection({ user }: { user: Partial<UserInfo> }) {
   const [isEditing, setIsEditing] = useState(false);
 
   return (

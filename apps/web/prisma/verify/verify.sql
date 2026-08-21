@@ -131,7 +131,8 @@ SELECT id AS bucket_ok, public
 FROM storage.buckets
 WHERE id IN (
     -- storage/avatar.sql
-    'avatars'
+    'avatars',
+    'logos'  -- storage/logo.sql
   )
 ORDER BY id;
 -- Attendu : 1 ligne
@@ -141,14 +142,12 @@ FROM pg_policies
 WHERE schemaname = 'storage'
   AND tablename = 'objects'
   AND policyname IN (
-    -- storage/avatar.sql
-    'avatars_public_read',
-    'avatars_owner_insert',
-    'avatars_owner_update',
-    'avatars_owner_delete'
+    'avatars_public_read', 'avatars_owner_insert', 'avatars_owner_update', 'avatars_owner_delete',
+    'logos_public_read', 'logos_responsable_insert', 'logos_responsable_update', 'logos_responsable_delete'  -- storage/logo.sql
   )
+
 ORDER BY policyname;
--- Attendu : 4 lignes
+-- Attendu : 8 lignes
 
 -- ─── Bonus : doublons d'index physiques (dérive migrations) ──────────────────
 

@@ -69,7 +69,7 @@ export async function getTeachersAction({departmentId}:{departmentId?: string}) 
     if (!auth.data) return { error: auth.error }
     const { orgId } = auth.data
 
-    return {data: mockgetTeachers}
+    // return {data: mockgetTeachers}
     return { data: await getTeachers(orgId, departmentId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }

@@ -1,5 +1,5 @@
 // ==========================================
-// lib/services/invitation/database.ts
+// src/modules/invitation/database.ts
 // ==========================================
 
 import { prisma } from "@/lib/prisma";
@@ -101,6 +101,7 @@ export async function saveInvitationWithAudit(
         expiresAt,
         orgId:          metadata?.organization?.id!,
         invitationType: "INVITE_ONLY",
+        role:           metadata.role as any,
         details:        invitationDetails,
         ...(resourceId   ? { resourceId }   : {}),
         ...(resourceType ? { resourceType } : {}),
@@ -118,6 +119,9 @@ export async function saveInvitationWithAudit(
     });
 
     return { invitation, auditLog };
+  }, {
+    maxWait: 10000,
+    timeout: 20000,
   });
 }
 

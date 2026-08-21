@@ -7,7 +7,8 @@ import ReactQueryProvider from '@/providers/react-query-provider'
 import { Suspense } from 'react'
 import { AsyncHeader } from '@/components/layout/Header/AsyncHeader'
 import {HeaderSkeleton} from '@/components/layout/Header/HeaderSkeleton'
-import './globals.css'
+import { NoiseFilterDefs } from "@/components/design/NoiseFilter";
+import  "./globals.css"
 
 export const metadata: Metadata = {
   title: 'Attendancy',
@@ -24,6 +25,7 @@ export default function RootLayout({
           <ReactQueryProvider>
             <NuqsAdapter>
               <div className="flex h-screen flex-col">
+                <NoiseFilterDefs baseFrequency={0.65} numOctaves={3} />
                 <Suspense fallback={<HeaderSkeleton />}>
                   <AsyncHeader />
                 </Suspense>

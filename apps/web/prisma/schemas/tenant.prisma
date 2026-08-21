@@ -254,7 +254,7 @@ model Invitation {
   userId         String?        @db.Uuid
   details        Json?
   invitationType InvitationType @default(INVITE_ONLY)
-  role           Role?          // dénormalisé pour filtrage
+  role           String? 
   orgId          String         @db.Uuid
   resourceId     String?        @db.Uuid
   resourceType   Resource?
@@ -384,6 +384,7 @@ enum Role {
 
   @@schema("public")
 }
+
 
 enum Action {
   CREATE

@@ -44,9 +44,9 @@ export const directionRoutes: Route[] = [
         link: "/direction/academic/ues",
       },
       {
-        title: "Référentiel MESRS",
+        title: "Référentiel",
         icon: "Library",
-        link: "/direction/ue-templates",
+        link: "/direction/academic/ues/templates",
       },
     ],
   },

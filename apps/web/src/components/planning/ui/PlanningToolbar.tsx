@@ -62,7 +62,7 @@ export function PlanningToolbar({
             type="button"
             onClick={onCancelEdit}
             disabled={saving}
-            className="inline-flex h-9 items-center justify-center rounded-lg border border-input bg-background px-3 text-[13px] font-medium"
+            className="inline-flex h-9 items-center justify-center rounded-sm border border-input bg-background px-3 text-[13px] font-medium"
           >
             Annuler
           </button>
@@ -70,7 +70,7 @@ export function PlanningToolbar({
             type="button"
             onClick={onSubmit}
             disabled={saving}
-            className="inline-flex h-9 items-center justify-center rounded-lg bg-primary px-3 text-[13px] font-medium text-primary-foreground"
+            className="inline-flex h-9 items-center justify-center rounded-sm bg-primary px-3 text-[13px] font-medium text-primary-foreground"
           >
             {saving && <Loader2 className="mr-1.5 size-4 animate-spin" />}
             Enregistrer
@@ -81,7 +81,7 @@ export function PlanningToolbar({
       )}
 
       <TooltipProvider delayDuration={250}>
-        <span className="flex items-center gap-1 rounded-lg border bg-muted/80 p-1 text-muted-foreground shadow-sm">
+        <span className="flex items-center gap-1 rounded-sm border bg-muted/80 p-1 text-muted-foreground shadow-sm">
           {canEdit && (
             <Tip label="Modifier la séance">
               <ToolbarButton onClick={() => onModeToggle("edit")} disabled={locked}>

@@ -109,7 +109,7 @@ export function ClassPlanning({
   );
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col ">
       <ActionScheduleToast
         open={open}
         title={confirmToastContent.title}
@@ -119,7 +119,7 @@ export function ClassPlanning({
         onClose={onClose}
       />
 
-      <div className="mb-2 flex items-center justify-end">
+      <div className="mb-0 flex items-center justify-end">
         <PlanningExportWidget classId={classId} resources={resources} />
       </div>
 

@@ -44,14 +44,14 @@ export function ActionScheduleToast({
   return (
     <div className="fixed inset-0 z-50">
       <div className="absolute inset-0 pointer-events-none opacity-70 bg-black/10 backdrop-blur-xs" />
-      <div className="absolute bottom-6 left-20 w-[360px] rounded-xl border bg-card shadow-lg p-3.5 flex flex-col gap-3">
+      <div className="absolute bottom-6 left-20 w-[360px] rounded-sm border bg-card shadow-lg p-3.5 flex flex-col gap-3">
         {change ? (
           <>
             <div className="flex items-center gap-2">
               <CalendarDays className="size-4 shrink-0 text-muted-foreground" />
               <p className="truncate text-[13px] font-semibold">{change.courseName}</p>
             </div>
-            <div className="flex items-center gap-2 rounded-lg bg-muted/40 px-3 py-2 text-[12px]">
+            <div className="flex items-center gap-2 rounded-sm bg-muted/40 px-3 py-2 text-[12px]">
               {change.fromDay && (
                 <>
                   <div className="flex flex-col">
@@ -78,13 +78,13 @@ export function ActionScheduleToast({
         <div className="flex items-center gap-2 [&>button]:flex-1">
           <button
             onClick={async () => { await cancel.onClick(); onClose?.(); }}
-            className="inline-flex h-9 items-center justify-center rounded-lg border border-input bg-background px-3 text-[13px] font-medium text-foreground transition-colors hover:bg-accent"
+            className="inline-flex h-9 items-center justify-center rounded-sm border border-input bg-background px-3 text-[13px] font-medium text-foreground transition-colors hover:bg-accent"
           >
             {cancel.label}
           </button>
           <button
             onClick={async () => { await confirm.onClick(); onClose?.(); }}
-            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 text-[13px] font-medium text-primary-foreground transition-opacity hover:opacity-90"
+            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-sm bg-primary px-3 text-[13px] font-medium text-primary-foreground transition-opacity hover:opacity-90"
           >
             <Check className="size-4" />
             {confirm.label}

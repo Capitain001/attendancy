@@ -1,4 +1,4 @@
-import { ScheduleStatus } from '@/generated/prisma/client'
+import { ScheduleStatus } from '@/generated/prisma/browser'
 
 export const SCHEDULE_STATUS_VALUES = [
   ScheduleStatus.PENDING,

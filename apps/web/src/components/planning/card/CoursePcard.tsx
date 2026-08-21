@@ -31,7 +31,7 @@ export function CoursePCard({
   status,
 }: CoursePCardProps) {
   return (
-    <div className="relative flex flex-col h-45 min-w-75 w-full justify-between rounded-2xl border bg-card p-4 gap-3 shadow-sm">
+    <div className="relative flex flex-col h-45 min-w-75 w-full justify-between rounded-sm border bg-card p-4 gap-3 shadow-sm">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Calendar size={15} aria-hidden />

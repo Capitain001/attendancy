@@ -46,11 +46,10 @@ const Layout = async ({ children, params }: LayoutProps) => {
 
             <div className="flex items-center gap-2">
               <RoleLiveBar role={"DIRECTION"} />
-
             </div>
           </div>
         </header>
-        <div className="flex flex-1 flex-col  overflow-y-auto scrollbar-hidden gap-4 p-2 md:p-4 pt-0 min-w-0">
+        <div className="flex flex-1 flex-col  overflow-y-auto scrollbar-hidden gap-4 p-2 md:p-4 md:pt-0 min-w-0">
           {children}
         </div>
       </SidebarInset>

@@ -2,14 +2,6 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { card, typography } from '@/styles'
 
-// interface MetricCardProps {
-//   label: string
-//   value: string
-//   sub: string
-//   href?: string
-// }
-
-
 export interface MetricCardProps {
   label: string
   value: number | string

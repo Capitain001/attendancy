@@ -17,7 +17,7 @@ export const card = {
 
   stat: cn(
     "rounded-lg ",
-    "bg-muted/50",
+    "bg-muted/80 ",
     "p-4",
     "transition-colors"
   ),
@@ -30,7 +30,7 @@ export const card = {
   ),
   statInteractive: cn(
     "rounded-lg",
-    "bg-muted/50",
+    "bg-muted/80",
     "p-4",
     "cursor-pointer",
     "transition-colors",

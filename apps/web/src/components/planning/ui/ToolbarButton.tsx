@@ -22,7 +22,7 @@ export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
         aria-label={title}
         aria-pressed={active}
         className={cn(
-          "grid size-7 place-items-center rounded-md transition-colors cursor-pointer",
+          "grid size-7 place-items-center rounded-sm transition-colors cursor-pointer",
           disabled && "opacity-40 cursor-default",
           !disabled && !active && "hover:bg-background/70",
           active && !activeColor && "bg-background text-foreground shadow-sm",

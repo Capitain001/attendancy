@@ -10,6 +10,7 @@ import { useCalendarEvents } from "./hooks/useCalendarEvents";
 // Composants
 import { CalendarHeader } from "./components/CalendarHeader";
 import { EventDialog } from "./components/event-dialog";
+import { CollapseItem } from "@/components/layout/CollapseItem";
 
 // Vues
 import { MonthView } from "./views/MonthView/month-view";
@@ -141,18 +142,20 @@ export function EventCalendar({
       <CalendarDndProvider onEventUpdate={handleEventUpdate} readOnly={readOnly}>
         <div className="flex min-h-0 flex-1  flex-col overflow-hidden ">
           <div className="sticky top-0 z-40 shrink-0  bg-background/95 backdrop-blur">
-            <CalendarHeader
-              view={view}
-              setView={setView}
-              selectedDay={currentDate}
-              firstDayCurrentMonth={currentDate}
-              previousPeriod={navigate.previous}
-              nextPeriod={navigate.next}
-              goToToday={navigate.today}
-              today={today}
-              href={href || "#"}
-              title={title}
-            />
+            <CollapseItem defaultOpen={true}>
+              <CalendarHeader
+                view={view}
+                setView={setView}
+                selectedDay={currentDate}
+                firstDayCurrentMonth={currentDate}
+                previousPeriod={navigate.previous}
+                nextPeriod={navigate.next}
+                goToToday={navigate.today}
+                today={today}
+                href={href || "#"}
+                title={title}
+              />
+            </CollapseItem>
           </div>
 
           <div className="scrollbar-hidden min-h-0 flex-1 overflow-y-auto overscroll-contain">

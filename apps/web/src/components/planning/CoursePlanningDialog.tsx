@@ -26,6 +26,7 @@ import type { PlanningResources } from "@/services/planning";
 
 import { CourseECard } from "./card/CourseEcard";
 import { CoursePCard } from "./card/CoursePcard";
+import { CourseRCard } from "./card/CourseRcard";
 import {
   buildAllTeachersMap,
   buildCourseMap,
@@ -289,6 +290,11 @@ export function CoursePlanningDialog({
 
   const isViewLike = mode === "view" || mode === "notes" || mode === "group";
 
+  const coursesCount = resources.courses.length;
+  const roomsCount = resources.rooms.length;
+  const teachersCount = new Set(resources.courses.flatMap(c => c.teachers.map(t => t.id))).size;
+  const isMissingResources = coursesCount === 0 || roomsCount === 0 || teachersCount === 0;
+
   return (
     <Dialog open={isOpen && !blockedCreation} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="flex flex-col border-0 gap-3 p-4 bg-transparent backdrop-blur-none shadow-none [&>button]:hidden">
@@ -311,7 +317,9 @@ export function CoursePlanningDialog({
           />
         )}
 
-        {mode === "edit" && (
+        {mode === "edit" && isMissingResources ? (
+          <CourseRCard coursesCount={coursesCount} roomsCount={roomsCount} teachersCount={teachersCount} />
+        ) : mode === "edit" && (
           <CourseECard
             key={event?.id ?? "new-session"}
             startDate={form.startDate}
@@ -334,7 +342,7 @@ export function CoursePlanningDialog({
         )}
 
         {mode === "notes" && (
-          <div className="rounded-xl border border-border bg-card p-3 flex flex-col gap-2">
+          <div className="rounded-sm border border-border bg-card p-3 flex flex-col gap-2">
             <span className="text-xs font-medium text-muted-foreground">Notes de séance</span>
             <Textarea
               value={form.notes}
@@ -347,7 +355,7 @@ export function CoursePlanningDialog({
         )}
 
         {mode === "group" && (
-          <div className="rounded-xl border border-border bg-card p-3 flex flex-col gap-2">
+          <div className="rounded-sm border border-border bg-card p-3 flex flex-col gap-2">
             <span className="text-xs font-medium text-muted-foreground">Groupe assigné</span>
             <Select value={form.groupId} onValueChange={(v) => patchForm({ groupId: v })}>
               <SelectTrigger className="bg-background">
@@ -366,7 +374,7 @@ export function CoursePlanningDialog({
         )}
 
         {error && (
-          <div role="alert" className="rounded-lg bg-destructive/15 px-3 py-2 text-xs text-destructive">
+          <div role="alert" className="rounded-sm bg-destructive/15 px-3 py-2 text-xs text-destructive">
             {error}
           </div>
         )}

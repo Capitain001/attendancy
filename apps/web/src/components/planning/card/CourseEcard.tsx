@@ -79,7 +79,7 @@ export function CourseECard({
   const [view, setView] = useState<"form" | "date">("form");
 
   return (
-    <div className="w-full rounded-2xl border bg-card p-5 shadow-lg">
+    <div className="w-full rounded-sm border bg-card p-5 shadow-lg">
       <AnimatePresence mode="wait" initial={false}>
         {view === "form" ? (
           <motion.div

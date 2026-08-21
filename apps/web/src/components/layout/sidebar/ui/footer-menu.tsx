@@ -27,8 +27,8 @@ interface FooterMenuProps {
 
 
 export function FooterMenu({ user }: FooterMenuProps) {
-    if (!user) return null;
-    const { isMobile } = useSidebar();
+  if (!user) return null;
+  const { isMobile } = useSidebar();
 
   return (
     <SidebarMenu>
@@ -39,7 +39,7 @@ export function FooterMenu({ user }: FooterMenuProps) {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div className="flex size-8 items-center justify-center overflow-hidden rounded-lg bg-muted">
+              <div className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-muted">
                 {user.avatar_url ? (
                   <Image
                     src={user.avatar_url}
