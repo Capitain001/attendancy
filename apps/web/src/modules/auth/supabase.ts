@@ -231,6 +231,7 @@ export async function updateProfile(
 ) {
   const supabase = await createClient();
   const { error: authError } = await supabase.auth.updateUser({
+    //ecris dans user.user_metadata conforme a la lecture du cache
     data: {
       name: data.name,
       phone: data.phone,

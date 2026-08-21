@@ -80,6 +80,16 @@ export function getUserInitials(name?: string, email?: string): string {
   return '?'
 }
 
+
+/**
+ * Construit un nom complet à partir du prénom/nom, en ignorant les parties
+ * vides ou undefined. Retourne undefined si aucune des deux parties n'est fournie.
+ */
+export function getFullName(firstName?: string | null, lastName?: string | null): string | undefined {
+  const parts = [firstName, lastName].filter(Boolean);
+  return parts.length > 0 ? parts.join(" ") : undefined;
+}
+
 export * from "./date"
 
 

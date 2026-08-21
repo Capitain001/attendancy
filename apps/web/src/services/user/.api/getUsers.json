@@ -1,0 +1,8 @@
+{
+  "name": "getUsers",
+  "file": "src/services/user/database/user.queries.ts",
+  "sig": "(orgId: string) => Promise<{ id: string; firstName: string | null; lastName: string | null; email: string; sex: Sex; phone: string | null; avatar_url: string | null; dateOfBirth: Date | null; isConnected: boolean; ... 4 more ...; deletedAt: Date | null; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,11 @@
+{
+  "name": "getUsersAction",
+  "file": "src/services/user/actions/user.queries.ts",
+  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { id: string; firstName: string | null; lastName: string | null; email: string; sex: Sex; phone: string | null; avatar_url: string | null; ... 6 more ...; deletedAt: Date | null; }[]; error?: undefined; }>",
+  "calls": [
+    "getUsers"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -8,13 +8,13 @@ import { PromotionBanner } from "@/components/classes/direction/section/ui/Promo
 
 interface LayoutProps {
   children: React.ReactNode;
-  params: Promise<{ classId: string; slug: string }>;
+  params: Promise<any>;
 }
 
 export default async function DirectionPromotionLayout({ children, params }: LayoutProps) {
 
   // Déstructuration de classId au lieu de id
-  const { classId, slug } = await params;
+  const { classId, slug } = (await params) as { classId: string; slug: string };
 
   // Récupération des données de la promotion
   const { data: class_, error } = await getClassAction({classId});

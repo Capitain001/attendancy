@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import type { UserInfo, UserStatus } from "@/types/user";
 import UserIcon from "../UserIcon";
 import AvatarUploader from "../AvatarUploader";
+import { getStatusLabel } from "@/services/user";
 
 // ─────────────────────────────────────────────────────────────────────────
 // Types
@@ -40,50 +41,9 @@ export interface UserProfileCardProps {
 // Helpers
 // ─────────────────────────────────────────────────────────────────────────
 
-const STATUS_LABEL: Record<UserStatus, string> = {
-  ACTIVE: "Actif",
-  INACTIVE: "Inactif",
-  SUSPENDED: "Suspendu",
-  ON_LEAVE: "En congé",
-  PENDING: "En attente",
-  NEW: "Nouveau",
-  INVITED: "Invité",
-};
 
-function getStatusLabel(status?: UserStatus): string {
-  return status ? STATUS_LABEL[status] : "—";
-}
 
-function getInitials(name?: string | null): string {
-  if (!name) return "?";
 
-  const parts = name
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean);
-
-  if (parts.length === 1) {
-    return parts[0][0]?.toUpperCase() ?? "?";
-  }
-
-  return (
-    (parts[0]?.[0] ?? "") + (parts[parts.length - 1]?.[0] ?? "")
-  ).toUpperCase();
-}
-
-function formatDate(value?: string | null): string {
-  if (!value) return "—";
-
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) return "—";
-
-  return new Intl.DateTimeFormat("fr-FR", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  }).format(date);
-}
 
 // ─────────────────────────────────────────────────────────────────────────
 // Sous-composants

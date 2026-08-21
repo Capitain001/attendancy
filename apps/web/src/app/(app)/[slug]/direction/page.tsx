@@ -77,7 +77,7 @@ export default async function DirectionDashboard({
           label="Sessions en cours"
           value={String(metrics?.activeSessions ?? 0)}
           sub="actuellement actives"
-          href={`${base}/sessions`}
+          href={`${base}/attendance/sessions`}
         />
       </section>
 

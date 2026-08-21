@@ -1,0 +1,11 @@
+{
+  "name": "deleteUserAction",
+  "file": "src/services/user/actions/user.mutations.ts",
+  "sig": "(userId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "calls": [
+    "deleteUser"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,8 @@
+{
+  "name": "deleteUser",
+  "file": "src/services/user/database/user.mutations.ts",
+  "sig": "(userId: string, orgId: string) => Promise<{ id: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,9 +1,6 @@
 import { getUserInfo } from '@/modules/user'
 import { redirect } from 'next/navigation'
-import { typography } from '@/styles'
-import { UserProfileForm } from '@/components/users/profile/UserProfileForm'
-import { UserPasswordForm } from '@/components/users/profile/UserPasswordForm'
-import { UserProfileCard } from '@/components/users/profile/UserProfileCard'
+import { ProfileSection } from '@/components/users/profile/ProfileSection'
 
 export default async function ProfilePage() {
   const user = await getUserInfo()
@@ -15,13 +12,13 @@ export default async function ProfilePage() {
   return (
     <div className="flex flex-col">
       <div className="flex flex-col mx-auto w-full max-w-3xl ">
-        <UserProfileCard user={user}  />
-        <UserPasswordForm />
+        <ProfileSection user={user as any} />
       </div>
     </div>
   )
 }
 
+/* deprecier */
 {/* <UserProfileForm 
   initialData={{
     id: user.id,

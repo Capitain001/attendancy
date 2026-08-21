@@ -2,7 +2,7 @@
 
 
 import { redirect } from "next/navigation";
-import { getUserInfo, removeUser, setUserInfo } from "@/services/user";
+import { getUserInfo, removeUser, setUserInfo } from "@/modules/user";
 import { logout } from "../supabase";
 
 

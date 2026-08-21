@@ -55,12 +55,14 @@ export const tryData = async <T>(
   }
 };
 
-export async function tryCatch<T>(promise: Promise<T>): Promise<ApiResponse<T>> {
+export async function tryCatch<T>(promise: Promise<T>, tag?: string): Promise<ApiResponse<T>> {
   try {
     const data = await promise;
     return { data };
   } catch (err: unknown) {
-    return { error: (err as Error)?.message || "Erreur inconnue" };
+    const error = (err as Error)?.message || "Erreur inconnue";
+    if (tag) console.error(`[${tag}]`, error);
+    return { error };
   }
 }
 

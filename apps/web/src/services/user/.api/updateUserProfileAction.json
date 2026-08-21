@@ -1,0 +1,11 @@
+{
+  "name": "updateUserProfileAction",
+  "file": "src/services/user/actions/user.mutations.ts",
+  "sig": "(input: UpdateCurrentUserInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "calls": [
+    "updateUserProfile"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

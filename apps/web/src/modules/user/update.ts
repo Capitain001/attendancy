@@ -1,4 +1,4 @@
-﻿// src/services/user/update.ts
+﻿// src/modules/user/update.ts
 "use server";
 
 import { Role } from "@/generated/prisma/client";
