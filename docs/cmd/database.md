@@ -15,6 +15,9 @@ Pour appliquer ou mettre à jour un script SQL spécifique, on utilise la comman
 **Exemple 1 : Appliquer les règles de stockage Supabase (bucket, RLS) pour les avatars**
 ```bash
 npx prisma db execute --file prisma/post-migrate/storage/avatar.sql
+
+# logo
+npx prisma db execute --file prisma/post-migrate/storage/logo.sql
 ```
 
 **Exemple 2 : Appliquer d'autres règles ou triggers (ex: communications)**
