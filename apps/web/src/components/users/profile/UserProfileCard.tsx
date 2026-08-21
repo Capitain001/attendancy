@@ -164,7 +164,7 @@ export function UserProfileCard({
 
         <div className="px-6 pb-6">
           <div className="-mt-12 flex items-end gap-4">
-            <AvatarUploader initialAvatarUrl={user?.avatar_url} name={fullName} />
+            <AvatarUploader initialAvatarUrl={user?.avatar_url ?? null} name={fullName} />
           </div>
 
           <div className="mt-3 flex flex-wrap items-center gap-2">
