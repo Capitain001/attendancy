@@ -1,4 +1,4 @@
-﻿//src/modules/auth/profile/user.ts
+//src/modules/auth/profile/user.ts
 "use server"
 
 import { Role } from "@/generated/prisma/client"
@@ -116,8 +116,8 @@ export async function checkUserProfile(userId?: string) {
   
   const profile = await prisma.user.findUnique({
     where: { id: userId || user.id },
-    select: { id: true }
+    select: { id: true, dateOfBirth: true }
   })
 
-  return !!profile
-}
+  return !!profile && !!profile.dateOfBirth
+};

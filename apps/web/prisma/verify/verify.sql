@@ -88,11 +88,13 @@ WHERE routine_schema = 'public'
     'trg_chat_on_class_ins',
     'trg_chat_on_group_ins',
     'trg_chat_on_student_enrollment_ins',
-    'trg_chat_on_student_group_ins'
+    'trg_chat_on_student_group_ins',
+    -- rpc/auth
+    'get_auth_user_by_email'
   )
 GROUP BY routine_name
 ORDER BY routine_name;
--- Attendu : 16 lignes
+-- Attendu : 17 lignes
 
 -- ─── Triggers ────────────────────────────────────────────────────────────────
 

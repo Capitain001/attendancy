@@ -26,9 +26,10 @@ export const CACHE_KEYS = {
     ALL: ["notifications"] as const,
   },
   INVITATIONS: {
-    ORG: ["invitations", "org"] as const,
+    ALL: ["invitations", "all"] as const,
     BY_CLASS: (classId: string) => ["invitations", "by-class", classId] as const,
     STATS: ["invitations", "stats"] as const,
+    
   },
   PROGRAMS: {
     BY_ID: (programId: string) => ["programs", programId] as const,

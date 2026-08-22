@@ -1,7 +1,5 @@
 // lib/storage/avatar.ts
 
-import { getPublicStorageUrl } from "./url";
-
 export const AVATAR_BUCKET = "avatars";
 
 export function getAvatarPath(userId: string): string {
@@ -9,7 +7,7 @@ export function getAvatarPath(userId: string): string {
 }
 
 export function getAvatarPublicUrl(filePath: string): string {
-  return getPublicStorageUrl(AVATAR_BUCKET, filePath);
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${AVATAR_BUCKET}/${filePath}`;
 }
 
 

@@ -1,4 +1,4 @@
-﻿// src/services/auth/members/utils.ts
+// src/services/auth/members/utils.ts
 "use server";
 
 import { PrismaClient, Role } from "@/generated/prisma/client";
@@ -197,6 +197,33 @@ export async function assignFunctionToUser(
     );
     // Ne pas faire échouer la transaction si l'assignation de fonction échoue
     return null;
+  }
+}
+
+/**
+ * Inscription d'un étudiant à sa classe et ses groupes (si spécifiés)
+ */
+export async function enrollStudentInClass(
+  tx: Tx,
+  studentId: string,
+  enrollment?: import("@/types/invitation").EnrollmentDetails
+): Promise<void> {
+  if (!enrollment?.classId) return;
+
+  const studentEnrollment = await tx.studentEnrollment.create({
+    data: {
+      studentId,
+      classId: enrollment.classId,
+    },
+  });
+
+  if (Array.isArray(enrollment.groupIds) && enrollment.groupIds.length > 0) {
+    await tx.studentGroup.createMany({
+      data: enrollment.groupIds.map((groupId) => ({
+        enrollmentId: studentEnrollment.id,
+        groupId,
+      })),
+    });
   }
 }
 

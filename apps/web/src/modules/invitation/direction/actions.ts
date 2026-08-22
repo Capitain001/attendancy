@@ -104,6 +104,7 @@ export async function inviteDirection(
       role: "DIRECTION",
       adminFunction: primaryFunction?.name || primaryFunctionName, // On passe le nom de la fonction
       permissions,
+      deliveryMethod: params.deliveryMethod,
     });
 
     if (result.error) {
@@ -149,8 +150,11 @@ export async function inviteDirection(
 
     return {
       success: true,
-      message: `Une invitation a été envoyée à ${email} pour le poste de direction`,
+      message: result.data?.link
+        ? `Lien d'invitation généré pour ${email}`
+        : `Une invitation a été envoyée à ${email} pour le poste de direction`,
       metadata: result.data?.metadata,
+      link: result.data?.link,
     };
   } catch (error) {
     console.error("Erreur lors de l'invitation du membre de la direction:", error);
@@ -160,4 +164,3 @@ export async function inviteDirection(
     };
   }
 }
-

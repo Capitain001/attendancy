@@ -15,11 +15,13 @@ import {
   DialogClose,
 } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
+import { isValidEmail } from '@/modules/invitation/validation'
 
 type Submit = (input: {
   email: string
   name?: string
   functions?: string[]
+  deliveryMethod?: "email" | "link"
 }) => Promise<{ success: boolean; error?: string }>
 
 interface InviteDialogProps {
@@ -36,6 +38,7 @@ export function InviteDialog({ functions, onInviteTeacher, onInviteDirection }: 
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
   const [selectedFns, setSelectedFns] = useState<string[]>([])
+  const [deliveryMethod, setDeliveryMethod] = useState<'email' | 'link'>('email')
   const [error, setError] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
 
@@ -44,6 +47,7 @@ export function InviteDialog({ functions, onInviteTeacher, onInviteDirection }: 
     setEmail('')
     setName('')
     setSelectedFns([])
+    setDeliveryMethod('email')
     setError(null)
   }
 
@@ -54,13 +58,13 @@ export function InviteDialog({ functions, onInviteTeacher, onInviteDirection }: 
   }
 
   const canSubmit =
-    email.trim().length > 3 &&
+    isValidEmail(email.trim()) &&
     (role === 'TEACHER' || selectedFns.length > 0)
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
-    const input = { email: email.trim(), name: name.trim() || undefined }
+    const input = { email: email.trim(), name: name.trim() || undefined, deliveryMethod }
     startTransition(async () => {
       const res =
         role === 'DIRECTION'
@@ -187,6 +191,41 @@ export function InviteDialog({ functions, onInviteTeacher, onInviteDirection }: 
               )}
             </div>
           )}
+
+          <div className="space-y-2 pt-1">
+            <label className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+              Envoi de l'invitation
+            </label>
+            <div className="flex gap-4">
+              <label className="flex items-center gap-1.5 text-[13px] cursor-pointer">
+                <input
+                  type="radio"
+                  name="deliveryMethod"
+                  value="email"
+                  checked={deliveryMethod === 'email'}
+                  onChange={() => setDeliveryMethod('email')}
+                  className="accent-primary"
+                />
+                Par email automatique
+              </label>
+              <label className="flex items-center gap-1.5 text-[13px] cursor-pointer">
+                <input
+                  type="radio"
+                  name="deliveryMethod"
+                  value="link"
+                  checked={deliveryMethod === 'link'}
+                  onChange={() => setDeliveryMethod('link')}
+                  className="accent-primary"
+                />
+                Lien uniquement
+              </label>
+            </div>
+            {deliveryMethod === 'link' && (
+              <p className="text-[11px] text-muted-foreground/80 leading-snug">
+                Le lien magique sera généré et copié pour que vous le partagiez vous-même (SMS, WhatsApp...).
+              </p>
+            )}
+          </div>
 
           {error && <p className="text-[12px] text-destructive">{error}</p>}
 

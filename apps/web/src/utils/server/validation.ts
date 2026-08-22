@@ -9,7 +9,7 @@ const uuidSchema = pipe(string(), uuid());
 //valide l uuid coter page , passer en params
 export function validateUUID(value: string): string {
   const result = safeParse(uuidSchema, value);
-  console.log("validateUUID", { value, result });
+  // console.log("validateUUID", { value, result });
   if (!result.success) notFound();
   return result.output;
 }

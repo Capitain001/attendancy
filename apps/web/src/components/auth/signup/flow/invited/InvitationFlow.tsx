@@ -3,8 +3,10 @@
 import { memo, useCallback, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { ArrowLeft } from 'lucide-react'
+import { isRedirectError } from 'next/dist/client/components/redirect-error'
 
 import type { ConfirmStatus } from './InvitationSteps'
+import type { AuthActionResult } from '@/modules/auth/types'
 import { button, card, layout } from '@/styles'
 import { cn } from '@/lib/utils'
 
@@ -33,8 +35,9 @@ export interface ConfirmDef {
 export interface InvitationFlowProps {
   steps: StepDef[]
   confirm: ConfirmDef
-  onAccept?: () => void | Promise<void>
-  onDecline?: () => void | Promise<void>
+  onAccept?: () => AuthActionResult | Promise<AuthActionResult>
+  onDecline?: () => AuthActionResult | Promise<AuthActionResult>
+  /** Affiché après un accept réussi qui ne redirige pas (ex: NEW user → signup). */
   onContinue?: () => void
 }
 
@@ -50,6 +53,7 @@ export default function InvitationFlow({
 }: InvitationFlowProps) {
   const [stepIndex, setStepIndex] = useState(0)
   const [status, setStatus] = useState<ConfirmStatus>('idle')
+  const [error, setError] = useState<string | null>(null)
 
   const totalSteps = steps.length + 1
   const isConfirmStep = stepIndex === steps.length
@@ -68,18 +72,35 @@ export default function InvitationFlow({
 
   const handleAccept = useCallback(async () => {
     setStatus('accepting')
+    setError(null)
     try {
-      await onAccept?.()
+      const result = await onAccept?.()
+      // Si onAccept redirige côté serveur (user existant, succès), le throw
+      // NEXT_REDIRECT ci-dessous interrompt avant d'atteindre cette ligne.
+      // On arrive ici uniquement si l'action est retournée sans redirect —
+      // càd un échec métier explicite (result.error), pas un throw.
+      if (result?.error) {
+        setError(result.error)
+        setStatus('idle')
+        return
+      }
       setStatus('accepted')
-    } catch {
+    } catch (err) {
+      if (isRedirectError(err)) throw err // laisser Next gérer la navigation
       setStatus('idle')
     }
   }, [onAccept])
 
   const handleDecline = useCallback(async () => {
     setStatus('declining')
+    setError(null)
     try {
-      await onDecline?.()
+      const result = await onDecline?.()
+      if (result?.error) {
+        setError(result.error)
+      }
+    } catch (err) {
+      if (isRedirectError(err)) throw err
     } finally {
       setStatus('idle')
     }
@@ -122,6 +143,12 @@ export default function InvitationFlow({
                 : steps[stepIndex].render()}
             </motion.div>
           </AnimatePresence>
+
+          {error && isConfirmStep && (
+            <p role="alert" className="text-sm text-destructive">
+              {error}
+            </p>
+          )}
 
           {!isConfirmStep && (
             <div className="flex w-full gap-2">

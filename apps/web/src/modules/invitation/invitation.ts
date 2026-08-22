@@ -1,5 +1,5 @@
 // ==========================================
-// lib/services/invitation.ts
+// src/modules/invitation/invitation.ts
 // ==========================================
 /**
  * Service d'envoi d'invitations via Supabase Auth

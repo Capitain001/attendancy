@@ -15,6 +15,8 @@ import { cn } from '@/lib/utils'
 import { useClasses } from '@/hooks/data/classes/useClasses'
 import { getGroupsByClassAction } from '@/services/group'
 import { inviteStudent } from '@/modules/invitation/student/actions'
+import { copyLinkOrToast } from '@/hooks/data/invitation/useInvitationMutations'
+import { isValidEmail } from '@/modules/invitation/validation'
 
 export function GlobalInviteStudentDialog() {
   const [open, setOpen] = useState(false)
@@ -34,6 +36,7 @@ export function GlobalInviteStudentDialog() {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [parentEmail, setParentEmail] = useState('')
+  const [deliveryMethod, setDeliveryMethod] = useState<'email' | 'link'>('email')
   
   const [loadingGroups, setLoadingGroups] = useState(false)
   const [pending, startTransition] = useTransition()
@@ -48,6 +51,7 @@ export function GlobalInviteStudentDialog() {
     setFirstName('')
     setLastName('')
     setParentEmail('')
+    setDeliveryMethod('email')
     setError(null)
   }
 
@@ -95,6 +99,7 @@ export function GlobalInviteStudentDialog() {
         lastName: lastName.trim() || undefined,
         groupIds: groupIds.length ? groupIds : undefined,
         parentEmail: parentEmail.trim() || undefined,
+        deliveryMethod,
         classId
       })
       
@@ -103,7 +108,11 @@ export function GlobalInviteStudentDialog() {
         return
       }
       
-      toast.success("Invitation envoyée avec succès")
+      if (res.link) {
+        void copyLinkOrToast(res.link, res.message ?? "Lien d'invitation copié")
+      } else {
+        toast.success(res.message ?? "Invitation envoyée avec succès")
+      }
       reset()
       setOpen(false)
     })
@@ -307,6 +316,41 @@ export function GlobalInviteStudentDialog() {
               className="h-9 w-full rounded-md border border-dashed border-foreground/30 bg-card px-3 text-[13px] outline-none focus:border-foreground/60 placeholder:text-muted-foreground/60"
             />
           </div>
+
+          <div className="space-y-2 pt-1">
+            <label className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+              Envoi de l'invitation
+            </label>
+            <div className="flex gap-4">
+              <label className="flex items-center gap-1.5 text-[13px] cursor-pointer">
+                <input
+                  type="radio"
+                  name="deliveryMethod"
+                  value="email"
+                  checked={deliveryMethod === 'email'}
+                  onChange={() => setDeliveryMethod('email')}
+                  className="accent-primary"
+                />
+                Par email automatique
+              </label>
+              <label className="flex items-center gap-1.5 text-[13px] cursor-pointer">
+                <input
+                  type="radio"
+                  name="deliveryMethod"
+                  value="link"
+                  checked={deliveryMethod === 'link'}
+                  onChange={() => setDeliveryMethod('link')}
+                  className="accent-primary"
+                />
+                Lien uniquement
+              </label>
+            </div>
+            {deliveryMethod === 'link' && (
+              <p className="text-[11px] text-muted-foreground/80 leading-snug">
+                Le lien magique sera généré et copié pour que vous le partagiez vous-même (SMS, WhatsApp...).
+              </p>
+            )}
+          </div>
         </div>
         
         {error && <p className="text-[12px] text-destructive">{error}</p>}
@@ -322,7 +366,7 @@ export function GlobalInviteStudentDialog() {
         </button>
         <button
           type="submit"
-          disabled={pending || email.trim().length < 4}
+          disabled={pending || !isValidEmail(email.trim())}
           className="rounded-md bg-foreground px-4 py-2 text-[12px] font-medium text-background transition-opacity hover:opacity-90 disabled:opacity-50 inline-flex items-center gap-1.5"
         >
           {pending ? <Loader2 className="size-3.5 animate-spin" /> : <Users className="size-3.5" />}

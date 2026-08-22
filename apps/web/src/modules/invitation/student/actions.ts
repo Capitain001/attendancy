@@ -1,4 +1,4 @@
-// src/services/invitation/student/actions.ts
+// src/modules/invitation/student/actions.ts
 "use server";
 
 import { inviteUser }                          from "../user";
@@ -80,6 +80,7 @@ export async function inviteStudent(params: InviteStudentParams) {
       expiresInDays: expiresInDays ?? 7,
       resourceId:    classId,
       resourceType:  "CLASS",
+      deliveryMethod: params.deliveryMethod,
       ...(groupIds?.length || parentEmail
         ? {
             details: {
@@ -124,8 +125,11 @@ export async function inviteStudent(params: InviteStudentParams) {
 
     return {
       success: true,
-      message: `Une invitation a été envoyée à ${email} pour s'inscrire en tant qu'étudiant`,
+      message: result.data?.link
+        ? `Lien d'invitation généré pour ${email}`
+        : `Une invitation a été envoyée à ${email} pour s'inscrire en tant qu'étudiant`,
       metadata: result.data?.metadata,
+      link: result.data?.link,
     };
 
   } catch (error) {

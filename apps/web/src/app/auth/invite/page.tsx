@@ -6,7 +6,6 @@ import { createClient } from '@/utils/supabase/client'
 function InviteRelay() {
   const router       = useRouter()
   const searchParams = useSearchParams()
-  const token        = searchParams.get('token')
   const supabase     = createClient()
 
   useEffect(() => {
@@ -25,14 +24,7 @@ function InviteRelay() {
         type:          hashParams.get('type') ?? '—',
         error:         hashParams.get('error') ?? '—',
       })
-      console.log('invite token  :', token ?? '❌ absent')
       console.groupEnd()
-
-      if (!token) {
-        console.error('[invite] pas de token dans les search params → error')
-        router.replace('/auth/error?error=invite_invalid')
-        return
-      }
 
       const access_token  = hashParams.get('access_token')
       const refresh_token = hashParams.get('refresh_token')
@@ -59,8 +51,8 @@ function InviteRelay() {
         email:  data.user?.email,
         role:   data.user?.user_metadata?.role,
       })
-      console.log('[invite] → redirect /auth/welcome?token=', token)
-      router.replace(`/auth/welcome?token=${token}`)
+      console.log('[invite] → redirect /auth/welcome')
+      router.replace(`/auth/welcome`)
     }
 
     relay()

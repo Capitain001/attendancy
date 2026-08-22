@@ -19,8 +19,9 @@ function createDatabaseDetails(
     function:       metadata.function,
     organization:   metadata.organization,
     invited_by:     metadata.invited_by,
-    status:         metadata.status,
+    status:         metadata.invitationStatus,
     invitationType: metadata.invitationType,
+    ...(metadata.details || {}),
   } as unknown as Prisma.InputJsonValue;
 }
 
@@ -101,7 +102,7 @@ export async function saveInvitationWithAudit(
         expiresAt,
         orgId:          metadata?.organization?.id!,
         invitationType: "INVITE_ONLY",
-        role:           metadata.role as any,
+        role:           metadata?.role,
         details:        invitationDetails,
         ...(resourceId   ? { resourceId }   : {}),
         ...(resourceType ? { resourceType } : {}),
@@ -164,6 +165,7 @@ export async function getOrganizationInvitations({
     usedAt:    inv.usedAt,
     role:      inv.role,
     details:   inv.details ? (inv.details as DatabaseInvitationDetails) : null,
+    token: inv.token,
   }));
 }
 

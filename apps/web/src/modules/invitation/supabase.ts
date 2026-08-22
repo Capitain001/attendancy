@@ -1,6 +1,7 @@
 import { INVITE_URL } from "@/config/url";
 import { createClient } from "@/utils/supabase/server";
 import { InvitationMetadata } from "@/types/invitation";
+import { findAuthUserByEmail } from "../auth/supabase";
 
 //supabase documentation url
 export const docUrl = "https://supabase.com/docs/reference/javascript";
@@ -23,21 +24,18 @@ export const docUrl = "https://supabase.com/docs/reference/javascript";
  */
 export async function resendInvitation(
   email: string,
-  metadata?: InvitationMetadata | { resendLinkBy?: string }
+  metadata?: InvitationMetadata | { invitationToken?: string; resendLinkBy?: string }
 ): Promise<{ success: true; message: string } | { success: false; error: string }> {
   try {
     const supabase = await createClient();
-    
-    // Vérifier si l'utilisateur existe en listant les utilisateurs avec cet email
-    const { data, error: listError } = await supabase.auth.admin.listUsers();
-    
-    let user = null;
-    if (!listError && data?.users) {
-      user = data.users.find((u: any) => u.email === email) || null;
-    }
-    
-    if (listError) {
-      // Si on ne peut pas lister, on essaie quand même d'envoyer l'invitation
+
+    // findAuthUserByEmail : même helper que deleteInvitationUserAction — évite de
+    // rescanner tous les users via listUsers() (paginé, non fiable au-delà de la 1ère page)
+    // juste pour trouver un seul email.
+    const findResult = await findAuthUserByEmail(email);
+
+    if ('error' in findResult) {
+      // Recherche indisponible → on essaie quand même d'envoyer l'invitation
       const { error } = await supabase.auth.admin.inviteUserByEmail(email, {
         redirectTo: INVITE_URL,
         data: metadata || {},
@@ -50,8 +48,10 @@ export async function resendInvitation(
       return { success: true, message: "Invitation envoyée automatiquement" };
     }
 
+    const user = findResult.data.user;
+
     if (!user) {
-      // Nouvel utilisateur → invitation automatique
+      // Nouvel utilisateur → invitation automatique (data honoré : c'est une création)
       const { error } = await supabase.auth.admin.inviteUserByEmail(email, {
         redirectTo: INVITE_URL,
         data: metadata || {},
@@ -65,7 +65,20 @@ export async function resendInvitation(
     }
 
     if (!user.email_confirmed_at) {
-      // Utilisateur non confirmé → on peut renvoyer l'invitation
+      // Utilisateur EXISTANT non confirmé : inviteUserByEmail ignore silencieusement `data`
+      // pour un utilisateur déjà créé (data n'est honoré qu'à la création). Il faut donc
+      // écrire nous-mêmes le nouveau user_metadata via updateUserById, en mergeant avec
+      // l'existant puisque updateUserById REMPLACE tout le user_metadata (pas de merge Supabase).
+      if (metadata) {
+        const mergedMetadata = { ...(user.user_metadata ?? {}), ...metadata };
+        const { error: updateError } = await supabase.auth.admin.updateUserById(user.id, {
+          user_metadata: mergedMetadata,
+        });
+        if (updateError) {
+          return { success: false, error: updateError.message };
+        }
+      }
+
       const { error } = await supabase.auth.admin.inviteUserByEmail(email, {
         redirectTo: INVITE_URL,
         data: metadata || {},
@@ -109,10 +122,30 @@ export async function resendInvitation(
  */
 export async function generateMagicLink(
   email: string,
-  metadata?: InvitationMetadata | { resendLinkBy?: string }
+  metadata?: InvitationMetadata | { invitationToken?: string; resendLinkBy?: string }
 ): Promise<{ success: true; link: string } | { success: false; error: string }> {
   try {
     const supabase = await createClient();
+
+    // generateLink() n'honore `data` qu'à la CRÉATION du user. Pour un utilisateur déjà
+    // existant (cas normal ici : on régénère un lien pour un compte invité), il faut
+    // persister nous-mêmes le nouveau user_metadata via updateUserById avant d'appeler
+    // generateLink — sinon le nouveau token (et le reste de `metadata`) est silencieusement
+    // ignoré et le lien renvoyé reste basé sur l'ancien user_metadata.
+    if (metadata) {
+      const findResult = await findAuthUserByEmail(email);
+      const user = 'error' in findResult ? null : findResult.data.user;
+
+      if (user) {
+        const mergedMetadata = { ...(user.user_metadata ?? {}), ...metadata };
+        const { error: updateError } = await supabase.auth.admin.updateUserById(user.id, {
+          user_metadata: mergedMetadata,
+        });
+        if (updateError) {
+          return { success: false, error: updateError.message };
+        }
+      }
+    }
 
     const { data, error } = await supabase.auth.admin.generateLink({
       type: "magiclink",
@@ -146,56 +179,67 @@ export async function generateMagicLink(
 
 
 /**
- * Fonction utilitaire combinée (ancienne version, conservée pour compatibilité)
- * 
- * @deprecated Utilisez resendInvitation() ou generateMagicLink() à la place
+ * Crée l'utilisateur (état "invited", non confirmé) et génère son lien d'invitation,
+ * SANS déclencher l'email automatique de Supabase.
+ *
+ * @description
+ * - Utilise `generateLink({ type: "invite" })`, qui d'après la doc Supabase
+ *   "handles the creation of the user for signup, invite and magiclink" :
+ *   contrairement à `inviteUserByEmail`, cet appel ne fait AUCUN envoi — il renvoie
+ *   seulement `action_link`, à charge de l'appelant de le transmettre (copier/coller,
+ *   SMS, email via notre propre provider, etc.)
+ * - Si l'email appartient déjà à un utilisateur confirmé → erreur, comme `inviteUserByEmail`
+ *   (dans ce cas, utiliser `generateMagicLink` à la place)
+ *
+ * @param email - Email de l'utilisateur à créer
+ * @param metadata - Métadonnées de l'invitation, stockées dans `user_metadata`
+ * @returns Le lien d'invitation à transmettre manuellement, et l'id Supabase créé
+ * @throws Error si l'opération échoue
+ *
+ * @example
+ * const result = await createInvitationLink("user@example.com", metadata);
+ * if (result.success) {
+ *   // result.link → à afficher/copier dans l'UI, ou à envoyer via notre propre canal
+ * }
  */
-export async function resendInviteOrMagicLink(email: string) {
+export async function createInvitationLink(
+  email: string,
+  metadata: InvitationMetadata
+): Promise<
+  | { success: true; link: string; userId: string }
+  | { success: false; error: string }
+> {
+  try {
     const supabase = await createClient();
-    
-    // Vérifier si l'utilisateur existe en listant les utilisateurs avec cet email
-    const { data, error: listError } = await supabase.auth.admin.listUsers();
-    
-    let user = null;
-    if (!listError && data?.users) {
-      user = data.users.find((u: any) => u.email === email) || null;
-    }
-    
-    if (listError) throw listError;
-  
-    if (!user) {
-      // Nouvel utilisateur → invitation automatique
-      const { error } = await supabase.auth.admin.inviteUserByEmail(email, {
-        redirectTo: INVITE_URL,
-        data: { invitedBy: "admin@example.com" },
-      });
-      if (error) throw error;
-      return "Invitation envoyée automatiquement par Supabase";
-    }
-  
-    if (!user?.email_confirmed_at) {
-    // Utilisateur non confirmé → on peut renvoyer l'invitation
-      const { error } = await supabase.auth.admin.inviteUserByEmail(email, {
-        redirectTo: INVITE_URL,
-        data: { invitedBy: "admin@example.com" },
-      });
-      if (error) throw error;
-      return "Invitation renvoyée (non confirmé)";
-    }
-    
-    // Utilisateur déjà actif → on envoie un magic link via generateLink
-  const { data: linkData, error } = await supabase.auth.admin.generateLink({
-      type: "magiclink",
+
+    const { data, error } = await supabase.auth.admin.generateLink({
+      type: "invite",
       email,
-      options: { redirectTo: INVITE_URL },
+      options: {
+        redirectTo: INVITE_URL,
+        data: metadata,
+      },
     });
-    if (error) throw error;
-  
-  return linkData?.properties?.action_link; // à envoyer via ton email
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    const link = data?.properties?.action_link;
+    const userId = data?.user?.id;
+
+    if (!link || !userId) {
+      return { success: false, error: "Le lien d'invitation n'a pas pu être généré" };
+    }
+
+    return { success: true, link, userId };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erreur inconnue lors de la création de l'invitation par lien",
+    };
   }
-  
-
-
+}
 
 
 
@@ -241,6 +285,3 @@ export async function getInvitationsByOrganization(organizationId: string) {
     if (error) throw error;
     return data;
   }
-  
-  
-  

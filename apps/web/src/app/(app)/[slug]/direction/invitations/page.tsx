@@ -18,7 +18,7 @@ export default async function Page() {
     getFunctionsAction(),
   ])
 
-  if ('data' in invRes) queryClient.setQueryData(CACHE_KEYS.INVITATIONS.ORG, invRes.data)
+  if ('data' in invRes) queryClient.setQueryData(CACHE_KEYS.INVITATIONS.ALL, invRes.data)
   if (statsRes.success) queryClient.setQueryData(CACHE_KEYS.INVITATIONS.STATS, statsRes.stats)
 
   const functions = fnRes.data ? fnRes.data.map((f) => ({ id: f.id, name: f.name })) : []

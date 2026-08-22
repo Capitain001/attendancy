@@ -1,8 +1,7 @@
 'use client'
 // Historique des invitations : statut résolu côté module (status.ts), filtre + actions.
-
 import { useState } from 'react'
-import { Loader2, RotateCw, Trash2 } from 'lucide-react'
+import { Loader2, RotateCw, Trash2, Share2 } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
 import {
@@ -18,6 +17,7 @@ interface InvitationTableProps {
   invitations: InvitationListItem[]
   onResend: (inv: InvitationListItem) => void
   onRevoke: (inv: InvitationListItem) => void
+  onShare?: (inv: InvitationListItem) => void
   pending?: boolean
 }
 
@@ -33,7 +33,7 @@ function formatDate(d: Date | string | null) {
   return new Date(d).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })
 }
 
-export function InvitationTable({ invitations, onResend, onRevoke, pending }: InvitationTableProps) {
+export function InvitationTable({ invitations, onResend, onRevoke, onShare, pending }: InvitationTableProps) {
   const [filter, setFilter] = useState<'all' | InvitationStatus>('all')
   const [confirmId, setConfirmId] = useState<string | null>(null)
 
@@ -78,7 +78,7 @@ export function InvitationTable({ invitations, onResend, onRevoke, pending }: In
                   </p>
                 </div>
 
-                <Badge variant={badge.variant} className="shrink-0 text-[10px]">
+                <Badge variant={badge.variant} className="shrink-0 rouned-sm text-[10px]">
                   {badge.label}
                 </Badge>
 
@@ -92,6 +92,18 @@ export function InvitationTable({ invitations, onResend, onRevoke, pending }: In
                       className="grid size-7 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground disabled:opacity-40"
                     >
                       <RotateCw className="size-3.5" />
+                    </button>
+                  )}
+
+                  {status !== 'accepted' && onShare && (
+                    <button
+                      type="button"
+                      onClick={() => onShare(inv)}
+                      disabled={pending}
+                      title="Partager le lien"
+                      className="grid size-7 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground disabled:opacity-40"
+                    >
+                      <Share2 className="size-3.5" />
                     </button>
                   )}
 

@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { toast } from "sonner"
-import NotificationBar from "../NotificationBar"
+import {NotificationBar} from "../NotificationBar"
 import { useNotifications } from "@/hooks/notification/useNotification"
 
 

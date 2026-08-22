@@ -18,7 +18,7 @@ interface Props {
   onToggle?: () => void
 }
 
-export default function NotificationBar({
+export function NotificationBar({
   notification,
   isCollapsed = true,
   show = true,

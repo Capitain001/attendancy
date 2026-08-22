@@ -14,6 +14,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
+import { isValidEmail } from '@/modules/invitation/validation'
 
 interface InviteStudentDialogProps {
   groups: { id: string; name: string }[]
@@ -23,6 +24,7 @@ interface InviteStudentDialogProps {
     lastName?: string
     groupIds?: string[]
     parentEmail?: string
+    deliveryMethod?: 'email' | 'link'
   }) => Promise<{ success: boolean; error?: string }>
 }
 
@@ -33,6 +35,7 @@ export function InviteStudentDialog({ groups, onSubmit }: InviteStudentDialogPro
   const [lastName, setLastName] = useState('')
   const [groupIds, setGroupIds] = useState<string[]>([])
   const [parentEmail, setParentEmail] = useState('')
+  const [deliveryMethod, setDeliveryMethod] = useState<'email' | 'link'>('email')
   const [error, setError] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
 
@@ -42,6 +45,7 @@ export function InviteStudentDialog({ groups, onSubmit }: InviteStudentDialogPro
     setLastName('')
     setGroupIds([])
     setParentEmail('')
+    setDeliveryMethod('email')
     setError(null)
   }
 
@@ -59,6 +63,7 @@ export function InviteStudentDialog({ groups, onSubmit }: InviteStudentDialogPro
         lastName: lastName.trim() || undefined,
         groupIds: groupIds.length ? groupIds : undefined,
         parentEmail: parentEmail.trim() || undefined,
+        deliveryMethod,
       })
       if (!res.success) {
         setError(res.error ?? "Envoi de l'invitation impossible.")
@@ -181,6 +186,41 @@ export function InviteStudentDialog({ groups, onSubmit }: InviteStudentDialogPro
             />
           </div>
 
+          <div className="space-y-2 pt-1">
+            <label className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+              Envoi de l'invitation
+            </label>
+            <div className="flex gap-4">
+              <label className="flex items-center gap-1.5 text-[13px] cursor-pointer">
+                <input
+                  type="radio"
+                  name="deliveryMethod"
+                  value="email"
+                  checked={deliveryMethod === 'email'}
+                  onChange={() => setDeliveryMethod('email')}
+                  className="accent-primary"
+                />
+                Par email automatique
+              </label>
+              <label className="flex items-center gap-1.5 text-[13px] cursor-pointer">
+                <input
+                  type="radio"
+                  name="deliveryMethod"
+                  value="link"
+                  checked={deliveryMethod === 'link'}
+                  onChange={() => setDeliveryMethod('link')}
+                  className="accent-primary"
+                />
+                Lien uniquement
+              </label>
+            </div>
+            {deliveryMethod === 'link' && (
+              <p className="text-[11px] text-muted-foreground/80 leading-snug">
+                Le lien magique sera généré et copié pour que vous le partagiez vous-même (SMS, WhatsApp...). L'étudiant ne recevra pas d'email.
+              </p>
+            )}
+          </div>
+
           {error && <p className="text-[12px] text-destructive">{error}</p>}
 
           <div className="flex justify-end gap-2 pt-1">
@@ -194,7 +234,7 @@ export function InviteStudentDialog({ groups, onSubmit }: InviteStudentDialogPro
             </DialogClose>
             <button
               type="submit"
-              disabled={pending || email.trim().length < 4}
+              disabled={pending || !isValidEmail(email.trim())}
               className="rounded-md bg-foreground px-3 py-2 text-[12px] font-medium text-background transition-opacity hover:opacity-90 disabled:opacity-50"
             >
               {pending ? 'Envoi…' : 'Envoyer'}

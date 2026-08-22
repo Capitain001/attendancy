@@ -1,5 +1,5 @@
 // ==========================================
-// lib/services/metadata.ts
+// src/modules/invitation/metadata.ts
 // ==========================================
 /**
  * Service de génération des métadonnées d'invitation
@@ -13,8 +13,8 @@
  * );
  */
 
-import { Functions, Organization, Role, UserInfo } from "@/types";
-import {  InvitationMetadata } from "@/types/invitation";
+import { Functions, Organization, Role, UserInfo, UserStatus } from "@/types";
+import { InvitationMetadata } from "@/types/invitation";
 
 interface MetadataParams {
   email: string;
@@ -24,12 +24,17 @@ interface MetadataParams {
   permissions?: string[];
   departmentId?: string;
   resources?: { courses?: string[]; classes?: string[] };
+  details?: {
+    enrollment?: import("@/types/invitation").EnrollmentDetails;
+    parentLink?: import("@/types/invitation").ParentLinkDetails;
+  };
 }
 
 export function generateInvitationMetadata(
   params: MetadataParams,
   user: UserInfo,
-  token: string
+  token: string,
+  userStatus: UserStatus
 ): InvitationMetadata {
   const organization: Organization = {
     id: user.organization?.id!,
@@ -40,7 +45,7 @@ export function generateInvitationMetadata(
     departmentId: params.departmentId,
   };
 
-  const invited_by ={
+  const invited_by = {
     id: user.id!,
     name: user.name || user.email?.split("@")[0] || "",
     email: user.email || "",
@@ -53,8 +58,10 @@ export function generateInvitationMetadata(
     organization,
     organizations: [organization],
     invited_by,
-    status: "PENDING",
+    status: userStatus,
+    invitationStatus: "PENDING",
     invitationToken: token,
     invitationType: "INVITE_ONLY",
+    details: params.details,
   };
 }

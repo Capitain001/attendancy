@@ -13,7 +13,7 @@ interface DirectionInvitationsPageProps {
 }
 
 export function DirectionInvitationsPage({ functions }: DirectionInvitationsPageProps) {
-  const { invitations, inviteTeacher, inviteDirection, resend, revoke } = useOrgInvitations()
+  const { invitations, inviteTeacher, inviteDirection, resend, revoke, share } = useOrgInvitations()
   const { stats } = useInvitationStats()
 
   return (
@@ -48,11 +48,12 @@ export function DirectionInvitationsPage({ functions }: DirectionInvitationsPage
         <MetricCard label="Expirées" value={String(stats?.expired ?? 0)} sub="à relancer" />
       </section>
 
-      <CollapseSection label="Historique" count={invitations.length} defaultOpen>
+      <CollapseSection label="Toutes les invitations" count={invitations.length} defaultOpen>
         <InvitationTable
           invitations={invitations}
           onResend={(inv) => resend.mutate(inv)}
           onRevoke={(inv) => revoke.mutate(inv)}
+          onShare={share}
           pending={resend.isPending || revoke.isPending}
         />
       </CollapseSection>

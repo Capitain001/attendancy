@@ -1,3 +1,4 @@
+//src/modules/invitation/token.ts
 /**
  * Service de génération de tokens d'invitation sécurisés
  * 

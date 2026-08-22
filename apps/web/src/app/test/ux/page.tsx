@@ -33,18 +33,20 @@ const mockUser: UserInfo = {
 
 export default function Page() {
   return (
-    <InvitationFlow
-      steps={[
-        { key: 'welcome',    render: () => <WelcomeStep    user={mockUser} /> },
-        { key: 'invitation', render: () => <InvitationStep user={mockUser} /> },
-        { key: 'role',       render: () => <RoleStep       user={mockUser} /> },
-      ]}
-      confirm={{
-        key: 'confirm',
-        render: (status) => <ConfirmStep user={mockUser} status={status} />,
-      }}
-      onAccept={async () => { await new Promise((r) => setTimeout(r, 1500)) }}
-      onDecline={async () => { await new Promise((r) => setTimeout(r, 800)) }}
-    />
+    // <InvitationFlow
+    //   steps={[
+    //     { key: 'welcome',    render: () => <WelcomeStep    user={mockUser} /> },
+    //     { key: 'invitation', render: () => <InvitationStep user={mockUser} /> },
+    //     { key: 'role',       render: () => <RoleStep       user={mockUser} /> },
+    //   ]}
+    //   confirm={{
+    //     key: 'confirm',
+    //     render: (status) => <ConfirmStep user={mockUser} status={status} />,
+    //   }}
+    //   onAccept={async () => { await new Promise((r) => setTimeout(r, 1500)) }}
+    //   onDecline={async () => { await new Promise((r) => setTimeout(r, 800)) }}
+    // />
+
+    <div>  </div>
   )
 }

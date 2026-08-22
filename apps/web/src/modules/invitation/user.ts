@@ -8,9 +8,12 @@ import { getUserInfo } from "../user";
 import { generateInvitationToken } from "./token";
 import { generateInvitationMetadata } from "./metadata";
 import { sendSupabaseInvitation } from "./invitation";
+import { createInvitationLink } from "./supabase";
 import { saveInvitationWithAudit } from "./database";
 import { Action } from "@/generated/prisma/browser";
 import { getAuthorization } from "../auth/persmission";
+import { prisma } from "@/lib/prisma";
+import { UserStatus } from "@/types";
 // : Promise<InvitationResult>
 
 export async function inviteUser(params: InvitationParams) {
@@ -43,25 +46,48 @@ export async function inviteUser(params: InvitationParams) {
     const { token, expiresAt } = await generateInvitationToken(params.expiresInDays);
 
     // ---------------------------------------------------------
-    // 4. Construction du Payload (Métadonnées)
+    // 4. Vérification du statut (Profil existant ou Nouveau)
+    // ---------------------------------------------------------
+    const existingProfile = await prisma.user.findUnique({
+      where: { email: params.email }
+    });
+    const userStatus: UserStatus = existingProfile ? "ACTIVE" : "NEW";
+
+    // ---------------------------------------------------------
+    // 5. Construction du Payload (Métadonnées)
     // ---------------------------------------------------------
     // Agrégation des données de l'invitation (rôle, fonction admin, etc.)
-    // avec les informations de l'émetteur et le token. Ce payload sera 
-    // injecté dans Supabase et potentiellement dans l'email.
+    // avec les informations de l'émetteur, le token et le statut.
     const metadata = generateInvitationMetadata(
       { ...params, function: params.adminFunction },
       user,
-      token
+      token,
+      userStatus
     );
 
     // ---------------------------------------------------------
     // 5. Interface avec le fournisseur d'identité (Supabase)
     // ---------------------------------------------------------
-    // Déclenche l'envoi effectif de l'invitation via l'API Supabase Auth.
-    // Si cette étape échoue (ex: email invalide, erreur réseau), on annule le flux.
-    const invitationResult = await sendSupabaseInvitation(params.email, metadata);
-    if (!invitationResult.success) {
-      return { error: invitationResult.error || "Erreur Supabase" };
+    // Deux modes de remise, choisis par l'appelant (défaut = "email", comportement inchangé) :
+    // - "email" : Supabase envoie lui-même l'email d'invitation (sendSupabaseInvitation).
+    // - "link"  : on crée l'utilisateur (état invited) et on récupère le lien nous-mêmes,
+    //             sans email Supabase — à charge de l'appelant de le transmettre
+    //             (copier/coller dans l'UI, SMS, notre propre provider d'email, etc.)
+    // Si cette étape échoue (ex: email invalide, déjà confirmé, erreur réseau), on annule le flux.
+    const deliveryMethod = params.deliveryMethod ?? "email";
+    let invitationLink: string | undefined;
+
+    if (deliveryMethod === "link") {
+      const linkResult = await createInvitationLink(params.email, metadata);
+      if (!linkResult.success) {
+        return { error: linkResult.error || "Erreur Supabase" };
+      }
+      invitationLink = linkResult.link;
+    } else {
+      const invitationResult = await sendSupabaseInvitation(params.email, metadata);
+      if (!invitationResult.success) {
+        return { error: invitationResult.error || "Erreur Supabase" };
+      }
     }
 
     // ---------------------------------------------------------
@@ -81,7 +107,7 @@ export async function inviteUser(params: InvitationParams) {
     );
 
     // Logging serveur pour le monitoring (sans exposer de données sensibles en prod)
-    console.log("✅ Invitation envoyée avec succès:", {
+    console.log(deliveryMethod === "link" ? "✅ Lien d'invitation généré:" : "✅ Invitation envoyée avec succès:", {
       email: result.invitation.email,
       token: result.invitation.token,
     });
@@ -92,8 +118,12 @@ export async function inviteUser(params: InvitationParams) {
     return {
       data: {
         success: true,
-        message: `Invitation envoyée à ${params.email}`,
+        message:
+          deliveryMethod === "link"
+            ? `Lien d'invitation généré pour ${params.email}`
+            : `Invitation envoyée à ${params.email}`,
         metadata,
+        ...(invitationLink ? { link: invitationLink } : {}),
       }
     };
 

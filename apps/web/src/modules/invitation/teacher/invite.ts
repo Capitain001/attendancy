@@ -8,7 +8,8 @@ type InviteTeacherParams = {
   email: string;
   name?: string;
   resources?: TeacherResources
-  permissions?: string[];   
+  permissions?: string[];
+  deliveryMethod?: "email" | "link";
 };
 
 export type TeacherResources= {
@@ -19,7 +20,8 @@ export async function inviteTeacher({
   email,
   name,
   permissions = [],
-  resources
+  resources,
+  deliveryMethod
 }: InviteTeacherParams) {
   try {
     const result = await inviteUser({
@@ -28,6 +30,7 @@ export async function inviteTeacher({
       role: "TEACHER",
       permissions,
       resources,
+      deliveryMethod,
     });
 
     if (result.error) {
@@ -39,8 +42,11 @@ export async function inviteTeacher({
 
     return {
       success: true,
-      message: `Une invitation a été envoyée à ${email}`,
+      message: result.data?.link
+        ? `Lien d'invitation généré pour ${email}`
+        : `Une invitation a été envoyée à ${email}`,
       metadata: result.data?.metadata,
+      link: result.data?.link,
     };
   } catch (error) {
     console.error("Erreur lors de l'invitation de l'enseignant:", error);

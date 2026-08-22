@@ -1,3 +1,4 @@
+//src/modules/invitation/actions.ts
 "use server";
 
 import { resendInvitation, generateMagicLink } from "./supabase";
@@ -55,9 +56,10 @@ export async function resendInvitationAction(
     // Mettre à jour le token dans la table invitation
     await updateInvitationToken(invitation.id, token, expiresAt);
 
-    // Envoyer l'invitation avec seulement resendLinkBy (les métadonnées sont déjà dans l'utilisateur Supabase)
+    // Envoyer l'invitation et inclure le NOUVEAU token pour mettre à jour les métadonnées Supabase
     const result = await resendInvitation(invitation.email, {
       resendLinkBy: user.id,
+      invitationToken: token,
     });
     
     if (!result.success) {
@@ -108,9 +110,10 @@ export async function generateMagicLinkAction(
     // Mettre à jour le token dans la table invitation
     await updateInvitationToken(invitation.id, token, expiresAt, user?.id);
 
-    // Générer le lien magique avec seulement resendLinkBy (les métadonnées sont déjà dans l'utilisateur Supabase)
+    // Générer le lien magique et inclure le NOUVEAU token pour mettre à jour les métadonnées Supabase
     const result = await generateMagicLink(invitation.email, {
       resendLinkBy: user?.id,
+      invitationToken: token,
     });
     
     if (result.success) {

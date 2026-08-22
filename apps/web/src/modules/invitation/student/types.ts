@@ -16,4 +16,5 @@ export interface InviteStudentParams {
 
   /** Durée de validité du token d'invitation en jours (1, 3, 7, 14 ou 30). Défaut : 7 */
   expiresInDays?: number;
+  deliveryMethod?: "email" | "link"
 }

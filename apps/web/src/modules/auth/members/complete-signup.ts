@@ -1,4 +1,4 @@
-﻿"use server";
+"use server";
 
 import { Action, Resource, Role } from "@/generated/prisma/client";
 
@@ -12,6 +12,7 @@ import {
   assignFunctionToUser,
   assignMultipleFunctionsToUser,
   createRoleSpecificEntity,
+  enrollStudentInClass,
 } from "./utils";
 import { logAuditAsync } from "@/utils/server";
 import { DatabaseInvitationDetails } from "@/types/invitation";
@@ -221,6 +222,11 @@ export async function completeSignup(): Promise<
             orgId,
           },
         });
+      }
+
+      // 4.ter Student enrollment : inscription à la classe pour laquelle il est invité.
+      if (role === "STUDENT" && profile?.id) {
+        await enrollStudentInClass(tx, profile.id, details.enrollment);
       }
 
       // 5. Marquer l'invitation comme utilisée

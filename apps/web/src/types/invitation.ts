@@ -1,6 +1,6 @@
-﻿// types/invitation.ts
+// types/invitation.ts
 import { User as SupabaseUser } from "@supabase/supabase-js";
-import { Functions, Organization, Role } from "./user";
+import { Functions, Organization, Role, UserStatus } from "@/types";
 
 import { Resource } from "@/generated/prisma/client";
 import { TeacherResources } from '@/modules/invitation/teacher/invite';
@@ -9,15 +9,15 @@ import { TeacherResources } from '@/modules/invitation/teacher/invite';
 export type InvitationStatus = "PENDING" | "ACCEPTED" | "REVOKED";
 
 export interface EnrollmentDetails {
-  classId?:     string;
-  groupIds?:    string[];
+  classId?: string;
+  groupIds?: string[];
   parentEmail?: string;
 }
 
 /** Lien parent→étudiant à matérialiser à l'acceptation (invitation PARENT externe, P-18 B). */
 export interface ParentLinkDetails {
   studentId: string;
-  relation:  string;
+  relation: string;
 }
 
 export interface InvitedBy {
@@ -33,59 +33,71 @@ export interface InvitationMetadata {
   organization: Organization;
   organizations: Organization[];
   invited_by: InvitedBy;
-  status: InvitationStatus;
+  invitationStatus: InvitationStatus;
+  status: UserStatus;
   invitationToken: string;
   invitationType: "INVITE_ONLY";
+  details?: {
+    enrollment?: EnrollmentDetails;
+    parentLink?: ParentLinkDetails;
+  };
 }
 
 export interface DatabaseInvitationDetails {
-  role:           Role;
-  name?:          string;
-  function?:      Functions;
+  role: Role;
+  name?: string;
+  function?: Functions;
   additionalFunctions?: string[];
-  organization:   Organization;
-  invited_by:     InvitedBy;
-  status:         string;
+  organization: Organization;
+  invited_by: InvitedBy;
+  status: string;
   invitationType: string;
-  enrollment?:    EnrollmentDetails;
-  parentLink?:    ParentLinkDetails;
-  [key: string]:  unknown;
+  enrollment?: EnrollmentDetails;
+  parentLink?: ParentLinkDetails;
+  [key: string]: unknown;
 }
 export interface InvitationParams {
-  email:          string;
-  name?:          string;
-  role:           Role;
+  email: string;
+  name?: string;
+  role: Role;
   adminFunction?: Functions;
-  permissions?:   string[];
-  departmentId?:  string;
-  resources?:     TeacherResources;
-  resourceId?:    string;        // ID de la ressource liée (classe, événement, etc.)
-  resourceType?:  Resource;      // Type de ressource (CLASS, EVENT, etc.)
+  permissions?: string[];
+  departmentId?: string;
+  resources?: TeacherResources;
+  resourceId?: string;        // ID de la ressource liée (classe, événement, etc.)
+  resourceType?: Resource;      // Type de ressource (CLASS, EVENT, etc.)
   /** Durée de validité du token en jours (1, 3, 7, 14 ou 30). Défaut : 7 */
   expiresInDays?: number;
+  deliveryMethod?: "email" | "link"; // défaut "email"
+  details?: {
+    enrollment?: EnrollmentDetails;
+    parentLink?: ParentLinkDetails;
+  };
 }
+
 
 export interface InvitationResult {
   success: boolean;
   error?: string;
   message?: string;
   metadata?: InvitationMetadata;
+  link?: string;
 }
 
 export type User = SupabaseUser
 
 // Types pour les différents contextes d'utilisation
-export interface SupabaseInviteData extends InvitationMetadata {}
+export interface SupabaseInviteData extends InvitationMetadata { }
 
-  export interface AuditLogDetails {
-    email: string;
-    name?: string;
-    orgId: string;
-    departmentId?: string;
-    role: string;
+export interface AuditLogDetails {
+  email: string;
+  name?: string;
+  orgId: string;
+  departmentId?: string;
+  role: string;
   function?: Functions;
-    [key: string]: any; // Signature d'index pour compatibilité Prisma
-  }
+  [key: string]: any; // Signature d'index pour compatibilité Prisma
+}
 
 
 /* 
@@ -103,8 +115,10 @@ export interface SupabaseInviteData extends InvitationMetadata {}
   "details": {
     "name": "invited teacher",
     "role": "TEACHER",
-    "status": "PENDING",
-    "invited_by": {
+    status: "PENDING",
+    status,
+    invitationStatus: "PENDING",
+    invitationToken: token,{
       "id": "57a001c5-1a27-4733-9310-51f54e4c3253",
       "name": "responsable philip",
       "email": "piratestuart@gmail.com"

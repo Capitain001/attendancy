@@ -9,6 +9,11 @@ import { signupMemberSchema } from './validation'
 import { completeSignup } from './complete-signup'
 import type { AuthActionResult } from '../types'
 
+import { redirectUser } from '@/config/redirects'
+import { UserStatus } from '@/types/user'
+import { getUserInfo } from '@/modules/user'
+
+
 
 export async function signupMemberAction(
   _prevState: AuthActionResult,
@@ -36,8 +41,54 @@ export async function signupMemberAction(
     const result = await completeSignup()
     if ('error' in result) {
       console.error('[signupMemberAction] completeSignup failed:', result.error)
-    }
-  })
-
+    }  
+  })  
+  
+  //setup profile url
   redirect(PROFILE_URL)
+}    
+
+
+
+
+/**
+ * Utilisateur déjà inscrit (status !== NEW) qui rejoint une organisation 
+ * suite à une invitation. Pas de mot de passe à poser : on réutilise
+ * completeSignup() directement, puis on redirige.
+ *
+ * Ne PAS appeler pour un NEW user — l'acceptation réelle passe par
+ * signupMemberAction (via SignupForm), qui déclenche completeSignup()
+ * après création du mot de passe.
+ */
+export async function joinOrganizationAction(): Promise<AuthActionResult> {
+  const user = await getUserInfo({ cache: false })
+  if (!user) redirect('/login')
+
+  if (user.status === UserStatus.NEW) {
+    return { error: 'Complétez votre inscription pour rejoindre cette organisation.' }
+  }
+
+  const result = await completeSignup()
+  if ('error' in result) return { error: result.error }
+
+  const updatedUser = await getUserInfo({ cache: false })
+  redirect(redirectUser(updatedUser ?? user))
+}
+
+export async function declineInvitationAction(): Promise<AuthActionResult> {
+  const user = await getUserInfo({ cache: false })
+  if (!user) redirect('/login')
+
+  if (!user.invitationToken) {
+    return { error: 'Aucune invitation en attente.' }
+  }
+
+  // TODO: marquer l'invitation comme refusée en DB (ex: invitation.declinedAt)
+  // try {
+  //   await declineInvitation(user.invitationToken)
+  // } catch (err) {
+  //   return { error: err instanceof Error ? err.message : 'Erreur inconnue' }
+  // }
+
+  return null
 }

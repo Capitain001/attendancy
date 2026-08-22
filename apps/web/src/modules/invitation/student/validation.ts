@@ -1,5 +1,6 @@
-// src/services/invitation/student/validation.ts
+// src/modules/invitation/student/validation.ts
 import * as v from "valibot";
+import { DELIVERY_METHODS } from "../constants";
 
 /**
  * Schéma de validation pour les paramètres d'invitation d'étudiant
@@ -34,6 +35,10 @@ export const inviteStudentSchema = v.object({
 
   parentEmail: v.optional(
     v.pipe(v.string(), v.email("Format d'email invalide pour le parent"))
+  ),
+
+  deliveryMethod: v.optional(
+    v.picklist(DELIVERY_METHODS, "Le mode de remise doit être 'email' ou 'link'")
   ),
 });
 
