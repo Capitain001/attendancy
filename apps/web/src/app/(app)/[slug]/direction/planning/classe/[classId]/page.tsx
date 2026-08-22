@@ -1,6 +1,5 @@
 import { connection } from "next/server";
 import { addMonths, endOfMonth, startOfMonth, subMonths } from "date-fns";
-
 import { getClassSchedulesAction } from "@/services/schedule";
 import { ClassPlanning } from "@/components/planning";
 import { getPlanningResourcesAction } from "@/services/planning";
