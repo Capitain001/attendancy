@@ -27,20 +27,8 @@ export default function Header({ user }: HeaderProps) {
           </span>
           <span className="text-sm font-medium text-text-primary">{orgLabel}</span>
         </Link>
-        {/* <p>{orgHref}</p> */}
         <div className="flex items-center gap-1">
           <ModeToggle />
-          {/* {user ? (
-            <UserMenu user={user} />
-          ) : (
-            <Link
-              href="/login"
-              className="rounded-md px-3 py-1.5 text-sm text-text-secondary transition-colors hover:bg-fill-faint hover:text-text-primary"
-            >
-              Connexion
-            </Link>
-          )} */}
-
           {user && <NotificationsPopover />}
           <AuthButton user={user} />
         </div>
