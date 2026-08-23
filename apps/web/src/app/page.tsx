@@ -2,7 +2,7 @@ import OrgLink from "@/components/auth/ui/OrgLink";
 import { getUserInfo } from "@/modules/user";
 import { Github } from "@mynaui/icons-react";
 import Link from "next/link";
-\
+
 export default async function HomePage() {
   const user = await getUserInfo();
   return (
@@ -24,7 +24,7 @@ export default async function HomePage() {
         }
 
         <span>
-          <a href={"https://github.com/Capitain001/attendancy"} target="_blank" className="p-2 border rounded-lg bg-muted/80 ">
+          <a href={"https://github.com/Capitain001/attendancy"} target="_blank" className="p-2 border rounded- bg-muted/80 ">
             <Github size={24} />
           </a>
         </span>
