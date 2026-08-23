@@ -8,7 +8,7 @@ interface NotificationBarToastOptions {
 
 export const customToast = {
   notificationBar: (options: NotificationBarToastOptions) => {
-    console.log("[notif] Calling customToast.notificationBar with message:", options.message)
+    console.log("[notif] Calling toast.notificationBar with message:", options.message)
     return toast.custom((id) => <NotificationBarToast id={id} message={options.message} />, {
       duration: options.duration ?? 5000,
       position: "top-center",

@@ -97,7 +97,7 @@ export function InviteDialog({ functions, onInviteTeacher, onInviteDirection }: 
         </button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-sm">
+      <DialogContent className="sm:max-w-sm rounded-sm">
         <DialogHeader>
           <DialogTitle className="text-[15px]">Inviter un membre</DialogTitle>
           <DialogDescription className="text-[12px]">

@@ -7,7 +7,7 @@
 // import { useUETemplateImports } from '@/hooks/data/ue-template/useUETemplates'
 // import { useManagePrograms } from '@/hooks/data/program/useManagePrograms'
 // import { useManageProgramTracks } from '@/hooks/data/program-track/useManageProgramTracks'
-// import { customToast } from '@/lib/toast/custom-toast'
+// import { toast } from '@/lib/toast/custom-toast'
 // import type { GetUETemplatesDto } from '@/services/ue-template'
 
 // type TemplateItem = GetUETemplatesDto[number]
@@ -52,10 +52,10 @@
 //   const selectedLabel = selectedIds.length === 1 ? 'UE sélectionnée' : 'UE sélectionnées'
 
 //   const handleApply = async () => {
-//     if (selectedIds.length === 0) return customToast.error('Sélectionnez au moins une UE')
+//     if (selectedIds.length === 0) return toast.error('Sélectionnez au moins une UE')
 
 //     const trackId = tracks?.[0]?.id
-//     if (!trackId) return customToast.error('Aucun parcours trouvé. Créez d\u2019abord une filière.')
+//     if (!trackId) return toast.error('Aucun parcours trouvé. Créez d\u2019abord une filière.')
 
 //     try {
 //       const programName = `${mention.mention}${mention.speciality ? ' - ' + mention.speciality : ''} - ${referentialName}`
@@ -70,10 +70,10 @@
 //         })
 //       )
 
-//       customToast.success('UE importées avec succès')
+//       toast.success('UE importées avec succès')
 //       onClose()
 //     } catch (e) {
-//       customToast.error(e instanceof Error ? e.message : 'Erreur lors de l\u2019import')
+//       toast.error(e instanceof Error ? e.message : 'Erreur lors de l\u2019import')
 //     }
 //   }
 

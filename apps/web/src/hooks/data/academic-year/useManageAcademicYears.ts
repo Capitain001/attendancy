@@ -6,7 +6,7 @@ import {
   setCurrentYearAction,
   removeAcademicYearAction,
 } from '@/services/academic-year'
-import { customToast } from '@/lib/toast/custom-toast'
+import { toast } from '@/lib/toast/custom-toast'
 
 const QK = ['academic-years'] as const
 
@@ -26,9 +26,9 @@ export function useManageAcademicYears() {
   const create = useMutation({
     mutationFn: createAcademicYearAction,
     onSuccess: (r) => {
-      if ('error' in r) { customToast.error(r.error ?? 'Erreur inconnue'); return }
+      if ('error' in r) { toast.error(r.error ?? 'Erreur inconnue'); return }
       invalidate()
-      customToast.success('Année académique créée')
+      toast.success('Année académique créée')
     },
   })
 
@@ -38,18 +38,18 @@ export function useManageAcademicYears() {
       return setCurrentYearAction({ academicYearId })
     },
     onSuccess: (r) => {
-      if ('error' in r) { customToast.error(r.error ?? 'Erreur inconnue'); return }
+      if ('error' in r) { toast.error(r.error ?? 'Erreur inconnue'); return }
       invalidate()
-      customToast.success('Année courante définie')
+      toast.success('Année courante définie')
     },
   })
 
   const remove = useMutation({
     mutationFn: removeAcademicYearAction,
     onSuccess: (r) => {
-      if ('error' in r) { customToast.error(r.error ?? 'Erreur inconnue'); return }
+      if ('error' in r) { toast.error(r.error ?? 'Erreur inconnue'); return }
       invalidate()
-      customToast.success('Année archivée')
+      toast.success('Année archivée')
     },
   })
 

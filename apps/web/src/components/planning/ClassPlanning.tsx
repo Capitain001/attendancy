@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { toast } from "@/lib/toast/custom-toast";
+import { toast } from "sonner"
 
 import type { EventDialogRendererProps, ScheduleEvent } from "@/components/event-calendar";
 import { EventCalendar } from "@/components/event-calendar";

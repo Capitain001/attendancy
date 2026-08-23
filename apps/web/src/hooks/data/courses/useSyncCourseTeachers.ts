@@ -4,7 +4,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { syncCourseTeachersAction } from "@/services/course-teacher";
-import { customToast } from "@/lib/toast/custom-toast";
+import { toast } from "@/lib/toast/custom-toast";
 
 /**
  * Mutation : remplace intégralement les enseignants d'un cours (principal +
@@ -25,10 +25,10 @@ export function useSyncCourseTeachers(courseId: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`course-teachers-${courseId}`] });
       router.refresh();
-      customToast.success("Enseignants mis à jour");
+      toast.success("Enseignants mis à jour");
     },
     onError: (error: Error) => {
-      customToast.error(error.message || "Échec de la mise à jour des enseignants");
+      toast.error(error.message || "Échec de la mise à jour des enseignants");
     },
   });
 

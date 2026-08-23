@@ -8,7 +8,7 @@
 //   importMentionFromReferentialAction,
 //   deleteUETemplateImportAction,
 // } from '@/services/ue-template'
-// import { customToast } from '@/lib/toast/custom-toast'
+// import { toast } from '@/lib/toast/custom-toast'
 // import type { GetUETemplatesParams } from '@/services/ue-template'
 
 // const QK_REFERENTIALS = ['ue-template-referentials'] as const
@@ -60,19 +60,19 @@
 //   const importUE = useMutation({
 //     mutationFn: importUEFromTemplateAction,
 //     onSuccess: (r) => {
-//       if ('error' in r) { customToast.error(r.error); return }
+//       if ('error' in r) { toast.error(r.error); return }
 //       invalidate()
-//       customToast.success('UE importée avec succès')
+//       toast.success('UE importée avec succès')
 //     },
 //   })
 
 //   const applyMention = useMutation({
 //     mutationFn: importMentionFromReferentialAction,
 //     onSuccess: (r) => {
-//       if ('error' in r) { customToast.error(r.error); return }
+//       if ('error' in r) { toast.error(r.error); return }
 //       invalidate()
 //       const { imported, skipped } = r.data
-//       customToast.success(
+//       toast.success(
 //         skipped > 0
 //           ? `${imported} UE appliquées (${skipped} déjà présentes)`
 //           : `${imported} UE appliquées avec succès`
@@ -83,9 +83,9 @@
 //   const deleteImport = useMutation({
 //     mutationFn: deleteUETemplateImportAction,
 //     onSuccess: (r) => {
-//       if ('error' in r) { customToast.error(r.error); return }
+//       if ('error' in r) { toast.error(r.error); return }
 //       invalidate()
-//       customToast.success('Import supprimé')
+//       toast.success('Import supprimé')
 //     },
 //   })
 

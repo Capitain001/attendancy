@@ -6,7 +6,7 @@ import {
   updateProgramTrackAction,
   deleteProgramTrackAction,
 } from '@/services/program-track'
-import { customToast } from '@/lib/toast/custom-toast'
+import { toast } from '@/lib/toast/custom-toast'
 
 const QK = ['program-tracks'] as const
 
@@ -26,9 +26,9 @@ export function useManageProgramTracks(departmentId?: string) {
   const create = useMutation({
     mutationFn: createProgramTrackAction,
     onSuccess: (r) => {
-      if ('error' in r) { customToast.error(r.error ?? 'Erreur inconnue'); return }
+      if ('error' in r) { toast.error(r.error ?? 'Erreur inconnue'); return }
       invalidate()
-      customToast.success('Filière créée')
+      toast.success('Filière créée')
     },
   })
 
@@ -36,9 +36,9 @@ export function useManageProgramTracks(departmentId?: string) {
     mutationFn: ({ id, data }: { id: string; data: { name?: string; departmentId?: string } }) =>
       updateProgramTrackAction(id, data),
     onSuccess: (r) => {
-      if ('error' in r) { customToast.error(r.error ?? 'Erreur inconnue'); return }
+      if ('error' in r) { toast.error(r.error ?? 'Erreur inconnue'); return }
       invalidate()
-      customToast.success('Filière mise à jour')
+      toast.success('Filière mise à jour')
     },
   })
 
@@ -48,9 +48,9 @@ export function useManageProgramTracks(departmentId?: string) {
       return deleteProgramTrackAction(programTrackId)
     },
     onSuccess: (r) => {
-      if ('error' in r) { customToast.error(r.error ?? 'Erreur inconnue'); return }
+      if ('error' in r) { toast.error(r.error ?? 'Erreur inconnue'); return }
       invalidate()
-      customToast.success('Filière supprimée')
+      toast.success('Filière supprimée')
     },
   })
 

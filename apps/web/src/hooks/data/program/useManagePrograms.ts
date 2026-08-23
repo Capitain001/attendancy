@@ -6,7 +6,7 @@ import {
   updateProgramAction,
   removeProgramAction,
 } from '@/services/program'
-import { customToast } from '@/lib/toast/custom-toast'
+import { toast } from '@/lib/toast/custom-toast'
 import type { UpdateProgramInput } from '@/services/program'
 import { ERRORS } from '@/config'
 
@@ -28,9 +28,9 @@ export function useManagePrograms(params: { programTrackId?: string } = {}) {
   const create = useMutation({
     mutationFn: createProgramAction,
     onSuccess: (r) => {
-      if ('error' in r) { customToast.error(r.error ??ERRORS.NOT_FOUND); return }
+      if ('error' in r) { toast.error(r.error ??ERRORS.NOT_FOUND); return }
       invalidate()
-      customToast.success('Programme créé')
+      toast.success('Programme créé')
     },
   })
 
@@ -38,9 +38,9 @@ export function useManagePrograms(params: { programTrackId?: string } = {}) {
     mutationFn: ({ id, data }: { id: string; data: UpdateProgramInput['data'] }) =>
       updateProgramAction({ programId: id, data }),
     onSuccess: (r) => {
-      if ('error' in r) { customToast.error(r.error?? ERRORS.NOT_FOUND); return }
+      if ('error' in r) { toast.error(r.error?? ERRORS.NOT_FOUND); return }
       invalidate()
-      customToast.success('Programme mis à jour')
+      toast.success('Programme mis à jour')
     },
   })
 
@@ -50,9 +50,9 @@ export function useManagePrograms(params: { programTrackId?: string } = {}) {
       return removeProgramAction(programId)
     },
     onSuccess: (r) => {
-      if ('error' in r) { customToast.error(r.error?? ERRORS.NOT_FOUND); return }
+      if ('error' in r) { toast.error(r.error?? ERRORS.NOT_FOUND); return }
       invalidate()
-      customToast.success('Programme supprimé')
+      toast.success('Programme supprimé')
     },
   })
 
