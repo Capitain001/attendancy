@@ -44,7 +44,7 @@ export const UECard = React.forwardRef<HTMLAnchorElement, UECardProps>(
           ref={ref}
           href={`./ues/${ue.id}`}
           className={cn(
-            "relative flex h-[300px] w-full max-w-[280px] flex-col rounded-xs border border-border bg-card p-5 text-card-foreground shadow-md transition-shadow duration-200 hover:shadow-lg",
+            "relative flex h-[300px] w-full w-[280px] flex-col rounded-xs border border-border bg-card p-5 text-card-foreground shadow-md transition-shadow duration-200 hover:shadow-lg",
             className
           )}
           {...props}
@@ -97,4 +97,4 @@ export const UECard = React.forwardRef<HTMLAnchorElement, UECardProps>(
   }
 );
 
-UECard.displayName = "UECard";
+UECard.displayName = "UECard";
