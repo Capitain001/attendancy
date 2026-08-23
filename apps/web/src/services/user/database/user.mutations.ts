@@ -11,7 +11,6 @@ export async function updateUserProfile(userId: string, data: UpdateCurrentUserO
       select: { id: true, firstName: true, lastName: true },
     }),
   );
-  await invalidateEvent("USER_UPDATED", orgId, userId);
   return result;
 }
 
@@ -24,6 +23,6 @@ export async function updateUser(userId: string, data: UpdateCurrentUserOutput, 
       select: { id: true },
     }),
   );
-  await invalidateEvent("USER_UPDATED", orgId, userId);
+  // await invalidateEvent("USER_UPDATED", orgId, userId);
   return result;
 }

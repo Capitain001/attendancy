@@ -26,7 +26,7 @@ export function AttendanceSheetButton({
   return (
     <ExportButton
       disabled={students.length === 0}
-      variant="outline"
+      // variant="outline"
       formats={['print', 'xlsx', 'csv']}
       defaultFormat="print"
       getConfig={() => ({

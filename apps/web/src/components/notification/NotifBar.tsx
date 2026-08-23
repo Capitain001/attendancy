@@ -1,5 +1,5 @@
 "use client"
-import NotificationBar from '@/components/notification/NotificationBar'
+import {NotificationBar} from '@/components/notification/NotificationBar'
 import { useNotifications } from '@/hooks/notification/useNotification'
 
 export default function NotifBar() {

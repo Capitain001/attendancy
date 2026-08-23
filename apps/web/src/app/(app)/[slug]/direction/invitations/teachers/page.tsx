@@ -13,7 +13,7 @@ export default async function Page() {
 
   // On pré-charge les 50 dernières invitations de l'organisation
   await queryClient.prefetchQuery({
-    queryKey: CACHE_KEYS.INVITATIONS.ORG,
+    queryKey: CACHE_KEYS.INVITATIONS.ALL,
     queryFn: async () => {
       const r = await getOrgInvitationsAction({limit:50})
       if ('error' in r) throw new Error(r.error)
