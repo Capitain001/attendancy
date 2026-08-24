@@ -22,9 +22,9 @@ export const SIDEBAR_VIEWS: Record<SidebarView, ViewEntry> = {
   planning: {
     label: "Planning",
     icon: CalendarDays,
-    // Component: dynamic(
-    //   () => import("./planning-filters").then((m) => m.PlanningFilters),
-    //   { ssr: false }
-    // ),
+    Component: dynamic(
+      () => import("./planning-filters").then((m) => m.PlanningFilters),
+      { ssr: false }
+    ),
   },
 };

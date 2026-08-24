@@ -11,6 +11,8 @@ import { card, typography } from '@/styles'
 import { cn } from '@/lib/utils'
 import type { GetProgramsDto } from '@/services/program'
 import type { GetProgramTracksDto } from '@/services/program-track'
+import { Lock, Unlock } from "lucide-react";
+
 
 type ProgramItem = GetProgramsDto[number]
 type TrackItem = NonNullable<GetProgramTracksDto>[number]
@@ -44,13 +46,14 @@ function ProgramRow({
 
       <div className="flex items-center gap-1.5 shrink-0 flex-wrap">
         {program.isLocked && (
-          <span className="rounded-sm bg-amber-500/10 border border-dashed border-amber-500/30 px-1.5 py-0.5 text-[9px] font-medium text-amber-600">
-            Verrouillé
+          <span className="rounded-sm  border border-dashed  px-1.5 py-1 text-[9px] font-medium ">
+            <Lock className="size-4" />
+            
           </span>
         )}
         {!program.isActive && (
           <span className="rounded-sm bg-muted border border-dashed border-muted-foreground/30 px-1.5 py-0.5 text-[9px] font-medium text-muted-foreground">
-            Inactif
+            Desactiver
           </span>
         )}
         <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
