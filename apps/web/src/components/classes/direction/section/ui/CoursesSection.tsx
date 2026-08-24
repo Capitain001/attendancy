@@ -20,7 +20,7 @@ function CourseCard({ course }: { course: Course }) {
       <GridDeco />
       <div className="relative z-10">
         <div className="flex justify-between items-start mb-3">
-          <Link href={`../../courses/${course.id}`} className="text-sm font-semibold">
+          <Link href={`../../academic/courses/${course.id}`} className="text-sm font-semibold">
             {course.name}
           </Link>
           <span className="text-[10px] font-mono dark:opacity-80">{course.credits} CREDITS</span>

@@ -84,8 +84,8 @@ export async function DirectionPromotionDetailPage({ classId, slug }: DirectionP
         <CollapseSection label="Cours" count={courses.length}>
           <CoursesSection courses={courses} />
           {class_.programId && (
-            <div className="mt-4">
-              <GenerateProgramCoursesButton classId={class_.id} programId={class_.programId} />
+            <div className="mt-4 flex justify-center">
+              <GenerateProgramCoursesButton classId={class_.id} programId={class_.programId}  />
             </div>
           )}
         </CollapseSection>
