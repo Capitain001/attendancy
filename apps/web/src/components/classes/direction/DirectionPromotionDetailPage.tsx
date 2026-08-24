@@ -11,6 +11,7 @@ import { AttendanceSheetButton } from './AttendanceSheetButton'
 import { mapCoursesForClassSection, mapSchedulesForClassSection } from './mapClassProfile'
 
 import { UsersGroup } from "@mynaui/icons-react";
+import { GenerateProgramCoursesButton } from './GenerateProgramCoursesButton'
 
 
 export interface DirectionPromotionDetailPageProps {
@@ -20,7 +21,7 @@ export interface DirectionPromotionDetailPageProps {
 
 
 export async function DirectionPromotionDetailPage({ classId, slug }: DirectionPromotionDetailPageProps) {
-  const { data: class_, error } = await getClassAction({classId})
+  const { data: class_, error } = await getClassAction({ classId })
   if (error || !class_) notFound()
 
 
@@ -47,11 +48,11 @@ export async function DirectionPromotionDetailPage({ classId, slug }: DirectionP
   const schedules = schedRes.data ? mapSchedulesForClassSection(schedRes.data) : []
 
 
-  const programHref     = `/${slug}/direction/academic/programs/${class_.programId}`
-  const planningHref    = `/${slug}/direction/planning/promotions/${classId}`
+  const programHref = `/${slug}/direction/academic/programs/${class_.programId}`
+  const planningHref = `/${slug}/direction/planning/promotions/${classId}`
   const invitationsHref = `./${classId}/invitations`
-  const enrollmentHref  = `/${slug}/direction/academic/promotions/${classId}/enrollment`
-  const groupsHref      = `/${slug}/direction/academic/promotions/${classId}/groups`
+  const enrollmentHref = `/${slug}/direction/academic/promotions/${classId}/enrollment`
+  const groupsHref = `/${slug}/direction/academic/promotions/${classId}/groups`
 
 
   return (
@@ -82,6 +83,11 @@ export async function DirectionPromotionDetailPage({ classId, slug }: DirectionP
       <section>
         <CollapseSection label="Cours" count={courses.length}>
           <CoursesSection courses={courses} />
+          {class_.programId && (
+            <div className="mt-4">
+              <GenerateProgramCoursesButton classId={class_.id} programId={class_.programId} />
+            </div>
+          )}
         </CollapseSection>
 
 

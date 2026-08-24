@@ -15,11 +15,44 @@ export function ScheduleConflict(error: any) {
   );
 }
 
+// ── Erreurs de connexion (base injoignable) ───────────────────────────────────
+//
+// P1001 : "Can't reach database server at ..." — la requête n'a jamais atteint
+// la base (réseau, pooler en pause, DB suspendue). C'est une panne d'infra,
+// pas un refus métier de la DB — donc PAS une PrismaClientKnownRequestError.
+// Selon le point d'entrée Prisma, ça remonte comme :
+//   - PrismaClientInitializationError (le plus courant, errorCode 'P1001')
+//   - parfois une erreur générique dont le message contient "Can't reach
+//     database server" (driver adapter / pooler)
+// Détection par message plutôt que par instanceof exclusif : plus robuste aux
+// variations de forme entre versions/adapters Prisma.
+//
+// Cf. old_OPERATOR_ACTIONS.md — OP-01 : signal d'une situation hors scope
+// agent (réseau, instance Supabase en pause). Ce patch ne "corrige" pas la
+// panne, il évite seulement de laisser fuiter la stack technique brute
+// jusqu'à l'utilisateur final.
+function isConnectionError(error: unknown): boolean {
+  if (error instanceof PrismaClientKnownRequestError && error.code === 'P1001') {
+    return true
+  }
+  const code = (error as { errorCode?: string })?.errorCode
+  if (code === 'P1001') return true
+
+  const message = error instanceof Error ? error.message : String(error)
+  return (
+    message.includes("Can't reach database server") ||
+    message.includes('P1001')
+  )
+}
+
 export async function tryUnique<T>(promise: Promise<T>): Promise<T> {
   try {
     return await promise;
   } catch (error) {
     console.log("tryUnique error : ", error);
+    if (isConnectionError(error)) {
+      throw new Error(ERRORS.DB.UNREACHABLE)
+    }
     uniqueError(error); // transforme les erreurs Prisma connues en erreurs UX
     throw error;        // relance les autres erreurs
   }
@@ -30,6 +63,17 @@ export async function tryConstraint<T>(promise: Promise<T>): Promise<T> {
   try {
     return await promise
   } catch (error) {
+    // Panne d'infra (base injoignable) : à traiter AVANT tryTriggerError
+    // (qui fait un .includes() sur le message — pas concerné ici mais on
+    // court-circuite tôt) et avant le guard instanceof qui exclurait une
+    // PrismaClientInitializationError.
+    if (isConnectionError(error)) {
+      if (process.env.NODE_ENV === "development") {
+        void debugPrismaError(error as any);
+      }
+      throw new Error(ERRORS.DB.UNREACHABLE)
+    }
+
     tryTriggerError(error)
 
     if (!(error instanceof PrismaClientKnownRequestError)) {

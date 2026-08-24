@@ -37,6 +37,7 @@ export const ERRORS = {
     NOT_FOUND: "la Resource est introuvable",
     FOREIGN_KEY: "Impossible de supprimer cet élément car il est utilisé ailleurs",
     OVERLAP: "Conflit de planification détecté",
+    UNREACHABLE: "Service temporairement indisponible — réessayez dans quelques instants",
   },
 
     AUTH: {

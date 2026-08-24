@@ -26,3 +26,36 @@ export type UpdateCourseDataOutput = InferOutput<typeof updateCourseDataSchema>
 
 export type UpdateCourseInput  = InferInput<typeof updateCourseSchema>
 export type UpdateCourseOutput = InferOutput<typeof updateCourseSchema>
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// À AJOUTER dans src/services/course/validation.ts (à la suite des schémas
+// existants — createCourseSchema, updateCourseSchema, etc.)
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// Pas de `satisfies Record<keyof CreateCourseData, unknown>` ici : contrairement
+// à createCourseSchema (qui valide un payload 1:1 avec Course), ce schéma valide
+// une opération d'ORCHESTRATION — programId/classId référencent d'autres modèles,
+// termsBySemester est une map calculée par l'appelant, aucun de ces champs n'est
+// un champ direct de Course. Validation manuelle, explicite.
+
+import * as v from 'valibot'
+
+export const generateCoursesFromProgramSchema = v.object({
+  programId: v.pipe(v.string(), v.uuid('ID de programme invalide')),
+  classId:   v.pipe(v.string(), v.uuid('ID de classe invalide')),
+
+  // Optionnel : map ProgramUE.semester (clé, sérialisée en string par JSON —
+  // d'où la validation par regex plutôt que v.number()) → Term.id de la classe
+  // cible. Fourni par l'appelant (orchestrateur applyProgramTemplate) quand les
+  // Terms de la classe existent déjà ; omis sinon (cours créés sans termId).
+  termsBySemester: v.optional(
+    v.record(
+      v.pipe(v.string(), v.regex(/^\d+$/, 'Semestre invalide')),
+      v.pipe(v.string(), v.uuid('ID de période invalide')),
+    ),
+  ),
+})
+
+export type GenerateCoursesFromProgramInput  = v.InferInput<typeof generateCoursesFromProgramSchema>  // Input UI
+export type GenerateCoursesFromProgramOutput = v.InferOutput<typeof generateCoursesFromProgramSchema> // Output validé
