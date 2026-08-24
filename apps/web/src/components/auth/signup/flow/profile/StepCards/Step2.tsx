@@ -68,9 +68,9 @@ export function Step2({
             </div>
           )}
         </div>
-
+{/* (optionnel) */}
         <FormInput
-          label="Téléphone (optionnel)"
+          label="Téléphone"
           id="phone"
           type="tel"
           placeholder="+33 6 12 34 56 78"
