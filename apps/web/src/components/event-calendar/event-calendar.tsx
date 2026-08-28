@@ -209,18 +209,16 @@ export function EventCalendar({
             onDelete: handleEventDelete,
           })
         ) : (
-          // <EventDialog
-          //   event={selectedEvent}
-          //   isOpen={isEventDialogOpen}
-          //   onClose={() => {
-          //     setIsEventDialogOpen(false);
-          //     setSelectedEvent(null);
-          //   }}
-          //   onSave={handleEventSave}
-          //   onDelete={handleEventDelete}
-          // />
-          
-          <></>
+          <EventDialog
+            event={selectedEvent}
+            isOpen={isEventDialogOpen}
+            onClose={() => {
+              setIsEventDialogOpen(false);
+              setSelectedEvent(null);
+            }}
+            onSave={handleEventSave}
+            onDelete={handleEventDelete}
+          />
         )}
       </CalendarDndProvider>
     </div>

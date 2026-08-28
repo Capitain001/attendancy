@@ -1,9 +1,10 @@
-import { isToday, getHours, getDay } from "date-fns";
+import { isToday, getHours, getDay, endOfDay } from "date-fns";
 import { ScheduleEvent } from "@/components/event-calendar/types";
 import { DraggableEvent } from "@/components/event-calendar/draggable-event";
 import { DroppableCell } from "@/components/event-calendar/droppable-cell";
 import { CurrentTimeIndicator } from "./CurrentTimeIndicator";
 import { cn } from "@/lib/utils";
+import { isSlotElapsed } from "@/services/planning/policy";
 
 interface DayColumnProps {
   day: Date;
@@ -39,12 +40,17 @@ export function DayColumn({
   onEventCreate,
 }: DayColumnProps) {
   const isWeekend = [0, 6].includes(getDay(day)); // 0 = dimanche, 6 = samedi
+  
+  // Un jour est complètement "passé" si la fin de la journée est passée
+  const isElapsed = isSlotElapsed({ start: day, end: endOfDay(day) });
 
   return (
     <div
-      className={`relative grid auto-cols-fr border-r border-border/70 last:border-r-0 ${
-        isWeekend ? "bg-muted/50" : ""
-      }`}
+      className={cn(
+        "relative grid auto-cols-fr border-r border-border/70 last:border-r-0",
+        isWeekend && "bg-muted/50",
+        isElapsed && "grayscale bg-muted/20"
+      )}
       data-today={isToday(day) || undefined}
     >
      

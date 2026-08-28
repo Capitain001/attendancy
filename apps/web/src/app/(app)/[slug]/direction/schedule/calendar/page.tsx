@@ -4,6 +4,7 @@ import { DirectionCalendar } from '@/components/direction/schedule/DirectionCale
 import type { ScheduleEvent } from '@/components/event-calendar/types'
 import { startOfWeek, endOfWeek } from 'date-fns'
 import { typography } from '@/styles'
+import { mapScheduleToEvent } from '@/components/planning/utils'
 
 export default async function CalendarPage() {
   await connection()
@@ -18,21 +19,7 @@ export default async function CalendarPage() {
     return <p className={typography.body}>{result.error}</p>
   }
 
-  const events: ScheduleEvent[] = result.data.map((s) => ({
-    id:    s.id,
-    title: s.course.name,
-    start: s.startTime,
-    end:   s.endTime,
-    location: s.room?.name,
-    meta: {
-      courseId:  s.course.id,
-      teacherId: s.teacher?.id ?? '',
-      classId:   s.class?.id,
-      groupId:   s.group?.id,
-      roomId:    s.room?.id,
-      status:    s.status as never,
-    },
-  }))
+  const schedules = result.data
 
-  return <DirectionCalendar events={events} />
+  return <DirectionCalendar schedules={schedules} />
 }

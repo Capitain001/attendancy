@@ -1,15 +1,38 @@
 'use client'
 
 import { EventCalendar } from '@/components/event-calendar'
-import type { ScheduleEvent } from '@/components/event-calendar/types'
+import { mapScheduleToEvent, type ScheduleRow } from '@/components/planning/utils'
+import { useMemo } from 'react'
+import dynamic from 'next/dynamic'
 
-export function DirectionCalendar({ events }: { events: ScheduleEvent[] }) {
+const CoursePCardDialog = dynamic(
+  () => import('@/components/planning/card/CourseEventDialog').then(mod => mod.CoursePCardDialog),
+  { ssr: false }
+)
+
+export function DirectionCalendar({ schedules }: { schedules: ScheduleRow[] }) {
+
+  const events = useMemo(
+    () => schedules.map((schedule) => mapScheduleToEvent(schedule)),
+    [schedules]
+  )
+
   return (
     <EventCalendar
       events={events}
       readOnly
       initialView="week"
       title="Planning"
+      renderEventDialog={({ event, isOpen, onClose }) => {
+        const schedule = schedules.find((s) => s.id === event?.id)
+        return (
+          <CoursePCardDialog
+            schedule={schedule}
+            isOpen={isOpen}
+            onClose={onClose}
+          />
+        )
+      }}
     />
   )
 }
