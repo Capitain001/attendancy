@@ -49,9 +49,9 @@ export async function DirectionPromotionDetailPage({ classId, slug }: DirectionP
 
 
   const programHref = `/${slug}/direction/academic/programs/${class_.programId}`
-  const planningHref = `/${slug}/direction/planning/promotions/${classId}`
+  const planningHref = `/${slug}/direction/planning/promotion/${classId}`
   const invitationsHref = `./${classId}/invitations`
-  const enrollmentHref = `/${slug}/direction/academic/promotions/${classId}/enrollment`
+  const enrollmentHref = `/${slug}/direction/academic/promotion/${classId}/enrollment`
   const groupsHref = `/${slug}/direction/academic/promotions/${classId}/groups`
 
 
