@@ -44,7 +44,7 @@ export function ActionScheduleToast({
   return (
     <div className="fixed inset-0 z-50">
       <div className="absolute inset-0 pointer-events-none opacity-70 bg-black/10 backdrop-blur-xs" />
-      <div className="absolute bottom-6 left-20 w-[360px] rounded-sm border bg-card shadow-lg p-3.5 flex flex-col gap-3">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[360px] rounded-sm border bg-card shadow-lg p-3.5 flex flex-col gap-3">
         {change ? (
           <>
             <div className="flex items-center gap-2">
