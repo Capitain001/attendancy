@@ -11,7 +11,7 @@ import {
   Clock,
   MessageSquare,
 } from "lucide-react";
-import { NotificationType } from "@/generated/prisma/client";
+import { NotificationType } from "@/generated/prisma/browser";
 
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
