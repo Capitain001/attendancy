@@ -4,10 +4,11 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { CoursePCard } from "./CoursePcard";
-import type { ScheduleRow } from "../utils";
+// import type { ScheduleRow } from "../utils";
+import { GetSchedulesDto } from "@/services/schedule/generated.types";
 
 export type CoursePCardDialogProps = {
-  schedule?: ScheduleRow;
+  schedule?: GetSchedulesDto[number];
   isOpen: boolean;
   onClose: () => void;
 };
@@ -22,6 +23,8 @@ export function CoursePCardDialog({
   const teacherName = schedule.teacher
     ? [schedule.teacher.user.firstName, schedule.teacher.user.lastName].filter(Boolean).join(" ")
     : undefined;
+    
+    const avatarUrl = schedule.teacher?.user.avatar_url || undefined
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -35,7 +38,7 @@ export function CoursePCardDialog({
           roomName={schedule.room.name || "Salle non assignée"}
           teacher={
             schedule.teacher
-              ? { id: schedule.teacher.id, name: teacherName }
+              ? { id: schedule.teacher.id, name: teacherName , avatarUrl  }
               : null
           }
           status={schedule.status}
