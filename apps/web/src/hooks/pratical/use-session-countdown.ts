@@ -3,6 +3,16 @@
 
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { differenceInMinutes, isBefore } from "date-fns";
+import type { TimePhase } from "@/services/session/policy";
+// browser.ts (pas client.ts) : réexporte types + enums Prisma sans embarquer
+// le runtime PrismaClient (driver DB, requêtes préparées…) — sûr côté
+// client, contrairement à '@/generated/prisma/client' qui est server-only.
+// Import de VALEUR (pas `import type`) : on réutilise l'objet enum lui-même
+// comme source unique ci-dessous, pas seulement son type.
+import {
+  SessionStatus as DBSessionStatus,
+  ScheduleStatus as DBScheduleStatus,
+} from "@/generated/prisma/browser";
 //src/config/session.ts
 export interface SessionState {
     status: "upcoming" | "check-in-available" | "ongoing" | "check-out-available" | "completed";
@@ -39,20 +49,18 @@ export const sessionConfig = {
   },
   
   // Configuration des statuts
-  status: {
-    ACTIVE: 'ACTIVE',
-    COMPLETED: 'COMPLETED',
-    CANCELLED: 'CANCELLED',
-  },
+  // Alias direct sur l'enum Prisma (browser.ts) — aucune clé recopiée à la
+  // main : impossible de diverger (c'est littéralement le même objet), plus
+  // besoin de `satisfies` pour s'en assurer. Le bug CANCELLED/CANCELED
+  // corrigé précédemment ne peut structurellement plus se reproduire.
+  status: DBSessionStatus,
   
   // Configuration des schedules
+  // Idem via ScheduleStatus. ONGOING n'y figure pas et ne PEUT pas y figurer
+  // par erreur : ce n'est pas une valeur de l'enum Prisma ScheduleStatus
+  // (ONGOING est dérivé du temps, jamais persisté — voir services/schedule/policy.ts).
   schedule: {
-    status: {
-      PENDING: 'PENDING',
-      ONGOING: 'ONGOING',
-      COMPLETED: 'COMPLETED',
-      CANCELLED: 'CANCELLED',
-    },
+    status: DBScheduleStatus,
   },
   
   // Messages d'erreur et de succès
@@ -72,9 +80,12 @@ export const sessionConfig = {
 } as const;
 
 // Types dérivés de la configuration
+// DBSessionStatus / DBScheduleStatus réexportés comme types : la valeur est
+// déjà importée ci-dessus (utilisée dans sessionConfig.status /
+// sessionConfig.schedule.status), cette ligne n'expose que la facette type
+// pour les consommateurs qui typent une variable (ex: `status: DBSessionStatus`).
+export type { DBSessionStatus, DBScheduleStatus };
 export type SessionThresholds = typeof sessionConfig.thresholds;
-export type SessionStatus = typeof sessionConfig.status.ACTIVE | typeof sessionConfig.status.COMPLETED | typeof sessionConfig.status.CANCELLED;
-export type ScheduleStatus = typeof sessionConfig.schedule.status[keyof typeof sessionConfig.schedule.status];
 
 interface UseSessionCountdownProps {
   startTime: Date;
@@ -83,12 +94,10 @@ interface UseSessionCountdownProps {
   checkOutThresholdMinutes?: number;
 }
 
-export type TimePhase =
-  | "before"    // avant start-15
-  | "checkin"   // [start-15 → start+15]
-  | "ongoing"   // (start+15 → end]
-  | "checkout"  // (end → end+15]
-  | "after";    // après end+15
+// TimePhase : importé de @/services/session/policy — source unique. Ne pas
+// redéclarer ici : une redéclaration structurellement identique compile sans
+// erreur si les deux dérivent, ce qui masquerait une régression au lieu de
+// la faire échouer à la compilation.
 
 export interface SessionCountdownState {
   phase: TimePhase;

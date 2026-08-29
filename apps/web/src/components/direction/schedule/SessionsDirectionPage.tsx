@@ -8,21 +8,17 @@ import { cn } from '@/lib/utils'
 import { card, typography } from '@/styles'
 import type { OrgDaySessionRow } from '@/services/session'
 import type { ClassItem } from '@/services/class'
+import { resolveScheduleUiStatus, SCHEDULE_UI_STATUS_LABEL, type ScheduleUiStatus } from '@/services/schedule/policy'
 
-const STATUS_BADGE: Record<string, string> = {
-  ACTIVE:    'bg-green-500/15 text-green-600',
+// Clés = ScheduleUiStatus (dérivé, pas le status DB brut) — ONGOING remplace
+// l'ancienne clé ACTIVE morte (ACTIVE est un statut de Session, pas de
+// Schedule ; il n'apparaissait jamais dans session.status ici).
+const STATUS_BADGE: Record<ScheduleUiStatus, string> = {
+  ONGOING:   'bg-green-500/15 text-green-600',
   PENDING:   'bg-muted text-text-secondary',
   COMPLETED: 'bg-primary/10 text-primary',
   CANCELED:  'bg-red-500/10 text-red-500',
   MISSED:    'bg-orange-500/10 text-orange-500',
-}
-
-const STATUS_LABEL: Record<string, string> = {
-  ACTIVE:    'En cours',
-  PENDING:   'À venir',
-  COMPLETED: 'Terminé',
-  CANCELED:  'Annulé',
-  MISSED:    'Manqué',
 }
 
 function formatTime(d: Date | string) {
@@ -46,8 +42,14 @@ const ATTENDANCE_STATUS_LABELS: Record<string, { label: string; cls: string }> =
 
 function SessionCard({ session }: { session: OrgDaySessionRow }) {
   const [expanded, setExpanded] = useState(false)
-  const statusBadge = STATUS_BADGE[session.status] ?? 'bg-muted text-text-secondary'
-  const statusLabel = STATUS_LABEL[session.status] ?? session.status
+  // session.status = Schedule.status BRUT (PENDING/COMPLETED/CANCELED/MISSED).
+  // Toujours passer par resolveScheduleUiStatus : c'est elle qui sait qu'un
+  // PENDING dans la fenêtre [startTime, endTime) doit s'afficher ONGOING,
+  // et qu'un PENDING dont endTime est dépassé doit s'afficher MISSED même si
+  // la DB n'a pas encore acté la transition (fenêtre de latence).
+  const uiStatus    = resolveScheduleUiStatus(session, new Date())
+  const statusBadge = STATUS_BADGE[uiStatus]
+  const statusLabel = SCHEDULE_UI_STATUS_LABEL[uiStatus]
   const teacherName = session.teacher
     ? [session.teacher.user.firstName, session.teacher.user.lastName].filter(Boolean).join(' ')
     : null

@@ -1,3 +1,4 @@
+//src/services/class/constants.ts
 import { Level } from '@/generated/prisma/browser'
 
 export const LEVELS = Object.values(Level)

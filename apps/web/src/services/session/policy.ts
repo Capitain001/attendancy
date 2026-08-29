@@ -14,6 +14,7 @@ export type DBSession = Pick<Session, 'id' | 'status' | 'checkIn'> | null
 export type SessionPresence =
   | 'NOT_STARTED'  // session null
   | 'ACTIVE'       // session ACTIVE en DB
+  | 'CANCELED'     // session CANCELED en DB — acté, priorité absolue (cf. done)
   | 'COMPLETED'    // session COMPLETED en DB
 
 /*
@@ -53,6 +54,12 @@ export type SessionPresence =
  *   - actions: aucune
  * }
  *
+ * canceled : {
+ *   - session: CANCELED (priorité absolue, quelle que soit la phase — même
+ *     traitement que COMPLETED : un fait acté n'est jamais recalculé)
+ *   - actions: aucune
+ * }
+ *
  * missed : {
  *   - phase  : after (end+15 dépassé)
  *   - session: NOT_STARTED
@@ -71,6 +78,7 @@ export type UISessionStatus =
   | 'ongoing'       // session en cours (start+15 → end)
   | 'can-check-out' // fenêtre check-out ou après, session ACTIVE
   | 'done'          // session COMPLETED
+  | 'canceled'      // session CANCELED
   | 'missed'        // cycle terminé, pas de session
 
 export type TimePhase = 'before' | 'checkin' | 'ongoing' | 'checkout' | 'after'
@@ -87,13 +95,28 @@ export const SESSION_THRESHOLDS = { checkIn: 15, checkOut: 15 } as const
 
 // ─── Fonctions pures ──────────────────────────────────────────────────────────
 
+function assertNeverSessionStatus(status: never): never {
+  throw new Error(`deriveSessionPresence: Session.status non géré: ${JSON.stringify(status)}`)
+}
+
 /**
  * Dérive la présence depuis la session DB.
+ *
+ * Exhaustif sur Session.status (ACTIVE|CANCELED|COMPLETED) : si un futur
+ * statut est ajouté au schéma Prisma sans être traité ici, le `default`
+ * fait échouer la compilation au lieu de retomber silencieusement sur
+ * 'ACTIVE' (c'était le bug avant ce correctif — CANCELED collapsait sur
+ * 'ACTIVE', ce qui autorisait à tort canCheckOut sur une session annulée).
  */
 export function deriveSessionPresence(session: DBSession): SessionPresence {
-  if (!session)                       return 'NOT_STARTED'
-  if (session.status === 'COMPLETED') return 'COMPLETED'
-  return 'ACTIVE'
+  if (!session) return 'NOT_STARTED'
+
+  switch (session.status) {
+    case 'ACTIVE':    return 'ACTIVE'
+    case 'CANCELED':  return 'CANCELED'
+    case 'COMPLETED': return 'COMPLETED'
+    default:          return assertNeverSessionStatus(session.status)
+  }
 }
 
 /**
@@ -109,9 +132,12 @@ export function deriveUISessionStatus(
   isLateCheckIn: boolean,
 ): SessionPolicy {
 
-  // ── COMPLETED : priorité absolue ──────────────────────────────────────────
+  // ── COMPLETED / CANCELED : faits actés, priorité absolue ──────────────────
   if (presence === 'COMPLETED') {
     return { uiStatus: 'done', canCheckIn: false, canCheckOut: false, isLate: false }
+  }
+  if (presence === 'CANCELED') {
+    return { uiStatus: 'canceled', canCheckIn: false, canCheckOut: false, isLate: false }
   }
 
   // ── Cycle terminé sans session ────────────────────────────────────────────
