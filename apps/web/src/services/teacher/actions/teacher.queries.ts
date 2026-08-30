@@ -1,7 +1,7 @@
 'use server'
 import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
-import { getTeachers, getTeacher, getTeacherTodaySchedules, getTeacherSchedules, getTeacherCourses, getTeacherStats, getTeacherOrganizationStats } from '../database'
+import { getTeachers, getTeacher, getTeacherTodaySchedules, getTeacherSchedules, getTeacherCourses } from '../database'
 import { mockgetTeachers } from '@/data/mocks/teachers'
 
 export async function getCurrentTeacherId(): Promise<string | null> {
@@ -44,24 +44,13 @@ export async function getTeacherCoursesAction(teacherId: string) {
     if (!auth.data) return { error: auth.error }
     const { orgId } = auth.data
 
-    const rows = await getTeacherCourses(teacherId, orgId)
-    return rows.map(r => ({ id: r.course.id, name: r.course.name, class: r.course.class }))
-  } catch {
-    return []
-  }
-}
-
-export async function getTeacherStatsAction(teacherId: string) {
-  try {
-    const auth = await authAccess()
-    if (!auth.data) return { error: auth.error }
-    const { orgId } = auth.data
-
-    return { data: await getTeacherStats(teacherId, orgId) }
+    return { data: await getTeacherCourses(teacherId, orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
+
+
 //MOCKS_USE
 export async function getTeachersAction({departmentId}:{departmentId?: string}) {
   try {
@@ -88,14 +77,3 @@ export async function getTeacherAction(teacherId: string) {
   }
 }
 
-export async function getTeacherOrganizationStatsAction() {
-  try {
-    const auth = await authAccess()
-    if (!auth.data) return { error: auth.error }
-    const { orgId } = auth.data
-
-    return { data: await getTeacherOrganizationStats(orgId) }
-  } catch (e) {
-    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
-  }
-}

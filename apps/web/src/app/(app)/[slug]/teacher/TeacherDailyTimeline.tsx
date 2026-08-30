@@ -17,9 +17,9 @@ import { CalendarRestIllustration, TeacherEmpty } from "@/components/teacher/ui/
 
 export interface DailyScheduleItem {
   id: string
-  start: string            // ISO — la dérivation temporelle a besoin de la date complète
-  end: string              // ISO
-  status: ScheduleStatus   // status DB brut ; l'UI dérive le statut affichable
+  start: Date               // Date natif — transporté tel quel par le RSC payload
+  end: Date
+  status: ScheduleStatus    // status DB brut ; l'UI dérive le statut affichable
   notes: string | null
   courseName: string
   roomName: string
@@ -60,7 +60,7 @@ export function TeacherDailyTimeline({
   const now = new Date()
   const uiStatusOf = (s: DailyScheduleItem): ScheduleUiStatus =>
     resolveScheduleUiStatus(
-      { status: s.status, startTime: new Date(s.start), endTime: new Date(s.end) },
+      { status: s.status, startTime: s.start, endTime: s.end },
       now,
     )
 
@@ -78,7 +78,7 @@ export function TeacherDailyTimeline({
         <div>
           <p className="text-xs text-muted-foreground">Planning du jour</p>
           <h2 className="text-base font-semibold capitalize">
-            {date ?? formatDate(new Date(), "LONG_DATE")}
+            {date ?? formatDate(now, "LONG_DATE")}
           </h2>
         </div>
         {schedules.length > 0 && (
@@ -175,7 +175,7 @@ export function TeacherDailyTimeline({
                   <div className="flex justify-between items-start gap-2">
                     <div className="space-y-0.5 min-w-0">
                       <p className="font-serif text-xs tabular-nums text-muted-foreground">
-                        {formatTime(new Date(schedule.start))} – {formatTime(new Date(schedule.end))}
+                        {formatTime(schedule.start)} – {formatTime(schedule.end)}
                       </p>
                       <p className={cn(
                         "text-sm font-medium truncate",

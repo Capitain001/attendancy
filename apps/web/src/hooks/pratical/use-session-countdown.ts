@@ -50,14 +50,11 @@ export const sessionConfig = {
   
   // Configuration des statuts
   // Alias direct sur l'enum Prisma (browser.ts) — aucune clé recopiée à la
-  // main : impossible de diverger (c'est littéralement le même objet), plus
-  // besoin de `satisfies` pour s'en assurer. Le bug CANCELLED/CANCELED
-  // corrigé précédemment ne peut structurellement plus se reproduire.
+  // main 
   status: DBSessionStatus,
   
   // Configuration des schedules
   // Idem via ScheduleStatus. ONGOING n'y figure pas et ne PEUT pas y figurer
-  // par erreur : ce n'est pas une valeur de l'enum Prisma ScheduleStatus
   // (ONGOING est dérivé du temps, jamais persisté — voir services/schedule/policy.ts).
   schedule: {
     status: DBScheduleStatus,

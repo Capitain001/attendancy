@@ -1,239 +1,121 @@
-"use client"
-
-import {
-  Mail,
-  Phone,
-  MessageSquare,
-  Video,
-  MoreVertical,
-  Calendar,
-} from "lucide-react"
-
-import { BsFileEarmarkText, BsWhatsapp } from "react-icons/bs"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
+import { GetTeacherDto, GetTeacherStatsDto,  } from "@/services/teacher"
 
-// ─── Types ─────────────────────────────────────────────
+// ─── Stats ───────────────────────────────────────────────────────────────────
 
-export interface Teacher {
-  id: string
-  name: string
-  title: string
-  department: string
-  email: string
-  phone?: string
-  avatarUrl?: string
-  status: "online" | "busy" | "away"
-}
+const STATS: {
+  key: keyof GetTeacherStatsDto
+  label: string
+  suffix: string
+}[] = [
+  { key: "assiduite", label: "Assiduité", suffix: "%" },
+  { key: "ponctualite", label: "Ponctualité", suffix: "%" },
+  { key: "courses", label: "Cours", suffix: "" },
+  { key: "annulations", label: "Annulations", suffix: "" },
+]
 
-export interface TeacherSchedule {
-  month: string
-  sessionCount: number
-}
+// ─── Composant ───────────────────────────────────────────────────────────────
 
-export interface TeacherProfileCardProps {
-  teacher: Teacher
-  schedule: TeacherSchedule
-
-  onEmail?: () => void
-  onCall?: () => void
-  onMessage?: () => void
-  onVideo?: () => void
-  onMore?: () => void
-
+interface TeacherProfileCardProps {
+  teacher: GetTeacherDto
+  stats: GetTeacherStatsDto
   className?: string
 }
 
-// ─── Mock ──────────────────────────────────────────────
-
-export const MOCK_TEACHER: Teacher = {
-  id: "t_1",
-  name: "Kossi Mensah",
-  title: "Professeur de Mathématiques",
-  department: "Sciences",
-  email: "kossi.mensah@example.com",
-  phone: "+228 90 00 00 00",
-  avatarUrl: "",
-  status: "online",
-}
-
-export const MOCK_TEACHER_SCHEDULE: TeacherSchedule = {
-  month: "Avril 2026",
-  sessionCount: 24,
-}
-
-// ─── Helpers ───────────────────────────────────────────
-
-const AVATAR_COLORS = [
-  "bg-blue-500",
-  "bg-violet-500",
-  "bg-emerald-500",
-  "bg-amber-500",
-  "bg-rose-500",
-]
-
-const STATUS_DOT: Record<Teacher["status"], string> = {
-  online: "bg-green-500",
-  busy: "bg-yellow-400",
-  away: "bg-slate-400",
-}
-
-function getInitials(name: string) {
-  return name
-    .split(" ")
-    .slice(0, 2)
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase()
-}
-
-function getAvatarColor(id: string) {
-  const hash = id
-    .split("")
-    .reduce((acc, c) => acc + c.charCodeAt(0), 0)
-
-  return AVATAR_COLORS[hash % AVATAR_COLORS.length]
-}
-
-// ─── Subcomponents ─────────────────────────────────────
-
-function Avatar({
-  teacher,
-}: {
-  teacher: Teacher
-}) {
-  return (
-    <div className="relative shrink-0">
-      {teacher.avatarUrl ? (
-        <img
-          src={teacher.avatarUrl}
-          alt={teacher.name}
-          className="size-14 rounded-full object-cover"
-        />
-      ) : (
-        <div
-          className={cn(
-            "size-14 rounded-full flex items-center justify-center  font-medium",
-            getAvatarColor(teacher.id)
-          )}
-        >
-          {getInitials(teacher.name)}
-        </div>
-      )}
-
-      <span
-        className={cn(
-          "absolute bottom-0.5 right-0.5 w-3 h-3 rounded-full border-2 border-background",
-          STATUS_DOT[teacher.status]
-        )}
-      />
-    </div>
-  )
-}
-
-function ActionButton({
-  onClick,
-  children,
-}: {
-  onClick?: () => void
-  children: React.ReactNode
-}) {
-  if (!onClick) return null
-
-  return (
-    <button
-      onClick={onClick}
-      className="w-9 h-9 rounded-full border border-border bg-muted/40 flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors"
-    >
-      {children}
-    </button>
-  )
-}
-
-// ─── Main Card ─────────────────────────────────────────
-
 export function TeacherProfileCard({
   teacher,
-  schedule,
-  onEmail,
-  onCall,
-  onMessage,
-  onVideo,
-  onMore,
+  stats,
   className,
 }: TeacherProfileCardProps) {
+  if (!teacher) {
+    return null
+  }
+
+  const { user, department } = teacher
+
+  const fullName =
+    [user.firstName, user.lastName].filter(Boolean).join(" ") ||
+    user.email
+
+  const initials =
+    [user.firstName?.[0], user.lastName?.[0]]
+      .filter(Boolean)
+      .join("")
+      .toUpperCase() || "?"
+
   return (
     <div
       className={cn(
-        "min-w-[18rem] flex flex-col w-full bg-card border border-border/10 rounded-xl p-5 font-sans gap-4",
-        className
+        "w-full rounded-2xl rounded-se-none bg-card p-4",
+        className,
       )}
     >
-      {/* Header */}
-      <div className="flex items-start justify-between ">
-        <div className="flex items-center gap-3">
-          <Avatar teacher={teacher} />
+      {/* Identité */}
+      <div className="flex items-center gap-3">
+        <Avatar className="size-16 shrink-0">
+          {user.avatar_url && (
+            <AvatarImage
+              src={user.avatar_url}
+              alt={fullName}
+            />
+          )}
 
-          <div>
-            <p className="text-sm font-medium text-foreground">
-              {teacher.name}
-            </p>
+          <AvatarFallback className="text-sm font-semibold">
+            {initials}
+          </AvatarFallback>
+        </Avatar>
 
-            <p className="text-xs text-muted-foreground">
-              {teacher.title}
-            </p>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-semibold">
+            {fullName}
+          </p>
 
-            <p className="text-[11px] text-muted-foreground/60 mt-0.5">
-              {teacher.department}
-            </p>
-          </div>
+          <p className="truncate text-xs text-muted-foreground">
+            {user.email}
+          </p>
+
+          {department && (
+            <Badge
+              variant="secondary"
+              className="mt-1 h-4 px-1.5 text-[10px]"
+            >
+              {department.name}
+            </Badge>
+          )}
         </div>
 
-        {onMore && (
-          <button
-            onClick={onMore}
-            className="w-7 h-7 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors"
+        <Badge
+          variant={
+            user.status === "ACTIVE"
+              ? "default"
+              : "secondary"
+          }
+          className="h-4 shrink-0 px-1.5 text-[10px]"
+        >
+          {user.status === "ACTIVE" ? "Actif" : "Inactif"}
+        </Badge>
+      </div>
+
+      {/* Bande de stats */}
+      <div className="mt-4 grid grid-cols-4 divide-x divide-border overflow-hidden rounded-xl bg-muted/50">
+        {STATS.map(({ key, label, suffix }) => (
+          <div
+            key={key}
+            className="flex flex-col items-center px-1 py-2.5"
           >
-            <MoreVertical className="w-3.5 h-3.5" />
-          </button>
-        )}
-      </div>
+            <span className="text-sm font-bold leading-none tabular-nums">
+              {stats[key]}
+              {suffix}
+            </span>
 
-      {/* Actions */}
-      <div className="flex gap-2 ">
-        <ActionButton onClick={onEmail}>
-          <Mail className="w-3.5 h-3.5" />
-        </ActionButton>
-
-        <ActionButton onClick={onCall}>
-          <Phone className="w-3.5 h-3.5" />
-        </ActionButton>
-
-        <ActionButton onClick={onMessage}>
-          <BsWhatsapp className="w-3.5 h-3.5" />
-        </ActionButton>
-
-        <ActionButton onClick={onVideo}>
-          <Video className="w-3.5 h-3.5" />
-        </ActionButton>
-      </div>
-
-      {/* Schedule row */}
-      <div className="flex gap-2">
-        <div className="flex items-center gap-2 border border-border rounded-lg px-2.5 py-1.5 flex-1">
-          <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
-          <span className="text-xs text-foreground">
-            {schedule.month}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2 border border-border rounded-lg px-2.5 py-1.5">
-          <span className="text-xs text-foreground">
-            Data
-          </span>
-          <BsFileEarmarkText />
-        </div>
+            <span className="mt-1 text-center text-[9px] leading-tight text-muted-foreground">
+              {label}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
-    )
+  )
 }
-
