@@ -5,7 +5,7 @@ import { getSerializableRoutes } from "@/components/layout/sidebar/nav";
 import { getUserInfo } from "@/modules/user";
 import type { ReactNode } from "react";
 import { UserSidebarSlot } from "@/components/layout/sidebar";
-import { teacherRoutes } from "@/components/teacher/navigation";
+import { teacherRoutes } from "@/components/teacher/user/navigation";
 
 interface LayoutProps {
   children: ReactNode;
