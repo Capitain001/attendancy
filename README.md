@@ -78,3 +78,5 @@ appelée directement dans un composant. Mode d'emploi : `src/hooks/entity/USAGE.
 - `*.unit.test.ts` co-localisés (purs, sans I/O) · `*.integration.test.ts` (DB réelle)
 - Base de test : `npm run test:db:setup` (exige `TEST_DATABASE_URL ≠ DATABASE_URL`)
 - Helpers par service : `src/services/<svc>/__tests__/` (exemple : `entity/__tests__/`)
+
+  
