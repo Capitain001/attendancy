@@ -47,6 +47,13 @@ const STATUS_CONFIG: Record<
     text: "text-red-600 dark:text-red-400",
     bg: "bg-red-500/10",
   },
+  canceled: {
+    label: "Annulée",
+    dot: "bg-zinc-400 dark:bg-zinc-600",
+    ring: "ring-zinc-400/30 dark:ring-zinc-600/30",
+    text: "text-zinc-600 dark:text-zinc-400",
+    bg: "bg-zinc-500/10",
+  },
 };
 
 interface SessionStatusBadgeProps {
