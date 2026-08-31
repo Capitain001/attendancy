@@ -154,6 +154,7 @@ function WidgetInner({
   const { uiStatus, canCheckIn, canCheckOut, isLate, countdown } =
     useSessionState({ startTime: startAt, endTime: endAt, session: optimisticSession });
 
+  
   const { startSession, endSession, isStarting, isEnding } = useStartSession({
     scheduleId: schedule.id,
     teacherId,
