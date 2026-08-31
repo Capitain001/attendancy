@@ -1,6 +1,8 @@
 export type { ClassProfileData, StudentData, ScheduleStatus } from './types'
 export { CollapseSection } from './CollapseSection'
 export { CoursesSection } from './CoursesSection'
+export { PromotionCoursesSection, type PromotionCourse } from './PromotionCoursesSection'
+export { MOCK_PROMOTION_COURSES } from './mockPromotionCourses'
 export { ScheduleSection } from './ScheduleSection'
 export { GridDeco } from '../../../../design/GridDeco'
 export { EmptyPlanning } from './EmptyPlanning'

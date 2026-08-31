@@ -1,0 +1,8 @@
+{
+  "name": "generateCoursesFromProgram",
+  "file": "src/services/course/database/course.mutations.ts",
+  "sig": "({ programId, classId, orgId, termsBySemester }: { programId: string classId: string orgId: string termsBySemester?: Record<number, string> }) => Promise<{ created: { name: string; id: string; credits: number; ueCourseId: string; }[]; skippedCount: number; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,197 @@
+import type { PromotionCourse } from './PromotionCoursesSection'
+
+export const MOCK_PROMOTION_COURSES: PromotionCourse[] = [
+  {
+    id: 'course-1',
+    name: 'Algorithmique & Structures de Données',
+    credits: 6,
+    ueCode: '1INF1110',
+    durationDone: 28,
+    durationTotal: 45,
+    semester: { id: 'term-s1', name: 'Semestre 1' },
+    teachers: [
+      {
+        id: 'teacher-marie-curie',
+        firstName: 'Marie',
+        lastName: 'Curie',
+        isMain: true,
+      },
+    ],
+  },
+  {
+    id: 'course-2',
+    name: 'Architecture des Ordinateurs & Assembleur',
+    credits: 4,
+    ueCode: '1INF1120',
+    durationDone: 20,
+    durationTotal: 30,
+    semester: { id: 'term-s1', name: 'Semestre 1' },
+    teachers: [
+      {
+        id: 'teacher-jean-dupont',
+        firstName: 'Jean',
+        lastName: 'Dupont',
+        isMain: true,
+      },
+    ],
+  },
+  {
+    id: 'course-3',
+    name: 'Bases de Données Relationnelles & SQL',
+    credits: 5,
+    ueCode: '1INF1130',
+    durationDone: 24,
+    durationTotal: 36,
+    semester: { id: 'term-s1', name: 'Semestre 1' },
+    teachers: [
+      {
+        id: 'teacher-sophie-martin',
+        firstName: 'Sophie',
+        lastName: 'Martin',
+        isMain: true,
+      },
+    ],
+  },
+  {
+    id: 'course-4',
+    name: 'Mathématiques Discrètes & Algèbre Linéaire',
+    credits: 6,
+    ueCode: '1MTH1110',
+    durationDone: 32,
+    durationTotal: 48,
+    semester: { id: 'term-s1', name: 'Semestre 1' },
+    teachers: [
+      {
+        id: 'teacher-thomas-bernard',
+        firstName: 'Thomas',
+        lastName: 'Bernard',
+        isMain: true,
+      },
+    ],
+  },
+  {
+    id: 'course-5',
+    name: 'Développement Web Fullstack & API REST',
+    credits: 5,
+    ueCode: '2INF1110',
+    durationDone: 16,
+    durationTotal: 40,
+    semester: { id: 'term-s2', name: 'Semestre 2' },
+    teachers: [
+      {
+        id: 'teacher-alain-prost',
+        firstName: 'Alain',
+        lastName: 'Prost',
+        isMain: true,
+      },
+    ],
+  },
+  {
+    id: 'course-6',
+    name: "Réseaux & Systèmes d'Exploitation",
+    credits: 5,
+    ueCode: '2INF1120',
+    durationDone: 12,
+    durationTotal: 30,
+    semester: { id: 'term-s2', name: 'Semestre 2' },
+    teachers: [
+      {
+        id: 'teacher-jean-dupont',
+        firstName: 'Jean',
+        lastName: 'Dupont',
+        isMain: true,
+      },
+    ],
+  },
+  {
+    id: 'course-7',
+    name: 'Génie Logiciel & Méthodes Agiles',
+    credits: 4,
+    ueCode: '2INF1130',
+    durationDone: 10,
+    durationTotal: 24,
+    semester: { id: 'term-s2', name: 'Semestre 2' },
+    teachers: [
+      {
+        id: 'teacher-marie-curie',
+        firstName: 'Marie',
+        lastName: 'Curie',
+        isMain: true,
+      },
+      {
+        id: 'teacher-alain-prost',
+        firstName: 'Alain',
+        lastName: 'Prost',
+        isMain: false,
+      },
+    ],
+  },
+  {
+    id: 'course-8',
+    name: 'Probabilités & Statistique Appliquée',
+    credits: 3,
+    ueCode: '2MTH1110',
+    durationDone: 18,
+    durationTotal: 24,
+    semester: { id: 'term-s2', name: 'Semestre 2' },
+    teachers: [
+      {
+        id: 'teacher-thomas-bernard',
+        firstName: 'Thomas',
+        lastName: 'Bernard',
+        isMain: true,
+      },
+    ],
+  },
+  {
+    id: 'course-9',
+    name: "Introduction à l'Intelligence Artificielle",
+    credits: 6,
+    ueCode: '3INF1110',
+    durationDone: 4,
+    durationTotal: 40,
+    semester: { id: 'term-s3', name: 'Semestre 3' },
+    teachers: [
+      {
+        id: 'teacher-alain-prost',
+        firstName: 'Alain',
+        lastName: 'Prost',
+        isMain: true,
+      },
+    ],
+  },
+  {
+    id: 'course-10',
+    name: 'Sécurité Informatique & Cryptographie',
+    credits: 4,
+    ueCode: '3INF1120',
+    durationDone: 0,
+    durationTotal: 30,
+    semester: { id: 'term-s3', name: 'Semestre 3' },
+    teachers: [
+      {
+        id: 'teacher-sophie-martin',
+        firstName: 'Sophie',
+        lastName: 'Martin',
+        isMain: true,
+      },
+    ],
+  },
+  {
+    id: 'course-11',
+    name: 'Module de rattrapage',
+    credits: 2,
+    ueCode: null,
+    durationDone: 0,
+    durationTotal: 12,
+    semester: null,
+    teachers: [
+      {
+        id: 'teacher-jean-dupont',
+        firstName: 'Jean',
+        lastName: 'Dupont',
+        isMain: true,
+      },
+    ],
+  },
+]

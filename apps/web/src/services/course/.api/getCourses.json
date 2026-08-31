@@ -1,7 +1,7 @@
 {
   "name": "getCourses",
   "file": "src/services/course/database/course.queries.ts",
-  "sig": "(orgId: string, classId?: string) => Promise<{ name: string; id: string; classId: string; durationDone: number; durationTotal: number; credits: number; termId: string | null; ueCourse: { name: string; id: string; code: string | null; }; teachers: { ...; }[]; }[]>",
+  "sig": "(orgId: string, classId?: string) => Promise<{ name: string; id: string; classId: string; durationDone: number; durationTotal: number; credits: number; termId: string | null; term: { name: string; id: string; } | null; ueCourse: { name: string; id: string; code: string | null; }; teachers: { ...; }[]; }[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

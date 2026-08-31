@@ -53,7 +53,7 @@ export async function DirectionPromotionDetailPage({ classId, slug }: DirectionP
   const invitationsHref = `./${classId}/invitations`
   const enrollmentHref = `/${slug}/direction/academic/promotion/${classId}/enrollment`
   const groupsHref = `/${slug}/direction/academic/promotions/${classId}/groups`
-
+  const moreCoursesHref = `/${slug}/direction/academic/promotions/${classId}/courses`
 
   return (
     <div className="flex flex-col gap-4">
@@ -82,7 +82,7 @@ export async function DirectionPromotionDetailPage({ classId, slug }: DirectionP
 
       <section>
         <CollapseSection label="Cours" count={courses.length}>
-          <CoursesSection courses={courses} />
+          <CoursesSection courses={courses} moreHref={moreCoursesHref} />
           {class_.programId && (
             <div className="mt-4 flex justify-center">
               <GenerateProgramCoursesButton classId={class_.id} programId={class_.programId}  />

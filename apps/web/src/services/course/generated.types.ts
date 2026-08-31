@@ -2,11 +2,12 @@
 // Régénérer : npx tsx scripts/generate/types/types.ts course
 // Pour surcharger un type, définissez-le dans ./types.ts (jamais écrasé).
 
-import { createCourse, updateCourse, removeCourse, getAllCourses, getCourseClassId, getCourse, getCourseDetail, getCourses } from './database'
+import { createCourse, updateCourse, removeCourse, generateCoursesFromProgram, getAllCourses, getCourseClassId, getCourse, getCourseDetail, getCourses } from './database'
 
 export type CreateCourseDto = Awaited<ReturnType<typeof createCourse>>
 export type UpdateCourseDto = Awaited<ReturnType<typeof updateCourse>>
 export type RemoveCourseDto = Awaited<ReturnType<typeof removeCourse>>
+export type GenerateCoursesFromProgramDto = Awaited<ReturnType<typeof generateCoursesFromProgram>>
 export type GetAllCoursesDto = Awaited<ReturnType<typeof getAllCourses>>
 export type GetCourseClassIdDto = Awaited<ReturnType<typeof getCourseClassId>>
 export type GetCourseDto = Awaited<ReturnType<typeof getCourse>>

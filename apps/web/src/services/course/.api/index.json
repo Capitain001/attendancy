@@ -2,7 +2,7 @@
   "service": "course",
   "path": "src/services/course/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "ed88b5f",
+  "derived_at": "89c6c34",
   "utils_dir": null,
   "fns": {
     "createCourse": {
@@ -17,6 +17,11 @@
     },
     "removeCourse": {
       "f": ".api/removeCourse.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "generateCoursesFromProgram": {
+      "f": ".api/generateCoursesFromProgram.json",
       "layer": "db",
       "kind": "mutation"
     },
@@ -60,6 +65,11 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "generateCoursesFromProgramAction": {
+      "f": ".api/generateCoursesFromProgramAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "getCourseAction": {
       "f": ".api/getCourseAction.json",
       "layer": "action",
@@ -91,6 +101,9 @@
     "removeCourse": [
       "removeCourseAction"
     ],
+    "generateCoursesFromProgram": [
+      "generateCoursesFromProgramAction"
+    ],
     "getAllCourses": [
       "getAllCoursesAction"
     ],
@@ -107,6 +120,7 @@
     "createCourseAction": [],
     "updateCourseAction": [],
     "removeCourseAction": [],
+    "generateCoursesFromProgramAction": [],
     "getCourseAction": [],
     "getAllCoursesAction": [],
     "getCoursesAction": [],

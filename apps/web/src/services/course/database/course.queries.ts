@@ -136,6 +136,9 @@ export async function getCourses(orgId: string, classId?: string) {
       ueCourse: {
         select: { id: true, name: true, code: true },
       },
+      term: {
+        select: { id: true, name: true },
+      },
       teachers: {
         select: {
           id: true, isMain: true, hours: true,

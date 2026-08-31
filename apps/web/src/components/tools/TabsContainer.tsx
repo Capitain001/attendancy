@@ -6,7 +6,7 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/components/ui/tabs";
+} from "@/components/ui/tabs"; // utilise tab de shadcn 
 import { cn } from "@/lib/utils";
 import React from "react";
 

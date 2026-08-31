@@ -53,7 +53,7 @@ function CourseCard({ course }: { course: Course }) {
   )
 }
 
-export function CoursesSection({ courses }: { courses: Course[] }) {
+export function CoursesSection({ courses, moreHref }: { courses: Course[]; moreHref?: string }) {
   return (
     <div className="flex flex-col gap-2">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -61,12 +61,14 @@ export function CoursesSection({ courses }: { courses: Course[] }) {
           <CourseCard key={c.id} course={c} />
         ))}
       </div>
-      <Link
-        href="#"
-        className="flex justify-center w-full text-sm font-semibold text-muted-foreground tracking-wide underline"
-      >
-        voir plus ...
-      </Link>
+      {moreHref && (
+        <Link
+          href={moreHref}
+          className="flex justify-center w-full text-sm font-semibold text-muted-foreground tracking-wide underline"
+        >
+          voir plus ...
+        </Link>
+      )}
     </div>
   )
 }

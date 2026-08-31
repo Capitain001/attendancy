@@ -1,0 +1,11 @@
+{
+  "name": "generateCoursesFromProgramAction",
+  "file": "src/services/course/actions/course.mutations.ts",
+  "sig": "(input: GenerateCoursesFromProgramInput) => Promise<{ error: string; data?: undefined; } | { data: { created: { name: string; id: string; credits: number; ueCourseId: string; }[]; skippedCount: number; }; error?: undefined; }>",
+  "calls": [
+    "generateCoursesFromProgram"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

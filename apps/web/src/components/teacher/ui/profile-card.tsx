@@ -48,7 +48,7 @@ export function TeacherProfileCard({
   return (
     <div
       className={cn(
-        "w-full rounded-2xl rounded-se-none bg-card p-4",
+        "w-full rounded-xl rounded-se-none bg-card p-4",
         className,
       )}
     >
@@ -99,7 +99,7 @@ export function TeacherProfileCard({
       </div>
 
       {/* Bande de stats */}
-      <div className="mt-4 grid grid-cols-4 divide-x divide-border overflow-hidden rounded-xl bg-muted/50">
+      <div className="mt-4 grid grid-cols-4 divide-x divide-border overflow-hidden rounded-md bg-muted/50">
         {STATS.map(({ key, label, suffix }) => (
           <div
             key={key}
