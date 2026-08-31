@@ -70,7 +70,7 @@ export function getRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)]
 }
 
-export function getInitials(first?: string, last?: string) {
+export function getInitials(first?: string | null, last?: string | null) {
   return `${first?.[0] ?? ''}${last?.[0] ?? ''}`.toUpperCase()
 }
 

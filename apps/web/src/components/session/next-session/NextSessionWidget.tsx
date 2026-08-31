@@ -41,21 +41,23 @@ function fmtDuration(minutes: number) {
 }
 
 const STATUS_DOT: Record<UISessionStatus, string> = {
-  upcoming:       "bg-muted-foreground/40",
+  upcoming: "bg-muted-foreground/40",
   "can-check-in": "bg-amber-400",
-  ongoing:        "bg-emerald-400 animate-pulse",
-  "can-check-out":"bg-blue-400",
-  done:           "bg-muted-foreground/30",
-  missed:         "bg-red-400/60",
+  ongoing: "bg-emerald-400 animate-pulse",
+  "can-check-out": "bg-blue-400",
+  done: "bg-muted-foreground/30",
+  missed: "bg-red-400/60",
+  canceled: "bg-red-600/60",
 };
 
 const STATUS_LABEL: Record<UISessionStatus, string> = {
-  upcoming:       "À venir",
+  upcoming: "À venir",
   "can-check-in": "Démarrage possible",
-  ongoing:        "En cours",
-  "can-check-out":"Clôture possible",
-  done:           "Terminée",
-  missed:         "Manquée",
+  ongoing: "En cours",
+  "can-check-out": "Clôture possible",
+  done: "Terminée",
+  missed: "Manquée",
+  canceled: "Annulée",
 };
 
 // ─── Slide dots indicator ─────────────────────────────────────────────────────
@@ -263,8 +265,8 @@ function WidgetInner({
   const actionLabel = canCheckIn
     ? isLate ? "Démarrer (retard)" : "Démarrer"
     : isActiveSession && canCheckOut
-    ? isLate ? "Clôturer (retard)" : "Clôturer"
-    : "En cours";
+      ? isLate ? "Clôturer (retard)" : "Clôturer"
+      : "En cours";
 
   const slideAction = (
     <div className="flex flex-col items-center justify-center gap-3 h-full">
@@ -340,8 +342,8 @@ export function NextSessionWidget({ teacherId, className }: NextSessionWidgetPro
             <span className={cn("size-1.5 rounded-full", STATUS_DOT[
               // On a besoin du uiStatus ici — on le recalcule pas, on affiche juste le dot via schedule.session
               schedule.session?.status === "ACTIVE" ? "ongoing"
-              : schedule.session?.status === "COMPLETED" ? "done"
-              : "upcoming"
+                : schedule.session?.status === "COMPLETED" ? "done"
+                  : "upcoming"
             ])} />
           </div>
         )}

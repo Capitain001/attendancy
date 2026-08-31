@@ -2,10 +2,8 @@ import { connection } from 'next/server'
 import { GraduationCap } from 'lucide-react'
 import { getCurrentTeacherId, getTeacherCoursesAction } from '@/services/teacher'
 import { getEnrolledStudentsAction } from '@/services/student'
+import { getInitials } from '@/lib/utils'
 
-function getInitials(first?: string | null, last?: string | null) {
-  return ((first?.[0] ?? '') + (last?.[0] ?? '')).toUpperCase() || '—'
-}
 
 export default async function Page() {
   await connection()
