@@ -20,7 +20,7 @@ Run `tree docs` pour connaître les docs disponibles. Lire selon besoin.
 - `"use server"` uniquement dans `actions/` — jamais sur les utilitaires
 - Actions : préfixe `get*` (jamais `list*`), retour `{ data }` / `{ error: string }`
 - Valibot pour toute validation — jamais Zod
-- Toast : `@/lib/toast/custom-toast` — jamais sonner directement
+
 
 ## Post-session checklist (services/*)
 ```

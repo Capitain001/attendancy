@@ -33,6 +33,8 @@ export default async function Page({ params }: PageProps) {
             : `${courses.length} cours répartis par semestre.`}
         </p>
       </div>
+      <p>COURSES: </p>
+      <pre>{JSON.stringify(courses, null, 2)}</pre>
 
       <PromotionCoursesSection courses={courses} />
     </div>

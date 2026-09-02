@@ -12,6 +12,7 @@ import { mapCoursesForClassSection, mapSchedulesForClassSection } from './mapCla
 
 import { UsersGroup } from "@mynaui/icons-react";
 import { GenerateProgramCoursesButton } from './GenerateProgramCoursesButton'
+import { GenerateTermsButton } from '@/components/term/Generatetermsbutton'
 
 
 export interface DirectionPromotionDetailPageProps {
@@ -90,6 +91,7 @@ export async function DirectionPromotionDetailPage({ classId, slug }: DirectionP
           )}
         </CollapseSection>
 
+          <GenerateTermsButton classId={class_.id} hasProgram={!!class_.programId} />
 
         <CollapseSection label="Étudiants" count={enrollments.length}>
           <StudentsSection

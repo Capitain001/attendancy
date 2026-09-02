@@ -100,8 +100,6 @@ export default function PCourseList() {
     </div>
 
     <CoursesExample/>
-       {/* <ExampleTabs/> */}
-
     </div>
   )
 }
