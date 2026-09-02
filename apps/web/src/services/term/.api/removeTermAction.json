@@ -1,0 +1,11 @@
+{
+  "name": "removeTermAction",
+  "file": "src/services/term/actions/term.mutations.ts",
+  "sig": "(termId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; classId: string; }; error?: undefined; }>",
+  "calls": [
+    "removeTerm"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

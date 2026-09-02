@@ -1,9 +1,9 @@
 {
-  "name": "generateTermsFromProgramAction",
-  "file": "src/services/term/actions/term.mutations.ts",
+  "name": "getTermsAction",
+  "file": "src/services/term/actions/term.queries.ts",
   "sig": "(classId: string) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; classId: string; order: number; startDate: Date | null; endDate: Date | null; lockedAt: Date | null; createdAt: Date; updatedAt: Date; }[]; error?: undefined; }>",
   "calls": [
-    "generateTermsFromProgram"
+    "getTerms"
   ],
   "auth": {},
   "rules": [],

@@ -1,0 +1,8 @@
+{
+  "name": "createTerm",
+  "file": "src/services/term/database/term.mutations.ts",
+  "sig": "(data: CreateTermData, orgId: string) => Promise<{ name: string; id: string; classId: string; order: number; startDate: Date | null; endDate: Date | null; lockedAt: Date | null; createdAt: Date; updatedAt: Date; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

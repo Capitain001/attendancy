@@ -3,7 +3,13 @@ import { notFound } from 'next/navigation'
 
 import { PromotionCoursesSection } from '@/components/courses/direction/sections/PromotionCoursesSection'
 import { getCoursesAction } from '@/services/course'
-import { validateUUID } from '@/utils/server/validation'
+import { TermCreateButton } from '@/components/direction/academic/TermForm'
+import { TermsList } from '@/components/term/TermsList'
+import { getTermsAction } from '@/services/term'
+// ⚠ à confirmer : quelle action expose déjà { programId } pour une classe ?
+// Le service `class`/`academic` n'était pas dans mon contexte — brancher la
+// bonne action à la place de ce placeholder pour hasProgram (voir plus bas).
+// import { getClassAction } from '@/services/class'
 
 interface PageProps {
   params: Promise<{ classId: string; slug: string }>
@@ -14,13 +20,19 @@ export default async function Page({ params }: PageProps) {
 
   const { classId } = await params
 
-  // validateUUID(classId)
+  // Deux résultats à résoudre indépendamment — chacun garde son objet
+  // { data } | { error } intact jusqu'au narrowing, pas de déstructuration
+  // séparée avant coup (sinon `terms`/`error` perdent leur lien pour TS,
+  // c'est exactement le bug du snippet précédent).
+  const coursesResult = await getCoursesAction(classId)
+  const termsResult = await getTermsAction(classId)
 
-  const res = await getCoursesAction(classId)
+  if ('error' in coursesResult) notFound()
+  if ('error' in termsResult) notFound()
 
-  if ('error' in res) notFound()
+  const courses = coursesResult.data
+  const terms = termsResult.data // narrowed en T[] — plus jamais undefined ici
 
-  const courses = res.data
 
   return (
     <div className="flex flex-col gap-6 p-4 md:p-6">
@@ -33,8 +45,12 @@ export default async function Page({ params }: PageProps) {
             : `${courses.length} cours répartis par semestre.`}
         </p>
       </div>
-      <p>COURSES: </p>
-      <pre>{JSON.stringify(courses, null, 2)}</pre>
+
+      <TermsList  terms={terms} />
+
+      <div className="flex items-center justify-end">
+        <TermCreateButton classId={classId} defaultOrder={0} />
+      </div>
 
       <PromotionCoursesSection courses={courses} />
     </div>

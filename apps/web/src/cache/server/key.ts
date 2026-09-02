@@ -51,6 +51,7 @@ import { PROGRAM_GRAPH } from "@/services/program/cache";
 import { COURSE_TEACHER_GRAPH } from "@/services/course-teacher/cache";
 import { UE_TEMPLATE_GRAPH } from "@/services/ue-template/cache";
 // import { USER_GRAPH } from "@/services/user/cache";
+import { CURRICULUM_GRAPH } from "@/services/curriculum/cache";
 // ⚠ À ÉTENDRE PAR PROJET — un import par service à données cachées :
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -87,6 +88,8 @@ export const CACHE = {
   ORG_PROGRAM_TEMPLATE: key("org-program-template"),
   ORG_UE_TEMPLATE: key("org-ue-template"),
   USER: key("user"),
+  TERM: key("term"),
+  CURRICULUM: key("curriculum"),
 // ⚠ À ÉTENDRE PAR PROJET — une entrée par entité cachée :
   // ENTITY: key("entity"),
   // RESOURCE: key("resource", CACHE_LIFE.SHORT),
@@ -122,6 +125,7 @@ export const CACHE_GRAPH = {
   ...COURSE_TEACHER_GRAPH,
   ...UE_TEMPLATE_GRAPH,
   // ...USER_GRAPH,
+  ...CURRICULUM_GRAPH,
 // ⚠ À ÉTENDRE PAR PROJET — spreader chaque <SERVICE>_GRAPH importé :
 } as const;
 

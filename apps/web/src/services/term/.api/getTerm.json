@@ -1,0 +1,8 @@
+{
+  "name": "getTerm",
+  "file": "src/services/term/database/term.queries.ts",
+  "sig": "(termId: string, orgId: string) => Promise<{ name: string; id: string; classId: string; order: number; startDate: Date | null; endDate: Date | null; lockedAt: Date | null; createdAt: Date; updatedAt: Date; } | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

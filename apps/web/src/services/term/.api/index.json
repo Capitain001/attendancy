@@ -2,25 +2,99 @@
   "service": "term",
   "path": "src/services/term/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "5a9e707",
+  "derived_at": "d4b8622",
   "utils_dir": null,
   "fns": {
+    "createTerm": {
+      "f": ".api/createTerm.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateTerm": {
+      "f": ".api/updateTerm.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "removeTerm": {
+      "f": ".api/removeTerm.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
     "generateTermsFromProgram": {
       "f": ".api/generateTermsFromProgram.json",
       "layer": "db",
       "kind": "mutation"
     },
+    "getTerms": {
+      "f": ".api/getTerms.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getTerm": {
+      "f": ".api/getTerm.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createTermAction": {
+      "f": ".api/createTermAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateTermAction": {
+      "f": ".api/updateTermAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeTermAction": {
+      "f": ".api/removeTermAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "generateTermsFromProgramAction": {
       "f": ".api/generateTermsFromProgramAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getTermsAction": {
+      "f": ".api/getTermsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getTermAction": {
+      "f": ".api/getTermAction.json",
       "layer": "action",
       "kind": "server-action"
     }
   },
   "edges": {
+    "createTerm": [
+      "createTermAction"
+    ],
+    "updateTerm": [
+      "updateTermAction"
+    ],
+    "removeTerm": [
+      "removeTermAction"
+    ],
     "generateTermsFromProgram": [
       "generateTermsFromProgramAction"
     ],
-    "generateTermsFromProgramAction": []
+    "getTerms": [
+      "getTermsAction"
+    ],
+    "getTerm": [
+      "getTermAction"
+    ],
+    "createTermAction": [],
+    "updateTermAction": [],
+    "removeTermAction": [],
+    "generateTermsFromProgramAction": [],
+    "getTermsAction": [],
+    "getTermAction": [],
+    "findOwnedTerm": [
+      "updateTerm",
+      "removeTerm"
+    ]
   },
   "deps": {}
 }

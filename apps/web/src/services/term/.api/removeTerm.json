@@ -1,0 +1,10 @@
+{
+  "name": "removeTerm",
+  "file": "src/services/term/database/term.mutations.ts",
+  "sig": "(termId: string, orgId: string) => Promise<{ id: string; classId: string; }>",
+  "composes": [
+    "findOwnedTerm"
+  ],
+  "rules": [],
+  "why_ref": ""
+}

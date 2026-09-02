@@ -1,0 +1,11 @@
+{
+  "name": "getTermAction",
+  "file": "src/services/term/actions/term.queries.ts",
+  "sig": "(termId: string) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; classId: string; order: number; startDate: Date | null; endDate: Date | null; lockedAt: Date | null; createdAt: Date; updatedAt: Date; }; error?: undefined; }>",
+  "calls": [
+    "getTerm"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

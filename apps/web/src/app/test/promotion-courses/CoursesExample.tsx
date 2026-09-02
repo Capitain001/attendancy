@@ -57,6 +57,58 @@ const courses: PCourse[] = [
       lastName: 'Adjei',
     },
   },
+    {
+    id: '5',
+    name: 'Trigonometrie',
+    credits: 6,
+    ueCode: 'INF203',
+    semesterName: 'Semestre 2',
+    durationDone: 20,
+    durationTotal: 30,
+    teacher: {
+      firstName: 'Alice',
+      lastName: 'Adjei',
+    },
+  },
+    {
+    id: '6',
+    name: 'Anglais professionel',
+    credits: 6,
+    ueCode: 'INF204',
+    semesterName: 'Semestre 2',
+    durationDone: 20,
+    durationTotal: 30,
+    teacher: {
+      firstName: 'Alice',
+      lastName: 'Adjei',
+    },
+  },
+      {
+    id: '7',
+    name: 'Latin',
+    credits: 3,
+    ueCode: 'INF300',
+    semesterName: 'Semestre 2',
+    durationDone: 20,
+    durationTotal: 30,
+    teacher: {
+      firstName: 'Alice',
+      lastName: 'Adjei',
+    },
+  },
+    {
+    id: '8',
+    name: 'Algebre Relationel',
+    credits: 4,
+    ueCode: 'INF301',
+    semesterName: 'Semestre 2',
+    durationDone: 20,
+    durationTotal: 30,
+    teacher: {
+      firstName: 'Alice',
+      lastName: 'Adjei',
+    },
+  },
 ]
 
 export default function CoursesExample() {
@@ -93,14 +145,15 @@ export default function CoursesExample() {
         </div>
       ),
     },
+    
   ]
 
   return (
     <CoursesTab
-      className="max-w-4xl"
+      className=""
       listClassName="gap-0.5"
       triggerClassName="px-2.5 py-1.5"
-      contentClassName="p-3"
+      contentClassName="p-3 bg-background"
       tabs={tabs}
     />
   )

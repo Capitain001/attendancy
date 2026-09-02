@@ -1,0 +1,11 @@
+{
+  "name": "createTermAction",
+  "file": "src/services/term/actions/term.mutations.ts",
+  "sig": "(input: CreateTermInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; classId: string; order: number; startDate: Date | null; endDate: Date | null; lockedAt: Date | null; createdAt: Date; updatedAt: Date; }; error?: undefined; }>",
+  "calls": [
+    "createTerm"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}
