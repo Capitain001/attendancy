@@ -6,6 +6,8 @@ import { getCoursesAction } from '@/services/course'
 import { TermCreateButton } from '@/components/direction/academic/TermForm'
 import { TermsList } from '@/components/term/TermsList'
 import { getTermsAction } from '@/services/term'
+import { TermsChips } from '@/components/term/TermsChips'
+import { ClassTerms } from '@/components/term/ClassTerms'
 // ⚠ à confirmer : quelle action expose déjà { programId } pour une classe ?
 // Le service `class`/`academic` n'était pas dans mon contexte — brancher la
 // bonne action à la place de ce placeholder pour hasProgram (voir plus bas).
@@ -45,12 +47,9 @@ export default async function Page({ params }: PageProps) {
             : `${courses.length} cours répartis par semestre.`}
         </p>
       </div>
+      {/* <TermsChips terms={terms} /> */}
+      <ClassTerms classId={classId} />
 
-      <TermsList  terms={terms} />
-
-      <div className="flex items-center justify-end">
-        <TermCreateButton classId={classId} defaultOrder={0} />
-      </div>
 
       <PromotionCoursesSection courses={courses} />
     </div>

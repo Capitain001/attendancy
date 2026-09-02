@@ -1,3 +1,6 @@
+
+// src/services/curriculum/validation.ts
+import * as v from 'valibot'
 import { object, string, pipe, trim, minLength, maxLength } from "valibot";
 import type { InferInput } from "valibot";
 
@@ -7,3 +10,6 @@ export const createCurriculumSchema = object({
 });
 
 export type CreateCurriculumInput = InferInput<typeof createCurriculumSchema>;
+
+
+export const classIdSchema = v.pipe(v.string(), v.uuid('ID de classe invalide'))
