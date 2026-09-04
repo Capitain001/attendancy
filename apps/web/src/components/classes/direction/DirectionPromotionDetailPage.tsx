@@ -87,7 +87,7 @@ export async function DirectionPromotionDetailPage({ classId, slug }: DirectionP
           <CoursesSection courses={courses} moreHref={moreCoursesHref} />
           {class_.programId && (
             <div className="mt-4 flex justify-center">
-              <GenerateProgramCoursesButton classId={class_.id} programId={class_.programId}  />
+              {/* <GenerateProgramCoursesButton classId={class_.id} programId={class_.programId}  /> */}
               <ApplyProgramButton classId={class_.id} hasProgram={!!class_.programId} />
             </div>
           )}
