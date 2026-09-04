@@ -1,6 +1,6 @@
 'use client'
 
-import { PCourse } from './PCourseCard'
+import { PCourse } from '../direction/ui/PCourseCard'
 import { useState } from 'react'
 
 export function useCourseOrder(initialCourses: PCourse[]) {

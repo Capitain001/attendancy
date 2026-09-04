@@ -51,13 +51,14 @@ export interface AuthMenuProps {
 }
 
 export const AuthMenu: React.FC<AuthMenuProps> = ({ user, className }) => {
+  const slug = user?.organization?.slug || "app";
 
   // ── Data menu
   const menuItems = [
     {
       icon: <BadgeCheckIcon />,
       label: "Profile",
-      href: user?.organization?.slug ? `/${user.organization.slug}/profile` : "#",
+      href: `/${slug}/settings/profile`,
       active: true,
     },
     {
@@ -68,7 +69,7 @@ export const AuthMenu: React.FC<AuthMenuProps> = ({ user, className }) => {
     {
       icon: <CreditCardIcon />,
       label: "Subscription",
-      href: "#",
+      href: `/${slug}/settings/payment`,
       badge: (
         <span className="text-[9px] font-bold bg-foreground/10 px-1.5 py-0.5 rounded-sm uppercase tracking-tighter">
           Pro
@@ -78,7 +79,7 @@ export const AuthMenu: React.FC<AuthMenuProps> = ({ user, className }) => {
     {
       icon: <ToggleIcon />,
       label: "Settings",
-      href: "#",
+      href: `/${slug}/settings`,
     },
   ]
 

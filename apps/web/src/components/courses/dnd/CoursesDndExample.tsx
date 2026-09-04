@@ -2,7 +2,7 @@
 import { CoursesTab } from "@/components/tools/CoursesTab"
 import { SortableCourseGrid } from "./SortableCourseGrid"
 import { useCourseOrder } from "./useCourseOrder"
-import { PCourse } from "./PCourseCard"
+import { PCourse } from "../direction/ui/PCourseCard"
 
 export default function CoursesDndExample({courses}: {courses: PCourse[]}) {
   const semester1 = useCourseOrder(courses.filter((c) => c.semesterName === 'Semestre 1'))
