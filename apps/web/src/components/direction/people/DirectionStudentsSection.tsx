@@ -47,25 +47,31 @@ export function DirectionStudentsSection({
       <div className="flex items-center justify-between">
         <h1 className="text-base font-semibold text-text-primary">Étudiants</h1>
         <div className="flex items-center gap-4">
-          {students != null && (
+          {students != null && selectedClassId && (
             <span className={typography.small}>
               {students.length} étudiant{students.length !== 1 ? "s" : ""}
             </span>
           )}
-          {selectedClassId && (
+          <div title={!selectedClassId ? "Créez une classe d'abord" : ""}>
             <InviteStudentDialog
               open={inviteDialogOpen}
               onOpenChange={setInviteDialogOpen}
               groups={groups}
               onSubmit={onInvite}
+              disabled={!selectedClassId}
             />
-          )}
+          </div>
         </div>
       </div>
 
       <SelectClass classes={classes} value={selectedClassId} />
 
-      {!selectedClassId ? (
+      {classes.length === 0 ? (
+        <InviteUserPlaceholder
+          title="Aucune classe existante"
+          subtitle="Vous devez d'abord créer une promotion (classe) avant de pouvoir inviter des étudiants."
+        />
+      ) : !selectedClassId ? (
         <p className={typography.body}>
           Sélectionnez une classe pour voir les étudiants.
         </p>
@@ -76,7 +82,7 @@ export function DirectionStudentsSection({
       ) : (
         <InviteUserPlaceholder
           title="Inviter vos premiers étudiants"
-          subtitle="Ajoutez des étudiants à votre université"
+          subtitle="Ajoutez des étudiants à cette classe."
           onCreateLink={() => setInviteDialogOpen(true)}
         />
       )}

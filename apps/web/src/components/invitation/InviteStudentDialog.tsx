@@ -28,6 +28,7 @@ interface InviteStudentDialogProps {
   }) => Promise<{ success: boolean; error?: string }>
   open?: boolean
   onOpenChange?: (open: boolean) => void
+  disabled?: boolean
 }
 
 export function InviteStudentDialog({
@@ -35,6 +36,7 @@ export function InviteStudentDialog({
   onSubmit,
   open: controlledOpen,
   onOpenChange: controlledOnOpenChange,
+  disabled,
 }: InviteStudentDialogProps) {
   const [internalOpen, setInternalOpen] = useState(false)
   const isControlled = controlledOpen !== undefined
@@ -102,7 +104,8 @@ export function InviteStudentDialog({
       <DialogTrigger asChild>
         <button
           type="button"
-          className="inline-flex items-center gap-1.5 rounded-md bg-foreground px-3 py-2 text-[12px] font-medium text-background transition-opacity hover:opacity-90"
+          disabled={disabled}
+          className="inline-flex items-center gap-1.5 rounded-md bg-foreground px-3 py-2 text-[12px] font-medium text-background transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span aria-hidden className="text-[14px] leading-none">+</span>
           Inviter un étudiant
