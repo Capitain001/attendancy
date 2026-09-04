@@ -44,7 +44,7 @@ export function CoursesTab({
           inactifs reculés (translate-y, fond discret) → effet intercalaires */}
             <TabsList
                 className={cn(
-                    'ml-auto h-auto w-52 justify-start gap-1 rounded-none border-0 bg-transparent p-0',
+                    'h-auto w-52 justify-start gap-1 rounded-none border-0 bg-transparent p-0',
                     listClassName,
                 )}
             >
@@ -70,9 +70,9 @@ export function CoursesTab({
                         <span className="font-mono text-[10px] uppercase tracking-wide">
                             {tab.label}
                         </span>
-                        {/* {typeof tab.count === 'number' && (
-                                <span className="font-mono text-[10px] opacity-60">{tab.count}</span>
-                            )} */}
+                        {typeof tab.count === 'number' && (
+                            <span className="font-mono text-[10px] opacity-60">({tab.count})</span>
+                        )}
                     </TabsTrigger>
                 ))}
             </TabsList>

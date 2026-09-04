@@ -37,7 +37,7 @@ export function EmptyResource({
 
         {actionLabel &&(
           <p
-          className="inline-block text-[11px] font-bold uppercase tracking-widest text-foreground/80 hover:text-foreground underline underline-offset-4 decoration-foreground/20 transition-colors"
+          className="block text-[11px] font-bold uppercase tracking-widest text-foreground/80 hover:text-foreground underline underline-offset-4 decoration-foreground/20 transition-colors"
           >
             {actionLabel}
           </p>

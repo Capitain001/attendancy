@@ -88,3 +88,23 @@ export async function generateCoursesFromProgramAction(input: GenerateCoursesFro
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
+
+import { linkCoursesToTermSchema } from '../validation'
+import type { LinkCoursesToTermInput } from '../validation'
+import { linkCoursesToTerm } from '../database'
+
+export async function linkCoursesToTermAction(input: LinkCoursesToTermInput) {
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
+  const parsed = v.safeParse(linkCoursesToTermSchema, input)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+
+  try {
+    const result = await linkCoursesToTerm({ ...parsed.output, orgId })
+    return { data: result }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}

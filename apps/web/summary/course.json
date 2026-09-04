@@ -2,8 +2,8 @@
   "service": "course",
   "path": "src/services/course/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "4e41f59",
-  "generated_at": "2026-08-06T12:17:34.051Z",
+  "derived_at": "bb85699",
+  "generated_at": "2026-09-03T11:13:11.846Z",
   "fns": {
     "createCourse": {
       "name": "createCourse",
@@ -18,7 +18,7 @@
     "updateCourse": {
       "name": "updateCourse",
       "file": "src/services/course/database/course.mutations.ts",
-      "sig": "(courseId: string, data: { name?: string; description?: string | null }, orgId: string) => Promise<{ name: string; id: string; description: string | null; }>",
+      "sig": "(courseId: string, data: UpdateCourseDataOutput, orgId: string) => Promise<{ name: string; id: string; description: string | null; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -35,8 +35,28 @@
       "layer": "db",
       "kind": "mutation"
     },
-    "getCourses": {
-      "name": "getCourses",
+    "generateCoursesFromProgram": {
+      "name": "generateCoursesFromProgram",
+      "file": "src/services/course/database/course.mutations.ts",
+      "sig": "({ programId, classId, orgId, termsBySemester }: { programId: string classId: string orgId: string termsBySemester?: Record<number, string> }) => Promise<{ created: { name: string; id: string; credits: number; ueCourseId: string; }[]; skippedCount: number; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "linkCoursesToTerm": {
+      "name": "linkCoursesToTerm",
+      "file": "src/services/course/database/course.mutations.ts",
+      "sig": "({ courseIds, termId, orgId }: LinkCoursesToTermOutput & { orgId: string }) => Promise<{ count: number; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getAllCourses": {
+      "name": "getAllCourses",
       "file": "src/services/course/database/course.queries.ts",
       "sig": "(orgId: string) => Promise<{ name: string; id: string; classId: string; }[]>",
       "composes": [],
@@ -48,7 +68,7 @@
     "getCourseClassId": {
       "name": "getCourseClassId",
       "file": "src/services/course/database/course.queries.ts",
-      "sig": "(courseId: string, orgId: string) => Promise<{ id: string; classId: string; } | null>",
+      "sig": "(courseId: string, orgId: string) => Promise<{ classId: string; } | null>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -75,10 +95,10 @@
       "layer": "db",
       "kind": "query"
     },
-    "getCoursesByClass": {
-      "name": "getCoursesByClass",
+    "getCourses": {
+      "name": "getCourses",
       "file": "src/services/course/database/course.queries.ts",
-      "sig": "(classId: string, orgId: string) => Promise<{ name: string; id: string; durationDone: number; durationTotal: number; credits: number; termId: string | null; ueCourse: { name: string; id: string; code: string | null; }; teachers: { id: string; hours: number | null; teacher: { ...; } | null; isMain: boolean; }[]; }[]>",
+      "sig": "(orgId: string, classId?: string) => Promise<{ name: string; id: string; classId: string; durationDone: number; durationTotal: number; credits: number; termId: string | null; term: { name: string; id: string; } | null; ueCourse: { name: string; id: string; code: string | null; }; teachers: { ...; }[]; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -88,7 +108,7 @@
     "createCourseAction": {
       "name": "createCourseAction",
       "file": "src/services/course/actions/course.mutations.ts",
-      "sig": "(input: CreateCourseInput) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; credits: number; }; error?: undefined; }>",
+      "sig": "(input: CreateCourseInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; credits: number; }; error?: undefined; }>",
       "calls": [
         "createCourse"
       ],
@@ -101,7 +121,7 @@
     "updateCourseAction": {
       "name": "updateCourseAction",
       "file": "src/services/course/actions/course.mutations.ts",
-      "sig": "(courseId: string, updates: { name?: string; description?: string | null }) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; }; error?: undefined; }>",
+      "sig": "(input: UpdateCourseInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; description: string | null; }; error?: undefined; }>",
       "calls": [
         "updateCourse"
       ],
@@ -114,9 +134,35 @@
     "removeCourseAction": {
       "name": "removeCourseAction",
       "file": "src/services/course/actions/course.mutations.ts",
-      "sig": "(courseId: string) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
+      "sig": "(courseId: string) => Promise<{ error: string; data?: undefined; } | { data: true; error?: undefined; }>",
       "calls": [
         "removeCourse"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "generateCoursesFromProgramAction": {
+      "name": "generateCoursesFromProgramAction",
+      "file": "src/services/course/actions/course.mutations.ts",
+      "sig": "(input: GenerateCoursesFromProgramInput) => Promise<{ error: string; data?: undefined; } | { data: { created: { name: string; id: string; credits: number; ueCourseId: string; }[]; skippedCount: number; }; error?: undefined; }>",
+      "calls": [
+        "generateCoursesFromProgram"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "linkCoursesToTermAction": {
+      "name": "linkCoursesToTermAction",
+      "file": "src/services/course/actions/course.mutations.ts",
+      "sig": "(input: LinkCoursesToTermInput) => Promise<{ error: string; data?: undefined; } | { data: { count: number; }; error?: undefined; }>",
+      "calls": [
+        "linkCoursesToTerm"
       ],
       "auth": {},
       "rules": [],
@@ -127,7 +173,7 @@
     "getCourseAction": {
       "name": "getCourseAction",
       "file": "src/services/course/actions/course.queries.ts",
-      "sig": "(courseId: string) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; classId: string; durationDone: number; durationTotal: number; credits: number; termId: string | null; ueCourse: { name: string; id: string; code: string | null; }; teachers: { ...; }[]; } | null; error?: undefined; }>",
+      "sig": "(courseId: string) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; classId: string; durationDone: number; durationTotal: number; credits: number; termId: string | null; ueCourse: { name: string; id: string; code: string | null; }; teachers: { ...; }[]; } | null; error?: undefined; }>",
       "calls": [
         "getCourse"
       ],
@@ -140,9 +186,9 @@
     "getAllCoursesAction": {
       "name": "getAllCoursesAction",
       "file": "src/services/course/actions/course.queries.ts",
-      "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; classId: string; }[]; error?: undefined; }>",
+      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; classId: string; }[]; error?: undefined; }>",
       "calls": [
-        "getCourses"
+        "getAllCourses"
       ],
       "auth": {},
       "rules": [],
@@ -153,9 +199,9 @@
     "getCoursesAction": {
       "name": "getCoursesAction",
       "file": "src/services/course/actions/course.queries.ts",
-      "sig": "(classId: string) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; durationDone: number; durationTotal: number; credits: number; termId: string | null; ueCourse: { name: string; id: string; code: string | null; }; teachers: { ...; }[]; }[]; error?: undefined; }>",
+      "sig": "(classId?: string) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; classId: string; durationDone: number; durationTotal: number; credits: number; termId: string | null; term: { name: string; id: string; } | null; ueCourse: { ...; }; teachers: { ...; }[]; }[]; error?: undefined; }>",
       "calls": [
-        "getCoursesByClass"
+        "getCourses"
       ],
       "auth": {},
       "rules": [],
@@ -166,7 +212,7 @@
     "getCourseDetailAction": {
       "name": "getCourseDetailAction",
       "file": "src/services/course/actions/course.queries.ts",
-      "sig": "(courseId: string) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; classId: string; durationDone: number; durationTotal: number; credits: number; description: string | null; termId: string | null; class: { ...; }; ueCourse: { ...; }; teachers: { ...; }[]; schedules: { ...; }[]; }; error?: undefined; }>",
+      "sig": "(courseId: string) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; classId: string; durationDone: number; durationTotal: number; credits: number; description: string | null; termId: string | null; class: { ...; }; ueCourse: { ...; }; teachers: { ...; }[]; schedules: { ...; }[]; }; error?: undefined; }>",
       "calls": [
         "getCourseDetail"
       ],
@@ -187,7 +233,13 @@
     "removeCourse": [
       "removeCourseAction"
     ],
-    "getCourses": [
+    "generateCoursesFromProgram": [
+      "generateCoursesFromProgramAction"
+    ],
+    "linkCoursesToTerm": [
+      "linkCoursesToTermAction"
+    ],
+    "getAllCourses": [
       "getAllCoursesAction"
     ],
     "getCourseClassId": [],
@@ -197,12 +249,14 @@
     "getCourseDetail": [
       "getCourseDetailAction"
     ],
-    "getCoursesByClass": [
+    "getCourses": [
       "getCoursesAction"
     ],
     "createCourseAction": [],
     "updateCourseAction": [],
     "removeCourseAction": [],
+    "generateCoursesFromProgramAction": [],
+    "linkCoursesToTermAction": [],
     "getCourseAction": [],
     "getAllCoursesAction": [],
     "getCoursesAction": [],

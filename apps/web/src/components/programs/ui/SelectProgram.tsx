@@ -41,7 +41,11 @@ export function SelectProgram({
   const selectedValue = isControlled ? value : internalValue;
 
   const setValue = (val: string) => {
-    isControlled ? onChange?.(val) : setInternalValue(val);
+    if (isControlled) {
+      onChange?.(val);
+    } else {
+      setInternalValue(val);
+    }
   };
 
   const selected = programs.find((p) => p.id === selectedValue);
@@ -52,41 +56,43 @@ export function SelectProgram({
         <Button
           variant="outline"
           role="combobox"
-          className={cn("w-full justify-between", className)}
+          className={cn("w-full justify-between font-normal", className)}
         >
-          {selected ? selected.name : placeholder}
+          <span className="truncate">
+            {selected ? selected.name : placeholder}
+          </span>
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-72 p-0">
+      <PopoverContent className="w-full min-w-[300px] p-0 bg-card" align="start">
         <Command>
           <CommandInput placeholder="Rechercher un programme..." />
           <CommandList>
             <CommandEmpty>Aucun programme trouvé.</CommandEmpty>
-            <CommandGroup heading="Programmes">
+            <CommandGroup heading="Programmes disponibles">
               {programs.map((program) => (
                 <CommandItem
                   key={program.id}
                   value={program.id}
+                  keywords={[program.name, program.description || ""]}
                   onSelect={() => {
                     setValue(program.id);
                     setOpen(false);
                   }}
-                  className="flex flex-col px-3 py-2"
+                  className="flex items-center justify-between px-3 py-2 cursor-pointer"
                 >
-                  <div className="flex justify-between items-center w-full">
-                    <span className="font-medium truncate">
-                      {program.name} 
+                  <div className="flex flex-col">
+                    <span className="font-medium text-slate-900 dark:text-slate-100">
+                      {program.name}
                     </span>
-                    {selectedValue === program.id && (
-                      <CheckIcon size={16} className="text-primary" />
+                    {program.description && (
+                      <span className="text-xs text-muted-foreground line-clamp-1">
+                        {program.description}
+                      </span>
                     )}
                   </div>
-
-                  {program.programTrack && (
-                    <span className="text-xs text-muted-foreground mt-1 truncate">
-                      Parcours : {program.programTrack.name} 
-                    </span>
+                  {selectedValue === program.id && (
+                    <CheckIcon size={16} className="text-primary shrink-0 ml-2" />
                   )}
                 </CommandItem>
               ))}

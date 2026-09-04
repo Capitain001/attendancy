@@ -44,8 +44,8 @@ export default async function Page({
       <EmptyResource
         title="Aucun programme"
         message="Aucun programme n'est affecté à cette promotion."
-        actionLabel="Affecter un programme"
-        href={`/${slug}/direction/academic/promotions/${classId}/program?program_modal=create`}
+        actionLabel="Associer un programme"
+        href={`/${slug}/direction/academic/promotions/${classId}/program?program_modal=link`}
       />
     );
   }

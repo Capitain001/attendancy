@@ -2,7 +2,7 @@
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
 import { invalidateEvent } from '@/cache/server/key'
-import type { CreateCourseOutput, UpdateCourseDataOutput } from '../validation'
+import type { CreateCourseOutput, UpdateCourseDataOutput, LinkCoursesToTermOutput } from '../validation'
 
 export async function createCourse(data: CreateCourseOutput & { orgId: string }) {
   // Verify class belongs to org
@@ -200,4 +200,37 @@ export async function generateCoursesFromProgram({
   await invalidateEvent('COURSE_CREATED', orgId, classId)
 
   return { created, skippedCount: candidates.length - created.length }
+}
+
+export async function linkCoursesToTerm({
+  courseIds,
+  termId,
+  orgId,
+}: LinkCoursesToTermOutput & { orgId: string }) {
+  if (courseIds.length === 0) return { count: 0 }
+
+  const courses = await prisma.course.findMany({
+    where: { id: { in: courseIds }, orgId, deletedAt: null },
+    select: { id: true, classId: true },
+  })
+
+  if (courses.length === 0) {
+    throw new Error('Aucun cours valide trouvé')
+  }
+
+  const validCourseIds = courses.map((c) => c.id)
+
+  const result = await tryConstraint(
+    prisma.course.updateMany({
+      where: { id: { in: validCourseIds }, orgId },
+      data: { termId },
+    })
+  )
+
+  const classIds = Array.from(new Set(courses.map((c) => c.classId)))
+  for (const classId of classIds) {
+    await invalidateEvent('COURSE_UPDATED', orgId, classId)
+  }
+
+  return result
 }

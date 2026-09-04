@@ -1,0 +1,11 @@
+{
+  "name": "applyProgramToClass",
+  "file": "src/services/curriculum/database/curriculum.mutations.ts",
+  "sig": "({ classId, orgId }: { classId: string orgId: string }) => Promise<{ termsCreated: { id: string; createdAt: Date; order: number; updatedAt: Date; name: string; classId: string; startDate: Date | null; endDate: Date | null; lockedAt: Date | null; }[]; coursesCreated: { ...; }[]; coursesSkipped: number; }>",
+  "composes": [
+    "generateTermsFromProgram",
+    "generateCoursesFromProgram"
+  ],
+  "rules": [],
+  "why_ref": ""
+}

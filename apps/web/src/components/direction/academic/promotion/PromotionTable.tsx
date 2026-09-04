@@ -89,7 +89,7 @@ function PromotionItem({ cls }: { cls: GetClassesDto[number] }) {
       </td>
 
       <td className="px-4 py-3 text-text-secondary hidden md:table-cell">
-        {cls.programTrack.name}
+        {cls?.programTrack?.name}
       </td>
 
       <td className="px-4 py-3 text-text-secondary hidden md:table-cell">

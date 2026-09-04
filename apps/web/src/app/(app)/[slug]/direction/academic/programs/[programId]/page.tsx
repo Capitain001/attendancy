@@ -8,6 +8,7 @@ import { getUEsAction } from '@/services/ue'
 import { getOrgDetailsAction } from '@/services/organization'
 import { DirectionProgramPage } from '@/components/programs/program/DirectionProgramPage'
 import { typography } from '@/styles'
+import { validateUUID } from '@/utils/server/validation'
 
 export default async function ProgramDetailPage({
   params,
@@ -16,6 +17,8 @@ export default async function ProgramDetailPage({
 }) {
   await connection()
   const { slug, programId } = await params
+  
+  validateUUID(programId)
 
   const [
     programResult,

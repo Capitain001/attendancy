@@ -13,6 +13,7 @@ import { mapCoursesForClassSection, mapSchedulesForClassSection } from './mapCla
 import { UsersGroup } from "@mynaui/icons-react";
 import { GenerateProgramCoursesButton } from './GenerateProgramCoursesButton'
 import { GenerateTermsButton } from '@/components/term/Generatetermsbutton'
+import { ApplyProgramButton } from '@/components/curriculum/ApplyProgramButton'
 
 
 export interface DirectionPromotionDetailPageProps {
@@ -49,7 +50,7 @@ export async function DirectionPromotionDetailPage({ classId, slug }: DirectionP
   const schedules = schedRes.data ? mapSchedulesForClassSection(schedRes.data) : []
 
 
-  const programHref = `/${slug}/direction/academic/programs/${class_.programId}`
+  const programHref = `/${slug}/direction/academic/promotions/${classId}/program`
   const planningHref = `/${slug}/direction/planning/promotion/${classId}`
   const invitationsHref = `./${classId}/invitations`
   const enrollmentHref = `/${slug}/direction/academic/promotion/${classId}/enrollment`
@@ -87,6 +88,7 @@ export async function DirectionPromotionDetailPage({ classId, slug }: DirectionP
           {class_.programId && (
             <div className="mt-4 flex justify-center">
               <GenerateProgramCoursesButton classId={class_.id} programId={class_.programId}  />
+              <ApplyProgramButton classId={class_.id} hasProgram={!!class_.programId} />
             </div>
           )}
         </CollapseSection>

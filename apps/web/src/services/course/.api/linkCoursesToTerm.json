@@ -1,0 +1,8 @@
+{
+  "name": "linkCoursesToTerm",
+  "file": "src/services/course/database/course.mutations.ts",
+  "sig": "({ courseIds, termId, orgId }: LinkCoursesToTermOutput & { orgId: string }) => Promise<{ count: number; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

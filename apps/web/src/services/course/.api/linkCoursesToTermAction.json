@@ -1,0 +1,11 @@
+{
+  "name": "linkCoursesToTermAction",
+  "file": "src/services/course/actions/course.mutations.ts",
+  "sig": "(input: LinkCoursesToTermInput) => Promise<{ error: string; data?: undefined; } | { data: { count: number; }; error?: undefined; }>",
+  "calls": [
+    "linkCoursesToTerm"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -59,3 +59,14 @@ export const generateCoursesFromProgramSchema = v.object({
 
 export type GenerateCoursesFromProgramInput  = v.InferInput<typeof generateCoursesFromProgramSchema>  // Input UI
 export type GenerateCoursesFromProgramOutput = v.InferOutput<typeof generateCoursesFromProgramSchema> // Output validé
+
+export const linkCoursesToTermSchema = v.object({
+  courseIds: v.pipe(
+    v.array(v.pipe(v.string(), v.uuid('ID de cours invalide'))),
+    v.minLength(1, 'Au moins un cours requis'),
+  ),
+  termId: v.nullable(v.pipe(v.string(), v.uuid('ID de semestre invalide'))),
+})
+
+export type LinkCoursesToTermInput  = v.InferInput<typeof linkCoursesToTermSchema>
+export type LinkCoursesToTermOutput = v.InferOutput<typeof linkCoursesToTermSchema>

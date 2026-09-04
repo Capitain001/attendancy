@@ -50,7 +50,7 @@ export async function createProgram({
       where: { id: data.classId },
       data: { programId: program.id },
     })
-    await invalidateEvent("PROGRAM_UPDATED", orgId, data.classId)
+    await invalidateEvent("CLASS_UPDATED", orgId, data.classId)
   }
 
   await invalidateEvent("PROGRAM_CREATED", orgId)
@@ -96,7 +96,7 @@ export async function updateProgram(
       where: { id: classId },
       data: { programId },
     })
-    await invalidateEvent("PROGRAM_UPDATED", orgId, classId)
+    await invalidateEvent("CLASS_UPDATED", orgId, classId)
   }
 
   await invalidateEvent("PROGRAM_UPDATED", orgId, programId)

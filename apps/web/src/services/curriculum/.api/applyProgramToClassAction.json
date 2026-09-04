@@ -1,0 +1,11 @@
+{
+  "name": "applyProgramToClassAction",
+  "file": "src/services/curriculum/actions/curriculum.mutations.ts",
+  "sig": "(classId: string) => Promise<{ error: string; data?: undefined; } | { data: { termsCreated: { id: string; createdAt: Date; order: number; updatedAt: Date; name: string; classId: string; startDate: Date | null; endDate: Date | null; lockedAt: Date | null; }[]; coursesCreated: { ...; }[]; coursesSkipped: number; }; error?: undefined; }>",
+  "calls": [
+    "applyProgramToClass"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

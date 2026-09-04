@@ -1,10 +1,11 @@
 // src/components/promotion/PromotionCoursesSection.tsx
 'use client'
 
-// import { groupByRelation, type Relation } from '@/utils/groupByRelation'
+import { useState, useMemo } from 'react'
 import { CoursesTab } from '@/components/tools/CoursesTab'
 import { PCourse, PCourseCard } from '../ui/PCourseCard'
 import { groupByRelation, Relation } from '@/lib/filter'
+import { CourseFilter } from './CourseFilter'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Forme brute attendue en entrée — le minimum nécessaire pour dériver un
@@ -64,15 +65,52 @@ function toPCourse(course: RawCourse): PCourse {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function PromotionCoursesSection({ courses }: { courses: RawCourse[] }) {
-  const grouped = groupByRelation(courses, (c) => c.term ?? NO_SEMESTER)
+  const [query, setQuery] = useState('')
+  const [selectedUeCode, setSelectedUeCode] = useState('')
 
-  const orderedGroups = [...grouped].sort((a, b) => {
-    if (a.relation.id === NO_SEMESTER.id) return 1
-    if (b.relation.id === NO_SEMESTER.id) return -1
-    return a.relation.name.localeCompare(b.relation.name)
-  })
+  // Extrait la liste unique des codes UE pour le sélecteur
+  const ueCodes = useMemo(() => {
+    const set = new Set<string>()
+    courses.forEach((c) => {
+      if (c.ueCourse?.code) set.add(c.ueCourse.code)
+    })
+    return Array.from(set).sort()
+  }, [courses])
 
-  if (orderedGroups.length === 0) {
+  // Filtre les cours en fonction de la recherche (nom, UE, enseignant) et du code UE
+  const filteredCourses = useMemo(() => {
+    const q = query.trim().toLowerCase()
+    return courses.filter((c) => {
+      const teachersStr = c.teachers
+        .map((t) => `${t.teacher?.user?.firstName ?? ''} ${t.teacher?.user?.lastName ?? ''}`)
+        .join(' ')
+        .toLowerCase()
+
+      const matchesQuery =
+        !q ||
+        c.name.toLowerCase().includes(q) ||
+        (c.ueCourse?.code && c.ueCourse.code.toLowerCase().includes(q)) ||
+        teachersStr.includes(q)
+
+      const matchesUe = !selectedUeCode || c.ueCourse?.code === selectedUeCode
+
+      return matchesQuery && matchesUe
+    })
+  }, [courses, query, selectedUeCode])
+
+  const grouped = useMemo(() => {
+    return groupByRelation(filteredCourses, (c) => c.term ?? NO_SEMESTER)
+  }, [filteredCourses])
+
+  const orderedGroups = useMemo(() => {
+    return [...grouped].sort((a, b) => {
+      if (a.relation.id === NO_SEMESTER.id) return 1
+      if (b.relation.id === NO_SEMESTER.id) return -1
+      return a.relation.name.localeCompare(b.relation.name)
+    })
+  }, [grouped])
+
+  if (courses.length === 0) {
     return (
       <p className="py-6 text-center text-xs text-muted-foreground">
         Aucun cours pour cette promotion.
@@ -93,5 +131,39 @@ export function PromotionCoursesSection({ courses }: { courses: RawCourse[] }) {
     ),
   }))
 
-  return <CoursesTab tabs={tabs} />
+  const hasActiveFilters = Boolean(query || selectedUeCode)
+
+  return (
+    <div className="space-y-3">
+      <CourseFilter
+        query={query}
+        setQuery={setQuery}
+        selectedUeCode={selectedUeCode}
+        setSelectedUeCode={setSelectedUeCode}
+        ueCodes={ueCodes}
+      />
+
+      {filteredCourses.length === 0 ? (
+        <div className="py-12 text-center bg-card rounded-xl border border-dashed border-foreground/20 p-6">
+          <p className="text-sm text-muted-foreground mb-3">
+            Aucun cours ne correspond à vos critères de recherche.
+          </p>
+          {hasActiveFilters && (
+            <button
+              type="button"
+              onClick={() => {
+                setQuery('')
+                setSelectedUeCode('')
+              }}
+              className="text-xs text-primary underline underline-offset-4 hover:opacity-80 font-medium"
+            >
+              Réinitialiser les filtres
+            </button>
+          )}
+        </div>
+      ) : (
+        <CoursesTab tabs={tabs} />
+      )}
+    </div>
+  )
 }
