@@ -1,7 +1,7 @@
 {
   "name": "getParentsForDirection",
   "file": "src/services/student/database/student.queries.ts",
-  "sig": "(orgId: string) => Promise<{ id: string; student: { id: string; user: { firstName: string | null; lastName: string | null; }; }; parent: { id: string; user: { email: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; relation: string; }[]>",
+  "sig": "(orgId: string) => Promise<{ id: string; student: { id: string; user: { firstName: string | null; lastName: string | null; }; }; parent: { id: string; user: { firstName: string | null; lastName: string | null; email: string; avatar_url: string | null; }; }; relation: string; }[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

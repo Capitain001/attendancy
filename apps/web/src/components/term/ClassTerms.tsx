@@ -1,3 +1,4 @@
+// src/components/term/ClassTerms.tsx
 "use client";
 
 import { useState } from "react";
@@ -13,6 +14,8 @@ type Term = GetTermsDto[number];
 export interface ClassTermsProps {
   /** ID de la classe dont on affiche/gère les semestres. */
   classId: string;
+  selectedTermId?: string | null;
+  onSelectTerm?: (termId: string | null) => void;
 }
 
 /**
@@ -22,7 +25,7 @@ export interface ClassTermsProps {
  * - Bouton "+" (`TermCreateButton`) pour créer un nouveau semestre, préempli
  *   avec le prochain numéro d'ordre disponible.
  */
-export function ClassTerms({ classId }: ClassTermsProps) {
+export function ClassTerms({ classId, selectedTermId, onSelectTerm }: ClassTermsProps) {
   const { data, loading, error } = useTerms({ classId });
 
   const [editingTerm, setEditingTerm] = useState<Term | null>(null);
@@ -46,7 +49,12 @@ export function ClassTerms({ classId }: ClassTermsProps) {
   return (
     <div className="flex items-start gap-2">
       <div className="flex flex-1 items-center justify-between">
-          <TermsChips terms={terms} onEdit={handleEdit} />
+          <TermsChips
+            terms={terms}
+            selectedId={selectedTermId}
+            onSelect={onSelectTerm}
+            onEdit={handleEdit}
+          />
           <TermCreateButton classId={classId} defaultOrder={terms.length + 1} />
       </div>
 

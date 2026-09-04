@@ -8,7 +8,7 @@ import { AttendanceTableBar } from '@/components/attendance/AttendanceBar'
 import {
   initials,
   sexLabel,
-} from '@/components/direction/students/ui/studentDirectory.helpers'
+} from '@/components/direction/students/utils'
 import { StudentDetailModal } from './StudentDetailModal'
 
 type SortKey = 'name' | 'email'

@@ -1,7 +1,7 @@
 {
   "name": "getStudentByIdForDirectionAction",
   "file": "src/services/student/actions/student.queries.ts",
-  "sig": "(studentId: string) => Promise<{ error: any; data?: undefined; } | { data: { studentId: string; classId: string; enrolledAt: Date; class: { name: string; id: string; }; groups: { name: string; id: string; }[]; user: { email: string; ... 6 more ...; dateOfBirth: Date | null; }; }; error?: undefined; }>",
+  "sig": "(studentId: string) => Promise<{ error: string; data?: undefined; } | { data: { studentId: string; classId: string; enrolledAt: Date; class: { name: string; id: string; }; groups: { name: string; id: string; }[]; user: { firstName: string | null; ... 6 more ...; status: UserStatus; }; }; error?: undefined; }>",
   "calls": [
     "getStudentByIdForDirection"
   ],

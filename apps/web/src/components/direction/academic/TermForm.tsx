@@ -1,29 +1,44 @@
 'use client'
+
 import { useRef } from 'react'
+import { Plus } from 'lucide-react'
+
 import { useTerms } from '@/hooks/data/term/useTerms'
 import { input } from '@/styles/input'
+import { cn } from '@/lib/utils'
+
 import { Button } from '@/components/ui/button'
-import { Plus } from 'lucide-react'
 import { FormDialog } from '@/components/ui/FormDialog'
 import { DialogFooter } from '@/components/ui/dialog'
 
 interface TermFormProps {
   /** ID de la classe à laquelle le semestre sera rattaché. */
   classId: string
+
   /** Callback de fermeture du modal (fourni par FormDialog). */
   close: () => void
-  /** Numéro d'ordre pré-rempli dans le champ (ex: `terms.length + 1` pour incrémenter le semestre). */
+
+  /** Numéro d'ordre pré-rempli dans le champ. */
   defaultOrder?: number
 }
 
-function TermForm({ classId, close, defaultOrder }: TermFormProps) {
+function TermForm({
+  classId,
+  close,
+  defaultOrder,
+}: TermFormProps) {
   const { create, isCreating } = useTerms({ classId })
   const ref = useRef<HTMLFormElement>(null)
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(
+    e: React.FormEvent<HTMLFormElement>
+  ) {
     e.preventDefault()
+
     if (!create) return
+
     const fd = new FormData(e.currentTarget)
+
     const name = fd.get('name') as string
     const orderStr = fd.get('order') as string
     const startDateRaw = fd.get('startDate') as string
@@ -35,8 +50,12 @@ function TermForm({ classId, close, defaultOrder }: TermFormProps) {
       classId,
       name,
       order: Number.isNaN(order) ? 1 : order,
-      startDate: startDateRaw ? new Date(startDateRaw) : undefined,
-      endDate: endDateRaw ? new Date(endDateRaw) : undefined,
+      startDate: startDateRaw
+        ? new Date(startDateRaw)
+        : undefined,
+      endDate: endDateRaw
+        ? new Date(endDateRaw)
+        : undefined,
     })
 
     ref.current?.reset()
@@ -44,9 +63,20 @@ function TermForm({ classId, close, defaultOrder }: TermFormProps) {
   }
 
   return (
-    <form ref={ref} onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <form
+      ref={ref}
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-4"
+    >
+      {/* Nom */}
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="term-name" className={input.label}>Nom du semestre *</label>
+        <label
+          htmlFor="term-name"
+          className={input.label}
+        >
+          Nom du semestre *
+        </label>
+
         <input
           id="term-name"
           name="name"
@@ -58,8 +88,15 @@ function TermForm({ classId, close, defaultOrder }: TermFormProps) {
         />
       </div>
 
+      {/* Ordre */}
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="term-order" className={input.label}>Numéro d&apos;ordre *</label>
+        <label
+          htmlFor="term-order"
+          className={input.label}
+        >
+          Numéro d&apos;ordre *
+        </label>
+
         <input
           id="term-order"
           name="order"
@@ -71,9 +108,16 @@ function TermForm({ classId, close, defaultOrder }: TermFormProps) {
         />
       </div>
 
+      {/* Dates */}
       <div className="grid grid-cols-2 gap-3">
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="term-start" className={input.label}>Date de début</label>
+          <label
+            htmlFor="term-start"
+            className={input.label}
+          >
+            Date de début
+          </label>
+
           <input
             id="term-start"
             name="startDate"
@@ -81,8 +125,15 @@ function TermForm({ classId, close, defaultOrder }: TermFormProps) {
             className={input.base}
           />
         </div>
+
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="term-end" className={input.label}>Date de fin</label>
+          <label
+            htmlFor="term-end"
+            className={input.label}
+          >
+            Date de fin
+          </label>
+
           <input
             id="term-end"
             name="endDate"
@@ -92,11 +143,22 @@ function TermForm({ classId, close, defaultOrder }: TermFormProps) {
         </div>
       </div>
 
+      {/* Actions */}
       <DialogFooter>
-        <Button type="button" variant="outline" size="sm" onClick={close}>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={close}
+        >
           Annuler
         </Button>
-        <Button type="submit" size="sm" disabled={isCreating}>
+
+        <Button
+          type="submit"
+          size="sm"
+          disabled={isCreating}
+        >
           {isCreating ? 'Création…' : 'Créer'}
         </Button>
       </DialogFooter>
@@ -107,21 +169,35 @@ function TermForm({ classId, close, defaultOrder }: TermFormProps) {
 export interface TermCreateButtonProps {
   /** ID de la classe à laquelle le semestre sera rattaché. */
   classId: string
-  /** Numéro d'ordre pré-rempli par défaut dans le formulaire (ex: `terms.length + 1`). */
+
+  /** Numéro d'ordre pré-rempli par défaut. */
   defaultOrder?: number
-  /** Libellé personnalisé du bouton (par défaut: "Nouveau semestre"). */
+
+  /** Libellé personnalisé du bouton. */
   buttonText?: string
+
+  /** Classes CSS supplémentaires du bouton. */
+  className?: string
 }
 
 export function TermCreateButton({
   classId,
   defaultOrder,
   buttonText = 'Nouveau semestre',
+  className,
 }: TermCreateButtonProps) {
   return (
     <FormDialog
       trigger={
-        <Button size="sm" variant="outline" disabled={!classId}>
+        <Button
+          size="sm"
+          variant="outline"
+          disabled={!classId}
+          className={cn(
+            'gap-1.5',
+            className
+          )}
+        >
           <Plus className="size-3.5" />
           {buttonText}
         </Button>
@@ -129,7 +205,11 @@ export function TermCreateButton({
       title="Nouveau semestre"
     >
       {(close) => (
-        <TermForm classId={classId} close={close} defaultOrder={defaultOrder} />
+        <TermForm
+          classId={classId}
+          close={close}
+          defaultOrder={defaultOrder}
+        />
       )}
     </FormDialog>
   )

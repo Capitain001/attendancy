@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import { typography } from '@/styles'
 
 type ClassItem = { id: string; name: string; programTrack: { name: string } }
 

@@ -3,17 +3,15 @@
 
 import { useState, useMemo } from 'react'
 import { CoursesTab } from '@/components/tools/CoursesTab'
+import { CoursesETab } from '@/components/tools/CoursesETab'
 import { PCourse, PCourseCard } from '../ui/PCourseCard'
+import { SortableCourseGrid } from '../../dnd/SortableCourseGrid'
+import { useCourseOrder } from '../../dnd/useCourseOrder'
 import { groupByRelation, Relation } from '@/lib/filter'
 import { CourseFilter } from './CourseFilter'
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Forme brute attendue en entrée — le minimum nécessaire pour dériver un
-// PCourse + le grouper par semestre. Correspond aux relations Prisma
-// disponibles sur Course (term, ueCourse, teachers → CourseTeacher → Teacher
-// → User) ; à faire matcher avec le `select` réel de la query owner
-// (SERVICE_CONTEXT.md : cette fonction ne fetch rien, elle reçoit et transforme).
-// ─────────────────────────────────────────────────────────────────────────────
+import { Button } from '@/components/ui/button'
+import { Edit3 } from 'lucide-react'
+import { useEffect } from 'react'
 
 type RawCourseTeacher = {
   isMain: boolean
@@ -36,12 +34,7 @@ export type RawCourse = {
   teachers: RawCourseTeacher[]
 }
 
-// Groupe de repli pour les cours hors maquette (term nullable en DB).
 const NO_SEMESTER: Relation = { id: 'none', name: 'Sans semestre' }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Mapper — RawCourse (forme requête) → PCourse (forme attendue par la card)
-// ─────────────────────────────────────────────────────────────────────────────
 
 function toPCourse(course: RawCourse): PCourse {
   const mainTeacherUser = course.teachers.find((t) => t.isMain)?.teacher?.user ?? null
@@ -58,26 +51,34 @@ function toPCourse(course: RawCourse): PCourse {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Section — groupe par semestre (groupByRelation) puis construit les tabs
-// attendus par CoursesTab, chaque contenu étant une grille de PCourseCard.
-// "Sans semestre" est toujours poussé en dernier onglet.
-// ─────────────────────────────────────────────────────────────────────────────
+export interface PromotionCoursesSectionProps {
+  courses: RawCourse[]
+  classTerms?: { id: string; name: string }[]
+  selectedTermId?: string | null
+  isEditing?: boolean
+  setIsEditing?: (val: boolean) => void
+  pendingChanges?: Map<string, string | null>
+  isSubmitting?: boolean
+  onToggleCourse?: (courseId: string, originalTermId: string | null, targetTermId: string | null) => void
+  onSave?: () => Promise<void>
+  onReset?: () => void
+}
 
-export function PromotionCoursesSection({ courses }: { courses: RawCourse[] }) {
+export function PromotionCoursesSection({
+  courses,
+  classTerms,
+  selectedTermId,
+  isEditing = false,
+  setIsEditing,
+  pendingChanges = new Map(),
+  isSubmitting = false,
+  onToggleCourse,
+  onSave,
+  onReset,
+}: PromotionCoursesSectionProps) {
   const [query, setQuery] = useState('')
   const [selectedUeCode, setSelectedUeCode] = useState('')
 
-  // Extrait la liste unique des codes UE pour le sélecteur
-  const ueCodes = useMemo(() => {
-    const set = new Set<string>()
-    courses.forEach((c) => {
-      if (c.ueCourse?.code) set.add(c.ueCourse.code)
-    })
-    return Array.from(set).sort()
-  }, [courses])
-
-  // Filtre les cours en fonction de la recherche (nom, UE, enseignant) et du code UE
   const filteredCourses = useMemo(() => {
     const q = query.trim().toLowerCase()
     return courses.filter((c) => {
@@ -97,6 +98,53 @@ export function PromotionCoursesSection({ courses }: { courses: RawCourse[] }) {
       return matchesQuery && matchesUe
     })
   }, [courses, query, selectedUeCode])
+
+  const ueCodes = useMemo(() => {
+    const set = new Set<string>()
+    courses.forEach((c) => {
+      if (c.ueCourse?.code) set.add(c.ueCourse.code)
+    })
+    return Array.from(set).sort()
+  }, [courses])
+
+  const terms = useMemo(() => {
+    const map = new Map<string, string>()
+
+    if (classTerms && classTerms.length > 0) {
+      classTerms.forEach((t) => map.set(t.id, t.name))
+    }
+
+    courses.forEach((c) => {
+      if (c.term) map.set(c.term.id, c.term.name)
+    })
+
+    const list = Array.from(map.entries()).map(([id, name]) => ({ id, name }))
+    list.sort((a, b) => a.name.localeCompare(b.name, 'fr', { numeric: true }))
+
+    if (list.length === 0 || courses.some((c) => !c.term)) {
+      if (!map.has(NO_SEMESTER.id)) {
+        list.push({ id: NO_SEMESTER.id, name: NO_SEMESTER.name })
+      }
+    }
+
+    return list
+  }, [courses, classTerms])
+
+  // Active term object based on selectedTermId or fallback to first term
+  const activeTerm = useMemo(() => {
+    if (selectedTermId) {
+      const found = terms.find((t) => t.id === selectedTermId)
+      if (found) return found
+    }
+    return terms[0] ?? null
+  }, [selectedTermId, terms])
+
+  const mappedPCourses = useMemo(() => {
+    return filteredCourses.map((c) => ({
+      ...toPCourse(c),
+      termId: c.term?.id ?? null,
+    }))
+  }, [filteredCourses])
 
   const grouped = useMemo(() => {
     return groupByRelation(filteredCourses, (c) => c.term ?? NO_SEMESTER)
@@ -118,52 +166,69 @@ export function PromotionCoursesSection({ courses }: { courses: RawCourse[] }) {
     )
   }
 
-  const tabs = orderedGroups.map((group) => ({
-    label: group.relation.name,
-    value: group.relation.id,
-    count: group.items.length,
-    content: (
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {group.items.map((course) => (
-          <PCourseCard key={course.id} course={toPCourse(course)} />
-        ))}
-      </div>
-    ),
-  }))
-
-  const hasActiveFilters = Boolean(query || selectedUeCode)
+  const tabs = useMemo(() => {
+    return orderedGroups.map((group) => {
+      const pCourses = group.items.map(toPCourse)
+      return {
+        label: group.relation.name,
+        value: group.relation.id,
+        count: group.items.length,
+        content: <SortableGroup items={pCourses} />,
+      }
+    })
+  }, [orderedGroups])
 
   return (
     <div className="space-y-3">
-      <CourseFilter
-        query={query}
-        setQuery={setQuery}
-        selectedUeCode={selectedUeCode}
-        setSelectedUeCode={setSelectedUeCode}
-        ueCodes={ueCodes}
-      />
+      {/* Header avec CourseFilter permanent + Bouton Mode Édition */}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <CourseFilter
+          query={query}
+          setQuery={setQuery}
+          selectedUeCode={selectedUeCode}
+          setSelectedUeCode={setSelectedUeCode}
+          ueCodes={ueCodes}
+        />
 
-      {filteredCourses.length === 0 ? (
-        <div className="py-12 text-center bg-card rounded-xl border border-dashed border-foreground/20 p-6">
-          <p className="text-sm text-muted-foreground mb-3">
-            Aucun cours ne correspond à vos critères de recherche.
-          </p>
-          {hasActiveFilters && (
-            <button
-              type="button"
-              onClick={() => {
-                setQuery('')
-                setSelectedUeCode('')
-              }}
-              className="text-xs text-primary underline underline-offset-4 hover:opacity-80 font-medium"
-            >
-              Réinitialiser les filtres
-            </button>
-          )}
-        </div>
+        {setIsEditing && !isEditing && (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setIsEditing(true)}
+            className="h-9 gap-1.5 text-xs font-medium shrink-0 mb-4"
+          >
+            <Edit3 className="size-3.5" />
+            Éditer les semestres
+          </Button>
+        )}
+      </div>
+
+      {/* Mode Édition ou Mode Lecture */}
+      {isEditing ? (
+        <CoursesETab
+          activeTerm={activeTerm}
+          courses={mappedPCourses}
+          pendingChanges={pendingChanges}
+          isSubmitting={isSubmitting}
+          onToggleCourse={onToggleCourse ?? (() => {})}
+          onSave={onSave}
+          onReset={onReset}
+          onCancel={() => setIsEditing?.(false)}
+        />
       ) : (
-        <CoursesTab tabs={tabs} />
+        <CoursesTab tabs={tabs} defaultValue={selectedTermId ?? undefined} />
       )}
     </div>
   )
+}
+
+function SortableGroup({ items }: { items: PCourse[] }) {
+  const { courses, reorder } = useCourseOrder(items)
+
+  useEffect(() => {
+    reorder(items)
+  }, [items, reorder])
+
+  return <SortableCourseGrid courses={courses} onReorder={reorder} />
 }

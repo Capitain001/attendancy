@@ -2,11 +2,14 @@
 import { getUserInfo } from '@/modules/user'
 import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
+import * as v from 'valibot'
 import {
   getEnrolledStudents, getStudentActiveSession, getStudentProfile,
   getStudentSchedules, getStudentStats, getStudentSessionDetail,
-  getStudentByIdForDirection, getParentsForDirection,
+  getStudentByIdForDirection, getParentsForDirection, getDirectionStudents,
 } from '../database'
+
+import { getDirectionStudentsSchema } from '../validation'
 
 export async function getCurrentStudentId(): Promise<string | null> {
   const user = await getUserInfo()
@@ -206,3 +209,21 @@ export async function getParentsForDirectionAction() {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
+
+export async function getDirectionStudentsAction(classId?: string) {
+  const auth = await authAccess({ requiredRole: ['DIRECTION', 'ADMIN'] })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
+  if (classId) {
+    const parsed = v.safeParse(getDirectionStudentsSchema, classId)
+    if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'ID classe invalide' }
+  }
+
+  try {
+    return { data: await getDirectionStudents(orgId, classId) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+

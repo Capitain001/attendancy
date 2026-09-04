@@ -3,10 +3,7 @@ import { getClassesAction } from '@/services/class'
 import { getEnrolledStudentsAction } from '@/services/student'
 import { getGroupsByClassAction } from '@/services/group'
 import { inviteStudent } from '@/modules/invitation/student/actions'
-import { StudentList } from '@/components/direction/people/StudentList'
-import { ClassSelectorBar } from '@/components/direction/people/ClassSelectorBar'
-import { InviteStudentDialog } from '@/components/invitation/InviteStudentDialog'
-import { typography } from '@/styles'
+import { DirectionStudentsSection } from '@/components/direction/people/DirectionStudentsSection'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -29,10 +26,8 @@ export default async function StudentsPage({ params, searchParams }: Props) {
   const groupsResult = selectedClassId
     ? await getGroupsByClassAction(selectedClassId)
     : null
-  
-  const groups = groupsResult && 'data' in groupsResult ? groupsResult.data ?? [] : []
 
-  const selectedClass = classes.find((c) => c.id === selectedClassId) ?? null
+  const groups = groupsResult && 'data' in groupsResult ? groupsResult.data ?? [] : []
 
   async function handleInvite(input: {
     email: string
@@ -42,44 +37,29 @@ export default async function StudentsPage({ params, searchParams }: Props) {
     parentEmail?: string
   }) {
     'use server'
-    if (!selectedClassId) return { success: false, error: "Aucune classe sélectionnée" }
-    
+    if (!selectedClassId) return { success: false, error: 'Aucune classe sélectionnée' }
+
     const res = await inviteStudent({
       ...input,
-      classId: selectedClassId
+      classId: selectedClassId,
     })
-    
+
     return { success: res.success, error: res.error }
   }
 
+  const students = (studentsResult && 'data' in studentsResult ? studentsResult.data : null) ?? null
+  const studentsError = studentsResult && 'error' in studentsResult ? studentsResult.error : null
+
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-base font-semibold text-text-primary">Étudiants</h1>
-        <div className="flex items-center gap-4">
-          {studentsResult && 'data' in studentsResult && studentsResult.data != null && (
-            <span className={typography.small}>
-              {studentsResult.data.length} étudiant{studentsResult.data.length !== 1 ? 's' : ''}
-            </span>
-          )}
-          {selectedClassId && (
-            <InviteStudentDialog 
-              groups={groups.map((g) => ({ id: g.id, name: g.name }))} 
-              onSubmit={handleInvite} 
-            />
-          )}
-        </div>
-      </div>
-
-      <ClassSelectorBar classes={classes} selectedClassId={selectedClassId} />
-
-      {!selectedClassId ? (
-        <p className={typography.body}>Sélectionnez une classe pour voir les étudiants.</p>
-      ) : studentsResult && 'error' in studentsResult ? (
-        <p className={typography.body}>{studentsResult.error}</p>
-      ) : studentsResult && 'data' in studentsResult ? (
-        <StudentList enrollments={studentsResult.data ?? []} slug={slug} />
-      ) : null}
-    </div>
+    <DirectionStudentsSection
+      classes={classes}
+      selectedClassId={selectedClassId}
+      students={students}
+      studentsError={studentsError}
+      groups={groups.map((g) => ({ id: g.id, name: g.name }))}
+      slug={slug}
+      onInvite={handleInvite}
+    />
   )
 }
+

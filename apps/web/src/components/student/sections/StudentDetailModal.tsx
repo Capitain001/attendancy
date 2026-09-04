@@ -15,7 +15,7 @@ import {
   initials,
   sexLabel,
   computeAge,
-} from '@/components/direction/students/ui/studentDirectory.helpers'
+} from '@/components/direction/students/utils'
 import { BackgroundPattern } from '@/components/design/BackgroundPattern'
 
 function formatDate(date: Date | string | null | undefined) {

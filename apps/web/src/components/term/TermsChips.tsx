@@ -19,6 +19,8 @@ type Term = {
 
 interface TermsChipsProps {
   terms: Term[]
+  selectedId?: string | null
+  onSelect?: (id: string | null) => void
   onEdit?: (term: Term) => void
 }
 
@@ -34,11 +36,22 @@ function formatDate(date: Date | null) {
 
 export function TermsChips({
   terms,
+  selectedId: controlledSelectedId,
+  onSelect,
   onEdit,
 }: TermsChipsProps) {
-  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [internalSelectedId, setInternalSelectedId] = useState<string | null>(null)
 
-  const selectedTerm = terms.find(term => term.id === selectedId)
+  const selectedId = controlledSelectedId !== undefined ? controlledSelectedId : internalSelectedId
+  const selectedTerm = terms.find((term) => term.id === selectedId)
+
+  const handleToggle = (id: string) => {
+    const nextId = selectedId === id ? null : id
+    if (controlledSelectedId === undefined) {
+      setInternalSelectedId(nextId)
+    }
+    onSelect?.(nextId)
+  }
 
   return (
     <div className="space-y-2">
@@ -46,16 +59,14 @@ export function TermsChips({
         {terms
           .slice()
           .sort((a, b) => a.order - b.order)
-          .map(term => {
+          .map((term) => {
             const selected = term.id === selectedId
 
             return (
               <button
                 key={term.id}
                 type="button"
-                onClick={() =>
-                  setSelectedId(selected ? null : term.id)
-                }
+                onClick={() => handleToggle(term.id)}
                 className={cn(
                   'inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5',
                   'text-xs font-medium transition-colors',

@@ -84,7 +84,7 @@ export function CoursesTab({
                     key={tab.value}
                     value={tab.value}
                     className={cn(
-                        'm-0 rounded-b-xl  rounded-t-none rounded-tl-lg border border-dashed border-foreground/20 bg-card p-4 dark:border-border',
+                        'm-0 rounded-b-xl  rounded-t-none rounded-tr-lg border border-dashed border-foreground/20 bg-card p-4 dark:border-border',
                         contentClassName,
                     )}
                 >

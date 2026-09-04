@@ -1,7 +1,7 @@
 {
   "name": "getStudentProfile",
   "file": "src/services/student/database/student.queries.ts",
-  "sig": "(studentId: string, orgId: string) => Promise<{ studentId: string; classId: string; groupIds: string[]; user: { email: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; } | null>",
+  "sig": "(studentId: string, orgId: string) => Promise<{ studentId: string; classId: string; groupIds: string[]; user: { firstName: string | null; lastName: string | null; email: string; avatar_url: string | null; }; } | null>",
   "composes": [],
   "rules": [],
   "why_ref": ""

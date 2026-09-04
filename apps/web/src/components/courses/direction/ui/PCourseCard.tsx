@@ -1,6 +1,10 @@
 'use client'
 
 import { GridDeco } from '@/components/design/GridDeco'
+import { cn } from '@/lib/utils'
+import { GripHorizontal, GripVertical } from 'lucide-react'
+import { memo } from 'react'
+import type { CSSProperties, HTMLAttributes } from 'react'
 
 export type PCourse = {
   id: string
@@ -16,22 +20,53 @@ export type PCourse = {
   } | null
 }
 
+type DragHandleProps = HTMLAttributes<HTMLDivElement> & Record<string, unknown>
+
+export interface PCourseCardProps {
+  course: PCourse
+  className?: string
+  dragHandleProps?: DragHandleProps
+  dragRef?: (node: HTMLElement | null) => void
+  style?: CSSProperties
+  isDragging?: boolean
+  isOverlay?: boolean
+}
+
 function getInitials(first?: string | null, last?: string | null) {
   const a = first?.[0] ?? ''
   const b = last?.[0] ?? ''
   return (a + b).toUpperCase() || '—'
 }
 
-export function PCourseCard({ course }: { course: PCourse }) {
+export const PCourseCard = memo(function PCourseCard({
+  course,
+  className,
+  dragHandleProps,
+  dragRef,
+  style,
+  isDragging = false,
+  isOverlay = false,
+}: PCourseCardProps) {
   const { teacher } = course
 
   return (
-    <div className="relative overflow-hidden rounded-xl border border-dashed dark:border-border">
+    <div
+      ref={dragRef}
+      style={style}
+      className={cn(
+        'group relative overflow-hidden rounded-xl border border-dashed dark:border-border',
+        isDragging && 'opacity-40',
+        isOverlay && 'rotate-1 shadow-lg ring-2 ring-primary/40',
+        className
+      )}
+    >
       <GridDeco />
 
       <div className="relative z-10 flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between gap-2 border-b bg-white/95 px-3 py-2 dark:bg-white/10">
+
+          {/* Teacher */}
           <div className="flex min-w-0 items-center gap-1.5">
             <div className="flex size-6 shrink-0 items-center justify-center rounded-full border border-dashed border-foreground/20 bg-foreground/10">
               <span className="text-[9px] font-medium">
@@ -46,6 +81,22 @@ export function PCourseCard({ course }: { course: PCourse }) {
             </span>
           </div>
 
+          {/* DnD handle a afficher via un etat pas en permennance */}
+          {dragHandleProps && (
+            <div
+              {...dragHandleProps}
+              aria-label="Réordonner le cours"
+              className={cn(
+                'absolute left-1/2 -translate-x-1/2 -translate-y-[65%]  cursor-grab touch-none text-muted-foreground/40 opacity-0 transition-opacity',
+                'group-hover:opacity-100 focus-visible:opacity-100',
+                isDragging && 'cursor-grabbing opacity-100',
+              )}
+            >
+              <GripHorizontal className="size-4" strokeWidth={1.8} />
+            </div>
+          )}
+
+          {/* Credits */}
           <span className="shrink-0 rounded-full border border-dashed border-foreground/20 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wide text-muted-foreground">
             {course.credits} CR
           </span>
@@ -84,4 +135,5 @@ export function PCourseCard({ course }: { course: PCourse }) {
       </div>
     </div>
   )
-}
+})
+

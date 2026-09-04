@@ -26,10 +26,27 @@ interface InviteStudentDialogProps {
     parentEmail?: string
     deliveryMethod?: 'email' | 'link'
   }) => Promise<{ success: boolean; error?: string }>
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
 }
 
-export function InviteStudentDialog({ groups, onSubmit }: InviteStudentDialogProps) {
-  const [open, setOpen] = useState(false)
+export function InviteStudentDialog({
+  groups,
+  onSubmit,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
+}: InviteStudentDialogProps) {
+  const [internalOpen, setInternalOpen] = useState(false)
+  const isControlled = controlledOpen !== undefined
+  const open = isControlled ? controlledOpen : internalOpen
+
+  const setOpen = (value: boolean) => {
+    if (isControlled) {
+      controlledOnOpenChange?.(value)
+    } else {
+      setInternalOpen(value)
+    }
+  }
   const [email, setEmail] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')

@@ -2,9 +2,9 @@
 import { useId } from "react";
 import { cn } from "@/lib/utils";
 import { NoiseFilter } from "./NoiseFilter";
- 
+
 export { NoiseFilterDefs } from "./NoiseFilter";
- 
+
 export const PATTERNS = [
   "pattern-noise",
   "pattern-cross",
@@ -12,9 +12,9 @@ export const PATTERNS = [
   "pattern-grid",
   "pattern-noise-svg",
 ] as const;
- 
+
 export type PatternVariant = (typeof PATTERNS)[number];
- 
+
 
 
 type BackgroundPatternProps = {
@@ -64,10 +64,10 @@ export function BackgroundPattern({
   invertOnDark = true,
 }: BackgroundPatternProps) {
   const filterId = useId();
- 
+
   if (pattern === "pattern-noise-svg") {
     const effectiveFilterId = shared ? "noise-filter-shared" : `noise-filter-${filterId}`;
- 
+
     return (
       <svg
         className={cn(
@@ -92,7 +92,7 @@ export function BackgroundPattern({
       </svg>
     );
   }
- 
+
   // Patterns image existants — comportement inchangé
   return (
     <div
@@ -106,5 +106,5 @@ export function BackgroundPattern({
     />
   );
 }
- 
+
 

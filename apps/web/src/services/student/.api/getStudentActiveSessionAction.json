@@ -1,7 +1,7 @@
 {
   "name": "getStudentActiveSessionAction",
   "file": "src/services/student/actions/student.queries.ts",
-  "sig": "(params: { classId: string; groupIds: string[] }) => Promise<{ error: any; data?: undefined; } | { data: { scheduleId: string; course: string; room: string; teacher: string | null; startTime: Date; endTime: Date; myAttendance: { status: AttendanceStatus; recordedAt: Date; } | null; } | null; error?: undefined; }>",
+  "sig": "(params: { classId: string; groupIds: string[] }) => Promise<{ error: string; data?: undefined; } | { data: { scheduleId: string; course: string; room: string; teacher: string | null; startTime: Date; endTime: Date; myAttendance: { status: AttendanceStatus; recordedAt: Date; } | null; } | null; error?: undefined; }>",
   "calls": [
     "getStudentActiveSession"
   ],

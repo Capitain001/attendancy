@@ -1,5 +1,5 @@
 // src/services/student/validation.ts
-import { object, pipe, string, uuid } from 'valibot'
+import { object, optional, pipe, string, uuid } from 'valibot'
 import type { InferInput, InferOutput } from 'valibot'
 
 export const enrollStudentSchema = object({
@@ -17,3 +17,7 @@ export const assignStudentGroupSchema = object({
 
 export type AssignStudentGroupInput  = InferInput<typeof assignStudentGroupSchema>
 export type AssignStudentGroupOutput = InferOutput<typeof assignStudentGroupSchema>
+
+export const getDirectionStudentsSchema = optional(pipe(string(), uuid('ID classe invalide')))
+export type GetDirectionStudentsInput = InferInput<typeof getDirectionStudentsSchema>
+

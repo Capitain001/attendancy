@@ -1,7 +1,7 @@
 {
   "name": "getParentsForDirectionAction",
   "file": "src/services/student/actions/student.queries.ts",
-  "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { id: string; student: { id: string; user: { firstName: string | null; lastName: string | null; }; }; parent: { id: string; user: { email: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; relation: string; }[]; error?: und...",
+  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { id: string; student: { id: string; user: { firstName: string | null; lastName: string | null; }; }; parent: { id: string; user: { firstName: string | null; lastName: string | null; email: string; avatar_url: string | null; }; }; relation: string; }[]; error?: ...",
   "calls": [
     "getParentsForDirection"
   ],
