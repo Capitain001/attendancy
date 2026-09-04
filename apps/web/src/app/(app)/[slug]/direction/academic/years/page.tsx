@@ -38,7 +38,7 @@ export default async function AcademicYearsPage() {
   }))
 
   return (
-    <div className="flex flex-col gap-y-6">
+    <div className="flex flex-col gap-y-6 pb-12">
       <SectionHeader
         title="Années académiques"
         action={<AcademicYearCreateButton />}

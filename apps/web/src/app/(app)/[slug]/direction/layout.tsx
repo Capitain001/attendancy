@@ -49,7 +49,7 @@ const Layout = async ({ children, params }: LayoutProps) => {
             </div>
           </div>
         </header>
-        <div className="flex flex-1 flex-col  overflow-y-auto scrollbar-hidden gap-4 p-2 md:p-4 md:pt-0 min-w-0">
+        <div className="flex flex-1 flex-col  overflow-y-auto scrollbar-hidden gap-4 p-2 md:p-4 md:pt-0 min-w-0 !pb-16">
           {children}
         </div>
       </SidebarInset>
