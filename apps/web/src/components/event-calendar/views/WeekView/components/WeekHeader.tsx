@@ -25,10 +25,10 @@ export function WeekHeader({ days,
   };
 
   return (
-    <div className="sticky top-0 z-30 mb-3">
+    <div className="sticky top-0 z-30 mb-0.5">
       <div className="flex flex-1  rounded-xs border bg-muted/80 backdrop-blur-md">
         {/* Colonne fixe à gauche */}
-        <div className="flex w-full flex-1 shrink-0 border-r border-dashed py-2 text-center text-sm text-muted-foreground/70 pointer-events-none">
+        <div className="flex w-full flex-1 shrink-0 border-r border-dashed py-2 lg:py-1.5 text-center text-sm text-muted-foreground/70 pointer-events-none">
           <span className="m-auto max-[479px]:sr-only">
             {format(new Date(), "O")}
           </span>
@@ -41,7 +41,9 @@ export function WeekHeader({ days,
             className={cn(
               "data-[today=true]:text-foreground data-[today=true]:font-medium",
 
-              "flex flex-1 flex-col items-center justify-center gap-1 py-2 text-sm text-muted-foreground",
+              // Grand écran : nom du jour + numéro sur la même ligne (gain
+              // de hauteur) au lieu de l'empilement vertical par défaut.
+              "flex flex-1 flex-col items-center justify-center gap-1 py-2 lg:flex-row lg:gap-1.5 lg:py-1.5 text-sm text-muted-foreground",
               [6, 0].includes(day.getDay()) && "text-muted-foreground/50",
               "hover:bg-muted cursor-pointer transition-colors",
               "border-r border-dashed last:border-r-0"
@@ -60,12 +62,12 @@ export function WeekHeader({ days,
             </span>
             <span
               className={cn(
-                "grid h-5 w-5 text-xs place-content-center rounded-full",
+                "grid h-5 w-5 text-xs lg:top-10  place-content-center rounded-full",
                 isToday(day) && "bg-primary/40 text-primary-foreground",
                 selectedDay &&
                 isSameDay(day, selectedDay) &&
                 !isToday(day) &&
-                "bg-foreground text-primary-foreground",
+                "bg-foreground text-primary-foreground lg:underline",
                 !isToday(day) &&
                 !isSameDay(day, selectedDay!) &&
                 "hover:bg-muted/70"

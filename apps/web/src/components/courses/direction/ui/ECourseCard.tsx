@@ -28,10 +28,10 @@ export function ECourseCard({
           type="button"
           onClick={onAction}
           className={cn(
-            'flex size-7 items-center justify-center rounded-full shadow-md transition-transform hover:scale-105 active:scale-95 cursor-pointer',
+            'flex size-7 items-center justify-center rounded-full shadow-md transition-transform  cursor-pointer border border-dashed border-foreground/20 bg-foreground/90 dark:bg-background/90 hover:bg-foreground/70 dark:hover:bg-background/70',
             actionType === 'add'
-              ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-              : 'bg-destructive/80 text-destructive-foreground hover:bg-destructive/85'
+              ? ' text-primary-foreground '
+              : 'text-destructive-foreground'
           )}
           title={actionType === 'add' ? 'Ajouter au semestre' : 'Retirer du semestre'}
         >

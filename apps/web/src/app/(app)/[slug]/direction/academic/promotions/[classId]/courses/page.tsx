@@ -14,7 +14,7 @@ export default async function Page({ params }: PageProps) {
 
   const { classId } = await params
 
-  const coursesResult = await getCoursesAction(classId)
+  const coursesResult = await getCoursesAction({ classId })
   const termsResult = await getTermsAction(classId)
 
   if ('error' in coursesResult) notFound()

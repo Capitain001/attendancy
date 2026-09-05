@@ -10,7 +10,8 @@ import { DailyMetricsCard } from '@/components/direction/dashboard/DailyMetricsC
 import { PrismaErrorPanel } from '@/components/server/PrismaErrorPanel'
 import { card, typography } from '@/styles'
 import { cn } from '@/lib/utils'
-import { Database, HardDrive, Users, BookOpen } from 'lucide-react'
+import { ButtonX } from '@/components/design/ButtonX'
+import { Database, HardDrive, Users, BookOpen, Sprout } from 'lucide-react'
 
 export default async function AdminPage() {
   await connection()
@@ -29,15 +30,20 @@ export default async function AdminPage() {
 
   return (
     <main className="min-h-screen bg-background p-8 flex flex-col gap-6">
-      <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-bold tracking-tight">Admin système</h1>
-        {identity && (
-          <p className={cn(typography.small, 'text-text-subtle')}>
-            {identity.name}
-            {identity.slug && <> · <span className="font-mono">{identity.slug}</span></>}
-            {identity.domain && <> · {identity.domain}</>}
-          </p>
-        )}
+      <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-2xl font-bold tracking-tight">Admin système</h1>
+          {identity && (
+            <p className={cn(typography.small, 'text-text-subtle')}>
+              {identity.name}
+              {identity.slug && <> · <span className="font-mono">{identity.slug}</span></>}
+              {identity.domain && <> · {identity.domain}</>}
+            </p>
+          )}
+        </div>
+        <ButtonX href="/admin/seed" icon={<Sprout className="size-4 text-emerald-500" />}>
+          Panneau de Seed
+        </ButtonX>
       </div>
 
       {usage && (

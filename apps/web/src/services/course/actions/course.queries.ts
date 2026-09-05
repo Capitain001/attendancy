@@ -28,13 +28,13 @@ export async function getAllCoursesAction() {
   }
 }
 
-export async function getCoursesAction(classId?: string) {
+export async function getCoursesAction({ classId, limit }: { classId?: string, limit?: number }) {
   const auth = await authAccess()
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
 
   try {
-    return { data: await getCourses(orgId, classId) }
+    return { data: await getCourses(orgId, classId, limit) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

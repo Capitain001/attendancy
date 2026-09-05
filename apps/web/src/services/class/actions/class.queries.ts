@@ -4,7 +4,7 @@ import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import { getClasses, getClass } from '../database'
 import { Level } from '@/generated/prisma/browser';
-export async function getClassesAction({ yearId, programTrackId, name, level }: { yearId?: string; programTrackId?: string; name?: string; level?: Level }) {
+export async function getClassesAction({ yearId, programTrackId, name, level }: { yearId?: string; programTrackId?: string; name?: string; level?: Level } = {}) {
   try {
     const auth = await authAccess()
     if (!auth.data) return { error: auth.error }

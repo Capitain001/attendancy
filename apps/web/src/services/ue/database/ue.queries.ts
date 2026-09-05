@@ -20,6 +20,7 @@ export async function getUEs(orgId: string, departmentId?: string) {
       isOptional: true,
       departmentId: true,
       description:true,
+      type:true,
       department: { select: { id: true, name: true } },
       ueCourses: {
             select: {

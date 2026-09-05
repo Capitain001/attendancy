@@ -3,7 +3,7 @@
 export * from './generated.types'
 import type { getTeacherNextSchedule } from '@/services/session/database'
 import type { getSchedules } from './database'
-import type { Schedule, ScheduleStatus } from "@/generated/prisma/client";
+import type { Schedule, ScheduleStatus } from "@/generated/prisma/browser";
 
 export type TeacherNextSchedule = Awaited<ReturnType<typeof getTeacherNextSchedule>>
 export type GetSchedulesReturn = Awaited<ReturnType<typeof getSchedules>>

@@ -28,7 +28,7 @@ export async function DirectionPromotionDetailPage({ classId, slug }: DirectionP
 
 
   const [coursesRes, enrollRes, ratesRes, schedRes] = await Promise.all([
-    getCoursesAction(classId),
+    getCoursesAction({classId, limit:6}),
     getEnrolledStudentsAction(classId),
     getClassAttendanceRatesAction({ classId }),
     getTodayClassSchedulesAction(classId),

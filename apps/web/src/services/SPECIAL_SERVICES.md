@@ -3,6 +3,16 @@
 Catalogue des services qui dévient du pattern `1 modèle Prisma = 1 service owner`.
 À lire avant toute modification sur ces services.
 
+const specialServices = [
+    "planning",
+    "audit",
+    "auth",
+    "user",
+    "seed",
+];
+
+
+
 ---
 
 ## 1. Services orchestrateurs (aucun modèle Prisma propre)

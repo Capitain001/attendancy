@@ -122,7 +122,7 @@ export async function getCourseDetail(courseId: string, orgId: string) {
  * réelle (getCourses = "les cours, éventuellement filtrés"), symétrique
  * à getAllCourses (jamais filtré).
  */
-export async function getCourses(orgId: string, classId?: string) {
+export async function getCourses(orgId: string, classId?: string, limit?: number) {
   'use cache'
   cacheTag(CACHE.COURSE(orgId))
   if (classId) cacheTag(CACHE.COURSE(orgId, classId))
@@ -152,5 +152,6 @@ export async function getCourses(orgId: string, classId?: string) {
       },
     },
     orderBy: { name: 'asc' },
+    ...(limit ? { take: limit } : {}),
   })
 }
