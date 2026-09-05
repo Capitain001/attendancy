@@ -2,11 +2,11 @@
 
 import { useState } from "react"
 import SelectUe from "./SelectUe"
-import { OrgUEDTO } from "@/services/ue/types"
+import { GetUEsDto } from "@/services/ue/types"
 
 
 interface SelectOrgUeProps {
-  ues: OrgUEDTO
+  ues: GetUEsDto
 }
 
 export default function SelectOrgUe({ ues }: SelectOrgUeProps) {

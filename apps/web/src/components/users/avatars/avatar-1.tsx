@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import { Skeleton } from "@/components/users/avatars/skeleton-1";
 import clsx from "clsx";
 import { getRoleColor } from "@/lib/project";

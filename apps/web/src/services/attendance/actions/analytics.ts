@@ -1,4 +1,4 @@
-﻿// src/services/attendance/actions/analytics.ts
+// src/services/attendance/actions/analytics.ts
 "use server";
 
 import { ERRORS } from "@/config";
@@ -31,7 +31,7 @@ export async function getClassAttendanceRatesAction({
 }
 
 /**
- * Liste des absences (ABSENT) du jour de l'org — pilotage direction (P-41).
+ * Liste des absences (ABSENT) du jour de l'org  pilotage direction (P-41).
  * Garde DIRECTION/ADMIN ; scope orgId via `schedule.orgId`.
  */
 export async function getOrgTodayAbsencesAction() {

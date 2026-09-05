@@ -5,11 +5,11 @@ import { ProgramLabel } from "./ProgramLabel";
 import { ProgramUeList } from "./ProgramUeList";
 import { AddProgramUe } from "./AddProgramUe";
 import type { CreateUeData, UpdateUEData } from "@/services/ue/database";
-import type { OrgUEDTO, ProgramTable } from "@/services/ue/types";
+import type { GetUEsDto, ProgramTable } from "@/services/ue/types";
 
 interface ProgramUeTableProps {
   program: ProgramTable;
-  availableUes: OrgUEDTO;
+  availableUes: GetUEsDto;
   departments: { id: string; name: string }[];
   loadingIds?: string[];
   onCreate: (data: CreateUeData) => Promise<void>;

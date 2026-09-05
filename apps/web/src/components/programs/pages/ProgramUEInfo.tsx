@@ -2,11 +2,11 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import type { DepartmentDto } from '@/services/department/types';
-import type { OrgUEDTO, ProgramTable } from '@/services/ue/types';
+import type { GetUEsDto, ProgramTable } from '@/services/ue/types';
 
 interface ProgramUEInfoProps {
   programId: string;
-  allUes: OrgUEDTO;
+  allUes: GetUEsDto;
   departments: DepartmentDto[];
 }
 

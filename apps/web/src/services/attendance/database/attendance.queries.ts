@@ -1,4 +1,4 @@
-﻿// src/services/attendance/database/attendance.queries.ts
+// src/services/attendance/database/attendance.queries.ts
 import { prisma } from "@/lib/prisma";
 import { AttendanceStatus } from "@/generated/prisma/client";
 import {
@@ -41,7 +41,7 @@ export async function getScheduleAttendances(
 
 /**
  * Historique de présence d'un étudiant (lecture espace étudiant).
- * Attendance n'a pas d'orgId → scope relationnel via `schedule.orgId`.
+ * Attendance n'a pas d'orgId ? scope relationnel via `schedule.orgId`.
  */
 export async function getStudentAttendances(studentId: string, orgId: string) {
   return prisma.attendance.findMany({
@@ -67,7 +67,7 @@ export async function getStudentAttendances(studentId: string, orgId: string) {
 /**
  * Présence d'un étudiant pour un schedule donné (null = aucune ligne).
  * Champs utiles à l'écran (statut + quand scanné + note/détail), pas juste le statut.
- * Attendance n'a pas d'orgId → scope relationnel via `schedule.orgId`.
+ * Attendance n'a pas d'orgId ? scope relationnel via `schedule.orgId`.
  */
 export async function getUserAttendance(
   studentId: string,
@@ -87,9 +87,9 @@ export async function getUserAttendance(
 }
 
 /**
- * Comptes de présence par statut pour un étudiant (taux non borné — D4).
+ * Comptes de présence par statut pour un étudiant (taux non borné  D4).
  * Le calcul du taux (numérateur/dénominateur) reste chez le consommateur via `policy.ts`.
- * `range` (optionnel) borne sur `schedule.startTime` — ex. comptes du jour.
+ * `range` (optionnel) borne sur `schedule.startTime`  ex. comptes du jour.
  */
 export async function getStudentAttendanceStatusCounts(
   studentId: string,
@@ -190,8 +190,8 @@ import { activeEnrollmentWhere, activeGroupMemberWhere } from "./filter";
 
 /**
  * Étudiants attendus à un schedule (identités, pour créer des Attendance).
- *  - groupId présent → membres du groupe (via StudentGroup → enrollment)
- *  - groupId absent  → tous les inscrits actifs de la classe
+ *  - groupId présent ? membres du groupe (via StudentGroup ? enrollment)
+ *  - groupId absent  ? tous les inscrits actifs de la classe
  * Filtre soft-delete : enrollment ET student actifs.
  * `tx` propagé pour rester dans le contexte transactionnel de la clôture.
  */

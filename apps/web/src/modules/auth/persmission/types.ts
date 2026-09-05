@@ -1,4 +1,4 @@
-﻿// services/persmission/types.ts
+// services/persmission/types.ts
 
 import { Action, Resource } from "@/generated/prisma/client";
 

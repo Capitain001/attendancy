@@ -1,4 +1,4 @@
-﻿import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import type { AcademicYear } from "@/generated/prisma/client"
 
 function Loader1({ className }: { className?: string }) {

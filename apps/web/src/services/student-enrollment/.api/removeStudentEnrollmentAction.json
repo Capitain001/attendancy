@@ -1,0 +1,11 @@
+{
+  "name": "removeStudentEnrollmentAction",
+  "file": "src/services/student-enrollment/actions/student-enrollment.mutations.ts",
+  "sig": "(studentEnrollmentId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; classId: string; }; error?: undefined; }>",
+  "calls": [
+    "removeStudentEnrollment"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

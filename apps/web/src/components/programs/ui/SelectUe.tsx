@@ -15,13 +15,13 @@ import {
 import { Button } from "@/components/ui/button"
 import { ReusableDialog } from "@/components/tools/ReusableDialog"
 import { ResourceIcon } from "@/components/icons/ResourceIcon"
-import { OrgUEDTO } from "@/services/ue/types"
+import { GetUEsDto } from "@/services/ue/types"
 
 
-type UeItem = OrgUEDTO[number]
+type UeItem = GetUEsDto[number]
 
 interface SelectUeProps {
-  ues: OrgUEDTO
+  ues: GetUEsDto
   value?: string
   onChange?: (value: string) => void
   placeholder?: string

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 import { Modal, ConfirmDialog } from '../ui';
-import type { ProgramSemesterDTO, ProgramUECourses, UeCourseDTO, OrgUEDTO } from '@/services/ue/types';
+import type { ProgramSemesterDTO, ProgramUECourses, UeCourseDTO, GetUEsDto } from '@/services/ue/types';
 import { duplicateProgramAction } from '@/services/program/actions';
 
 export type ModalState =
@@ -21,7 +21,7 @@ export type ProgramModalsProps = {
   programId: string;
   modal: ModalState;
   closeModal: () => void;
-  availableUes: OrgUEDTO;
+  availableUes: GetUEsDto;
   program: ProgramSemesterDTO[];
   classInfo?: { program?: string };
   programDetails?: { programTrackId?: string };

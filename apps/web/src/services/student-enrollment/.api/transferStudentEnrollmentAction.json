@@ -1,0 +1,11 @@
+{
+  "name": "transferStudentEnrollmentAction",
+  "file": "src/services/student-enrollment/actions/student-enrollment.mutations.ts",
+  "sig": "(input: TransferStudentEnrollmentInput) => Promise<{ error: string; data?: undefined; } | { data: { ended: { id: string; classId: string; }; created: { id: string; studentId: string; classId: string; }; }; error?: undefined; }>",
+  "calls": [
+    "transferStudentEnrollment"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

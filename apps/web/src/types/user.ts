@@ -1,4 +1,4 @@
-﻿//src/types/user.ts
+//src/types/user.ts
 import { FUNCTIONS } from "@/config/data";
 import { InvitedBy } from "./invitation";
 
@@ -108,7 +108,7 @@ export type UserMetadata = Pick<UserInfo,
     role: Role;
     function: Functions;
     name: string;
-    /** Garanti par le flow d'inscription actuel (owner ou invité — les deux exigent un email).
+    /** Garanti par le flow d'inscription actuel (owner ou invité  les deux exigent un email).
      *  À revalider si un nouveau flow d'auth (OAuth, SSO...) est ajouté. */
     email: string;
   };

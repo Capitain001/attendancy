@@ -69,4 +69,4 @@ export const linkCoursesToTermSchema = v.object({
 })
 
 export type LinkCoursesToTermInput  = v.InferInput<typeof linkCoursesToTermSchema>
-export type LinkCoursesToTermOutput = v.InferOutput<typeof linkCoursesToTermSchema>
+export type LinkCoursesToTermOutput = v.InferOutput<typeof linkCoursesToTermSchema>

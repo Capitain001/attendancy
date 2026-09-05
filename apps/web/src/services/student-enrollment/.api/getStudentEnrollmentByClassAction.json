@@ -1,0 +1,11 @@
+{
+  "name": "getStudentEnrollmentByClassAction",
+  "file": "src/services/student-enrollment/actions/student-enrollment.queries.ts",
+  "sig": "(studentId: string, classId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; studentId: string; classId: string; createdAt: Date; endedAt: Date | null; } | null; error?: undefined; }>",
+  "calls": [
+    "getStudentEnrollmentByClass"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

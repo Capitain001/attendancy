@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { getProgramUEsTableAction } from "@/services/ue/actions";
-import { OrgUEDTO, ProgramTable as ProgramTableType } from "@/services/ue/types";
+import { GetUEsDto, ProgramTable as ProgramTableType } from "@/services/ue/types";
 import { CACHE_KEYS, CACHE_TIME } from "@/config/client_cache";
 
 interface UseProgramTableResult {
   program: ProgramTableType;
-  availableUes: OrgUEDTO;
+  availableUes: GetUEsDto;
   isLoading: boolean;
   error: Error | null;
 }
@@ -14,7 +14,7 @@ interface UseProgramTableResult {
 // Gère les données nécessaires au composant ProgramTable
 export function useProgramTable(
   programId: string,
-  allUes: OrgUEDTO
+  allUes: GetUEsDto
 ): UseProgramTableResult {
   const {
     data: programData,

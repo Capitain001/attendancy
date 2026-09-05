@@ -1,4 +1,4 @@
-﻿// src/modules/user/update.ts
+// src/modules/user/update.ts
 "use server";
 
 import { Role } from "@/generated/prisma/client";
@@ -23,7 +23,7 @@ async function refreshCurrentUserCache() {
 
 /**
  * Remplace intégralement les metadata Supabase de l'utilisateur courant.
- * Contrairement à `setUserInfo`, utilise le client admin — donc pas de merge,
+ * Contrairement à `setUserInfo`, utilise le client admin  donc pas de merge,
  * les champs non fournis sont supprimés.
  *
  * À utiliser pour les réinitialisations ou corrections de metadata corrompues.
@@ -63,7 +63,7 @@ export async function cleanUserMetadata({
 
 /**
  * Merge partiellement les metadata Supabase de l'utilisateur courant.
- * Seuls les champs fournis sont mis à jour — les autres sont conservés.
+ * Seuls les champs fournis sont mis à jour  les autres sont conservés.
  *
  * C'est la fonction de base pour toutes les mises à jour de session utilisateur.
  * Rafraîchit le cache après l'écriture.
@@ -169,7 +169,7 @@ export async function syncUserOrganizationProfile({
 
 /**
  * Met à jour partiellement les user_metadata Supabase d'un utilisateur cible
- * via le client admin. Merge partiel natif — les champs non fournis sont préservés.
+ * via le client admin. Merge partiel natif  les champs non fournis sont préservés.
  * Appelé hors transaction Prisma (best-effort) : échec loggé sans throw.
  */
 export async function updateUserMetadata(

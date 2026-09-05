@@ -3,14 +3,14 @@
 
 import { useState } from "react";
 import type { CreateUeData } from "@/services/ue/database";
-import type { OrgUEDTO } from "@/services/ue/types";
+import type { GetUEsDto } from "@/services/ue/types";
 import { ProgramUeForm } from "./ProgramUeForm";
 import { ProgramUeAction } from "./ProgramUeAction";
 import SelectUe from "./SelectUe";
 
 interface AddProgramUeProps {
   departments: { id: string; name: string }[];
-  availableUes: OrgUEDTO;
+  availableUes: GetUEsDto;
   onCreate: (data: CreateUeData) => Promise<void>;
   onAttach: (ueId: string) => Promise<void>;
 }

@@ -1,4 +1,4 @@
-﻿// src/services/auth/permission/access.ts
+// src/services/auth/permission/access.ts
 "use server";
 
 import { getUserInfo } from '@/modules/user';

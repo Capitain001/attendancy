@@ -1,0 +1,110 @@
+{
+  "service": "student-enrollment",
+  "path": "src/services/student-enrollment/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "ccbb57a",
+  "utils_dir": null,
+  "fns": {
+    "createStudentEnrollment": {
+      "f": ".api/createStudentEnrollment.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "removeStudentEnrollment": {
+      "f": ".api/removeStudentEnrollment.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateStudentEnrollment": {
+      "f": ".api/updateStudentEnrollment.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "transferStudentEnrollment": {
+      "f": ".api/transferStudentEnrollment.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getStudentsEnrollments": {
+      "f": ".api/getStudentsEnrollments.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getStudentEnrollmentDetails": {
+      "f": ".api/getStudentEnrollmentDetails.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getStudentEnrollmentByClass": {
+      "f": ".api/getStudentEnrollmentByClass.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createStudentEnrollmentAction": {
+      "f": ".api/createStudentEnrollmentAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeStudentEnrollmentAction": {
+      "f": ".api/removeStudentEnrollmentAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateStudentEnrollmentAction": {
+      "f": ".api/updateStudentEnrollmentAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "transferStudentEnrollmentAction": {
+      "f": ".api/transferStudentEnrollmentAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getStudentEnrollmentsAction": {
+      "f": ".api/getStudentEnrollmentsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getStudentEnrollmentDetailsAction": {
+      "f": ".api/getStudentEnrollmentDetailsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getStudentEnrollmentByClassAction": {
+      "f": ".api/getStudentEnrollmentByClassAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createStudentEnrollment": [
+      "createStudentEnrollmentAction"
+    ],
+    "removeStudentEnrollment": [
+      "removeStudentEnrollmentAction"
+    ],
+    "updateStudentEnrollment": [
+      "updateStudentEnrollmentAction"
+    ],
+    "transferStudentEnrollment": [
+      "transferStudentEnrollmentAction"
+    ],
+    "getStudentsEnrollments": [
+      "getStudentEnrollmentsAction"
+    ],
+    "getStudentEnrollmentDetails": [
+      "getStudentEnrollmentDetailsAction"
+    ],
+    "getStudentEnrollmentByClass": [
+      "getStudentEnrollmentByClassAction"
+    ],
+    "createStudentEnrollmentAction": [],
+    "removeStudentEnrollmentAction": [],
+    "updateStudentEnrollmentAction": [],
+    "transferStudentEnrollmentAction": [],
+    "getStudentEnrollmentsAction": [],
+    "getStudentEnrollmentDetailsAction": [],
+    "getStudentEnrollmentByClassAction": []
+  },
+  "deps": {}
+}

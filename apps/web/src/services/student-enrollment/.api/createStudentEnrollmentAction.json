@@ -1,0 +1,11 @@
+{
+  "name": "createStudentEnrollmentAction",
+  "file": "src/services/student-enrollment/actions/student-enrollment.mutations.ts",
+  "sig": "(input: CreateStudentEnrollmentInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; studentId: string; classId: string; }; error?: undefined; }>",
+  "calls": [
+    "createStudentEnrollment"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,4 +1,4 @@
-﻿// src/utils/server/audit.ts
+// src/utils/server/audit.ts
 
 import "server-only";
 

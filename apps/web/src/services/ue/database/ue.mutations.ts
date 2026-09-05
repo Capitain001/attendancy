@@ -22,13 +22,6 @@ export type AddUEData = Pick<
   | "isOptional"
 >;
 
-// export type UpdateUEData = {
-//   name?: string
-//   code?: string
-//   description?: string
-//   departmentId?: string | null
-//   isOptional?: boolean
-// }
 
 export type CreateUeData = Omit<AddUEData, "orgId">;
 export type UpdateUEData = Partial<CreateUeData>;

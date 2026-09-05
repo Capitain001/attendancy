@@ -1,15 +1,13 @@
 // src/services/ue/types.ts
 import type { CreateUEInput } from './validation'
 import type { getProgramUEs } from './database'
-import { GetUEsDto, CreateUEDto  } from './generated.types'
+import { GetUEsDto } from './generated.types'
 
 export type { CreateUEInput }
 
-export type UEItem    = GetUEsDto[number]
-export type CreateUEsDTO = CreateUEDto
+// a conserver 
+export type UEsItem    = GetUEsDto[number]
 
-// Full UE list for org (used as catalogue for linking to programs)
-export type OrgUEDTO = GetUEsDto
 
 // ProgramUE types (UEs attached to a program, with courses)
 export type GetProgramUEsDto = Awaited<ReturnType<typeof getProgramUEs>>

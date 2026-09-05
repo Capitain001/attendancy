@@ -1,10 +1,10 @@
-﻿// src/services/user/profile.ts
+// src/services/user/profile.ts
 
 import type { Organization } from "@/types/user";
 import { Role } from "@/generated/prisma/client";
 
 /* =========================
-   MAPPING RÔLE → CLÉ PROFIL
+   MAPPING RÔLE ? CLÉ PROFIL
 ========================= */
 
 const ROLE_PROFILE_KEY: Partial<Record<Role, keyof Organization>> = {
@@ -19,8 +19,8 @@ const ROLE_PROFILE_KEY: Partial<Record<Role, keyof Organization>> = {
  * Retourne `null` si le rôle n'a pas de profil associé (ex: ADMIN, GUEST).
  *
  * @example
- * getRoleProfileKey("TEACHER") // → "teacherId"
- * getRoleProfileKey("ADMIN")   // → null
+ * getRoleProfileKey("TEACHER") // ? "teacherId"
+ * getRoleProfileKey("ADMIN")   // ? null
  */
 export function getRoleProfileKey(role: Role): keyof Organization | null {
   return ROLE_PROFILE_KEY[role] ?? null;
@@ -33,7 +33,7 @@ export function getRoleProfileKey(role: Role): keyof Organization | null {
  *
  * @example
  * injectRoleProfileId(org, "TEACHER", "abc-123")
- * // → { ...org, teacherId: "abc-123" }
+ * // ? { ...org, teacherId: "abc-123" }
  */
 export function injectRoleProfileId(
   organization: Organization,
@@ -77,7 +77,7 @@ export function updateOrganizationsProfile(
  * ou pour vérifier qu'un profil a bien été créé.
  *
  * @example
- * getCurrentProfileId(user.organization) // → "teacher-uuid" | null
+ * getCurrentProfileId(user.organization) // ? "teacher-uuid" | null
  */
 export function getCurrentProfileId(organization?: Organization): string | null {
   return (

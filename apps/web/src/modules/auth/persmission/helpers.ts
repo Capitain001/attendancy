@@ -1,4 +1,4 @@
-﻿
+
 import { Action, Resource } from "@/generated/prisma/client";
 import { ActionLabels, ResourceLabels } from "./types";
 

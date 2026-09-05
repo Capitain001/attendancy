@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { useRouter } from 'next/navigation';
-import type { ProgramSemesterDTO, ProgramUECourses, UeCourseDTO, OrgUEDTO } from '@/services/ue/types';
+import type { ProgramSemesterDTO, ProgramUECourses, UeCourseDTO, GetUEsDto } from '@/services/ue/types';
 import { useProgramData } from '@/hooks/data/programs/useProgramData';
 import { useProgramActions } from '@/hooks/data/programs/useProgramActions';
 import { useProgramReorder } from '@/hooks/data/programs/useProgramReorder';
@@ -27,7 +27,7 @@ import { GetProgramByIdDto } from '@/services/program';
 export type DirectionProgramPageProps = {
   programId: string;
   classId?: string;
-  allUes: OrgUEDTO;
+  allUes: GetUEsDto;
   organization?: ProgramOrganizationData;
   programDetails?: {
     isActive?: boolean;

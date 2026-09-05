@@ -1,8 +1,8 @@
-﻿// src/lib/export/exporters.ts
+// src/lib/export/exporters.ts
 //
-// Exporters gÃ©nÃ©riques opÃ©rant sur ExportConfig<T>. Pur client (DOM/Blob).
-// Largeurs auto-ajustÃ©es au contenu (XLSX + PDF) â€” corrige le dÃ©faut Â« cellule
-// ne s'adapte pas Ã  son contenu Â». Libs chargÃ©es en dynamic import (bundle lÃ©ger).
+// Exporters génériques opérant sur ExportConfig<T>. Pur client (DOM/Blob).
+// Largeurs auto-ajustées au contenu (XLSX + PDF) — corrige le défaut « cellule
+// ne s'adapte pas à son contenu ». Libs chargées en dynamic import (bundle léger).
 
 import type { ExportColumn, ExportConfig, ExportFormat } from "./types";
 import { buildPrintHtml, type PrintPayload } from "./print-template";
@@ -19,7 +19,7 @@ function matrix<T>(cfg: ExportConfig<T>): string[][] {
   return cfg.rows.map((row) => cfg.columns.map((c) => c.value(row) ?? ""));
 }
 
-/** Projection sÃ©rialisable (headers + matrice) pour les rendus HTML (print/serveur). */
+/** Projection sérialisable (headers + matrice) pour les rendus HTML (print/serveur). */
 export function toPrintPayload<T>(cfg: ExportConfig<T>): PrintPayload {
   return {
     filename: cfg.filename,
@@ -30,7 +30,7 @@ export function toPrintPayload<T>(cfg: ExportConfig<T>): PrintPayload {
   };
 }
 
-/** Largeur (caractÃ¨res) auto-ajustÃ©e : max(header, cellules), bornÃ©e. */
+/** Largeur (caractères) auto-ajustée : max(header, cellules), bornée. */
 function autoWidth<T>(
   cfg: ExportConfig<T>,
   colIndex: number,
@@ -57,7 +57,7 @@ function triggerDownload(blob: Blob, filename: string) {
 }
 
 /* =========================
-   CSV (compatible Excel FR : sÃ©parateur ;, BOM UTF-8)
+   CSV (compatible Excel FR : séparateur ;, BOM UTF-8)
 ========================= */
 
 export function exportCSV<T>(cfg: ExportConfig<T>) {
@@ -66,7 +66,7 @@ export function exportCSV<T>(cfg: ExportConfig<T>) {
     row.map(escape).join(";"),
   );
   const csv = lines.join("\r\n");
-  const blob = new Blob(["ï»¿" + csv], { type: "text/csv;charset=utf-8;" });
+  const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
   triggerDownload(blob, `${cfg.filename}.csv`);
 }
 
@@ -87,7 +87,7 @@ export function exportJSON<T>(cfg: ExportConfig<T>) {
 }
 
 /* =========================
-   XLSX (exceljs) â€” largeurs auto-ajustÃ©es
+   XLSX (exceljs) — largeurs auto-ajustées
 ========================= */
 
 export async function exportXLSX<T>(cfg: ExportConfig<T>) {
@@ -107,7 +107,7 @@ export async function exportXLSX<T>(cfg: ExportConfig<T>) {
   }));
 
   const headerRow = ws.getRow(1);
-  // EntÃªte neutre : gris clair + texte gras foncÃ© (pas de bandeau bleu).
+  // Entête neutre : gris clair + texte gras foncé (pas de bandeau bleu).
   headerRow.font = { bold: true, color: { argb: "FF0F172A" } };
   headerRow.fill = {
     type: "pattern",
@@ -158,7 +158,7 @@ export async function exportDOCX<T>(cfg: ExportConfig<T>) {
   const headerCells = cfg.columns.map(
     (c) =>
       new TableCell({
-        // EntÃªte neutre : gris clair + texte gras foncÃ©.
+        // Entête neutre : gris clair + texte gras foncé.
         shading: { fill: "E2E8F0" },
         children: [
           new Paragraph({
@@ -215,7 +215,7 @@ export async function exportDOCX<T>(cfg: ExportConfig<T>) {
 }
 
 /* =========================
-   PRINT (impression navigateur â†’ PDF papier)
+   PRINT (impression navigateur → PDF papier)
 ========================= */
 
 export function exportPrint<T>(cfg: ExportConfig<T>) {

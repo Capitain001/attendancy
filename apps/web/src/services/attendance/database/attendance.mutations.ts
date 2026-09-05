@@ -1,10 +1,10 @@
-﻿// src/services/attendance/database/attendance.mutations.ts
+// src/services/attendance/database/attendance.mutations.ts
 
 import { prisma } from "@/lib/prisma";
 import { AttendanceStatus, Prisma } from "@/generated/prisma/client";
 import { getExpectedAttendees } from "./attendance.queries";
 
-// ─── create ─────────────────────────────────────────────
+// --- create ---------------------------------------------
 /**
  * Enregistre la présence d'un étudiant après validation du token.
  * Status initial : PENDING (en attente de confirmation du prof).
@@ -71,7 +71,7 @@ export async function createAttendance(
   });
 }
 
-// ─── confirm one ────────────────────────────────────────
+// --- confirm one ----------------------------------------
 
 export async function confirmAttendance(
   attendanceId: string
@@ -109,7 +109,7 @@ export async function confirmAttendance(
   };
 }
 
-// ─── confirm all ────────────────────────────────────────
+// --- confirm all ----------------------------------------
 
 export async function confirmAllAttendances(
   scheduleId: string
@@ -136,13 +136,13 @@ export async function confirmAllAttendances(
 }
 
 
-// ─── markScheduleAbsences : clôture — marquage des absences ─────────────────────
+// --- markScheduleAbsences : clôture  marquage des absences ---------------------
 /**
  * Marque les absences d'un schedule à la clôture. Deux effets :
- *   1) PENDING non validés → ABSENT (le prof a été averti avant clôture)
- *   2) inscrits attendus sans ligne → ABSENT créé (createMany)
+ *   1) PENDING non validés ? ABSENT (le prof a été averti avant clôture)
+ *   2) inscrits attendus sans ligne ? ABSENT créé (createMany)
  * Idempotent : rejouable sans doublon (@@unique[scheduleId, studentId] + skipDuplicates).
- * Retourne les userId nouvellement absents (PENDING basculés ∪ non-scanneurs) + l'audience.
+ * Retourne les userId nouvellement absents (PENDING basculés ? non-scanneurs) + l'audience.
  * `tx` propagé : utilisable seule ou dans la transaction de completeSession.
  */
 export async function markScheduleAbsences(
@@ -168,7 +168,7 @@ export async function markScheduleAbsences(
 
   const recordedStudentIds = new Set(existing.map((a) => a.studentId));
 
-  // (1) PENDING → ABSENT
+  // (1) PENDING ? ABSENT
   const pendings = existing.filter((a) => a.status === "PENDING");
   if (pendings.length > 0) {
     await tx.attendance.updateMany({
@@ -177,7 +177,7 @@ export async function markScheduleAbsences(
     });
   }
 
-  // (2) attendus sans ligne → ABSENT créé
+  // (2) attendus sans ligne ? ABSENT créé
   const expected = await getExpectedAttendees(scheduleId, tx);
   const absentStudents = expected.filter(
     (e) => !recordedStudentIds.has(e.studentId),
@@ -196,13 +196,13 @@ export async function markScheduleAbsences(
     });
   }
 
-  // userId à notifier = PENDING basculés ∪ non-scanneurs créés
+  // userId à notifier = PENDING basculés ? non-scanneurs créés
   const absentUserIds = [
     ...pendings.map((p) => p.student.userId),
     ...absentStudents.map((e) => e.userId),
   ];
 
-  // studentId des absents — sert à notifier les PARENTS (gate org côté action).
+  // studentId des absents  sert à notifier les PARENTS (gate org côté action).
   const absentStudentIds = [
     ...pendings.map((p) => p.studentId),
     ...absentStudents.map((e) => e.studentId),

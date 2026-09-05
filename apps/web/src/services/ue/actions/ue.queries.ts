@@ -51,4 +51,4 @@ export async function getUEByIdAction({ ueId }: { ueId: string }) {
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
-}
+}

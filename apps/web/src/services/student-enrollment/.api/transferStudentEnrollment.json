@@ -1,0 +1,8 @@
+{
+  "name": "transferStudentEnrollment",
+  "file": "src/services/student-enrollment/database/student-enrollment.mutations.ts",
+  "sig": "(studentEnrollmentId: string, studentId: string, newClassId: string, orgId: string) => Promise<{ ended: { id: string; classId: string; }; created: { id: string; studentId: string; classId: string; }; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

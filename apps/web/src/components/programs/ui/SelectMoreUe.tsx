@@ -17,25 +17,12 @@ import { ReusableDialog } from "@/components/tools/ReusableDialog"
 import { ResourceIcon } from "@/components/icons/ResourceIcon"
 
 
-export type OrgUEDTO = {
-  id: string
-  name: string
-  code: string | null
-  credits: number
-  description: string | null
-  imageUrl: string | null
-  departmentId: string | null
-  createdAt: Date
-  department: {
-    id: string
-    name: string
-  } | null
-}[]
+import type { GetUEsDto } from "@/services/ue/types"
 
-type UeItem = OrgUEDTO[number]
+type UeItem = GetUEsDto[number]
 
 interface SelectUeProps {
-  ues: OrgUEDTO
+  ues: GetUEsDto
   value?: string
   onChange?: (value: string) => void
   placeholder?: string
@@ -132,7 +119,7 @@ export default function SelectUe({
 
                         <span className="text-xs text-muted-foreground">
                           {ue.code && `${ue.code} • `}
-                          {ue.credits} crédits
+                    
                         </span>
                       </div>
 

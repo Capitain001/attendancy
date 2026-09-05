@@ -1,4 +1,4 @@
-﻿// src/services/attendance/actions/attendance.queries.ts
+// src/services/attendance/actions/attendance.queries.ts
 "use server";
 
 import { ERRORS } from "@/config";
