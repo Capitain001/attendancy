@@ -44,11 +44,9 @@ export function SelectClass({
   const [open, setOpen] = React.useState(false);
   const pathname = usePathname();
 
-  const isControlled = value !== undefined && onChange !== undefined;
-  const [internalValue, setInternalValue] = React.useState("");
-  const selectedValue = isControlled ? value : internalValue;
-
-  const selected = classes.find((c) => c.id === selectedValue);
+  // value est la seule source de vérité : la sélection est pilotée par l'URL
+  // (?classId=...) via les <Link> ci-dessous, pas par un state interne.
+  const selected = classes.find((c) => c.id === value);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -99,7 +97,7 @@ export function SelectClass({
                         </span>
                       )}
                     </div>
-                    {selectedValue === c.id && (
+                    {value === c.id && (
                       <CheckIcon size={16} className="text-primary shrink-0 ml-2" />
                     )}
                   </Link>

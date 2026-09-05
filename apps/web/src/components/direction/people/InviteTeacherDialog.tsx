@@ -19,10 +19,26 @@ type Submit = (input: {
 
 interface InviteTeacherDialogProps {
   onInviteTeacher: Submit
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
 }
 
-export function InviteTeacherDialog({ onInviteTeacher }: InviteTeacherDialogProps) {
-  const [open, setOpen] = useState(false)
+export function InviteTeacherDialog({ 
+  onInviteTeacher,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
+}: InviteTeacherDialogProps) {
+  const [internalOpen, setInternalOpen] = useState(false)
+  const isControlled = controlledOpen !== undefined
+  const open = isControlled ? controlledOpen : internalOpen
+
+  const setOpen = (value: boolean) => {
+    if (isControlled) {
+      controlledOnOpenChange?.(value)
+    } else {
+      setInternalOpen(value)
+    }
+  }
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
   const [error, setError] = useState<string | null>(null)

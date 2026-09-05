@@ -1,6 +1,6 @@
 import { connection } from 'next/server'
 import { getClassesAction } from '@/services/class'
-import { getEnrolledStudentsAction } from '@/services/student'
+import { getEnrolledStudentsAction, getStudentsStatsAction } from '@/services/student'
 import { getGroupsByClassAction } from '@/services/group'
 import { inviteStudent } from '@/modules/invitation/student/actions'
 import { DirectionStudentsSection } from '@/components/direction/people/DirectionStudentsSection'
@@ -21,6 +21,10 @@ export default async function StudentsPage({ params, searchParams }: Props) {
 
   const studentsResult = selectedClassId
     ? await getEnrolledStudentsAction(selectedClassId)
+    : null
+
+  const statsResult = !selectedClassId
+    ? await getStudentsStatsAction()
     : null
 
   const groupsResult = selectedClassId
@@ -49,8 +53,11 @@ export default async function StudentsPage({ params, searchParams }: Props) {
 
   const students = (studentsResult && 'data' in studentsResult ? studentsResult.data : null) ?? null
   const studentsError = studentsResult && 'error' in studentsResult ? studentsResult.error : null
+  const totalStudents = statsResult && 'data' in statsResult ? statsResult.data?.count : undefined
+
 
   return (
+    // <pre>{JSON.stringify({ classes, selectedClassId, students, groups, studentsError }, null, 2)}</pre>
     <DirectionStudentsSection
       classes={classes}
       selectedClassId={selectedClassId}
@@ -59,6 +66,7 @@ export default async function StudentsPage({ params, searchParams }: Props) {
       groups={groups.map((g) => ({ id: g.id, name: g.name }))}
       slug={slug}
       onInvite={handleInvite}
+      totalStudents={totalStudents}
     />
   )
 }

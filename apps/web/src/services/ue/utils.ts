@@ -1,6 +1,6 @@
-import type { ProgramUEsDTO, ProgramTable, ProgramUECourses, ProgramSemesterDTO } from './types'
+import type { GetProgramUEsDto, ProgramTable, ProgramUECourses, ProgramSemesterDTO } from './types'
 
-export function getProgramUEsTable(programUEs: ProgramUEsDTO): ProgramTable {
+export function getProgramUEsTable(programUEs: GetProgramUEsDto): ProgramTable {
   const semesterMap = new Map<number, ProgramSemesterDTO>()
 
   for (const pu of programUEs) {

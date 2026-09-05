@@ -2,9 +2,14 @@
   "service": "student",
   "path": "src/services/student/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "5e6ab88",
+  "derived_at": "6803174",
   "utils_dir": null,
   "fns": {
+    "getStudentsStats": {
+      "f": ".api/getStudentsStats.json",
+      "layer": "db",
+      "kind": "query"
+    },
     "enrollStudent": {
       "f": ".api/enrollStudent.json",
       "layer": "db",
@@ -69,6 +74,11 @@
       "f": ".api/getDirectionStudents.json",
       "layer": "db",
       "kind": "query"
+    },
+    "getStudentsStatsAction": {
+      "f": ".api/getStudentsStatsAction.json",
+      "layer": "action",
+      "kind": "server-action"
     },
     "enrollStudentAction": {
       "f": ".api/enrollStudentAction.json",
@@ -147,6 +157,9 @@
     }
   },
   "edges": {
+    "getStudentsStats": [
+      "getStudentsStatsAction"
+    ],
     "enrollStudent": [
       "enrollStudentAction"
     ],
@@ -187,6 +200,7 @@
     "getDirectionStudents": [
       "getDirectionStudentsAction"
     ],
+    "getStudentsStatsAction": [],
     "enrollStudentAction": [],
     "removeEnrollmentAction": [],
     "assignStudentGroupAction": [],

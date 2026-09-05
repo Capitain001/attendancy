@@ -1,7 +1,7 @@
 {
   "name": "enrollStudentAction",
   "file": "src/services/student/actions/student.mutations.ts",
-  "sig": "(input: EnrollStudentInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; studentId: string; classId: string; }; error?: undefined; }>",
+  "sig": "(input: EnrollStudentInput) => Promise<{ error: string; data?: undefined; } | { data: { classId: string; id: string; studentId: string; }; error?: undefined; }>",
   "calls": [
     "enrollStudent"
   ],

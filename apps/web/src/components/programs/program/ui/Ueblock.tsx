@@ -26,12 +26,13 @@ import { DropLine, OrderHandle, CourseGhost } from '../ui';
 import { SortableCourseRow } from '../SortableCourseRow';
 import { ActionMenu, IconPlus, IconUnlink } from './Actionmenu';
 
-export function UEBlock({ ue, semesterIndex, isDragging, onCoursesChange, isEditing }: {
+export function UEBlock({ ue, semesterIndex, isDragging, onCoursesChange, isEditing, showType = true }: {
   ue: ProgramUECourses;
   semesterIndex: number;
   isDragging: boolean;
   onCoursesChange: (programUEId: string, courses: UeCourseDTO[]) => void;
   isEditing?: boolean;
+  showType?: boolean;
 }) {
   const ueId = makeUEId(semesterIndex, ue.programUEId);
   const [expanded, setExpanded] = useState(true);
@@ -61,7 +62,9 @@ export function UEBlock({ ue, semesterIndex, isDragging, onCoursesChange, isEdit
   // ── Edit context (null en mode lecture) ──
   const edit = useEditHandlers();
 
-  const COL = 'grid-cols-[24px_1fr_52px_44px_32px] sm:grid-cols-[28px_90px_1fr_72px_56px_44px]';
+  const COL = showType
+    ? 'grid-cols-[24px_1fr_40px_52px_44px_32px] sm:grid-cols-[28px_90px_1fr_85px_72px_56px_44px]'
+    : 'grid-cols-[24px_1fr_52px_44px_32px] sm:grid-cols-[28px_90px_1fr_72px_56px_44px]';
   const CELL = 'px-1.5 sm:px-2.5 py-0 flex items-center';
 
   return (
@@ -86,7 +89,6 @@ export function UEBlock({ ue, semesterIndex, isDragging, onCoursesChange, isEdit
           />
         </div>
 
-        {/* Code */}
         <div className={`hidden sm:flex ${CELL} py-2.5 justify-center`}>
           <span className="text-[9px] font-mono text-muted-foreground/70 border border-dashed border-foreground/20 px-1.5 py-0.5 rounded-sm truncate max-w-full">
             {ue.ue.code}
@@ -105,6 +107,20 @@ export function UEBlock({ ue, semesterIndex, isDragging, onCoursesChange, isEdit
             <p className="sm:hidden text-[9px] font-mono text-muted-foreground/50 mt-0.5">{ue.ue.code}</p>
           </div>
         </button>
+
+        {/* Type */}
+        {showType && (
+          <div className={`${CELL} py-2.5`}>
+            {/* Mobile (4 letters uppercase) */}
+            <span className="sm:hidden text-[9px] font-medium text-muted-foreground/70 uppercase">
+              {ue.ue.type?.substring(0, 4) ?? '—'}
+            </span>
+            {/* Desktop (full capitalized) */}
+            <span className="hidden sm:inline text-[10px] font-medium text-muted-foreground/70 truncate max-w-full capitalize">
+              {ue.ue.type?.toLowerCase() ?? '—'}
+            </span>
+          </div>
+        )}
 
         {/* Duration */}
         <div className={`${CELL} py-2 sm:py-2.5 justify-center`}>
@@ -166,6 +182,7 @@ export function UEBlock({ ue, semesterIndex, isDragging, onCoursesChange, isEdit
                     ueOrder={ue.order}
                     programUEId={ue.programUEId}
                   // parentUE={ue}
+                    showType={showType}
                   />
                 ))}
               </SortableContext>

@@ -1,0 +1,8 @@
+{
+  "name": "getStudentsStats",
+  "file": "src/services/student/database/student.analytics.ts",
+  "sig": "(orgId: string, classId?: string) => Promise<{ count: number; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

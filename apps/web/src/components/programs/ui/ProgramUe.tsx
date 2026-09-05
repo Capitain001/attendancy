@@ -4,10 +4,10 @@ import { useState, useMemo } from "react";
 import { ProgramUeForm } from "./ProgramUeForm";
 import { ProgramUeAction } from "./ProgramUeAction";
 import type { UpdateUEData } from "@/services/ue/database";
-import type { ProgramUEDTO } from "@/services/ue/types";
+import type { ProgramUEsItem } from "@/services/ue/types";
 
 interface ProgramUeProps {
-  ue: ProgramUEDTO["ue"];
+  ue: ProgramUEsItem["ue"];
   departments: { id: string; name: string }[];
   loading: boolean;
   onEdit?: (ueId: string, data: Partial<UpdateUEData>) => Promise<void>;

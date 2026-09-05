@@ -29,7 +29,21 @@ function ProgramRow({
   const slug = params?.slug ?? ''
 
   return (
-    <div className={cn(card.base, 'flex items-center gap-3')}>
+    <div
+      className={cn(
+        card.base,
+        'flex items-center gap-3',
+        !program.isActive && 'opacity-60 grayscale'
+      )}
+      style={
+        !program.isActive
+          ? {
+              backgroundImage:
+                'repeating-linear-gradient(-45deg, transparent, transparent 5px, rgba(128,128,128,0.1) 5px, rgba(128,128,128,0.1) 10px)',
+            }
+          : undefined
+      }
+    >
       <BookMarked className="size-4 shrink-0 text-primary" strokeWidth={1.5} />
 
       <div className="min-w-0 flex-1 flex flex-col gap-0.5">
@@ -46,14 +60,13 @@ function ProgramRow({
 
       <div className="flex items-center gap-1.5 shrink-0 flex-wrap">
         {program.isLocked && (
-          <span className="rounded-sm  border border-dashed  px-1.5 py-1 text-[9px] font-medium ">
+          <span className="rounded-sm border border-dashed px-1.5 py-1 text-[9px] font-medium">
             <Lock className="size-4" />
-            
           </span>
         )}
         {!program.isActive && (
           <span className="rounded-sm bg-muted border border-dashed border-muted-foreground/30 px-1.5 py-0.5 text-[9px] font-medium text-muted-foreground">
-            Desactiver
+            Désactivé
           </span>
         )}
         <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">

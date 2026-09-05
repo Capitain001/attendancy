@@ -6,11 +6,12 @@ import type { UeCourseDTO } from '@/services/ue/types';
 import { getHoursFromSettings } from '@/utils/hours';
 import { DropLine, OrderHandle, ActionMenu, IconTrash } from './ui';
 
-export function SortableCourseRow({ course, ueOrder, programUEId, isEditing, onDelete, onEdit }: {
+export function SortableCourseRow({ course, ueOrder, programUEId, isEditing, onDelete, onEdit, showType = true }: {
   course: UeCourseDTO; ueOrder: number | null; programUEId: string;
   isEditing?: boolean;
   onDelete?: () => void;
   onEdit?: () => void;
+  showType?: boolean;
 }) {
   const id = makeCourseId(programUEId, course.id);
   const {
@@ -23,7 +24,9 @@ export function SortableCourseRow({ course, ueOrder, programUEId, isEditing, onD
     transition,
   };
 
-  const COL  = 'grid-cols-[24px_1fr_52px_44px_32px] sm:grid-cols-[28px_90px_1fr_72px_56px_44px]';
+  const COL = showType
+    ? 'grid-cols-[24px_1fr_40px_52px_44px_32px] sm:grid-cols-[28px_90px_1fr_85px_72px_56px_44px]'
+    : 'grid-cols-[24px_1fr_52px_44px_32px] sm:grid-cols-[28px_90px_1fr_72px_56px_44px]';
   const CELL = 'px-1.5 sm:px-2.5 py-0 flex items-center';
 
   const hoursBreakdown = (course as any).settings?.hours ? getHoursFromSettings((course as any).settings) : null;
@@ -66,6 +69,9 @@ export function SortableCourseRow({ course, ueOrder, programUEId, isEditing, onD
           <p className="sm:hidden text-[9px] font-mono text-muted-foreground/40 w-full mt-0.5">{course.code}</p>
         </div>
       </div>
+
+      {/* Type */}
+      {showType && <div className={`${CELL} py-2`} />}
 
       {/* Duration */}
       <div className={`${CELL} py-1.5 sm:py-2 justify-center`}>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { useProgramExport, type ExportFormat } from "@/hooks/data/programs/Useprogramexport";
+import { useProgramExport, type ExportFormat } from "@/hooks/data/programs/useProgramExport";
 
 import type { ProgramPageData } from "../types";
 
@@ -40,12 +40,12 @@ const FORMATS: FormatOption[] = [
     description: "Tableau natif Excel (.xlsx)",
     icon: <IconXLSX />,
   },
-  // {
-  //   value: "csv",
-  //   label: "CSV",
-  //   description: "Tableau compatible Excel / Sheets",
-  //   icon: <IconCSV />,
-  // },
+  {
+    value: "csv",
+    label: "CSV",
+    description: "Tableau compatible Excel / Sheets",
+    icon: <IconCSV />,
+  },
   {
     value: "json",
     label: "JSON",
@@ -63,12 +63,14 @@ interface ProgramExportButtonProps {
   /** Format sélectionné par défaut */
   defaultFormat?: ExportFormat;
   className?: string;
+  showType?: boolean;
 }
 
 export function ProgramExportButton({
   data,
   defaultFormat = "pdf",
   className = "",
+  showType = true,
 }: ProgramExportButtonProps) {
   const [selectedFormat, setSelectedFormat] = useState<ExportFormat>(defaultFormat);
   const [watermark, setWatermark] = useState<string>("Document Officiel");
@@ -106,6 +108,7 @@ export function ProgramExportButton({
       template: "official",
       watermark: selectedFormat === "pdf" && watermark ? watermark : undefined,
       showSignatures: selectedFormat === "pdf" ? showSignatures : false,
+      showType,
     });
     setOpen(false);
   }

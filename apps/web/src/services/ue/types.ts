@@ -1,5 +1,6 @@
+// src/services/ue/types.ts
 import type { CreateUEInput } from './validation'
-import type { getUEs, getProgramUEs } from './database'
+import type { getProgramUEs } from './database'
 import { GetUEsDto, CreateUEDto  } from './generated.types'
 
 export type { CreateUEInput }
@@ -11,15 +12,15 @@ export type CreateUEsDTO = CreateUEDto
 export type OrgUEDTO = GetUEsDto
 
 // ProgramUE types (UEs attached to a program, with courses)
-export type ProgramUEsDTO = Awaited<ReturnType<typeof getProgramUEs>>
-export type ProgramUEDTO  = ProgramUEsDTO[number]
-export type UeCourseDTO   = ProgramUEDTO['ue']['ueCourses'][number]
+export type GetProgramUEsDto = Awaited<ReturnType<typeof getProgramUEs>>
+export type ProgramUEsItem  = GetProgramUEsDto[number]
+export type UeCourseDTO   = ProgramUEsItem['ue']['ueCourses'][number]
 
 export type ProgramUECourses = {
   programUEId: string
   semester: number
   order: number | null
-  ue: ProgramUEDTO['ue']
+  ue: ProgramUEsItem['ue']
   ueTotalCredits: number
   ueTotalDuration: number
 }
@@ -44,10 +45,10 @@ type ProgramUECourses = {
     semester: number;
     order: number | null;
     ue: {
+        code: string | null;
         id: string;
         name: string;
         description: string | null;
-        code: string | null;
         imageUrl: string | null;
         departmentId: string | null;
         type: UEType;
@@ -56,16 +57,18 @@ type ProgramUECourses = {
             name: string;
         } | null;
         ueCourses: {
+            code: string | null;
             id: string;
             order: number | null;
             name: string;
-            code: string | null;
             credits: number;
             duration: number;
+            settings: JsonValue;
         }[];
     };
     ueTotalCredits: number;
     ueTotalDuration: number;
+
 }
 
 */

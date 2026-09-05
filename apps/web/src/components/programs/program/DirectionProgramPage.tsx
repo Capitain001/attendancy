@@ -56,6 +56,7 @@ export function DirectionProgramPage({
   const [isEditing, setIsEditing] = useState(false);
   const [isLocked, setIsLocked] = useState(programDetails?.isLocked ?? false);
   const [isActive, setIsActive] = useState(programDetails?.isActive ?? true);
+  const [showType, setShowType] = useState(true);
   const queryClient = useQueryClient();
   const router = useRouter();
 
@@ -189,7 +190,7 @@ export function DirectionProgramPage({
           onToggleActive={handleToggleActive}
           onDuplicate={() => setModal({ type: 'duplicate-program' })}
         />
-          <ProgramExportButton data={exportData} />
+          <ProgramExportButton data={exportData} showType={showType} />
         </div>
 
         {/* {programClasses && programClasses.length > 0 && (
@@ -205,13 +206,26 @@ export function DirectionProgramPage({
             </div>
           </div>
         )} */}
-        <span className='border border-dashed w-24 flex items-center h-8 rounded-xs'>
-            <p className='mx-auto text-sm text-muted-foreground'>Classes {programClasses?.length?? "0"} </p>
-        </span>
+        <div className="flex justify-between items-center px-1">
+          <span className='border border-dashed w-24 flex items-center h-8 rounded-xs'>
+              <p className='mx-auto text-sm text-muted-foreground'>Classes {programClasses?.length?? "0"} </p>
+          </span>
+
+          <label className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-widest text-muted-foreground cursor-pointer select-none hover:text-foreground transition-colors">
+            <input 
+              type="checkbox" 
+              checked={showType} 
+              onChange={e => setShowType(e.target.checked)} 
+              className="accent-foreground size-3"
+            />
+            Afficher le type
+          </label>
+        </div>
 
         <ProgramSemesterList
           semesters={data}
           isEditing={isEditing}
+          showType={showType}
           onUEsChange={(semester, newUEs) => {
             if (!isEditing) return;
             onProgramChange((prev) => {
@@ -235,8 +249,8 @@ export function DirectionProgramPage({
           onUnlinkUE={(programUEId) => setModal({ type: "unlink-ue", programUEId })}
           onAddCourse={(ueId) => setModal({ type: "add-course", ueId })}
           onDeleteCourse={requestRemoveCourse}
-          onEditUE={(ue) => setModal({ type: "edit-ue", ue: ue as any })}
-          onEditCourse={(course, ueId) => setModal({ type: "edit-course", course, ueId } as any)}
+          onEditUE={(ue) => setModal({ type: "edit-ue", ue })}
+          onEditCourse={(course, ueId) => setModal({ type: "edit-course", course, ueId })}
         />
       </div>
 
@@ -251,17 +265,17 @@ export function DirectionProgramPage({
 
       <ProgramModals
         programId={programId}
-        modal={modal as any}
+        modal={modal}
         closeModal={closeModal}
         availableUes={availableUes}
         program={data}
         classInfo={classInfo}
         programDetails={programDetails}
-        linkUE={linkUE as any}
+        linkUE={linkUE}
         unlinkUE={unlinkUE}
-        createCourse={createCourse as any}
+        createCourse={createCourse}
         updateUE={updateUE}
-        updateCourse={updateCourse as any}
+        updateCourse={updateCourse}
       />
 
     </section>

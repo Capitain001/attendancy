@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import type { ProgramSemesterDTO } from "@/services/ue/types";
+import type { ProgramSemesterDTO, UeCourseDTO } from "@/services/ue/types";
 import { CollapseSection } from "../ui";
 import { SemesterTable } from "../SemesterTable";
 import { semesterLabel } from "../ProgramPage";
@@ -16,6 +16,7 @@ export function ProgramSemesterList({
   onDeleteCourse,
   onEditUE,
   onEditCourse,
+  showType = true,
 }: {
   semesters: ProgramSemesterDTO[];
   isEditing: boolean;
@@ -25,7 +26,8 @@ export function ProgramSemesterList({
   onAddCourse: (ueId: string) => void;
   onDeleteCourse: (courseId: string) => void;
   onEditUE: (ue: ProgramSemesterDTO["ues"][number]) => void;
-  onEditCourse: (course: any, ueId: string) => void;
+  onEditCourse: (course: UeCourseDTO, ueId: string) => void;
+  showType?: boolean;
 }) {
   // Programme vide — afficher un point d'entrée
   if (semesters.length === 0) {
@@ -82,8 +84,9 @@ export function ProgramSemesterList({
                 onUnlinkUE={onUnlinkUE}
                 onAddCourse={onAddCourse}
                 onDeleteCourse={onDeleteCourse}
-                onEditUE={onEditUE as any}
+                onEditUE={onEditUE}
                 onEditCourse={onEditCourse}
+                showType={showType}
               />
             </div>
           </CollapseSection>
