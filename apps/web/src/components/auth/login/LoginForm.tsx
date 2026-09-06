@@ -2,6 +2,7 @@
 import { login } from '@/modules/auth/actions'
 import { useActionState } from 'react'
 import { useFormStatus } from 'react-dom'
+import GoogleSignInButton from '../ui/GoogleSignInButton'
 
 function SubmitButton() {
   const { pending } = useFormStatus()
@@ -21,9 +22,8 @@ export function LoginForm({ next }: { next?: string }) {
 
   return (
     <div className="w-full max-w-sm space-y-6">
-      <div className="space-y-1">
+      <div className="gap-y-1 flex flex-col items-center">
         <h1 className="text-2xl font-semibold tracking-tight">Connexion</h1>
-        <p className="text-sm text-muted-foreground">Accédez à votre espace Attendancy</p>
       </div>
 
       <form action={formAction} className="space-y-4">
@@ -67,10 +67,36 @@ export function LoginForm({ next }: { next?: string }) {
         <SubmitButton />
       </form>
 
-      <p className="text-center text-sm text-muted-foreground">
-        Pas encore de compte ?{' '}
-        <a href="/auth/signup" className="underline">Créer un compte</a>
-      </p>
+            <div className="my-2 flex items-center gap-3 before:h-px before:flex-1 before:bg-border after:h-px after:flex-1 after:bg-border">
+              <span className="text-xs text-muted-foreground">Or</span>
+            </div>
+
+            <div className="flex flex-col gap-y-2">
+              <GoogleSignInButton className="w-full rounded-md border-2"/>
+              <div className=" space-y-2">
+                <p className="text-center text-sm text-muted-foreground">
+                  Pas encore de compte ?{" "}
+                  <a
+                    href="/auth/signup"
+                    className="font-medium text-foreground underline-offset-2 hover:underline"
+                  >
+                    Créez votre établissement
+                  </a>
+                </p>
+                <p className="text-center text-xs text-muted-foreground">
+                  Si vous n'avez pas reçu d'invitation, contactez votre
+                  établissement ou{" "}
+                  <a
+                    className="underline hover:no-underline"
+                    href="mailto:capitainstuart@gmail.com"
+                  >
+                    laissez-nous un message
+                  </a>
+                  .
+                </p>
+              </div>
+            </div>
+
     </div>
   )
 }

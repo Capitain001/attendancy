@@ -6199,6 +6199,8 @@ export const UserScalarFieldEnum = {
   phone: 'phone',
   avatar_url: 'avatar_url',
   dateOfBirth: 'dateOfBirth',
+  nationality: 'nationality',
+  address: 'address',
   isConnected: 'isConnected',
   status: 'status',
   details: 'details',

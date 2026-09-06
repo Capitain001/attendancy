@@ -26,6 +26,10 @@ model User {
   avatar_url          String?
   // @db.Date : date pure sans heure/fuseau
   dateOfBirth         DateTime?          @db.Date
+ //phase 2 : identiter
+  nationality  String?
+  address      String?
+
   isConnected         Boolean            @default(false)
   status              UserStatus         @default(ACTIVE)
   details             Json?

@@ -16,3 +16,10 @@ export const getRoleColor = (role: Role) => {
     
     return roleMapping[role] || '#9E9E9E'; // Gris par défaut si rôle non trouvé
   };
+
+  //#D2D2D2 couleur bar application
+  //#DCDCDC couleur table 
+  //#FEFEFE couleur bg 
+
+//#979395 couleur fond mobile
+//#17181A couleur dark mobile

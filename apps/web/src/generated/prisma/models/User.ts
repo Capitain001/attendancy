@@ -33,6 +33,8 @@ export type UserMinAggregateOutputType = {
   phone: string | null
   avatar_url: string | null
   dateOfBirth: Date | null
+  nationality: string | null
+  address: string | null
   isConnected: boolean | null
   status: $Enums.UserStatus | null
   createdAt: Date | null
@@ -49,6 +51,8 @@ export type UserMaxAggregateOutputType = {
   phone: string | null
   avatar_url: string | null
   dateOfBirth: Date | null
+  nationality: string | null
+  address: string | null
   isConnected: boolean | null
   status: $Enums.UserStatus | null
   createdAt: Date | null
@@ -65,6 +69,8 @@ export type UserCountAggregateOutputType = {
   phone: number
   avatar_url: number
   dateOfBirth: number
+  nationality: number
+  address: number
   isConnected: number
   status: number
   details: number
@@ -84,6 +90,8 @@ export type UserMinAggregateInputType = {
   phone?: true
   avatar_url?: true
   dateOfBirth?: true
+  nationality?: true
+  address?: true
   isConnected?: true
   status?: true
   createdAt?: true
@@ -100,6 +108,8 @@ export type UserMaxAggregateInputType = {
   phone?: true
   avatar_url?: true
   dateOfBirth?: true
+  nationality?: true
+  address?: true
   isConnected?: true
   status?: true
   createdAt?: true
@@ -116,6 +126,8 @@ export type UserCountAggregateInputType = {
   phone?: true
   avatar_url?: true
   dateOfBirth?: true
+  nationality?: true
+  address?: true
   isConnected?: true
   status?: true
   details?: true
@@ -206,6 +218,8 @@ export type UserGroupByOutputType = {
   phone: string | null
   avatar_url: string | null
   dateOfBirth: Date | null
+  nationality: string | null
+  address: string | null
   isConnected: boolean
   status: $Enums.UserStatus
   details: runtime.JsonValue | null
@@ -244,6 +258,8 @@ export type UserWhereInput = {
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   avatar_url?: Prisma.StringNullableFilter<"User"> | string | null
   dateOfBirth?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  nationality?: Prisma.StringNullableFilter<"User"> | string | null
+  address?: Prisma.StringNullableFilter<"User"> | string | null
   isConnected?: Prisma.BoolFilter<"User"> | boolean
   status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   details?: Prisma.JsonNullableFilter<"User">
@@ -287,6 +303,8 @@ export type UserOrderByWithRelationInput = {
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar_url?: Prisma.SortOrderInput | Prisma.SortOrder
   dateOfBirth?: Prisma.SortOrderInput | Prisma.SortOrder
+  nationality?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
   isConnected?: Prisma.SortOrder
   status?: Prisma.SortOrder
   details?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -333,6 +351,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   sex?: Prisma.EnumSexFilter<"User"> | $Enums.Sex
   avatar_url?: Prisma.StringNullableFilter<"User"> | string | null
   dateOfBirth?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  nationality?: Prisma.StringNullableFilter<"User"> | string | null
+  address?: Prisma.StringNullableFilter<"User"> | string | null
   isConnected?: Prisma.BoolFilter<"User"> | boolean
   status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   details?: Prisma.JsonNullableFilter<"User">
@@ -376,6 +396,8 @@ export type UserOrderByWithAggregationInput = {
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar_url?: Prisma.SortOrderInput | Prisma.SortOrder
   dateOfBirth?: Prisma.SortOrderInput | Prisma.SortOrder
+  nationality?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
   isConnected?: Prisma.SortOrder
   status?: Prisma.SortOrder
   details?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -399,6 +421,8 @@ export type UserScalarWhereWithAggregatesInput = {
   phone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   avatar_url?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   dateOfBirth?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  nationality?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  address?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   isConnected?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   status?: Prisma.EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
   details?: Prisma.JsonNullableWithAggregatesFilter<"User">
@@ -416,6 +440,8 @@ export type UserCreateInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -459,6 +485,8 @@ export type UserUncheckedCreateInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -502,6 +530,8 @@ export type UserUpdateInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -545,6 +575,8 @@ export type UserUncheckedUpdateInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -588,6 +620,8 @@ export type UserCreateManyInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -605,6 +639,8 @@ export type UserUpdateManyMutationInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -622,6 +658,8 @@ export type UserUncheckedUpdateManyInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -649,6 +687,8 @@ export type UserCountOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   avatar_url?: Prisma.SortOrder
   dateOfBirth?: Prisma.SortOrder
+  nationality?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   isConnected?: Prisma.SortOrder
   status?: Prisma.SortOrder
   details?: Prisma.SortOrder
@@ -666,6 +706,8 @@ export type UserMaxOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   avatar_url?: Prisma.SortOrder
   dateOfBirth?: Prisma.SortOrder
+  nationality?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   isConnected?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -682,6 +724,8 @@ export type UserMinOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   avatar_url?: Prisma.SortOrder
   dateOfBirth?: Prisma.SortOrder
+  nationality?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   isConnected?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -1098,6 +1142,8 @@ export type UserCreateWithoutQrScansInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1140,6 +1186,8 @@ export type UserUncheckedCreateWithoutQrScansInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1198,6 +1246,8 @@ export type UserUpdateWithoutQrScansInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1240,6 +1290,8 @@ export type UserUncheckedUpdateWithoutQrScansInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1282,6 +1334,8 @@ export type UserCreateWithoutJustificationsDeclaredInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1324,6 +1378,8 @@ export type UserUncheckedCreateWithoutJustificationsDeclaredInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1371,6 +1427,8 @@ export type UserCreateWithoutJustificationsReviewedInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1413,6 +1471,8 @@ export type UserUncheckedCreateWithoutJustificationsReviewedInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1471,6 +1531,8 @@ export type UserUpdateWithoutJustificationsDeclaredInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1513,6 +1575,8 @@ export type UserUncheckedUpdateWithoutJustificationsDeclaredInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1566,6 +1630,8 @@ export type UserUpdateWithoutJustificationsReviewedInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1608,6 +1674,8 @@ export type UserUncheckedUpdateWithoutJustificationsReviewedInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1650,6 +1718,8 @@ export type UserCreateWithoutChannelMembershipsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1692,6 +1762,8 @@ export type UserUncheckedCreateWithoutChannelMembershipsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1750,6 +1822,8 @@ export type UserUpdateWithoutChannelMembershipsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1792,6 +1866,8 @@ export type UserUncheckedUpdateWithoutChannelMembershipsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1834,6 +1910,8 @@ export type UserCreateWithoutMessagesInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1876,6 +1954,8 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1934,6 +2014,8 @@ export type UserUpdateWithoutMessagesInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1976,6 +2058,8 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2018,6 +2102,8 @@ export type UserCreateWithoutModeratedCommentsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2060,6 +2146,8 @@ export type UserUncheckedCreateWithoutModeratedCommentsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2107,6 +2195,8 @@ export type UserCreateWithoutCommentsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2149,6 +2239,8 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2207,6 +2299,8 @@ export type UserUpdateWithoutModeratedCommentsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2249,6 +2343,8 @@ export type UserUncheckedUpdateWithoutModeratedCommentsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2302,6 +2398,8 @@ export type UserUpdateWithoutCommentsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2344,6 +2442,8 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2386,6 +2486,8 @@ export type UserCreateWithoutNotificationsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2428,6 +2530,8 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2486,6 +2590,8 @@ export type UserUpdateWithoutNotificationsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2528,6 +2634,8 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2570,6 +2678,8 @@ export type UserCreateWithoutPushSubscriptionInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2612,6 +2722,8 @@ export type UserUncheckedCreateWithoutPushSubscriptionInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2670,6 +2782,8 @@ export type UserUpdateWithoutPushSubscriptionInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2712,6 +2826,8 @@ export type UserUncheckedUpdateWithoutPushSubscriptionInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2754,6 +2870,8 @@ export type UserCreateWithoutAdminInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2796,6 +2914,8 @@ export type UserUncheckedCreateWithoutAdminInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2854,6 +2974,8 @@ export type UserUpdateWithoutAdminInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2896,6 +3018,8 @@ export type UserUncheckedUpdateWithoutAdminInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2938,6 +3062,8 @@ export type UserCreateWithoutTeacherInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2980,6 +3106,8 @@ export type UserUncheckedCreateWithoutTeacherInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3038,6 +3166,8 @@ export type UserUpdateWithoutTeacherInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3080,6 +3210,8 @@ export type UserUncheckedUpdateWithoutTeacherInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3122,6 +3254,8 @@ export type UserCreateWithoutStudentInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3164,6 +3298,8 @@ export type UserUncheckedCreateWithoutStudentInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3222,6 +3358,8 @@ export type UserUpdateWithoutStudentInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3264,6 +3402,8 @@ export type UserUncheckedUpdateWithoutStudentInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3306,6 +3446,8 @@ export type UserCreateWithoutParentInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3348,6 +3490,8 @@ export type UserUncheckedCreateWithoutParentInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3406,6 +3550,8 @@ export type UserUpdateWithoutParentInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3448,6 +3594,8 @@ export type UserUncheckedUpdateWithoutParentInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3490,6 +3638,8 @@ export type UserCreateWithoutDirectionInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3532,6 +3682,8 @@ export type UserUncheckedCreateWithoutDirectionInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3590,6 +3742,8 @@ export type UserUpdateWithoutDirectionInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3632,6 +3786,8 @@ export type UserUncheckedUpdateWithoutDirectionInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3674,6 +3830,8 @@ export type UserCreateWithoutCreatedEventsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3716,6 +3874,8 @@ export type UserUncheckedCreateWithoutCreatedEventsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3774,6 +3934,8 @@ export type UserUpdateWithoutCreatedEventsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3816,6 +3978,8 @@ export type UserUncheckedUpdateWithoutCreatedEventsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3858,6 +4022,8 @@ export type UserCreateWithoutEventParticipationsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3900,6 +4066,8 @@ export type UserUncheckedCreateWithoutEventParticipationsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3958,6 +4126,8 @@ export type UserUpdateWithoutEventParticipationsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4000,6 +4170,8 @@ export type UserUncheckedUpdateWithoutEventParticipationsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4042,6 +4214,8 @@ export type UserCreateWithoutUserOrganizationsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4084,6 +4258,8 @@ export type UserUncheckedCreateWithoutUserOrganizationsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4142,6 +4318,8 @@ export type UserUpdateWithoutUserOrganizationsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4184,6 +4362,8 @@ export type UserUncheckedUpdateWithoutUserOrganizationsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4226,6 +4406,8 @@ export type UserCreateWithoutFunctionsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4268,6 +4450,8 @@ export type UserUncheckedCreateWithoutFunctionsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4315,6 +4499,8 @@ export type UserCreateWithoutAssignedFunctionsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4357,6 +4543,8 @@ export type UserUncheckedCreateWithoutAssignedFunctionsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4415,6 +4603,8 @@ export type UserUpdateWithoutFunctionsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4457,6 +4647,8 @@ export type UserUncheckedUpdateWithoutFunctionsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4510,6 +4702,8 @@ export type UserUpdateWithoutAssignedFunctionsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4552,6 +4746,8 @@ export type UserUncheckedUpdateWithoutAssignedFunctionsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4594,6 +4790,8 @@ export type UserCreateWithoutAssignedInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4636,6 +4834,8 @@ export type UserUncheckedCreateWithoutAssignedInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4683,6 +4883,8 @@ export type UserCreateWithoutPermissionsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4725,6 +4927,8 @@ export type UserUncheckedCreateWithoutPermissionsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4783,6 +4987,8 @@ export type UserUpdateWithoutAssignedInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4825,6 +5031,8 @@ export type UserUncheckedUpdateWithoutAssignedInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4878,6 +5086,8 @@ export type UserUpdateWithoutPermissionsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4920,6 +5130,8 @@ export type UserUncheckedUpdateWithoutPermissionsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4962,6 +5174,8 @@ export type UserCreateWithoutInvitationsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5004,6 +5218,8 @@ export type UserUncheckedCreateWithoutInvitationsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5062,6 +5278,8 @@ export type UserUpdateWithoutInvitationsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5104,6 +5322,8 @@ export type UserUncheckedUpdateWithoutInvitationsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5146,6 +5366,8 @@ export type UserCreateWithoutUploadedDocumentsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5188,6 +5410,8 @@ export type UserUncheckedCreateWithoutUploadedDocumentsInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5246,6 +5470,8 @@ export type UserUpdateWithoutUploadedDocumentsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5288,6 +5514,8 @@ export type UserUncheckedUpdateWithoutUploadedDocumentsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5330,6 +5558,8 @@ export type UserCreateWithoutAuditLogInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5372,6 +5602,8 @@ export type UserUncheckedCreateWithoutAuditLogInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5430,6 +5662,8 @@ export type UserUpdateWithoutAuditLogInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5472,6 +5706,8 @@ export type UserUncheckedUpdateWithoutAuditLogInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5514,6 +5750,8 @@ export type UserCreateWithoutApprovalRequestedInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5556,6 +5794,8 @@ export type UserUncheckedCreateWithoutApprovalRequestedInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5603,6 +5843,8 @@ export type UserCreateWithoutApprovalReviewedInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5645,6 +5887,8 @@ export type UserUncheckedCreateWithoutApprovalReviewedInput = {
   phone?: string | null
   avatar_url?: string | null
   dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
   isConnected?: boolean
   status?: $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5703,6 +5947,8 @@ export type UserUpdateWithoutApprovalRequestedInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5745,6 +5991,8 @@ export type UserUncheckedUpdateWithoutApprovalRequestedInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5798,6 +6046,8 @@ export type UserUpdateWithoutApprovalReviewedInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5840,6 +6090,8 @@ export type UserUncheckedUpdateWithoutApprovalReviewedInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -6129,6 +6381,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   phone?: boolean
   avatar_url?: boolean
   dateOfBirth?: boolean
+  nationality?: boolean
+  address?: boolean
   isConnected?: boolean
   status?: boolean
   details?: boolean
@@ -6173,6 +6427,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   phone?: boolean
   avatar_url?: boolean
   dateOfBirth?: boolean
+  nationality?: boolean
+  address?: boolean
   isConnected?: boolean
   status?: boolean
   details?: boolean
@@ -6190,6 +6446,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   phone?: boolean
   avatar_url?: boolean
   dateOfBirth?: boolean
+  nationality?: boolean
+  address?: boolean
   isConnected?: boolean
   status?: boolean
   details?: boolean
@@ -6207,6 +6465,8 @@ export type UserSelectScalar = {
   phone?: boolean
   avatar_url?: boolean
   dateOfBirth?: boolean
+  nationality?: boolean
+  address?: boolean
   isConnected?: boolean
   status?: boolean
   details?: boolean
@@ -6215,7 +6475,7 @@ export type UserSelectScalar = {
   deletedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firstName" | "lastName" | "email" | "sex" | "phone" | "avatar_url" | "dateOfBirth" | "isConnected" | "status" | "details" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firstName" | "lastName" | "email" | "sex" | "phone" | "avatar_url" | "dateOfBirth" | "nationality" | "address" | "isConnected" | "status" | "details" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   admin?: boolean | Prisma.User$adminArgs<ExtArgs>
   approvalRequested?: boolean | Prisma.User$approvalRequestedArgs<ExtArgs>
@@ -6287,6 +6547,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     phone: string | null
     avatar_url: string | null
     dateOfBirth: Date | null
+    nationality: string | null
+    address: string | null
     isConnected: boolean
     status: $Enums.UserStatus
     details: runtime.JsonValue | null
@@ -6750,6 +7012,8 @@ export interface UserFieldRefs {
   readonly phone: Prisma.FieldRef<"User", 'String'>
   readonly avatar_url: Prisma.FieldRef<"User", 'String'>
   readonly dateOfBirth: Prisma.FieldRef<"User", 'DateTime'>
+  readonly nationality: Prisma.FieldRef<"User", 'String'>
+  readonly address: Prisma.FieldRef<"User", 'String'>
   readonly isConnected: Prisma.FieldRef<"User", 'Boolean'>
   readonly status: Prisma.FieldRef<"User", 'UserStatus'>
   readonly details: Prisma.FieldRef<"User", 'Json'>

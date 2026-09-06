@@ -36,58 +36,60 @@ export function TeacherFilter({
   };
 
   return (
-    <div className="flex flex-col sm:flex-row gap-3">
-      <div className="relative flex-1">
-        <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
+<div className="flex flex-col sm:flex-row gap-3">
+  {/* Recherche : prend toute la ligne sur mobile */}
+  <div className="relative flex-1">
+    <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
 
-        <input
-          type="text"
-          placeholder="Rechercher un enseignant..."
-          className={`${input.base} w-full pl-9 ${hasActiveFilters ? "pr-10" : ""}`}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
+    <input
+      type="text"
+      placeholder="Rechercher un enseignant..."
+      className={`${input.base} w-full pl-9 ${hasActiveFilters ? "pr-10" : ""}`}
+      value={query}
+      onChange={(e) => setQuery(e.target.value)}
+    />
 
-        {hasActiveFilters && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={clearFilters}
-            className="absolute right-1 top-1 size-8 text-muted-foreground hover:text-foreground"
-            title="Effacer les filtres"
-          >
-            <X className="size-4" />
-          </Button>
-        )}
-      </div>
+    {hasActiveFilters && (
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={clearFilters}
+        className="absolute right-1 top-1 size-8 text-muted-foreground hover:text-foreground"
+        title="Effacer les filtres"
+      >
+        <X className="size-4" />
+      </Button>
+    )}
+  </div>
 
-      <div className="flex gap-2 flex-wrap sm:flex-nowrap items-center">
-        <select
-          className={input.base}
-          value={departmentId}
-          onChange={(e) => setDepartmentId(e.target.value)}
-        >
-          <option value="">Tous les départements</option>
-          {departments.map((d) => (
-            <option key={d.id} value={d.id}>
-              {d.name}
-            </option>
-          ))}
-        </select>
+  {/* Filtres : côte à côte sur la même ligne (flex-row et flex-1 sur chaque select) */}
+  <div className="flex flex-row gap-2 items-center">
+    <select
+      className={`${input.base} flex-1 sm:w-auto`}
+      value={departmentId}
+      onChange={(e) => setDepartmentId(e.target.value)}
+    >
+      <option value="">Tous les départements</option>
+      {departments.map((d) => (
+        <option key={d.id} value={d.id}>
+          {d.name}
+        </option>
+      ))}
+    </select>
 
-        <select
-          className={input.base}
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-        >
-          <option value="">Tous les statuts</option>
-          {Object.entries(STATUS_MAP).map(([key, val]) => (
-            <option key={key} value={key}>
-              {val.label}
-            </option>
-          ))}
-        </select>
-      </div>
-    </div>
+    <select
+      className={`${input.base} flex-1 sm:w-auto`}
+      value={status}
+      onChange={(e) => setStatus(e.target.value)}
+    >
+      <option value="">Tous les statuts</option>
+      {Object.entries(STATUS_MAP).map(([key, val]) => (
+        <option key={key} value={key}>
+          {val.label}
+        </option>
+      ))}
+    </select>
+  </div>
+</div>
   );
 }

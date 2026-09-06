@@ -91,11 +91,12 @@ export function DirectionStudentsSection({
       ) : students && students.length > 0 ? (
         <StudentList enrollments={students} slug={slug} />
       ) : (
-        <InviteUserPlaceholder
-          title="Inviter vos premiers étudiants"
-          subtitle="Ajoutez des étudiants à cette classe."
-          onCreateLink={() => setInviteDialogOpen(true)}
-        />
+<InviteUserPlaceholder
+    title="Inviter vos premiers étudiants"
+    subtitle="Ajoutez des étudiants à cette classe."
+    onCreateLink={() => setInviteDialogOpen(true)}
+    className="py-6 sm:py-8 min-h-[320px] "
+  />
       )}
     </div>
   );

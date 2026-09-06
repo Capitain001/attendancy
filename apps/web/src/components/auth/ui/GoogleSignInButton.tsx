@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { signInWithOAuthProvider } from "@/modules/auth/providers";
 import { Loader1 } from "@/components/loaders/Loader";
 import { cn } from "@/lib/utils";
+import { images } from "@/config/images";
 
 interface GoogleSignInButtonProps {
   className?: string;
@@ -34,7 +35,7 @@ export default function GoogleSignInButton({ className, next }: GoogleSignInButt
       {loading ? (
         <Loader1 className="size-4 opacity-70" />
       ) : (
-        <Image src="/assets/icons/google.png" alt="Google" width={16} height={16} />
+        <Image src={images.icon.google} alt="Google" width={16} height={16} />
       )}
       Continue with Google
     </Button>

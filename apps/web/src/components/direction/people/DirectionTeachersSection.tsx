@@ -25,7 +25,7 @@ export function DirectionTeachersSection({ teachers, slug }: DirectionTeachersSe
           title="Équipe pédagogique" 
           description="Gérez les enseignants, leurs départements d'affectation et leurs cours."
         />
-        <div className="flex items-center gap-4">
+        <div className="flex items-center justify-between gap-4">
           <span className={typography.small}>
             {teachers.length} enseignant{teachers.length !== 1 ? 's' : ''}
           </span>
