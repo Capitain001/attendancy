@@ -23,14 +23,6 @@ Régime de suppression : **hard delete** (`delete*`).
 | `index.ts` | Point d'entrée du service (export actions + types) |
 | `types.ts` | DTOs et types du domaine |
 | `validation.ts` | Schémas Valibot |
-- `database/curriculum.queries.ts` — lectures Prisma (`"use cache"`)
-- `database/curriculum.mutations.ts` — écritures Prisma (`tryConstraint` + `invalidateEvent`)
-- `cache.ts` — graphe d'invalidation (`CURRICULUM_GRAPH`)
-- `validation.ts` — schémas Valibot
-- `actions/curriculum.queries.ts` — queries exposées au frontend
-- `actions/curriculum.mutations.ts` — mutations `"use server"`
-- `constants.ts`, `types.ts` — enums + DTOs inférés
-
 ## Contraintes
 <!-- TODO : invariants métier, index partiels, triggers DB liés (le cas échéant). -->
 

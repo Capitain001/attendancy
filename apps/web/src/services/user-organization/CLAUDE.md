@@ -24,14 +24,6 @@ Régime de suppression : **hard delete** (`delete*`).
 | `policy.ts` | Règles d'autorisation métier |
 | `types.ts` | DTOs et types du domaine |
 | `validation.ts` | Schémas Valibot |
-- `database/user-organization.queries.ts` — lectures Prisma (`"use cache"`)
-- `database/user-organization.mutations.ts` — écritures Prisma (`tryConstraint` + `invalidateEvent`)
-- `cache.ts` — graphe d'invalidation (`USER_ORGANIZATION_GRAPH`)
-- `validation.ts` — schémas Valibot
-- `actions/user-organization.queries.ts` — queries exposées au frontend
-- `actions/user-organization.mutations.ts` — mutations `"use server"`
-- `constants.ts`, `types.ts` — enums + DTOs inférés
-
 ## Contraintes
 <!-- TODO : invariants métier, index partiels, triggers DB liés (le cas échéant). -->
 

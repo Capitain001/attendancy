@@ -26,14 +26,6 @@ pas de `deletedAt` sur le modèle.
 | `index.ts` | Point d'entrée du service (export actions + types) |
 | `types.ts` | DTOs et types du domaine |
 | `validation.ts` | Schémas Valibot |
-- `database/course-teacher.queries.ts` — `getCourseTeachers`, `getCourseTeachersIds` (`"use cache"`, tag `COURSE_TEACHER`)
-- `database/course-teacher.mutations.ts` — `assignTeacher`, `deleteTeacherFromCourse`, `syncCourseTeachers`
-- `cache.ts` — `COURSE_TEACHER_GRAPH` — invalide COURSE_TEACHER **+ COURSE** (cross-service, voir Contraintes)
-- `validation.ts` — `assignTeacherSchema`, `syncCourseTeachersSchema`
-- `actions/course-teacher.queries.ts` — `getCourseTeachersAction`, `getCourseTeachersIdAction`
-- `actions/course-teacher.mutations.ts` — `assignTeacherAction`, `deleteTeacherAction`, `syncCourseTeachersAction`
-- `types.ts` — `CourseTeacher` (alias `GetCourseTeachersDto[number]`) + DTOs générés
-
 ## Contraintes
 - `@@unique([teacherId, courseId])` — un enseignant ne peut être affecté deux
   fois au même cours (via `assignTeacher` : `tryConstraint` remonte l'erreur).

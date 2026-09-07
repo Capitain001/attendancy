@@ -191,6 +191,42 @@ puis supprimer manuellement le type de l'ancien fichier.
 
 ---
 
+## `referentiel` — Classification DOMAIN/MODEL
+
+Génère `src/generated/referentiel.ts` qui classifie chaque service en `MODEL` (s'il existe un modèle Prisma portant exactement le même nom) ou `DOMAIN` (orchestrateur).
+
+```bash
+# Générer la classification
+npm run generate:referentiel
+
+# Vérifier que chaque service DOMAIN a bien une description (non-bloquant, exit 0)
+npm run check:referentiel
+```
+
+**Quand lancer** : 
+- Génération : après l'ajout, la suppression ou le renommage d'un dossier sous `src/services/`.
+- Vérification : avant chaque commit (souvent branché en CI ou pre-commit).
+
+---
+
+## `context` — Documentation CLAUDE.md
+
+Met à jour intelligemment la section `## Fichiers` des `CLAUDE.md` de chaque service. Le script scanne les fichiers réels, préserve les descriptions manuelles existantes, et attribue des rôles génériques aux nouveaux fichiers.
+
+```bash
+# Mettre à jour tous les fichiers CLAUDE.md du projet
+npm run generate:context
+
+# Vérifier les CLAUDE.md obsolètes sans les modifier (non-bloquant, exit 0)
+npm run check:context
+```
+
+**Quand lancer** : 
+- Génération : lorsque de nouveaux fichiers (types, utilitaires, actions) sont ajoutés ou supprimés dans un service.
+- Vérification : pour s'assurer de l'exhaustivité de la documentation locale des agents.
+
+---
+
 ## `supabase-types` — Types Supabase
 
 Génère `src/types/database.ts` depuis le schéma Supabase distant.
