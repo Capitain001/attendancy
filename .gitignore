@@ -22,6 +22,9 @@ next-env.d.ts
 # prisma — client généré (recréé par `prisma generate`)
 src/generated/
 
+#reference type service
+src/generated/referentiel.ts
+
 # rust build artifacts
 src-tauri/target/
 

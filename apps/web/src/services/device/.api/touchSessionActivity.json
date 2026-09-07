@@ -1,0 +1,8 @@
+{
+  "name": "touchSessionActivity",
+  "file": "src/services/device/database/device.mutations.ts",
+  "sig": "(sessionId: string) => Promise<{ id: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

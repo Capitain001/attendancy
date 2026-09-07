@@ -1,0 +1,8 @@
+{
+  "name": "revokeSession",
+  "file": "src/services/device/database/device.mutations.ts",
+  "sig": "(sessionId: string, userId: string, reason: SessionRevokeReason) => Promise<{ id: string; deviceId: string; authSessionId: string | null; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

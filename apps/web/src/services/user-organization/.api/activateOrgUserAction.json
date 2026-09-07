@@ -1,0 +1,11 @@
+{
+  "name": "activateOrgUserAction",
+  "file": "src/services/user-organization/actions/user-organization.mutations.ts",
+  "sig": "(input: ActivateOrgUserInput) => Promise<{ error: string; data?: undefined; } | { data: { status: UserStatus; }; error?: undefined; }>",
+  "calls": [
+    "activateOrgUser"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

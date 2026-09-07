@@ -427,6 +427,8 @@ export const ModelName = {
   Comment: 'Comment',
   Notification: 'Notification',
   PushSubscription: 'PushSubscription',
+  UserDevice: 'UserDevice',
+  UserSession: 'UserSession',
   Evaluation: 'Evaluation',
   Admin: 'Admin',
   Teacher: 'Teacher',
@@ -478,7 +480,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "academicYear" | "department" | "programTrack" | "program" | "programUE" | "uE" | "uECourse" | "class" | "term" | "course" | "courseTeacher" | "optionalUE" | "studentEnrollment" | "group" | "studentGroup" | "session" | "sessionToken" | "attendance" | "qRCode" | "qRScan" | "justification" | "plan" | "subscription" | "channel" | "channelMember" | "message" | "realtimeItem" | "comment" | "notification" | "pushSubscription" | "evaluation" | "admin" | "teacher" | "student" | "parent" | "direction" | "parentRelation" | "referential" | "programTemplate" | "uETemplate" | "uETemplateEC" | "programUETemplate" | "orgProgramTemplate" | "orgUETemplate" | "schedule" | "weeklyTemplate" | "weeklySlot" | "weekRecurence" | "location" | "room" | "event" | "eventParticipant" | "teacherUnavailability" | "superAdmin" | "user" | "organization" | "organizationSettings" | "organizationUsage" | "userOrganization" | "function" | "userFunction" | "permission" | "invitation" | "document" | "auditLog" | "approvalRequest"
+    modelProps: "academicYear" | "department" | "programTrack" | "program" | "programUE" | "uE" | "uECourse" | "class" | "term" | "course" | "courseTeacher" | "optionalUE" | "studentEnrollment" | "group" | "studentGroup" | "session" | "sessionToken" | "attendance" | "qRCode" | "qRScan" | "justification" | "plan" | "subscription" | "channel" | "channelMember" | "message" | "realtimeItem" | "comment" | "notification" | "pushSubscription" | "userDevice" | "userSession" | "evaluation" | "admin" | "teacher" | "student" | "parent" | "direction" | "parentRelation" | "referential" | "programTemplate" | "uETemplate" | "uETemplateEC" | "programUETemplate" | "orgProgramTemplate" | "orgUETemplate" | "schedule" | "weeklyTemplate" | "weeklySlot" | "weekRecurence" | "location" | "room" | "event" | "eventParticipant" | "teacherUnavailability" | "superAdmin" | "user" | "organization" | "organizationSettings" | "organizationUsage" | "userOrganization" | "function" | "userFunction" | "permission" | "invitation" | "document" | "auditLog" | "approvalRequest"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2699,6 +2701,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.PushSubscriptionCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.PushSubscriptionCountAggregateOutputType> | number
+        }
+      }
+    }
+    UserDevice: {
+      payload: Prisma.$UserDevicePayload<ExtArgs>
+      fields: Prisma.UserDeviceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserDeviceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserDevicePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserDeviceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserDevicePayload>
+        }
+        findFirst: {
+          args: Prisma.UserDeviceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserDevicePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserDeviceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserDevicePayload>
+        }
+        findMany: {
+          args: Prisma.UserDeviceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserDevicePayload>[]
+        }
+        create: {
+          args: Prisma.UserDeviceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserDevicePayload>
+        }
+        createMany: {
+          args: Prisma.UserDeviceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserDeviceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserDevicePayload>[]
+        }
+        delete: {
+          args: Prisma.UserDeviceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserDevicePayload>
+        }
+        update: {
+          args: Prisma.UserDeviceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserDevicePayload>
+        }
+        deleteMany: {
+          args: Prisma.UserDeviceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserDeviceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserDeviceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserDevicePayload>[]
+        }
+        upsert: {
+          args: Prisma.UserDeviceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserDevicePayload>
+        }
+        aggregate: {
+          args: Prisma.UserDeviceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserDevice>
+        }
+        groupBy: {
+          args: Prisma.UserDeviceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserDeviceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserDeviceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserDeviceCountAggregateOutputType> | number
+        }
+      }
+    }
+    UserSession: {
+      payload: Prisma.$UserSessionPayload<ExtArgs>
+      fields: Prisma.UserSessionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserSessionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserSessionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload>
+        }
+        findFirst: {
+          args: Prisma.UserSessionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserSessionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload>
+        }
+        findMany: {
+          args: Prisma.UserSessionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload>[]
+        }
+        create: {
+          args: Prisma.UserSessionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload>
+        }
+        createMany: {
+          args: Prisma.UserSessionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserSessionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload>[]
+        }
+        delete: {
+          args: Prisma.UserSessionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload>
+        }
+        update: {
+          args: Prisma.UserSessionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserSessionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserSessionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserSessionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload>[]
+        }
+        upsert: {
+          args: Prisma.UserSessionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload>
+        }
+        aggregate: {
+          args: Prisma.UserSessionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserSession>
+        }
+        groupBy: {
+          args: Prisma.UserSessionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserSessionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserSessionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserSessionCountAggregateOutputType> | number
         }
       }
     }
@@ -5839,6 +5989,45 @@ export const PushSubscriptionScalarFieldEnum = {
 export type PushSubscriptionScalarFieldEnum = (typeof PushSubscriptionScalarFieldEnum)[keyof typeof PushSubscriptionScalarFieldEnum]
 
 
+export const UserDeviceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  deviceId: 'deviceId',
+  label: 'label',
+  deviceType: 'deviceType',
+  os: 'os',
+  osVersion: 'osVersion',
+  browser: 'browser',
+  browserVersion: 'browserVersion',
+  isTrusted: 'isTrusted',
+  firstSeenAt: 'firstSeenAt',
+  lastSeenAt: 'lastSeenAt',
+  lastIpAddress: 'lastIpAddress',
+  revokedAt: 'revokedAt'
+} as const
+
+export type UserDeviceScalarFieldEnum = (typeof UserDeviceScalarFieldEnum)[keyof typeof UserDeviceScalarFieldEnum]
+
+
+export const UserSessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  deviceId: 'deviceId',
+  orgId: 'orgId',
+  status: 'status',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  authSessionId: 'authSessionId',
+  createdAt: 'createdAt',
+  lastActivityAt: 'lastActivityAt',
+  expiresAt: 'expiresAt',
+  revokedAt: 'revokedAt',
+  revokedReason: 'revokedReason'
+} as const
+
+export type UserSessionScalarFieldEnum = (typeof UserSessionScalarFieldEnum)[keyof typeof UserSessionScalarFieldEnum]
+
+
 export const EvaluationScalarFieldEnum = {
   id: 'id',
   courseId: 'courseId',
@@ -6697,6 +6886,48 @@ export type ListEnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputT
 
 
 /**
+ * Reference to a field of type 'DeviceType'
+ */
+export type EnumDeviceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DeviceType'>
+    
+
+
+/**
+ * Reference to a field of type 'DeviceType[]'
+ */
+export type ListEnumDeviceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DeviceType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'UserSessionStatus'
+ */
+export type EnumUserSessionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserSessionStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'UserSessionStatus[]'
+ */
+export type ListEnumUserSessionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserSessionStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'SessionRevokeReason'
+ */
+export type EnumSessionRevokeReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionRevokeReason'>
+    
+
+
+/**
+ * Reference to a field of type 'SessionRevokeReason[]'
+ */
+export type ListEnumSessionRevokeReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionRevokeReason[]'>
+    
+
+
+/**
  * Reference to a field of type 'EvaluationType'
  */
 export type EnumEvaluationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EvaluationType'>
@@ -7100,6 +7331,8 @@ export type GlobalOmitConfig = {
   comment?: Prisma.CommentOmit
   notification?: Prisma.NotificationOmit
   pushSubscription?: Prisma.PushSubscriptionOmit
+  userDevice?: Prisma.UserDeviceOmit
+  userSession?: Prisma.UserSessionOmit
   evaluation?: Prisma.EvaluationOmit
   admin?: Prisma.AdminOmit
   teacher?: Prisma.TeacherOmit

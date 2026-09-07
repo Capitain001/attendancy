@@ -1,6 +1,6 @@
-// src/utils/supabase/middleware.ts
 // Rafraîchissement de session Supabase dans le middleware Edge.
 // Appelé depuis middleware.ts (racine) sur chaque requête matchée.
+import { ensureDeviceIdCookie } from '@/lib/device'
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
@@ -47,6 +47,14 @@ export async function updateSession(request: NextRequest) {
   //   url.pathname = '/login'
   //   return NextResponse.redirect(url)
   // }
+
+  // ⚠️ Placé APRÈS toute la logique Supabase (y compris le éventuel reassign
+  // de supabaseResponse dans setAll ci-dessus) : sinon le cookie device_id
+  // posé ici serait perdu si setAll reconstruit supabaseResponse ensuite.
+  // Comme c'est la dernière étape avant le return, il est garanti de
+  // survivre sur la réponse réellement renvoyée, peu importe le chemin
+  // emprunté (setAll déclenché ou non).
+  ensureDeviceIdCookie(request, supabaseResponse)
 
   // IMPORTANT : retourner supabaseResponse tel quel. Si une nouvelle réponse
   // est créée, copier `request` ET les cookies de supabaseResponse — sinon la

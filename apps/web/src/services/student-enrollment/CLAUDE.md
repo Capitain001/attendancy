@@ -5,6 +5,21 @@ Domaine propriétaire du modèle `StudentEnrollment`.
 Gère les inscriptions des étudiants aux classes (relation entre `Student` et `Class`).
 
 ## Fichiers
+
+| Fichier | Rôle |
+|---------|------|
+| `actions/index.ts` | Barrel exports des actions |
+| `actions/student-enrollment.mutations.ts` | Écritures serveur (Validation + AuthGuard) |
+| `actions/student-enrollment.queries.ts` | Lectures serveur exposées au frontend |
+| `cache.ts` | <SERVICE>_GRAPH : événement → tags à invalider |
+| `constants.ts` | Constantes du domaine |
+| `database/index.ts` | Barrel interne (non exporté) |
+| `database/student-enrollment.mutations.ts` | Requêtes Prisma (tryConstraint + invalidateEvent) |
+| `database/student-enrollment.queries.ts` | Requêtes Prisma (lectures avec cache) |
+| `generated.types.ts` | Types générés automatiquement (DTOs de lecture) |
+| `index.ts` | Point d'entrée du service (export actions + types) |
+| `types.ts` | DTOs et types du domaine |
+| `validation.ts` | Schémas Valibot |
 - `database/` : interactions Prisma exclusives au modèle `StudentEnrollment`.
 - `actions/` : server actions pour créer, modifier (terminer un enrôlement) et lire les inscriptions.
 - `validation.ts` : Schémas Valibot stricts pour l'inscription d'un étudiant.

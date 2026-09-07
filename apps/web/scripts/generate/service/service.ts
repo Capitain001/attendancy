@@ -682,6 +682,20 @@ Régime de suppression : ${softDelete ? "**soft delete** (`deletedAt`, `remove*`
 
 ## Questions ouvertes
 <!-- TODO -->
+
+## Commandes
+
+CMD des generateurs pour le service ${kebabName} :
+\`\`\`bash
+# index API
+npx tsx scripts/generate/api/api.ts ${kebabName}
+
+# types
+npx tsx scripts/generate/types/types.ts ${kebabName}
+
+# résumé
+npx tsx scripts/generate/summary/summary.ts ${kebabName}
+\`\`\`
 `;
 }
 

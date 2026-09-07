@@ -34,3 +34,20 @@ sont des implémentations de référence COMMENTÉES — aucun modèle Prisma re
 - `orgId` extrait du token serveur UNIQUEMENT
 - Actions : préfixe `get*` (jamais `list*`), suffixe `Action`
 - Retour action : `{ data }` / `{ error: string }`
+
+## Fichiers
+
+| Fichier | Rôle |
+|---------|------|
+| `actions/entity.mutations.ts` | Écritures serveur (Validation + AuthGuard) |
+| `actions/entity.queries.ts` | Lectures serveur exposées au frontend |
+| `actions/index.ts` | Barrel exports des actions |
+| `cache.ts` | <SERVICE>_GRAPH : événement → tags à invalider |
+| `constants.ts` | Constantes du domaine |
+| `database/entity.mutations.ts` | Requêtes Prisma (tryConstraint + invalidateEvent) |
+| `database/entity.queries.ts` | Requêtes Prisma (lectures avec cache) |
+| `database/index.ts` | Barrel interne (non exporté) |
+| `generated.types.ts` | Types générés automatiquement (DTOs de lecture) |
+| `index.ts` | Point d'entrée du service (export actions + types) |
+| `types.ts` | DTOs et types du domaine |
+| `validation.ts` | Schémas Valibot |

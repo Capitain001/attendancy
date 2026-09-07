@@ -33,3 +33,19 @@ invalident donc `CACHE.CLASS(orgId, classId)` — pas de CACHE.GROUP séparé.
 - `getGroupEligibleStudents` lit `StudentEnrollment` (join membership) scopé par
   `class.programTrack.orgId` ; `groupId` est un arg → clé de cache `'use cache'` par groupe.
 - `setGroupStudents` : set transactionnel (`deleteMany` + `createMany`) après garde ownership.
+
+## Fichiers
+
+| Fichier | Rôle |
+|---------|------|
+| `actions/group.mutations.ts` | Écritures serveur (Validation + AuthGuard) |
+| `actions/group.queries.ts` | Lectures serveur exposées au frontend |
+| `actions/index.ts` | Barrel exports des actions |
+| `cache.ts` | <SERVICE>_GRAPH : événement → tags à invalider |
+| `database/group.mutations.ts` | Requêtes Prisma (tryConstraint + invalidateEvent) |
+| `database/group.queries.ts` | Requêtes Prisma (lectures avec cache) |
+| `database/index.ts` | Barrel interne (non exporté) |
+| `generated.types.ts` | Types générés automatiquement (DTOs de lecture) |
+| `index.ts` | Point d'entrée du service (export actions + types) |
+| `types.ts` | DTOs et types du domaine |
+| `validation.ts` | Schémas Valibot |

@@ -1,0 +1,96 @@
+// ─── Appareils & sessions ────────────────────────────────────────────────────
+// Deux plans distincts :
+//   IDENTITÉ  (UserDevice) : l'appareil physique/navigateur, persistant,
+//                            indépendant de tout login/logout.
+//   HISTORIQUE (UserSession) : chaque connexion réussie sur cet appareil,
+//                            scopée à l'org visitée le cas échéant.
+// deviceId est généré CÔTÉ CLIENT (cookie long-lived) — jamais dbgenerated,
+// même contrat que Invitation.token : secret/identifiant applicatif, pas un
+// UUID Postgres garanti (pas de @db.Uuid).
+// ⚠️ La révocation ici est du BOOKKEEPING applicatif : elle ne suffit pas à
+// invalider un JWT Supabase déjà émis. Deux options pour la rendre effective :
+//   (a) middleware qui vérifie UserSession.status à chaque requête,
+//   (b) appel best-effort à l'API admin Supabase (authSessionId) au revoke.
+
+model UserDevice {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String    @db.Uuid
+  deviceId       String    // valeur du cookie/localStorage, généré côté client
+  label          String?   // nom convivial éditable ("MacBook de Jean")
+  deviceType     DeviceType @default(UNKNOWN)
+  os             String?
+  osVersion      String?
+  browser        String?
+  browserVersion String?
+  isTrusted      Boolean   @default(false) // réservé usage futur (ex. skip 2FA)
+  firstSeenAt    DateTime  @default(now())
+  lastSeenAt     DateTime  @default(now())
+  lastIpAddress  String?
+  // Révocation globale de l'appareil ("déconnecter partout sur ce device") —
+  // désactivation, pas suppression : l'historique des sessions reste lisible.
+  revokedAt      DateTime?
+
+  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessions UserSession[]
+
+  @@unique([userId, deviceId])
+  @@index([userId])
+  @@schema("public")
+}
+
+// Une ligne par connexion réussie. Fait quasi-immuable une fois créée (seuls
+// lastActivityAt / status / revokedAt bougent) — pas de soft delete classique :
+// le cycle de vie EST le statut (même pattern que Justification).
+model UserSession {
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String        @db.Uuid
+  deviceId       String        @db.Uuid // FK vers UserDevice.id (pas le deviceId brut)
+  orgId          String?       @db.Uuid // org visitée à ce login ; null = pas encore choisie
+  status         UserSessionStatus @default(ACTIVE)
+  ipAddress      String?
+  userAgent      String?       // header brut conservé — reparsable si le parser évolue
+  // Claim "session_id" du JWT Supabase — permet un revoke ciblé via l'API
+  // admin en side-effect best-effort (cf. note en tête de fichier).
+  authSessionId  String?
+  createdAt      DateTime      @default(now())
+  lastActivityAt DateTime      @default(now())
+  expiresAt      DateTime?
+  revokedAt      DateTime?
+  revokedReason  SessionRevokeReason?
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device       UserDevice    @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  organization Organization? @relation(fields: [orgId], references: [id], onDelete: SetNull)
+
+  @@index([userId, status])
+  @@index([deviceId])
+  @@index([orgId])
+  @@index([authSessionId])
+  @@schema("public")
+}
+
+enum DeviceType {
+  DESKTOP
+  MOBILE
+  TABLET
+  UNKNOWN
+
+  @@schema("public")
+}
+
+enum UserSessionStatus {
+  ACTIVE
+  EXPIRED
+  REVOKED
+
+  @@schema("public")
+}
+
+enum SessionRevokeReason {
+  USER_LOGOUT
+  USER_REVOKED_DEVICE
+  ADMIN_REVOKED
+  PASSWORD_CHANGE
+
+  @@schema("public")
+}

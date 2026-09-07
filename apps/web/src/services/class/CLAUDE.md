@@ -13,13 +13,19 @@ Gère les promotions réelles d'une année académique — `Class`.
 
 | Fichier | Rôle |
 |---------|------|
-| `database/class.queries.ts` | `getClasses`, `getClass` |
-| `database/class.mutations.ts` | `createClass`, `removeClass` (soft delete) |
-| `cache.ts` | `CLASS_GRAPH` — invalidation liste + détail |
-| `validation.ts` | `createClassSchema` (Level enum : L1…D3) |
-| `actions/class.queries.ts` | `getClassesAction(yearId?)`, `getClassAction(classId)` |
 | `actions/class.mutations.ts` | `createClassAction`, `removeClassAction` |
-
+| `actions/class.queries.ts` | `getClassesAction(yearId?)`, `getClassAction(classId)` |
+| `actions/index.ts` | Barrel exports des actions |
+| `cache.ts` | `CLASS_GRAPH` — invalidation liste + détail |
+| `constants.ts` | Constantes du domaine |
+| `database/class.mutations.ts` | `createClass`, `removeClass` (soft delete) |
+| `database/class.queries.ts` | `getClasses`, `getClass` |
+| `database/index.ts` | Barrel interne (non exporté) |
+| `generated.types.ts` | Types générés automatiquement (DTOs de lecture) |
+| `index.ts` | Point d'entrée du service (export actions + types) |
+| `policy.ts` | Règles d'autorisation métier |
+| `types.ts` | DTOs et types du domaine |
+| `validation.ts` | `createClassSchema` (Level enum : L1…D3) |
 ## Invariants
 
 - `@@unique([programTrackId, name, academicYearId])` → `Class_programTrackId_name_academicYearId_key`

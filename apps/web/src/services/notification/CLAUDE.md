@@ -19,23 +19,25 @@ import { ... } from '@/services/notification'   // server actions, types Prisma,
 ## Structure du service
 
 | Fichier | Rôle |
-|---|---|
-| `database/notification.queries.ts` | Lectures avec `'use cache'` + cache tags |
-| `database/notification.mutations.ts` | Créer, lire, supprimer + invalidation cache |
-| `database/push.queries.ts` | Actifs, stats, findByEndpoint, countDevices |
-| `database/push.mutations.ts` | Upsert, unsubscribe, markExpired, cleanup |
-| `actions/notification.queries.ts` | Server actions lecture avec auth |
-| `actions/notification.mutations.ts` | Server actions écriture avec auth |
-| `user.ts` | Server actions push — subscribe/send (importe depuis `@/modules/notification`) |
-| `cache.ts` | `NOTIFICATION_GRAPH` |
-| `types.ts` | Types dérivés Prisma : `NotificationItem`, `PushSubscriptionItem`, `NotificationStats`, `PushSubscriptionStats` |
-| `validation.ts` | `createNotificationSchema` avec types métier (`ABSENCE`, `COURSE_CHANGE`…) |
+|---------|------|
 | `action.ts` | Ré-export `'use server'` centralisé |
+| `actions/notification.mutations.ts` | Server actions écriture avec auth |
+| `actions/notification.queries.ts` | Server actions lecture avec auth |
+| `cache.ts` | `NOTIFICATION_GRAPH` |
+| `database/index.ts` | Barrel interne (non exporté) |
+| `database/notification.mutations.ts` | Créer, lire, supprimer + invalidation cache |
+| `database/notification.queries.ts` | Lectures avec `'use cache'` + cache tags |
+| `database/push.mutations.ts` | Upsert, unsubscribe, markExpired, cleanup |
+| `database/push.queries.ts` | Actifs, stats, findByEndpoint, countDevices |
+| `generated.types.ts` | Types générés automatiquement (DTOs de lecture) |
 | `index.ts` | Barrel : re-exporte module + service |
-
-**Fichiers de migration (re-exports temporaires vers module) :**
-`push.ts`, `utils.ts`, `permission.ts`, `service-worker.ts` → migrer les imports vers `@/modules/notification`
-
+| `permission.ts` | Fichier interne |
+| `push.ts` | Fichier interne |
+| `service-worker.ts` | Fichier interne |
+| `types.ts` | Types dérivés Prisma : `NotificationItem`, `PushSubscriptionItem`, `NotificationStats`, `PushSubscriptionStats` |
+| `user.ts` | Server actions push — subscribe/send (importe depuis `@/modules/notification`) |
+| `utils.ts` | Utilitaires internes |
+| `validation.ts` | `createNotificationSchema` avec types métier (`ABSENCE`, `COURSE_CHANGE`…) |
 ## Modèles Prisma propriétaires
 
 - `Notification` — cycle de vie par `read` (pas de soft delete)

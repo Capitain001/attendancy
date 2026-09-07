@@ -81,6 +81,8 @@ export const ModelName = {
   Comment: 'Comment',
   Notification: 'Notification',
   PushSubscription: 'PushSubscription',
+  UserDevice: 'UserDevice',
+  UserSession: 'UserSession',
   Evaluation: 'Evaluation',
   Admin: 'Admin',
   Teacher: 'Teacher',
@@ -567,6 +569,45 @@ export const PushSubscriptionScalarFieldEnum = {
 } as const
 
 export type PushSubscriptionScalarFieldEnum = (typeof PushSubscriptionScalarFieldEnum)[keyof typeof PushSubscriptionScalarFieldEnum]
+
+
+export const UserDeviceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  deviceId: 'deviceId',
+  label: 'label',
+  deviceType: 'deviceType',
+  os: 'os',
+  osVersion: 'osVersion',
+  browser: 'browser',
+  browserVersion: 'browserVersion',
+  isTrusted: 'isTrusted',
+  firstSeenAt: 'firstSeenAt',
+  lastSeenAt: 'lastSeenAt',
+  lastIpAddress: 'lastIpAddress',
+  revokedAt: 'revokedAt'
+} as const
+
+export type UserDeviceScalarFieldEnum = (typeof UserDeviceScalarFieldEnum)[keyof typeof UserDeviceScalarFieldEnum]
+
+
+export const UserSessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  deviceId: 'deviceId',
+  orgId: 'orgId',
+  status: 'status',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  authSessionId: 'authSessionId',
+  createdAt: 'createdAt',
+  lastActivityAt: 'lastActivityAt',
+  expiresAt: 'expiresAt',
+  revokedAt: 'revokedAt',
+  revokedReason: 'revokedReason'
+} as const
+
+export type UserSessionScalarFieldEnum = (typeof UserSessionScalarFieldEnum)[keyof typeof UserSessionScalarFieldEnum]
 
 
 export const EvaluationScalarFieldEnum = {

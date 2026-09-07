@@ -7,13 +7,17 @@ Entité structurelle (réutilisée par toutes les classes), pas d'instance tempo
 
 | Fichier | Rôle |
 |---------|------|
-| `database/ue-course.queries.ts` | `getUECoursesByUE` — liste avec filtre UE |
-| `database/ue-course.mutations.ts` | `createUECourse`, `removeUECourse` (soft delete) |
-| `cache.ts` | `UE_COURSE_GRAPH` — invalidation liste + filtre UE |
-| `validation.ts` | `createUECourseSchema` |
-| `actions/ue-course.queries.ts` | `getUECoursesAction(ueId)` |
+| `actions/index.ts` | Barrel exports des actions |
 | `actions/ue-course.mutations.ts` | `createUECourseAction`, `removeUECourseAction` |
-
+| `actions/ue-course.queries.ts` | `getUECoursesAction(ueId)` |
+| `cache.ts` | `UE_COURSE_GRAPH` — invalidation liste + filtre UE |
+| `database/index.ts` | Barrel interne (non exporté) |
+| `database/ue-course.mutations.ts` | `createUECourse`, `removeUECourse` (soft delete) |
+| `database/ue-course.queries.ts` | `getUECoursesByUE` — liste avec filtre UE |
+| `generated.types.ts` | Types générés automatiquement (DTOs de lecture) |
+| `index.ts` | Point d'entrée du service (export actions + types) |
+| `types.ts` | DTOs et types du domaine |
+| `validation.ts` | `createUECourseSchema` |
 ## Invariants
 
 - `@@unique([name, ueId])` — contrainte `UECourse_name_ueId_key`

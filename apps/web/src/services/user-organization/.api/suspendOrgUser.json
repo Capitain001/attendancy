@@ -1,0 +1,8 @@
+{
+  "name": "suspendOrgUser",
+  "file": "src/services/user-organization/database/user-organization.mutations.ts",
+  "sig": "(userId: string, orgId: string) => Promise<{ status: UserStatus; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

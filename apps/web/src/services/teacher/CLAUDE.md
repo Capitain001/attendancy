@@ -32,3 +32,22 @@ le flux invite/onboarding (`invite/` service). Ce service gère l'édition du pr
 
 - `deactivateTeacherAction` : `deletedAt: new Date()` + invalider cache
 - `getTeacherCoursesAction(teacherId)` — charges et cours assignés
+
+## Fichiers
+
+| Fichier | Rôle |
+|---------|------|
+| `actions/index.ts` | Barrel exports des actions |
+| `actions/teacher.analytics.ts` | Fonctions liées aux statistiques |
+| `actions/teacher.mutations.ts` | Écritures serveur (Validation + AuthGuard) |
+| `actions/teacher.queries.ts` | Lectures serveur exposées au frontend |
+| `cache.ts` | <SERVICE>_GRAPH : événement → tags à invalider |
+| `constants.ts` | Constantes du domaine |
+| `database/index.ts` | Barrel interne (non exporté) |
+| `database/teacher.analytics.ts` | Fonctions liées aux statistiques |
+| `database/teacher.mutations.ts` | Requêtes Prisma (tryConstraint + invalidateEvent) |
+| `database/teacher.queries.ts` | Requêtes Prisma (lectures avec cache) |
+| `generated.types.ts` | Types générés automatiquement (DTOs de lecture) |
+| `index.ts` | Point d'entrée du service (export actions + types) |
+| `types.ts` | DTOs et types du domaine |
+| `validation.ts` | Schémas Valibot |

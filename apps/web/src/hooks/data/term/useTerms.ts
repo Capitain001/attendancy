@@ -7,7 +7,7 @@ import {
   getTermsAction,
   createTermAction,
   updateTermAction,
-  removeTermAction,
+  deleteTermAction,
 } from "@/services/term/actions";
 import type { GetTermsDto } from "@/services/term";
 import type { CreateTermInput as ServiceCreateInput, UpdateTermDataInput } from "@/services/term/validation";
@@ -47,8 +47,8 @@ export function useTerms(options: UseTermsOptions) {
   const create  = toCreateFn(createTermAction);
   // updateTermAction attend { termId, data } — norme V2 nested.
   const update  = toUpdateFn(updateTermAction, "termId");
-  // removeTermAction est un hard-delete côté DB (Term n'a pas de deletedAt).
-  const deleteTerm = toDeleteFn(removeTermAction);
+  // deleteTermAction est un hard-delete côté DB (Term n'a pas de deletedAt).
+  const deleteTerm = toDeleteFn(deleteTermAction);
 
   return useCrudEntity<GetTermsDto[number], CreateTermInput, UpdateTermInput>({
     entityName: "terms",

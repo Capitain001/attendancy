@@ -14,7 +14,7 @@ export const TERM_GRAPH = {
     CACHE.TERM(orgId),
     CACHE.TERM(orgId, classId),
   ],
-  TERM_REMOVED: (orgId: string, classId: string) => [
+  TERM_DELETED: (orgId: string, classId: string) => [
     CACHE.TERM(orgId),
     CACHE.TERM(orgId, classId),
   ],

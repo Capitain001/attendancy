@@ -1,0 +1,8 @@
+{
+  "name": "expireSessionOnLogout",
+  "file": "src/services/device/database/device.mutations.ts",
+  "sig": "(userId: string, deviceId: string) => Promise<BatchPayload>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

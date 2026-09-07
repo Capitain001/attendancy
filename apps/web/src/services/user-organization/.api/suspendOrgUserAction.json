@@ -1,0 +1,11 @@
+{
+  "name": "suspendOrgUserAction",
+  "file": "src/services/user-organization/actions/user-organization.mutations.ts",
+  "sig": "(input: SuspendOrgUserInput) => Promise<{ error: string; data?: undefined; } | { data: { status: UserStatus; }; error?: undefined; }>",
+  "calls": [
+    "suspendOrgUser"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

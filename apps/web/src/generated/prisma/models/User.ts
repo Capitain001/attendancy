@@ -292,6 +292,8 @@ export type UserWhereInput = {
   assignedFunctions?: Prisma.UserFunctionListRelationFilter
   functions?: Prisma.UserFunctionListRelationFilter
   userOrganizations?: Prisma.UserOrganizationListRelationFilter
+  devices?: Prisma.UserDeviceListRelationFilter
+  sessions?: Prisma.UserSessionListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -337,6 +339,8 @@ export type UserOrderByWithRelationInput = {
   assignedFunctions?: Prisma.UserFunctionOrderByRelationAggregateInput
   functions?: Prisma.UserFunctionOrderByRelationAggregateInput
   userOrganizations?: Prisma.UserOrganizationOrderByRelationAggregateInput
+  devices?: Prisma.UserDeviceOrderByRelationAggregateInput
+  sessions?: Prisma.UserSessionOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -385,6 +389,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   assignedFunctions?: Prisma.UserFunctionListRelationFilter
   functions?: Prisma.UserFunctionListRelationFilter
   userOrganizations?: Prisma.UserOrganizationListRelationFilter
+  devices?: Prisma.UserDeviceListRelationFilter
+  sessions?: Prisma.UserSessionListRelationFilter
 }, "id" | "email" | "phone">
 
 export type UserOrderByWithAggregationInput = {
@@ -474,6 +480,8 @@ export type UserCreateInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -519,6 +527,8 @@ export type UserUncheckedCreateInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -564,6 +574,8 @@ export type UserUpdateInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -609,6 +621,8 @@ export type UserUncheckedUpdateInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -869,6 +883,34 @@ export type UserUpdateOneRequiredWithoutPushSubscriptionNestedInput = {
   upsert?: Prisma.UserUpsertWithoutPushSubscriptionInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPushSubscriptionInput, Prisma.UserUpdateWithoutPushSubscriptionInput>, Prisma.UserUncheckedUpdateWithoutPushSubscriptionInput>
+}
+
+export type UserCreateNestedOneWithoutDevicesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDevicesInput, Prisma.UserUncheckedCreateWithoutDevicesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDevicesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutDevicesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDevicesInput, Prisma.UserUncheckedCreateWithoutDevicesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDevicesInput
+  upsert?: Prisma.UserUpsertWithoutDevicesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDevicesInput, Prisma.UserUpdateWithoutDevicesInput>, Prisma.UserUncheckedUpdateWithoutDevicesInput>
+}
+
+export type UserCreateNestedOneWithoutSessionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSessionsInput, Prisma.UserUncheckedCreateWithoutSessionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSessionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSessionsInput, Prisma.UserUncheckedCreateWithoutSessionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSessionsInput
+  upsert?: Prisma.UserUpsertWithoutSessionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSessionsInput, Prisma.UserUpdateWithoutSessionsInput>, Prisma.UserUncheckedUpdateWithoutSessionsInput>
 }
 
 export type UserCreateNestedOneWithoutAdminInput = {
@@ -1175,6 +1217,8 @@ export type UserCreateWithoutQrScansInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutQrScansInput = {
@@ -1219,6 +1263,8 @@ export type UserUncheckedCreateWithoutQrScansInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutQrScansInput = {
@@ -1279,6 +1325,8 @@ export type UserUpdateWithoutQrScansInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutQrScansInput = {
@@ -1323,6 +1371,8 @@ export type UserUncheckedUpdateWithoutQrScansInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutJustificationsDeclaredInput = {
@@ -1367,6 +1417,8 @@ export type UserCreateWithoutJustificationsDeclaredInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutJustificationsDeclaredInput = {
@@ -1411,6 +1463,8 @@ export type UserUncheckedCreateWithoutJustificationsDeclaredInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutJustificationsDeclaredInput = {
@@ -1460,6 +1514,8 @@ export type UserCreateWithoutJustificationsReviewedInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutJustificationsReviewedInput = {
@@ -1504,6 +1560,8 @@ export type UserUncheckedCreateWithoutJustificationsReviewedInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutJustificationsReviewedInput = {
@@ -1564,6 +1622,8 @@ export type UserUpdateWithoutJustificationsDeclaredInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutJustificationsDeclaredInput = {
@@ -1608,6 +1668,8 @@ export type UserUncheckedUpdateWithoutJustificationsDeclaredInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutJustificationsReviewedInput = {
@@ -1663,6 +1725,8 @@ export type UserUpdateWithoutJustificationsReviewedInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutJustificationsReviewedInput = {
@@ -1707,6 +1771,8 @@ export type UserUncheckedUpdateWithoutJustificationsReviewedInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutChannelMembershipsInput = {
@@ -1751,6 +1817,8 @@ export type UserCreateWithoutChannelMembershipsInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutChannelMembershipsInput = {
@@ -1795,6 +1863,8 @@ export type UserUncheckedCreateWithoutChannelMembershipsInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutChannelMembershipsInput = {
@@ -1855,6 +1925,8 @@ export type UserUpdateWithoutChannelMembershipsInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutChannelMembershipsInput = {
@@ -1899,6 +1971,8 @@ export type UserUncheckedUpdateWithoutChannelMembershipsInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMessagesInput = {
@@ -1943,6 +2017,8 @@ export type UserCreateWithoutMessagesInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMessagesInput = {
@@ -1987,6 +2063,8 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMessagesInput = {
@@ -2047,6 +2125,8 @@ export type UserUpdateWithoutMessagesInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMessagesInput = {
@@ -2091,6 +2171,8 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutModeratedCommentsInput = {
@@ -2135,6 +2217,8 @@ export type UserCreateWithoutModeratedCommentsInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutModeratedCommentsInput = {
@@ -2179,6 +2263,8 @@ export type UserUncheckedCreateWithoutModeratedCommentsInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutModeratedCommentsInput = {
@@ -2228,6 +2314,8 @@ export type UserCreateWithoutCommentsInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCommentsInput = {
@@ -2272,6 +2360,8 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCommentsInput = {
@@ -2332,6 +2422,8 @@ export type UserUpdateWithoutModeratedCommentsInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutModeratedCommentsInput = {
@@ -2376,6 +2468,8 @@ export type UserUncheckedUpdateWithoutModeratedCommentsInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutCommentsInput = {
@@ -2431,6 +2525,8 @@ export type UserUpdateWithoutCommentsInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommentsInput = {
@@ -2475,6 +2571,8 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -2519,6 +2617,8 @@ export type UserCreateWithoutNotificationsInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -2563,6 +2663,8 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -2623,6 +2725,8 @@ export type UserUpdateWithoutNotificationsInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -2667,6 +2771,8 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPushSubscriptionInput = {
@@ -2711,6 +2817,8 @@ export type UserCreateWithoutPushSubscriptionInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPushSubscriptionInput = {
@@ -2755,6 +2863,8 @@ export type UserUncheckedCreateWithoutPushSubscriptionInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPushSubscriptionInput = {
@@ -2815,6 +2925,8 @@ export type UserUpdateWithoutPushSubscriptionInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPushSubscriptionInput = {
@@ -2859,6 +2971,408 @@ export type UserUncheckedUpdateWithoutPushSubscriptionInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutDevicesInput = {
+  id?: string
+  firstName?: string | null
+  lastName?: string | null
+  email: string
+  sex?: $Enums.Sex
+  phone?: string | null
+  avatar_url?: string | null
+  dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
+  isConnected?: boolean
+  status?: $Enums.UserStatus
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  admin?: Prisma.AdminCreateNestedOneWithoutUserInput
+  approvalRequested?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  approvalReviewed?: Prisma.ApprovalRequestCreateNestedManyWithoutReviewedByInput
+  auditLog?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  channelMemberships?: Prisma.ChannelMemberCreateNestedManyWithoutUserInput
+  moderatedComments?: Prisma.CommentCreateNestedManyWithoutDeletedByUserInput
+  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
+  direction?: Prisma.DirectionCreateNestedManyWithoutUserInput
+  uploadedDocuments?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatedByInput
+  eventParticipations?: Prisma.EventParticipantCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutUserInput
+  justificationsDeclared?: Prisma.JustificationCreateNestedManyWithoutDeclaredByInput
+  justificationsReviewed?: Prisma.JustificationCreateNestedManyWithoutReviewedByInput
+  messages?: Prisma.MessageCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  parent?: Prisma.ParentCreateNestedManyWithoutUserInput
+  assigned?: Prisma.PermissionCreateNestedManyWithoutAssignedByInput
+  permissions?: Prisma.PermissionCreateNestedManyWithoutUserInput
+  pushSubscription?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  qrScans?: Prisma.QRScanCreateNestedManyWithoutUserInput
+  student?: Prisma.StudentCreateNestedManyWithoutUserInput
+  teacher?: Prisma.TeacherCreateNestedManyWithoutUserInput
+  assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
+  functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
+  userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutDevicesInput = {
+  id?: string
+  firstName?: string | null
+  lastName?: string | null
+  email: string
+  sex?: $Enums.Sex
+  phone?: string | null
+  avatar_url?: string | null
+  dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
+  isConnected?: boolean
+  status?: $Enums.UserStatus
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  admin?: Prisma.AdminUncheckedCreateNestedOneWithoutUserInput
+  approvalRequested?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  approvalReviewed?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  auditLog?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  channelMemberships?: Prisma.ChannelMemberUncheckedCreateNestedManyWithoutUserInput
+  moderatedComments?: Prisma.CommentUncheckedCreateNestedManyWithoutDeletedByUserInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
+  direction?: Prisma.DirectionUncheckedCreateNestedManyWithoutUserInput
+  uploadedDocuments?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatedByInput
+  eventParticipations?: Prisma.EventParticipantUncheckedCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutUserInput
+  justificationsDeclared?: Prisma.JustificationUncheckedCreateNestedManyWithoutDeclaredByInput
+  justificationsReviewed?: Prisma.JustificationUncheckedCreateNestedManyWithoutReviewedByInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  parent?: Prisma.ParentUncheckedCreateNestedManyWithoutUserInput
+  assigned?: Prisma.PermissionUncheckedCreateNestedManyWithoutAssignedByInput
+  permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutUserInput
+  pushSubscription?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  qrScans?: Prisma.QRScanUncheckedCreateNestedManyWithoutUserInput
+  student?: Prisma.StudentUncheckedCreateNestedManyWithoutUserInput
+  teacher?: Prisma.TeacherUncheckedCreateNestedManyWithoutUserInput
+  assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
+  functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
+  userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutDevicesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutDevicesInput, Prisma.UserUncheckedCreateWithoutDevicesInput>
+}
+
+export type UserUpsertWithoutDevicesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutDevicesInput, Prisma.UserUncheckedUpdateWithoutDevicesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutDevicesInput, Prisma.UserUncheckedCreateWithoutDevicesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutDevicesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutDevicesInput, Prisma.UserUncheckedUpdateWithoutDevicesInput>
+}
+
+export type UserUpdateWithoutDevicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  sex?: Prisma.EnumSexFieldUpdateOperationsInput | $Enums.Sex
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  admin?: Prisma.AdminUpdateOneWithoutUserNestedInput
+  approvalRequested?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  approvalReviewed?: Prisma.ApprovalRequestUpdateManyWithoutReviewedByNestedInput
+  auditLog?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  channelMemberships?: Prisma.ChannelMemberUpdateManyWithoutUserNestedInput
+  moderatedComments?: Prisma.CommentUpdateManyWithoutDeletedByUserNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
+  direction?: Prisma.DirectionUpdateManyWithoutUserNestedInput
+  uploadedDocuments?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatedByNestedInput
+  eventParticipations?: Prisma.EventParticipantUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutUserNestedInput
+  justificationsDeclared?: Prisma.JustificationUpdateManyWithoutDeclaredByNestedInput
+  justificationsReviewed?: Prisma.JustificationUpdateManyWithoutReviewedByNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  parent?: Prisma.ParentUpdateManyWithoutUserNestedInput
+  assigned?: Prisma.PermissionUpdateManyWithoutAssignedByNestedInput
+  permissions?: Prisma.PermissionUpdateManyWithoutUserNestedInput
+  pushSubscription?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  qrScans?: Prisma.QRScanUpdateManyWithoutUserNestedInput
+  student?: Prisma.StudentUpdateManyWithoutUserNestedInput
+  teacher?: Prisma.TeacherUpdateManyWithoutUserNestedInput
+  assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
+  functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
+  userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutDevicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  sex?: Prisma.EnumSexFieldUpdateOperationsInput | $Enums.Sex
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  admin?: Prisma.AdminUncheckedUpdateOneWithoutUserNestedInput
+  approvalRequested?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  approvalReviewed?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  auditLog?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  channelMemberships?: Prisma.ChannelMemberUncheckedUpdateManyWithoutUserNestedInput
+  moderatedComments?: Prisma.CommentUncheckedUpdateManyWithoutDeletedByUserNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
+  direction?: Prisma.DirectionUncheckedUpdateManyWithoutUserNestedInput
+  uploadedDocuments?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatedByNestedInput
+  eventParticipations?: Prisma.EventParticipantUncheckedUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutUserNestedInput
+  justificationsDeclared?: Prisma.JustificationUncheckedUpdateManyWithoutDeclaredByNestedInput
+  justificationsReviewed?: Prisma.JustificationUncheckedUpdateManyWithoutReviewedByNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  parent?: Prisma.ParentUncheckedUpdateManyWithoutUserNestedInput
+  assigned?: Prisma.PermissionUncheckedUpdateManyWithoutAssignedByNestedInput
+  permissions?: Prisma.PermissionUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscription?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  qrScans?: Prisma.QRScanUncheckedUpdateManyWithoutUserNestedInput
+  student?: Prisma.StudentUncheckedUpdateManyWithoutUserNestedInput
+  teacher?: Prisma.TeacherUncheckedUpdateManyWithoutUserNestedInput
+  assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
+  functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
+  userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSessionsInput = {
+  id?: string
+  firstName?: string | null
+  lastName?: string | null
+  email: string
+  sex?: $Enums.Sex
+  phone?: string | null
+  avatar_url?: string | null
+  dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
+  isConnected?: boolean
+  status?: $Enums.UserStatus
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  admin?: Prisma.AdminCreateNestedOneWithoutUserInput
+  approvalRequested?: Prisma.ApprovalRequestCreateNestedManyWithoutRequestedByInput
+  approvalReviewed?: Prisma.ApprovalRequestCreateNestedManyWithoutReviewedByInput
+  auditLog?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  channelMemberships?: Prisma.ChannelMemberCreateNestedManyWithoutUserInput
+  moderatedComments?: Prisma.CommentCreateNestedManyWithoutDeletedByUserInput
+  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
+  direction?: Prisma.DirectionCreateNestedManyWithoutUserInput
+  uploadedDocuments?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatedByInput
+  eventParticipations?: Prisma.EventParticipantCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutUserInput
+  justificationsDeclared?: Prisma.JustificationCreateNestedManyWithoutDeclaredByInput
+  justificationsReviewed?: Prisma.JustificationCreateNestedManyWithoutReviewedByInput
+  messages?: Prisma.MessageCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  parent?: Prisma.ParentCreateNestedManyWithoutUserInput
+  assigned?: Prisma.PermissionCreateNestedManyWithoutAssignedByInput
+  permissions?: Prisma.PermissionCreateNestedManyWithoutUserInput
+  pushSubscription?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  qrScans?: Prisma.QRScanCreateNestedManyWithoutUserInput
+  student?: Prisma.StudentCreateNestedManyWithoutUserInput
+  teacher?: Prisma.TeacherCreateNestedManyWithoutUserInput
+  assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
+  functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
+  userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSessionsInput = {
+  id?: string
+  firstName?: string | null
+  lastName?: string | null
+  email: string
+  sex?: $Enums.Sex
+  phone?: string | null
+  avatar_url?: string | null
+  dateOfBirth?: Date | string | null
+  nationality?: string | null
+  address?: string | null
+  isConnected?: boolean
+  status?: $Enums.UserStatus
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  admin?: Prisma.AdminUncheckedCreateNestedOneWithoutUserInput
+  approvalRequested?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  approvalReviewed?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  auditLog?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  channelMemberships?: Prisma.ChannelMemberUncheckedCreateNestedManyWithoutUserInput
+  moderatedComments?: Prisma.CommentUncheckedCreateNestedManyWithoutDeletedByUserInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
+  direction?: Prisma.DirectionUncheckedCreateNestedManyWithoutUserInput
+  uploadedDocuments?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatedByInput
+  eventParticipations?: Prisma.EventParticipantUncheckedCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutUserInput
+  justificationsDeclared?: Prisma.JustificationUncheckedCreateNestedManyWithoutDeclaredByInput
+  justificationsReviewed?: Prisma.JustificationUncheckedCreateNestedManyWithoutReviewedByInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  parent?: Prisma.ParentUncheckedCreateNestedManyWithoutUserInput
+  assigned?: Prisma.PermissionUncheckedCreateNestedManyWithoutAssignedByInput
+  permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutUserInput
+  pushSubscription?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  qrScans?: Prisma.QRScanUncheckedCreateNestedManyWithoutUserInput
+  student?: Prisma.StudentUncheckedCreateNestedManyWithoutUserInput
+  teacher?: Prisma.TeacherUncheckedCreateNestedManyWithoutUserInput
+  assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
+  functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
+  userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSessionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSessionsInput, Prisma.UserUncheckedCreateWithoutSessionsInput>
+}
+
+export type UserUpsertWithoutSessionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSessionsInput, Prisma.UserUncheckedUpdateWithoutSessionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSessionsInput, Prisma.UserUncheckedCreateWithoutSessionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSessionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSessionsInput, Prisma.UserUncheckedUpdateWithoutSessionsInput>
+}
+
+export type UserUpdateWithoutSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  sex?: Prisma.EnumSexFieldUpdateOperationsInput | $Enums.Sex
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  admin?: Prisma.AdminUpdateOneWithoutUserNestedInput
+  approvalRequested?: Prisma.ApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  approvalReviewed?: Prisma.ApprovalRequestUpdateManyWithoutReviewedByNestedInput
+  auditLog?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  channelMemberships?: Prisma.ChannelMemberUpdateManyWithoutUserNestedInput
+  moderatedComments?: Prisma.CommentUpdateManyWithoutDeletedByUserNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
+  direction?: Prisma.DirectionUpdateManyWithoutUserNestedInput
+  uploadedDocuments?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatedByNestedInput
+  eventParticipations?: Prisma.EventParticipantUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutUserNestedInput
+  justificationsDeclared?: Prisma.JustificationUpdateManyWithoutDeclaredByNestedInput
+  justificationsReviewed?: Prisma.JustificationUpdateManyWithoutReviewedByNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  parent?: Prisma.ParentUpdateManyWithoutUserNestedInput
+  assigned?: Prisma.PermissionUpdateManyWithoutAssignedByNestedInput
+  permissions?: Prisma.PermissionUpdateManyWithoutUserNestedInput
+  pushSubscription?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  qrScans?: Prisma.QRScanUpdateManyWithoutUserNestedInput
+  student?: Prisma.StudentUpdateManyWithoutUserNestedInput
+  teacher?: Prisma.TeacherUpdateManyWithoutUserNestedInput
+  assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
+  functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
+  userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  sex?: Prisma.EnumSexFieldUpdateOperationsInput | $Enums.Sex
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isConnected?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  admin?: Prisma.AdminUncheckedUpdateOneWithoutUserNestedInput
+  approvalRequested?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  approvalReviewed?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  auditLog?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  channelMemberships?: Prisma.ChannelMemberUncheckedUpdateManyWithoutUserNestedInput
+  moderatedComments?: Prisma.CommentUncheckedUpdateManyWithoutDeletedByUserNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
+  direction?: Prisma.DirectionUncheckedUpdateManyWithoutUserNestedInput
+  uploadedDocuments?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatedByNestedInput
+  eventParticipations?: Prisma.EventParticipantUncheckedUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutUserNestedInput
+  justificationsDeclared?: Prisma.JustificationUncheckedUpdateManyWithoutDeclaredByNestedInput
+  justificationsReviewed?: Prisma.JustificationUncheckedUpdateManyWithoutReviewedByNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  parent?: Prisma.ParentUncheckedUpdateManyWithoutUserNestedInput
+  assigned?: Prisma.PermissionUncheckedUpdateManyWithoutAssignedByNestedInput
+  permissions?: Prisma.PermissionUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscription?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  qrScans?: Prisma.QRScanUncheckedUpdateManyWithoutUserNestedInput
+  student?: Prisma.StudentUncheckedUpdateManyWithoutUserNestedInput
+  teacher?: Prisma.TeacherUncheckedUpdateManyWithoutUserNestedInput
+  assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
+  functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
+  userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAdminInput = {
@@ -2903,6 +3417,8 @@ export type UserCreateWithoutAdminInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAdminInput = {
@@ -2947,6 +3463,8 @@ export type UserUncheckedCreateWithoutAdminInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAdminInput = {
@@ -3007,6 +3525,8 @@ export type UserUpdateWithoutAdminInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminInput = {
@@ -3051,6 +3571,8 @@ export type UserUncheckedUpdateWithoutAdminInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTeacherInput = {
@@ -3095,6 +3617,8 @@ export type UserCreateWithoutTeacherInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTeacherInput = {
@@ -3139,6 +3663,8 @@ export type UserUncheckedCreateWithoutTeacherInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTeacherInput = {
@@ -3199,6 +3725,8 @@ export type UserUpdateWithoutTeacherInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTeacherInput = {
@@ -3243,6 +3771,8 @@ export type UserUncheckedUpdateWithoutTeacherInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutStudentInput = {
@@ -3287,6 +3817,8 @@ export type UserCreateWithoutStudentInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutStudentInput = {
@@ -3331,6 +3863,8 @@ export type UserUncheckedCreateWithoutStudentInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutStudentInput = {
@@ -3391,6 +3925,8 @@ export type UserUpdateWithoutStudentInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStudentInput = {
@@ -3435,6 +3971,8 @@ export type UserUncheckedUpdateWithoutStudentInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutParentInput = {
@@ -3479,6 +4017,8 @@ export type UserCreateWithoutParentInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutParentInput = {
@@ -3523,6 +4063,8 @@ export type UserUncheckedCreateWithoutParentInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutParentInput = {
@@ -3583,6 +4125,8 @@ export type UserUpdateWithoutParentInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutParentInput = {
@@ -3627,6 +4171,8 @@ export type UserUncheckedUpdateWithoutParentInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDirectionInput = {
@@ -3671,6 +4217,8 @@ export type UserCreateWithoutDirectionInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDirectionInput = {
@@ -3715,6 +4263,8 @@ export type UserUncheckedCreateWithoutDirectionInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDirectionInput = {
@@ -3775,6 +4325,8 @@ export type UserUpdateWithoutDirectionInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDirectionInput = {
@@ -3819,6 +4371,8 @@ export type UserUncheckedUpdateWithoutDirectionInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCreatedEventsInput = {
@@ -3863,6 +4417,8 @@ export type UserCreateWithoutCreatedEventsInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedEventsInput = {
@@ -3907,6 +4463,8 @@ export type UserUncheckedCreateWithoutCreatedEventsInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedEventsInput = {
@@ -3967,6 +4525,8 @@ export type UserUpdateWithoutCreatedEventsInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedEventsInput = {
@@ -4011,6 +4571,8 @@ export type UserUncheckedUpdateWithoutCreatedEventsInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEventParticipationsInput = {
@@ -4055,6 +4617,8 @@ export type UserCreateWithoutEventParticipationsInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEventParticipationsInput = {
@@ -4099,6 +4663,8 @@ export type UserUncheckedCreateWithoutEventParticipationsInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEventParticipationsInput = {
@@ -4159,6 +4725,8 @@ export type UserUpdateWithoutEventParticipationsInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEventParticipationsInput = {
@@ -4203,6 +4771,8 @@ export type UserUncheckedUpdateWithoutEventParticipationsInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutUserOrganizationsInput = {
@@ -4247,6 +4817,8 @@ export type UserCreateWithoutUserOrganizationsInput = {
   teacher?: Prisma.TeacherCreateNestedManyWithoutUserInput
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUserOrganizationsInput = {
@@ -4291,6 +4863,8 @@ export type UserUncheckedCreateWithoutUserOrganizationsInput = {
   teacher?: Prisma.TeacherUncheckedCreateNestedManyWithoutUserInput
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutUserOrganizationsInput = {
@@ -4351,6 +4925,8 @@ export type UserUpdateWithoutUserOrganizationsInput = {
   teacher?: Prisma.TeacherUpdateManyWithoutUserNestedInput
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUserOrganizationsInput = {
@@ -4395,6 +4971,8 @@ export type UserUncheckedUpdateWithoutUserOrganizationsInput = {
   teacher?: Prisma.TeacherUncheckedUpdateManyWithoutUserNestedInput
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFunctionsInput = {
@@ -4439,6 +5017,8 @@ export type UserCreateWithoutFunctionsInput = {
   teacher?: Prisma.TeacherCreateNestedManyWithoutUserInput
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFunctionsInput = {
@@ -4483,6 +5063,8 @@ export type UserUncheckedCreateWithoutFunctionsInput = {
   teacher?: Prisma.TeacherUncheckedCreateNestedManyWithoutUserInput
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFunctionsInput = {
@@ -4532,6 +5114,8 @@ export type UserCreateWithoutAssignedFunctionsInput = {
   teacher?: Prisma.TeacherCreateNestedManyWithoutUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAssignedFunctionsInput = {
@@ -4576,6 +5160,8 @@ export type UserUncheckedCreateWithoutAssignedFunctionsInput = {
   teacher?: Prisma.TeacherUncheckedCreateNestedManyWithoutUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAssignedFunctionsInput = {
@@ -4636,6 +5222,8 @@ export type UserUpdateWithoutFunctionsInput = {
   teacher?: Prisma.TeacherUpdateManyWithoutUserNestedInput
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFunctionsInput = {
@@ -4680,6 +5268,8 @@ export type UserUncheckedUpdateWithoutFunctionsInput = {
   teacher?: Prisma.TeacherUncheckedUpdateManyWithoutUserNestedInput
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutAssignedFunctionsInput = {
@@ -4735,6 +5325,8 @@ export type UserUpdateWithoutAssignedFunctionsInput = {
   teacher?: Prisma.TeacherUpdateManyWithoutUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAssignedFunctionsInput = {
@@ -4779,6 +5371,8 @@ export type UserUncheckedUpdateWithoutAssignedFunctionsInput = {
   teacher?: Prisma.TeacherUncheckedUpdateManyWithoutUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAssignedInput = {
@@ -4823,6 +5417,8 @@ export type UserCreateWithoutAssignedInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAssignedInput = {
@@ -4867,6 +5463,8 @@ export type UserUncheckedCreateWithoutAssignedInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAssignedInput = {
@@ -4916,6 +5514,8 @@ export type UserCreateWithoutPermissionsInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPermissionsInput = {
@@ -4960,6 +5560,8 @@ export type UserUncheckedCreateWithoutPermissionsInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPermissionsInput = {
@@ -5020,6 +5622,8 @@ export type UserUpdateWithoutAssignedInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAssignedInput = {
@@ -5064,6 +5668,8 @@ export type UserUncheckedUpdateWithoutAssignedInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutPermissionsInput = {
@@ -5119,6 +5725,8 @@ export type UserUpdateWithoutPermissionsInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPermissionsInput = {
@@ -5163,6 +5771,8 @@ export type UserUncheckedUpdateWithoutPermissionsInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutInvitationsInput = {
@@ -5207,6 +5817,8 @@ export type UserCreateWithoutInvitationsInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutInvitationsInput = {
@@ -5251,6 +5863,8 @@ export type UserUncheckedCreateWithoutInvitationsInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutInvitationsInput = {
@@ -5311,6 +5925,8 @@ export type UserUpdateWithoutInvitationsInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInvitationsInput = {
@@ -5355,6 +5971,8 @@ export type UserUncheckedUpdateWithoutInvitationsInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutUploadedDocumentsInput = {
@@ -5399,6 +6017,8 @@ export type UserCreateWithoutUploadedDocumentsInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUploadedDocumentsInput = {
@@ -5443,6 +6063,8 @@ export type UserUncheckedCreateWithoutUploadedDocumentsInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutUploadedDocumentsInput = {
@@ -5503,6 +6125,8 @@ export type UserUpdateWithoutUploadedDocumentsInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUploadedDocumentsInput = {
@@ -5547,6 +6171,8 @@ export type UserUncheckedUpdateWithoutUploadedDocumentsInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAuditLogInput = {
@@ -5591,6 +6217,8 @@ export type UserCreateWithoutAuditLogInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogInput = {
@@ -5635,6 +6263,8 @@ export type UserUncheckedCreateWithoutAuditLogInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogInput = {
@@ -5695,6 +6325,8 @@ export type UserUpdateWithoutAuditLogInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogInput = {
@@ -5739,6 +6371,8 @@ export type UserUncheckedUpdateWithoutAuditLogInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutApprovalRequestedInput = {
@@ -5783,6 +6417,8 @@ export type UserCreateWithoutApprovalRequestedInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApprovalRequestedInput = {
@@ -5827,6 +6463,8 @@ export type UserUncheckedCreateWithoutApprovalRequestedInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApprovalRequestedInput = {
@@ -5876,6 +6514,8 @@ export type UserCreateWithoutApprovalReviewedInput = {
   assignedFunctions?: Prisma.UserFunctionCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApprovalReviewedInput = {
@@ -5920,6 +6560,8 @@ export type UserUncheckedCreateWithoutApprovalReviewedInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutAssignedByUserInput
   functions?: Prisma.UserFunctionUncheckedCreateNestedManyWithoutUserInput
   userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApprovalReviewedInput = {
@@ -5980,6 +6622,8 @@ export type UserUpdateWithoutApprovalRequestedInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApprovalRequestedInput = {
@@ -6024,6 +6668,8 @@ export type UserUncheckedUpdateWithoutApprovalRequestedInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutApprovalReviewedInput = {
@@ -6079,6 +6725,8 @@ export type UserUpdateWithoutApprovalReviewedInput = {
   assignedFunctions?: Prisma.UserFunctionUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApprovalReviewedInput = {
@@ -6123,6 +6771,8 @@ export type UserUncheckedUpdateWithoutApprovalReviewedInput = {
   assignedFunctions?: Prisma.UserFunctionUncheckedUpdateManyWithoutAssignedByUserNestedInput
   functions?: Prisma.UserFunctionUncheckedUpdateManyWithoutUserNestedInput
   userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.UserSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -6156,6 +6806,8 @@ export type UserCountOutputType = {
   assignedFunctions: number
   functions: number
   userOrganizations: number
+  devices: number
+  sessions: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -6184,6 +6836,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   assignedFunctions?: boolean | UserCountOutputTypeCountAssignedFunctionsArgs
   functions?: boolean | UserCountOutputTypeCountFunctionsArgs
   userOrganizations?: boolean | UserCountOutputTypeCountUserOrganizationsArgs
+  devices?: boolean | UserCountOutputTypeCountDevicesArgs
+  sessions?: boolean | UserCountOutputTypeCountSessionsArgs
 }
 
 /**
@@ -6371,6 +7025,20 @@ export type UserCountOutputTypeCountUserOrganizationsArgs<ExtArgs extends runtim
   where?: Prisma.UserOrganizationWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountDevicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserDeviceWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserSessionWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -6415,6 +7083,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   assignedFunctions?: boolean | Prisma.User$assignedFunctionsArgs<ExtArgs>
   functions?: boolean | Prisma.User$functionsArgs<ExtArgs>
   userOrganizations?: boolean | Prisma.User$userOrganizationsArgs<ExtArgs>
+  devices?: boolean | Prisma.User$devicesArgs<ExtArgs>
+  sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -6503,6 +7173,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   assignedFunctions?: boolean | Prisma.User$assignedFunctionsArgs<ExtArgs>
   functions?: boolean | Prisma.User$functionsArgs<ExtArgs>
   userOrganizations?: boolean | Prisma.User$userOrganizationsArgs<ExtArgs>
+  devices?: boolean | Prisma.User$devicesArgs<ExtArgs>
+  sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -6537,6 +7209,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     assignedFunctions: Prisma.$UserFunctionPayload<ExtArgs>[]
     functions: Prisma.$UserFunctionPayload<ExtArgs>[]
     userOrganizations: Prisma.$UserOrganizationPayload<ExtArgs>[]
+    devices: Prisma.$UserDevicePayload<ExtArgs>[]
+    sessions: Prisma.$UserSessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -6975,6 +7649,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   assignedFunctions<T extends Prisma.User$assignedFunctionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignedFunctionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserFunctionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   functions<T extends Prisma.User$functionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$functionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserFunctionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   userOrganizations<T extends Prisma.User$userOrganizationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$userOrganizationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserOrganizationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  devices<T extends Prisma.User$devicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$devicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserDevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8029,6 +8705,54 @@ export type User$userOrganizationsArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.UserOrganizationScalarFieldEnum | Prisma.UserOrganizationScalarFieldEnum[]
+}
+
+/**
+ * User.devices
+ */
+export type User$devicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserDevice
+   */
+  select?: Prisma.UserDeviceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserDevice
+   */
+  omit?: Prisma.UserDeviceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserDeviceInclude<ExtArgs> | null
+  where?: Prisma.UserDeviceWhereInput
+  orderBy?: Prisma.UserDeviceOrderByWithRelationInput | Prisma.UserDeviceOrderByWithRelationInput[]
+  cursor?: Prisma.UserDeviceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserDeviceScalarFieldEnum | Prisma.UserDeviceScalarFieldEnum[]
+}
+
+/**
+ * User.sessions
+ */
+export type User$sessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserSession
+   */
+  select?: Prisma.UserSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserSession
+   */
+  omit?: Prisma.UserSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserSessionInclude<ExtArgs> | null
+  where?: Prisma.UserSessionWhereInput
+  orderBy?: Prisma.UserSessionOrderByWithRelationInput | Prisma.UserSessionOrderByWithRelationInput[]
+  cursor?: Prisma.UserSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserSessionScalarFieldEnum | Prisma.UserSessionScalarFieldEnum[]
 }
 
 /**

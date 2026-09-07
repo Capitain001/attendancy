@@ -67,14 +67,14 @@ export async function updateTerm(termId: string, orgId: string, data: UpdateTerm
  * aucune perte de cours, seulement du rattachement au semestre.
  * Refusé si clôturé (même logique que updateTerm).
  */
-export async function removeTerm(termId: string, orgId: string) {
+export async function deleteTerm(termId: string, orgId: string) {
   const existing = await findOwnedTerm(termId, orgId)
   if (!existing) throw new Error(ERRORS.DB.NOT_FOUND)
   if (existing.lockedAt) throw new Error('Semestre clôturé : suppression impossible.')
 
   await tryConstraint(prisma.term.delete({ where: { id: termId } }))
 
-  await invalidateEvent('TERM_REMOVED', orgId, existing.classId)
+  await invalidateEvent('TERM_DELETED', orgId, existing.classId)
   return { id: termId, classId: existing.classId }
 }
 

@@ -31,3 +31,21 @@ Modèles Prisma : `Referential`, `ProgramTemplate`, `UETemplate`, `UETemplateEC`
 - L'import nécessite le rôle DIRECTION ou ADMIN.
 - Les actions ne contiennent pas la logique métier, elles ne font que de l'orchestration + validation.
 - L'import est idempotent : réappliquer le même programme national ne crée pas de doublons mais réutilise les entités métier existantes.
+
+## Fichiers
+
+| Fichier | Rôle |
+|---------|------|
+| `actions/import.mutations.ts` | Écritures serveur (Validation + AuthGuard) |
+| `actions/index.ts` | Barrel exports des actions |
+| `actions/referential.queries.ts` | Lectures serveur exposées au frontend |
+| `cache.ts` | <SERVICE>_GRAPH : événement → tags à invalider |
+| `constants.ts` | Constantes du domaine |
+| `database/import.mutations.ts` | Requêtes Prisma (tryConstraint + invalidateEvent) |
+| `database/index.ts` | Barrel interne (non exporté) |
+| `database/referential.queries.ts` | Requêtes Prisma (lectures avec cache) |
+| `database/template.queries.ts` | Requêtes Prisma (lectures avec cache) |
+| `generated.types.ts` | Types générés automatiquement (DTOs de lecture) |
+| `index.ts` | Point d'entrée du service (export actions + types) |
+| `types.ts` | DTOs et types du domaine |
+| `validation.ts` | Schémas Valibot |

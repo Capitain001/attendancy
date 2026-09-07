@@ -11,6 +11,21 @@ Régime de suppression : **hard delete** (`delete*`, événement `*_DELETED`) �
 pas de `deletedAt` sur le modèle.
 
 ## Fichiers
+
+| Fichier | Rôle |
+|---------|------|
+| `actions/course-teacher.mutations.ts` | Écritures serveur (Validation + AuthGuard) |
+| `actions/course-teacher.queries.ts` | Lectures serveur exposées au frontend |
+| `actions/index.ts` | Barrel exports des actions |
+| `cache.ts` | <SERVICE>_GRAPH : événement → tags à invalider |
+| `constants.ts` | Constantes du domaine |
+| `database/course-teacher.mutations.ts` | Requêtes Prisma (tryConstraint + invalidateEvent) |
+| `database/course-teacher.queries.ts` | Requêtes Prisma (lectures avec cache) |
+| `database/index.ts` | Barrel interne (non exporté) |
+| `generated.types.ts` | Types générés automatiquement (DTOs de lecture) |
+| `index.ts` | Point d'entrée du service (export actions + types) |
+| `types.ts` | DTOs et types du domaine |
+| `validation.ts` | Schémas Valibot |
 - `database/course-teacher.queries.ts` — `getCourseTeachers`, `getCourseTeachersIds` (`"use cache"`, tag `COURSE_TEACHER`)
 - `database/course-teacher.mutations.ts` — `assignTeacher`, `deleteTeacherFromCourse`, `syncCourseTeachers`
 - `cache.ts` — `COURSE_TEACHER_GRAPH` — invalide COURSE_TEACHER **+ COURSE** (cross-service, voir Contraintes)

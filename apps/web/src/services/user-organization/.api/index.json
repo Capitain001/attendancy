@@ -1,0 +1,68 @@
+{
+  "service": "user-organization",
+  "path": "src/services/user-organization/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "d45ce76",
+  "utils_dir": null,
+  "fns": {
+    "suspendOrgUser": {
+      "f": ".api/suspendOrgUser.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "activateOrgUser": {
+      "f": ".api/activateOrgUser.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "reintegrateUserOrganization": {
+      "f": ".api/reintegrateUserOrganization.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getUserOrganizations": {
+      "f": ".api/getUserOrganizations.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "suspendOrgUserAction": {
+      "f": ".api/suspendOrgUserAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "activateOrgUserAction": {
+      "f": ".api/activateOrgUserAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "reintegrateUserOrganizationAction": {
+      "f": ".api/reintegrateUserOrganizationAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getUserOrganizationsAction": {
+      "f": ".api/getUserOrganizationsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "suspendOrgUser": [
+      "suspendOrgUserAction"
+    ],
+    "activateOrgUser": [
+      "activateOrgUserAction"
+    ],
+    "reintegrateUserOrganization": [
+      "reintegrateUserOrganizationAction"
+    ],
+    "getUserOrganizations": [
+      "getUserOrganizationsAction"
+    ],
+    "suspendOrgUserAction": [],
+    "activateOrgUserAction": [],
+    "reintegrateUserOrganizationAction": [],
+    "getUserOrganizationsAction": []
+  },
+  "deps": {}
+}

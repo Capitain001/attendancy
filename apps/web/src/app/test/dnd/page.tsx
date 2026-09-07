@@ -2,6 +2,7 @@
 import DragDrop from '@/components/programs/dnd-basic-exemple'
 import ExampleNoiseUsage from './NoiseExemple'
 import React from 'react'
+import { BackgroundPattern } from '@/components/design/BackgroundPattern'
 
 export default function page() {
   return (
@@ -10,6 +11,8 @@ export default function page() {
   <div className="pattern pattern-noise dark:invert" style={{ "--pattern-opacity": 0.25 } as React.CSSProperties} />
   <p className="relative p-4 text-white">Contenu</p>
 </div>
+
+<BackgroundPattern pattern="pattern-dots"  className="opacity-30" />
       <DragDrop/>
       <ExampleNoiseUsage/>
     </div>

@@ -1,0 +1,8 @@
+{
+  "name": "getUserDevices",
+  "file": "src/services/device/database/device.queries.ts",
+  "sig": "(userId: string) => Promise<{ id: string; deviceId: string; label: string | null; deviceType: DeviceType; os: string | null; osVersion: string | null; browser: string | null; browserVersion: string | null; ... 4 more ...; revokedAt: Date | null; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

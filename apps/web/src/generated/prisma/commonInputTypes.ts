@@ -548,6 +548,57 @@ export type EnumNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumNotificationTypeFilter<$PrismaModel>
 }
 
+export type EnumDeviceTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeviceType | Prisma.EnumDeviceTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.DeviceType[] | Prisma.ListEnumDeviceTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DeviceType[] | Prisma.ListEnumDeviceTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDeviceTypeFilter<$PrismaModel> | $Enums.DeviceType
+}
+
+export type EnumDeviceTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeviceType | Prisma.EnumDeviceTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.DeviceType[] | Prisma.ListEnumDeviceTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DeviceType[] | Prisma.ListEnumDeviceTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDeviceTypeWithAggregatesFilter<$PrismaModel> | $Enums.DeviceType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDeviceTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDeviceTypeFilter<$PrismaModel>
+}
+
+export type EnumUserSessionStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.UserSessionStatus | Prisma.EnumUserSessionStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.UserSessionStatus[] | Prisma.ListEnumUserSessionStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.UserSessionStatus[] | Prisma.ListEnumUserSessionStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumUserSessionStatusFilter<$PrismaModel> | $Enums.UserSessionStatus
+}
+
+export type EnumSessionRevokeReasonNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.SessionRevokeReason | Prisma.EnumSessionRevokeReasonFieldRefInput<$PrismaModel> | null
+  in?: $Enums.SessionRevokeReason[] | Prisma.ListEnumSessionRevokeReasonFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.SessionRevokeReason[] | Prisma.ListEnumSessionRevokeReasonFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumSessionRevokeReasonNullableFilter<$PrismaModel> | $Enums.SessionRevokeReason | null
+}
+
+export type EnumUserSessionStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.UserSessionStatus | Prisma.EnumUserSessionStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.UserSessionStatus[] | Prisma.ListEnumUserSessionStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.UserSessionStatus[] | Prisma.ListEnumUserSessionStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumUserSessionStatusWithAggregatesFilter<$PrismaModel> | $Enums.UserSessionStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumUserSessionStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumUserSessionStatusFilter<$PrismaModel>
+}
+
+export type EnumSessionRevokeReasonNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SessionRevokeReason | Prisma.EnumSessionRevokeReasonFieldRefInput<$PrismaModel> | null
+  in?: $Enums.SessionRevokeReason[] | Prisma.ListEnumSessionRevokeReasonFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.SessionRevokeReason[] | Prisma.ListEnumSessionRevokeReasonFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumSessionRevokeReasonNullableWithAggregatesFilter<$PrismaModel> | $Enums.SessionRevokeReason | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSessionRevokeReasonNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSessionRevokeReasonNullableFilter<$PrismaModel>
+}
+
 export type EnumEvaluationTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.EvaluationType | Prisma.EnumEvaluationTypeFieldRefInput<$PrismaModel>
   in?: $Enums.EvaluationType[] | Prisma.ListEnumEvaluationTypeFieldRefInput<$PrismaModel>
@@ -1428,6 +1479,57 @@ export type NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel = never>
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumNotificationTypeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumNotificationTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumDeviceTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeviceType | Prisma.EnumDeviceTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.DeviceType[] | Prisma.ListEnumDeviceTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DeviceType[] | Prisma.ListEnumDeviceTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDeviceTypeFilter<$PrismaModel> | $Enums.DeviceType
+}
+
+export type NestedEnumDeviceTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeviceType | Prisma.EnumDeviceTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.DeviceType[] | Prisma.ListEnumDeviceTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DeviceType[] | Prisma.ListEnumDeviceTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDeviceTypeWithAggregatesFilter<$PrismaModel> | $Enums.DeviceType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDeviceTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDeviceTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumUserSessionStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.UserSessionStatus | Prisma.EnumUserSessionStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.UserSessionStatus[] | Prisma.ListEnumUserSessionStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.UserSessionStatus[] | Prisma.ListEnumUserSessionStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumUserSessionStatusFilter<$PrismaModel> | $Enums.UserSessionStatus
+}
+
+export type NestedEnumSessionRevokeReasonNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.SessionRevokeReason | Prisma.EnumSessionRevokeReasonFieldRefInput<$PrismaModel> | null
+  in?: $Enums.SessionRevokeReason[] | Prisma.ListEnumSessionRevokeReasonFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.SessionRevokeReason[] | Prisma.ListEnumSessionRevokeReasonFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumSessionRevokeReasonNullableFilter<$PrismaModel> | $Enums.SessionRevokeReason | null
+}
+
+export type NestedEnumUserSessionStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.UserSessionStatus | Prisma.EnumUserSessionStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.UserSessionStatus[] | Prisma.ListEnumUserSessionStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.UserSessionStatus[] | Prisma.ListEnumUserSessionStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumUserSessionStatusWithAggregatesFilter<$PrismaModel> | $Enums.UserSessionStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumUserSessionStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumUserSessionStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumSessionRevokeReasonNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SessionRevokeReason | Prisma.EnumSessionRevokeReasonFieldRefInput<$PrismaModel> | null
+  in?: $Enums.SessionRevokeReason[] | Prisma.ListEnumSessionRevokeReasonFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.SessionRevokeReason[] | Prisma.ListEnumSessionRevokeReasonFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumSessionRevokeReasonNullableWithAggregatesFilter<$PrismaModel> | $Enums.SessionRevokeReason | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSessionRevokeReasonNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSessionRevokeReasonNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumEvaluationTypeFilter<$PrismaModel = never> = {

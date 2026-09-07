@@ -13,13 +13,19 @@ et affectations aux groupes (`StudentGroup`).
 
 | Fichier | Rôle |
 |---------|------|
-| `database/student.queries.ts` | `getEnrolledStudents(classId, orgId)` — liste avec groupes |
-| `database/student.mutations.ts` | `enrollStudent`, `removeEnrollment`, `assignStudentGroup`, `deleteStudentGroup` |
-| `cache.ts` | `STUDENT_GRAPH` — invalide STUDENT + CLASS (counts) |
-| `validation.ts` | `enrollStudentSchema`, `assignStudentGroupSchema` |
-| `actions/student.queries.ts` | `getEnrolledStudentsAction(classId)` |
+| `actions/index.ts` | Barrel exports des actions |
+| `actions/student.analytics.ts` | Fonctions liées aux statistiques |
 | `actions/student.mutations.ts` | 4 actions DIRECTION |
-
+| `actions/student.queries.ts` | `getEnrolledStudentsAction(classId)` |
+| `cache.ts` | `STUDENT_GRAPH` — invalide STUDENT + CLASS (counts) |
+| `database/index.ts` | Barrel interne (non exporté) |
+| `database/student.analytics.ts` | Fonctions liées aux statistiques |
+| `database/student.mutations.ts` | `enrollStudent`, `removeEnrollment`, `assignStudentGroup`, `deleteStudentGroup` |
+| `database/student.queries.ts` | `getEnrolledStudents(classId, orgId)` — liste avec groupes |
+| `generated.types.ts` | Types générés automatiquement (DTOs de lecture) |
+| `index.ts` | Point d'entrée du service (export actions + types) |
+| `types.ts` | DTOs et types du domaine |
+| `validation.ts` | `enrollStudentSchema`, `assignStudentGroupSchema` |
 ## Invariants
 
 - `@@unique([studentId, classId])` → `StudentEnrollment_studentId_classId_key`

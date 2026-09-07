@@ -192,6 +192,16 @@ export type Notification = Prisma.NotificationModel
  */
 export type PushSubscription = Prisma.PushSubscriptionModel
 /**
+ * Model UserDevice
+ * 
+ */
+export type UserDevice = Prisma.UserDeviceModel
+/**
+ * Model UserSession
+ * 
+ */
+export type UserSession = Prisma.UserSessionModel
+/**
  * Model Evaluation
  * 
  */

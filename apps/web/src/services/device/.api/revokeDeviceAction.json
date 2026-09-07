@@ -1,0 +1,11 @@
+{
+  "name": "revokeDeviceAction",
+  "file": "src/services/device/actions/device.mutations.ts",
+  "sig": "(input: RevokeDeviceInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "calls": [
+    "revokeDevice"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

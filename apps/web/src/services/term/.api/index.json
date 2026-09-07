@@ -2,7 +2,7 @@
   "service": "term",
   "path": "src/services/term/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "d4b8622",
+  "derived_at": "d45ce76",
   "utils_dir": null,
   "fns": {
     "createTerm": {
@@ -15,8 +15,8 @@
       "layer": "db",
       "kind": "mutation"
     },
-    "removeTerm": {
-      "f": ".api/removeTerm.json",
+    "deleteTerm": {
+      "f": ".api/deleteTerm.json",
       "layer": "db",
       "kind": "mutation"
     },
@@ -45,8 +45,8 @@
       "layer": "action",
       "kind": "server-action"
     },
-    "removeTermAction": {
-      "f": ".api/removeTermAction.json",
+    "deleteTermAction": {
+      "f": ".api/deleteTermAction.json",
       "layer": "action",
       "kind": "server-action"
     },
@@ -73,8 +73,8 @@
     "updateTerm": [
       "updateTermAction"
     ],
-    "removeTerm": [
-      "removeTermAction"
+    "deleteTerm": [
+      "deleteTermAction"
     ],
     "generateTermsFromProgram": [
       "generateTermsFromProgramAction"
@@ -87,13 +87,13 @@
     ],
     "createTermAction": [],
     "updateTermAction": [],
-    "removeTermAction": [],
+    "deleteTermAction": [],
     "generateTermsFromProgramAction": [],
     "getTermsAction": [],
     "getTermAction": [],
     "findOwnedTerm": [
       "updateTerm",
-      "removeTerm"
+      "deleteTerm"
     ]
   },
   "deps": {}

@@ -1,0 +1,196 @@
+{
+  "service": "device",
+  "path": "src/services/device/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "d45ce76",
+  "generated_at": "2026-09-06T22:01:28.317Z",
+  "fns": {
+    "upsertDeviceOnLogin": {
+      "name": "upsertDeviceOnLogin",
+      "file": "src/services/device/database/device.mutations.ts",
+      "sig": "(input: { userId: string deviceId: string userAgent: string | null ipAddress: string | null authSessionId: string | null }) => Promise<{ device: { id: string; revokedAt: Date | null; }; session: { id: string; deviceId: string; createdAt: Date; }; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "expireSessionOnLogout": {
+      "name": "expireSessionOnLogout",
+      "file": "src/services/device/database/device.mutations.ts",
+      "sig": "(userId: string, deviceId: string) => Promise<BatchPayload>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "revokeSession": {
+      "name": "revokeSession",
+      "file": "src/services/device/database/device.mutations.ts",
+      "sig": "(sessionId: string, userId: string, reason: SessionRevokeReason) => Promise<{ id: string; deviceId: string; authSessionId: string | null; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "revokeDevice": {
+      "name": "revokeDevice",
+      "file": "src/services/device/database/device.mutations.ts",
+      "sig": "(deviceId: string, userId: string, reason: SessionRevokeReason) => Promise<{ id: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "touchSessionActivity": {
+      "name": "touchSessionActivity",
+      "file": "src/services/device/database/device.mutations.ts",
+      "sig": "(sessionId: string) => Promise<{ id: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getUserDevices": {
+      "name": "getUserDevices",
+      "file": "src/services/device/database/device.queries.ts",
+      "sig": "(userId: string) => Promise<{ id: string; deviceId: string; label: string | null; deviceType: DeviceType; os: string | null; osVersion: string | null; browser: string | null; browserVersion: string | null; ... 4 more ...; revokedAt: Date | null; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getUserSessions": {
+      "name": "getUserSessions",
+      "file": "src/services/device/database/device.queries.ts",
+      "sig": "(userId: string, deviceId?: string) => Promise<{ id: string; revokedAt: Date | null; ipAddress: string | null; orgId: string | null; status: UserSessionStatus; createdAt: Date; lastActivityAt: Date; revokedReason: SessionRevokeReason | null; device: { ...; }; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getSession": {
+      "name": "getSession",
+      "file": "src/services/device/database/device.queries.ts",
+      "sig": "(sessionId: string) => Promise<{ id: string; userId: string; orgId: string | null; status: UserSessionStatus; authSessionId: string | null; } | null>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "captureLoginDeviceAction": {
+      "name": "captureLoginDeviceAction",
+      "file": "src/services/device/actions/device.mutations.ts",
+      "sig": "(input: CaptureLoginDeviceInput) => Promise<{ error: string; data?: undefined; } | { data: { device: { id: string; revokedAt: Date | null; }; session: { id: string; deviceId: string; createdAt: Date; }; }; error?: undefined; }>",
+      "calls": [
+        "upsertDeviceOnLogin"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "endSessionOnLogoutAction": {
+      "name": "endSessionOnLogoutAction",
+      "file": "src/services/device/actions/device.mutations.ts",
+      "sig": "(input: EndSessionOnLogoutInput) => Promise<{ error: string; data?: undefined; } | { data: boolean; error?: undefined; }>",
+      "calls": [
+        "expireSessionOnLogout"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "revokeSessionAction": {
+      "name": "revokeSessionAction",
+      "file": "src/services/device/actions/device.mutations.ts",
+      "sig": "(input: RevokeSessionInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; deviceId: string; authSessionId: string | null; }; error?: undefined; }>",
+      "calls": [
+        "revokeSession"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "revokeDeviceAction": {
+      "name": "revokeDeviceAction",
+      "file": "src/services/device/actions/device.mutations.ts",
+      "sig": "(input: RevokeDeviceInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "calls": [
+        "revokeDevice"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getMyDevicesAction": {
+      "name": "getMyDevicesAction",
+      "file": "src/services/device/actions/device.queries.ts",
+      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { id: string; deviceId: string; label: string | null; deviceType: DeviceType; os: string | null; osVersion: string | null; browser: string | null; ... 5 more ...; revokedAt: Date | null; }[]; error?: undefined; }>",
+      "calls": [
+        "getUserDevices"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getMySessionsAction": {
+      "name": "getMySessionsAction",
+      "file": "src/services/device/actions/device.queries.ts",
+      "sig": "(input?: { deviceId?: string }) => Promise<{ error: string; data?: undefined; } | { data: { id: string; revokedAt: Date | null; ipAddress: string | null; orgId: string | null; status: UserSessionStatus; createdAt: Date; lastActivityAt: Date; revokedReason: SessionRevokeReason | null; device: { ...; }; }[]; error?: undefined; }>",
+      "calls": [
+        "getUserSessions"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "upsertDeviceOnLogin": [
+      "captureLoginDeviceAction"
+    ],
+    "expireSessionOnLogout": [
+      "endSessionOnLogoutAction"
+    ],
+    "revokeSession": [
+      "revokeSessionAction"
+    ],
+    "revokeDevice": [
+      "revokeDeviceAction"
+    ],
+    "touchSessionActivity": [],
+    "getUserDevices": [
+      "getMyDevicesAction"
+    ],
+    "getUserSessions": [
+      "getMySessionsAction"
+    ],
+    "getSession": [],
+    "captureLoginDeviceAction": [],
+    "endSessionOnLogoutAction": [],
+    "revokeSessionAction": [],
+    "revokeDeviceAction": [],
+    "getMyDevicesAction": [],
+    "getMySessionsAction": []
+  },
+  "deps": {}
+}

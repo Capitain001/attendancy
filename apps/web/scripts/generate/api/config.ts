@@ -58,6 +58,10 @@ export const ORG_ID_CHECK = {
     "getPushSubscriptionsByUserId",
     "getActivePushSubscriptionsByUserId",
     "getSubscriptionStats",
+    // device — UserDevice et UserSession sont scopés par userId, pas par orgId (audit optionnel)
+    "getUserDevices",
+    "getUserSessions",
+    "getSession",
     // teacher — orgId imbriqué dans relation course/schedule (pas de colonne orgId directe sur CourseTeacher/Session)
     "getTeacherCourses",
     "getTeacherStats",

@@ -14,8 +14,9 @@ export async function enrollStudentAction(input: EnrollStudentInput) {
     if (!auth.data) return { error: auth.error }
     const { orgId } = auth.data
 
-    const parsed = v.parse(enrollStudentSchema, input)
-    return { data: await enrollStudent({ ...parsed, orgId }) }
+    const parsed = v.safeParse(enrollStudentSchema, input)
+    if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+    return { data: await enrollStudent({ ...parsed.output, orgId }) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
@@ -39,8 +40,9 @@ export async function assignStudentGroupAction(input: AssignStudentGroupInput) {
     if (!auth.data) return { error: auth.error }
     const { orgId } = auth.data
 
-    const parsed = v.parse(assignStudentGroupSchema, input)
-    return { data: await assignStudentGroup({ ...parsed, orgId }) }
+    const parsed = v.safeParse(assignStudentGroupSchema, input)
+    if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+    return { data: await assignStudentGroup({ ...parsed.output, orgId }) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

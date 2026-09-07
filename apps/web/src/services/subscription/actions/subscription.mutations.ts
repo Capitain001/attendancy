@@ -13,8 +13,10 @@ export async function createSubscriptionAction(input: unknown) {
     if (!auth.data) return { error: auth.error }
     const { orgId } = auth.data
 
-    const parsed = v.parse(createSubscriptionSchema, input)
-    const subscription = await createSubscription({ orgId, planId: parsed.planId })
+    const parsed = v.safeParse(createSubscriptionSchema, input)
+    if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+
+    const subscription = await createSubscription({ orgId, planId: parsed.output.planId })
     return { data: subscription }
   } catch (error) {
     return { error: error instanceof Error ? error.message : ERRORS.SERVER }

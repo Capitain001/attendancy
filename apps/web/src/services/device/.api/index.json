@@ -1,0 +1,108 @@
+{
+  "service": "device",
+  "path": "src/services/device/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "d45ce76",
+  "utils_dir": null,
+  "fns": {
+    "upsertDeviceOnLogin": {
+      "f": ".api/upsertDeviceOnLogin.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "expireSessionOnLogout": {
+      "f": ".api/expireSessionOnLogout.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "revokeSession": {
+      "f": ".api/revokeSession.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "revokeDevice": {
+      "f": ".api/revokeDevice.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "touchSessionActivity": {
+      "f": ".api/touchSessionActivity.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getUserDevices": {
+      "f": ".api/getUserDevices.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getUserSessions": {
+      "f": ".api/getUserSessions.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getSession": {
+      "f": ".api/getSession.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "captureLoginDeviceAction": {
+      "f": ".api/captureLoginDeviceAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "endSessionOnLogoutAction": {
+      "f": ".api/endSessionOnLogoutAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "revokeSessionAction": {
+      "f": ".api/revokeSessionAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "revokeDeviceAction": {
+      "f": ".api/revokeDeviceAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getMyDevicesAction": {
+      "f": ".api/getMyDevicesAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getMySessionsAction": {
+      "f": ".api/getMySessionsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "upsertDeviceOnLogin": [
+      "captureLoginDeviceAction"
+    ],
+    "expireSessionOnLogout": [
+      "endSessionOnLogoutAction"
+    ],
+    "revokeSession": [
+      "revokeSessionAction"
+    ],
+    "revokeDevice": [
+      "revokeDeviceAction"
+    ],
+    "touchSessionActivity": [],
+    "getUserDevices": [
+      "getMyDevicesAction"
+    ],
+    "getUserSessions": [
+      "getMySessionsAction"
+    ],
+    "getSession": [],
+    "captureLoginDeviceAction": [],
+    "endSessionOnLogoutAction": [],
+    "revokeSessionAction": [],
+    "revokeDeviceAction": [],
+    "getMyDevicesAction": [],
+    "getMySessionsAction": []
+  },
+  "deps": {}
+}

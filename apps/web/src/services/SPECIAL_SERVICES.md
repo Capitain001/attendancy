@@ -9,6 +9,7 @@ const specialServices = [
     "auth",
     "user",
     "seed",
+    "device",
 ];
 
 

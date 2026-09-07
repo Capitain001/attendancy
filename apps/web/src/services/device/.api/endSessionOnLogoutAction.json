@@ -1,0 +1,11 @@
+{
+  "name": "endSessionOnLogoutAction",
+  "file": "src/services/device/actions/device.mutations.ts",
+  "sig": "(input: EndSessionOnLogoutInput) => Promise<{ error: string; data?: undefined; } | { data: boolean; error?: undefined; }>",
+  "calls": [
+    "expireSessionOnLogout"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

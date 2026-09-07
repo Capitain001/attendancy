@@ -37,3 +37,19 @@ Une fonction regroupe des permissions fines et complète le rôle grossier de `U
 
 - `getFunctionsByNames` utilisé par `invite/direction/database.ts` (cache branché Phase REG-02)
 - `FUNCTION_GRAPH` → étendre si d'autres services invalident lors de mutations Function
+
+## Fichiers
+
+| Fichier | Rôle |
+|---------|------|
+| `actions/function.mutations.ts` | Écritures serveur (Validation + AuthGuard) |
+| `actions/function.queries.ts` | Lectures serveur exposées au frontend |
+| `actions/index.ts` | Barrel exports des actions |
+| `cache.ts` | <SERVICE>_GRAPH : événement → tags à invalider |
+| `database/function.mutations.ts` | Requêtes Prisma (tryConstraint + invalidateEvent) |
+| `database/function.queries.ts` | Requêtes Prisma (lectures avec cache) |
+| `database/index.ts` | Barrel interne (non exporté) |
+| `generated.types.ts` | Types générés automatiquement (DTOs de lecture) |
+| `index.ts` | Point d'entrée du service (export actions + types) |
+| `types.ts` | DTOs et types du domaine |
+| `validation.ts` | Schémas Valibot |

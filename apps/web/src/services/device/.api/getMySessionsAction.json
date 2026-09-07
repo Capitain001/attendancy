@@ -1,0 +1,11 @@
+{
+  "name": "getMySessionsAction",
+  "file": "src/services/device/actions/device.queries.ts",
+  "sig": "(input?: { deviceId?: string }) => Promise<{ error: string; data?: undefined; } | { data: { id: string; revokedAt: Date | null; ipAddress: string | null; orgId: string | null; status: UserSessionStatus; createdAt: Date; lastActivityAt: Date; revokedReason: SessionRevokeReason | null; device: { ...; }; }[]; error?: undefined; }>",
+  "calls": [
+    "getUserSessions"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

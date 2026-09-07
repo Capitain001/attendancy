@@ -118,6 +118,35 @@ export const NotificationType = {
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
 
 
+export const DeviceType = {
+  DESKTOP: 'DESKTOP',
+  MOBILE: 'MOBILE',
+  TABLET: 'TABLET',
+  UNKNOWN: 'UNKNOWN'
+} as const
+
+export type DeviceType = (typeof DeviceType)[keyof typeof DeviceType]
+
+
+export const UserSessionStatus = {
+  ACTIVE: 'ACTIVE',
+  EXPIRED: 'EXPIRED',
+  REVOKED: 'REVOKED'
+} as const
+
+export type UserSessionStatus = (typeof UserSessionStatus)[keyof typeof UserSessionStatus]
+
+
+export const SessionRevokeReason = {
+  USER_LOGOUT: 'USER_LOGOUT',
+  USER_REVOKED_DEVICE: 'USER_REVOKED_DEVICE',
+  ADMIN_REVOKED: 'ADMIN_REVOKED',
+  PASSWORD_CHANGE: 'PASSWORD_CHANGE'
+} as const
+
+export type SessionRevokeReason = (typeof SessionRevokeReason)[keyof typeof SessionRevokeReason]
+
+
 export const EvaluationType = {
   DEVOIR: 'DEVOIR',
   EXAMEN: 'EXAMEN',

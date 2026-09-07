@@ -10,6 +10,7 @@ import {
   Hand,
   CircleDollarSign,
   Plug,
+  Smartphone,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { UserInfo } from "@/types/user";
@@ -31,6 +32,7 @@ export function SettingsSidebar({
     { id: "notifications", label: "Notifications", href: `/${slug}/settings/notifications`, icon: Bell },
     { id: "privacy", label: "Privacy", href: `/${slug}/settings/privacy`, icon: Hand },
     { id: "payment", label: "Payment", href: `/${slug}/settings/payment`, icon: CircleDollarSign },
+    { id: "devices", label: "Appareils", href: `/${slug}/settings/devices`, icon: Smartphone },
     { id: "plugins", label: "Plugins", href: `/${slug}/settings/plugins`, icon: Plug },
   ];
 

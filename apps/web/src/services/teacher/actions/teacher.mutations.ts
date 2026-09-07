@@ -11,15 +11,17 @@ import { updateTeacherDepartment } from '../database'
 
 export async function updateTeacherDepartmentAction(input: UpdateTeacherDepartmentInput) {
   try {
-  const parsed = v.parse(updateTeacherDepartmentSchema, input)
-   const auth = await authAccess({ 
+    const auth = await authAccess({ 
       requiredRole: ['ADMIN', 'DIRECTION'], 
       requiredFunction: 'PRINCIPAL' 
     })
     if (!auth.data) return { error: auth.error }
-    
     const { orgId } = auth.data
-    return { data: await updateTeacherDepartment(parsed.teacherId, parsed.departmentId, orgId) }
+
+    const parsed = v.safeParse(updateTeacherDepartmentSchema, input)
+    if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+    
+    return { data: await updateTeacherDepartment(parsed.output.teacherId, parsed.output.departmentId, orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

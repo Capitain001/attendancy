@@ -34,3 +34,19 @@ Modèle : 1-1 avec `Organization` (contrainte `@unique` sur `orgId`).
   PAS dans le schéma actuel (`billing.prisma`). À ajouter via migration si besoin Stripe.
 - `cancelSubscriptionAction` — mettre `canceledAt` + `status: CANCELED` + invalidation cache.
 - Webhook Stripe (`POST /api/webhooks/stripe`) — hors du pattern service, à placer dans `app/api/`.
+
+## Fichiers
+
+| Fichier | Rôle |
+|---------|------|
+| `actions/index.ts` | Barrel exports des actions |
+| `actions/subscription.mutations.ts` | Écritures serveur (Validation + AuthGuard) |
+| `actions/subscription.queries.ts` | Lectures serveur exposées au frontend |
+| `cache.ts` | <SERVICE>_GRAPH : événement → tags à invalider |
+| `database/index.ts` | Barrel interne (non exporté) |
+| `database/subscription.mutations.ts` | Requêtes Prisma (tryConstraint + invalidateEvent) |
+| `database/subscription.queries.ts` | Requêtes Prisma (lectures avec cache) |
+| `generated.types.ts` | Types générés automatiquement (DTOs de lecture) |
+| `index.ts` | Point d'entrée du service (export actions + types) |
+| `types.ts` | DTOs et types du domaine |
+| `validation.ts` | Schémas Valibot |

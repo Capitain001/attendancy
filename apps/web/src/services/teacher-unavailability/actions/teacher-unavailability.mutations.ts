@@ -22,8 +22,9 @@ export async function createWeeklyUnavailabilityAction(input: CreateWeeklyUnavai
     if (!auth.data) return { error: auth.error }
     const { orgId } = auth.data
 
-    const parsed = v.parse(createWeeklyUnavailabilitySchema, input)
-    return { data: await createWeeklyUnavailability(orgId, parsed) }
+    const parsed = v.safeParse(createWeeklyUnavailabilitySchema, input)
+    if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+    return { data: await createWeeklyUnavailability(orgId, parsed.output) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
@@ -35,8 +36,9 @@ export async function createDateRangeUnavailabilityAction(input: CreateDateRange
     if (!auth.data) return { error: auth.error }
     const { orgId } = auth.data
 
-    const parsed = v.parse(createDateRangeUnavailabilitySchema, input)
-    return { data: await createDateRangeUnavailability(orgId, parsed) }
+    const parsed = v.safeParse(createDateRangeUnavailabilitySchema, input)
+    if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+    return { data: await createDateRangeUnavailability(orgId, parsed.output) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

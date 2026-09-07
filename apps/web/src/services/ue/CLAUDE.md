@@ -7,13 +7,18 @@ Catalogue des Unités d'Enseignement d'une organisation.
 
 | Fichier | Rôle |
 |---------|------|
-| `database/ue.queries.ts` | `getUEs(orgId, departmentId?)` avec `"use cache"` |
-| `database/ue.mutations.ts` | `createUE`, `removeUE` (soft delete) |
-| `cache.ts` | `UE_GRAPH` enregistré dans `src/cache/server/key.ts` |
-| `validation.ts` | `createUESchema` |
-| `actions/ue.queries.ts` | `getUEsAction(departmentId?)` |
+| `actions/index.ts` | Barrel exports des actions |
 | `actions/ue.mutations.ts` | `createUEAction`, `archiveUEAction` |
-
+| `actions/ue.queries.ts` | `getUEsAction(departmentId?)` |
+| `cache.ts` | `UE_GRAPH` enregistré dans `src/cache/server/key.ts` |
+| `database/index.ts` | Barrel interne (non exporté) |
+| `database/ue.mutations.ts` | `createUE`, `removeUE` (soft delete) |
+| `database/ue.queries.ts` | `getUEs(orgId, departmentId?)` avec `"use cache"` |
+| `generated.types.ts` | Types générés automatiquement (DTOs de lecture) |
+| `index.ts` | Point d'entrée du service (export actions + types) |
+| `types.ts` | DTOs et types du domaine |
+| `utils.ts` | Utilitaires internes |
+| `validation.ts` | `createUESchema` |
 ## Invariants
 
 - `deletedAt` = archivage (soft delete) — convention du projet : UE archivée reste dans l'historique

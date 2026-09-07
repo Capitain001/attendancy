@@ -1,0 +1,11 @@
+{
+  "name": "getUserOrganizationsAction",
+  "file": "src/services/user-organization/actions/user-organization.queries.ts",
+  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { id: string; }[]; error?: undefined; }>",
+  "calls": [
+    "getUserOrganizations"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -10,17 +10,23 @@ au rendu du planning. Pas de mutations : les séances sont gérées par `service
 ## Fichiers
 
 | Fichier | Rôle |
-|---|---|
-| `database.ts` | `getPlanningResources`, `getOrgPlanningResources` — `'use cache'` |
+|---------|------|
 | `actions.ts` | `getPlanningResourcesAction`, `getOrgPlanningResourcesAction` — `'use server'` |
-| `types.ts` | `PlanningResources`, `OrgPlanningResources` — inférés via `Awaited<ReturnType<...>>` |
-| `policy.ts` | `isSlotElapsed`, `PAST_SLOT_ERROR` — règles métier pures (partagées client+serveur) |
-| `utils.ts` | `mapScheduleToEvent`, `statusToColor`, `getPlanningRange`, `ScheduleRow` |
-| `queries.ts` | `planningSchedulesQuery`, `scheduleDaysQuery`, `orgPlanningResourcesQuery` |
+| `conflict/actions.ts` | Fichier interne |
+| `conflict/check/availability.ts` | Fichier interne |
+| `conflict/check/availability.unit.test.ts` | Fichier interne |
+| `conflict/check/conflicts.integration.test.ts` | Fichier interne |
+| `conflict/check/conflicts.ts` | Fichier interne |
+| `conflict/check/conflicts.unit.test.ts` | Fichier interne |
+| `conflict/check/index.ts` | Fichier interne |
+| `conflict/index.ts` | Fichier interne |
+| `conflict/validation.ts` | Fichier interne |
+| `database.ts` | `getPlanningResources`, `getOrgPlanningResources` — `'use cache'` |
 | `index.ts` | Barrel public |
-
----
-
+| `policy.ts` | `isSlotElapsed`, `PAST_SLOT_ERROR` — règles métier pures (partagées client+serveur) |
+| `queries.ts` | `planningSchedulesQuery`, `scheduleDaysQuery`, `orgPlanningResourcesQuery` |
+| `types.ts` | `PlanningResources`, `OrgPlanningResources` — inférés via `Awaited<ReturnType<...>>` |
+| `utils.ts` | `mapScheduleToEvent`, `statusToColor`, `getPlanningRange`, `ScheduleRow` |
 ## Fonctions DB
 
 ### `getPlanningResources(classId, orgId)` → `PlanningResources`

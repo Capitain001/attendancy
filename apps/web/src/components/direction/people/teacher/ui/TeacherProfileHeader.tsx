@@ -3,6 +3,7 @@ import { card } from '@/styles'
 import { cn } from '@/lib/utils'
 import { Mail, Phone, Building2 } from 'lucide-react'
 import type { GetTeacherNotNull } from '@/services/teacher'
+import { BackgroundPattern } from '@/components/design/BackgroundPattern'
 
 export function TeacherProfileHeader({ teacher }: { teacher: GetTeacherNotNull }) {
   const name =
@@ -10,8 +11,19 @@ export function TeacherProfileHeader({ teacher }: { teacher: GetTeacherNotNull }
   const isActive = teacher.user.status === 'ACTIVE'
   const coursesCount = String(teacher._count.courses).padStart(2, '0')
 
+  const emailHref = `mailto:${teacher.user.email}`
+  const phoneHref = teacher.user.phone ? `tel:${teacher.user.phone.replace(/\s+/g, '')}` : undefined
+
   return (
-    <div className={cn(card.base, 'p-4 sm:p-6 font-sans tracking-tight text-foreground bg-background border border-border')}>
+    <div className={cn(card.base, 'p-4 sm:p-6 font-sans tracking-tight text-foreground bg-background border border-border relative isolate mix-blend-multiply')}>
+
+        {/* <BackgroundPattern
+          pattern="pattern-noise-svg"
+          baseFrequency={0.5}
+          numOctaves={1}
+          opacity={0.2}
+          className='w-full h-full'
+        /> */}
       {/* En-tête style éditorial */}
       <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-border/60 text-[10px] sm:text-[11px] font-medium tracking-widest uppercase text-muted-foreground">
         <span>TEACHER</span>
@@ -30,7 +42,9 @@ export function TeacherProfileHeader({ teacher }: { teacher: GetTeacherNotNull }
       </div>
 
       {/* Section principale : Photo + Grand chiffre de cours */}
-      <div className="flex items-start justify-between gap-4 pt-4 sm:pt-6">
+      <div className="flex items-start justify-between gap-4 pt-4 sm:pt-6 relative isolate">
+           <BackgroundPattern pattern="pattern-dots"  opacity={0.2} className='dark:invert-0' />
+
         <div className="relative">
           <UserIcon
             showOnline={false}
@@ -68,16 +82,16 @@ export function TeacherProfileHeader({ teacher }: { teacher: GetTeacherNotNull }
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs sm:text-sm text-foreground">
-          <div className="flex items-center gap-2 min-w-0">
+          <a href={emailHref} className="flex items-center gap-2 min-w-0 hover:opacity-80 transition-opacity">
             <Mail className="size-3.5 sm:size-4 text-muted-foreground stroke-[1.5] shrink-0" />
-            <span className="font-mono text-xs sm:text-sm truncate">{teacher.user.email}</span>
-          </div>
+            <span className="font-mono text-xs sm:text-sm truncate hover:underline underline-offset-4">{teacher.user.email}</span>
+          </a>
 
-          {teacher.user.phone && (
-            <div className="flex items-center gap-2 shrink-0">
+          {teacher.user.phone && phoneHref && (
+            <a href={phoneHref} className="flex items-center gap-2 shrink-0 hover:opacity-80 transition-opacity">
               <Phone className="size-3.5 sm:size-4 text-muted-foreground stroke-[1.5] shrink-0" />
-              <span className="font-mono text-xs sm:text-sm">{teacher.user.phone}</span>
-            </div>
+              <span className="font-mono text-xs sm:text-sm hover:underline underline-offset-4">{teacher.user.phone}</span>
+            </a>
           )}
         </div>
       </div>

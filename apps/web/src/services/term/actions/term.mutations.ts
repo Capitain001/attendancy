@@ -9,7 +9,7 @@ import {
   classIdSchema,
 } from '../validation'
 import type { CreateTermInput, UpdateTermInput } from '../validation'
-import { createTerm, updateTerm, removeTerm, generateTermsFromProgram } from '../database'
+import { createTerm, updateTerm, deleteTerm, generateTermsFromProgram } from '../database'
 
 export async function createTermAction(input: CreateTermInput) {
   const auth = await authAccess({ requiredRole: 'DIRECTION' })
@@ -43,9 +43,9 @@ export async function updateTermAction(input: UpdateTermInput) {
 
 // DELETE toujours audité (service-module-pattern §Audit log) — brancher
 // logAuditAsync({ userId: auth.data.user.id, action: 'DELETE', resource: 'TERM',
-// resourceId: termId, orgId }) après le retour de removeTerm, avant le
+// resourceId: termId, orgId }) après le retour de deleteTerm, avant le
 // `return { data }`, une fois le helper d'audit du projet importé ici.
-export async function removeTermAction(termId: string) {
+export async function deleteTermAction(termId: string) {
   const auth = await authAccess({ requiredRole: 'DIRECTION' })
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
@@ -54,7 +54,7 @@ export async function removeTermAction(termId: string) {
   if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'ID invalide' }
 
   try {
-    return { data: await removeTerm(parsed.output, orgId) }
+    return { data: await deleteTerm(parsed.output, orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

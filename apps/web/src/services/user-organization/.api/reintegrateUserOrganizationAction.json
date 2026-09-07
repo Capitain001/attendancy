@@ -1,0 +1,11 @@
+{
+  "name": "reintegrateUserOrganizationAction",
+  "file": "src/services/user-organization/actions/user-organization.mutations.ts",
+  "sig": "(input: ReintegrateUserOrganizationInput) => Promise<{ error: string; data?: undefined; } | { data: { status: UserStatus; }; error?: undefined; }>",
+  "calls": [
+    "reintegrateUserOrganization"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

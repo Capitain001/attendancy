@@ -1,0 +1,8 @@
+{
+  "name": "getUserSessions",
+  "file": "src/services/device/database/device.queries.ts",
+  "sig": "(userId: string, deviceId?: string) => Promise<{ id: string; revokedAt: Date | null; ipAddress: string | null; orgId: string | null; status: UserSessionStatus; createdAt: Date; lastActivityAt: Date; revokedReason: SessionRevokeReason | null; device: { ...; }; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

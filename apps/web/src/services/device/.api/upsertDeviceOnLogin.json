@@ -1,0 +1,8 @@
+{
+  "name": "upsertDeviceOnLogin",
+  "file": "src/services/device/database/device.mutations.ts",
+  "sig": "(input: { userId: string deviceId: string userAgent: string | null ipAddress: string | null authSessionId: string | null }) => Promise<{ device: { id: string; revokedAt: Date | null; }; session: { id: string; deviceId: string; createdAt: Date; }; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

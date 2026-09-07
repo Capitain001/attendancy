@@ -8,12 +8,18 @@ de `Class` — générés automatiquement depuis le programme attaché à la cla
 ## Fichiers
 
 | Fichier | Rôle |
-|---|---|
+|---------|------|
+| `actions/index.ts` | Barrel exports des actions |
 | `actions/term.mutations.ts` | `generateTermsFromProgramAction` — DIRECTION uniquement |
-| `database/term.mutations.ts` | `generateTermsFromProgram` — transaction batch creation |
+| `actions/term.queries.ts` | Lectures serveur exposées au frontend |
 | `cache.ts` | `TERM_GRAPH` → invalide `CACHE.CLASS(orgId)` + `CACHE.CLASS(orgId, classId)` |
+| `database/index.ts` | Barrel interne (non exporté) |
+| `database/term.mutations.ts` | `generateTermsFromProgram` — transaction batch creation |
+| `database/term.queries.ts` | Requêtes Prisma (lectures avec cache) |
+| `generated.types.ts` | Types générés automatiquement (DTOs de lecture) |
+| `index.ts` | Point d'entrée du service (export actions + types) |
 | `types.ts` | DTOs |
-
+| `validation.ts` | Schémas Valibot |
 ## Invariants
 
 - Term = semestre numéroté (`order` = numéro de semestre du programUE).
