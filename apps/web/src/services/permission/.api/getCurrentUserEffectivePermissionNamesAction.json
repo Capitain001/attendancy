@@ -1,0 +1,11 @@
+{
+  "name": "getCurrentUserEffectivePermissionNamesAction",
+  "file": "src/services/permission/actions/permission.queries.ts",
+  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: PermissionName[]; error?: undefined; }>",
+  "calls": [
+    "getEffectivePermissionNames"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

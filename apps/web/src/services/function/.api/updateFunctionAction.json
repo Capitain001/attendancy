@@ -1,7 +1,7 @@
 {
   "name": "updateFunctionAction",
   "file": "src/services/function/actions/function.mutations.ts",
-  "sig": "(input: UpdateFunctionInput) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; isMain: boolean; icon: string | null; }; error?: undefined; }>",
+  "sig": "(input: UpdateFunctionInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; description: string | null; isMain: boolean; icon: string | null; }; error?: undefined; }>",
   "calls": [
     "updateFunction"
   ],

@@ -23,8 +23,6 @@ import {
 } from './database/push.queries'
 import { createUserNotification } from './database/notification.mutations'
 
-export type { SerializedPushSubscription }
-
 // ─── Abonnement push ──────────────────────────────────────────────────────────
 
 export async function subscribeUser(subscription: SerializedPushSubscription, userAgent?: string) {

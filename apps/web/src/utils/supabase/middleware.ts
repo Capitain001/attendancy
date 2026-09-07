@@ -1,12 +1,24 @@
 // Rafraîchissement de session Supabase dans le middleware Edge.
 // Appelé depuis middleware.ts (racine) sur chaque requête matchée.
-import { ensureDeviceIdCookie } from '@/lib/device'
+import { getOrGenerateDeviceId, setDeviceIdCookieOnResponse } from '@/lib/device'
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
+  // Appel AVANT NextResponse.next({ request }) pour que le header cookie soit
+  // mis à jour avec le device_id avant d'être transmis aux Server Actions.
+  // Note : request.cookies.set ne suffit pas — on doit passer les headers
+  // modifiés à NextResponse.next pour qu'ils soient visibles dans cookies().
+  const { deviceId, isNew } = getOrGenerateDeviceId(request)
+
+  const requestHeaders = new Headers(request.headers)
+  if (isNew) {
+    const currentCookies = requestHeaders.get('cookie') || ''
+    requestHeaders.set('cookie', currentCookies ? `${currentCookies}; device_id=${deviceId}` : `device_id=${deviceId}`)
+  }
+
   let supabaseResponse = NextResponse.next({
-    request,
+    request: { headers: requestHeaders },
   })
 
   // Ne jamais mettre ce client dans une variable globale : un client neuf par
@@ -21,9 +33,7 @@ export async function updateSession(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
-          supabaseResponse = NextResponse.next({
-            request,
-          })
+          supabaseResponse = NextResponse.next({ request })
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           )
@@ -32,29 +42,9 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  // IMPORTANT : ne rien exécuter entre createServerClient et getClaims() —
-  // et ne pas retirer getClaims() : sans lui, les sessions SSR peuvent être
-  // déconnectées aléatoirement.
-  // const { data } = await supabase.auth.getClaims()
-  // const user = data?.claims
-
-  // if (
-  //   !user &&
-  //   !request.nextUrl.pathname.startsWith('/login') &&
-  //   !request.nextUrl.pathname.startsWith('/auth')
-  // ) {
-  //   const url = request.nextUrl.clone()
-  //   url.pathname = '/login'
-  //   return NextResponse.redirect(url)
-  // }
-
-  // ⚠️ Placé APRÈS toute la logique Supabase (y compris le éventuel reassign
-  // de supabaseResponse dans setAll ci-dessus) : sinon le cookie device_id
-  // posé ici serait perdu si setAll reconstruit supabaseResponse ensuite.
-  // Comme c'est la dernière étape avant le return, il est garanti de
-  // survivre sur la réponse réellement renvoyée, peu importe le chemin
-  // emprunté (setAll déclenché ou non).
-  ensureDeviceIdCookie(request, supabaseResponse)
+  if (isNew) {
+    setDeviceIdCookieOnResponse(supabaseResponse, deviceId)
+  }
 
   // IMPORTANT : retourner supabaseResponse tel quel. Si une nouvelle réponse
   // est créée, copier `request` ET les cookies de supabaseResponse — sinon la

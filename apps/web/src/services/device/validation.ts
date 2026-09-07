@@ -25,3 +25,15 @@ export const revokeDeviceSchema = v.object({
   deviceId: v.pipe(v.string(), v.uuid('ID invalide')), // id interne UserDevice.id, pas le cookie
 })
 export type RevokeDeviceInput = v.InferInput<typeof revokeDeviceSchema>
+
+export const updateDeviceLabelSchema = v.object({
+  deviceId: v.pipe(v.string(), v.uuid('ID invalide')),
+  label: v.nullable(v.pipe(v.string(), v.maxLength(50, 'Nom trop long (50 car. max)'))),
+})
+export type UpdateDeviceLabelInput = v.InferInput<typeof updateDeviceLabelSchema>
+
+export const setDeviceTrustedSchema = v.object({
+  deviceId: v.pipe(v.string(), v.uuid('ID invalide')),
+  isTrusted: v.boolean(),
+})
+export type SetDeviceTrustedInput = v.InferInput<typeof setDeviceTrustedSchema>

@@ -1,0 +1,8 @@
+{
+  "name": "revokePermission",
+  "file": "src/services/permission/database/permission.mutations.ts",
+  "sig": "(permissionId: string, orgId: string) => Promise<{ id: string; userId: string | null; functionId: string | null; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

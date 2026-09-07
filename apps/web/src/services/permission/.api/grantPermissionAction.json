@@ -1,0 +1,11 @@
+{
+  "name": "grantPermissionAction",
+  "file": "src/services/permission/actions/permission.mutations.ts",
+  "sig": "(input: GrantPermissionInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; userId: string | null; functionId: string | null; action: Action; resource: Resource | null; resourceId: string | null; }; error?: undefined; }>",
+  "calls": [
+    "grantPermission"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

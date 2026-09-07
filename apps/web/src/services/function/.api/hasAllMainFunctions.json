@@ -1,0 +1,8 @@
+{
+  "name": "hasAllMainFunctions",
+  "file": "src/services/function/database/function.queries.ts",
+  "sig": "(orgId: string) => Promise<boolean>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

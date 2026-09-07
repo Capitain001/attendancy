@@ -1,0 +1,11 @@
+{
+  "name": "getUserFunctionsAction",
+  "file": "src/services/function/actions/function.queries.ts",
+  "sig": "(input: GetUserFunctionsInput) => Promise<{ error: string; data?: undefined; } | { data: { function: { name: string; id: string; description: string | null; isMain: boolean; icon: string | null; }; id: string; assignedAt: Date; assignedBy: string | null; }[]; error?: undefined; }>",
+  "calls": [
+    "getUserFunctions"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

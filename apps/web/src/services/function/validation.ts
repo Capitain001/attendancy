@@ -28,3 +28,16 @@ export type UpdateFunctionDataOutput = InferOutput<typeof updateFunctionDataSche
 
 export type UpdateFunctionInput  = InferInput<typeof updateFunctionSchema>
 export type UpdateFunctionOutput = InferOutput<typeof updateFunctionSchema>
+
+
+
+import * as v from 'valibot'
+
+// Pas de pattern existant pour les ids en lecture seule — validation minimale
+// mais alignée sur la convention `validation.ts` : IDs = uuid, InferInput/Output exportés.
+export const getUserFunctionsSchema = v.object({
+  userId: v.pipe(v.string(), v.uuid('ID utilisateur invalide')),
+})
+
+export type GetUserFunctionsInput = v.InferInput<typeof getUserFunctionsSchema>
+export type GetUserFunctionsOutput = v.InferOutput<typeof getUserFunctionsSchema>

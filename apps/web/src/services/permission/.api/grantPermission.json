@@ -1,0 +1,8 @@
+{
+  "name": "grantPermission",
+  "file": "src/services/permission/database/permission.mutations.ts",
+  "sig": "(data: CreatePermissionData) => Promise<{ id: string; userId: string | null; functionId: string | null; action: Action; resource: Resource | null; resourceId: string | null; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

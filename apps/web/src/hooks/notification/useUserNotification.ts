@@ -7,10 +7,11 @@ import {
   validateHTTPS,
   getCurrentPermission,
   serializeSubscription,
-  urlBase64ToUint8Array,
   requestNotificationPermission,
-  getServiceWorkerRegistration,
   getCurrentSubscription,
+  registerBrowserSubscription,
+  withSoftTimeout,
+  withTimeout,
   type SerializedPushSubscription,
 } from '@/modules/notification'
 import {
@@ -38,21 +39,45 @@ export interface UserNotificationState {
   }> | null
 }
 
-export function useUserNotification() {
-  const [state, setState] = useState<UserNotificationState>({
-    isSupported: false,
-    permission: 'default',
-    isGranted: false,
-    isHTTPS: false,
-    hasVAPID: false,
-    subscription: null,
-    subscriptions: null
-  })
+const INITIAL_STATE: UserNotificationState = {
+  isSupported: false,
+  permission: 'default',
+  isGranted: false,
+  isHTTPS: false,
+  hasVAPID: false,
+  subscription: null,
+  subscriptions: null,
+}
 
+const LOG_PREFIX = '[useUserNotification]'
+
+/** Enregistre l'abonnement côté serveur pour l'utilisateur connecté. */
+async function persistSubscriptionOnServer(
+  subscription: PushSubscription,
+): Promise<{ success: true } | { success: false; error: string }> {
+  const serialized: SerializedPushSubscription = serializeSubscription(subscription)
+  const userAgent = typeof navigator !== 'undefined' ? navigator.userAgent : undefined
+
+  const result = await withTimeout(
+    subscribeUser(serialized, userAgent),
+    15_000,
+    "Le serveur n'a pas répondu à temps",
+  )
+
+  if ('error' in result) {
+    return {
+      success: false,
+      error: result.error || "Erreur lors de l'enregistrement de l'abonnement",
+    }
+  }
+  return { success: true }
+}
+
+export function useUserNotification() {
+  const [state, setState] = useState<UserNotificationState>(INITIAL_STATE)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Initialisation et vérification de l'état
   useEffect(() => {
     const isSupported = checkBrowserSupport()
     const permission = getCurrentPermission()
@@ -64,45 +89,36 @@ export function useUserNotification() {
       permission,
       isGranted: permission === 'granted',
       isHTTPS,
-      hasVAPID: !!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
+      hasVAPID: !!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
     }))
 
     if (isSupported) {
       checkSubscription()
       loadUserSubscriptions()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Vérifier l'abonnement actuel du navigateur
   const checkSubscription = useCallback(async () => {
     try {
       const subscription = await getCurrentSubscription()
       setState(prev => ({ ...prev, subscription }))
     } catch (error) {
-      console.error('Erreur vérification abonnement:', error)
+      console.error(`${LOG_PREFIX} Échec de la vérification de l'abonnement:`, error)
     }
   }, [])
 
-  // Charger les abonnements de l'utilisateur depuis la base de données
   const loadUserSubscriptions = useCallback(async () => {
-    console.log('📋 [loadUserSubscriptions] Début du chargement...')
     try {
       const result = await debugUserSubscriptions()
-      console.log('📥 [loadUserSubscriptions] Résultat:', result)
       if (result.success && result.subscriptions) {
-        console.log('✅ [loadUserSubscriptions] Abonnements chargés:', result.subscriptions.length)
         setState(prev => ({ ...prev, subscriptions: result.subscriptions ?? null }))
-      } else {
-        console.warn('⚠️ [loadUserSubscriptions] Échec ou pas d\'abonnements:', result)
       }
     } catch (error) {
-      console.error('❌ [loadUserSubscriptions] Erreur:', error)
-      console.error('❌ [loadUserSubscriptions] Stack:', error instanceof Error ? error.stack : 'N/A')
+      console.error(`${LOG_PREFIX} Échec du chargement des abonnements:`, error)
     }
-    console.log('🏁 [loadUserSubscriptions] Fin du chargement')
   }, [])
 
-  // Demander la permission de notification
   const requestPermission = useCallback(async (): Promise<boolean> => {
     if (!state.isSupported) {
       setError('Navigateur non supporté')
@@ -112,7 +128,6 @@ export function useUserNotification() {
     try {
       const permission = await requestNotificationPermission()
       const isGranted = permission === 'granted'
-
       setState(prev => ({ ...prev, permission, isGranted }))
       setError(null)
       return isGranted
@@ -122,167 +137,63 @@ export function useUserNotification() {
     }
   }, [state.isSupported])
 
-  // S'abonner aux notifications push pour l'utilisateur connecté
   const subscribe = useCallback(async (): Promise<boolean> => {
-    console.log('🔔 [subscribe] Début de l\'abonnement')
-    
     if (!state.isSupported || !state.isGranted) {
-      const errorMsg = 'Navigateur non supporté ou permission non accordée'
-      console.error('❌ [subscribe]', errorMsg)
-      setError(errorMsg)
+      setError('Navigateur non supporté ou permission non accordée')
+      return false
+    }
+    if (!NOTIFICATION_CONFIG.vapidPublicKey) {
+      setError('Clé VAPID non configurée')
       return false
     }
 
     setIsLoading(true)
     setError(null)
-    console.log('⏳ [subscribe] Loading activé')
-    
+
+    let subscription: PushSubscription | null = null
+
     try {
-      // Vérifier que la clé VAPID est disponible
-      if (!NOTIFICATION_CONFIG.vapidPublicKey) {
-        throw new Error('Clé VAPID non configurée')
-      }
-      console.log('✅ [subscribe] Clé VAPID disponible')
+      subscription = await registerBrowserSubscription(NOTIFICATION_CONFIG.vapidPublicKey)
 
-      console.log('📋 [subscribe] Récupération du service worker...')
-      
-      // Ajouter un timeout global pour getServiceWorkerRegistration
-      const registrationPromise = getServiceWorkerRegistration()
-      const registrationTimeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => {
-          console.error('⏱️ [subscribe] TIMEOUT: Service worker registration a pris plus de 15s')
-          reject(new Error('Timeout: Impossible de récupérer le service worker'))
-        }, 15000)
-      })
-      
-      const registration = await Promise.race([registrationPromise, registrationTimeoutPromise])
-      console.log('✅ [subscribe] Service worker récupéré:', registration.scope)
-      
-      console.log('📋 [subscribe] Vérification de l\'abonnement existant...')
-      const existingSub = await registration.pushManager.getSubscription()
-      
-      // Désabonner l'ancien abonnement s'il existe
-      if (existingSub) {
-        console.log('🔄 [subscribe] Désabonnement de l\'ancien abonnement...')
-        try {
-          await existingSub.unsubscribe()
-          console.log('✅ [subscribe] Ancien abonnement désabonné')
-        } catch (unsubError) {
-          console.warn('⚠️ [subscribe] Erreur lors du désabonnement de l\'ancien abonnement:', unsubError)
-        }
-      } else {
-        console.log('ℹ️ [subscribe] Aucun abonnement existant')
-      }
-
-      // Créer un nouvel abonnement avec timeout
-      console.log('📋 [subscribe] Création du nouvel abonnement...')
-      const subscribePromise = registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(NOTIFICATION_CONFIG.vapidPublicKey) as BufferSource,
-      })
-
-      // Timeout de 10 secondes pour éviter que ça reste bloqué
-      const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => {
-          console.error('⏱️ [subscribe] TIMEOUT: L\'abonnement navigateur a pris plus de 10s')
-          reject(new Error('Timeout: L\'abonnement a pris trop de temps'))
-        }, 10000)
-      })
-
-      const subscription = await Promise.race([subscribePromise, timeoutPromise])
-      console.log('✅ [subscribe] Abonnement navigateur créé:', subscription.endpoint.substring(0, 50) + '...')
-
-      // Sérialiser l'abonnement
-      const serializedSub: SerializedPushSubscription = serializeSubscription(subscription)
-      console.log('✅ [subscribe] Abonnement sérialisé')
-      
-      // Obtenir le user agent
-      const userAgent = typeof navigator !== 'undefined' ? navigator.userAgent : undefined
-      console.log('📋 [subscribe] Envoi au serveur...', { userAgent: userAgent?.substring(0, 50) })
-
-      // Enregistrer l'abonnement côté serveur pour l'utilisateur connecté avec timeout
-      const serverPromise = subscribeUser(serializedSub, userAgent)
-      const serverTimeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => {
-          console.error('⏱️ [subscribe] TIMEOUT: Le serveur a pris plus de 15s')
-          reject(new Error('Timeout: Le serveur a pris trop de temps à répondre'))
-        }, 15000)
-      })
-
-      const result = await Promise.race([serverPromise, serverTimeoutPromise])
-      console.log('📥 [subscribe] Réponse serveur reçue:', result)
-
-      if ('error' in result) {
-        console.error('❌ [subscribe] Erreur serveur:', result.error)
-        setError(result.error || 'Erreur lors de l\'enregistrement de l\'abonnement')
-        // Désabonner du navigateur si l'enregistrement serveur a échoué
-        try {
-          console.log('🔄 [subscribe] Nettoyage: désabonnement navigateur...')
-          await subscription.unsubscribe()
-          console.log('✅ [subscribe] Nettoyage terminé')
-        } catch (unsubError) {
-          console.warn('⚠️ [subscribe] Erreur lors du désabonnement après échec:', unsubError)
-        }
+      const serverResult = await persistSubscriptionOnServer(subscription)
+      if (!serverResult.success) {
+        setError(serverResult.error)
+        await subscription.unsubscribe().catch(() => undefined)
         return false
       }
 
-      console.log('✅ [subscribe] Abonnement enregistré avec succès')
-      
-      // Mettre à jour l'état
       setState(prev => ({ ...prev, subscription }))
-      console.log('📋 [subscribe] Chargement des abonnements utilisateur...')
-      
-      // Ajouter un timeout pour loadUserSubscriptions
-      const loadPromise = loadUserSubscriptions()
-      const loadTimeoutPromise = new Promise<void>((resolve) => {
-        setTimeout(() => {
-          console.warn('⚠️ [subscribe] Timeout chargement abonnements, continuation...')
-          resolve()
-        }, 5000)
-      })
-      
-      await Promise.race([loadPromise, loadTimeoutPromise])
-      console.log('✅ [subscribe] Abonnements chargés')
-      
+      await withSoftTimeout(loadUserSubscriptions(), 5_000, undefined)
       return true
     } catch (error: any) {
-      console.error('❌ [subscribe] Erreur complète:', error)
-      console.error('❌ [subscribe] Stack:', error.stack)
-      const errorMessage = error.message || 'Erreur lors de l\'abonnement'
-      setError(errorMessage)
+      console.error(`${LOG_PREFIX} Échec de l'abonnement:`, error)
+      setError(error.message || "Erreur lors de l'abonnement")
       return false
     } finally {
-      console.log('🏁 [subscribe] Fin de l\'abonnement, désactivation du loading')
       setIsLoading(false)
     }
   }, [state.isSupported, state.isGranted, loadUserSubscriptions])
 
-  // Se désabonner de tous les appareils
   const unsubscribe = useCallback(async (): Promise<boolean> => {
     setIsLoading(true)
     setError(null)
-    
+
     try {
-      // Désabonner du navigateur
       const subscription = await getCurrentSubscription()
       if (subscription) {
         await subscription.unsubscribe()
       }
 
-      // Désabonner de tous les appareils côté serveur
       const result = await unsubscribeUser()
-
       if ('error' in result) {
         setError(result.error || 'Erreur lors du désabonnement')
         return false
       }
 
-      // Mettre à jour l'état
       setState(prev => ({ ...prev, subscription: null, subscriptions: [] }))
-      
       return true
     } catch (error: any) {
-      console.error('Erreur désabonnement:', error)
+      console.error(`${LOG_PREFIX} Échec du désabonnement:`, error)
       setError(error.message || 'Erreur lors du désabonnement')
       return false
     } finally {
@@ -290,61 +201,52 @@ export function useUserNotification() {
     }
   }, [])
 
-  // Se désabonner d'un appareil spécifique
   const unsubscribeDevice = useCallback(async (endpoint: string): Promise<boolean> => {
     setIsLoading(true)
     setError(null)
-    
+
     try {
       const result = await unsubscribeUserDevice(endpoint)
-
       if ('error' in result) {
-        setError(result.error || 'Erreur lors du désabonnement de l\'appareil')
+        setError(result.error || "Erreur lors du désabonnement de l'appareil")
         return false
       }
 
-      // Recharger les abonnements
       await loadUserSubscriptions()
-      
-      // Si c'est l'abonnement actuel, le retirer de l'état
+
       if (state.subscription?.endpoint === endpoint) {
         setState(prev => ({ ...prev, subscription: null }))
       }
-      
       return true
     } catch (error: any) {
-      console.error('Erreur désabonnement appareil:', error)
-      setError(error.message || 'Erreur lors du désabonnement de l\'appareil')
+      console.error(`${LOG_PREFIX} Échec du désabonnement de l'appareil:`, error)
+      setError(error.message || "Erreur lors du désabonnement de l'appareil")
       return false
     } finally {
       setIsLoading(false)
     }
   }, [state.subscription, loadUserSubscriptions])
 
-  // Envoyer une notification à l'utilisateur connecté
   const sendNotification = useCallback(async (message: string): Promise<boolean> => {
     setIsLoading(true)
     setError(null)
-    
+
     try {
       const result = await sendNotificationToCurrentUser({ message })
-      
       if (!result.success) {
-        setError(result.error || 'Erreur lors de l\'envoi de la notification')
+        setError(result.error || "Erreur lors de l'envoi de la notification")
         return false
       }
-
       return true
     } catch (error: any) {
-      console.error('Erreur envoi notification:', error)
-      setError(error.message || 'Erreur lors de l\'envoi de la notification')
+      console.error(`${LOG_PREFIX} Échec de l'envoi de la notification:`, error)
+      setError(error.message || "Erreur lors de l'envoi de la notification")
       return false
     } finally {
       setIsLoading(false)
     }
   }, [])
 
-  // Recharger les abonnements
   const refreshSubscriptions = useCallback(async () => {
     await loadUserSubscriptions()
     await checkSubscription()
@@ -360,8 +262,7 @@ export function useUserNotification() {
       unsubscribe,
       unsubscribeDevice,
       sendNotification,
-      refreshSubscriptions
-    }
+      refreshSubscriptions,
+    },
   }
 }
-

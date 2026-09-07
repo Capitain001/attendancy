@@ -2,7 +2,7 @@ import { connection } from 'next/server'
 import { notFound } from 'next/navigation'
 import { getStudentByIdForDirectionAction } from '@/services/student'
 import { getStudentAttendanceSummaryAction } from '@/services/attendance'
-import { StudentDetailPage } from '@/components/direction/people/StudentDetailPage'
+import { StudentDetailPage } from '@/components/direction/people/student'
 
 interface Props {
   params: Promise<{ slug: string; studentId: string }>

@@ -7,6 +7,8 @@ import { useOrgInvitations, useInvitationStats } from '@/hooks/data/invitation/u
 import { InviteDialog } from './InviteDialog'
 import { GlobalInviteStudentDialog } from './GlobalInviteStudentDialog'
 import { InvitationTable } from './InvitationTable'
+import { InvitationFilter } from './InvitationFilter'
+import { useInvitationsFilter } from './hooks/use-invitations-filter'
 
 interface DirectionInvitationsPageProps {
   functions: { id: string; name: string }[]
@@ -15,6 +17,16 @@ interface DirectionInvitationsPageProps {
 export function DirectionInvitationsPage({ functions }: DirectionInvitationsPageProps) {
   const { invitations, inviteTeacher, inviteDirection, resend, revoke, share } = useOrgInvitations()
   const { stats } = useInvitationStats()
+
+  const {
+    query,
+    setQuery,
+    role,
+    setRole,
+    status,
+    setStatus,
+    filteredInvitations
+  } = useInvitationsFilter(invitations)
 
   return (
     <div className="space-y-5">
@@ -48,14 +60,24 @@ export function DirectionInvitationsPage({ functions }: DirectionInvitationsPage
         <MetricCard label="Expirées" value={String(stats?.expired ?? 0)} sub="à relancer" />
       </section>
 
-      <CollapseSection label="Toutes les invitations" count={invitations.length} defaultOpen>
-        <InvitationTable
-          invitations={invitations}
-          onResend={(inv) => resend.mutate(inv)}
-          onRevoke={(inv) => revoke.mutate(inv)}
-          onShare={share}
-          pending={resend.isPending || revoke.isPending}
-        />
+      <CollapseSection label="Toutes les invitations" count={filteredInvitations.length} defaultOpen>
+        <div className="space-y-4">
+          <InvitationFilter
+            query={query}
+            setQuery={setQuery}
+            role={role}
+            setRole={setRole}
+            status={status}
+            setStatus={setStatus}
+          />
+          <InvitationTable
+            invitations={filteredInvitations}
+            onResend={(inv) => resend.mutate(inv)}
+            onRevoke={(inv) => revoke.mutate(inv)}
+            onShare={share}
+            pending={resend.isPending || revoke.isPending}
+          />
+        </div>
       </CollapseSection>
     </div>
   )

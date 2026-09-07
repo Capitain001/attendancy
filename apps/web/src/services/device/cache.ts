@@ -11,4 +11,5 @@ export const DEVICE_GRAPH = {
     CACHE.USER_DEVICES(userId),
     CACHE.USER_SESSIONS(userId),
   ],
+  DEVICE_UPDATED: (userId: string) => [CACHE.USER_DEVICES(userId)],
 }

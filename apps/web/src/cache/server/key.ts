@@ -54,6 +54,7 @@ import { CURRICULUM_GRAPH } from "@/services/curriculum/cache";
 import { STUDENT_ENROLLMENT_GRAPH } from "@/services/student-enrollment/cache";
 import { USER_ORGANIZATION_GRAPH } from "@/services/user-organization/cache";
 import { DEVICE_GRAPH } from "@/services/device/cache";
+import { PERMISSION_GRAPH } from "@/services/permission/cache";
 // ⚠ À ÉTENDRE PAR PROJET — un import par service à données cachées :
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -97,7 +98,8 @@ export const CACHE = {
   USER_DEVICES: key("user-devices"),
   USER_SESSIONS: key("user-sessions"),
   USER_SESSION: key("user-session"),
-  
+  USER_FUNCTIONS: key("user-functions"),
+  PERMISSION: key("permission")
 // ⚠ À ÉTENDRE PAR PROJET — une entrée par entité cachée :
   // ENTITY: key("entity"),
   // RESOURCE: key("resource", CACHE_LIFE.SHORT),
@@ -136,6 +138,7 @@ export const CACHE_GRAPH = {
   ...STUDENT_ENROLLMENT_GRAPH,
   ...USER_ORGANIZATION_GRAPH,
   ...DEVICE_GRAPH,
+  ...PERMISSION_GRAPH,
 // ⚠ À ÉTENDRE PAR PROJET — spreader chaque <SERVICE>_GRAPH importé :
 } as const;
 

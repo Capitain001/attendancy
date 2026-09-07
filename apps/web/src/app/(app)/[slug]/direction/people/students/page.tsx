@@ -3,7 +3,7 @@ import { getClassesAction } from '@/services/class'
 import { getEnrolledStudentsAction, getStudentsStatsAction } from '@/services/student'
 import { getGroupsByClassAction } from '@/services/group'
 import { inviteStudent } from '@/modules/invitation/student/actions'
-import { DirectionStudentsSection } from '@/components/direction/people/DirectionStudentsSection'
+import { DirectionStudentsSection } from '@/components/direction/people/student'
 
 interface Props {
   params: Promise<{ slug: string }>

@@ -1,12 +1,10 @@
 //src/modules/auth/actions/login.ts
 "use server";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import { redirectUser } from "@/config/redirects";
 import { getUserInfo, setUserInfo } from "@/modules/user";
-import { captureLoginDeviceAction } from "@/services/device";
+import { captureLoginDevice } from "@/services/device";
 import { loginWithPassword } from "../supabase";
-import { getSessionIdFromAccessToken } from "@/services/device/utils";
 
 type LoginState = { error: string } | null;
 
@@ -36,21 +34,11 @@ export async function login(
   if (!user) {
     return { error: "Erreur lors de la récupération des informations utilisateur" };
   }
-
-  // Capture de l'appareil — best-effort, ne bloque jamais le login.
-  // deviceId posé par le middleware (cookie httpOnly device_id), jamais
-  // généré ici : voir src/utils/supabase/device-id.ts.
-  const cookieStore = await cookies();
-  const deviceId = cookieStore.get("device_id")?.value;
-  if (deviceId && user.id) {
-    const authSessionId = getSessionIdFromAccessToken(authData.session.access_token);
-    await captureLoginDeviceAction({
-      userId: user.id,
-      deviceId,
-      authSessionId: authSessionId ?? undefined,
-    });
+  const accessToken = authData.session?.access_token
+  if (user.id && accessToken) {
+    // Capture de l'appareil — best-effort, ne bloque jamais le login.
+    await captureLoginDevice(user.id, accessToken)
   }
-
   // met a jour le cache serveur
   await setUserInfo({ isConnected: true });
   const redirectPath =

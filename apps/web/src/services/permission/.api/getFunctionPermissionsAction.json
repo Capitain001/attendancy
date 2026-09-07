@@ -1,0 +1,11 @@
+{
+  "name": "getFunctionPermissionsAction",
+  "file": "src/services/permission/actions/permission.queries.ts",
+  "sig": "(input: GetFunctionPermissionsInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; action: Action; resource: Resource | null; resourceId: string | null; description: string | null; }[]; error?: undefined; }>",
+  "calls": [
+    "getFunctionPermissions"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

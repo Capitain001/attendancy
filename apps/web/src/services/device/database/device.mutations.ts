@@ -127,3 +127,27 @@ export async function touchSessionActivity(sessionId: string) {
     }),
   )
 }
+
+export async function updateDeviceLabel(deviceId: string, userId: string, label: string | null) {
+  const device = await tryConstraint(
+    prisma.userDevice.update({
+      where: { id: deviceId, userId },
+      data: { label },
+      select: { id: true, label: true },
+    }),
+  )
+  await invalidateEvent('DEVICE_UPDATED', userId)
+  return device
+}
+
+export async function setDeviceTrusted(deviceId: string, userId: string, isTrusted: boolean) {
+  const device = await tryConstraint(
+    prisma.userDevice.update({
+      where: { id: deviceId, userId },
+      data: { isTrusted },
+      select: { id: true, isTrusted: true },
+    }),
+  )
+  await invalidateEvent('DEVICE_UPDATED', userId)
+  return device
+}

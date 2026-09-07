@@ -1,0 +1,12 @@
+{
+  "name": "ensureMainFunctions",
+  "file": "src/services/function/database/function.mutations.ts",
+  "sig": "(orgId: string) => Promise<{ created: boolean; functions: { name: string; id: string; description: string | null; isMain: boolean; icon: string | null; }[]; }>",
+  "composes": [
+    "getMissingMainFunctions",
+    "getFunctions",
+    "createMainFunctions"
+  ],
+  "rules": [],
+  "why_ref": ""
+}

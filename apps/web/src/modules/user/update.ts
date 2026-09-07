@@ -1,7 +1,7 @@
 // src/modules/user/update.ts
 "use server";
 
-import { Role } from "@/generated/prisma/client";
+import { Role } from "@/generated/prisma/browser";
 
 import type { UserMetadata, UserStatus } from "@/types/user";
 import { createClient } from "@/utils/supabase/server";

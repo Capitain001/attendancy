@@ -1,0 +1,8 @@
+{
+  "name": "getMissingMainFunctions",
+  "file": "src/services/function/database/function.queries.ts",
+  "sig": "(orgId: string) => Promise<(\"PRINCIPAL\" | \"SECRETARY\" | \"ASSISTANT\" | \"DELEGATE\" | \"COORDINATOR\" | \"MEMBER\")[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

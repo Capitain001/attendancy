@@ -1,0 +1,182 @@
+{
+  "service": "permission",
+  "path": "src/services/permission/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "60bd946",
+  "generated_at": "2026-09-07T14:20:37.144Z",
+  "fns": {
+    "grantPermission": {
+      "name": "grantPermission",
+      "file": "src/services/permission/database/permission.mutations.ts",
+      "sig": "(data: CreatePermissionData) => Promise<{ id: string; userId: string | null; functionId: string | null; action: Action; resource: Resource | null; resourceId: string | null; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "revokePermission": {
+      "name": "revokePermission",
+      "file": "src/services/permission/database/permission.mutations.ts",
+      "sig": "(permissionId: string, orgId: string) => Promise<{ id: string; userId: string | null; functionId: string | null; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getUserPermissions": {
+      "name": "getUserPermissions",
+      "file": "src/services/permission/database/permission.queries.ts",
+      "sig": "(userId: string, orgId: string) => Promise<{ id: string; action: Action; resource: Resource | null; resourceId: string | null; description: string | null; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getFunctionPermissions": {
+      "name": "getFunctionPermissions",
+      "file": "src/services/permission/database/permission.queries.ts",
+      "sig": "(functionId: string, orgId: string) => Promise<{ id: string; action: Action; resource: Resource | null; resourceId: string | null; description: string | null; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getEffectivePermissionNames": {
+      "name": "getEffectivePermissionNames",
+      "file": "src/services/permission/database/permission.queries.ts",
+      "sig": "(userId: string, orgId: string) => Promise<PermissionName[]>",
+      "composes": [
+        "getUserPermissions",
+        "getFunctionPermissions"
+      ],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "grantPermissionAction": {
+      "name": "grantPermissionAction",
+      "file": "src/services/permission/actions/permission.mutations.ts",
+      "sig": "(input: GrantPermissionInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; userId: string | null; functionId: string | null; action: Action; resource: Resource | null; resourceId: string | null; }; error?: undefined; }>",
+      "calls": [
+        "grantPermission"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "revokePermissionAction": {
+      "name": "revokePermissionAction",
+      "file": "src/services/permission/actions/permission.mutations.ts",
+      "sig": "(input: RevokePermissionInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; userId: string | null; functionId: string | null; }; error?: undefined; }>",
+      "calls": [
+        "revokePermission"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getUserPermissionsAction": {
+      "name": "getUserPermissionsAction",
+      "file": "src/services/permission/actions/permission.queries.ts",
+      "sig": "(input: GetUserPermissionsInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; action: Action; resource: Resource | null; resourceId: string | null; description: string | null; }[]; error?: undefined; }>",
+      "calls": [
+        "getUserPermissions"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getCurrentUserPermissionsAction": {
+      "name": "getCurrentUserPermissionsAction",
+      "file": "src/services/permission/actions/permission.queries.ts",
+      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { id: string; action: Action; resource: Resource | null; resourceId: string | null; description: string | null; }[]; error?: undefined; }>",
+      "calls": [
+        "getUserPermissions"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getFunctionPermissionsAction": {
+      "name": "getFunctionPermissionsAction",
+      "file": "src/services/permission/actions/permission.queries.ts",
+      "sig": "(input: GetFunctionPermissionsInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; action: Action; resource: Resource | null; resourceId: string | null; description: string | null; }[]; error?: undefined; }>",
+      "calls": [
+        "getFunctionPermissions"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getEffectivePermissionNamesAction": {
+      "name": "getEffectivePermissionNamesAction",
+      "file": "src/services/permission/actions/permission.queries.ts",
+      "sig": "(input: GetUserPermissionsInput) => Promise<{ error: string; data?: undefined; } | { data: PermissionName[]; error?: undefined; }>",
+      "calls": [
+        "getEffectivePermissionNames"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getCurrentUserEffectivePermissionNamesAction": {
+      "name": "getCurrentUserEffectivePermissionNamesAction",
+      "file": "src/services/permission/actions/permission.queries.ts",
+      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: PermissionName[]; error?: undefined; }>",
+      "calls": [
+        "getEffectivePermissionNames"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "grantPermission": [
+      "grantPermissionAction"
+    ],
+    "revokePermission": [
+      "revokePermissionAction"
+    ],
+    "getUserPermissions": [
+      "getEffectivePermissionNames",
+      "getUserPermissionsAction",
+      "getCurrentUserPermissionsAction"
+    ],
+    "getFunctionPermissions": [
+      "getEffectivePermissionNames",
+      "getFunctionPermissionsAction"
+    ],
+    "getEffectivePermissionNames": [
+      "getEffectivePermissionNamesAction",
+      "getCurrentUserEffectivePermissionNamesAction"
+    ],
+    "grantPermissionAction": [],
+    "revokePermissionAction": [],
+    "getUserPermissionsAction": [],
+    "getCurrentUserPermissionsAction": [],
+    "getFunctionPermissionsAction": [],
+    "getEffectivePermissionNamesAction": [],
+    "getCurrentUserEffectivePermissionNamesAction": []
+  },
+  "deps": {}
+}

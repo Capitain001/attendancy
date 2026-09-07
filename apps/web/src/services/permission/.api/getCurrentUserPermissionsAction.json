@@ -1,0 +1,11 @@
+{
+  "name": "getCurrentUserPermissionsAction",
+  "file": "src/services/permission/actions/permission.queries.ts",
+  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { id: string; action: Action; resource: Resource | null; resourceId: string | null; description: string | null; }[]; error?: undefined; }>",
+  "calls": [
+    "getUserPermissions"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

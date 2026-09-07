@@ -2,8 +2,10 @@ import { cookies } from "next/headers";
 import { getUserInfo } from "@/modules/user";
 import { getUserDevices } from "@/services/device/database";
 import { DeviceRevokeButton } from "./DeviceRevokeButton";
-import { Monitor, Smartphone, Tablet, MonitorSmartphone } from "lucide-react";
-import { card, typography } from "@/styles";
+import { DeviceLabelInput } from "./DeviceLabelInput";
+import { DeviceTrustToggle } from "./DeviceTrustToggle";
+import { Monitor, Smartphone, Tablet, MonitorSmartphone, ShieldCheck } from "lucide-react";
+import { card } from "@/styles";
 import { cn } from "@/lib/utils";
 
 function DeviceIcon({ type }: { type: string }) {
@@ -27,7 +29,6 @@ export default async function DevicesPage() {
   const currentDeviceId = cookieStore.get("device_id")?.value;
 
   const devices = await getUserDevices(user.id);
-  // Filter out revoked devices
   const activeDevices = devices.filter((d) => !d.revokedAt);
 
   return (
@@ -35,35 +36,58 @@ export default async function DevicesPage() {
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Appareils</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Gérez les appareils connectés à votre compte. Vous pouvez déconnecter tout appareil suspect ou que vous n'utilisez plus.
+          Gérez les appareils connectés à votre compte. Vous pouvez renommer un appareil,
+          le marquer comme de confiance ou le déconnecter.
         </p>
       </div>
 
       <div className="flex flex-col gap-4 mt-4">
         {activeDevices.map((device) => {
           const isCurrentDevice = currentDeviceId === device.deviceId;
-          const browserName = device.browser ? `${device.browser} ${device.browserVersion || ""}` : "Navigateur inconnu";
-          const osName = device.os ? `${device.os} ${device.osVersion || ""}` : "OS inconnu";
+          const browserName = device.browser
+            ? `${device.browser} ${device.browserVersion || ""}`
+            : "Navigateur inconnu";
+          const osName = device.os
+            ? `${device.os} ${device.osVersion || ""}`
+            : "OS inconnu";
           const location = device.lastIpAddress || "IP inconnue";
 
           return (
             <div
               key={device.id}
-              className={cn(card.base, "flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 md:p-5")}
+              className={cn(
+                card.base,
+                "flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 md:p-5",
+                isCurrentDevice && "border-primary/40 bg-primary/5"
+              )}
             >
-              <div className="flex items-start sm:items-center gap-4">
-                <div className="p-3 bg-muted rounded-full shrink-0">
+              <div className="flex items-start sm:items-center gap-4 flex-1 min-w-0">
+                <div className={cn(
+                  "p-3 rounded-full shrink-0",
+                  isCurrentDevice ? "bg-primary/10" : "bg-muted"
+                )}>
                   <DeviceIcon type={device.deviceType} />
                 </div>
-                <div>
-                  <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
-                    {device.label || browserName}
+                <div className="flex-1 min-w-0">
+                  {/* Nom éditable + badge "Cet appareil" */}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <DeviceLabelInput
+                      deviceId={device.id}
+                      initialLabel={device.label}
+                      fallback={browserName}
+                    />
                     {isCurrentDevice && (
-                      <span className="sm:hidden text-[10px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-md">
+                      <span className="text-[10px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-md">
                         Cet appareil
                       </span>
                     )}
-                  </h3>
+                    {device.isTrusted && (
+                      <span className="text-[10px] font-medium text-green-600 bg-green-500/10 px-2 py-0.5 rounded-md flex items-center gap-1">
+                        <ShieldCheck className="size-3" /> De confiance
+                      </span>
+                    )}
+                  </div>
+                  {/* Méta */}
                   <div className="text-xs text-muted-foreground mt-1 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
                     <span>{osName}</span>
                     <span className="hidden sm:inline">•</span>
@@ -81,8 +105,18 @@ export default async function DevicesPage() {
                   </div>
                 </div>
               </div>
-              <div className="flex justify-end sm:shrink-0">
-                <DeviceRevokeButton deviceId={device.id} isCurrentDevice={isCurrentDevice} />
+
+              {/* Actions */}
+              <div className="flex items-center gap-3 justify-end sm:shrink-0">
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <DeviceTrustToggle
+                    deviceId={device.id}
+                    initialTrusted={device.isTrusted}
+                  />
+                </div>
+                {!isCurrentDevice && (
+                  <DeviceRevokeButton deviceId={device.id} isCurrentDevice={false} />
+                )}
               </div>
             </div>
           );

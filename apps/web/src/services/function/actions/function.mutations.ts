@@ -10,7 +10,7 @@ import {
   updateFunction,
   deleteFunction,
   assignFunctionToUser,
-  removeFunctionFromUser,
+  deleteFunctionFromUser,
   getFunctionByName,
 } from '../database'
 
@@ -74,7 +74,7 @@ export async function assignFunctionToUserAction(params: {
   }
 }
 
-export async function removeFunctionFromUserAction(params: {
+export async function deleteFunctionFromUserAction(params: {
   userId: string
   functionId: string
 }) {
@@ -83,7 +83,7 @@ export async function removeFunctionFromUserAction(params: {
   const { orgId } = auth.data
 
   try {
-    await removeFunctionFromUser({ userId: params.userId, functionId: params.functionId, orgId })
+    await deleteFunctionFromUser({ userId: params.userId, functionId: params.functionId, orgId })
     return { data: { userId: params.userId, functionId: params.functionId } }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }

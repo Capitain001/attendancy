@@ -1,0 +1,11 @@
+{
+  "name": "revokePermissionAction",
+  "file": "src/services/permission/actions/permission.mutations.ts",
+  "sig": "(input: RevokePermissionInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; userId: string | null; functionId: string | null; }; error?: undefined; }>",
+  "calls": [
+    "revokePermission"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -133,6 +133,7 @@ export interface InvitationListItem {
   expiresAt: Date | null;
   usedAt:    Date | null;
   details:   DatabaseInvitationDetails | null;
+  role:      string | null;
 }
 
 export interface InvitationStats {

@@ -1,11 +1,10 @@
 import type { Prisma } from '@/generated/prisma/client'
+import { GetFunctionByNameDto, GetFunctionsDto } from './generated.types'
 export * from './generated.types'
 
 
-import type { getFunctions, getFunctionByName,getFunctionProfiles } from './database'
-
-export type FunctionItem      = Awaited<ReturnType<typeof getFunctions>>[number]
-export type FunctionDetail    = Awaited<ReturnType<typeof getFunctionByName>>
+export type FunctionItem      = GetFunctionsDto[number]
+export type FunctionDetail    = GetFunctionByNameDto
 
 export type CreateFunctionData = Pick<Prisma.FunctionUncheckedCreateInput, 'name' | 'description' | 'icon' | 'isMain'>
 export type UpdateFunctionData = Partial<CreateFunctionData>

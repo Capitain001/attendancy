@@ -1,0 +1,8 @@
+{
+  "name": "getFunctionPermissions",
+  "file": "src/services/permission/database/permission.queries.ts",
+  "sig": "(functionId: string, orgId: string) => Promise<{ id: string; action: Action; resource: Resource | null; resourceId: string | null; description: string | null; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,98 @@
+{
+  "service": "permission",
+  "path": "src/services/permission/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "60bd946",
+  "utils_dir": null,
+  "fns": {
+    "grantPermission": {
+      "f": ".api/grantPermission.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "revokePermission": {
+      "f": ".api/revokePermission.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getUserPermissions": {
+      "f": ".api/getUserPermissions.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getFunctionPermissions": {
+      "f": ".api/getFunctionPermissions.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getEffectivePermissionNames": {
+      "f": ".api/getEffectivePermissionNames.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "grantPermissionAction": {
+      "f": ".api/grantPermissionAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "revokePermissionAction": {
+      "f": ".api/revokePermissionAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getUserPermissionsAction": {
+      "f": ".api/getUserPermissionsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getCurrentUserPermissionsAction": {
+      "f": ".api/getCurrentUserPermissionsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getFunctionPermissionsAction": {
+      "f": ".api/getFunctionPermissionsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getEffectivePermissionNamesAction": {
+      "f": ".api/getEffectivePermissionNamesAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getCurrentUserEffectivePermissionNamesAction": {
+      "f": ".api/getCurrentUserEffectivePermissionNamesAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "grantPermission": [
+      "grantPermissionAction"
+    ],
+    "revokePermission": [
+      "revokePermissionAction"
+    ],
+    "getUserPermissions": [
+      "getEffectivePermissionNames",
+      "getUserPermissionsAction",
+      "getCurrentUserPermissionsAction"
+    ],
+    "getFunctionPermissions": [
+      "getEffectivePermissionNames",
+      "getFunctionPermissionsAction"
+    ],
+    "getEffectivePermissionNames": [
+      "getEffectivePermissionNamesAction",
+      "getCurrentUserEffectivePermissionNamesAction"
+    ],
+    "grantPermissionAction": [],
+    "revokePermissionAction": [],
+    "getUserPermissionsAction": [],
+    "getCurrentUserPermissionsAction": [],
+    "getFunctionPermissionsAction": [],
+    "getEffectivePermissionNamesAction": [],
+    "getCurrentUserEffectivePermissionNamesAction": []
+  },
+  "deps": {}
+}

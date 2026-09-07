@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
 import { invalidateEvent } from '@/cache/server/key'
 import type { CreateFunctionOutput, UpdateFunctionDataOutput } from '../validation'
+import { getFunctions, getMissingMainFunctions } from './function.queries'
+import { MAIN_FUNCTIONS } from '../constants'
 
 export async function createFunction(data: CreateFunctionOutput & { orgId: string }) {
   const result = await tryConstraint(
@@ -64,7 +66,7 @@ export async function assignFunctionToUser(params: {
   return result
 }
 
-export async function removeFunctionFromUser(params: {
+export async function deleteFunctionFromUser(params: {
   userId: string
   functionId: string
   orgId: string
@@ -73,4 +75,32 @@ export async function removeFunctionFromUser(params: {
     where: { userId_functionId: { userId: params.userId, functionId: params.functionId } },
   })
   await invalidateEvent('FUNCTION_UNASSIGNED', params.orgId)
+}
+
+
+
+export async function createMainFunctions(orgId: string) {
+  const results = await Promise.all(
+    MAIN_FUNCTIONS.map((main) =>
+      tryConstraint(
+        prisma.function.upsert({
+          where: { name_orgId: { name: main.name, orgId } },
+          update: { description: main.description, icon: main.icon, isMain: true },
+          create: { name: main.name, orgId, description: main.description, icon: main.icon, isMain: true },
+          select: { id: true, name: true, description: true, icon: true, isMain: true },
+        })
+      )
+    )
+  )
+  await invalidateEvent('FUNCTION_CREATED', orgId)
+  return results
+}
+
+
+export async function ensureMainFunctions(orgId: string) {
+  const missing = await getMissingMainFunctions(orgId)
+  if (missing.length === 0) {
+    return { created: false, functions: await getFunctions(orgId) }
+  }
+  return { created: true, functions: await createMainFunctions(orgId) }
 }

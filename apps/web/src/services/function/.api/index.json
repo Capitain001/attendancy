@@ -2,7 +2,7 @@
   "service": "function",
   "path": "src/services/function/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "0328a03",
+  "derived_at": "60bd946",
   "utils_dir": null,
   "fns": {
     "createFunction": {
@@ -25,8 +25,18 @@
       "layer": "db",
       "kind": "mutation"
     },
-    "removeFunctionFromUser": {
-      "f": ".api/removeFunctionFromUser.json",
+    "deleteFunctionFromUser": {
+      "f": ".api/deleteFunctionFromUser.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "createMainFunctions": {
+      "f": ".api/createMainFunctions.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "ensureMainFunctions": {
+      "f": ".api/ensureMainFunctions.json",
       "layer": "db",
       "kind": "mutation"
     },
@@ -50,6 +60,21 @@
       "layer": "db",
       "kind": "query"
     },
+    "getUserFunctions": {
+      "f": ".api/getUserFunctions.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "hasAllMainFunctions": {
+      "f": ".api/hasAllMainFunctions.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getMissingMainFunctions": {
+      "f": ".api/getMissingMainFunctions.json",
+      "layer": "db",
+      "kind": "query"
+    },
     "createFunctionAction": {
       "f": ".api/createFunctionAction.json",
       "layer": "action",
@@ -70,8 +95,8 @@
       "layer": "action",
       "kind": "server-action"
     },
-    "removeFunctionFromUserAction": {
-      "f": ".api/removeFunctionFromUserAction.json",
+    "deleteFunctionFromUserAction": {
+      "f": ".api/deleteFunctionFromUserAction.json",
       "layer": "action",
       "kind": "server-action"
     },
@@ -89,6 +114,16 @@
       "f": ".api/getFunctionProfilesAction.json",
       "layer": "action",
       "kind": "server-action"
+    },
+    "getUserFunctionsAction": {
+      "f": ".api/getUserFunctionsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getCurrentUserFunctionsAction": {
+      "f": ".api/getCurrentUserFunctionsAction.json",
+      "layer": "action",
+      "kind": "server-action"
     }
   },
   "edges": {
@@ -104,10 +139,15 @@
     "assignFunctionToUser": [
       "assignFunctionToUserAction"
     ],
-    "removeFunctionFromUser": [
-      "removeFunctionFromUserAction"
+    "deleteFunctionFromUser": [
+      "deleteFunctionFromUserAction"
     ],
+    "createMainFunctions": [
+      "ensureMainFunctions"
+    ],
+    "ensureMainFunctions": [],
     "getFunctions": [
+      "ensureMainFunctions",
       "getFunctionsAction"
     ],
     "getFunctionByName": [
@@ -118,14 +158,24 @@
     "getFunctionProfiles": [
       "getFunctionProfilesAction"
     ],
+    "getUserFunctions": [
+      "getUserFunctionsAction",
+      "getCurrentUserFunctionsAction"
+    ],
+    "hasAllMainFunctions": [],
+    "getMissingMainFunctions": [
+      "ensureMainFunctions"
+    ],
     "createFunctionAction": [],
     "updateFunctionAction": [],
     "deleteFunctionAction": [],
     "assignFunctionToUserAction": [],
-    "removeFunctionFromUserAction": [],
+    "deleteFunctionFromUserAction": [],
     "getFunctionsAction": [],
     "getFunctionByNameAction": [],
-    "getFunctionProfilesAction": []
+    "getFunctionProfilesAction": [],
+    "getUserFunctionsAction": [],
+    "getCurrentUserFunctionsAction": []
   },
   "deps": {}
 }

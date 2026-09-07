@@ -1,4 +1,5 @@
 import OrgLink from "@/components/auth/ui/OrgLink";
+import { BackgroundPattern } from "@/components/design/BackgroundPattern";
 import { getUserInfo } from "@/modules/user";
 import { Github } from "@mynaui/icons-react";
 import Link from "next/link";
@@ -6,11 +7,13 @@ import Link from "next/link";
 export default async function HomePage() {
   const user = await getUserInfo();
   return (
-    <main className="flex flex-col min-h-screen items-center justify-center gap-4">
+    <main className="flex flex-col min-h-screen  items-center justify-center gap-4 ">
 
       <h1 className="text-2xl font-semibold">attendancy</h1>
 
 
+              <BackgroundPattern pattern="pattern-noise" opacity={0.55} />
+    
       {/* NB:cette section sert temporairement a rendre accessible le lien de l ettablissement dispo dans le header pr ceux qui test la maquette */}
       {/* cette page est volontairement minimaliste */}
       <div className="flex flex-col items-center gap-4 ">

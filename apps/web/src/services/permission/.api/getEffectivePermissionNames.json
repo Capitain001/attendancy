@@ -1,0 +1,11 @@
+{
+  "name": "getEffectivePermissionNames",
+  "file": "src/services/permission/database/permission.queries.ts",
+  "sig": "(userId: string, orgId: string) => Promise<PermissionName[]>",
+  "composes": [
+    "getUserPermissions",
+    "getFunctionPermissions"
+  ],
+  "rules": [],
+  "why_ref": ""
+}

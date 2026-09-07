@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { Loader2, RotateCw, Trash2, Share2, ChevronDown, ChevronRight } from 'lucide-react'
+import { Loader2, RotateCw, Trash2, Share2, ChevronRight, CircleAlert } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
 import {
@@ -36,8 +36,21 @@ export function InvitationTable({ invitations, onResend, onRevoke, onShare, pend
   const [filter, setFilter] = useState<'all' | InvitationStatus>('all')
   const [confirmId, setConfirmId] = useState<string | null>(null)
   const [showExpiry, setShowExpiry] = useState(false)
+  const [visibleActions, setVisibleActions] = useState<Set<string>>(new Set())
 
   const rows = filterInvitationsByStatus(invitations, filter)
+
+  function toggleActions(id: string) {
+    setVisibleActions((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
+      return next
+    })
+  }
 
   return (
     <div className="space-y-3">
@@ -83,6 +96,7 @@ export function InvitationTable({ invitations, onResend, onRevoke, onShare, pend
             const badge = getStatusBadgeInfo(status)
             const role = inv.details?.role ?? '—'
             const confirming = confirmId === inv.id
+            const actionsVisible = visibleActions.has(inv.id)
             return (
               <li key={inv.id} className="flex items-center gap-3 py-2.5">
                 <div className="min-w-0 flex-1">
@@ -92,9 +106,33 @@ export function InvitationTable({ invitations, onResend, onRevoke, onShare, pend
                   </p>
                 </div>
 
-                <Badge variant={badge.variant} className="rouned-sm border-4 text-[10px]">
-                  {badge.label}
-                </Badge>
+                {status !== 'accepted' ? (
+                  <button
+                    type="button"
+                    onClick={() => toggleActions(inv.id)}
+                    title={actionsVisible ? 'Masquer les actions' : 'Afficher les actions'}
+                    className="relative inline-flex shrink-0 appearance-none border-0 bg-transparent p-0"
+                  >
+                    <Badge variant={badge.variant} className="rounded-sm border-4 text-[10px]">
+                      {badge.label}
+                    </Badge>
+
+                    <span
+                      className={cn(
+                        'absolute -right-1.5 -top-1.5 grid size-4 place-items-center rounded-full bg-background text-muted-foreground shadow-sm ring-1 ring-foreground/10 transition-colors',
+                        actionsVisible && 'text-foreground ring-foreground/20',
+                      )}
+                    >
+                      <CircleAlert className="size-full" />
+                    </span>
+                  </button>
+                ) : (
+                  <div className="relative shrink-0">
+                    <Badge variant={badge.variant} className="rounded-sm border-4 text-[10px]">
+                      {badge.label}
+                    </Badge>
+                  </div>
+                )}
 
                 {showExpiry && (
                   <span className="text-xs text-muted-foreground">
@@ -102,8 +140,8 @@ export function InvitationTable({ invitations, onResend, onRevoke, onShare, pend
                   </span>
                 )}
 
-         <div className="flex shrink-0 items-center gap-1">
-                  {status !== 'accepted' && (
+                <div className="flex shrink-0 items-center gap-1">
+                  {status !== 'accepted' && actionsVisible && (
                     <button
                       type="button"
                       onClick={() => onResend(inv)}
@@ -115,7 +153,7 @@ export function InvitationTable({ invitations, onResend, onRevoke, onShare, pend
                     </button>
                   )}
 
-                  {status !== 'accepted' && onShare && (
+                  {status !== 'accepted' && actionsVisible && onShare && (
                     <button
                       type="button"
                       onClick={() => onShare(inv)}

@@ -3,8 +3,11 @@
 
 import { getUserInfo } from '@/modules/user';
 import { getAuthorization } from "./autorization";
-import { UserInfo, Role, Functions, AuthenticatedUser } from "@/types/user";
+import {  Role, Functions, AuthenticatedUser } from "@/types/user";
 import { ERRORS } from "@/config";
+import { hasPermission, permissionName } from '@/services/permission'
+import type { Action, Resource } from '@/generated/prisma/client'
+
 
 
 export async function getAuthUser() {
@@ -19,9 +22,11 @@ export async function getAuthUser() {
 
 
 type AuthAccessParams = {
-  requiredRole?: Role | Role[];
-  requiredFunction?: Functions;
-};
+  requiredRole?: Role | Role[]
+  requiredFunction?: Functions
+  requiredPermission?: { action: Action; resource: Resource; resourceId?: string }
+}
+
 
 /**
  * Vérifie l'authentification et les permissions de l'utilisateur
@@ -57,32 +62,35 @@ type AuthAccessParams = {
 
 
 
-export async function authAccess(params: AuthAccessParams = {}){
+// src/services/auth/access.ts
+
+export async function authAccess(params: AuthAccessParams = {}) {
   try {
-    const user = await getUserInfo();
-    if (!user?.id) {
-      return { error: ERRORS.AUTH.UNAUTHORIZED };
-    }
+    const user = await getUserInfo()
+    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
 
-    const orgId = user.organization?.id;
-    if (!orgId) {
-      return { error: ERRORS.ORG.NOT_FOUND };
-    }
+    const orgId = user.organization?.id
+    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
 
-    // id/role/function/name/email garantis par getUserInfo (fallback + flow d'inscription)
-    const authenticatedUser = user as AuthenticatedUser;
+    const authenticatedUser = user as AuthenticatedUser
 
     if (params.requiredRole || params.requiredFunction) {
-      const auth = getAuthorization(authenticatedUser, params.requiredRole, params.requiredFunction);
-      if (auth.error) {
-        return { error: auth.error };
+      const auth = getAuthorization(authenticatedUser, params.requiredRole, params.requiredFunction)
+      if (auth.error) return { error: auth.error }
+    }
+
+    // SUPER_ADMIN bypasse déjà via getAuthorization ; ici on ne re-vérifie
+    // la permission fine que si un rôle/fonction insuffisant ne l'a pas
+    // déjà rejetée — évite un check redondant sur le chemin ADMIN.
+    if (params.requiredPermission) {
+      const cached = authenticatedUser.organization?.permissions ?? []
+      if (authenticatedUser.function !== 'SUPER_ADMIN' && !hasPermission(cached, params.requiredPermission)) {
+        return { error: `Permission ${permissionName(params.requiredPermission.action, params.requiredPermission.resource, params.requiredPermission.resourceId)} refusée` }
       }
     }
 
-    return { data: { user: authenticatedUser, orgId } };
+    return { data: { user: authenticatedUser, orgId } }
   } catch (error) {
-    return {
-      error: error instanceof Error ? error.message : ERRORS.SERVER,
-    };
+    return { error: error instanceof Error ? error.message : ERRORS.SERVER }
   }
 }

@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-09-06T22:01:28.322Z",
+  "generated_at": "2026-09-07T14:20:55.074Z",
   "services": [
     {
-      "service": "device",
-      "file": "summary/device.json",
-      "fnCount": 14,
-      "derived_at": "d45ce76"
+      "service": "function",
+      "file": "summary/function.json",
+      "fnCount": 24,
+      "derived_at": "60bd946"
     }
   ]
 }

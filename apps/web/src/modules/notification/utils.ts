@@ -1,3 +1,4 @@
+//src/modules/notification/utils.ts
 import type { SerializedPushSubscription } from './types'
 
 // ─── Conversion VAPID ─────────────────────────────────────────────────────────
@@ -43,4 +44,25 @@ export function validateHTTPS(): boolean {
 export function getCurrentPermission(): NotificationPermission {
   if (typeof window === 'undefined' || !('Notification' in window)) return 'default'
   return Notification.permission
+}
+
+
+// ─── Timeouts ─────────────────────────────────────────────────────────────────
+
+/** Rejette avec `message` si `promise` n'aboutit pas dans le délai imparti. */
+export function withTimeout<T>(promise: Promise<T>, ms: number, message: string): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<never>((_, reject) => {
+      setTimeout(() => reject(new Error(message)), ms)
+    }),
+  ])
+}
+
+/** Résout avec `fallback` si `promise` n'aboutit pas dans le délai (non bloquant). */
+export function withSoftTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((resolve) => setTimeout(() => resolve(fallback), ms)),
+  ])
 }
