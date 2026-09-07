@@ -3,7 +3,6 @@
 // Point d'entrée du référentiel des services de src/services/ — LIRE CE
 // FICHIER avant d'aller chercher dans src/generated/referentiel.ts.
 //
-// Deux catégories, jamais une troisième :
 //
 // 1. SERVICE MODÈLE (MODEL) — 1 service = 1 modèle Prisma (règle d'or, voir
 //    SKILL.md service-module-pattern). Le dossier ne contient QUE la
