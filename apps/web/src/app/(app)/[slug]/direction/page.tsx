@@ -171,7 +171,7 @@ export default async function DirectionDashboard({
             label="Étudiants"
             value={String(counts?.students ?? 0)}
             sub={`${counts?.teachers ?? 0} enseignants`}
-            href={`${base}/students`}
+            href={`${base}/people/students`}
           />
         </div>
       </CollapseSection>
