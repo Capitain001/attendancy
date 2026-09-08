@@ -84,6 +84,7 @@ export async function getClassInvitations(classId: string, orgId: string) {
       expiresAt: true,
       usedAt:    true,
       details:   true,
+      role :true,
     },
     orderBy: { createdAt: "desc" },
     take: 100,
@@ -96,5 +97,6 @@ export async function getClassInvitations(classId: string, orgId: string) {
     expiresAt: inv.expiresAt,
     usedAt:    inv.usedAt,
     details:   inv.details ? (inv.details as DatabaseInvitationDetails) : null,
+    role:      inv.role,
   }));
 }
