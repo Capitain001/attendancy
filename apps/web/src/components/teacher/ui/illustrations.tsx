@@ -33,7 +33,7 @@ export function TeacherEmpty({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center gap-1 rounded-2xl border border-dashed bg-card/50 px-6 py-12 text-center",
+        "flex flex-col items-center justify-center gap-1 rounded-2xl border border-dashed border-foreground/80 bg-card/80 px-6 py-12 text-center",
         "animate-in fade-in slide-in-from-bottom-2 duration-500",
         className,
       )}

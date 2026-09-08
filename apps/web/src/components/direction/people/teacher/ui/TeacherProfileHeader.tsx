@@ -15,15 +15,8 @@ export function TeacherProfileHeader({ teacher }: { teacher: GetTeacherNotNull }
   const phoneHref = teacher.user.phone ? `tel:${teacher.user.phone.replace(/\s+/g, '')}` : undefined
 
   return (
-    <div className={cn(card.base, 'p-4 sm:p-6 font-sans tracking-tight text-foreground bg-background border border-border relative isolate mix-blend-multiply')}>
+    <div className={cn(card.base, 'p-4 sm:p-6 sm:py-2 font-sans tracking-tight text-foreground bg-background border border-border relative isolate mix-blend-multiply')}>
 
-        {/* <BackgroundPattern
-          pattern="pattern-noise-svg"
-          baseFrequency={0.5}
-          numOctaves={1}
-          opacity={0.2}
-          className='w-full h-full'
-        /> */}
       {/* En-tête style éditorial */}
       <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-border/60 text-[10px] sm:text-[11px] font-medium tracking-widest uppercase text-muted-foreground">
         <span>TEACHER</span>

@@ -11,6 +11,7 @@ import {
   type ScheduleUiStatus,
 } from "@/services/schedule/policy"
 import { CalendarRestIllustration, TeacherEmpty } from "@/components/teacher/ui/illustrations"
+import { TimerIllustration } from "@/components/student/ui/illustrations"
 // import { TeacherEmpty, CalendarRestIllustration } from "@/components/teacher/ui/illustrations"
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -73,7 +74,7 @@ export function TeacherDailyTimeline({
   )
 
   return (
-    <div className={cn("bg-card rounded-2xl p-4 w-full", className)}>
+    <div className={cn("bg-card rounded-xl p-4 w-full", className)}>
       <div className="mb-4 flex items-end justify-between gap-3">
         <div>
           <p className="text-xs text-muted-foreground">Planning du jour</p>
@@ -90,7 +91,7 @@ export function TeacherDailyTimeline({
 
       {schedules.length === 0 ? (
         <TeacherEmpty
-          illustration={<CalendarRestIllustration />}
+          illustration={<TimerIllustration />}
           title="Aucune séance aujourd'hui"
           hint="Profitez-en — votre prochain cours apparaîtra ici."
           className=""

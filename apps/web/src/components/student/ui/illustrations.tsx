@@ -30,6 +30,34 @@ export function CalendarRestIllustration({ className }: IllustrationProps) {
   );
 }
 
+/** Temps qui s'écoule — sablier suspendu. */
+export function TimerIllustration({ className }: IllustrationProps) {
+  return (
+    <div className={cn("relative", className)}>
+      <svg viewBox="0 0 120 120" fill="none" aria-hidden="true" className="h-full w-full text-muted-foreground/60">
+        <rect x="38" y="24" width="44" height="7" rx="3.5" className="fill-card" stroke="currentColor" strokeWidth="2.5" />
+        <rect x="38" y="89" width="44" height="7" rx="3.5" className="fill-card" stroke="currentColor" strokeWidth="2.5" />
+        <path
+          d="M45 29c0 13 11 19 15 22 4-3 15-9 15-22Z"
+          className="fill-card"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M45 91c0-13 11-19 15-22 4 3 15 9 15 22Z"
+          className="fill-card"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinejoin="round"
+        />
+        <path d="M53 34c1 7 5 11 7 13 2-2 6-6 7-13Z" className="fill-primary/40" />
+        <path d="M51 88c2-6 6-9 9-11 3 2 7 5 9 11Z" className="fill-primary/25" />
+        <path d="M60 53v8" className="stroke-primary" strokeWidth="3" strokeLinecap="round" />
+      </svg>
+    </div>
+  );
+}
 /** Pause — tasse fumante, aucune séance en cours. */
 export function SessionPauseIllustration({ className }: IllustrationProps) {
   return (
