@@ -115,7 +115,7 @@ export async function getUserFunctions({ userId, orgId }: { userId: string; orgI
 // ─── Merge V1 (hasAllMainFunctions / getMissingMainFunctions) ──────────────
 // PAS de "use cache" : ces lectures gardent ensureMainFunctions (mutation).
 // Une lecture périmée romprait la garde et recréerait/skipperait à tort.
-export async function hasAllMainFunctions(orgId: string) {
+export async function checkExistingMainFunctions(orgId: string) {
   const existing = await prisma.function.findMany({
     where: { orgId, isMain: true },
     select: { name: true },
@@ -132,3 +132,37 @@ export async function getMissingMainFunctions(orgId: string) {
   const existingNames = new Set(existing.map((f) => f.name))
   return MAIN_FUNCTIONS.filter((f) => !existingNames.has(f.name)).map((f) => f.name)
 }
+
+export async function getFunctionDetail(functionId: string, orgId: string) {
+  'use cache'
+  cacheTag(CACHE.FUNCTION(orgId, functionId))
+  cacheLife(CACHE.FUNCTION.life)
+  return prisma.function.findUnique({
+    where: { id: functionId, orgId },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      icon: true,
+      isMain: true,
+      createdAt: true,
+      _count: { select: { users: true, permissions: true } },
+      permissions: {
+        where: { isActive: true },
+        select: { id: true, action: true, resource: true, resourceId: true, description: true, expiresAt: true },
+        orderBy: { createdAt: 'desc' },
+      },
+      users: {
+        select: {
+          id: true,
+          assignedAt: true,
+          user: { select: { id: true, firstName: true, lastName: true, email: true, avatar_url: true, status: true } },
+          assignedByUser: { select: { id: true, firstName: true, lastName: true, avatar_url: true } },
+        },
+        orderBy: { assignedAt: 'desc' },
+      },
+    },
+  })
+}
+
+

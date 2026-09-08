@@ -41,3 +41,15 @@ export const getUserFunctionsSchema = v.object({
 
 export type GetUserFunctionsInput = v.InferInput<typeof getUserFunctionsSchema>
 export type GetUserFunctionsOutput = v.InferOutput<typeof getUserFunctionsSchema>
+
+
+export const getFunctionDetailSchema = v.object({
+  functionId: v.pipe(v.string(), v.uuid('ID invalide')),
+})
+export type GetFunctionDetailInput = v.InferInput<typeof getFunctionDetailSchema>
+
+export const revokeFunctionFromUserSchema = v.object({
+  userId: v.pipe(v.string(), v.uuid('ID invalide')),
+  functionId: v.pipe(v.string(), v.uuid('ID invalide')),
+})
+export type RevokeFunctionFromUserInput = v.InferInput<typeof revokeFunctionFromUserSchema>

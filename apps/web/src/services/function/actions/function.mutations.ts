@@ -3,8 +3,8 @@
 import * as v from 'valibot'
 import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
-import { createFunctionSchema, updateFunctionSchema } from '../validation'
-import type { CreateFunctionInput, UpdateFunctionInput } from '../validation'
+import { createFunctionSchema, revokeFunctionFromUserSchema, updateFunctionSchema } from '../validation'
+import type { CreateFunctionInput, RevokeFunctionFromUserInput, UpdateFunctionInput } from '../validation'
 import {
   createFunction,
   updateFunction,
@@ -12,7 +12,22 @@ import {
   assignFunctionToUser,
   deleteFunctionFromUser,
   getFunctionByName,
+  createMainFunctions,
+  removeFunctionFromUser
 } from '../database'
+import { logAuditAsync } from '@/utils/server'
+
+
+ 
+export async function createMainFunctionsAction() {
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+ 
+  const functions = await createMainFunctions(orgId)
+  return { data: functions }
+}
+ 
 
 export async function createFunctionAction(input: CreateFunctionInput) {
   const auth = await authAccess({ requiredRole: 'DIRECTION' })
@@ -85,6 +100,25 @@ export async function deleteFunctionFromUserAction(params: {
   try {
     await deleteFunctionFromUser({ userId: params.userId, functionId: params.functionId, orgId })
     return { data: { userId: params.userId, functionId: params.functionId } }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+
+
+export async function removeFunctionFromUserAction(input: RevokeFunctionFromUserInput) {
+  const auth = await authAccess({ requiredRole: 'ADMIN' })
+  if (!auth.data) return { error: auth.error }
+  const { user, orgId } = auth.data
+
+  const parsed = v.safeParse(revokeFunctionFromUserSchema, input)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+
+  try {
+    await removeFunctionFromUser({ ...parsed.output, orgId })
+    // Fire-and-forget, après la mutation —
+    logAuditAsync({ userId: user.id, orgId, action: 'DELETE', resource: 'FUNCTION', resourceId: parsed.output.functionId, details: { targetUserId: parsed.output.userId } })
+    return { data: true }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

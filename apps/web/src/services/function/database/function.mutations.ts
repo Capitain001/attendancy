@@ -77,7 +77,16 @@ export async function deleteFunctionFromUser(params: {
   await invalidateEvent('FUNCTION_UNASSIGNED', params.orgId)
 }
 
-
+export async function removeFunctionFromUser(params: {
+  userId: string
+  functionId: string
+  orgId: string
+}) {
+  await prisma.userFunction.delete({
+    where: { userId_functionId: { userId: params.userId, functionId: params.functionId } },
+  })
+  await invalidateEvent('FUNCTION_UNASSIGNED', params.orgId, params.userId)
+}
 
 export async function createMainFunctions(orgId: string) {
   const results = await Promise.all(

@@ -2,9 +2,21 @@
 import * as v from 'valibot'
 import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
-import { getFunctions, getFunctionByName , getFunctionProfiles, getUserFunctions } from '../database'
-import { getUserFunctionsSchema } from '../validation'
-import type { GetUserFunctionsInput } from '../validation'
+import { getFunctions, getFunctionByName , getFunctionProfiles, getUserFunctions, checkExistingMainFunctions, getFunctionDetail } from '../database'
+import { getFunctionDetailSchema, getUserFunctionsSchema } from '../validation'
+import type { GetFunctionDetailInput, GetUserFunctionsInput } from '../validation'
+
+export async function checkExistingMainFunctionsAction() {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
+  try {
+    return { data: await checkExistingMainFunctions(orgId) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
 
 export async function getFunctionsAction() {
   const auth = await authAccess({ requiredRole: 'DIRECTION' })
@@ -76,6 +88,23 @@ export async function getCurrentUserFunctionsAction() {
 
   try {
     return { data: await getUserFunctions({ userId: user.id, orgId }) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+
+export async function getFunctionDetailAction(input: GetFunctionDetailInput) {
+  const auth = await authAccess({ requiredRole: 'ADMIN' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
+  const parsed = v.safeParse(getFunctionDetailSchema, input)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+
+  try {
+    const function_ = await getFunctionDetail(parsed.output.functionId, orgId)
+    if (!function_) return { error: 'Fonction introuvable' }
+    return { data: function_ }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
