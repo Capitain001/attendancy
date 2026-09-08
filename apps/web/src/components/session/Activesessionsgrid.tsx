@@ -173,21 +173,59 @@ function ActiveSessionCard({ session }: ActiveSessionCardProps) {
 
 // ─── Skeleton ─────────────────────────────────────────────────────────────────
 
+// ─── Skeleton ─────────────────────────────────────────────────────────────────
+
 function SessionCardSkeleton() {
   return (
-    <Card className="size-42 shrink-0 flex flex-col justify-between p-3.5 gap-1 animate-pulse">
-      
-      <div className="h-9 w-full rounded-lg bg-muted" />
+    <Card
+      className={cn(
+        "h-42 w-42 shrink-0",
+        "flex flex-col justify-between",
+        "p-3.5 overflow-hidden relative gap-1",
+      )}
+    >
+      {/* Barre de progression fantôme */}
+      <div className="relative h-9 rounded-lg overflow-hidden border border-border/60 bg-muted/40">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(-45deg, transparent, transparent 5px, rgba(128,128,128,0.08) 5px, rgba(128,128,128,0.08) 10px)",
+          }}
+        />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="h-2.5 w-10 rounded-full bg-muted-foreground/20" />
+        </div>
+      </div>
 
-      <div className="flex flex-col items-center gap-2">
+      {/* Avatar + nom enseignant */}
+      <div className="flex flex-col items-center justify-center gap-1.5">
         <div className="size-14 rounded-full bg-muted" />
-        <div className="h-3 w-2/3 rounded bg-muted" />
+
+        <div className="flex items-center gap-1.5">
+          <User className="size-3 shrink-0 text-muted-foreground/30" />
+          <div className="h-2.5 w-16 rounded-full bg-muted" />
+        </div>
       </div>
 
+      {/* Horaire + salle */}
       <div className="flex flex-col items-center gap-1.5">
-        <div className="h-2.5 w-1/2 rounded bg-muted" />
-        <div className="h-2.5 w-1/3 rounded bg-muted" />
+        <div className="flex items-center gap-1 text-muted-foreground/30">
+          <Clock className="size-3 shrink-0" />
+          <div className="h-2 w-14 rounded-full bg-muted" />
+        </div>
+
+        <div className="flex items-center gap-1.5 text-muted-foreground/30">
+          <MapPin className="size-3 shrink-0" />
+          <div className="h-2 w-10 rounded-full bg-muted" />
+        </div>
       </div>
+
+      {/* Effet shimmer */}
+      <div
+        className="absolute inset-0 -translate-x-full animate-[shimmer_1.6s_infinite] bg-gradient-to-r from-transparent via-background/40 to-transparent"
+        aria-hidden
+      />
     </Card>
   );
 }

@@ -69,7 +69,7 @@ export default async function DirectionDashboard({
           label="Séances du jour"
           value={schedulesCount}
           sub="complétées aujourd'hui"
-          href={`${base}/schedule`}
+          href={`${base}/schedule/calendar`}
           
           max={metrics?.todaySchedules}
         />
@@ -153,19 +153,19 @@ export default async function DirectionDashboard({
             label="Cours"
             value={String(counts?.courses ?? 0)}
             sub="cours actifs"
-            href={`${base}/courses`}
+            href={`${base}/academic/courses`}
           />
           <MetricCard
-            label="Classes"
+            label="Promotions"
             value={String(counts?.classes ?? 0)}
-            sub="classes ouvertes"
-            href={`${base}/academic/classes`}
+            sub="vos promotions"
+            href={`${base}/academic/promotions`}
           />
           <MetricCard
             label="Salles"
             value={String(counts?.rooms ?? 0)}
             sub="salles disponibles"
-            href={`${base}/rooms`}
+            href={`${base}/schedule/rooms`}
           />
           <MetricCard
             label="Étudiants"
