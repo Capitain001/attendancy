@@ -1,7 +1,7 @@
 'use server'
 import * as v from 'valibot'
 import { authAccess } from '@/services/auth'
-import { ERRORS } from '@/config'
+import { ERROR_CODES, ERRORS } from '@/config'
 import { getFunctions, getFunctionByName , getFunctionProfiles, getUserFunctions, checkExistingMainFunctions, getFunctionDetail } from '../database'
 import { getFunctionDetailSchema, getUserFunctionsSchema } from '../validation'
 import type { GetFunctionDetailInput, GetUserFunctionsInput } from '../validation'
@@ -94,16 +94,17 @@ export async function getCurrentUserFunctionsAction() {
 }
 
 export async function getFunctionDetailAction(input: GetFunctionDetailInput) {
-  const auth = await authAccess({ requiredRole: 'ADMIN' })
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
 
   const parsed = v.safeParse(getFunctionDetailSchema, input)
-  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+  // Id malformé = même absence de résultat qu'un id valide sans fonction
+  // correspondante, du point de vue de l'appelant : pas une erreur à part.
+  if (!parsed.success) return { data: null }
 
   try {
     const function_ = await getFunctionDetail(parsed.output.functionId, orgId)
-    if (!function_) return { error: 'Fonction introuvable' }
     return { data: function_ }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }

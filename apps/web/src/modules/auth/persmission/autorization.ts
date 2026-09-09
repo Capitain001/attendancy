@@ -1,4 +1,5 @@
 // utils/authorization.ts
+import { ERROR_CODES } from '@/config'
 import { UserInfo, Role, Functions, AuthenticatedUser } from "@/types/user";
 import { Permission, PermissionAction, PermissionResource, AuthorizationResult } from "@/types/permissions";
 import { getUserInfo } from '@/modules/user';
@@ -76,6 +77,7 @@ export function getAuthorization(
 
     if (!isRoleAllowed) {
       return {
+
         error: `Rôle ${userRole} insuffisant (requis: ${requiredRoles.join(", ")})`,
       };
     }

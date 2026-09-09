@@ -9,6 +9,7 @@ export type ApiResponse<T> =
   | { data: T }
   | { error: string }
 
+  
 export const ERRORS = {
   // AUTH: "Not authenticated, please login first.",
   // FORBIDDEN: "You don't have permission to access this resource.",
@@ -50,6 +51,16 @@ export const ERRORS = {
 type ErrorResponse = Extract<ApiResponse<any>, { error: string }>;
 export const ERROR_KEY: keyof ErrorResponse = "error";
 
+export const ERROR_CODES = {
+  UNAUTHORIZED: 'UNAUTHORIZED',
+  FORBIDDEN: 'FORBIDDEN',
+  NOT_FOUND: 'NOT_FOUND',
+  BAD_REQUEST: 'BAD_REQUEST',
+  SERVER: 'SERVER',
+  ORG_NOT_FOUND: 'ORG_NOT_FOUND',
+} as const satisfies Record<string, string>
+
+export type ErrorCode = (typeof ERROR_CODES)[keyof typeof ERROR_CODES]
 
 export const PRISMA_UNIQUE_MAP: Record<string, string> = {
   code: ERRORS.UNIQUE.CODE,
