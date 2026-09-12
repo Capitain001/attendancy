@@ -6,4 +6,5 @@ export * from "./use-image-upload"
 export * from "./use-reference"
 export * from "./use-debounce"
 export * from "./use-mobile"
+export * from "./use-theme-selector"
 

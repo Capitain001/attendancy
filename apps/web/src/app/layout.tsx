@@ -9,6 +9,7 @@ import { AsyncHeader } from '@/components/layout/Header/AsyncHeader'
 import {HeaderSkeleton} from '@/components/layout/Header/HeaderSkeleton'
 import { NoiseFilterDefs } from "@/components/design/NoiseFilter";
 import  "./globals.css"
+import { ActiveThemeProvider } from '@/components/theme/ActiveTheme'
 
 export const metadata: Metadata = {
   title: 'Attendancy',
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang="fr" suppressHydrationWarning>
       <body className="antialiased" suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ActiveThemeProvider>
           <ReactQueryProvider>
             <NuqsAdapter>
               <div className="flex h-screen flex-col">
@@ -39,6 +41,7 @@ export default function RootLayout({
               <Toaster position="top-right" expand duration={4000} />
             </NuqsAdapter>
           </ReactQueryProvider>
+          </ActiveThemeProvider>
         </ThemeProvider>
       </body>
     </html>

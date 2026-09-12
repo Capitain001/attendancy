@@ -8,6 +8,7 @@ import {
 } from "@/services/teacher/actions"
 import { DailyScheduleItem, TeacherDailyTimeline } from "./TeacherDailyTimeline"
 import { TeacherProfileCard } from "@/components/teacher/ui/profile-card"
+import TeacherCourseList from "@/components/teacher/courses/TeacherCourseList"
 
 
 export default async function Page() {
@@ -55,8 +56,12 @@ export default async function Page() {
       {/* Agenda du jour réel */}
       <TeacherDailyTimeline schedules={schedules} />
 
+    
       {/* Cours enseignés — nom en serif (accent teacher), surfaces douces */}
-      {courses.length > 0 && (
+    
+        <TeacherCourseList courses={courses} />
+        
+      {/* {courses.length > 0 && (
         <div className="bg-card rounded-2xl p-4">
           <p className="text-[11px] font-medium uppercase tracking-widest text-muted-foreground mb-3">
             Mes cours
@@ -73,7 +78,7 @@ export default async function Page() {
             ))}
           </div>
         </div>
-      )}
+      )} */}
 
     </div>
   )

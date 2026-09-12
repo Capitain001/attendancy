@@ -3,4 +3,5 @@ export * from './url'
 export * from './redirects'
 export * from './notification';
 export * from './session'
+export * from './themes'
 
