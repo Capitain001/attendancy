@@ -8,16 +8,24 @@ Les scripts SQL situés dans `apps/web/prisma/post-migrate` contiennent tout ce 
 
 Ils doivent être appliqués **après** vos migrations Prisma classiques (`prisma migrate deploy` ou `prisma migrate dev`).
 
-### 1. En Développement et Production (fichier par fichier)
+### 1. En Développement et Production (Tous les fichiers)
 
-Pour appliquer ou mettre à jour un script SQL spécifique, on utilise la commande `prisma db execute` en lui passant le chemin du fichier concerné. Ces commandes doivent être lancées depuis le dossier `apps/web`.
+Pour appliquer ou mettre à jour tous les scripts SQL de `post-migrate` d'un seul coup (recommandé), utilisez la commande suivante depuis le dossier `apps/web` :
+
+```bash
+bun run db:post-migrate
+# ou npm run db:post-migrate
+```
+
+*(En interne, ce script fait appel à `scripts/database/db-post-migrate.ts` qui va chercher récursivement tous les fichiers `.sql` dans `post-migrate` et exécuter un `db execute` sur chacun d'eux).*
+
+### 2. Exécution manuelle (Fichier par fichier)
+
+Si vous souhaitez appliquer uniquement un script spécifique, vous pouvez toujours utiliser `prisma db execute` en lui passant le chemin du fichier.
 
 **Exemple 1 : Appliquer les règles de stockage Supabase (bucket, RLS) pour les avatars**
 ```bash
 npx prisma db execute --file prisma/post-migrate/storage/avatar.sql
-
-# logo
-npx prisma db execute --file prisma/post-migrate/storage/logo.sql
 ```
 
 **Exemple 2 : Appliquer d'autres règles ou triggers (ex: communications)**
@@ -27,16 +35,19 @@ npx prisma db execute --file prisma/post-migrate/70_communication.sql
 
 > **Note :** Tous les scripts présents dans `post-migrate` sont conçus pour être **idempotents**. Vous pouvez donc lancer ces commandes plusieurs fois de suite en toute sécurité sans provoquer d'erreurs (ils utilisent des clauses comme `CREATE OR REPLACE`, `CREATE INDEX IF NOT EXISTS`, ou `ON CONFLICT DO NOTHING`).
 
-### 2. Vérification des objets Post-Migrate (`verify.sql`)
+### 2. Vérification des objets Post-Migrate (`db:verify`)
 
-Le fichier `verify.sql` est un script en **lecture seule** utilisé comme diagnostic pour vérifier qu'aucun objet créé manuellement n'a été détruit par inadvertance par une migration Prisma générée automatiquement. 
+Le script de vérification teste l'état réel de votre base de données pour diagnostiquer si des objets créés manuellement (fonctions, index, triggers, policies...) ont été détruits par inadvertance par une migration Prisma générée automatiquement.
 
-Il est recommandé de l'exécuter après avoir passé toute la chaîne des `post-migrate` ou à la suite d'un `prisma migrate` pour valider l'intégrité (ex: extensions, triggers, etc.).
+Il est recommandé de l'exécuter après avoir passé toute la chaîne des `post-migrate` ou à la suite d'un `prisma migrate` pour valider l'intégrité de la DB. Le script affichera un rapport détaillé dans votre console.
 
 **Exemple : Lancer le diagnostic de vérification**
 ```bash
-npx prisma db execute --file prisma/verify/verify.sql
+bun run db:verify
+# ou npm run db:verify
 ```
+
+*(En interne, ce script exécute `scripts/database/db-verify.ts` qui interroge l'Information Schema de Postgres via Prisma pour vérifier la présence de chaque objet attendu).*
 
 ### 3. Base de tests (Automatisé)
 

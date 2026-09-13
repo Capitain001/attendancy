@@ -125,7 +125,8 @@ BEGIN
     "checkInMethod",
     position,
     "locationId",
-    "isLate"
+    "isLate",
+    "updatedAt"
   ) VALUES (
     p_schedule_id,
     'ACTIVE',
@@ -133,7 +134,8 @@ BEGIN
     p_method::"VerificationMethod",
     v_check_in_point,
     v_data.location_id,
-    v_is_late
+    v_is_late,
+    v_now
   )
   RETURNING id INTO v_session_id;
 

@@ -9,3 +9,4 @@ contriante :
 ex:  pour la recherche rapide des fn se baser sur ./api et /summary referncer dans claude.md (racine) inclure les script et patern juger utile a la tache dans le plan pr ne pas perdre le contexte , ect 
 
 -utiliser le skill :docs\cmd\por-dev.md pour etabir le plan
+
