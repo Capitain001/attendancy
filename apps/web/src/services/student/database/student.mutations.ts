@@ -1,7 +1,7 @@
 // src/services/student/database/student.mutations.ts
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 import type { EnrollStudentOutput, AssignStudentGroupOutput } from '../validation'
 
 export async function enrollStudent(data: EnrollStudentOutput & { orgId: string }) {

@@ -1,7 +1,7 @@
 // src/services/teacher/database/teacher.mutations.ts
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 
 export async function updateTeacherDepartment(
   teacherId: string,

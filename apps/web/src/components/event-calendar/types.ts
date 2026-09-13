@@ -22,6 +22,7 @@ export type ScheduleEvent = {
     groupId?: string;
     status?: ScheduleStatus;
     confirmed?: boolean;
+    isLocked?:boolean;
   };
 };
 

@@ -1,6 +1,6 @@
 import { cacheTag, cacheLife } from 'next/cache'
 import { prisma } from '@/lib/prisma'
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;;
 
 const eventSelect = {
   id: true, title: true, description: true,

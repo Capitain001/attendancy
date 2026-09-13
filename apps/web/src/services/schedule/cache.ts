@@ -1,5 +1,5 @@
 // src/services/schedule/cache.ts
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;
 
 export const SCHEDULE_GRAPH = {
   SCHEDULE_CREATED: (orgId: string, classId: string) => [

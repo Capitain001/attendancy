@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 import type { CreateNotificationOutput } from '../validation'
 
 // ─── Notifications utilisateur ────────────────────────────────────────────────

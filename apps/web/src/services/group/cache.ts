@@ -1,7 +1,7 @@
 // src/services/group/cache.ts
 // Groups apparaissent dans deux caches : getClass (détail, select imbriqué)
 // et getGroupsByClass (liste dédiée) → invalider CACHE.CLASS et CACHE.GROUP.
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;;
 
 export const GROUP_GRAPH = {
   GROUP_CREATED: (orgId: string, classId: string) => [

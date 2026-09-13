@@ -12,8 +12,9 @@ import {
   restoreSchedule,
   markScheduleCreationNotified,
   getScheduleForNotify,
+  toggleScheduleLock,
 } from '../database'
-import { CreateScheduleOutput, UpdateScheduleDataOutput, createScheduleSchema, updateScheduleSchema, UpdateScheduleInput } from '../validation'
+import { CreateScheduleOutput, UpdateScheduleDataOutput, createScheduleSchema, updateScheduleSchema, UpdateScheduleInput, ToggleScheduleLockInput, toggleScheduleLockSchema } from '../validation'
 import { logAuditAsync } from '@/modules/audit'
 import { INVALID_TIME_ORDER_ERROR, isSlotElapsed, isValidTimeOrder, PAST_SLOT_ERROR } from '@/services/planning/policy' 
 import { getExpectedAttendees } from '@/services/attendance/database'
@@ -128,7 +129,8 @@ export async function createScheduleAction(data: CreateScheduleOutput) {
 }
 
 export async function updateScheduleAction(input: UpdateScheduleInput) {
-  const auth = await authAccess({ requiredRole: PLANNING_ROLES })
+  // const auth = await authAccess({ requiredRole: PLANNING_ROLES })
+    const auth = await authAccess({ requiredRole: "DIRECTION" , requiredFunction:"PRINCIPAL" })
   if (!auth.data) return { error: auth.error }
   const { orgId, user } = auth.data
 
@@ -274,4 +276,38 @@ export async function notifyScheduleCreationsAction(scheduleIds: string[]) {
   }
 
   return { data: { succeeded, failed } }
+}
+
+
+
+export async function toggleScheduleLockAction(input: ToggleScheduleLockInput) {
+  try {
+    const auth = await authAccess({ requiredRole: 'DIRECTION', requiredFunction: ['PRINCIPAL', 'SECRETARY'] })
+    if (!auth.data) return { error: auth.error }
+    const { user, orgId } = auth.data
+
+    const parsed = v.safeParse(toggleScheduleLockSchema, input)
+    if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+
+    const { scheduleId, data } = parsed.output
+
+    const result = await toggleScheduleLock({ scheduleId, orgId, isLocked: data.isLocked })
+
+    logAuditAsync({
+      userId: user.id,
+      orgId,
+      action: 'UPDATE',
+      resource: 'SCHEDULE',
+      resourceId: scheduleId,
+      actor: { name: user.name, email: user.email },
+      details: {
+        event: data.isLocked ? 'SCHEDULE_LOCKED' : 'SCHEDULE_UNLOCKED',
+      },
+    })
+
+    return { data: result }
+  } catch (error) {
+    console.error('toggleScheduleLockAction:', error)
+    return { error: error instanceof Error ? error.message : ERRORS.SERVER }
+  }
 }

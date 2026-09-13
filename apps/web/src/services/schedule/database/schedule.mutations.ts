@@ -1,7 +1,7 @@
 // src/services/schedule/database/schedule.mutations.ts
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 import type { CreateScheduleOutput, UpdateScheduleDataOutput } from '../validation'
 
 const scheduleSelect = {
@@ -159,4 +159,25 @@ export async function removeNextSchedulesByRule(ruleId: string, orgId: string) {
   })
 
   await Promise.all(affected.map(({ classId }) => invalidateEvent('SCHEDULE_REMOVED', orgId, classId)))
+}
+
+
+export async function toggleScheduleLock({
+  scheduleId,
+  orgId,
+  isLocked,
+}: {
+  scheduleId: string
+  orgId: string
+  isLocked: boolean
+}) {
+  const result = await tryConstraint(
+    prisma.schedule.update({
+      where: { id: scheduleId, orgId, deletedAt: null },
+      data: { isLocked },
+      select: { id: true, isLocked: true },
+    }),
+  )
+  await invalidateEvent('SCHEDULE_UPDATED', orgId, result.id)
+  return result
 }

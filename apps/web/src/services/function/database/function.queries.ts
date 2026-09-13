@@ -1,7 +1,7 @@
 // src/services/function/database/function.queries.ts
 import { cacheTag, cacheLife } from 'next/cache'
 import { prisma } from '@/lib/prisma'
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;;
 import { MAIN_FUNCTIONS } from '../constants'
 
 export async function getFunctions(orgId: string) {

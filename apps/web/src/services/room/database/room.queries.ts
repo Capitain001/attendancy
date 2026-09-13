@@ -1,7 +1,7 @@
 // src/services/room/database/room.queries.ts
 import { cacheTag, cacheLife } from 'next/cache'
 import { prisma } from '@/lib/prisma'
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;
 
 export async function getRooms(orgId: string) {
   'use cache'

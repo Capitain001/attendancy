@@ -1,5 +1,5 @@
 // src/services/class/cache.ts
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;;
 
 export const CLASS_GRAPH = {
   CLASS_CREATED: (orgId: string) => [CACHE.CLASS(orgId)],

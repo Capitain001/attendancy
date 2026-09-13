@@ -3,6 +3,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { differenceInMinutes, format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { toast } from "sonner";
+
+import { toggleScheduleLockAction, updateScheduleAction } from "@/services/schedule/actions";
 
 import type { EventDialogRendererProps } from "@/components/event-calendar";
 import { EndHour, StartHour } from "@/components/event-calendar/constants";
@@ -21,7 +24,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useAvailability } from "@/hooks/data/planning/useAvailability";
-import { isSlotElapsed } from "@/services/planning/policy";
+import { isSlotElapsed, isScheduleEditable } from "@/services/planning/policy";
 import type { PlanningResources } from "@/services/planning";
 
 import { CourseECard } from "./card/CourseEcard";
@@ -58,6 +61,7 @@ const TIME_OPTIONS: TimeOption[] = buildTimeOptions(StartHour, EndHour);
 export type CoursePlanningDialogProps = EventDialogRendererProps & {
   classId: string;
   resources: NonNullable<PlanningResources>;
+  onLockChange: (scheduleId: string, isLocked: boolean) => void;
 };
 
 export function CoursePlanningDialog({
@@ -68,24 +72,30 @@ export function CoursePlanningDialog({
   onDelete,
   classId,
   resources,
+  onLockChange,
 }: CoursePlanningDialogProps) {
   const [form, setForm] = useState<CoursePlanningFormState>(() =>
     getInitialCoursePlanningFormState(event)
   );
 
   const [mode, setMode] = useState<DialogMode>(event?.id ? "view" : "edit");
-  const [locked, setLocked] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [savingNotes, setSavingNotes] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [canceling, setCanceling] = useState(false);
 
-  useEffect(() => {
-    setForm(getInitialCoursePlanningFormState(event));
-    setMode(event?.id ? "view" : "edit");
-    setLocked(!event?.id);
-    setError(null);
-  }, [event]);
+  const [isLocked, setIsLocked] = useState(false);
+  const [togglingLock, setTogglingLock] = useState(false);
+
+useEffect(() => {
+  if (!isOpen) return; // ← ne pas réinitialiser mode/form pendant la fermeture
+
+  setForm(getInitialCoursePlanningFormState(event));
+  setMode(event?.id ? "view" : "edit");
+  setIsLocked(event?.meta.isLocked ?? false);
+  setError(null);
+}, [isOpen, event]);
 
   const isCreation = !event?.id;
   const isElapsedSlot = useMemo(
@@ -93,6 +103,17 @@ export function CoursePlanningDialog({
     [event],
   );
   const blockedCreation = isOpen && isCreation && isElapsedSlot;
+
+  const scheduleEditable = useMemo(() => {
+    if (isCreation) return true;
+    if (!event) return false;
+    return isScheduleEditable({
+      status: event.meta.status ?? "PENDING",
+      isLocked: isLocked,
+      start: event.start,
+      end: event.end,
+    });
+  }, [isCreation, event, isLocked]);
 
   const patchForm = useCallback((patch: Partial<CoursePlanningFormState>) => {
     setForm((prev) => ({ ...prev, ...patch }));
@@ -237,6 +258,27 @@ export function CoursePlanningDialog({
     }
   }, [event?.id, onDelete]);
 
+  const handleSaveNotes = useCallback(async () => {
+    if (!event?.id || isLocked) return;
+    setSavingNotes(true);
+    try {
+      const res = await updateScheduleAction({
+        scheduleId: event.id,
+        data: { notes: form.notes ?? null },
+      });
+      if (res.error) {
+        setError(res.error);
+      } else {
+        toast.success("Notes enregistrées.");
+        setMode("view");
+      }
+    } catch {
+      setError("Erreur lors de l'enregistrement des notes.");
+    } finally {
+      setSavingNotes(false);
+    }
+  }, [event?.id, form.notes, isLocked]);
+
   const handleCardUpdate = useCallback(
     (data: CoursePlanningCardUpdatePatch) => {
       const resolved = resolveTimeUpdateAgainstGrid(data, form.endTime, TIME_OPTIONS);
@@ -272,21 +314,52 @@ export function CoursePlanningDialog({
     [form.endTime]
   );
 
-  const handleLockToggle = useCallback(() => {
-    setLocked((prev) => {
-      const nextLocked = !prev;
-      if (nextLocked && (mode === "notes" || mode === "group")) setMode("view");
-      return nextLocked;
-    });
-  }, [mode]);
+  const handleLockToggle = useCallback(async () => {
+    if (!event?.id) return;
 
+    const nextLocked = !isLocked;
+
+    setIsLocked(nextLocked);
+    if (nextLocked && mode === "edit") setMode("view");
+
+    setTogglingLock(true);
+    try {
+      const res = await toggleScheduleLockAction({
+        scheduleId: event.id,
+        data: { isLocked: nextLocked },
+      });
+      if (res.error) {
+        setIsLocked(!nextLocked);
+        setError(res.error);
+        return;
+      }
+      toast.success(nextLocked ? "Séance verrouillée." : "Séance déverrouillée.");
+      onLockChange(event.id, nextLocked);
+    } catch {
+      setIsLocked(!nextLocked);
+      setError("Erreur lors du verrouillage.");
+    } finally {
+      setTogglingLock(false);
+    }
+  }, [event, isLocked, mode, onLockChange]);
+  // 1. Autoriser l'ouverture du mode "group" même si verrouillé / non éditable
   const handleModeToggle = useCallback(
     (target: DialogMode) => {
-      if (locked) return;
+      if (isCreation) return;
+
+      if (target === "notes" || target === "group") {
+        setMode((prev) => (prev === target ? "view" : target));
+        return;
+      }
+
+      if (!scheduleEditable) return;
+
       setMode((prev) => (prev === target ? "view" : target));
     },
-    [locked]
+    [isCreation, scheduleEditable]
   );
+
+
 
   const isViewLike = mode === "view" || mode === "notes" || mode === "group";
 
@@ -347,6 +420,7 @@ export function CoursePlanningDialog({
             <Textarea
               value={form.notes}
               onChange={(e) => patchForm({ notes: e.target.value })}
+              readOnly={isLocked}
               rows={3}
               placeholder="Consigne du Cours"
               className="resize-none text-sm bg-transparent border-border/60 focus-visible:ring-1"
@@ -357,7 +431,11 @@ export function CoursePlanningDialog({
         {mode === "group" && (
           <div className="rounded-sm border border-border bg-card p-3 flex flex-col gap-2">
             <span className="text-xs font-medium text-muted-foreground">Groupe assigné</span>
-            <Select value={form.groupId} onValueChange={(v) => patchForm({ groupId: v })}>
+            <Select
+              value={form.groupId}
+              onValueChange={(v) => patchForm({ groupId: v })}
+              disabled={isLocked}
+            >
               <SelectTrigger className="bg-background">
                 <SelectValue placeholder="Toute la classe" />
               </SelectTrigger>
@@ -381,18 +459,22 @@ export function CoursePlanningDialog({
 
         <PlanningToolbar
           mode={mode}
-          locked={locked}
+          locked={isLocked}
           saving={saving}
+          savingNotes={savingNotes}
+          togglingLock={togglingLock}
           canceling={canceling}
           deleting={deleting}
           hasEvent={!!event?.id}
           status={form.status}
           isElapsed={isElapsedSlot}
+          isScheduleEditable={scheduleEditable}
           onModeToggle={handleModeToggle}
           onLockToggle={handleLockToggle}
           onCancel={handleCancel}
           onRemove={handleRemove}
           onSubmit={handleSubmit}
+          onSaveNotes={handleSaveNotes}
           onCancelEdit={() => {
             setForm(getInitialCoursePlanningFormState(event));
             setError(null);

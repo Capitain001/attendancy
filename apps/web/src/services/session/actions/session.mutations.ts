@@ -1,7 +1,7 @@
 'use server'
 import { ERRORS } from '@/config'
 import { authAccess } from '@/services/auth'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 import { startSession, finalizeSession } from '../database'
 
 export async function startSessionAction(

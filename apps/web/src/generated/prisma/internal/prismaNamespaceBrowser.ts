@@ -806,6 +806,7 @@ export const ScheduleScalarFieldEnum = {
   statusChangedAt: 'statusChangedAt',
   confirmed: 'confirmed',
   notes: 'notes',
+  isLocked: 'isLocked',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   classId: 'classId',

@@ -1,4 +1,4 @@
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;;
 
 export const PERMISSION_GRAPH = {
   PERMISSION_GRANTED: (orgId: string, scopeId?: string) => [

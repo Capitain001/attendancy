@@ -3,7 +3,7 @@
 // Domaine Parent — OWNER de ParentRelation. Mutations d'assignation/retrait d'un
 // parent à un étudiant (direction), atomiques + audit (P-18 A, P-19 C).
 
-import { invalidateCache } from "@/cache/server/key";
+import { invalidateCache } from '@/cache/server/graph';;
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 

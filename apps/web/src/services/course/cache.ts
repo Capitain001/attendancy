@@ -1,6 +1,6 @@
 // src/services/course/cache.ts
 // COURSE mutations also invalidate CLASS (class detail shows course count).
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;;
 
 export const COURSE_GRAPH = {
   COURSE_CREATED: (orgId: string, classId: string) => [

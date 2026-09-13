@@ -3,7 +3,7 @@
 // Les affectations sont lues sous le tag COURSE_TEACHER (scopé par courseId),
 // mais le DÉTAIL cours (service course) embarque les enseignants dans son
 // `select` → toute mutation invalide AUSSI les tags COURSE (cross-service).
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;;
 
 const tags = (orgId: string, courseId: string, classId: string) => [
   CACHE.COURSE_TEACHER(orgId, courseId),

@@ -1,0 +1,8 @@
+{
+  "name": "toggleScheduleLock",
+  "file": "src/services/schedule/database/schedule.mutations.ts",
+  "sig": "({ scheduleId, orgId, isLocked }: { scheduleId: string orgId: string isLocked: boolean }) => Promise<{ id: string; isLocked: boolean; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

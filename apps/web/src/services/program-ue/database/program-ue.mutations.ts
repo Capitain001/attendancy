@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { invalidateCache } from "@/cache/server/key";
+import { invalidateCache } from '@/cache/server/graph';;
 import { tryUnique } from "@/utils/server";
 import { Prisma } from "@/generated/prisma/client";
 

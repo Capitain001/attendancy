@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
-import { CACHE, CACHE_LIFE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;;
+import { CACHE_LIFE } from '@/cache/server/graph';
 import { cacheLife, cacheTag } from 'next/cache'
 
 export async function getReferentials() {

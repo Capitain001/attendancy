@@ -13,7 +13,7 @@
 //
 // import { prisma } from '@/lib/db'
 // import { tryConstraint } from '@/utils/server/prisma'
-// import { invalidateEvent } from '@/cache/server/key'
+// import { invalidateEvent } from '@/cache/server/graph'
 // import type { EntityGroupByOutputType } from '@/generated/prisma/models/Entity'
 //
 // export type CreateEntityData =

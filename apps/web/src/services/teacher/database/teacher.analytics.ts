@@ -2,7 +2,7 @@
 
 import { prisma } from '@/lib/prisma'
 import { cacheTag, cacheLife } from 'next/cache'
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;
 
 /**
  * Stats d'un enseignant, scopées orgId.

@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 import { assignMultipleFunctionsToUser } from '@/modules/auth/members/utils'
 
 export async function assignFunctionsToMember(params: {

@@ -1,4 +1,4 @@
-import { CACHE } from "@/cache/server/key";
+import { CACHE } from '@/cache/server/key';;;;
 
 export const CURRICULUM_GRAPH = {
     CURRICULUM_APPLIED: (orgId: string, classId: string) => [

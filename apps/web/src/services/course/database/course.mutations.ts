@@ -1,7 +1,7 @@
 // src/services/course/database/course.mutations.ts
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 import type { CreateCourseOutput, UpdateCourseDataOutput, LinkCoursesToTermOutput } from '../validation'
 
 export async function createCourse(data: CreateCourseOutput & { orgId: string }) {

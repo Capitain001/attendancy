@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 
 export async function applyProgramTemplate(orgId: string, programTemplateId: string) {
   // 1. Fetch template with details

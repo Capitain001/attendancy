@@ -80,12 +80,19 @@ export function ClassPlanning({
     []
   );
 
-  const { events, onEventAdd, onEventUpdate, onEventDelete } = usePlanningEvents({
+const { events, patchEvent, onEventAdd, onEventUpdate, onEventDelete } = usePlanningEvents({
     initialEvents,
     classId,
     confirmMove,
     getConflictResources,
   });
+
+  const handleLockChange = useCallback(
+    (scheduleId: string, isLocked: boolean) => {
+      patchEvent(scheduleId, { meta: { isLocked } });
+    },
+    [patchEvent]
+  );
 
   const renderDialog = useCallback(
     (dialogProps: EventDialogRendererProps) => (
@@ -93,9 +100,10 @@ export function ClassPlanning({
         {...dialogProps}
         classId={classId}
         resources={resourcesRef.current}
+        onLockChange={handleLockChange}
       />
     ),
-    [classId]
+    [classId, handleLockChange]
   );
 
   const title = useMemo(

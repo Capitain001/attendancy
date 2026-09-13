@@ -11,7 +11,7 @@ export function DirectionClassGroupsPage({
   classId,
   className,
 }: DirectionClassGroupsPageProps) {
-  const enrollmentHref = `/${slug}/direction/academic/classes/${classId}/enrollment`;
+  const enrollmentHref = `/${slug}/direction/academic/promotions/${classId}/enrollment`;
 
   return (
     <div className="scroll-smooth flex flex-col gap-y-4 pb-10">

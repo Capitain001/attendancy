@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@/generated/prisma/client";
 import { tryConstraint } from "@/utils/server/prisma";
-import { invalidateEvent } from "@/cache/server/key";
+import { invalidateEvent } from '@/cache/server/graph';
 import type { CreateStudentEnrollmentData } from "../types";
 import type {
   CreateStudentEnrollmentOutput,

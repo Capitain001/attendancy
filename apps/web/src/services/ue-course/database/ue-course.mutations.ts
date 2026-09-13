@@ -1,7 +1,7 @@
 // src/services/ue-course/database/ue-course.mutations.ts
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 import { CreateUECourseOutput, UpdateUECourseOutput } from '../validation'
 
 export async function createUECourse(data: CreateUECourseOutput & { orgId: string }) {

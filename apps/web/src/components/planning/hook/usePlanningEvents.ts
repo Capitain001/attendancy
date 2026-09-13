@@ -15,7 +15,7 @@ import { checkConflictsAction } from "@/services/planning/conflict/actions";
 import type { ConflictResources } from "../conflictsToast";
 import { diff } from "@/lib/utils";
 
-import { mapScheduleToEvent } from "../utils";
+import { mapScheduleToEvent, patchEventById, ScheduleEventPatch } from "../utils";
 import { toastScheduleConflict } from "../conflictsToast";
 import { NO_TEACHER } from "../types";
 
@@ -222,5 +222,14 @@ export function usePlanningEvents(opts: UsePlanningEventsOptions) {
     return true;
   }, [armUndoToast]);
 
-  return { events, setEvents, onEventAdd, onEventUpdate, onEventDelete };
+  /**
+   * Modifie un événement spécifique par son ID en utilisant le helper utilitaire.
+   */
+  const patchEvent = useCallback(
+    (id: string, patch: ScheduleEventPatch) => {
+      setEvents((prev) => patchEventById(prev, id, patch));
+    },
+    []
+  );
+  return { events, setEvents, patchEvent, onEventAdd, onEventUpdate, onEventDelete };
 }

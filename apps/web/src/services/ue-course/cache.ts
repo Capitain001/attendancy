@@ -1,5 +1,5 @@
 // src/services/ue-course/cache.ts
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;
 
 export const UE_COURSE_GRAPH = {
   UE_COURSE_CREATED: (orgId: string, ueId: string) => [

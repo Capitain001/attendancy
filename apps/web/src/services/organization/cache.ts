@@ -4,7 +4,7 @@
 //
 // Cross-service : si une query d'un AUTRE service inclut des données org dans
 // son select, ajouter son tag ici (l'événement org invalide aussi ce cache).
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;;
 
 export const ORG_GRAPH = {
   ORG_CREATED: (orgId: string) => [

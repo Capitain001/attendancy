@@ -2,7 +2,7 @@
 // Lectures Prisma du service org — Prisma pur, AUCUNE auth ici.
 import { cacheTag, cacheLife } from 'next/cache'
 import { prisma } from '@/lib/prisma'
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;;
 import type { OrgDetails } from '../types'
 
 export async function getOrgIdentity(orgId: string) {

@@ -2,7 +2,7 @@
   "service": "schedule",
   "path": "src/services/schedule/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "d45ce76",
+  "derived_at": "e128b9b",
   "utils_dir": null,
   "fns": {
     "createSchedule": {
@@ -42,6 +42,11 @@
     },
     "removeNextSchedulesByRule": {
       "f": ".api/removeNextSchedulesByRule.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "toggleScheduleLock": {
+      "f": ".api/toggleScheduleLock.json",
       "layer": "db",
       "kind": "mutation"
     },
@@ -140,6 +145,11 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "toggleScheduleLockAction": {
+      "f": ".api/toggleScheduleLockAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "getClassSchedulesAction": {
       "f": ".api/getClassSchedulesAction.json",
       "layer": "action",
@@ -205,6 +215,9 @@
     ],
     "removeSchedulesByRule": [],
     "removeNextSchedulesByRule": [],
+    "toggleScheduleLock": [
+      "toggleScheduleLockAction"
+    ],
     "getSchedules": [
       "getClassSchedules",
       "getTeacherSchedules",
@@ -244,6 +257,7 @@
     "restoreScheduleAction": [],
     "notifyScheduleCreationAction": [],
     "notifyScheduleCreationsAction": [],
+    "toggleScheduleLockAction": [],
     "getClassSchedulesAction": [],
     "getSchedulesAction": [],
     "getDaySchedulesAction": [],

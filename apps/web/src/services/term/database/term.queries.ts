@@ -1,7 +1,7 @@
 // src/services/term/database/term.queries.ts
 import { cacheTag, cacheLife } from 'next/cache'
 import { prisma } from '@/lib/prisma'
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;
 
 // Select partagé queries + mutations (retour homogène pour les DTOs).
 export const termSelect = {

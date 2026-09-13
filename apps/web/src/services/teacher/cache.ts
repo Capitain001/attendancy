@@ -1,5 +1,5 @@
 // src/services/teacher/cache.ts
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;
 
 export const TEACHER_GRAPH = {
   TEACHER_UPDATED: (orgId: string, teacherId: string) => [

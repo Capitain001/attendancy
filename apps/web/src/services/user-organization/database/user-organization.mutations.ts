@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import type { UserStatus } from "@/generated/prisma/client";
 import { tryConstraint } from "@/utils/server/prisma";
-import { invalidateEvent } from "@/cache/server/key";
+import { invalidateEvent } from '@/cache/server/graph';
 
 const ACTIVE_STATUS: UserStatus = "ACTIVE" as UserStatus;
 const SUSPENDED_STATUS: UserStatus = "SUSPENDED" as UserStatus;

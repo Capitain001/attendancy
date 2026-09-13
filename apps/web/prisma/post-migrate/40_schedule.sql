@@ -83,12 +83,18 @@ END;
 $$ LANGUAGE plpgsql VOLATILE;
 
 -- Verrou : seuls les PENDING sont modifiables (COMPLETED/CANCELED/MISSED figés).
+-- isLocked: une séance  verrouillée => figée, même si le status est PENDING.
 CREATE OR REPLACE FUNCTION prevent_locked_schedule_update()
 RETURNS TRIGGER AS $$
 BEGIN
   IF OLD.status <> 'PENDING' THEN
     RAISE EXCEPTION 'Impossible de modifier un schedule avec le status %', OLD.status;
   END IF;
+
+  IF OLD."isLocked" THEN
+    RAISE EXCEPTION 'Séance verrouillée : modification impossible';
+  END IF;
+
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -114,3 +120,18 @@ CREATE TRIGGER trigger_prevent_locked_schedule_update
 BEFORE UPDATE OF "courseId", "teacherId", "roomId", "classId", "groupId", "startTime", "endTime"
 ON "public"."Schedule"
 FOR EACH ROW EXECUTE FUNCTION prevent_locked_schedule_update();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

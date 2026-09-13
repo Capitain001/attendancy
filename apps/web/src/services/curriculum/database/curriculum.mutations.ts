@@ -15,7 +15,7 @@
 // classe (fraîchement créés + déjà existants), puis Courses liés dès leur
 // création.
 import { prisma } from '@/lib/prisma'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 import { generateTermsFromProgram } from '@/services/term/database/term.mutations'
 import { generateCoursesFromProgram } from '@/services/course/database/course.mutations'
 

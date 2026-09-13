@@ -1,7 +1,7 @@
 // src/services/student/database/student.queries.ts
 import { cacheTag, cacheLife } from 'next/cache'
 import { prisma } from '@/lib/prisma'
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;
 import { getActiveSessions } from '@/services/session/database/session.queries'
 import { getUserAttendance } from '@/services/attendance/database/attendance.queries'
 import {
@@ -9,6 +9,7 @@ import {
   ATTENDANCE_DENOMINATOR_STATUSES,
 } from '@/services/attendance/policy'
 import type { AttendanceStatus } from '@/generated/prisma/client'
+import { getSchedules } from '@/services/schedule/database';
 
 /** Profil étudiant courant — classId + groupIds pour filtrer les schedules. */
 export async function getStudentProfile(studentId: string, orgId: string) {
@@ -42,41 +43,13 @@ export async function getStudentProfile(studentId: string, orgId: string) {
 }
 
 /** Schedules de la classe filtrés pour les groupes de l'étudiant. */
-export async function getStudentSchedules(
+export function getStudentSchedules(
   groupIds: string[],
   params: { orgId: string; classId: string; rangeStart: Date; rangeEnd: Date },
 ) {
-  'use cache'
-  cacheTag(CACHE.SCHEDULE(params.orgId))
-  cacheTag(CACHE.SCHEDULE(params.orgId, params.classId))
-  cacheLife(CACHE.SCHEDULE.life)
-  return prisma.schedule.findMany({
-    where: {
-      orgId:    params.orgId,
-      classId:  params.classId,
-      deletedAt: null,
-      startTime: { lt: params.rangeEnd },
-      endTime:   { gt: params.rangeStart },
-      OR: [
-        { groupId: null },
-        ...(groupIds.length > 0 ? [{ groupId: { in: groupIds } }] : []),
-      ],
-    },
-    select: {
-      id: true, status: true, startTime: true, endTime: true, notes: true,
-      confirmed: true,
-      courseId: true, teacherId: true, roomId: true, classId: true, groupId: true,
-      course:  { select: { id: true, name: true } },
-      room:    { select: { id: true, name: true } },
-      teacher: {
-        select: {
-          id: true,
-          user: { select: { firstName: true, lastName: true } },
-        },
-      },
-      group:   { select: { id: true, name: true } },
-    },
-    orderBy: { startTime: 'asc' },
+  return getSchedules({
+    ...params,
+    groupIds,
   })
 }
 

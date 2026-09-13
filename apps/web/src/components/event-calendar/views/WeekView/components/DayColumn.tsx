@@ -2,7 +2,7 @@ import { isToday, getHours, getDay, endOfDay } from "date-fns";
 import { ScheduleEvent } from "@/components/event-calendar/types";
 import { DraggableEvent } from "@/components/event-calendar/draggable-event";
 import { DroppableCell } from "@/components/event-calendar/droppable-cell";
-import { CurrentTimeIndicator } from "./CurrentTimeIndicator";
+import { CurrentTimeIndicator } from "@/components/event-calendar/components/CurrentTimeIndicator";
 import { cn } from "@/lib/utils";
 import { isSlotElapsed } from "@/services/planning/policy";
 
@@ -40,7 +40,7 @@ export function DayColumn({
   onEventCreate,
 }: DayColumnProps) {
   const isWeekend = [0, 6].includes(getDay(day)); // 0 = dimanche, 6 = samedi
-  
+
   // Un jour est complètement "passé" si la fin de la journée est passée
   const isElapsed = isSlotElapsed({ start: day, end: endOfDay(day) });
 
@@ -49,11 +49,16 @@ export function DayColumn({
       className={cn(
         "relative grid auto-cols-fr border-r border-border/70 last:border-r-0",
         isWeekend && "bg-muted/50",
-        isElapsed && "grayscale bg-muted/20"
+        isElapsed && "grayscale",  
+        // "cross"
       )}
       data-today={isToday(day) || undefined}
     >
-     
+
+      {/*  {isElapsed && (
+    <BackgroundPattern pattern="pattern-cross" opacity={0.15} />
+  )} */}
+
       {/* Événements positionnés */}
       {(positionedEvents ?? []).map((positionedEvent) => (
         <div
@@ -93,7 +98,7 @@ export function DayColumn({
             key={hour.toString()}
             className="relative min-h-[var(--week-cells-height)] last:border-b-0 border-y border-dashed border-0.5 border-gray-300/40"
           >
-         
+
             {[0, 1, 2, 3].map((quarter) => {
               const quarterHourTime = hourValue + quarter * 0.25;
               const startTime = new Date(day);
@@ -107,12 +112,12 @@ export function DayColumn({
                     date={day}
                     time={quarterHourTime}
                     className={cn(
-                    "absolute h-[calc(var(--week-cells-height)/4)] w-full",
-                    quarter === 0 && "top-0",
-                    quarter === 1 && "top-[calc(var(--week-cells-height)/4)]",
-                    quarter === 2 && "top-[calc(var(--week-cells-height)/4*2)]",
-                    quarter === 3 && "top-[calc(var(--week-cells-height)/4*3)]"
-                  )}
+                      "absolute h-[calc(var(--week-cells-height)/4)] w-full",
+                      quarter === 0 && "top-0",
+                      quarter === 1 && "top-[calc(var(--week-cells-height)/4)]",
+                      quarter === 2 && "top-[calc(var(--week-cells-height)/4*2)]",
+                      quarter === 3 && "top-[calc(var(--week-cells-height)/4*3)]"
+                    )}
                     onClick={() => onEventCreate(startTime)}
                   />
                 </div>

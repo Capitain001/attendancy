@@ -142,4 +142,6 @@ export const TRIGGER_ERROR: Record<string, string> = {
   'no_class_overlap_global': 'Conflit de classe : une séance est déjà planifiée sur ce créneau',
   'no_group_overlap': 'Conflit de groupe : ce groupe a déjà une séance sur ce créneau',
   'Impossible de modifier un schedule': 'Séance non modifiable : statut figé',
+  'Séance verrouillée': 'Séance verrouillée : modification impossible',
+
 }

@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { ProgramTrack } from "@/generated/prisma/client";
 import { unstable_cache } from "next/cache";
 
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;;
 
 export type AddProgramTrackData = Pick<ProgramTrack, "name" | "departmentId">;
 export type UpdateProgramTrackData = Partial<AddProgramTrackData>;

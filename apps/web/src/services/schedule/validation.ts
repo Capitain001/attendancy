@@ -48,3 +48,16 @@ export type UpdateScheduleDataOutput = InferOutput<typeof updateScheduleDataSche
 
 export type UpdateScheduleInput = InferInput<typeof updateScheduleSchema>
 export type UpdateScheduleOutput = InferOutput<typeof updateScheduleSchema>
+
+
+export const toggleScheduleLockDataSchema = v.object({
+  isLocked: v.boolean(),
+})
+
+export type ToggleScheduleLockDataInput  = InferInput<typeof toggleScheduleLockDataSchema>
+export type ToggleScheduleLockDataOutput = InferOutput<typeof toggleScheduleLockDataSchema>
+
+export const toggleScheduleLockSchema = validateWithId('scheduleId', toggleScheduleLockDataSchema)
+
+export type ToggleScheduleLockInput  = InferInput<typeof toggleScheduleLockSchema>
+export type ToggleScheduleLockOutput = InferOutput<typeof toggleScheduleLockSchema>

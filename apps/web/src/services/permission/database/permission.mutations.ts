@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 import type { CreatePermissionData } from '../types'
 
 export async function grantPermission(data: CreatePermissionData) {

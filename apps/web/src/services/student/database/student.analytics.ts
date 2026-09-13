@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { cacheTag, cacheLife } from 'next/cache'
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;
 
 // Comptage léger : total d'étudiants actifs d'une org, filtrable par classe
 // (via l'inscription active — pas de FK directe Student → Class).

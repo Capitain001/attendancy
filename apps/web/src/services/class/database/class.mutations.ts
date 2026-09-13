@@ -1,7 +1,7 @@
 // src/services/class/database/class.mutations.ts
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 import { getCurrentYear } from '@/services/academic-year/database'
 import type { CreateClassOutput, UpdateClassDataOutput, UpdateClassOutput } from '../validation'
 

@@ -1,7 +1,7 @@
 // src/services/program/database/program.mutations.ts
 import { prisma } from '@/lib/prisma'
 import { Program } from '@/generated/prisma/client'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 import { tryConstraint } from '@/utils/server/prisma'
 import { PROGRAM_GRAPH } from '../cache'
 import type { CreateProgramOutput, UpdateProgramDataOutput } from '../validation'

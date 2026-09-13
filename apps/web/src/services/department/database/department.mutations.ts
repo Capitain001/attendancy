@@ -1,7 +1,7 @@
 // src/services/department/database/department.mutations.ts
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 import type { CreateDepartmentOutput, UpdateDepartmentDataOutput } from '../validation'
 
 export async function createDepartment(data: CreateDepartmentOutput & { orgId: string }) {

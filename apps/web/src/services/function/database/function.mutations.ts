@@ -1,7 +1,7 @@
 // src/services/function/database/function.mutations.ts
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 import type { CreateFunctionOutput, UpdateFunctionDataOutput } from '../validation'
 import { getFunctions, getMissingMainFunctions } from './function.queries'
 import { MAIN_FUNCTIONS } from '../constants'

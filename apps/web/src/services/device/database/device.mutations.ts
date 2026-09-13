@@ -1,7 +1,7 @@
 import { UAParser } from 'ua-parser-js'
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 import type { DeviceType, SessionRevokeReason } from '@/generated/prisma/client'
 
 // Mappe le type ua-parser-js sur l'enum Prisma — parsing isolé ici, pas dans

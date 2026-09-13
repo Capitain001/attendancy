@@ -1,6 +1,6 @@
 // src/services/room/database/room.mutations.ts
 import { prisma } from '@/lib/prisma'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 
 import type { UpdateRoomDataOutput, CreateRoomOutput, CreateLocationOutput } from '../validation'
 

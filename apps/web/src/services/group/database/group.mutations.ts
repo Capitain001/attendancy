@@ -1,7 +1,7 @@
 // src/services/group/database/group.mutations.ts
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 import type { CreateGroupOutput, UpdateGroupOutput, SetGroupStudentsOutput } from '../validation'
 
 // select partagé — aligne la forme retournée par create/update sur getGroupsByClass

@@ -1,5 +1,6 @@
 import type { ScheduleStatus } from "@/generated/prisma/browser";
 import type { ScheduleEvent, EventColor } from "@/components/event-calendar/types";
+import type { ScheduleRow } from "@/services/planning";
 
 const STATUS_COLOR: Record<ScheduleStatus, EventColor> = {
   PENDING: "sky",
@@ -8,33 +9,6 @@ const STATUS_COLOR: Record<ScheduleStatus, EventColor> = {
   MISSED: "rose",
 };
 
-export type ScheduleRow = {
-  id: string;
-  startTime: Date;
-  endTime: Date;
-  status: ScheduleStatus;
-  confirmed: boolean;
-  notes: string | null;
-
-  courseId: string;
-  teacherId: string;
-  roomId: string;
-  classId: string;
-  groupId: string | null;
-
-  course: { id: string; name: string };
-  room: { id: string; name: string };
-
-  teacher: {
-    id: string;
-    user: {
-      firstName: string | null;
-      lastName: string | null;
-    };
-  } | null;
-
-  group: { id: string; name: string } | null;
-};
 
 export function statusToColor(status: ScheduleStatus): EventColor {
   return STATUS_COLOR[status] ?? "blue";
@@ -57,6 +31,7 @@ export function mapScheduleToEvent(schedule: ScheduleRow): ScheduleEvent {
       groupId: schedule.groupId ?? undefined,
       status: schedule.status,
       confirmed: schedule.confirmed,
+      isLocked:schedule.isLocked,
     },
   };
 }
@@ -136,4 +111,41 @@ export function buildScheduleMoveToastContent(
     title: `Confirmer le déplacement de ${courseName} ?`,
     description: `Actuel: ${formatSlot(new Date(previous.start), new Date(previous.end))}\nNouveau: ${formatSlot(new Date(next.start), new Date(next.end))}`,
   };
+}
+
+
+export type ScheduleEventPatch =
+  | (Omit<Partial<ScheduleEvent>, "meta"> & {
+      meta?: Partial<NonNullable<ScheduleEvent["meta"]>>;
+    })
+  | ((prev: ScheduleEvent) => ScheduleEvent);
+
+/**
+ * Retourne une nouvelle liste d'événements avec l’événement cible mis à jour.
+ * Fusionne automatiquement les propriétés de premier niveau et l'objet `meta`.
+ */
+export function patchEventById(
+  events: ScheduleEvent[],
+  id: string,
+  patch: ScheduleEventPatch
+): ScheduleEvent[] {
+  return events.map((item) => {
+    if (item.id !== id) return item;
+    if (typeof patch === "function") return patch(item);
+
+    const { meta, ...rest } = patch;
+
+    return {
+      ...item,
+      ...rest,
+      ...(item.meta || meta
+        ? {
+            meta: {
+              ...item.meta,
+              ...meta,
+            } as ScheduleEvent["meta"],
+          }
+        : {}),
+    };
+  });
 }

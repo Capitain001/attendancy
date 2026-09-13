@@ -30,3 +30,4 @@ export type { ScheduleEvent, CalendarView, EventColor, ScheduleUpdateSource } fr
 
 // Composants
 export { CalendarHeader } from "./components/CalendarHeader";
+export { CurrentTimeIndicator } from "./components/CurrentTimeIndicator";

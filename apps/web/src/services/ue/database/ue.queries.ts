@@ -1,7 +1,7 @@
 // src/services/ue/database/ue.queries.ts
 import { cacheTag, cacheLife } from 'next/cache'
 import { prisma } from '@/lib/prisma'
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;
 
 export async function getUEs(orgId: string, departmentId?: string) {
   'use cache'

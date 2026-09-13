@@ -1,6 +1,6 @@
 import { cacheTag, cacheLife } from 'next/cache'
 import { prisma } from '@/lib/prisma'
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;;
 import { permissionName } from '../utils'
 
 const activeWhere = { isActive: true, OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }] }

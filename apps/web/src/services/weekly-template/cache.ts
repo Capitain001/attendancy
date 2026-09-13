@@ -1,4 +1,4 @@
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;
 
 export const WEEKLY_TEMPLATE_GRAPH = {
   WEEKLY_TEMPLATE_CREATED: (orgId: string) => [CACHE.WEEKLY_TEMPLATE(orgId)],

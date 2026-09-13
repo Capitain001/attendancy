@@ -1,5 +1,5 @@
 // src/services/room/cache.ts
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;
 
 export const ROOM_GRAPH = {
   ROOM_CREATED: (orgId: string) => [CACHE.ROOM(orgId)],

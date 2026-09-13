@@ -1,7 +1,7 @@
 // src/services/ue/database/ue.mutations.ts
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 import type { CreateUEOutput } from '../validation'
 import type { UEOrder, CourseOrder } from '../validation'
 import { UE } from '@/generated/prisma/client'

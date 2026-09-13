@@ -1,6 +1,6 @@
 // src/services/term/database/term.mutations.ts
 import { prisma } from '@/lib/prisma'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 import { tryConstraint } from '@/utils/server/prisma'
 import { ERRORS } from '@/config'
 import { termSelect } from './term.queries'

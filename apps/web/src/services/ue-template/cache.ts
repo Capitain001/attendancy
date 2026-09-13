@@ -1,4 +1,4 @@
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;
 
 export const UE_TEMPLATE_GRAPH = {
   // L'importation d'un programme invalide la liste des programmes et UEs

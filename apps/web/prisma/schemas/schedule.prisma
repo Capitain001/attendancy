@@ -18,8 +18,15 @@ model Schedule {
   endTime          DateTime
   status           ScheduleStatus            @default(PENDING)
   statusChangedAt  DateTime?
+  // validation du 'teacher' : seule les seances 'confirmed' sont visible aux 'students'
   confirmed        Boolean                   @default(false)
+  
+  // notes de la 'direction' sur la seance
   notes            String?
+
+  // Séance verrouillée : les informations de la séance ne peuvent plus être modifiées.
+  isLocked       Boolean      @default(false)
+
   createdAt        DateTime                  @default(now())
   updatedAt        DateTime                  @updatedAt
   classId          String                    @db.Uuid

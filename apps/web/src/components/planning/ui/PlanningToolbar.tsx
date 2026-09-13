@@ -16,16 +16,21 @@ export interface PlanningToolbarProps {
   mode: DialogMode;
   locked: boolean;
   saving: boolean;
+  savingNotes: boolean;
+  togglingLock: boolean;
   canceling: boolean;
   deleting: boolean;
   hasEvent: boolean;
   status: ScheduleStatus;
   isElapsed: boolean;
+  /** Éditabilité structurante : status DB + isLocked DB + créneau écoulé. */
+  isScheduleEditable: boolean;
   onModeToggle: (target: DialogMode) => void;
   onLockToggle: () => void;
   onCancel: () => void;
   onRemove: () => void;
   onSubmit: () => void;
+  onSaveNotes: () => void;
   onCancelEdit: () => void;
 }
 
@@ -42,17 +47,21 @@ export function PlanningToolbar({
   mode,
   locked = false,
   saving = false,
+  savingNotes = false,
+  togglingLock = false,
   deleting = false,
   hasEvent = false,
   isElapsed = false,
+  isScheduleEditable = true,
   onModeToggle,
   onLockToggle,
   onRemove,
   onSubmit,
+  onSaveNotes,
   onCancelEdit,
 }: PlanningToolbarProps) {
   const notEditing = mode !== "edit";
-  const canEdit = notEditing && !isElapsed;
+  const canEdit = notEditing && isScheduleEditable;
 
   return (
     <div className="flex items-center justify-between gap-2">
@@ -76,6 +85,28 @@ export function PlanningToolbar({
             Enregistrer
           </button>
         </div>
+      ) : mode === "notes" ? (
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => onModeToggle("notes")}
+            disabled={savingNotes}
+            className="inline-flex h-9 items-center justify-center rounded-sm border border-input bg-background px-3 text-[13px] font-medium"
+          >
+            {locked ? "Fermer" : "Annuler"}
+          </button>
+          {!locked && (
+            <button
+              type="button"
+              onClick={onSaveNotes}
+              disabled={savingNotes}
+              className="inline-flex h-9 items-center justify-center rounded-sm bg-primary px-3 text-[13px] font-medium text-primary-foreground"
+            >
+              {savingNotes && <Loader2 className="mr-1.5 size-4 animate-spin" />}
+              Sauvegarder
+            </button>
+          )}
+        </div>
       ) : (
         <div />
       )}
@@ -90,20 +121,24 @@ export function PlanningToolbar({
             </Tip>
           )}
           <Tip label="Groupe assigné">
-            <ToolbarButton onClick={() => onModeToggle("group")} active={mode === "group"} disabled={locked}>
+            <ToolbarButton onClick={() => onModeToggle("group")} active={mode === "group"}>
               <Users size={16} />
             </ToolbarButton>
           </Tip>
+          {/* Notes : accessible même si verrouillé pour la lecture */}
           <Tip label="Notes de séance">
-            <ToolbarButton onClick={() => onModeToggle("notes")} active={mode === "notes"} disabled={locked}>
+            <ToolbarButton onClick={() => onModeToggle("notes")} active={mode === "notes"}>
               <ResourceIcon name="comment" size={16} />
             </ToolbarButton>
           </Tip>
           {notEditing && <span className="mx-0.5 h-4 w-px bg-border" />}
-          {notEditing && (
+          {notEditing && hasEvent && (
             <Tip label={locked ? "Déverrouiller" : "Verrouiller"}>
-              <ToolbarButton onClick={onLockToggle} active={locked} activeColor="amber">
-                {locked ? <Lock size={16} /> : <LockOpen size={16} />}
+              <ToolbarButton onClick={onLockToggle} active={locked} activeColor="amber" disabled={togglingLock}>
+                {togglingLock
+                  ? <Loader2 size={16} className="animate-spin" />
+                  : locked ? <Lock size={16} /> : <LockOpen size={16} />
+                }
               </ToolbarButton>
             </Tip>
           )}
@@ -113,8 +148,8 @@ export function PlanningToolbar({
                 <Loader2 size={16} className="animate-spin text-destructive" />
               </span>
             ) : (
-              <Tip label="Supprimer la séance">
-                <ToolbarButton onClick={onRemove} hoverColor="destructive">
+              <Tip label={locked ? "Séance verrouillée" : "Supprimer la séance"}>
+                <ToolbarButton onClick={onRemove} hoverColor="destructive" disabled={locked}>
                   <Trash2 size={16} />
                 </ToolbarButton>
               </Tip>

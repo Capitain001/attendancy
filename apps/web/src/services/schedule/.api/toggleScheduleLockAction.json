@@ -1,0 +1,11 @@
+{
+  "name": "toggleScheduleLockAction",
+  "file": "src/services/schedule/actions/schedule.mutations.ts",
+  "sig": "(input: ToggleScheduleLockInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; isLocked: boolean; }; error?: undefined; }>",
+  "calls": [
+    "toggleScheduleLock"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,7 +1,7 @@
 // src/services/group/database/group.queries.ts
 import { cacheTag, cacheLife } from 'next/cache'
 import { prisma } from '@/lib/prisma'
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;;
 
 export async function getGroupsByClass(classId: string, orgId: string) {
   'use cache'

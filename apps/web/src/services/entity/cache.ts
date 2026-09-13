@@ -9,7 +9,7 @@
 // Cross-service : si la query d'un autre service inclut cette entité dans son
 // select, invalider AUSSI son tag ici — sinon son cache sert des données mortes.
 //
-// import { CACHE } from '@/cache/server/key'
+// import { CACHE } from '@/cache/server/key';;;
 //
 // export const ENTITY_GRAPH = {
 //   ENTITY_CREATED: (orgId: string) => [

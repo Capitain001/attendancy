@@ -24,6 +24,7 @@ import {
   WeekCellsHeight,
   type ScheduleEvent,
 } from "@/components/event-calendar";
+import { CurrentTimeIndicator } from "@/components/event-calendar/components/CurrentTimeIndicator";
 import { EndHour, StartHour } from "@/components/event-calendar/constants";
 import { cn, formatTime } from "@/lib/utils";
 
@@ -271,15 +272,7 @@ export function DayView({
 
           {/* Current time indicator */}
           {currentTimeVisible && (
-            <div
-              className="pointer-events-none absolute left-0 right-0 z-20"
-              style={{ top: `${currentTimePosition}%` }}
-            >
-              <div className="relative flex items-center">
-                <div className="absolute -left-1 h-2 w-2 rounded-full bg-primary"></div>
-                <div className="h-[2px] w-full bg-primary"></div>
-              </div>
-            </div>
+            <CurrentTimeIndicator position={currentTimePosition || 0} />
           )}
 
           {/* Time grid */}

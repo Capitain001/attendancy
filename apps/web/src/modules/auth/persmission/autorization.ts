@@ -24,7 +24,11 @@ import { ERRORS } from "@/config";
  *
  * @param user - user => userInfo
  * @param requiredRole - Rôle requis (Role | Role[])
- * @param requiredFunction -  Fonction requise (Functions)
+ * @param requiredFunction - Fonction requise (Functions | Functions[])
+ *
+ * @example
+ * // Vérifie plusieurs fonctions (PRINCIPAL ou SECRETARY)
+ * await getAuthorization(user, "DIRECTION", ["PRINCIPAL", "SECRETARY"]);
  *
  * @returns AuthorizationResult
  * - { success: true } si l'accès est autorisé
@@ -58,7 +62,7 @@ import { ERRORS } from "@/config";
 export function getAuthorization(
   user: Partial<UserInfo>,
   requiredRole?: Role | Role[],
-  requiredFunction?: Functions
+  requiredFunction?: Functions | Functions[]
 ) {
   const userRole = user.role;
   const userFunction = user.function;
@@ -77,16 +81,20 @@ export function getAuthorization(
 
     if (!isRoleAllowed) {
       return {
-
         error: `Rôle ${userRole} insuffisant (requis: ${requiredRoles.join(", ")})`,
       };
     }
   }
 
-  if (requiredFunction && userRole !== "ADMIN" && userFunction !== requiredFunction) {
-    return {
-      error: `Fonction ${userFunction} insuffisante (requise: ${requiredFunction})`,
-    };
+  if (requiredFunction && userRole !== "ADMIN") {
+    const requiredFunctions = Array.isArray(requiredFunction) ? requiredFunction : [requiredFunction];
+    const isFunctionAllowed = !!userFunction && requiredFunctions.includes(userFunction);
+
+    if (!isFunctionAllowed) {
+      return {
+        error: `Fonction ${userFunction} insuffisante (requise: ${requiredFunctions.join(", ")})`,
+      };
+    }
   }
 
   return { error: null };

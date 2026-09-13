@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 
 export async function createWeeklyTemplate(orgId: string, name: string) {
   const template = await prisma.weeklyTemplate.create({

@@ -39,40 +39,50 @@ const dayScheduleSelect = {
    TYPES
 ========================= */
 
-export type ScheduleFilterParams =
-  Partial<
-    Pick<
-      Schedule,
-      | 'classId'
-      | 'groupId'
-      | 'teacherId'
-      | 'roomId'
-      | 'weekRecurrenceId'
-      | 'status'
-      | 'confirmed'
-    >
-  > & {
-    orgId: string
-    academicYearId?: string
-    rangeStart: Date
-    rangeEnd: Date
-  }
+export type ScheduleFilterParams = Partial<
+  Pick<
+    Schedule,
+    | 'classId'
+    | 'groupId'
+    | 'teacherId'
+    | 'roomId'
+    | 'weekRecurrenceId'
+    | 'status'
+    | 'confirmed'
+  >
+> & {
+  orgId: string
+  academicYearId?: string
+  rangeStart: Date
+  rangeEnd: Date
+  groupIds?: string[]
+}
 
 /* =========================
    BUILDER WHERE
 ========================= */
 
 function buildScheduleWhere(params: ScheduleFilterParams) {
-  const { orgId, academicYearId, rangeStart, rangeEnd, ...filters } = params
+  const { orgId, academicYearId, rangeStart, rangeEnd, groupIds, ...filters } = params
 
   if (rangeEnd <= rangeStart) {
     throw new Error('rangeEnd must be after rangeStart')
   }
 
+  const groupCondition = groupIds
+    ? {
+        OR: [
+          { groupId: null },
+          ...(groupIds.length > 0 ? [{ groupId: { in: groupIds } }] : []),
+        ],
+      }
+    : {}
+
   return {
     orgId,
     deletedAt: null,
     ...filters,
+    ...groupCondition,
     ...(academicYearId ? { class: { academicYearId } } : {}),
     startTime: { lt: rangeEnd },
     endTime: { gt: rangeStart },

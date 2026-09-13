@@ -1,4 +1,4 @@
-import { CACHE } from '@/cache/server/key'
+import { CACHE } from '@/cache/server/key';;;
 
 export const NOTIFICATION_GRAPH = {
   NOTIFICATION_CREATED: (userId: string) => [CACHE.NOTIFICATION(userId)],

@@ -45,7 +45,7 @@ export function isSlotElapsed(
 //
 // Un créneau est valide ssi début < fin (contrainte DB `check_schedule_time_order`).
 // Convention d'intervalle : demi-ouvert `[start, end)` (tstzrange '[)').
-  
+
 /** Message utilisateur partagé (actions serveur). */
 export const INVALID_TIME_ORDER_ERROR =
   "L'heure de fin doit être après l'heure de début.";
@@ -122,4 +122,54 @@ export function isBlockingResource(kind: PlanningResourceKind): boolean {
 
 export function isScheduleMutable(status: ScheduleStatus): boolean {
   return status === "PENDING";
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// R6 — Verrou explicite (isLocked) + créneau écoulé : figent aussi les champs
+// structurants, indépendamment du status
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// Deux niveaux de verrou sur les champs STRUCTURANTS (cours/prof/salle/classe/
+// groupe/horaires) — `notes` n'entre JAMAIS dans ce calcul, toujours éditable
+// quel que soit status/isLocked/temps (action dédiée séparée) :
+//
+//   1. isScheduleLocked   → status ≠ PENDING OU isLocked = true
+//                           Autorité : trigger DB `prevent_locked_schedule_update`
+//                           (RAISE EXCEPTION dans les deux cas). Fiable à 100%,
+//                           la DB rejettera toute tentative de contournement.
+//
+//   2. isScheduleEditable → en plus, le créneau ne doit pas être
+//                           déjà écoulu (PENDING + isLocked=false + passé → figé).
+//                           PAS (encore) appliqué en DB — le seuil temporel
+//                           (latence transaction / horloge) n'est pas assez
+//                           tranché pour un RAISE EXCEPTION en dur ; ce contrôle
+//                           reste applicatif/UI pour l'instant (cf. R1/isSlotElapsed),
+//                           à faire remonter en DB si le besoin se confirme.
+
+export const LOCKED_SCHEDULE_ERROR = "Séance verrouillée : modification impossible.";
+
+export type ScheduleLockInput = {
+  status: ScheduleStatus;
+  isLocked: boolean;
+};
+
+/** Verrou figé côté DB (authoritative) : status non-PENDING OU isLocked. */
+export function isScheduleLocked(schedule: ScheduleLockInput): boolean {
+  return !isScheduleMutable(schedule.status) || schedule.isLocked;
+}
+
+export type ScheduleStructuralEditInput = ScheduleLockInput & {
+  start: Date | string;
+  end?: Date | string | null;
+};
+
+/**
+ * Éditabilité complète des champs structurants (DB + règle applicative du
+ * créneau écoulé). C'est CETTE fonction qui doit piloter la désactivation
+ * du bouton d'édition en UI — `isScheduleMutable` seul ne suffit plus.
+ */
+export function isScheduleEditable(schedule: ScheduleStructuralEditInput): boolean {
+  if (isScheduleLocked(schedule)) return false;
+  if (isSlotElapsed({ start: schedule.start, end: schedule.end })) return false;
+  return true;
 }

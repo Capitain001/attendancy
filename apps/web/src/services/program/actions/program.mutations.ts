@@ -6,17 +6,17 @@ import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
 import { createProgram, updateProgram, removeProgram, toggleProgramLock, toggleProgramActive } from '../database'
 import { CreateProgramSchema, UpdateProgramSchema, type CreateProgramInput, type UpdateProgramInput } from '../validation'
-import { logAuditAsync } from '@/services/audit'
+import { logAuditAsync } from '@/modules/audit'
 
 export async function createProgramAction(input: CreateProgramInput) {
-  try {
+
     const auth = await authAccess({ requiredRole: 'DIRECTION' })
     if (!auth.data) return { error: auth.error }
     const { orgId } = auth.data
 
     const parsed = v.safeParse(CreateProgramSchema, input)
     if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
-
+  try {
     const program = await createProgram({
       data: {
         ...parsed.output,

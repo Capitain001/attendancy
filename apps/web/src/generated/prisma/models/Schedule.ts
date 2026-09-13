@@ -36,6 +36,7 @@ export type ScheduleMinAggregateOutputType = {
   statusChangedAt: Date | null
   confirmed: boolean | null
   notes: string | null
+  isLocked: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   classId: string | null
@@ -58,6 +59,7 @@ export type ScheduleMaxAggregateOutputType = {
   statusChangedAt: Date | null
   confirmed: boolean | null
   notes: string | null
+  isLocked: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   classId: string | null
@@ -80,6 +82,7 @@ export type ScheduleCountAggregateOutputType = {
   statusChangedAt: number
   confirmed: number
   notes: number
+  isLocked: number
   createdAt: number
   updatedAt: number
   classId: number
@@ -104,6 +107,7 @@ export type ScheduleMinAggregateInputType = {
   statusChangedAt?: true
   confirmed?: true
   notes?: true
+  isLocked?: true
   createdAt?: true
   updatedAt?: true
   classId?: true
@@ -126,6 +130,7 @@ export type ScheduleMaxAggregateInputType = {
   statusChangedAt?: true
   confirmed?: true
   notes?: true
+  isLocked?: true
   createdAt?: true
   updatedAt?: true
   classId?: true
@@ -148,6 +153,7 @@ export type ScheduleCountAggregateInputType = {
   statusChangedAt?: true
   confirmed?: true
   notes?: true
+  isLocked?: true
   createdAt?: true
   updatedAt?: true
   classId?: true
@@ -243,6 +249,7 @@ export type ScheduleGroupByOutputType = {
   statusChangedAt: Date | null
   confirmed: boolean
   notes: string | null
+  isLocked: boolean
   createdAt: Date
   updatedAt: Date
   classId: string
@@ -286,6 +293,7 @@ export type ScheduleWhereInput = {
   statusChangedAt?: Prisma.DateTimeNullableFilter<"Schedule"> | Date | string | null
   confirmed?: Prisma.BoolFilter<"Schedule"> | boolean
   notes?: Prisma.StringNullableFilter<"Schedule"> | string | null
+  isLocked?: Prisma.BoolFilter<"Schedule"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Schedule"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Schedule"> | Date | string
   classId?: Prisma.UuidFilter<"Schedule"> | string
@@ -319,6 +327,7 @@ export type ScheduleOrderByWithRelationInput = {
   statusChangedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   confirmed?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  isLocked?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   classId?: Prisma.SortOrder
@@ -355,6 +364,7 @@ export type ScheduleWhereUniqueInput = Prisma.AtLeast<{
   statusChangedAt?: Prisma.DateTimeNullableFilter<"Schedule"> | Date | string | null
   confirmed?: Prisma.BoolFilter<"Schedule"> | boolean
   notes?: Prisma.StringNullableFilter<"Schedule"> | string | null
+  isLocked?: Prisma.BoolFilter<"Schedule"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Schedule"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Schedule"> | Date | string
   classId?: Prisma.UuidFilter<"Schedule"> | string
@@ -388,6 +398,7 @@ export type ScheduleOrderByWithAggregationInput = {
   statusChangedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   confirmed?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  isLocked?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   classId?: Prisma.SortOrder
@@ -416,6 +427,7 @@ export type ScheduleScalarWhereWithAggregatesInput = {
   statusChangedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Schedule"> | Date | string | null
   confirmed?: Prisma.BoolWithAggregatesFilter<"Schedule"> | boolean
   notes?: Prisma.StringNullableWithAggregatesFilter<"Schedule"> | string | null
+  isLocked?: Prisma.BoolWithAggregatesFilter<"Schedule"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Schedule"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Schedule"> | Date | string
   classId?: Prisma.UuidWithAggregatesFilter<"Schedule"> | string
@@ -434,6 +446,7 @@ export type ScheduleCreateInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -464,6 +477,7 @@ export type ScheduleUncheckedCreateInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   classId: string
@@ -486,6 +500,7 @@ export type ScheduleUpdateInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -516,6 +531,7 @@ export type ScheduleUncheckedUpdateInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -542,6 +558,7 @@ export type ScheduleCreateManyInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   classId: string
@@ -560,6 +577,7 @@ export type ScheduleUpdateManyMutationInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -579,6 +597,7 @@ export type ScheduleUncheckedUpdateManyInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -621,6 +640,7 @@ export type ScheduleCountOrderByAggregateInput = {
   statusChangedAt?: Prisma.SortOrder
   confirmed?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  isLocked?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   classId?: Prisma.SortOrder
@@ -643,6 +663,7 @@ export type ScheduleMaxOrderByAggregateInput = {
   statusChangedAt?: Prisma.SortOrder
   confirmed?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  isLocked?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   classId?: Prisma.SortOrder
@@ -665,6 +686,7 @@ export type ScheduleMinOrderByAggregateInput = {
   statusChangedAt?: Prisma.SortOrder
   confirmed?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  isLocked?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   classId?: Prisma.SortOrder
@@ -1043,6 +1065,7 @@ export type ScheduleCreateWithoutClassInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1072,6 +1095,7 @@ export type ScheduleUncheckedCreateWithoutClassInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   groupId?: string | null
@@ -1126,6 +1150,7 @@ export type ScheduleScalarWhereInput = {
   statusChangedAt?: Prisma.DateTimeNullableFilter<"Schedule"> | Date | string | null
   confirmed?: Prisma.BoolFilter<"Schedule"> | boolean
   notes?: Prisma.StringNullableFilter<"Schedule"> | string | null
+  isLocked?: Prisma.BoolFilter<"Schedule"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Schedule"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Schedule"> | Date | string
   classId?: Prisma.UuidFilter<"Schedule"> | string
@@ -1144,6 +1169,7 @@ export type ScheduleCreateWithoutCourseInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1172,6 +1198,7 @@ export type ScheduleUncheckedCreateWithoutCourseInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   classId: string
@@ -1220,6 +1247,7 @@ export type ScheduleCreateWithoutGroupInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1249,6 +1277,7 @@ export type ScheduleUncheckedCreateWithoutGroupInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   classId: string
@@ -1296,6 +1325,7 @@ export type ScheduleCreateWithoutSessionInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1325,6 +1355,7 @@ export type ScheduleUncheckedCreateWithoutSessionInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   classId: string
@@ -1362,6 +1393,7 @@ export type ScheduleUpdateWithoutSessionInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1391,6 +1423,7 @@ export type ScheduleUncheckedUpdateWithoutSessionInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1412,6 +1445,7 @@ export type ScheduleCreateWithoutAttendancesInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1441,6 +1475,7 @@ export type ScheduleUncheckedCreateWithoutAttendancesInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   classId: string
@@ -1478,6 +1513,7 @@ export type ScheduleUpdateWithoutAttendancesInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1507,6 +1543,7 @@ export type ScheduleUncheckedUpdateWithoutAttendancesInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1528,6 +1565,7 @@ export type ScheduleCreateWithoutJustificationsInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1557,6 +1595,7 @@ export type ScheduleUncheckedCreateWithoutJustificationsInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   classId: string
@@ -1594,6 +1633,7 @@ export type ScheduleUpdateWithoutJustificationsInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1623,6 +1663,7 @@ export type ScheduleUncheckedUpdateWithoutJustificationsInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1644,6 +1685,7 @@ export type ScheduleCreateWithoutNotificationsInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1673,6 +1715,7 @@ export type ScheduleUncheckedCreateWithoutNotificationsInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   classId: string
@@ -1710,6 +1753,7 @@ export type ScheduleUpdateWithoutNotificationsInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1739,6 +1783,7 @@ export type ScheduleUncheckedUpdateWithoutNotificationsInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1760,6 +1805,7 @@ export type ScheduleCreateWithoutTeacherInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1788,6 +1834,7 @@ export type ScheduleUncheckedCreateWithoutTeacherInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   classId: string
@@ -1836,6 +1883,7 @@ export type ScheduleCreateWithoutWeekRecurenceInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1865,6 +1913,7 @@ export type ScheduleUncheckedCreateWithoutWeekRecurenceInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   classId: string
@@ -1912,6 +1961,7 @@ export type ScheduleCreateWithoutRoomInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1940,6 +1990,7 @@ export type ScheduleUncheckedCreateWithoutRoomInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   classId: string
@@ -1988,6 +2039,7 @@ export type ScheduleCreateWithoutOrganizationInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2016,6 +2068,7 @@ export type ScheduleUncheckedCreateWithoutOrganizationInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   classId: string
@@ -2068,6 +2121,7 @@ export type ScheduleCreateManyClassInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   groupId?: string | null
@@ -2085,6 +2139,7 @@ export type ScheduleUpdateWithoutClassInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2114,6 +2169,7 @@ export type ScheduleUncheckedUpdateWithoutClassInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2139,6 +2195,7 @@ export type ScheduleUncheckedUpdateManyWithoutClassInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2159,6 +2216,7 @@ export type ScheduleCreateManyCourseInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   classId: string
@@ -2177,6 +2235,7 @@ export type ScheduleUpdateWithoutCourseInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2205,6 +2264,7 @@ export type ScheduleUncheckedUpdateWithoutCourseInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2230,6 +2290,7 @@ export type ScheduleUncheckedUpdateManyWithoutCourseInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2252,6 +2313,7 @@ export type ScheduleCreateManyGroupInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   classId: string
@@ -2269,6 +2331,7 @@ export type ScheduleUpdateWithoutGroupInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2298,6 +2361,7 @@ export type ScheduleUncheckedUpdateWithoutGroupInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2323,6 +2387,7 @@ export type ScheduleUncheckedUpdateManyWithoutGroupInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2343,6 +2408,7 @@ export type ScheduleCreateManyTeacherInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   classId: string
@@ -2361,6 +2427,7 @@ export type ScheduleUpdateWithoutTeacherInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2389,6 +2456,7 @@ export type ScheduleUncheckedUpdateWithoutTeacherInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2414,6 +2482,7 @@ export type ScheduleUncheckedUpdateManyWithoutTeacherInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2436,6 +2505,7 @@ export type ScheduleCreateManyWeekRecurenceInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   classId: string
@@ -2453,6 +2523,7 @@ export type ScheduleUpdateWithoutWeekRecurenceInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2482,6 +2553,7 @@ export type ScheduleUncheckedUpdateWithoutWeekRecurenceInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2507,6 +2579,7 @@ export type ScheduleUncheckedUpdateManyWithoutWeekRecurenceInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2527,6 +2600,7 @@ export type ScheduleCreateManyRoomInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   classId: string
@@ -2545,6 +2619,7 @@ export type ScheduleUpdateWithoutRoomInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2573,6 +2648,7 @@ export type ScheduleUncheckedUpdateWithoutRoomInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2598,6 +2674,7 @@ export type ScheduleUncheckedUpdateManyWithoutRoomInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2619,6 +2696,7 @@ export type ScheduleCreateManyOrganizationInput = {
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   classId: string
@@ -2637,6 +2715,7 @@ export type ScheduleUpdateWithoutOrganizationInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2665,6 +2744,7 @@ export type ScheduleUncheckedUpdateWithoutOrganizationInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2690,6 +2770,7 @@ export type ScheduleUncheckedUpdateManyWithoutOrganizationInput = {
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2761,6 +2842,7 @@ export type ScheduleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   statusChangedAt?: boolean
   confirmed?: boolean
   notes?: boolean
+  isLocked?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   classId?: boolean
@@ -2795,6 +2877,7 @@ export type ScheduleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   statusChangedAt?: boolean
   confirmed?: boolean
   notes?: boolean
+  isLocked?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   classId?: boolean
@@ -2824,6 +2907,7 @@ export type ScheduleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   statusChangedAt?: boolean
   confirmed?: boolean
   notes?: boolean
+  isLocked?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   classId?: boolean
@@ -2853,6 +2937,7 @@ export type ScheduleSelectScalar = {
   statusChangedAt?: boolean
   confirmed?: boolean
   notes?: boolean
+  isLocked?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   classId?: boolean
@@ -2863,7 +2948,7 @@ export type ScheduleSelectScalar = {
   notifiedAt?: boolean
 }
 
-export type ScheduleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "courseId" | "roomId" | "teacherId" | "orgId" | "startTime" | "endTime" | "status" | "statusChangedAt" | "confirmed" | "notes" | "createdAt" | "updatedAt" | "classId" | "groupId" | "weekRecurrenceId" | "deletedAt" | "notifyState" | "notifiedAt", ExtArgs["result"]["schedule"]>
+export type ScheduleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "courseId" | "roomId" | "teacherId" | "orgId" | "startTime" | "endTime" | "status" | "statusChangedAt" | "confirmed" | "notes" | "isLocked" | "createdAt" | "updatedAt" | "classId" | "groupId" | "weekRecurrenceId" | "deletedAt" | "notifyState" | "notifiedAt", ExtArgs["result"]["schedule"]>
 export type ScheduleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   attendances?: boolean | Prisma.Schedule$attendancesArgs<ExtArgs>
   class?: boolean | Prisma.ClassDefaultArgs<ExtArgs>
@@ -2924,6 +3009,7 @@ export type $SchedulePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     statusChangedAt: Date | null
     confirmed: boolean
     notes: string | null
+    isLocked: boolean
     createdAt: Date
     updatedAt: Date
     classId: string
@@ -3377,6 +3463,7 @@ export interface ScheduleFieldRefs {
   readonly statusChangedAt: Prisma.FieldRef<"Schedule", 'DateTime'>
   readonly confirmed: Prisma.FieldRef<"Schedule", 'Boolean'>
   readonly notes: Prisma.FieldRef<"Schedule", 'String'>
+  readonly isLocked: Prisma.FieldRef<"Schedule", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Schedule", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Schedule", 'DateTime'>
   readonly classId: Prisma.FieldRef<"Schedule", 'String'>

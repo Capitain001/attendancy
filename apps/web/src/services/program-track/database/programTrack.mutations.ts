@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { invalidateCache, invalidateEvent } from '@/cache/server/key'
+import { invalidateCache, invalidateEvent } from '@/cache/server/graph';
 import type { AddProgramTrackData, UpdateProgramTrackData } from "./programTrack.queries";
 
 export async function createProgramTrack({ data, orgId }: { data: AddProgramTrackData; orgId: string }) {

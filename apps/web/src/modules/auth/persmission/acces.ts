@@ -23,7 +23,7 @@ export async function getAuthUser() {
 
 type AuthAccessParams = {
   requiredRole?: Role | Role[]
-  requiredFunction?: Functions
+  requiredFunction?: Functions | Functions[]
   requiredPermission?: { action: Action; resource: Resource; resourceId?: string }
 }
 
@@ -59,11 +59,6 @@ type AuthAccessParams = {
  * const { user, orgId } = auth.data;
  * ```
  */
-
-
-
-// src/services/auth/access.ts
-
 export async function authAccess(params: AuthAccessParams = {}) {
   try {
     const user = await getUserInfo()
