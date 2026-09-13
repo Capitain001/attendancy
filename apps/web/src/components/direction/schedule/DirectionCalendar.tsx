@@ -1,7 +1,7 @@
 'use client'
 
 import { EventCalendar } from '@/components/event-calendar'
-import { mapScheduleToEvent, type ScheduleRow } from '@/components/planning/utils'
+import { mapScheduleToEvent } from '@/components/planning/utils'
 import { useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import { GetSchedulesDto } from '@/services/schedule/generated.types'

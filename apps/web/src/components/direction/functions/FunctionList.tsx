@@ -49,7 +49,7 @@ export function FunctionList({
   return (
     <div className="flex flex-col gap-2">
       {items.map((fn) => (
-        <FunctionCard key={fn.id} fn={fn} href={getHref(fn)} onEdit={onEdit} onDelete={onDelete} />
+        <FunctionCard key={fn.id} fn={fn} href={getHref(fn)} onEdit={onEdit} onDelete={(f) => onDelete(f.id)} />
       ))}
     </div>
   )

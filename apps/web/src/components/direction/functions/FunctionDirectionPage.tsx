@@ -134,9 +134,10 @@ export function FunctionDirectionPage({ initialFunctions }: FunctionDirectionPag
       <FunctionFormDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
-        initial={editTarget}
+        mode={editTarget ? 'edit' : 'create'}
+        initial={editTarget || undefined}
+        pending={loading}
         onSubmit={handleSubmit}
-        isPending={loading}
       />
     </div>
   )
