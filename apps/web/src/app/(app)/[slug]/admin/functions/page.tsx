@@ -13,7 +13,7 @@ type DialogState =
   | { mode: 'edit'; fn: FunctionItem }
   | { mode: 'delete'; fn: FunctionItem }
 
-export function FunctionsAdminPage() {
+export default function FunctionsAdminPage() {
   const { data, create, update, delete: deleteFunction, loading } = useFonctions()
   const [dialog, setDialog] = useState<DialogState>({ mode: 'closed' })
   const close = () => setDialog({ mode: 'closed' })
