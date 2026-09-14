@@ -29,7 +29,7 @@ export default async function Page() {
 
   return (
     <div className="scroll-smooth flex flex-1">
-      <TeacherScheduleCalendar schedules={schedules} />
+      <TeacherScheduleCalendar teacherId={teacherId} initialSchedules={schedules} />
     </div>
   )
 }
