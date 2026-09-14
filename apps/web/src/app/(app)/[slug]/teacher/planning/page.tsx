@@ -28,7 +28,7 @@ export default async function Page() {
   if (!teacherId) return <div />
 
   const { start, end } = getWeekBounds()
-  const res = await getTeacherSchedulesAction(teacherId, start, end)
+  const res = await getTeacherSchedulesAction({teacherId, rangeStart:start, rangeEnd: end})
   const schedules = 'data' in res ? (res.data ?? []) : []
 
   // Grouper par jour
