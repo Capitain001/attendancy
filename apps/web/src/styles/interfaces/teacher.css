@@ -1,0 +1,38 @@
+@theme inline {
+  --color-teacher-bg: var(--teacher-bg);
+  --color-teacher-fg: var(--teacher-fg);
+  --color-teacher-brand: var(--teacher-brand);
+  --color-teacher-muted: var(--teacher-muted);
+  --color-teacher-surface: var(--teacher-surface);
+  --color-teacher-surface-muted: var(--teacher-surface-muted);
+  --color-teacher-inverted: var(--teacher-inverted);
+  --color-teacher-inverted-fg: var(--teacher-inverted-fg);
+}
+
+@layer base {
+  .teacher-theme {
+    /* Couleurs claires originales */
+    --teacher-bg: #EFECE6;
+    --teacher-fg: #17140F;
+    --teacher-brand: #F05A28;
+    --teacher-muted: #8C8375;
+    --teacher-surface-muted: #DDD7CD;
+    --teacher-surface: #E5E0D8;
+    --teacher-inverted: #17140F;
+    --teacher-inverted-fg: #EFECE6;
+  }
+
+  .dark .teacher-theme,
+  .teacher-theme.dark {
+    /* Couleurs sombres correspondantes */
+    --teacher-bg: var(--color-zinc-900);
+    --teacher-fg: var(--color-zinc-100);
+    --teacher-brand: #F05A28;
+    --teacher-muted: var(--color-zinc-400);
+    --teacher-surface-muted: var(--color-zinc-800);
+    /* rgba équivalent à zinc-800/80 (opacité à 80%) */
+    --teacher-surface: color-mix(in srgb, var(--color-zinc-800) 80%, transparent);
+    --teacher-inverted: var(--color-zinc-100);
+    --teacher-inverted-fg: var(--color-zinc-900);
+  }
+}

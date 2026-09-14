@@ -10,11 +10,17 @@ export async function getCurrentTeacherId(): Promise<string | null> {
   return auth.data.user?.organization?.teacherId ?? null
 }
 
-export async function getTeacherSchedulesAction(
-  teacherId: string,
-  rangeStart: Date,
-  rangeEnd: Date,
-) {
+type GetTeacherSchedulesParams = {
+  teacherId: string;
+  rangeStart: Date;
+  rangeEnd: Date;
+};
+
+export async function getTeacherSchedulesAction({
+  teacherId,
+  rangeStart,
+  rangeEnd,
+}: GetTeacherSchedulesParams) {
   try {
     const auth = await authAccess()
     if (!auth.data) return { error: auth.error }

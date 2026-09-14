@@ -10,6 +10,8 @@ import {
   getTeacherNextSchedule,
   getTodayClassSchedules,
   type ScheduleFilterParams,
+  getTeacherSchedules,
+  ScheduleDaysFilterParams,
 } from '../database'
 import { getCourses } from '@/services/course/database'
 // import { getGroupsByClass } from '@/services/group/database'
@@ -71,18 +73,23 @@ export async function getCourseScheduleAction(courseId: string) {
   }
 }
 
-export async function getScheduleDaysAction(month: string) {
+export type GetScheduleDaysInput = {
+  month: string
+  filters?: ScheduleDaysFilterParams
+}
+
+export async function getScheduleDaysAction({ month, filters }: GetScheduleDaysInput) {
   const auth = await authAccess()
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
 
   try {
-    return { data: await getScheduleDays(orgId, month) }
-  } catch (e) {
-    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+    const days = await getScheduleDays(orgId, month, filters)
+    return { data: days }
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : ERRORS.SERVER }
   }
 }
-
 export async function getTeacherNextScheduleAction({ teacherId }: { teacherId: string }) {
   const auth = await authAccess()
   if (!auth.data) return { error: auth.error }
@@ -136,6 +143,21 @@ export async function getClassScheduleOptionsAction(classId: string) {
         groups: groups.map((g) => ({ id: g.id, name: g.name })),
       },
     }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+
+
+export async function getTeacherSchedulesAction(
+  params: Omit<ScheduleFilterParams, 'orgId' | 'classId' | 'roomId'>,
+) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
+  try {
+    return { data: await getTeacherSchedules({ orgId, ...params }) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

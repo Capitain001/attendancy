@@ -184,13 +184,63 @@ export async function getSchedulesByCourse(courseId: string, orgId: string) {
    SCHEDULE DAYS — calendrier
 ========================= */
 
-export async function getScheduleDays(orgId: string, month: string) {
+// src/services/schedule/database/schedule.queries.ts
+import { Prisma } from '@/generated/prisma/client'
+
+export type ScheduleDaysFilterParams = Partial<
+  Pick<Schedule, 'teacherId' | 'classId' | 'groupId' | 'roomId' | 'weekRecurrenceId' | 'status' | 'confirmed'>
+>
+
+export async function getScheduleDays(
+  orgId: string,
+  month: string,
+  filters: ScheduleDaysFilterParams = {},
+) {
   'use cache'
   cacheTag(CACHE.SCHEDULE(orgId))
+  // Tags dédiés pour pouvoir revalider finement sur un enseignant/une classe
+  // sans invalider tout le cache de l'org.
+  if (filters.teacherId) cacheTag(CACHE.SCHEDULE(orgId, filters.teacherId))
+  if (filters.classId) cacheTag(CACHE.SCHEDULE(orgId, filters.classId))
   cacheLife({ revalidate: 3600 })
 
   const start = startOfMonth(new Date(`${month}-01T00:00:00`))
   const end = endOfMonth(start)
+
+  // Chaque condition écrite en literal Prisma.sql (pas de Prisma.raw) :
+  // - aucun nom de colonne construit dynamiquement -> rien à faire taire
+  //   côté linter de sécurité, aucun risque même théorique d'injection
+  // - chaque colonne reste greppable/"find references" directement dans l'IDE
+  // - `!= null` couvre undefined ET null en une seule comparaison
+  const dynamicConditions: Prisma.Sql[] = []
+
+  if (filters.teacherId != null) {
+    dynamicConditions.push(Prisma.sql`"teacherId" = ${filters.teacherId}::uuid`)
+  }
+  if (filters.classId != null) {
+    dynamicConditions.push(Prisma.sql`"classId" = ${filters.classId}::uuid`)
+  }
+  if (filters.groupId != null) {
+    dynamicConditions.push(Prisma.sql`"groupId" = ${filters.groupId}::uuid`)
+  }
+  if (filters.roomId != null) {
+    dynamicConditions.push(Prisma.sql`"roomId" = ${filters.roomId}::uuid`)
+  }
+  if (filters.weekRecurrenceId != null) {
+    dynamicConditions.push(Prisma.sql`"weekRecurrenceId" = ${filters.weekRecurrenceId}::uuid`)
+  }
+  if (filters.status != null) {
+    dynamicConditions.push(Prisma.sql`"status" = ${filters.status}::"ScheduleStatus"`)
+  }
+  if (filters.confirmed != null) {
+    dynamicConditions.push(Prisma.sql`"confirmed" = ${filters.confirmed}`)
+  }
+
+  // Un seul "AND" préfixé au bloc joint, plutôt qu'un "AND" répété dans
+  // chaque fragment (plus robuste : les fragments ne portent plus de logique de jointure).
+  const extraWhere = dynamicConditions.length
+    ? Prisma.sql`AND ${Prisma.join(dynamicConditions, ' AND ')}`
+    : Prisma.empty
 
   const rows = await prisma.$queryRaw<{ day: string }[]>`
     SELECT DISTINCT TO_CHAR("startTime", 'YYYY-MM-DD') AS day
@@ -199,6 +249,7 @@ export async function getScheduleDays(orgId: string, month: string) {
       AND "deletedAt" IS NULL
       AND "startTime" >= ${start}
       AND "startTime" <= ${end}
+      ${extraWhere}
     ORDER BY day ASC
   `
   return rows.map((r) => r.day)

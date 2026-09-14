@@ -12,8 +12,11 @@ export const CACHE_KEYS = {
   },
   SCHEDULES: {
     PLANNING: (filters: Record<string, unknown>) => ["schedules", "planning", filters] as const,
-    DAYS: (month: string) => ["schedules", "days", month] as const,
+    DAYS: (month: string, filters?: Record<string, unknown>) =>
+      filters ? (["schedules", "days", month, filters] as const) : (["schedules", "days", month] as const),
     NEXT: (teacherId: string) => ["schedules", "next", teacherId] as const,
+    TEACHER_DAY: ({ teacherId, dayKey }: { teacherId: string; dayKey: string }) =>
+      ["schedules", "teacher-day", teacherId, dayKey] as const,
   },
   SESSIONS: {
     ACTIVE: ["sessions", "active"] as const,
@@ -29,7 +32,7 @@ export const CACHE_KEYS = {
     ALL: ["invitations", "all"] as const,
     BY_CLASS: (classId: string) => ["invitations", "by-class", classId] as const,
     STATS: ["invitations", "stats"] as const,
-    
+
   },
   PROGRAMS: {
     BY_ID: (programId: string) => ["programs", programId] as const,

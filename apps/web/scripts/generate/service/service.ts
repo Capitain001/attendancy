@@ -21,8 +21,9 @@
 //                           `entity`. Pensé pour un agent IA qui va tout de
 //                           suite remplir/adapter — évite l'aller-retour
 //                           "décommenter + réécrire".
-//   --skip-cache-registry    N'essaie pas de patcher src/cache/server/key.ts
-//   --cache-registry=<path>  Chemin du registre cache si différent du défaut
+//   --skip-cache-registry    N'essaie pas de patcher src/cache/server/{key,graph}.ts
+//   --key-registry=<path>    Chemin de key.ts si différent du défaut
+//   --graph-registry=<path>  Chemin de graph.ts si différent du défaut
 //   --force                  Écrase un service existant
 //
 // Exemples :
@@ -32,31 +33,19 @@
 // Le script NE remplit PAS de logique métier : il pose le squelette (fichiers
 // + fonctions à compléter), à charge de l'auteur de brancher Prisma dessus.
 
-import { mkdirSync, existsSync, writeFileSync, readFileSync } from "node:fs";
+import { mkdirSync, existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { parseArgs, toKebabCase, toPascalCase, toCamelCase, toScreamingSnake } from "./cli-utils";
+import {
+  DEFAULT_KEY_REGISTRY_PATH,
+  DEFAULT_GRAPH_REGISTRY_PATH,
+  registerInCacheRegistry,
+  logCacheRegistryResult,
+} from "./cache-registry";
 
 // ─── Parsing des arguments ──────────────────────────────────────────────────────
-
-interface ParsedArgs {
-  positional: string[];
-  flags: Record<string, string | true>;
-}
-
-function parseArgs(argv: string[]): ParsedArgs {
-  const positional: string[] = [];
-  const flags: Record<string, string | true> = {};
-
-  for (const arg of argv) {
-    if (arg.startsWith("--")) {
-      const [key, ...rest] = arg.slice(2).split("=");
-      flags[key] = rest.length > 0 ? rest.join("=") : true;
-    } else {
-      positional.push(arg);
-    }
-  }
-
-  return { positional, flags };
-}
+// (parseArgs + helpers de casse : voir ./cli-utils.ts, partagé avec
+// create-service.ts — ne pas redupliquer ici.)
 
 function printUsageAndExit(message?: string): never {
   if (message) console.error(`✖ ${message}\n`);
@@ -72,8 +61,9 @@ function printUsageAndExit(message?: string): never {
       "  --prefix=<kebab>        Préfixe de domaine pour cache/événements",
       "  --soft-delete           Génère remove* (deletedAt) au lieu de delete* (hard delete)",
       "  --minimal               Code actif non commenté (pour agent IA)",
-      "  --skip-cache-registry   N'écrit pas dans src/cache/server/key.ts",
-      "  --cache-registry=<path> Chemin du registre si non standard",
+      "  --skip-cache-registry   N'écrit pas dans src/cache/server/{key,graph}.ts",
+      "  --key-registry=<path>   Chemin de key.ts si non standard",
+      "  --graph-registry=<path> Chemin de graph.ts si non standard",
       "  --force                 Écrase un service existant",
       "",
       "Exemple:",
@@ -94,33 +84,13 @@ const minimal = flags.minimal === true;
 const skipCacheRegistry = flags["skip-cache-registry"] === true;
 const prefixFlag = typeof flags.prefix === "string" ? flags.prefix : undefined;
 const rawModel = typeof flags.model === "string" ? flags.model : undefined;
-const cacheRegistryPathFlag =
-  typeof flags["cache-registry"] === "string" ? flags["cache-registry"] : undefined;
+const keyRegistryPathFlag =
+  typeof flags["key-registry"] === "string" ? flags["key-registry"] : undefined;
+const graphRegistryPathFlag =
+  typeof flags["graph-registry"] === "string" ? flags["graph-registry"] : undefined;
 
 // ─── Helpers de casse ──────────────────────────────────────────────────────────
-
-function toKebabCase(input: string): string {
-  return input
-    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
-    .replace(/[_\s]+/g, "-")
-    .toLowerCase();
-}
-
-function toPascalCase(input: string): string {
-  return input
-    .split(/[-_\s]+/)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join("");
-}
-
-function toCamelCase(input: string): string {
-  const pascal = toPascalCase(input);
-  return pascal.charAt(0).toLowerCase() + pascal.slice(1);
-}
-
-function toScreamingSnake(input: string): string {
-  return toKebabCase(input).replace(/-/g, "_").toUpperCase();
-}
+// (voir ./cli-utils.ts, importé ci-dessus — partagé avec create-service.ts)
 
 // ─── Résolution des paramètres ───────────────────────────────────────────────────
 
@@ -138,10 +108,15 @@ const removeEvent = softDelete ? "REMOVED" : "DELETED";
 
 const SERVICES_ROOT = join(process.cwd(), "src", "services");
 const serviceDir = join(SERVICES_ROOT, kebabName);
-const DEFAULT_CACHE_REGISTRY_PATH = join(process.cwd(), "src", "cache", "server", "key.ts");
-const cacheRegistryPath = cacheRegistryPathFlag
-  ? join(process.cwd(), cacheRegistryPathFlag)
-  : DEFAULT_CACHE_REGISTRY_PATH;
+
+// Chemins par défaut des deux registres cache — voir ./cache-registry.ts
+// (importé ci-dessus, partagé avec create-service.ts).
+const keyRegistryPath = keyRegistryPathFlag
+  ? join(process.cwd(), keyRegistryPathFlag)
+  : DEFAULT_KEY_REGISTRY_PATH;
+const graphRegistryPath = graphRegistryPathFlag
+  ? join(process.cwd(), graphRegistryPathFlag)
+  : DEFAULT_GRAPH_REGISTRY_PATH;
 
 // ─── Écriture fichier ──────────────────────────────────────────────────────────
 
@@ -168,8 +143,9 @@ export * from "./validation";
 function fileCacheCommented(): string {
   return `// src/services/${kebabName}/cache.ts
 //
-// Graphe événement → tags à invalider. À enregistrer dans
-// src/cache/server/key.ts (import + spread dans CACHE_GRAPH).
+// Graphe événement → tags à invalider. À enregistrer :
+// - entrée CACHE.${eventPrefix} dans src/cache/server/key.ts
+// - import + spread dans CACHE_GRAPH de src/cache/server/graph.ts
 //
 // import { CACHE } from "@/cache/server/key";
 //
@@ -388,7 +364,7 @@ function fileDatabaseMutationsCommented(): string {
 //
 // import { prisma } from "@/lib/prisma";
 // import { tryConstraint } from "@/utils/server/prisma";
-// import { invalidateEvent } from "@/cache/server/key";
+// import { invalidateEvent } from "@/cache/server/graph";
 //
 // export type Create${modelName}Data = { name: string; orgId: string };
 //
@@ -612,7 +588,7 @@ function fileDatabaseMutationsMinimal(): string {
 
   return `import { prisma } from "@/lib/prisma";
 import { tryConstraint } from "@/utils/server/prisma";
-import { invalidateEvent } from "@/cache/server/key";
+import { invalidateEvent } from "@/cache/server/graph";
 
 // TODO: remplacer par les vrais champs du modèle ${modelName}
 export type Create${modelName}Data = { name: string; orgId: string };
@@ -699,58 +675,9 @@ npx tsx scripts/generate/summary/summary.ts ${kebabName}
 `;
 }
 
-// ─── Enregistrement automatique dans src/cache/server/key.ts ───────────────────
-
-const CACHE_REGISTRY_MARKER_IMPORT =
-  "// ⚠ À ÉTENDRE PAR PROJET — un import par service à données cachées :";
-const CACHE_REGISTRY_MARKER_ENTRY =
-  "// ⚠ À ÉTENDRE PAR PROJET — une entrée par entité cachée :";
-const CACHE_REGISTRY_MARKER_SPREAD =
-  "// ⚠ À ÉTENDRE PAR PROJET — spreader chaque <SERVICE>_GRAPH importé :";
-
-type RegistryResult =
-  | "patched"
-  | "already-present"
-  | "not-found"
-  | "markers-missing";
-
-function registerInCacheRegistry(registryPath: string): RegistryResult {
-  if (!existsSync(registryPath)) return "not-found";
-
-  let content = readFileSync(registryPath, "utf-8");
-  const graphName = `${eventPrefix}_GRAPH`;
-
-  if (content.includes(`${graphName} }`) || content.includes(`...${graphName}`)) {
-    return "already-present";
-  }
-
-  const hasAllMarkers =
-    content.includes(CACHE_REGISTRY_MARKER_IMPORT) &&
-    content.includes(CACHE_REGISTRY_MARKER_ENTRY) &&
-    content.includes(CACHE_REGISTRY_MARKER_SPREAD);
-
-  if (!hasAllMarkers) return "markers-missing";
-
-  const importLine = `import { ${graphName} } from "@/services/${kebabName}/cache";\n`;
-  const cacheEntryLine = `  ${eventPrefix}: key("${cacheKeySlug}"),\n`;
-  const spreadLine = `  ...${graphName},\n`;
-
-  content = content.replace(
-    CACHE_REGISTRY_MARKER_IMPORT,
-    importLine + CACHE_REGISTRY_MARKER_IMPORT,
-  );
-  content = content.replace(
-    CACHE_REGISTRY_MARKER_ENTRY,
-    cacheEntryLine + CACHE_REGISTRY_MARKER_ENTRY,
-  );
-  content = content.replace(
-    CACHE_REGISTRY_MARKER_SPREAD,
-    spreadLine + CACHE_REGISTRY_MARKER_SPREAD,
-  );
-
-  writeFileSync(registryPath, content, "utf-8");
-  return "patched";
-}
+// ─── Enregistrement automatique dans src/cache/server/{key,graph}.ts ──────────
+// (registerInCacheRegistry + logCacheRegistryResult : voir ./cache-registry.ts,
+// importé ci-dessus — partagé avec create-service.ts, ne pas redupliquer)
 
 // ─── Génération ──────────────────────────────────────────────────────────────
 
@@ -805,32 +732,20 @@ function main(): void {
 
   console.log(`\n✔ Service "${kebabName}" créé dans src/services/${kebabName}/`);
 
-  // ── Registre cache ────────────────────────────────────────────────────────
+  // ── Registres cache (key.ts + graph.ts) ─────────────────────────────────────
   if (skipCacheRegistry) {
-    console.log(`\n⏭  Registre cache non touché (--skip-cache-registry).`);
+    console.log(`\n⏭  Registres cache non touchés (--skip-cache-registry).`);
   } else {
-    const result = registerInCacheRegistry(cacheRegistryPath);
-    switch (result) {
-      case "patched":
-        console.log(
-          `\n✔ ${eventPrefix}_GRAPH enregistré dans ${cacheRegistryPath} (import + CACHE.${eventPrefix} + spread CACHE_GRAPH).`,
-        );
-        break;
-      case "already-present":
-        console.log(`\n⏭  ${eventPrefix}_GRAPH déjà présent dans le registre — rien à faire.`);
-        break;
-      case "not-found":
-        console.warn(
-          `\n⚠ Registre cache introuvable (${cacheRegistryPath}) — enregistrement manuel requis.`,
-        );
-        break;
-      case "markers-missing":
-        console.warn(
-          `\n⚠ Les marqueurs "⚠ À ÉTENDRE PAR PROJET" sont absents de ${cacheRegistryPath} — ` +
-            `enregistrement manuel requis (import, CACHE.${eventPrefix}, ...${eventPrefix}_GRAPH dans CACHE_GRAPH).`,
-        );
-        break;
-    }
+    const result = registerInCacheRegistry({
+      kebabName,
+      eventPrefix,
+      cacheKeySlug,
+      keyRegistryPath,
+      graphRegistryPath,
+    });
+    console.log("");
+    logCacheRegistryResult(`CACHE.${eventPrefix}`, keyRegistryPath, result.key);
+    logCacheRegistryResult(`${eventPrefix}_GRAPH`, graphRegistryPath, result.graph);
   }
 
   console.log(`\nProchaines étapes :`);
@@ -841,7 +756,7 @@ function main(): void {
   }
   if (skipCacheRegistry) {
     console.log(
-      `  2. Enregistrer ${eventPrefix}_GRAPH dans src/cache/server/key.ts (import + spread) + entrée CACHE.${eventPrefix}`,
+      `  2. Enregistrer CACHE.${eventPrefix} dans src/cache/server/key.ts et ${eventPrefix}_GRAPH (import + spread) dans src/cache/server/graph.ts`,
     );
   }
   console.log(`  3. Compléter le CLAUDE.md (rôle, contraintes)`);

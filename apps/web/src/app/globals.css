@@ -256,6 +256,7 @@
 /* ════════════════════════════════════════════ */
 
 @import "../styles/themes/index.css";
+@import "../styles/interfaces/teacher.css";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 

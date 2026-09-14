@@ -1,13 +1,14 @@
 // src/services/planning/queries.ts
 // Factory pure réutilisable côté serveur (prefetch) ET client (hook).
-import { getSchedulesAction, getScheduleDaysAction } from '@/services/schedule/actions'
-import type { GetSchedulesReturn } from '@/services/schedule'
+import { getSchedulesAction, getScheduleDaysAction, getTeacherSchedulesAction } from '@/services/schedule/actions'
+import type { GetScheduleDaysInput, GetSchedulesReturn } from '@/services/schedule'
 
 import { CACHE_KEYS, QUERY_PRESETS } from '@/cache/client/key'
 import { getPlanningRange } from './utils'
 import { getOrgPlanningResourcesAction } from './actions'
 import type { OrgPlanningResources } from './types'
 import { ScheduleStatus } from '@/generated/prisma/browser'
+import { ScheduleDaysFilterParams } from '../schedule/database'
 
 
 export interface PlanningScheduleFilters {
@@ -53,18 +54,18 @@ export function planningSchedulesQuery(
  * Jours (yyyy-MM-dd) ayant des séances pour un mois "yyyy-MM".
  * Une entrée cache par mois — réutilisable serveur (prefetch) + client (hook).
  */
-export function scheduleDaysQuery(month: string) {
+export function scheduleDaysQuery(input: GetScheduleDaysInput) {
   return {
-    queryKey: CACHE_KEYS.SCHEDULES.DAYS(month),
+    queryKey: CACHE_KEYS.SCHEDULES.DAYS(input.month, input.filters),
     queryFn: async (): Promise<string[]> => {
-      const res = await getScheduleDaysAction(month);
+      const res = await getScheduleDaysAction(input)
       if (res.error || !res.data) {
-        throw new Error(res.error ?? "Impossible de récupérer les jours.");
+        throw new Error(res.error ?? "Impossible de récupérer les jours.")
       }
-      return res.data;
+      return res.data
     },
     ...QUERY_PRESETS.DASHBOARD,
-  };
+  }
 }
 
 /**
@@ -87,3 +88,30 @@ export function orgPlanningResourcesQuery() {
   };
 }
 
+export type GetTeacherDaySchedulesInput = {
+  teacherId: string;
+  dayKey: string;
+};
+
+/**
+ * Séances complètes d'un enseignant pour UN jour (yyyy-MM-dd).
+ * Une entrée cache par (teacherId, jour) — alimente le détail affiché sous
+ * le calendrier, séparément de scheduleDaysQuery (liste des jours seulement,
+ * pour la grille de points).
+ */
+export function teacherDaySchedulesQuery({ teacherId, dayKey }: GetTeacherDaySchedulesInput) {
+  const rangeStart = new Date(`${dayKey}T00:00:00`);
+  const rangeEnd = new Date(`${dayKey}T23:59:59.999`);
+
+  return {
+    queryKey: CACHE_KEYS.SCHEDULES.TEACHER_DAY({ teacherId, dayKey }),
+    queryFn: async () => {
+      const res = await getTeacherSchedulesAction({ teacherId, rangeStart, rangeEnd });
+      if ("error" in res && res.error) {
+        throw new Error(res.error);
+      }
+      return res.data ?? [];
+    },
+    ...QUERY_PRESETS.DASHBOARD,
+  };
+}
