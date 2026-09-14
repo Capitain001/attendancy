@@ -68,7 +68,7 @@ function PlanningFiltersClient() {
 
   // Mois affiché par le calendrier (+ prefetch des mois adjacents).
   const [visibleMonth, setVisibleMonth] = useState(date ?? new Date());
-  const scheduleDays = useScheduleDays(visibleMonth);
+  const scheduleDays = useScheduleDays({visibleMonth});
   const scheduleModifiers = {
     hasSchedule: (day: Date) => scheduleDays.has(format(day, "yyyy-MM-dd")),
   };
