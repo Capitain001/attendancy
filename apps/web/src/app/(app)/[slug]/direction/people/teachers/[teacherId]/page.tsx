@@ -19,7 +19,7 @@ export default async function TeacherDetailRoute({ params }: Props) {
   const [teacherResult, coursesResult, schedulesResult, unavailResult] = await Promise.all([
     getTeacherAction(teacherId),
     getTeacherCoursesAction(teacherId),
-    getTeacherSchedulesAction(teacherId, rangeStart, rangeEnd),
+    getTeacherSchedulesAction({teacherId, rangeStart, rangeEnd}),
     getTeacherUnavailabilitiesAction(teacherId),
   ])
 
