@@ -14,7 +14,8 @@ import {
   subMonths,
 } from "date-fns";
 import { fr } from "date-fns/locale";
-import { ChevronLeft, ChevronRight, Lock } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Lock } from "lucide-react";
 
 import { useScheduleDays } from "@/hooks/data/planning/useScheduleDays";
 import { useTeacherDaySchedules } from "@/hooks/data/planning/useTeacherDaySchedules";
@@ -40,12 +41,15 @@ function toMondayIndex(jsDay: number): number {
   return (jsDay + 6) % 7;
 }
 
+const SWIPE_THRESHOLD = 50;
+
 export function TeacherScheduleCalendar({
   teacherId,
   initialSchedules,
   referenceDate = new Date(),
 }: TeacherScheduleCalendarProps) {
   const [selectedDate, setSelectedDate] = useState(referenceDate);
+  const [direction, setDirection] = useState<-1 | 1>(1);
 
   // 1. Grille mensuelle de points + prefetch des mois adjacents
   const scheduleDays = useScheduleDays({
@@ -54,7 +58,6 @@ export function TeacherScheduleCalendar({
   });
 
   // 2. Détail du jour sélectionné (fetch dynamique, fallback sur initialSchedules)
-// 2. Détail du jour sélectionné (fetch dynamique, fallback sur initialSchedules)
   const { data: daySchedulesRaw, isLoading: isLoadingDay } = useTeacherDaySchedules({
     teacherId,
     date: selectedDate,
@@ -80,15 +83,43 @@ export function TeacherScheduleCalendar({
     [daySchedulesRaw],
   );
 
+  const handleNextMonth = () => {
+    setDirection(1);
+    setSelectedDate((d) => addMonths(d, 1));
+  };
+
+  const handlePrevMonth = () => {
+    setDirection(-1);
+    setSelectedDate((d) => subMonths(d, 1));
+  };
+
+  // Variantes d'animation du carrousel pour Framer Motion
+  const slideVariants = {
+    enter: (dir: number) => ({
+      x: dir > 0 ? "100%" : "-100%",
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+    },
+    exit: (dir: number) => ({
+      x: dir > 0 ? "-100%" : "100%",
+      opacity: 0,
+    }),
+  };
+
+  const currentMonthKey = format(selectedDate, "yyyy-MM");
+
   return (
     <div className="flex h-full w-full flex-col justify-between rounded-md bg-teacher-bg p-6 text-teacher-fg transition-colors sm:p-8">
       <div className="grid h-full w-full flex-1 grid-cols-1 gap-6 lg:grid-cols-12 lg:items-start lg:gap-10">
         
-        {/* ── SECTION GAUCHE / MOBILE : Calendrier ── */}
-        <div className="my-auto flex w-full flex-col gap-10 lg:col-span-7 sm:gap-8">
+        {/* ── SECTION GAUCHE / MOBILE : Calendrier Swipable ── */}
+        <div className="my-auto flex w-full flex-col gap-8 overflow-hidden lg:col-span-7">
           
-          {/* Header Date : Chiffre + Mois + Navigation */}
-          <div className="flex flex-col gap-1">
+          {/* Header Date : Chiffre + Mois */}
+          <div className="flex flex-col gap-1 select-none">
             <div className="-mt-2 font-black leading-none tracking-tighter text-teacher-brand text-[6.5rem] sm:text-[7.5rem]">
               {format(selectedDate, "d")}
             </div>
@@ -103,78 +134,83 @@ export function TeacherScheduleCalendar({
                 </span>
               </div>
 
-              {/* Jours abrégés + Boutons de changement de mois */}
-              <div className="flex items-center gap-3">
-                <span className="text-2xl font-extrabold uppercase tracking-tight text-teacher-muted sm:text-3xl">
-                  {format(selectedDate, "eee", { locale: fr }).slice(0, 3)}
-                </span>
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    aria-label="Mois précédent"
-                    onClick={() => setSelectedDate((d) => subMonths(d, 1))}
-                    className="rounded-full p-1 transition-colors hover:bg-teacher-surface-muted"
-                  >
-                    <ChevronLeft className="h-5 w-5 text-teacher-muted" />
-                  </button>
-                  <button
-                    type="button"
-                    aria-label="Mois suivant"
-                    onClick={() => setSelectedDate((d) => addMonths(d, 1))}
-                    className="rounded-full p-1 transition-colors hover:bg-teacher-surface-muted"
-                  >
-                    <ChevronRight className="h-5 w-5 text-teacher-muted" />
-                  </button>
-                </div>
-              </div>
+              <span className="text-2xl font-extrabold uppercase tracking-tight text-teacher-muted sm:text-3xl">
+                {format(selectedDate, "eee", { locale: fr }).slice(0, 3)}
+              </span>
             </div>
           </div>
 
-          {/* Grille des puces */}
-          <div className="flex flex-col gap-2">
-            {/* Libellés jours */}
-            <div className="grid grid-cols-7 gap-1 text-center">
-              {WEEKDAY_LABELS.map((label) => (
-                <span key={label} className="text-[10px] font-semibold text-teacher-muted">
-                  {label}
-                </span>
-              ))}
-            </div>
+          {/* Zone Swipable (Carrousel avec Drag Gesture) */}
+          <div className="relative min-h-[260px] w-full touch-pan-y">
+            <AnimatePresence initial={false} custom={direction} mode="popLayout">
+              <motion.div
+                key={currentMonthKey}
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  x: { type: "spring", stiffness: 300, damping: 30 },
+                  opacity: { duration: 0.2 },
+                }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={(_, info) => {
+                  if (info.offset.x < -SWIPE_THRESHOLD) {
+                    handleNextMonth();
+                  } else if (info.offset.x > SWIPE_THRESHOLD) {
+                    handlePrevMonth();
+                  }
+                }}
+                className="flex w-full cursor-grab flex-col gap-2 active:cursor-grabbing"
+              >
+                {/* Libellés jours */}
+                <div className="grid grid-cols-7 gap-1 text-center select-none">
+                  {WEEKDAY_LABELS.map((label) => (
+                    <span key={label} className="text-[10px] font-semibold text-teacher-muted">
+                      {label}
+                    </span>
+                  ))}
+                </div>
 
-            {/* Bulles de jours */}
-            <div className="grid grid-cols-7 gap-2 sm:gap-3">
-              {Array.from({ length: leadingBlanks }).map((_, i) => (
-                <div key={`blank-${i}`} className="aspect-square w-full" />
-              ))}
+                {/* Bulles de jours */}
+                <div className="grid grid-cols-7 gap-2 sm:gap-3">
+                  {Array.from({ length: leadingBlanks }).map((_, i) => (
+                    <div key={`blank-${i}`} className="aspect-square w-full" />
+                  ))}
 
-              {monthDays.map((day) => {
-                const key = format(day, "yyyy-MM-dd");
-                const hasSession = scheduleDays.has(key);
-                const isSelected = isSameDay(day, selectedDate);
-                const isCurrentDay = isTodayFn(day);
+                  {monthDays.map((day) => {
+                    const key = format(day, "yyyy-MM-dd");
+                    const hasSession = scheduleDays.has(key);
+                    const isSelected = isSameDay(day, selectedDate);
+                    const isCurrentDay = isTodayFn(day);
 
-                let circleStyle = "bg-teacher-surface-muted";
+                    let circleStyle = "bg-teacher-surface-muted";
 
-                if (isSelected) {
-                  circleStyle = "bg-teacher-brand";
-                } else if (hasSession) {
-                  circleStyle = "bg-teacher-inverted";
-                }
+                    if (isSelected) {
+                      circleStyle = "bg-teacher-brand";
+                    } else if (hasSession) {
+                      circleStyle = "bg-teacher-inverted";
+                    }
 
-                return (
-                  <button
-                    key={key}
-                    type="button"
-                    onClick={() => setSelectedDate(day)}
-                    aria-label={format(day, "d MMMM yyyy", { locale: fr })}
-                    aria-pressed={isSelected}
-                    className={`aspect-square w-full max-w-[44px] justify-self-center rounded-full transition-all hover:scale-105 active:scale-95 ${circleStyle} ${
-                      isCurrentDay && !isSelected ? "ring-2 ring-teacher-brand ring-offset-2" : ""
-                    }`}
-                  />
-                );
-              })}
-            </div>
+                    return (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => setSelectedDate(day)}
+                        aria-label={format(day, "d MMMM yyyy", { locale: fr })}
+                        aria-pressed={isSelected}
+                        className={`aspect-square w-full max-w-[44px] justify-self-center rounded-full transition-all hover:scale-105 active:scale-95 ${circleStyle} ${
+                          isCurrentDay && !isSelected ? "ring-2 ring-teacher-brand ring-offset-2" : ""
+                        }`}
+                      />
+                    );
+                  })}
+                </div>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
 
