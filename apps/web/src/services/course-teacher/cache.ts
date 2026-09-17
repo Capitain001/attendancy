@@ -1,3 +1,4 @@
+// cache.ts
 // src/services/course-teacher/cache.ts
 //
 // Les affectations sont lues sous le tag COURSE_TEACHER (scopé par courseId),

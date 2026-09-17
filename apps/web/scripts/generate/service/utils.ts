@@ -1,4 +1,4 @@
-// scripts/generate/service/cli-utils.ts
+// scripts/generate/service/utils.ts
 //
 // Helpers CLI purs partagés par les générateurs de service (service.ts,
 // create-service.ts) : parsing d'arguments + conversions de casse. Zéro état,

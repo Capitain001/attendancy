@@ -1,3 +1,5 @@
+// src/services/chat/database/message.queries.ts
+
 import { prisma } from '@/lib/prisma'
 
 export async function getMessages(channelId: string, limit = 50) {

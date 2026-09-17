@@ -27,8 +27,8 @@ const IGNORE_PATTERNS = [
  * Ajoute le commentaire de chemin relatif en première ligne d'un fichier
  */
 async function addPathComment(filePath: string, rootDir: string): Promise<void> {
-  const relativePath = path.relative(rootDir, filePath);
-  const commentLine = `//${relativePath}`;
+  const relativePath = path.relative(rootDir, filePath).replace(/\\/g, '/');
+  const commentLine = `// ${relativePath}`;
 
   try {
     const content = await fs.readFile(filePath, 'utf8');
@@ -78,10 +78,19 @@ async function findFiles(rootDir: string): Promise<string[]> {
 }
 
 async function main() {
-  const rootDir = process.argv[2] || process.cwd();
-  console.log(`📂 Dossier racine : ${rootDir}`);
+  // rootDir = toujours la racine du projet (là où le script est lancé, ex: apps/web).
+  // Sert UNIQUEMENT à calculer le chemin relatif inséré dans le commentaire.
+  const rootDir = process.cwd();
 
-  const files = await findFiles(rootDir);
+  // scanDir = dossier optionnel à scanner (peut être un sous-dossier ciblé).
+  // Résolu par rapport à rootDir, jamais utilisé pour le calcul du chemin relatif.
+  const scanArg = process.argv[2];
+  const scanDir = scanArg ? path.resolve(rootDir, scanArg) : rootDir;
+
+  console.log(`📂 Racine (pour les chemins) : ${rootDir}`);
+  console.log(`🔍 Dossier scanné : ${scanDir}`);
+
+  const files = await findFiles(scanDir);
   console.log(`📄 ${files.length} fichier(s) trouvé(s).`);
 
   for (const file of files) {

@@ -1,4 +1,4 @@
-// scripts/generate/service/cache-registry.ts
+// scripts/generate/service/cache.ts
 //
 // Patch des DEUX registres cache lors de la génération d'un service, depuis
 // la scission de src/cache/server/key.ts (registre pur CACHE) et
@@ -8,25 +8,13 @@
 //
 // Logique pure (ne lit aucun état de CLI — tout est passé en paramètre),
 // partagée par service.ts et create-service.ts. À importer, jamais à
-// redupliquer dans un générateur.
+// redupliquer dans un générateur. Chemins par défaut : voir ./config.ts.
 
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { IMPORT_PATHS } from "./config";
 
-export const DEFAULT_KEY_REGISTRY_PATH = join(
-  process.cwd(),
-  "src",
-  "cache",
-  "server",
-  "key.ts",
-);
-export const DEFAULT_GRAPH_REGISTRY_PATH = join(
-  process.cwd(),
-  "src",
-  "cache",
-  "server",
-  "graph.ts",
-);
+// Re-exportés pour compat — la source unique reste ./config.ts.
+export { DEFAULT_KEY_REGISTRY_PATH, DEFAULT_GRAPH_REGISTRY_PATH } from "./config";
 
 export const KEY_REGISTRY_MARKER_ENTRY =
   "// ⚠ À ÉTENDRE PAR PROJET — une entrée par entité cachée :";
@@ -92,7 +80,7 @@ function patchGraphRegistry({
 
   if (!hasAllMarkers) return "markers-missing";
 
-  const importLine = `import { ${graphName} } from "@/services/${kebabName}/cache";\n`;
+  const importLine = `import { ${graphName} } from "${IMPORT_PATHS.servicesRoot}/${kebabName}/cache";\n`;
   const spreadLine = `  ...${graphName},\n`;
 
   content = content.replace(

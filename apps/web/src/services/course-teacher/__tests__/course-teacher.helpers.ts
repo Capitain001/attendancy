@@ -1,3 +1,4 @@
+// __tests__/course-teacher.helpers.ts
 import { prisma } from "@/lib/prisma";
 
 export async function createTestOrg() {

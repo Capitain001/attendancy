@@ -1,5 +1,5 @@
 const path = require("node:path");
-const { generateCollection } = require("../src/lib/svg");
+const { generateCollection } = require("./lib");
 
 // ─── Déclaration des collections ───────────────────────────────────────────
 // Pour ajouter un nouveau jeu de SVG (ex: "logos"), ajoute une entrée ici.

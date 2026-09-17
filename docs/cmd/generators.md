@@ -237,17 +237,55 @@ npm run generate:supabase-types
 
 ---
 
-## `icons` / `svg` — Composants React depuis SVG
+## `svg` — Composants React depuis SVG
+
+Génère les composants React pour toutes les collections SVG déclarées dans
+`scripts/generate/svg/index.js`. La logique de génération partagée se trouve dans
+`scripts/generate/svg/lib.js`.
+
+Deux modes disponibles :
+- `"icon"` → carré, taille pilotée par `size` (défaut 24), adapté aux pictogrammes UI.
+- `"illustration"` → conserve le `viewBox` natif (ratio préservé), pas de taille forcée.
 
 ```bash
-# Icônes resource (public/assets/resources/*.svg → src/components/icons/generated/)
-npm run generate:icons
-
-# Collections SVG (resource, illustration…)
+# Toutes les collections (resource → icons/generated/, illustration → illustrations/generated/)
 npm run generate:svg
+
+# Commande directe
+node scripts/generate/svg/index.js
 ```
 
 **Quand lancer** : après avoir ajouté ou modifié des fichiers `.svg` dans `public/assets/`.
+
+> `generate:icons` (script `scripts/generate/icons.js`) est **supprimé** — il était une
+> version antérieure limitée à la collection `resource`. `generate:svg` le remplace
+> entièrement et couvre toutes les collections.
+
+---
+
+## `comment` — En-tête de chemin dans les fichiers source
+
+Ajoute (ou vérifie) un commentaire `// src/...` en première ligne de chaque fichier source,
+ce qui facilite l'orientation dans les gros contextes (lecture IA, revue de code).
+
+Script : `scripts/generate/path/comment.ts`
+
+```bash
+# Tout le projet (depuis la racine apps/web)
+npm run generate:comment
+
+# Dossier spécifique — commande directe
+npx tsx scripts/generate/path/comment.ts src/services/teacher
+```
+
+**Comportement** :
+- Si le commentaire est déjà présent et correct → `⏭️  Déjà présent`, fichier non modifié.
+- Préserve les shebangs (`#!/usr/bin/env node`) en première ligne.
+- Ignore automatiquement : `node_modules`, `.next`, `dist`, `build`, `.git`, `coverage`.
+
+**Extensions traitées** : `.ts`, `.tsx`, `.js`, `.jsx`, `.mjs`, `.cjs`, `.css`, `.scss`, `.html`, `.vue`, `.svelte`, `.json`.
+
+**Quand lancer** : ponctuellement, après la création de nouveaux fichiers ou avant une session de travail avec un agent IA.
 
 ---
 
@@ -266,8 +304,8 @@ nécessaire.
 
 ## `generate:all` — Tout régénérer
 
-Lance tous les générateurs dans l'ordre : api → api:check → summary → types →
-check:naming → check:types → icons → svg.
+Lance tous les générateurs dans l'ordre : api → summary → types →
+check:naming → check:types → svg.
 
 ```bash
 npm run generate:all
