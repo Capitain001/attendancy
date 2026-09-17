@@ -1,0 +1,11 @@
+{
+  "name": "getFunctionDetailAction",
+  "file": "src/services/function/actions/function.queries.ts",
+  "sig": "(input: GetFunctionDetailInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; _count: { permissions: number; users: number; }; createdAt: Date; permissions: { id: string; description: string | null; action: Action; resource: Resource | null; resourceId: string | null; expiresAt: Date | null; }[]; description: s...",
+  "calls": [
+    "getFunctionDetail"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,9 +1,10 @@
 import { connection } from 'next/server'
 import { notFound } from 'next/navigation'
 import { addMonths, startOfMonth, endOfMonth } from 'date-fns'
-import { getTeacherAction, getTeacherCoursesAction, getTeacherSchedulesAction } from '@/services/teacher'
+import { getTeacherAction, getTeacherSchedulesAction } from '@/services/teacher'
 import { getTeacherUnavailabilitiesAction } from '@/services/teacher-unavailability'
 import { TeacherDetailPage } from '@/components/direction/people/TeacherDetailPage'
+import { getTeacherCoursesAction } from '@/services/course-teacher'
 
 interface Props {
   params: Promise<{ slug: string; teacherId: string }>

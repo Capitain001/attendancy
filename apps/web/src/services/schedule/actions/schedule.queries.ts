@@ -12,6 +12,7 @@ import {
   type ScheduleFilterParams,
   getTeacherSchedules,
   ScheduleDaysFilterParams,
+  getTeacherSchedulesInfo,
 } from '../database'
 import { getCourses } from '@/services/course/database'
 // import { getGroupsByClass } from '@/services/group/database'
@@ -158,6 +159,28 @@ export async function getTeacherSchedulesAction(
 
   try {
     return { data: await getTeacherSchedules({ orgId, ...params }) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+
+type GetTeacherSchedulesParams = {
+  teacherId: string;
+  rangeStart: Date;
+  rangeEnd: Date;
+};
+
+export async function getTeacherSchedulesInfoAction({
+  teacherId,
+  rangeStart,
+  rangeEnd,
+}: GetTeacherSchedulesParams) {
+  try {
+    const auth = await authAccess()
+    if (!auth.data) return { error: auth.error }
+    const { orgId } = auth.data
+
+    return { data: await getTeacherSchedulesInfo(teacherId, orgId, rangeStart, rangeEnd) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

@@ -1,0 +1,8 @@
+{
+  "name": "updateDeviceLabel",
+  "file": "src/services/device/database/device.mutations.ts",
+  "sig": "(deviceId: string, userId: string, label: string | null) => Promise<{ id: string; label: string | null; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

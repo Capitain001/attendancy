@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { card } from '@/styles'
 import { cn } from '@/lib/utils'
 
-import type { GetTeacherDto, GetTeacherSchedulesDto, GetTeacherCoursesDto } from '@/services/teacher'
+import type { GetTeacherDto, GetTeacherSchedulesDto } from '@/services/teacher'
 import type { GetTeacherUnavailabilitiesDto } from '@/services/teacher-unavailability'
 
 import { TeacherProfileHeader } from './teacher/ui/TeacherProfileHeader'
@@ -12,6 +12,7 @@ import { TeacherStatsSection } from './teacher/sections/TeacherStatsSection'
 import { TeacherCoursesSection } from './teacher/sections/TeacherCoursesSection'
 import { TeacherSchedulesSection } from './teacher/sections/TeacherSchedulesSection'
 import { TeacherUnavailabilitiesSection } from './teacher/sections/TeacherUnavailabilitiesSection'
+import type { TeacherCoursesItem } from '@/services/course-teacher'
 
 export function TeacherDetailPage({
   teacher,
@@ -21,7 +22,7 @@ export function TeacherDetailPage({
   backHref,
 }: {
   teacher: GetTeacherDto
-  courses: GetTeacherCoursesDto
+  courses: TeacherCoursesItem[]
   schedules: GetTeacherSchedulesDto | []
   unavailabilities: GetTeacherUnavailabilitiesDto | []
   backHref: string

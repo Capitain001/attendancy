@@ -2,8 +2,8 @@
   "service": "planning/conflict",
   "path": "src/services/planning/conflict/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "5306ac7",
-  "generated_at": "2026-08-06T12:17:34.559Z",
+  "derived_at": "38f2f24",
+  "generated_at": "2026-09-17T08:14:17.968Z",
   "fns": {
     "checkAvailabilityAction": {
       "name": "checkAvailabilityAction",
@@ -19,7 +19,7 @@
     "checkConflictsAction": {
       "name": "checkConflictsAction",
       "file": "src/services/planning/conflict/actions.ts",
-      "sig": "(params: CheckConflictsActionParams) => Promise<{ error: any; data?: undefined; } | { data: ConflictReportDto; error?: undefined; }>",
+      "sig": "(params: CheckConflictsActionParams) => Promise<{ error: string; data?: undefined; } | { data: ConflictReportDto; error?: undefined; }>",
       "calls": [],
       "auth": {},
       "rules": [],

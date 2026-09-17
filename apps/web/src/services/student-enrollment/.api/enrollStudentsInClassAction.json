@@ -1,0 +1,11 @@
+{
+  "name": "enrollStudentsInClassAction",
+  "file": "src/services/student-enrollment/actions/student-enrollment.mutations.ts",
+  "sig": "(input: EnrollStudentsInClassInput) => Promise<{ error: string; data?: undefined; } | { data: EnrollmentMutationResult[]; error?: undefined; }>",
+  "calls": [
+    "enrollStudentsInClass"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

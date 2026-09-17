@@ -1,6 +1,6 @@
 {
   "name": "getTeacherStats",
-  "file": "src/services/teacher/database/teacher.queries.ts",
+  "file": "src/services/teacher/database/teacher.analytics.ts",
   "sig": "(teacherId: string, orgId: string) => Promise<{ courses: number; assiduite: number; ponctualite: number; annulations: number; }>",
   "composes": [],
   "rules": [],

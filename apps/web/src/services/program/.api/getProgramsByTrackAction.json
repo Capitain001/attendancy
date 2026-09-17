@@ -1,7 +1,7 @@
 {
   "name": "getProgramsByTrackAction",
   "file": "src/services/program/actions/program.queries.ts",
-  "sig": "({ classId, programTrackId }: { classId?: string programTrackId?: string }) => Promise<{ error: any; data?: undefined; } | { data: { programTrack: Relation; programs: unknown[]; }[]; error?: undefined; }>",
+  "sig": "({ classId, programTrackId }: { classId?: string programTrackId?: string }) => Promise<{ error: string; data?: undefined; } | { data: { programTrack: Relation; programs: { name: string; id: string; isActive: boolean; _count: { classes: number; }; programTrack: { name: string; id: string; }; isLocked: boolean; description: string | null; }[]; }[]; error?: undefined; }>",
   "calls": [
     "getProgramList"
   ],

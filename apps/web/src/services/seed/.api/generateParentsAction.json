@@ -1,0 +1,9 @@
+{
+  "name": "generateParentsAction",
+  "file": "src/services/seed/actions.ts",
+  "sig": "(orgId: string, options?: GenerateParentsOptions) => Promise<{ error: string | undefined; data?: undefined; } | { data: GenerateParentResultItem[]; error?: undefined; }>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

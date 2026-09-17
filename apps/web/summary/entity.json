@@ -2,8 +2,8 @@
   "service": "entity",
   "path": "src/services/entity/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "2dc6b24",
-  "generated_at": "2026-08-06T12:17:34.191Z",
+  "derived_at": "38f2f24",
+  "generated_at": "2026-09-17T08:14:16.874Z",
   "fns": {},
   "edges": {},
   "deps": {}

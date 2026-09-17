@@ -1,7 +1,7 @@
 {
   "name": "getOrgAuditLogsAction",
   "file": "src/services/audit/actions.ts",
-  "sig": "(params?: { resource?: string action?: string cursor?: string limit?: number }) => Promise<{ error: any; data?: undefined; } | { data: { items: { id: string; user: { firstName: string | null; lastName: string | null; } | null; details: JsonValue; createdAt: Date; userId: string | null; action: Action; resource: string | null; resourceId: string | null; }[]; hasNext: boolean; nextCursor: string | n...",
+  "sig": "(params?: { resource?: string action?: string cursor?: string limit?: number }) => Promise<{ error: string; data?: undefined; } | { data: { items: { id: string; user: { firstName: string | null; lastName: string | null; } | null; details: JsonValue; createdAt: Date; userId: string | null; action: Action; resource: string | null; resourceId: string | null; }[]; hasNext: boolean; nextCursor: string ...",
   "calls": [],
   "auth": {},
   "rules": [],

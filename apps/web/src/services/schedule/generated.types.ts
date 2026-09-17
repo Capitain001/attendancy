@@ -2,7 +2,7 @@
 // Régénérer : npx tsx scripts/generate/types/types.ts schedule
 // Pour surcharger un type, définissez-le dans ./types.ts (jamais écrasé).
 
-import { createSchedule, updateSchedule, removeSchedule, restoreSchedule, markScheduleCreationNotified, getScheduleForNotify, removeSchedulesByRule, removeNextSchedulesByRule, toggleScheduleLock, getSchedules, getDaySchedules, getClassSchedules, getTeacherSchedules, getRoomSchedules, getSchedulesByClass, getSchedulesByCourse, getScheduleDays, getTeacherNextSchedule, getTodayClassSchedules, assertClassInOrg } from './database'
+import { createSchedule, updateSchedule, removeSchedule, restoreSchedule, markScheduleCreationNotified, getScheduleForNotify, removeSchedulesByRule, removeNextSchedulesByRule, toggleScheduleLock, getSchedules, getDaySchedules, getClassSchedules, getTeacherSchedules, getRoomSchedules, getSchedulesByClass, getSchedulesByCourse, getScheduleDays, getTeacherNextSchedule, getTodayClassSchedules, assertClassInOrg, getTeacherSchedulesInfo } from './database'
 
 export type CreateScheduleDto = Awaited<ReturnType<typeof createSchedule>>
 export type UpdateScheduleDto = Awaited<ReturnType<typeof updateSchedule>>
@@ -24,3 +24,4 @@ export type GetScheduleDaysDto = Awaited<ReturnType<typeof getScheduleDays>>
 export type GetTeacherNextScheduleDto = Awaited<ReturnType<typeof getTeacherNextSchedule>>
 export type GetTodayClassSchedulesDto = Awaited<ReturnType<typeof getTodayClassSchedules>>
 export type AssertClassInOrgDto = Awaited<ReturnType<typeof assertClassInOrg>>
+export type GetTeacherSchedulesInfoDto = Awaited<ReturnType<typeof getTeacherSchedulesInfo>>

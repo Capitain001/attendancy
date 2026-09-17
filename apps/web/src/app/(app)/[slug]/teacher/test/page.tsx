@@ -6,6 +6,8 @@ import { ChevronUp } from "lucide-react"
 import { SwipeNavigator, type SwipeNavState } from "@/components/swipe-navigator"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { DailyScheduleView } from "@/components/teacher/planning/DailyScheduleView"
+import { mockGetTeacherSchedulesInfo } from "@/data/mocks/teachers"
 
 export default function ScheduleScreen() {
   const [screen, setScreen] = useState<SwipeNavState>("main")
@@ -25,6 +27,7 @@ export default function ScheduleScreen() {
     />
   )
 }
+
 
 function Schedule() {
   return (

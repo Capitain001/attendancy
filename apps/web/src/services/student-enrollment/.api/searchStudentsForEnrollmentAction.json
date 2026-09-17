@@ -1,0 +1,11 @@
+{
+  "name": "searchStudentsForEnrollmentAction",
+  "file": "src/services/student-enrollment/actions/student-enrollment.queries.ts",
+  "sig": "(input: SearchStudentsForEnrollmentInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; user: { email: string; avatar_url: string | null; phone: string | null; firstName: string | null; lastName: string | null; }; studentEnrollments: { ...; }[]; }[]; error?: undefined; }>",
+  "calls": [
+    "searchStudentsForEnrollment"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

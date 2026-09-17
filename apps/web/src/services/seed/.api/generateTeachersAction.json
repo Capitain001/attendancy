@@ -1,0 +1,9 @@
+{
+  "name": "generateTeachersAction",
+  "file": "src/services/seed/actions.ts",
+  "sig": "(orgId: string, options?: GenerateTeachersOptions) => Promise<{ error: string | undefined; data?: undefined; } | { data: GenerateTeacherResultItem[]; error?: undefined; }>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

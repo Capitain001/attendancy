@@ -1,0 +1,8 @@
+{
+  "name": "searchStudentsForEnrollment",
+  "file": "src/services/student-enrollment/database/student-enrollment.queries.ts",
+  "sig": "(orgId: string, classId: string, query: string) => Promise<{ id: string; user: { email: string; avatar_url: string | null; phone: string | null; firstName: string | null; lastName: string | null; }; studentEnrollments: { id: string; endedAt: Date | null; }[]; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

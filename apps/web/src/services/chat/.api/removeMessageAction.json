@@ -1,7 +1,7 @@
 {
   "name": "removeMessageAction",
   "file": "src/services/chat/actions/message.mutations.ts",
-  "sig": "(messageId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "sig": "(messageId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
   "calls": [
     "removeMessage"
   ],

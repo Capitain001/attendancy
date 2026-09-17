@@ -4,8 +4,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { filterAvailabilityAction } from "@/services/planning/conflict/actions";
-import type { Room, Course } from "@/generated/prisma/client";
-import type { GetTeacherDto as TeacherDTo } from "@/services/teacher/types";
+import type { Room, Course } from "@/generated/prisma/browser";
+import type { GetTeacherItem } from "@/services/teacher";
 
 export interface UseFilterAvailabilityOptions {
   start: Date | null;
@@ -13,7 +13,7 @@ export interface UseFilterAvailabilityOptions {
   excludeScheduleId?: string | null;
   rooms: Room[];
   courses: Course[];
-  teachers: TeacherDTo[];
+  teachers: GetTeacherItem[];
   enabled?: boolean;
   staleTime?: number;
 }

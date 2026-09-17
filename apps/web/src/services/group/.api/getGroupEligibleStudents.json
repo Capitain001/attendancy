@@ -1,7 +1,7 @@
 {
   "name": "getGroupEligibleStudents",
   "file": "src/services/group/database/group.queries.ts",
-  "sig": "(classId: string, groupId: string, orgId: string) => Promise<{ enrollmentId: string; inGroup: boolean; student: { id: string; userId: string; user: { firstName: string | null; lastName: string | null; }; }; }[]>",
+  "sig": "(classId: string, groupId: string, orgId: string) => Promise<{ enrollmentId: string; inGroup: boolean; student: { id: string; user: { firstName: string | null; lastName: string | null; }; userId: string; }; }[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

@@ -1,0 +1,72 @@
+{
+  "service": "seed",
+  "path": "src/services/seed/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "38f2f24",
+  "generated_at": "2026-09-17T08:14:18.169Z",
+  "fns": {
+    "generateTeachersAction": {
+      "name": "generateTeachersAction",
+      "file": "src/services/seed/actions.ts",
+      "sig": "(orgId: string, options?: GenerateTeachersOptions) => Promise<{ error: string | undefined; data?: undefined; } | { data: GenerateTeacherResultItem[]; error?: undefined; }>",
+      "calls": [],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "generateStudentsAction": {
+      "name": "generateStudentsAction",
+      "file": "src/services/seed/actions.ts",
+      "sig": "(orgId: string, options?: GenerateStudentsOptions) => Promise<{ error: string | undefined; data?: undefined; } | { data: GenerateStudentResultItem[]; error?: undefined; }>",
+      "calls": [],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "generateParentsAction": {
+      "name": "generateParentsAction",
+      "file": "src/services/seed/actions.ts",
+      "sig": "(orgId: string, options?: GenerateParentsOptions) => Promise<{ error: string | undefined; data?: undefined; } | { data: GenerateParentResultItem[]; error?: undefined; }>",
+      "calls": [],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "linkRandomTeachersToCoursesAction": {
+      "name": "linkRandomTeachersToCoursesAction",
+      "file": "src/services/seed/actions.ts",
+      "sig": "(orgId: string, options?: LinkRandomTeachersToCoursesOptions) => Promise<{ error: string | undefined; data?: undefined; } | { data: LinkTeacherResultItem[]; error?: undefined; }>",
+      "calls": [],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "purgeSeedDataAction": {
+      "name": "purgeSeedDataAction",
+      "file": "src/services/seed/actions.ts",
+      "sig": "(orgId: string, options?: PurgeSeedDataOptions) => Promise<{ error: string | undefined; data?: undefined; } | { data: PurgeSeedDataResult; error?: undefined; }>",
+      "calls": [],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "generateTeachersAction": [],
+    "generateStudentsAction": [],
+    "generateParentsAction": [],
+    "linkRandomTeachersToCoursesAction": [],
+    "purgeSeedDataAction": []
+  },
+  "deps": {}
+}

@@ -2,8 +2,8 @@
   "service": "course-teacher",
   "path": "src/services/course-teacher/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "4e41f59",
-  "generated_at": "2026-08-06T12:17:34.107Z",
+  "derived_at": "38f2f24",
+  "generated_at": "2026-09-17T08:14:16.767Z",
   "fns": {
     "assignTeacher": {
       "name": "assignTeacher",
@@ -42,7 +42,7 @@
     "getCourseTeachers": {
       "name": "getCourseTeachers",
       "file": "src/services/course-teacher/database/course-teacher.queries.ts",
-      "sig": "(courseId: string, orgId: string) => Promise<{ id: string; isMain: boolean; hours: number | null; teacher: { id: string; user: { id: string; firstName: string | null; lastName: string | null; email: string; }; } | null; }[]>",
+      "sig": "(courseId: string, orgId: string) => Promise<{ id: string; teacher: { id: string; user: { id: string; email: string; firstName: string | null; lastName: string | null; }; } | null; hours: number | null; isMain: boolean; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -59,10 +59,20 @@
       "layer": "db",
       "kind": "query"
     },
+    "getTeacherCourses": {
+      "name": "getTeacherCourses",
+      "file": "src/services/course-teacher/database/course-teacher.queries.ts",
+      "sig": "(teacherId: string, orgId: string) => Promise<{ isMain: boolean; name: string; id: string; class: { name: string; id: string; }; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
     "assignTeacherAction": {
       "name": "assignTeacherAction",
       "file": "src/services/course-teacher/actions/course-teacher.mutations.ts",
-      "sig": "(input: AssignTeacherInput) => Promise<{ error: any; data?: undefined; } | { data: { id: string; isMain: boolean; }; error?: undefined; }>",
+      "sig": "(input: AssignTeacherInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; isMain: boolean; }; error?: undefined; }>",
       "calls": [
         "assignTeacher"
       ],
@@ -75,7 +85,7 @@
     "deleteTeacherAction": {
       "name": "deleteTeacherAction",
       "file": "src/services/course-teacher/actions/course-teacher.mutations.ts",
-      "sig": "(courseTeacherId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "sig": "(courseTeacherId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
       "calls": [
         "deleteTeacherFromCourse"
       ],
@@ -88,7 +98,7 @@
     "syncCourseTeachersAction": {
       "name": "syncCourseTeachersAction",
       "file": "src/services/course-teacher/actions/course-teacher.mutations.ts",
-      "sig": "(input: SyncCourseTeachersInput) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
+      "sig": "(input: SyncCourseTeachersInput) => Promise<{ error: string; data?: undefined; } | { data: true; error?: undefined; }>",
       "calls": [
         "syncCourseTeachers"
       ],
@@ -101,7 +111,7 @@
     "getCourseTeachersAction": {
       "name": "getCourseTeachersAction",
       "file": "src/services/course-teacher/actions/course-teacher.queries.ts",
-      "sig": "(courseId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; isMain: boolean; hours: number | null; teacher: { id: string; user: { id: string; firstName: string | null; lastName: string | null; email: string; }; } | null; }[]; error?: undefined; }>",
+      "sig": "(courseId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; teacher: { id: string; user: { id: string; email: string; firstName: string | null; lastName: string | null; }; } | null; hours: number | null; isMain: boolean; }[]; error?: undefined; }>",
       "calls": [
         "getCourseTeachers"
       ],
@@ -114,9 +124,22 @@
     "getCourseTeachersIdAction": {
       "name": "getCourseTeachersIdAction",
       "file": "src/services/course-teacher/actions/course-teacher.queries.ts",
-      "sig": "(courseId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; teacherId: string | null; isMain: boolean; }[]; error?: undefined; }>",
+      "sig": "(courseId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; teacherId: string | null; isMain: boolean; }[]; error?: undefined; }>",
       "calls": [
         "getCourseTeachersIds"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getTeacherCoursesAction": {
+      "name": "getTeacherCoursesAction",
+      "file": "src/services/course-teacher/actions/course-teacher.queries.ts",
+      "sig": "(teacherId: string) => Promise<{ error: string; data?: undefined; } | { data: { isMain: boolean; name: string; id: string; class: { name: string; id: string; }; }[]; error?: undefined; }>",
+      "calls": [
+        "getTeacherCourses"
       ],
       "auth": {},
       "rules": [],
@@ -141,11 +164,15 @@
     "getCourseTeachersIds": [
       "getCourseTeachersIdAction"
     ],
+    "getTeacherCourses": [
+      "getTeacherCoursesAction"
+    ],
     "assignTeacherAction": [],
     "deleteTeacherAction": [],
     "syncCourseTeachersAction": [],
     "getCourseTeachersAction": [],
     "getCourseTeachersIdAction": [],
+    "getTeacherCoursesAction": [],
     "getCourseClassId": [
       "assignTeacher",
       "syncCourseTeachers"

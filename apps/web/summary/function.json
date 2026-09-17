@@ -2,8 +2,8 @@
   "service": "function",
   "path": "src/services/function/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "60bd946",
-  "generated_at": "2026-09-07T14:20:55.069Z",
+  "derived_at": "38f2f24",
+  "generated_at": "2026-09-17T08:14:16.972Z",
   "fns": {
     "createFunction": {
       "name": "createFunction",
@@ -55,6 +55,16 @@
       "layer": "db",
       "kind": "mutation"
     },
+    "removeFunctionFromUser": {
+      "name": "removeFunctionFromUser",
+      "file": "src/services/function/database/function.mutations.ts",
+      "sig": "(params: { userId: string functionId: string orgId: string }) => Promise<void>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
     "createMainFunctions": {
       "name": "createMainFunctions",
       "file": "src/services/function/database/function.mutations.ts",
@@ -82,7 +92,7 @@
     "getFunctions": {
       "name": "getFunctions",
       "file": "src/services/function/database/function.queries.ts",
-      "sig": "(orgId: string) => Promise<{ name: string; id: string; description: string | null; isMain: boolean; icon: string | null; _count: { users: number; }; }[]>",
+      "sig": "(orgId: string) => Promise<{ name: string; id: string; _count: { users: number; }; description: string | null; isMain: boolean; icon: string | null; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -112,7 +122,7 @@
     "getFunctionProfiles": {
       "name": "getFunctionProfiles",
       "file": "src/services/function/database/function.queries.ts",
-      "sig": "({ functionId, orgId }: { functionId: string; orgId: string }) => Promise<{ function: { name: string; isMain: boolean; }; id: string; assignedAt: Date; assignedBy: string | null; user: { id: string; createdAt: Date; firstName: string | null; lastName: string | null; ... 6 more ...; details: JsonValue; }; }[]>",
+      "sig": "({ functionId, orgId }: { functionId: string; orgId: string }) => Promise<{ function: { name: string; isMain: boolean; }; id: string; user: { id: string; email: string; avatar_url: string | null; phone: string | null; status: UserStatus; details: JsonValue; ... 4 more ...; dateOfBirth: Date | null; }; assignedAt: Date; assignedBy: string | null; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -129,8 +139,8 @@
       "layer": "db",
       "kind": "query"
     },
-    "hasAllMainFunctions": {
-      "name": "hasAllMainFunctions",
+    "checkExistingMainFunctions": {
+      "name": "checkExistingMainFunctions",
       "file": "src/services/function/database/function.queries.ts",
       "sig": "(orgId: string) => Promise<boolean>",
       "composes": [],
@@ -148,6 +158,29 @@
       "why_ref": "",
       "layer": "db",
       "kind": "query"
+    },
+    "getFunctionDetail": {
+      "name": "getFunctionDetail",
+      "file": "src/services/function/database/function.queries.ts",
+      "sig": "(functionId: string, orgId: string) => Promise<{ name: string; id: string; _count: { permissions: number; users: number; }; createdAt: Date; permissions: { id: string; description: string | null; action: Action; resource: Resource | null; resourceId: string | null; expiresAt: Date | null; }[]; description: string | null; isMain: boolean; icon: string | n...",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createMainFunctionsAction": {
+      "name": "createMainFunctionsAction",
+      "file": "src/services/function/actions/function.mutations.ts",
+      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; description: string | null; isMain: boolean; icon: string | null; }[]; error?: undefined; }>",
+      "calls": [
+        "createMainFunctions"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
     },
     "createFunctionAction": {
       "name": "createFunctionAction",
@@ -215,10 +248,36 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "removeFunctionFromUserAction": {
+      "name": "removeFunctionFromUserAction",
+      "file": "src/services/function/actions/function.mutations.ts",
+      "sig": "(input: RevokeFunctionFromUserInput) => Promise<{ error: string; data?: undefined; } | { data: boolean; error?: undefined; }>",
+      "calls": [
+        "removeFunctionFromUser"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "checkExistingMainFunctionsAction": {
+      "name": "checkExistingMainFunctionsAction",
+      "file": "src/services/function/actions/function.queries.ts",
+      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: boolean; error?: undefined; }>",
+      "calls": [
+        "checkExistingMainFunctions"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "getFunctionsAction": {
       "name": "getFunctionsAction",
       "file": "src/services/function/actions/function.queries.ts",
-      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; description: string | null; isMain: boolean; icon: string | null; _count: { users: number; }; }[]; error?: undefined; }>",
+      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; _count: { users: number; }; description: string | null; isMain: boolean; icon: string | null; }[]; error?: undefined; }>",
       "calls": [
         "getFunctions"
       ],
@@ -244,7 +303,7 @@
     "getFunctionProfilesAction": {
       "name": "getFunctionProfilesAction",
       "file": "src/services/function/actions/function.queries.ts",
-      "sig": "(functionId: string) => Promise<{ error: string; data?: undefined; } | { data: { function: { name: string; isMain: boolean; }; id: string; assignedAt: Date; assignedBy: string | null; user: { id: string; createdAt: Date; ... 8 more ...; details: JsonValue; }; }[]; error?: undefined; }>",
+      "sig": "(functionId: string) => Promise<{ error: string; data?: undefined; } | { data: { function: { name: string; isMain: boolean; }; id: string; user: { id: string; email: string; avatar_url: string | null; phone: string | null; status: UserStatus; ... 5 more ...; dateOfBirth: Date | null; }; assignedAt: Date; assignedBy: string | null; }[]; err...",
       "calls": [
         "getFunctionProfiles"
       ],
@@ -279,6 +338,19 @@
       "why_ref": "",
       "layer": "action",
       "kind": "server-action"
+    },
+    "getFunctionDetailAction": {
+      "name": "getFunctionDetailAction",
+      "file": "src/services/function/actions/function.queries.ts",
+      "sig": "(input: GetFunctionDetailInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; _count: { permissions: number; users: number; }; createdAt: Date; permissions: { id: string; description: string | null; action: Action; resource: Resource | null; resourceId: string | null; expiresAt: Date | null; }[]; description: s...",
+      "calls": [
+        "getFunctionDetail"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
     }
   },
   "edges": {
@@ -297,8 +369,12 @@
     "deleteFunctionFromUser": [
       "deleteFunctionFromUserAction"
     ],
+    "removeFunctionFromUser": [
+      "removeFunctionFromUserAction"
+    ],
     "createMainFunctions": [
-      "ensureMainFunctions"
+      "ensureMainFunctions",
+      "createMainFunctionsAction"
     ],
     "ensureMainFunctions": [],
     "getFunctions": [
@@ -317,20 +393,29 @@
       "getUserFunctionsAction",
       "getCurrentUserFunctionsAction"
     ],
-    "hasAllMainFunctions": [],
+    "checkExistingMainFunctions": [
+      "checkExistingMainFunctionsAction"
+    ],
     "getMissingMainFunctions": [
       "ensureMainFunctions"
     ],
+    "getFunctionDetail": [
+      "getFunctionDetailAction"
+    ],
+    "createMainFunctionsAction": [],
     "createFunctionAction": [],
     "updateFunctionAction": [],
     "deleteFunctionAction": [],
     "assignFunctionToUserAction": [],
     "deleteFunctionFromUserAction": [],
+    "removeFunctionFromUserAction": [],
+    "checkExistingMainFunctionsAction": [],
     "getFunctionsAction": [],
     "getFunctionByNameAction": [],
     "getFunctionProfilesAction": [],
     "getUserFunctionsAction": [],
-    "getCurrentUserFunctionsAction": []
+    "getCurrentUserFunctionsAction": [],
+    "getFunctionDetailAction": []
   },
   "deps": {}
 }

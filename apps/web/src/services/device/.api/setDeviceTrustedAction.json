@@ -1,0 +1,11 @@
+{
+  "name": "setDeviceTrustedAction",
+  "file": "src/services/device/actions/device.mutations.ts",
+  "sig": "(input: SetDeviceTrustedInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; isTrusted: boolean; }; error?: undefined; }>",
+  "calls": [
+    "setDeviceTrusted"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -5,7 +5,7 @@
 import { useCallback } from "react";
 import { useEntity } from "@/hooks/entity/useEntity";
 import { getTeachersAction } from "@/services/teacher/actions";
-import type { TeacherDTo } from "@/services/teacher/types";
+import type { GetTeacherItem } from "@/services/teacher/types";
 
 /**
  * Hook pour récupérer les teachers d'une organisation
@@ -40,7 +40,7 @@ export function useTeachers({
 
   const entityName = `teachers-${departmentId}-${status}`;
 //@ts-ignore
-  const entity = useEntity<TeacherDTo>({
+  const entity = useEntity<GetTeacherItem>({
     entityName,
     fetchFn,
     enabled,

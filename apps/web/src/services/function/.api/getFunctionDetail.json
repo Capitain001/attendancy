@@ -1,0 +1,8 @@
+{
+  "name": "getFunctionDetail",
+  "file": "src/services/function/database/function.queries.ts",
+  "sig": "(functionId: string, orgId: string) => Promise<{ name: string; id: string; _count: { permissions: number; users: number; }; createdAt: Date; permissions: { id: string; description: string | null; action: Action; resource: Resource | null; resourceId: string | null; expiresAt: Date | null; }[]; description: string | null; isMain: boolean; icon: string | n...",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

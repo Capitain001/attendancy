@@ -2,8 +2,8 @@
   "service": "student",
   "path": "src/services/student/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "6803174",
-  "generated_at": "2026-09-04T23:15:30.939Z",
+  "derived_at": "38f2f24",
+  "generated_at": "2026-09-17T08:14:18.257Z",
   "fns": {
     "getStudentsStats": {
       "name": "getStudentsStats",
@@ -18,7 +18,7 @@
     "enrollStudent": {
       "name": "enrollStudent",
       "file": "src/services/student/database/student.mutations.ts",
-      "sig": "(data: EnrollStudentOutput & { orgId: string }) => Promise<{ classId: string; id: string; studentId: string; }>",
+      "sig": "(data: EnrollStudentOutput & { orgId: string }) => Promise<{ id: string; studentId: string; classId: string; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -58,7 +58,7 @@
     "getStudentProfile": {
       "name": "getStudentProfile",
       "file": "src/services/student/database/student.queries.ts",
-      "sig": "(studentId: string, orgId: string) => Promise<{ studentId: string; classId: string; groupIds: string[]; user: { firstName: string | null; lastName: string | null; email: string; avatar_url: string | null; }; } | null>",
+      "sig": "(studentId: string, orgId: string) => Promise<{ studentId: string; classId: string; groupIds: string[]; user: { email: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; } | null>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -68,8 +68,10 @@
     "getStudentSchedules": {
       "name": "getStudentSchedules",
       "file": "src/services/student/database/student.queries.ts",
-      "sig": "(groupIds: string[], params: { orgId: string; classId: string; rangeStart: Date; rangeEnd: Date }) => Promise<{ classId: string; room: { name: string; id: string; }; group: { name: string; id: string; } | null; teacher: { user: { firstName: string | null; lastName: string | null; }; id: string; }; course: { name: string; id: string; }; ... 9 more ...; notes: string | null; }[]>",
-      "composes": [],
+      "sig": "(groupIds: string[], params: { orgId: string; classId: string; rangeStart: Date; rangeEnd: Date }) => Promise<({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; teacher: { id: string; user: { avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; room: { ...; }; } & { ...; })[]>",
+      "composes": [
+        "getSchedules"
+      ],
       "rules": [],
       "why_ref": "",
       "layer": "db",
@@ -113,7 +115,7 @@
     "getStudentByIdForDirection": {
       "name": "getStudentByIdForDirection",
       "file": "src/services/student/database/student.queries.ts",
-      "sig": "(studentId: string, orgId: string) => Promise<{ studentId: string; classId: string; enrolledAt: Date; class: { name: string; id: string; }; groups: { name: string; id: string; }[]; user: { firstName: string | null; lastName: string | null; ... 5 more ...; status: UserStatus; }; } | null>",
+      "sig": "(studentId: string, orgId: string) => Promise<{ studentId: string; classId: string; enrolledAt: Date; class: { name: string; id: string; }; groups: { name: string; id: string; }[]; user: { email: string; avatar_url: string | null; phone: string | null; ... 4 more ...; dateOfBirth: Date | null; }; } | null>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -123,7 +125,7 @@
     "getParentsForDirection": {
       "name": "getParentsForDirection",
       "file": "src/services/student/database/student.queries.ts",
-      "sig": "(orgId: string) => Promise<{ student: { user: { firstName: string | null; lastName: string | null; }; id: string; }; id: string; parent: { user: { firstName: string | null; lastName: string | null; email: string; avatar_url: string | null; }; id: string; }; relation: string; }[]>",
+      "sig": "(orgId: string) => Promise<{ id: string; student: { id: string; user: { firstName: string | null; lastName: string | null; }; }; parent: { id: string; user: { email: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; relation: string; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -133,7 +135,7 @@
     "getEnrolledStudents": {
       "name": "getEnrolledStudents",
       "file": "src/services/student/database/student.queries.ts",
-      "sig": "(classId: string, orgId: string) => Promise<{ student: { user: { firstName: string | null; lastName: string | null; email: string; sex: Sex; phone: string | null; avatar_url: string | null; dateOfBirth: Date | null; status: UserStatus; }; id: string; }; id: string; studentId: string; createdAt: Date; studentGroups: { ...; }[]; }[]>",
+      "sig": "(classId: string, orgId: string) => Promise<{ id: string; student: { id: string; user: { email: string; avatar_url: string | null; phone: string | null; status: UserStatus; firstName: string | null; lastName: string | null; sex: Sex; dateOfBirth: Date | null; }; }; studentId: string; createdAt: Date; studentGroups: { ...; }[]; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -166,7 +168,7 @@
     "enrollStudentAction": {
       "name": "enrollStudentAction",
       "file": "src/services/student/actions/student.mutations.ts",
-      "sig": "(input: EnrollStudentInput) => Promise<{ error: string; data?: undefined; } | { data: { classId: string; id: string; studentId: string; }; error?: undefined; }>",
+      "sig": "(input: EnrollStudentInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; studentId: string; classId: string; }; error?: undefined; }>",
       "calls": [
         "enrollStudent"
       ],
@@ -240,7 +242,7 @@
     "getStudentProfileAction": {
       "name": "getStudentProfileAction",
       "file": "src/services/student/actions/student.queries.ts",
-      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { studentId: string; classId: string; groupIds: string[]; user: { firstName: string | null; lastName: string | null; email: string; avatar_url: string | null; }; }; error?: undefined; }>",
+      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { studentId: string; classId: string; groupIds: string[]; user: { email: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; error?: undefined; }>",
       "calls": [
         "getStudentProfile"
       ],
@@ -253,7 +255,7 @@
     "getStudentScheduleAction": {
       "name": "getStudentScheduleAction",
       "file": "src/services/student/actions/student.queries.ts",
-      "sig": "(params: { classId: string groupIds: string[] rangeStart: Date rangeEnd: Date }) => Promise<{ error: string; data?: undefined; } | { data: { classId: string; room: { name: string; id: string; }; group: { name: string; id: string; } | null; teacher: { user: { firstName: string | null; lastName: string | null; }; id: string; }; ... 10 more ...; notes: string | null; }[]; error?: undefined; }>",
+      "sig": "(params: { classId: string groupIds: string[] rangeStart: Date rangeEnd: Date }) => Promise<{ error: string; data?: undefined; } | { data: ({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; teacher: { id: string; user: { avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; room: { ...; }; } & { ...",
       "calls": [
         "getStudentSchedules"
       ],
@@ -306,7 +308,7 @@
     "getEnrolledStudentsAction": {
       "name": "getEnrolledStudentsAction",
       "file": "src/services/student/actions/student.queries.ts",
-      "sig": "(classId: string) => Promise<{ error: string; data?: undefined; } | { data: { student: { user: { firstName: string | null; lastName: string | null; email: string; sex: Sex; phone: string | null; avatar_url: string | null; dateOfBirth: Date | null; status: UserStatus; }; id: string; }; id: string; studentId: string; createdAt: Date; stud...",
+      "sig": "(classId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; student: { id: string; user: { email: string; avatar_url: string | null; phone: string | null; status: UserStatus; firstName: string | null; lastName: string | null; sex: Sex; dateOfBirth: Date | null; }; }; studentId: string; createdAt: Date; stud...",
       "calls": [
         "getEnrolledStudents"
       ],
@@ -319,7 +321,7 @@
     "getStudentByIdForDirectionAction": {
       "name": "getStudentByIdForDirectionAction",
       "file": "src/services/student/actions/student.queries.ts",
-      "sig": "(studentId: string) => Promise<{ error: string; data?: undefined; } | { data: { studentId: string; classId: string; enrolledAt: Date; class: { name: string; id: string; }; groups: { name: string; id: string; }[]; user: { firstName: string | null; ... 6 more ...; status: UserStatus; }; }; error?: undefined; }>",
+      "sig": "(studentId: string) => Promise<{ error: string; data?: undefined; } | { data: { studentId: string; classId: string; enrolledAt: Date; class: { name: string; id: string; }; groups: { name: string; id: string; }[]; user: { email: string; ... 6 more ...; dateOfBirth: Date | null; }; }; error?: undefined; }>",
       "calls": [
         "getStudentByIdForDirection"
       ],
@@ -332,7 +334,7 @@
     "getParentsForDirectionAction": {
       "name": "getParentsForDirectionAction",
       "file": "src/services/student/actions/student.queries.ts",
-      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { student: { user: { firstName: string | null; lastName: string | null; }; id: string; }; id: string; parent: { user: { firstName: string | null; lastName: string | null; email: string; avatar_url: string | null; }; id: string; }; relation: string; }[]; error?: ...",
+      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { id: string; student: { id: string; user: { firstName: string | null; lastName: string | null; }; }; parent: { id: string; user: { email: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; relation: string; }[]; error?: ...",
       "calls": [
         "getParentsForDirection"
       ],
@@ -416,6 +418,9 @@
     "getStudentByIdForDirectionAction": [],
     "getParentsForDirectionAction": [],
     "getDirectionStudentsAction": [],
+    "getSchedules": [
+      "getStudentSchedules"
+    ],
     "getActiveSessions": [
       "getStudentActiveSession"
     ],
@@ -425,6 +430,7 @@
     ]
   },
   "deps": {
+    "getSchedules": "schedule",
     "getActiveSessions": "session",
     "getUserAttendance": "attendance"
   }

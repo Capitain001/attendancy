@@ -1,0 +1,11 @@
+{
+  "name": "getTeacherCoursesAction",
+  "file": "src/services/course-teacher/actions/course-teacher.queries.ts",
+  "sig": "(teacherId: string) => Promise<{ error: string; data?: undefined; } | { data: { isMain: boolean; name: string; id: string; class: { name: string; id: string; }; }[]; error?: undefined; }>",
+  "calls": [
+    "getTeacherCourses"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -2,13 +2,33 @@
   "service": "group",
   "path": "src/services/group/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "5306ac7",
-  "generated_at": "2026-08-06T12:17:34.411Z",
+  "derived_at": "38f2f24",
+  "generated_at": "2026-09-17T08:14:17.191Z",
   "fns": {
     "createGroup": {
       "name": "createGroup",
       "file": "src/services/group/database/group.mutations.ts",
-      "sig": "(data: CreateGroupOutput & { orgId: string }) => Promise<{ name: string; id: string; description: string | null; }>",
+      "sig": "(data: CreateGroupOutput & { orgId: string }) => Promise<{ name: string; id: string; _count: { studentGroups: number; }; description: string | null; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateGroup": {
+      "name": "updateGroup",
+      "file": "src/services/group/database/group.mutations.ts",
+      "sig": "(data: UpdateGroupOutput & { orgId: string }) => Promise<{ name: string; id: string; _count: { studentGroups: number; }; description: string | null; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "setGroupStudents": {
+      "name": "setGroupStudents",
+      "file": "src/services/group/database/group.mutations.ts",
+      "sig": "(data: SetGroupStudentsOutput & { orgId: string }) => Promise<{ id: string; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -28,7 +48,17 @@
     "getGroupsByClass": {
       "name": "getGroupsByClass",
       "file": "src/services/group/database/group.queries.ts",
-      "sig": "(classId: string, orgId: string) => Promise<{ name: string; id: string; description: string | null; _count: { studentGroups: number; }; }[]>",
+      "sig": "(classId: string, orgId: string) => Promise<{ name: string; id: string; _count: { studentGroups: number; }; description: string | null; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getGroupEligibleStudents": {
+      "name": "getGroupEligibleStudents",
+      "file": "src/services/group/database/group.queries.ts",
+      "sig": "(classId: string, groupId: string, orgId: string) => Promise<{ enrollmentId: string; inGroup: boolean; student: { id: string; user: { firstName: string | null; lastName: string | null; }; userId: string; }; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -38,9 +68,22 @@
     "createGroupAction": {
       "name": "createGroupAction",
       "file": "src/services/group/actions/group.mutations.ts",
-      "sig": "(input: CreateGroupInput) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; }; error?: undefined; }>",
+      "sig": "(input: CreateGroupInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; _count: { studentGroups: number; }; description: string | null; }; error?: undefined; }>",
       "calls": [
         "createGroup"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateGroupAction": {
+      "name": "updateGroupAction",
+      "file": "src/services/group/actions/group.mutations.ts",
+      "sig": "(input: UpdateGroupInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; _count: { studentGroups: number; }; description: string | null; }; error?: undefined; }>",
+      "calls": [
+        "updateGroup"
       ],
       "auth": {},
       "rules": [],
@@ -51,9 +94,22 @@
     "removeGroupAction": {
       "name": "removeGroupAction",
       "file": "src/services/group/actions/group.mutations.ts",
-      "sig": "(groupId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "sig": "(groupId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
       "calls": [
         "removeGroup"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "setGroupStudentsAction": {
+      "name": "setGroupStudentsAction",
+      "file": "src/services/group/actions/group.mutations.ts",
+      "sig": "(input: SetGroupStudentsInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "calls": [
+        "setGroupStudents"
       ],
       "auth": {},
       "rules": [],
@@ -64,9 +120,36 @@
     "getGroupsByClassAction": {
       "name": "getGroupsByClassAction",
       "file": "src/services/group/actions/group.queries.ts",
-      "sig": "(classId: string) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; _count: { studentGroups: number; }; }[]; error?: undefined; }>",
+      "sig": "(classId: string) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; _count: { studentGroups: number; }; description: string | null; }[]; error?: undefined; }>",
       "calls": [
         "getGroupsByClass"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getClassGroupsAction": {
+      "name": "getClassGroupsAction",
+      "file": "src/services/group/actions/group.queries.ts",
+      "sig": "(input: { classId: string }) => Promise<{ error: string; data?: undefined; } | { data: { groups: { name: string; id: string; _count: { studentGroups: number; }; description: string | null; }[]; class: { level: Level; name: string; academicYear: { ...; }; ... 5 more ...; groups: { ...; }[]; } | null | undefined; }; error?: undefined; }>",
+      "calls": [
+        "getGroupsByClass",
+        "getClassAction"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getGroupEligibleStudentsAction": {
+      "name": "getGroupEligibleStudentsAction",
+      "file": "src/services/group/actions/group.queries.ts",
+      "sig": "(input: { classId: string; groupId: string }) => Promise<{ error: string; data?: undefined; } | { data: { students: { enrollmentId: string; inGroup: boolean; student: { id: string; user: { firstName: string | null; lastName: string | null; }; userId: string; }; }[]; }; error?: undefined; }>",
+      "calls": [
+        "getGroupEligibleStudents"
       ],
       "auth": {},
       "rules": [],
@@ -79,15 +162,34 @@
     "createGroup": [
       "createGroupAction"
     ],
+    "updateGroup": [
+      "updateGroupAction"
+    ],
+    "setGroupStudents": [
+      "setGroupStudentsAction"
+    ],
     "removeGroup": [
       "removeGroupAction"
     ],
     "getGroupsByClass": [
-      "getGroupsByClassAction"
+      "getGroupsByClassAction",
+      "getClassGroupsAction"
+    ],
+    "getGroupEligibleStudents": [
+      "getGroupEligibleStudentsAction"
     ],
     "createGroupAction": [],
+    "updateGroupAction": [],
     "removeGroupAction": [],
-    "getGroupsByClassAction": []
+    "setGroupStudentsAction": [],
+    "getGroupsByClassAction": [],
+    "getClassGroupsAction": [],
+    "getGroupEligibleStudentsAction": [],
+    "getClassAction": [
+      "getClassGroupsAction"
+    ]
   },
-  "deps": {}
+  "deps": {
+    "getClassAction": "class"
+  }
 }

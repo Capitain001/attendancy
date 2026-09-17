@@ -1,7 +1,7 @@
 {
   "name": "deleteDirectionMemberAction",
   "file": "src/services/direction/actions/direction.mutations.ts",
-  "sig": "(directionId: string) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
+  "sig": "(directionId: string) => Promise<{ error: string; data?: undefined; } | { data: true; error?: undefined; }>",
   "calls": [
     "removeDirectionMember"
   ],

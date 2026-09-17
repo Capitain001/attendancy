@@ -2,8 +2,11 @@
 // Régénérer : npx tsx scripts/generate/types/types.ts attendance
 // Pour surcharger un type, définissez-le dans ./types.ts (jamais écrasé).
 
-import { recordAttendance, createAttendance, confirmAttendance, confirmAllAttendances, markScheduleAbsences, getScheduleAttendances, getStudentAttendances, getUserAttendance, getStudentAttendanceStatusCounts, getOrgStudentAttendanceRates, getStudentAttendanceSummary, getExpectedAttendees } from './database'
+import { getOrgTodayAbsences, getClassAttendanceRates, getAttendanceReport, recordAttendance, createAttendance, confirmAttendance, confirmAllAttendances, markScheduleAbsences, getScheduleAttendances, getStudentAttendances, getUserAttendance, getStudentAttendanceStatusCounts, getOrgStudentAttendanceRates, getStudentAttendanceSummary, getExpectedAttendees } from './database'
 
+export type GetOrgTodayAbsencesDto = Awaited<ReturnType<typeof getOrgTodayAbsences>>
+export type GetClassAttendanceRatesDto = Awaited<ReturnType<typeof getClassAttendanceRates>>
+export type GetAttendanceReportDto = Awaited<ReturnType<typeof getAttendanceReport>>
 export type RecordAttendanceDto = Awaited<ReturnType<typeof recordAttendance>>
 export type CreateAttendanceDto = Awaited<ReturnType<typeof createAttendance>>
 export type ConfirmAttendanceDto = Awaited<ReturnType<typeof confirmAttendance>>

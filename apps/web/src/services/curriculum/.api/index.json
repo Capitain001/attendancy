@@ -2,7 +2,7 @@
   "service": "curriculum",
   "path": "src/services/curriculum/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "bb85699",
+  "derived_at": "38f2f24",
   "utils_dir": null,
   "fns": {
     "applyProgramToClass": {

@@ -2,13 +2,13 @@
   "service": "program-ue",
   "path": "src/services/program-ue/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "2dc6b24",
-  "generated_at": "2026-08-06T12:17:34.661Z",
+  "derived_at": "38f2f24",
+  "generated_at": "2026-09-17T08:14:18.051Z",
   "fns": {
     "addUEToProgram": {
       "name": "addUEToProgram",
       "file": "src/services/program-ue/database/program-ue.mutations.ts",
-      "sig": "({ programId, ueId, semester, order, isOptional = false }: { programId: string; ueId: string; semester?: number; order?: number; isOptional?: boolean }) => Promise<{ id: string; programId: string; ueId: string; isCompleted: boolean; isOptional: boolean; semester: number; createdAt: Date; order: number | null; updatedAt: Date; }>",
+      "sig": "({ programId, ueId, semester, order, isOptional = false }: { programId: string; ueId: string; semester?: number; order?: number; isOptional?: boolean }) => Promise<{ id: string; createdAt: Date; updatedAt: Date; programId: string; ueId: string; order: number | null; isCompleted: boolean; isOptional: boolean; semester: number; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -38,7 +38,7 @@
     "getProgramUEs": {
       "name": "getProgramUEs",
       "file": "src/services/program-ue/database/program-ue.queries.ts",
-      "sig": "({ programId, orgId }: { programId: string; orgId: string }) => Promise<{ id: string; semester: number; ue: { name: string; id: string; code: string | null; description: string | null; ueCourses: { name: string; id: string; order: number | null; code: string | null; description: string | null; credits: number; duration: number; }[]; }; }[]>",
+      "sig": "({ programId, orgId }: { programId: string; orgId: string }) => Promise<{ id: string; ue: { name: string; id: string; description: string | null; code: string | null; ueCourses: { name: string; id: string; credits: number; description: string | null; duration: number; code: string | null; order: number | null; }[]; }; semester: number; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -48,7 +48,7 @@
     "removeUEFromProgramAction": {
       "name": "removeUEFromProgramAction",
       "file": "src/services/program-ue/actions/program-ue.mutations.ts",
-      "sig": "({ programUEId, programId, ueId }: { programUEId?: string; programId: string; ueId?: string }) => Promise<{ error: any; data?: undefined; } | { data: BatchPayload; error?: undefined; }>",
+      "sig": "({ programUEId, programId, ueId }: { programUEId?: string; programId: string; ueId?: string }) => Promise<{ error: string; data?: undefined; } | { data: BatchPayload; error?: undefined; }>",
       "calls": [
         "removeUEFromProgram"
       ],

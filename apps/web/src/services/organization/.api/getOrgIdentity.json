@@ -1,7 +1,7 @@
 {
   "name": "getOrgIdentity",
   "file": "src/services/organization/database/organization.queries.ts",
-  "sig": "(orgId: string) => Promise<{ id: string; name: string; email: string | null; slug: string | null; logo: string | null; domain: string | null; } | null>",
+  "sig": "(orgId: string) => Promise<{ name: string; id: string; email: string | null; slug: string | null; logo: string | null; domain: string | null; } | null>",
   "composes": [],
   "rules": [],
   "why_ref": ""

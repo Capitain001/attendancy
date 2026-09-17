@@ -1,7 +1,7 @@
 {
   "name": "getFunctionProfiles",
   "file": "src/services/function/database/function.queries.ts",
-  "sig": "({ functionId, orgId }: { functionId: string; orgId: string }) => Promise<{ function: { name: string; isMain: boolean; }; id: string; assignedAt: Date; assignedBy: string | null; user: { id: string; createdAt: Date; firstName: string | null; lastName: string | null; ... 6 more ...; details: JsonValue; }; }[]>",
+  "sig": "({ functionId, orgId }: { functionId: string; orgId: string }) => Promise<{ function: { name: string; isMain: boolean; }; id: string; user: { id: string; email: string; avatar_url: string | null; phone: string | null; status: UserStatus; details: JsonValue; ... 4 more ...; dateOfBirth: Date | null; }; assignedAt: Date; assignedBy: string | null; }[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

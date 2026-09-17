@@ -1,7 +1,7 @@
 {
   "name": "captureLoginDeviceAction",
   "file": "src/services/device/actions/device.mutations.ts",
-  "sig": "(input: CaptureLoginDeviceInput) => Promise<{ error: string; data?: undefined; } | { data: { device: { id: string; revokedAt: Date | null; }; session: { id: string; deviceId: string; createdAt: Date; }; }; error?: undefined; }>",
+  "sig": "(input: CaptureLoginDeviceInput) => Promise<{ error: string; data?: undefined; } | { data: { device: { id: string; revokedAt: Date | null; }; session: { id: string; createdAt: Date; deviceId: string; }; }; error?: undefined; }>",
   "calls": [
     "upsertDeviceOnLogin"
   ],

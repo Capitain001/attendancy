@@ -1,8 +1,9 @@
 import { connection } from 'next/server'
 import { GraduationCap } from 'lucide-react'
-import { getCurrentTeacherId, getTeacherCoursesAction } from '@/services/teacher'
+import { getCurrentTeacherId } from '@/services/teacher'
 import { getEnrolledStudentsAction } from '@/services/student'
 import { getInitials } from '@/lib/utils'
+import { getTeacherCoursesAction } from '@/services/course-teacher'
 
 
 export default async function Page() {

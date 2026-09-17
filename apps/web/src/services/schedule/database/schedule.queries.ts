@@ -366,3 +366,30 @@ export async function assertClassInOrg(classId: string, orgId: string) {
 
   if (!row) throw new Error('Classe introuvable')
 }
+
+
+export async function getTeacherSchedulesInfo(
+  teacherId: string,
+  orgId: string,
+  rangeStart: Date,
+  rangeEnd: Date,
+) {
+  'use cache'
+  cacheTag(CACHE.SCHEDULE(orgId))
+  cacheLife(CACHE.SCHEDULE.life)
+  return prisma.schedule.findMany({
+    where: {
+      teacherId, orgId, deletedAt: null,
+      startTime: { lt: rangeEnd },
+      endTime: { gt: rangeStart },
+    },
+    select: {
+      id: true, status: true, notes: true, startTime: true, endTime: true,
+      course: { select: { id: true, name: true } },
+      room: { select: { id: true, name: true } },
+      class: { select: { id: true, name: true } },
+      group: { select: { id: true, name: true } },
+    },
+    orderBy: { startTime: 'asc' },
+  })
+}

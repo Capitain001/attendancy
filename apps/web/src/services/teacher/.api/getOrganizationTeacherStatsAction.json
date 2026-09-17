@@ -1,0 +1,11 @@
+{
+  "name": "getOrganizationTeacherStatsAction",
+  "file": "src/services/teacher/actions/teacher.analytics.ts",
+  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { total: number; active: number; inactive: number; withCourses: number; }; error?: undefined; }>",
+  "calls": [
+    "getOrganizationTeacherStats"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -2,25 +2,49 @@
   "service": "user",
   "path": "src/services/user/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "87fd0c8",
-  "generated_at": "2026-07-29T12:17:29.460Z",
+  "derived_at": "38f2f24",
+  "generated_at": "2026-09-17T08:14:18.650Z",
   "fns": {
-    "updateAvatar": {
-      "name": "updateAvatar",
-      "file": "src/services/user/actions.ts",
-      "sig": "(avatarUrl: string) => Promise<{ data: true } | { error: string }>",
-      "calls": [],
+    "updateUserProfile": {
+      "name": "updateUserProfile",
+      "file": "src/services/user/database/user.mutations.ts",
+      "sig": "(userId: string, data: UpdateCurrentUserOutput, orgId: string) => Promise<{ id: string; firstName: string | null; lastName: string | null; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateUser": {
+      "name": "updateUser",
+      "file": "src/services/user/database/user.mutations.ts",
+      "sig": "(userId: string, data: UpdateCurrentUserOutput, orgId: string) => Promise<{ id: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateUserProfileAction": {
+      "name": "updateUserProfileAction",
+      "file": "src/services/user/actions/user.mutations.ts",
+      "sig": "(input: UpdateCurrentUserInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; firstName: string | null; lastName: string | null; }; error?: undefined; }>",
+      "calls": [
+        "updateUserProfile"
+      ],
       "auth": {},
       "rules": [],
       "why_ref": "",
       "layer": "action",
       "kind": "server-action"
     },
-    "getUserRoleStatsAction": {
-      "name": "getUserRoleStatsAction",
-      "file": "src/services/user/actions.ts",
-      "sig": "() => Promise<{ data: UserRoleStats } | { error: string }>",
-      "calls": [],
+    "updateUserAction": {
+      "name": "updateUserAction",
+      "file": "src/services/user/actions/user.mutations.ts",
+      "sig": "(input: UpdateUserInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "calls": [
+        "updateUser"
+      ],
       "auth": {},
       "rules": [],
       "why_ref": "",
@@ -29,8 +53,14 @@
     }
   },
   "edges": {
-    "updateAvatar": [],
-    "getUserRoleStatsAction": []
+    "updateUserProfile": [
+      "updateUserProfileAction"
+    ],
+    "updateUser": [
+      "updateUserAction"
+    ],
+    "updateUserProfileAction": [],
+    "updateUserAction": []
   },
   "deps": {}
 }

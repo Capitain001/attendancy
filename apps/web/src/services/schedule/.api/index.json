@@ -2,7 +2,7 @@
   "service": "schedule",
   "path": "src/services/schedule/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "e128b9b",
+  "derived_at": "38f2f24",
   "utils_dir": null,
   "fns": {
     "createSchedule": {
@@ -105,6 +105,11 @@
       "layer": "db",
       "kind": "query"
     },
+    "getTeacherSchedulesInfo": {
+      "f": ".api/getTeacherSchedulesInfo.json",
+      "layer": "db",
+      "kind": "query"
+    },
     "createScheduleAction": {
       "f": ".api/createScheduleAction.json",
       "layer": "action",
@@ -189,6 +194,16 @@
       "f": ".api/getClassScheduleOptionsAction.json",
       "layer": "action",
       "kind": "server-action"
+    },
+    "getTeacherSchedulesAction": {
+      "f": ".api/getTeacherSchedulesAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getTeacherSchedulesInfoAction": {
+      "f": ".api/getTeacherSchedulesInfoAction.json",
+      "layer": "action",
+      "kind": "server-action"
     }
   },
   "edges": {
@@ -229,7 +244,9 @@
       "getDaySchedulesAction"
     ],
     "getClassSchedules": [],
-    "getTeacherSchedules": [],
+    "getTeacherSchedules": [
+      "getTeacherSchedulesAction"
+    ],
     "getRoomSchedules": [],
     "getSchedulesByClass": [
       "getClassSchedulesAction"
@@ -247,6 +264,9 @@
       "getTodayClassSchedulesAction"
     ],
     "assertClassInOrg": [],
+    "getTeacherSchedulesInfo": [
+      "getTeacherSchedulesInfoAction"
+    ],
     "createScheduleAction": [],
     "updateScheduleAction": [],
     "cancelScheduleAction": [],
@@ -266,6 +286,8 @@
     "getTeacherNextScheduleAction": [],
     "getTodayClassSchedulesAction": [],
     "getClassScheduleOptionsAction": [],
+    "getTeacherSchedulesAction": [],
+    "getTeacherSchedulesInfoAction": [],
     "getCourses": [
       "getClassScheduleOptionsAction"
     ],

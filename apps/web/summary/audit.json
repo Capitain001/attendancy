@@ -1,0 +1,24 @@
+{
+  "service": "audit",
+  "path": "src/services/audit/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "38f2f24",
+  "generated_at": "2026-09-17T08:14:16.677Z",
+  "fns": {
+    "getOrgAuditLogsAction": {
+      "name": "getOrgAuditLogsAction",
+      "file": "src/services/audit/actions.ts",
+      "sig": "(params?: { resource?: string action?: string cursor?: string limit?: number }) => Promise<{ error: string; data?: undefined; } | { data: { items: { id: string; user: { firstName: string | null; lastName: string | null; } | null; details: JsonValue; createdAt: Date; userId: string | null; action: Action; resource: string | null; resourceId: string | null; }[]; hasNext: boolean; nextCursor: string ...",
+      "calls": [],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "getOrgAuditLogsAction": []
+  },
+  "deps": {}
+}

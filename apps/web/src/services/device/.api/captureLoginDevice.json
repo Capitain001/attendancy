@@ -1,0 +1,11 @@
+{
+  "name": "captureLoginDevice",
+  "file": "src/services/device/actions/device.mutations.ts",
+  "sig": "(userId: string, accessToken: string) => Promise<{ error: string; data?: undefined; } | { data: { device: { id: string; revokedAt: Date | null; }; session: { id: string; createdAt: Date; deviceId: string; }; }; error?: undefined; }>",
+  "calls": [
+    "captureLoginDeviceAction"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

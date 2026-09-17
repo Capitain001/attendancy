@@ -1,0 +1,267 @@
+{
+  "service": "parent",
+  "path": "src/services/parent/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "38f2f24",
+  "generated_at": "2026-09-17T08:14:17.896Z",
+  "fns": {
+    "createParentRelationWithAudit": {
+      "name": "createParentRelationWithAudit",
+      "file": "src/services/parent/database/parent.mutations.ts",
+      "sig": "(params: { orgId: string; parentId: string; studentId: string; relation: string; actorUserId: string }) => Promise<{ relationId: string }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "deleteParentRelationWithAudit": {
+      "name": "deleteParentRelationWithAudit",
+      "file": "src/services/parent/database/parent.mutations.ts",
+      "sig": "(params: { orgId: string; relationId: string; actorUserId: string }) => Promise<{ relationId: string; studentId: string; parentId: string }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getParentOverview": {
+      "name": "getParentOverview",
+      "file": "src/services/parent/database/parent.overview.ts",
+      "sig": "(parentId: string, orgId: string) => Promise<OverviewData>",
+      "composes": [
+        "getParentStudents"
+      ],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getParentStudents": {
+      "name": "getParentStudents",
+      "file": "src/services/parent/database/parent.queries.ts",
+      "sig": "(parentId: string, orgId: string) => Promise<{ studentId: string; relation: string; firstName: string | null; lastName: string | null; avatarUrl: string | null; dateOfBirth: Date | null; className: string; }[]>",
+      "cache": {
+        "strategy": "unstable_cache",
+        "keys": [
+          "parent",
+          "students",
+          "orgId",
+          "parentId"
+        ],
+        "tags": [],
+        "revalidate": "300"
+      },
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "searchEligibleParents": {
+      "name": "searchEligibleParents",
+      "file": "src/services/parent/database/parent.queries.ts",
+      "sig": "(params: { orgId: string; query: string; excludeStudentId?: string }) => Promise<{ parentId: string; userId: string; firstName: string | null; lastName: string | null; email: string; avatarUrl: string | null; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getParentUserIdsForStudents": {
+      "name": "getParentUserIdsForStudents",
+      "file": "src/services/parent/database/parent.queries.ts",
+      "sig": "(studentIds: string[], orgId: string) => Promise<string[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getParentStudentsAction": {
+      "name": "getParentStudentsAction",
+      "file": "src/services/parent/actions.ts",
+      "sig": "() => Promise<{ data: { studentId: string; relation: string; firstName: string | null; lastName: string | null; avatarUrl: string | null; dateOfBirth: Date | null; className: string; }[]; error?: undefined; } | { ...; }>",
+      "calls": [
+        "getParentStudents"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getParentOverviewAction": {
+      "name": "getParentOverviewAction",
+      "file": "src/services/parent/actions.ts",
+      "sig": "() => Promise<{ data: { header: { name: string | null; avatarUrl: string | null; orgName: string | null; childrenCount: number; }; metrics: { attendanceRate: number; pendingCount: number; monthAbsences: number; }; alert: { ...; } | null; children: ParentChildOverview[]; }; error?: undefined; } | { ...; }>",
+      "calls": [
+        "getParentOverview"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getParentDashboardAction": {
+      "name": "getParentDashboardAction",
+      "file": "src/services/parent/actions.ts",
+      "sig": "(params: { studentId: string; classId: string | null; groupIds: string[] }) => Promise<{ error: string; data?: undefined; } | { data: { profile: null; stats: null; activeSession: null; }; error?: undefined; } | { data: { profile: { studentId: string; classId: string; groupIds: string[]; user: { ...; }; } | null; stats: { ...; }; activeSession: { ...; } | null; }; error?: undefined; }>",
+      "calls": [
+        "isStudentParent",
+        "getStudentProfile",
+        "getStudentStats",
+        "getStudentActiveSession"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getParentAttendancesAction": {
+      "name": "getParentAttendancesAction",
+      "file": "src/services/parent/actions.ts",
+      "sig": "(params: { studentId: string }) => Promise<{ error: string; data?: undefined; } | { data: { attendances: { id: string; schedule: { id: string; course: { name: string; id: string; }; startTime: Date; endTime: Date; }; status: AttendanceStatus; recordedAt: Date; }[]; }; error?: undefined; }>",
+      "calls": [
+        "isStudentParent",
+        "getStudentAttendances"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getParentPlanningAction": {
+      "name": "getParentPlanningAction",
+      "file": "src/services/parent/actions.ts",
+      "sig": "(params: { studentId: string; classId: string | null; groupIds: string[]; rangeStart: Date; rangeEnd: Date }) => Promise<{ error: string; data?: undefined; } | { data: { schedules: ({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; teacher: { id: string; user: { ...; }; }; room: { ...; }; } & { ...; })[]; }; error?: undefined; }>",
+      "calls": [
+        "isStudentParent",
+        "getStudentSchedules"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getParentSessionDetailAction": {
+      "name": "getParentSessionDetailAction",
+      "file": "src/services/parent/actions.ts",
+      "sig": "(params: { studentId: string; scheduleId: string }) => Promise<{ error: string; data?: undefined; } | { data: { schedule: { id: string; courseName: string; credits: number; roomName: string; startTime: Date; endTime: Date; status: ScheduleStatus; confirmed: boolean; notes: string | null; teacher: { ...; } | null; }; myAttendance: { ...; } | null; session: { ...; } | nul...",
+      "calls": [
+        "isStudentParent",
+        "getStudentProfile",
+        "getStudentSessionDetail"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "searchEligibleParentsAction": {
+      "name": "searchEligibleParentsAction",
+      "file": "src/services/parent/actions.ts",
+      "sig": "(input: unknown) => Promise<{ error: string; data?: undefined; } | { data: { parentId: string; userId: string; firstName: string | null; lastName: string | null; email: string; avatarUrl: string | null; }[]; error?: undefined; }>",
+      "calls": [
+        "searchEligibleParents"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "assignParentToStudentAction": {
+      "name": "assignParentToStudentAction",
+      "file": "src/services/parent/actions.ts",
+      "sig": "(input: unknown) => Promise<{ error: string; data?: undefined; } | { data: { relationId: string; }; error?: undefined; }>",
+      "calls": [
+        "createParentRelationWithAudit"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeParentFromStudentAction": {
+      "name": "removeParentFromStudentAction",
+      "file": "src/services/parent/actions.ts",
+      "sig": "(input: unknown) => Promise<{ error: string; data?: undefined; } | { data: { relationId: string; studentId: string; parentId: string; }; error?: undefined; }>",
+      "calls": [
+        "deleteParentRelationWithAudit"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createParentRelationWithAudit": [
+      "assignParentToStudentAction"
+    ],
+    "deleteParentRelationWithAudit": [
+      "removeParentFromStudentAction"
+    ],
+    "getParentOverview": [
+      "getParentOverviewAction"
+    ],
+    "getParentStudents": [
+      "getParentOverview",
+      "getParentStudentsAction"
+    ],
+    "searchEligibleParents": [
+      "searchEligibleParentsAction"
+    ],
+    "getParentUserIdsForStudents": [],
+    "getParentStudentsAction": [],
+    "getParentOverviewAction": [],
+    "getParentDashboardAction": [],
+    "getParentAttendancesAction": [],
+    "getParentPlanningAction": [],
+    "getParentSessionDetailAction": [],
+    "searchEligibleParentsAction": [],
+    "assignParentToStudentAction": [],
+    "removeParentFromStudentAction": [],
+    "isStudentParent": [
+      "getParentDashboardAction",
+      "getParentAttendancesAction",
+      "getParentPlanningAction",
+      "getParentSessionDetailAction"
+    ],
+    "getStudentProfile": [
+      "getParentDashboardAction",
+      "getParentSessionDetailAction"
+    ],
+    "getStudentStats": [
+      "getParentDashboardAction"
+    ],
+    "getStudentActiveSession": [
+      "getParentDashboardAction"
+    ],
+    "getStudentAttendances": [
+      "getParentAttendancesAction"
+    ],
+    "getStudentSchedules": [
+      "getParentPlanningAction"
+    ],
+    "getStudentSessionDetail": [
+      "getParentSessionDetailAction"
+    ]
+  },
+  "deps": {
+    "getStudentProfile": "student",
+    "getStudentStats": "student",
+    "getStudentActiveSession": "student",
+    "getStudentAttendances": "attendance",
+    "getStudentSchedules": "student",
+    "getStudentSessionDetail": "student"
+  }
+}

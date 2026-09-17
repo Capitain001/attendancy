@@ -1,7 +1,7 @@
 {
   "name": "getClassProgram",
   "file": "src/services/program/database/program.queries.ts",
-  "sig": "({ classId }: { classId: string }) => Promise<{ level: Level; name: string; program: { name: string; id: string; description: string | null; } | null; programTrack: { name: string; id: string; }; academicYear: { name: string; id: string; }; } | null>",
+  "sig": "({ classId }: { classId: string }) => Promise<{ level: Level; name: string; academicYear: { name: string; id: string; }; programTrack: { name: string; id: string; }; program: { name: string; id: string; description: string | null; } | null; } | null>",
   "composes": [],
   "rules": [],
   "why_ref": ""

@@ -1,0 +1,8 @@
+{
+  "name": "setDeviceTrusted",
+  "file": "src/services/device/database/device.mutations.ts",
+  "sig": "(deviceId: string, userId: string, isTrusted: boolean) => Promise<{ id: string; isTrusted: boolean; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,11 @@
+{
+  "name": "checkExistingMainFunctionsAction",
+  "file": "src/services/function/actions/function.queries.ts",
+  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: boolean; error?: undefined; }>",
+  "calls": [
+    "checkExistingMainFunctions"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

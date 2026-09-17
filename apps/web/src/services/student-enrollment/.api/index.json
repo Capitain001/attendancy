@@ -2,7 +2,7 @@
   "service": "student-enrollment",
   "path": "src/services/student-enrollment/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "ccbb57a",
+  "derived_at": "38f2f24",
   "utils_dir": null,
   "fns": {
     "createStudentEnrollment": {
@@ -25,6 +25,11 @@
       "layer": "db",
       "kind": "mutation"
     },
+    "enrollStudentsInClass": {
+      "f": ".api/enrollStudentsInClass.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
     "getStudentsEnrollments": {
       "f": ".api/getStudentsEnrollments.json",
       "layer": "db",
@@ -37,6 +42,11 @@
     },
     "getStudentEnrollmentByClass": {
       "f": ".api/getStudentEnrollmentByClass.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "searchStudentsForEnrollment": {
+      "f": ".api/searchStudentsForEnrollment.json",
       "layer": "db",
       "kind": "query"
     },
@@ -60,6 +70,11 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "enrollStudentsInClassAction": {
+      "f": ".api/enrollStudentsInClassAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "getStudentEnrollmentsAction": {
       "f": ".api/getStudentEnrollmentsAction.json",
       "layer": "action",
@@ -72,6 +87,11 @@
     },
     "getStudentEnrollmentByClassAction": {
       "f": ".api/getStudentEnrollmentByClassAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "searchStudentsForEnrollmentAction": {
+      "f": ".api/searchStudentsForEnrollmentAction.json",
       "layer": "action",
       "kind": "server-action"
     }
@@ -89,6 +109,9 @@
     "transferStudentEnrollment": [
       "transferStudentEnrollmentAction"
     ],
+    "enrollStudentsInClass": [
+      "enrollStudentsInClassAction"
+    ],
     "getStudentsEnrollments": [
       "getStudentEnrollmentsAction"
     ],
@@ -98,13 +121,18 @@
     "getStudentEnrollmentByClass": [
       "getStudentEnrollmentByClassAction"
     ],
+    "searchStudentsForEnrollment": [
+      "searchStudentsForEnrollmentAction"
+    ],
     "createStudentEnrollmentAction": [],
     "removeStudentEnrollmentAction": [],
     "updateStudentEnrollmentAction": [],
     "transferStudentEnrollmentAction": [],
+    "enrollStudentsInClassAction": [],
     "getStudentEnrollmentsAction": [],
     "getStudentEnrollmentDetailsAction": [],
-    "getStudentEnrollmentByClassAction": []
+    "getStudentEnrollmentByClassAction": [],
+    "searchStudentsForEnrollmentAction": []
   },
   "deps": {}
 }

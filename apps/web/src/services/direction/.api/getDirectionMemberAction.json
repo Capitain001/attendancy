@@ -1,7 +1,7 @@
 {
   "name": "getDirectionMemberAction",
   "file": "src/services/direction/actions/direction.queries.ts",
-  "sig": "(directionId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; orgId: string; user: { id: string; email: string; avatar_url: string | null; phone: string | null; status: UserStatus; firstName: string | null; lastName: string | null; functions: { ...; }[]; }; createdAt: Date; userId: string; }; error?: undefined; }>",
+  "sig": "(directionId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; orgId: string; user: { id: string; email: string; avatar_url: string | null; phone: string | null; status: UserStatus; firstName: string | null; lastName: string | null; functions: { ...; }[]; }; createdAt: Date; userId: string; }; error?: undefine...",
   "calls": [
     "getDirectionMember"
   ],

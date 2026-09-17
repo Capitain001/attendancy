@@ -2,13 +2,13 @@
   "service": "program-track",
   "path": "src/services/program-track/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "5306ac7",
-  "generated_at": "2026-08-06T12:17:34.650Z",
+  "derived_at": "38f2f24",
+  "generated_at": "2026-09-17T08:14:18.020Z",
   "fns": {
     "createProgramTrack": {
       "name": "createProgramTrack",
       "file": "src/services/program-track/database/programTrack.mutations.ts",
-      "sig": "({ data, orgId }: { data: AddProgramTrackData; orgId: string }) => Promise<{ id: string; name: string; description: string | null; departmentId: string; }>",
+      "sig": "({ data, orgId }: { data: AddProgramTrackData; orgId: string }) => Promise<{ name: string; id: string; description: string | null; departmentId: string; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -18,7 +18,7 @@
     "updateProgramTrack": {
       "name": "updateProgramTrack",
       "file": "src/services/program-track/database/programTrack.mutations.ts",
-      "sig": "({ programTrackId, orgId }: { programTrackId: string; orgId: string }, data: UpdateProgramTrackData) => Promise<{ id: string; name: string; description: string | null; departmentId: string; }>",
+      "sig": "({ programTrackId, orgId }: { programTrackId: string; orgId: string }, data: UpdateProgramTrackData) => Promise<{ name: string; id: string; description: string | null; departmentId: string; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -38,7 +38,7 @@
     "getProgramTracks": {
       "name": "getProgramTracks",
       "file": "src/services/program-track/database/programTrack.queries.ts",
-      "sig": "({ orgId, departmentId }: { orgId: string; departmentId?: string }) => Promise<{ id: string; name: string; description: string | null; department: { id: string; name: string; }; _count: { classes: number; }; }[]>",
+      "sig": "({ orgId, departmentId }: { orgId: string; departmentId?: string }) => Promise<{ name: string; id: string; _count: { classes: number; }; department: { name: string; id: string; }; description: string | null; }[]>",
       "cache": {
         "strategy": "unstable_cache",
         "keys": [
@@ -60,7 +60,7 @@
     "getProgramTracksBasic": {
       "name": "getProgramTracksBasic",
       "file": "src/services/program-track/database/programTrack.queries.ts",
-      "sig": "({ orgId, departmentId }: { orgId: string; departmentId?: string }) => Promise<{ id: string; name: string; description: string | null; departmentId: string; }[]>",
+      "sig": "({ orgId, departmentId }: { orgId: string; departmentId?: string }) => Promise<{ name: string; id: string; description: string | null; departmentId: string; }[]>",
       "cache": {
         "strategy": "unstable_cache",
         "keys": [
@@ -82,7 +82,7 @@
     "getProgramTrack": {
       "name": "getProgramTrack",
       "file": "src/services/program-track/database/programTrack.queries.ts",
-      "sig": "({ programTrackId, orgId }: { programTrackId: string; orgId: string }) => Promise<{ id: string; name: string; description: string | null; department: { id: string; name: string; }; _count: { classes: number; }; } | null>",
+      "sig": "({ programTrackId, orgId }: { programTrackId: string; orgId: string }) => Promise<{ name: string; id: string; _count: { classes: number; }; department: { name: string; id: string; }; description: string | null; } | null>",
       "cache": {
         "strategy": "unstable_cache",
         "keys": [
@@ -104,7 +104,7 @@
     "createProgramTrackAction": {
       "name": "createProgramTrackAction",
       "file": "src/services/program-track/actions/programTrack.mutations.ts",
-      "sig": "(data: AddProgramTrackData) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; description: string | null; departmentId: string; }; error?: undefined; }>",
+      "sig": "(data: AddProgramTrackData) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; description: string | null; departmentId: string; }; error?: undefined; }>",
       "calls": [
         "createProgramTrack"
       ],
@@ -117,7 +117,7 @@
     "updateProgramTrackAction": {
       "name": "updateProgramTrackAction",
       "file": "src/services/program-track/actions/programTrack.mutations.ts",
-      "sig": "(programTrackId: string, data: UpdateProgramTrackData) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; description: string | null; departmentId: string; }; error?: undefined; }>",
+      "sig": "(programTrackId: string, data: UpdateProgramTrackData) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; description: string | null; departmentId: string; }; error?: undefined; }>",
       "calls": [
         "updateProgramTrack"
       ],
@@ -130,7 +130,7 @@
     "deleteProgramTrackAction": {
       "name": "deleteProgramTrackAction",
       "file": "src/services/program-track/actions/programTrack.mutations.ts",
-      "sig": "(programTrackId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+      "sig": "(programTrackId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
       "calls": [
         "deleteProgramTrack"
       ],
@@ -143,7 +143,7 @@
     "getProgramTracksAction": {
       "name": "getProgramTracksAction",
       "file": "src/services/program-track/actions/programTrack.queries.ts",
-      "sig": "({ departmentId }: { departmentId?: string }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; description: string | null; department: { id: string; name: string; }; _count: { classes: number; }; }[]; error?: undefined; }>",
+      "sig": "({ departmentId }: { departmentId?: string }) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; _count: { classes: number; }; department: { name: string; id: string; }; description: string | null; }[]; error?: undefined; }>",
       "calls": [
         "getProgramTracks"
       ],
@@ -156,7 +156,7 @@
     "getProgramTracksBasicAction": {
       "name": "getProgramTracksBasicAction",
       "file": "src/services/program-track/actions/programTrack.queries.ts",
-      "sig": "({ departmentId }: { departmentId?: string }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; description: string | null; departmentId: string; }[]; error?: undefined; }>",
+      "sig": "({ departmentId }: { departmentId?: string }) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; description: string | null; departmentId: string; }[]; error?: undefined; }>",
       "calls": [
         "getProgramTracksBasic"
       ],
@@ -169,7 +169,7 @@
     "getProgramTracksByDepartmentAction": {
       "name": "getProgramTracksByDepartmentAction",
       "file": "src/services/program-track/actions/programTrack.queries.ts",
-      "sig": "({ departmentId }: { departmentId?: string }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; description: string | null; department: { id: string; name: string; }; _count: { classes: number; }; }[]; error?: undefined; } | { data: { ...; }[]; }>",
+      "sig": "({ departmentId }: { departmentId?: string }) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; _count: { classes: number; }; department: { name: string; id: string; }; description: string | null; }[]; error?: undefined; } | { ...; }>",
       "calls": [
         "getProgramTracksAction"
       ],
@@ -182,7 +182,7 @@
     "getProgramTrackAction": {
       "name": "getProgramTrackAction",
       "file": "src/services/program-track/actions/programTrack.queries.ts",
-      "sig": "({ programTrackId }: { programTrackId: string }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; name: string; description: string | null; department: { id: string; name: string; }; _count: { classes: number; }; }; error?: undefined; }>",
+      "sig": "({ programTrackId }: { programTrackId: string }) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; _count: { classes: number; }; department: { name: string; id: string; }; description: string | null; }; error?: undefined; }>",
       "calls": [
         "getProgramTrack"
       ],

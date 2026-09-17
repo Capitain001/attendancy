@@ -1,7 +1,7 @@
 {
   "name": "getScheduleDaysAction",
   "file": "src/services/schedule/actions/schedule.queries.ts",
-  "sig": "(month: string) => Promise<{ error: string; data?: undefined; } | { data: string[]; error?: undefined; }>",
+  "sig": "({ month, filters }: GetScheduleDaysInput) => Promise<{ error: string; data?: undefined; } | { data: string[]; error?: undefined; }>",
   "calls": [
     "getScheduleDays"
   ],

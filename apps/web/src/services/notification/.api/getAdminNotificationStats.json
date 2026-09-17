@@ -1,7 +1,7 @@
 {
   "name": "getAdminNotificationStats",
   "file": "src/services/notification/actions/notification.queries.ts",
-  "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { total: number; unread: number; read: number; byType: Record<string, number>; uniqueUsers: number; }; error?: undefined; }>",
+  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { total: number; unread: number; read: number; byType: Record<string, number>; uniqueUsers: number; }; error?: undefined; }>",
   "calls": [
     "getOrganizationNotificationStats"
   ],

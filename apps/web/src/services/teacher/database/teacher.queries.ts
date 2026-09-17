@@ -48,28 +48,7 @@ export async function getTeacherTodaySchedules(teacherId: string, orgId: string)
   })
 }
 
-export async function getTeacherCourses(teacherId: string, orgId: string) {
-  'use cache'
-  cacheTag(CACHE.TEACHER(orgId, teacherId))
-  cacheLife(CACHE.TEACHER.life)
 
-  const rows = await prisma.courseTeacher.findMany({
-    where: {
-      teacherId,
-      course: { orgId, deletedAt: null },
-    },
-    select: {
-      isMain: true,
-      course: { select: { id: true, name: true, class: { select: { id: true, name: true } } } },
-    },
-    orderBy: { course: { name: 'asc' } },
-  })
-
-  return rows.map((r) => ({
-    ...r.course,
-    isMain: r.isMain,
-  }))
-}
 
 export async function getTeacherSchedules(
   teacherId: string,

@@ -2,7 +2,7 @@
   "service": "permission",
   "path": "src/services/permission/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "60bd946",
+  "derived_at": "38f2f24",
   "utils_dir": null,
   "fns": {
     "grantPermission": {

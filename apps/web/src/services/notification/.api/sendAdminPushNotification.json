@@ -1,7 +1,7 @@
 {
   "name": "sendAdminPushNotification",
   "file": "src/services/notification/actions/notification.mutations.ts",
-  "sig": "(userId: string, input: { message: string; type?: string; scheduleId?: string; metadata?: Record<string, unknown> }) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
+  "sig": "(userId: string, input: { message: string; type?: string; scheduleId?: string; metadata?: Record<string, unknown> }) => Promise<{ error: string; data?: undefined; } | { data: true; error?: undefined; }>",
   "calls": [
     "checkOrgMembership"
   ],

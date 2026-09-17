@@ -1,0 +1,11 @@
+{
+  "name": "updateDeviceLabelAction",
+  "file": "src/services/device/actions/device.mutations.ts",
+  "sig": "(input: UpdateDeviceLabelInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; label: string | null; }; error?: undefined; }>",
+  "calls": [
+    "updateDeviceLabel"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

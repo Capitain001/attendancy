@@ -2,7 +2,7 @@
   "service": "course-teacher",
   "path": "src/services/course-teacher/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "5a9e707",
+  "derived_at": "38f2f24",
   "utils_dir": null,
   "fns": {
     "assignTeacher": {
@@ -30,6 +30,11 @@
       "layer": "db",
       "kind": "query"
     },
+    "getTeacherCourses": {
+      "f": ".api/getTeacherCourses.json",
+      "layer": "db",
+      "kind": "query"
+    },
     "assignTeacherAction": {
       "f": ".api/assignTeacherAction.json",
       "layer": "action",
@@ -54,6 +59,11 @@
       "f": ".api/getCourseTeachersIdAction.json",
       "layer": "action",
       "kind": "server-action"
+    },
+    "getTeacherCoursesAction": {
+      "f": ".api/getTeacherCoursesAction.json",
+      "layer": "action",
+      "kind": "server-action"
     }
   },
   "edges": {
@@ -72,11 +82,15 @@
     "getCourseTeachersIds": [
       "getCourseTeachersIdAction"
     ],
+    "getTeacherCourses": [
+      "getTeacherCoursesAction"
+    ],
     "assignTeacherAction": [],
     "deleteTeacherAction": [],
     "syncCourseTeachersAction": [],
     "getCourseTeachersAction": [],
     "getCourseTeachersIdAction": [],
+    "getTeacherCoursesAction": [],
     "getCourseClassId": [
       "assignTeacher",
       "syncCourseTeachers"

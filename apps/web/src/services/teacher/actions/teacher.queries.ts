@@ -1,7 +1,7 @@
 'use server'
 import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
-import { getTeachers, getTeacher, getTeacherTodaySchedules, getTeacherSchedules, getTeacherCourses } from '../database'
+import { getTeachers, getTeacher, getTeacherTodaySchedules, getTeacherSchedules } from '../database'
 import { mockgetTeachers } from '@/data/mocks/teachers'
 
 export async function getCurrentTeacherId(): Promise<string | null> {
@@ -16,6 +16,7 @@ type GetTeacherSchedulesParams = {
   rangeEnd: Date;
 };
 
+//a supprimer 
 export async function getTeacherSchedulesAction({
   teacherId,
   rangeStart,
@@ -44,17 +45,6 @@ export async function getTeacherTodaySchedulesAction(teacherId: string) {
   }
 }
 
-export async function getTeacherCoursesAction(teacherId: string) {
-  try {
-    const auth = await authAccess()
-    if (!auth.data) return { error: auth.error }
-    const { orgId } = auth.data
-
-    return { data: await getTeacherCourses(teacherId, orgId) }
-  } catch (e) {
-    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
-  }
-}
 
 
 //MOCKS_USE
@@ -82,4 +72,6 @@ export async function getTeacherAction(teacherId: string) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
+
+
 

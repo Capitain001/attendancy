@@ -2,13 +2,13 @@
   "service": "class",
   "path": "src/services/class/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "5306ac7",
-  "generated_at": "2026-08-06T12:17:34.028Z",
+  "derived_at": "38f2f24",
+  "generated_at": "2026-09-17T08:14:16.704Z",
   "fns": {
     "createClass": {
       "name": "createClass",
       "file": "src/services/class/database/class.mutations.ts",
-      "sig": "(data: CreateClassOutput & { orgId: string }) => Promise<{ level: Level; name: string; id: string; programTrackId: string; academicYearId: string; }>",
+      "sig": "(data: CreateClassOutput & { orgId: string }) => Promise<{ level: Level; name: string; id: string; academicYearId: string; programTrackId: string; }>",
       "composes": [
         "getCurrentYear"
       ],
@@ -17,10 +17,20 @@
       "layer": "db",
       "kind": "mutation"
     },
+    "updateClass": {
+      "name": "updateClass",
+      "file": "src/services/class/database/class.mutations.ts",
+      "sig": "(classId: string, orgId: string, data: UpdateClassDataOutput) => Promise<{ level: Level; name: string; id: string; academicYearId: string; programTrackId: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
     "removeClass": {
       "name": "removeClass",
       "file": "src/services/class/database/class.mutations.ts",
-      "sig": "(classId: string, orgId: string) => Promise<{ level: Level; name: string; id: string; createdAt: Date; updatedAt: Date; deletedAt: Date | null; programTrackId: string; programId: string | null; academicYearId: string; }>",
+      "sig": "(classId: string, orgId: string) => Promise<{ level: Level; name: string; id: string; academicYearId: string; createdAt: Date; updatedAt: Date; deletedAt: Date | null; programTrackId: string; programId: string | null; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -30,7 +40,7 @@
     "getClasses": {
       "name": "getClasses",
       "file": "src/services/class/database/class.queries.ts",
-      "sig": "(orgId: string, yearId?: string) => Promise<{ level: Level; name: string; id: string; programTrackId: string; academicYearId: string; academicYear: { name: string; id: string; }; programTrack: { name: string; id: string; }; _count: { courses: number; studentEnrollments: number; }; }[]>",
+      "sig": "({ orgId, yearId, programTrackId, name, level }: { orgId: string; yearId?: string; programTrackId?: string; name?: string; level?: Level }) => Promise<{ level: Level; name: string; academicYear: { name: string; id: string; }; id: string; _count: { studentEnrollments: number; courses: number; }; programTrack: { name: string; id: string; }; academicYearId: string; programTrackId: string; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -40,85 +50,32 @@
     "getClass": {
       "name": "getClass",
       "file": "src/services/class/database/class.queries.ts",
-      "sig": "(classId: string, orgId: string) => Promise<{ level: Level; name: string; id: string; programId: string | null; academicYear: { name: string; id: string; isCurrent: boolean; }; programTrack: { name: string; id: string; }; _count: { courses: number; groups: number; studentEnrollments: number; }; } | null>",
+      "sig": "({ classId, orgId }: { classId: string; orgId: string }) => Promise<{ level: Level; name: string; academicYear: { name: string; id: string; startDate: Date; endDate: Date; isActive: boolean; isCurrent: boolean; }; id: string; _count: { studentEnrollments: number; courses: number; }; programTrack: { ...; }; createdAt: Date; programId: string | null; groups: { ...; }[]; } | nu...",
       "composes": [],
       "rules": [],
       "why_ref": "",
       "layer": "db",
       "kind": "query"
     },
-    "getClassGroupsAction": {
-      "name": "getClassGroupsAction",
-      "file": "src/services/class/actions/class.group-actions.ts",
-      "sig": "(input: { classId: string }) => Promise<{ error: any; data?: undefined; } | { data: { groups: { name: string; id: string; _count: { studentGroups: number; }; description: string | null; }[]; class: { name: string; id: string; } | null; }; error?: undefined; }>",
-      "calls": [],
-      "auth": {},
-      "rules": [],
-      "why_ref": "",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "getGroupEligibleStudentsAction": {
-      "name": "getGroupEligibleStudentsAction",
-      "file": "src/services/class/actions/class.group-actions.ts",
-      "sig": "(input: { classId: string; groupId: string }) => Promise<{ error: any; data?: undefined; } | { data: { students: { id: string; student: { id: string; userId: string; user: { firstName: string | null; lastName: string | null; }; }; }[]; }; error?: undefined; }>",
-      "calls": [],
-      "auth": {},
-      "rules": [],
-      "why_ref": "",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "createClassGroupAction": {
-      "name": "createClassGroupAction",
-      "file": "src/services/class/actions/class.group-actions.ts",
-      "sig": "(input: { classId: string; name: string; description?: string }) => Promise<{ error: any; data?: undefined; } | { data: GroupRow; error?: undefined; }>",
-      "calls": [],
-      "auth": {},
-      "rules": [],
-      "why_ref": "",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "updateClassGroupAction": {
-      "name": "updateClassGroupAction",
-      "file": "src/services/class/actions/class.group-actions.ts",
-      "sig": "(input: { classId: string; groupId: string; name?: string; description?: string | null }) => Promise<{ error: any; data?: undefined; } | { data: GroupRow; error?: undefined; }>",
-      "calls": [],
-      "auth": {},
-      "rules": [],
-      "why_ref": "",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "deleteClassGroupAction": {
-      "name": "deleteClassGroupAction",
-      "file": "src/services/class/actions/class.group-actions.ts",
-      "sig": "(input: { classId: string; groupId: string }) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
-      "calls": [],
-      "auth": {},
-      "rules": [],
-      "why_ref": "",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "setGroupStudentsAction": {
-      "name": "setGroupStudentsAction",
-      "file": "src/services/class/actions/class.group-actions.ts",
-      "sig": "(input: { classId: string; groupId: string; enrollmentIds: string[] }) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
-      "calls": [],
-      "auth": {},
-      "rules": [],
-      "why_ref": "",
-      "layer": "action",
-      "kind": "server-action"
-    },
     "createClassAction": {
       "name": "createClassAction",
       "file": "src/services/class/actions/class.mutations.ts",
-      "sig": "(input: CreateClassInput) => Promise<{ error: any; data?: undefined; } | { data: { level: Level; name: string; id: string; programTrackId: string; academicYearId: string; }; error?: undefined; }>",
+      "sig": "(input: CreateClassInput) => Promise<{ error: string; data?: undefined; } | { data: { level: Level; name: string; id: string; academicYearId: string; programTrackId: string; }; error?: undefined; }>",
       "calls": [
         "createClass"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateClassAction": {
+      "name": "updateClassAction",
+      "file": "src/services/class/actions/class.mutations.ts",
+      "sig": "(input: UpdateClassInput) => Promise<{ error: string; data?: undefined; } | { data: { level: Level; name: string; id: string; academicYearId: string; programTrackId: string; }; error?: undefined; }>",
+      "calls": [
+        "updateClass"
       ],
       "auth": {},
       "rules": [],
@@ -129,7 +86,7 @@
     "removeClassAction": {
       "name": "removeClassAction",
       "file": "src/services/class/actions/class.mutations.ts",
-      "sig": "(classId: string) => Promise<{ error: any; data?: undefined; } | { data: { level: Level; name: string; id: string; createdAt: Date; updatedAt: Date; deletedAt: Date | null; programTrackId: string; programId: string | null; academicYearId: string; }; error?: undefined; }>",
+      "sig": "(classId: string) => Promise<{ error: string; data?: undefined; } | { data: { level: Level; name: string; id: string; academicYearId: string; createdAt: Date; updatedAt: Date; deletedAt: Date | null; programTrackId: string; programId: string | null; }; error?: undefined; }>",
       "calls": [
         "removeClass"
       ],
@@ -142,7 +99,7 @@
     "getClassesAction": {
       "name": "getClassesAction",
       "file": "src/services/class/actions/class.queries.ts",
-      "sig": "(yearId?: string) => Promise<{ error: any; data?: undefined; } | { data: { level: Level; name: string; id: string; programTrackId: string; academicYearId: string; academicYear: { name: string; id: string; }; programTrack: { ...; }; _count: { ...; }; }[]; error?: undefined; }>",
+      "sig": "({ yearId, programTrackId, name, level }: { yearId?: string; programTrackId?: string; name?: string; level?: Level } = {}) => Promise<{ error: string; data?: undefined; } | { data: { level: Level; name: string; academicYear: { name: string; id: string; }; id: string; _count: { studentEnrollments: number; courses: number; }; programTrack: { ...; }; academicYearId: string; programTrackId: string; }[]; error?: undefined; }>",
       "calls": [
         "getClasses"
       ],
@@ -155,7 +112,7 @@
     "getClassAction": {
       "name": "getClassAction",
       "file": "src/services/class/actions/class.queries.ts",
-      "sig": "(classId: string) => Promise<{ error: any; data?: undefined; } | { data: { level: Level; name: string; id: string; programId: string | null; academicYear: { name: string; id: string; isCurrent: boolean; }; programTrack: { ...; }; _count: { ...; }; } | null; error?: undefined; }>",
+      "sig": "({ classId }: { classId: string }) => Promise<{ error: string; data?: undefined; } | { data: { level: Level; name: string; academicYear: { name: string; id: string; startDate: Date; endDate: Date; isActive: boolean; isCurrent: boolean; }; ... 5 more ...; groups: { ...; }[]; } | null; error?: undefined; }>",
       "calls": [
         "getClass"
       ],
@@ -170,6 +127,9 @@
     "createClass": [
       "createClassAction"
     ],
+    "updateClass": [
+      "updateClassAction"
+    ],
     "removeClass": [
       "removeClassAction"
     ],
@@ -179,13 +139,8 @@
     "getClass": [
       "getClassAction"
     ],
-    "getClassGroupsAction": [],
-    "getGroupEligibleStudentsAction": [],
-    "createClassGroupAction": [],
-    "updateClassGroupAction": [],
-    "deleteClassGroupAction": [],
-    "setGroupStudentsAction": [],
     "createClassAction": [],
+    "updateClassAction": [],
     "removeClassAction": [],
     "getClassesAction": [],
     "getClassAction": [],

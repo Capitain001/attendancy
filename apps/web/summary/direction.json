@@ -2,8 +2,8 @@
   "service": "direction",
   "path": "src/services/direction/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "5306ac7",
-  "generated_at": "2026-08-06T12:17:34.172Z",
+  "derived_at": "38f2f24",
+  "generated_at": "2026-09-17T08:14:16.789Z",
   "fns": {
     "assignFunctionsToMember": {
       "name": "assignFunctionsToMember",
@@ -48,7 +48,7 @@
     "getDirectionMembers": {
       "name": "getDirectionMembers",
       "file": "src/services/direction/database/direction.queries.ts",
-      "sig": "(orgId: string, functionId?: string) => Promise<{ user: { id: string; firstName: string | null; lastName: string | null; email: string; phone: string | null; avatar_url: string | null; status: UserStatus; functions: { function: { ...; }; assignedAt: Date; assignedBy: string | null; }[]; }; id: string; userId: string; orgId: string; createdAt: Date; }[]>",
+      "sig": "(orgId: string, functionId?: string) => Promise<{ id: string; orgId: string; user: { id: string; email: string; avatar_url: string | null; phone: string | null; status: UserStatus; firstName: string | null; lastName: string | null; functions: { ...; }[]; }; createdAt: Date; userId: string; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -58,7 +58,7 @@
     "getDirectionMember": {
       "name": "getDirectionMember",
       "file": "src/services/direction/database/direction.queries.ts",
-      "sig": "(directionId: string, orgId: string) => Promise<{ user: { id: string; firstName: string | null; lastName: string | null; email: string; phone: string | null; avatar_url: string | null; status: UserStatus; functions: { ...; }[]; }; id: string; userId: string; orgId: string; createdAt: Date; } | null>",
+      "sig": "(directionId: string, orgId: string) => Promise<{ id: string; orgId: string; user: { id: string; email: string; avatar_url: string | null; phone: string | null; status: UserStatus; firstName: string | null; lastName: string | null; functions: { ...; }[]; }; createdAt: Date; userId: string; } | null>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -68,7 +68,7 @@
     "getDirectionMemberByUserId": {
       "name": "getDirectionMemberByUserId",
       "file": "src/services/direction/database/direction.queries.ts",
-      "sig": "(userId: string, orgId: string) => Promise<{ user: { id: string; firstName: string | null; lastName: string | null; email: string; phone: string | null; avatar_url: string | null; status: UserStatus; functions: { ...; }[]; }; id: string; userId: string; orgId: string; createdAt: Date; } | null>",
+      "sig": "(userId: string, orgId: string) => Promise<{ id: string; orgId: string; user: { id: string; email: string; avatar_url: string | null; phone: string | null; status: UserStatus; firstName: string | null; lastName: string | null; functions: { ...; }[]; }; createdAt: Date; userId: string; } | null>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -78,7 +78,7 @@
     "assignFunctionsToMemberAction": {
       "name": "assignFunctionsToMemberAction",
       "file": "src/services/direction/actions/direction.mutations.ts",
-      "sig": "(params: AssignFunctionsParams) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
+      "sig": "(params: AssignFunctionsParams) => Promise<{ error: string; data?: undefined; } | { data: true; error?: undefined; }>",
       "calls": [
         "assignFunctionsToMember"
       ],
@@ -91,7 +91,7 @@
     "revokeFunctionsFromMemberAction": {
       "name": "revokeFunctionsFromMemberAction",
       "file": "src/services/direction/actions/direction.mutations.ts",
-      "sig": "(userId: string, functionIds: string[]) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
+      "sig": "(userId: string, functionIds: string[]) => Promise<{ error: string; data?: undefined; } | { data: true; error?: undefined; }>",
       "calls": [
         "revokeFunctionsFromMember"
       ],
@@ -104,7 +104,7 @@
     "updateMemberFunctionsAction": {
       "name": "updateMemberFunctionsAction",
       "file": "src/services/direction/actions/direction.mutations.ts",
-      "sig": "(params: AssignFunctionsParams) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
+      "sig": "(params: AssignFunctionsParams) => Promise<{ error: string; data?: undefined; } | { data: true; error?: undefined; }>",
       "calls": [
         "updateMemberFunctions"
       ],
@@ -117,7 +117,7 @@
     "deleteDirectionMemberAction": {
       "name": "deleteDirectionMemberAction",
       "file": "src/services/direction/actions/direction.mutations.ts",
-      "sig": "(directionId: string) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
+      "sig": "(directionId: string) => Promise<{ error: string; data?: undefined; } | { data: true; error?: undefined; }>",
       "calls": [
         "removeDirectionMember"
       ],
@@ -130,7 +130,7 @@
     "getDirectionMembersAction": {
       "name": "getDirectionMembersAction",
       "file": "src/services/direction/actions/direction.queries.ts",
-      "sig": "(params?: { functionId?: string }) => Promise<{ error: any; data?: undefined; } | { data: { user: { id: string; firstName: string | null; lastName: string | null; email: string; phone: string | null; avatar_url: string | null; status: UserStatus; functions: { ...; }[]; }; id: string; userId: string; orgId: string; createdAt: Date; }[]; error?: undefined...",
+      "sig": "(params?: { functionId?: string }) => Promise<{ error: string; data?: undefined; } | { data: { id: string; orgId: string; user: { id: string; email: string; avatar_url: string | null; phone: string | null; status: UserStatus; firstName: string | null; lastName: string | null; functions: { ...; }[]; }; createdAt: Date; userId: string; }[]; error?: undefi...",
       "calls": [
         "getDirectionMembers"
       ],
@@ -143,7 +143,7 @@
     "getDirectionMemberAction": {
       "name": "getDirectionMemberAction",
       "file": "src/services/direction/actions/direction.queries.ts",
-      "sig": "(directionId: string) => Promise<{ error: any; data?: undefined; } | { data: { user: { id: string; firstName: string | null; lastName: string | null; email: string; phone: string | null; avatar_url: string | null; status: UserStatus; functions: { ...; }[]; }; id: string; userId: string; orgId: string; createdAt: Date; }; error?: undefined; }>",
+      "sig": "(directionId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; orgId: string; user: { id: string; email: string; avatar_url: string | null; phone: string | null; status: UserStatus; firstName: string | null; lastName: string | null; functions: { ...; }[]; }; createdAt: Date; userId: string; }; error?: undefine...",
       "calls": [
         "getDirectionMember"
       ],
@@ -156,7 +156,7 @@
     "getDirectionMemberByUserIdAction": {
       "name": "getDirectionMemberByUserIdAction",
       "file": "src/services/direction/actions/direction.queries.ts",
-      "sig": "(userId: string) => Promise<{ error: any; data?: undefined; } | { data: { user: { id: string; firstName: string | null; lastName: string | null; email: string; phone: string | null; avatar_url: string | null; status: UserStatus; functions: { ...; }[]; }; id: string; userId: string; orgId: string; createdAt: Date; }; error?: undefined; }>",
+      "sig": "(userId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; orgId: string; user: { id: string; email: string; avatar_url: string | null; phone: string | null; status: UserStatus; firstName: string | null; lastName: string | null; functions: { ...; }[]; }; createdAt: Date; userId: string; }; error?: undefine...",
       "calls": [
         "getDirectionMemberByUserId"
       ],

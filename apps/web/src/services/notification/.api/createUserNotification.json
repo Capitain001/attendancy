@@ -1,7 +1,7 @@
 {
   "name": "createUserNotification",
   "file": "src/services/notification/database/notification.mutations.ts",
-  "sig": "(params: { userId: string data: CreateNotificationOutput }) => Promise<{ id: string; message: string; type: NotificationType; read: boolean; metadata: JsonValue; createdAt: Date; updatedAt: Date; scheduleId: string | null; }>",
+  "sig": "(params: { userId: string data: CreateNotificationOutput }) => Promise<{ id: string; type: NotificationType; metadata: JsonValue; message: string; scheduleId: string | null; createdAt: Date; updatedAt: Date; read: boolean; }>",
   "composes": [],
   "rules": [],
   "why_ref": ""

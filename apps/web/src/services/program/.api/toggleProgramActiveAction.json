@@ -1,7 +1,7 @@
 {
   "name": "toggleProgramActiveAction",
   "file": "src/services/program/actions/program.mutations.ts",
-  "sig": "({ programId, isActive }: { programId: string isActive: boolean }) => Promise<{ error: any; data?: undefined; } | { data: { id: string; isActive: boolean; }; error?: undefined; }>",
+  "sig": "({ programId, isActive }: { programId: string isActive: boolean }) => Promise<{ error: string; data?: undefined; } | { data: { id: string; isActive: boolean; }; error?: undefined; }>",
   "calls": [
     "toggleProgramActive"
   ],

@@ -2,36 +2,14 @@
   "service": "ue-template",
   "path": "src/services/ue-template/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "decb56e",
-  "generated_at": "2026-08-06T14:31:10.263Z",
+  "derived_at": "38f2f24",
+  "generated_at": "2026-09-17T08:14:18.647Z",
   "fns": {
-    "importUEFromTemplate": {
-      "name": "importUEFromTemplate",
+    "applyProgramTemplate": {
+      "name": "applyProgramTemplate",
       "file": "src/services/ue-template/database/import.mutations.ts",
-      "sig": "(params: { templateId: string programId: string semester: number orgId: string }) => Promise<{ ueId: string; importedCount: number; importId: string; }>",
-      "composes": [
-        "getUETemplateImport",
-        "getUETemplate",
-        "getUEByCode",
-        "createUE",
-        "createUECourse",
-        "addUEToProgram",
-        "createUETemplateImport"
-      ],
-      "rules": [],
-      "why_ref": "",
-      "layer": "db",
-      "kind": "mutation"
-    },
-    "deleteImportedUE": {
-      "name": "deleteImportedUE",
-      "file": "src/services/ue-template/database/import.mutations.ts",
-      "sig": "(ueId: string, orgId: string) => Promise<void>",
-      "composes": [
-        "getUETemplateImportsByOrg",
-        "removeUE",
-        "deleteUETemplateImport"
-      ],
+      "sig": "(orgId: string, programTemplateId: string) => Promise<{ id: string; orgId: string; createdAt: Date; programId: string | null; departmentId: string | null; programTemplateId: string; trackId: string | null; }>",
+      "composes": [],
       "rules": [],
       "why_ref": "",
       "layer": "db",
@@ -40,77 +18,70 @@
     "getReferentials": {
       "name": "getReferentials",
       "file": "src/services/ue-template/database/referential.queries.ts",
-      "sig": "() => Promise<{ name: string; id: string; country: string; issuer: string; version: string; publishedAt: Date; }[]>",
+      "sig": "() => Promise<{ name: string; id: string; isActive: boolean; createdAt: Date; country: string; issuer: string; version: string; publishedAt: Date; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
       "layer": "db",
       "kind": "query"
     },
-    "getUETemplates": {
-      "name": "getUETemplates",
+    "getReferential": {
+      "name": "getReferential",
       "file": "src/services/ue-template/database/referential.queries.ts",
-      "sig": "(params: GetUETemplatesParams) => Promise<{ name: string; id: string; code: string | null; _count: { elements: number; }; type: UETemplateType; semester: number; domain: string; degree: string; mention: string; speciality: string | null; credits: Decimal; }[]>",
+      "sig": "(referentialId: string) => Promise<{ name: string; id: string; isActive: boolean; createdAt: Date; country: string; issuer: string; version: string; publishedAt: Date; } | null>",
       "composes": [],
       "rules": [],
       "why_ref": "",
       "layer": "db",
       "kind": "query"
     },
-    "getUETemplate": {
-      "name": "getUETemplate",
+    "getReferentialWithPrograms": {
+      "name": "getReferentialWithPrograms",
       "file": "src/services/ue-template/database/referential.queries.ts",
-      "sig": "(templateId: string) => Promise<{ name: string; id: string; code: string | null; type: UETemplateType; semester: number; domain: string; degree: string; mention: string; speciality: string | null; credits: Decimal; elements: { ...; }[]; } | null>",
+      "sig": "(referentialId: string) => Promise<({ programs: ({ programUEs: ({ ueTemplate: { elements: { name: string; id: string; settings: JsonValue; credits: number; description: string | null; duration: number | null; code: string; order: number; templateId: string; }[]; } & { ...; }; } & { ...; })[]; } & { ...; })[]; } & { ...; }) | null>",
       "composes": [],
       "rules": [],
       "why_ref": "",
       "layer": "db",
       "kind": "query"
     },
-    "createUETemplateImport": {
-      "name": "createUETemplateImport",
-      "file": "src/services/ue-template/database/template.mutations.ts",
-      "sig": "(params: { templateId: string orgId: string ueId: string }) => Promise<{ id: string; orgId: string; templateId: string; ueId: string; importedAt: Date; }>",
-      "composes": [],
-      "rules": [],
-      "why_ref": "",
-      "layer": "db",
-      "kind": "mutation"
-    },
-    "deleteUETemplateImport": {
-      "name": "deleteUETemplateImport",
-      "file": "src/services/ue-template/database/template.mutations.ts",
-      "sig": "(templateId: string, orgId: string) => Promise<void>",
-      "composes": [],
-      "rules": [],
-      "why_ref": "",
-      "layer": "db",
-      "kind": "mutation"
-    },
-    "getUETemplateImport": {
-      "name": "getUETemplateImport",
+    "getProgramTemplates": {
+      "name": "getProgramTemplates",
       "file": "src/services/ue-template/database/template.queries.ts",
-      "sig": "(templateId: string, orgId: string) => Promise<{ id: string; ueId: string; importedAt: Date; } | null>",
+      "sig": "(referentialId: string) => Promise<({ programUEs: ({ ueTemplate: { elements: { name: string; id: string; settings: JsonValue; credits: number; description: string | null; duration: number | null; code: string; order: number; templateId: string; }[]; } & { ...; }; } & { ...; })[]; } & { ...; })[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
       "layer": "db",
       "kind": "query"
     },
-    "getUETemplateImportsByOrg": {
-      "name": "getUETemplateImportsByOrg",
+    "getOrgProgramTemplates": {
+      "name": "getOrgProgramTemplates",
       "file": "src/services/ue-template/database/template.queries.ts",
-      "sig": "(orgId: string) => Promise<{ templateId: string; ueId: string; importedAt: Date; }[]>",
+      "sig": "(orgId: string) => Promise<({ programTemplate: { level: Level; id: string; createdAt: Date; updatedAt: Date; domain: string; referentialId: string; mention: string; specialty: string; degree: DegreeType; profile: string | null; competencies: string | null; outcomes: string | null; }; } & { ...; })[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
       "layer": "db",
       "kind": "query"
+    },
+    "applyProgramsAction": {
+      "name": "applyProgramsAction",
+      "file": "src/services/ue-template/actions/import.mutations.ts",
+      "sig": "(input: ApplyProgramsInput) => Promise<{ error: string; data?: undefined; } | { data: boolean; error?: undefined; }>",
+      "calls": [
+        "applyProgramTemplate"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
     },
     "getReferentialsAction": {
       "name": "getReferentialsAction",
       "file": "src/services/ue-template/actions/referential.queries.ts",
-      "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; country: string; issuer: string; version: string; publishedAt: Date; }[]; error?: undefined; }>",
+      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; isActive: boolean; createdAt: Date; country: string; issuer: string; version: string; publishedAt: Date; }[]; error?: undefined; }>",
       "calls": [
         "getReferentials"
       ],
@@ -120,51 +91,12 @@
       "layer": "action",
       "kind": "server-action"
     },
-    "getUETemplatesAction": {
-      "name": "getUETemplatesAction",
+    "getReferentialAction": {
+      "name": "getReferentialAction",
       "file": "src/services/ue-template/actions/referential.queries.ts",
-      "sig": "(params: GetUETemplatesParams) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; code: string | null; _count: { elements: number; }; type: UETemplateType; semester: number; domain: string; degree: string; mention: string; speciality: string | null; credits: Decimal; }[]; error?: undefined; }>",
+      "sig": "(referentialId: string) => Promise<{ error: string; data?: undefined; } | { data: ({ programs: ({ programUEs: ({ ueTemplate: { elements: { name: string; id: string; settings: JsonValue; credits: number; description: string | null; duration: number | null; code: string; order: number; templateId: string; }[]; } & { ...; }; } & { ...; })[]; } &...",
       "calls": [
-        "getUETemplates"
-      ],
-      "auth": {},
-      "rules": [],
-      "why_ref": "",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "getUETemplateImportsByOrgAction": {
-      "name": "getUETemplateImportsByOrgAction",
-      "file": "src/services/ue-template/actions/referential.queries.ts",
-      "sig": "() => Promise<{ error: any; data?: undefined; } | { data: { templateId: string; ueId: string; importedAt: Date; }[]; error?: undefined; }>",
-      "calls": [
-        "getUETemplateImportsByOrg"
-      ],
-      "auth": {},
-      "rules": [],
-      "why_ref": "",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "importUEFromTemplateAction": {
-      "name": "importUEFromTemplateAction",
-      "file": "src/services/ue-template/actions/template.mutations.ts",
-      "sig": "(input: ImportUETemplateInput) => Promise<{ error: any; data?: undefined; } | { data: { ueId: string; importedCount: number; importId: string; }; error?: undefined; }>",
-      "calls": [
-        "importUEFromTemplate"
-      ],
-      "auth": {},
-      "rules": [],
-      "why_ref": "",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "deleteUETemplateImportAction": {
-      "name": "deleteUETemplateImportAction",
-      "file": "src/services/ue-template/actions/template.mutations.ts",
-      "sig": "({ ueId }: { ueId: string }) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
-      "calls": [
-        "deleteImportedUE"
+        "getReferentialWithPrograms"
       ],
       "auth": {},
       "rules": [],
@@ -174,60 +106,21 @@
     }
   },
   "edges": {
-    "importUEFromTemplate": [
-      "importUEFromTemplateAction"
-    ],
-    "deleteImportedUE": [
-      "deleteUETemplateImportAction"
+    "applyProgramTemplate": [
+      "applyProgramsAction"
     ],
     "getReferentials": [
       "getReferentialsAction"
     ],
-    "getUETemplates": [
-      "getUETemplatesAction"
+    "getReferential": [],
+    "getReferentialWithPrograms": [
+      "getReferentialAction"
     ],
-    "getUETemplate": [
-      "importUEFromTemplate"
-    ],
-    "createUETemplateImport": [
-      "importUEFromTemplate"
-    ],
-    "deleteUETemplateImport": [
-      "deleteImportedUE"
-    ],
-    "getUETemplateImport": [
-      "importUEFromTemplate"
-    ],
-    "getUETemplateImportsByOrg": [
-      "deleteImportedUE",
-      "getUETemplateImportsByOrgAction"
-    ],
+    "getProgramTemplates": [],
+    "getOrgProgramTemplates": [],
+    "applyProgramsAction": [],
     "getReferentialsAction": [],
-    "getUETemplatesAction": [],
-    "getUETemplateImportsByOrgAction": [],
-    "importUEFromTemplateAction": [],
-    "deleteUETemplateImportAction": [],
-    "getUEByCode": [
-      "importUEFromTemplate"
-    ],
-    "createUE": [
-      "importUEFromTemplate"
-    ],
-    "createUECourse": [
-      "importUEFromTemplate"
-    ],
-    "addUEToProgram": [
-      "importUEFromTemplate"
-    ],
-    "removeUE": [
-      "deleteImportedUE"
-    ]
+    "getReferentialAction": []
   },
-  "deps": {
-    "getUEByCode": "ue",
-    "createUE": "ue",
-    "createUECourse": "ue-course",
-    "addUEToProgram": "program-ue",
-    "removeUE": "ue"
-  }
+  "deps": {}
 }

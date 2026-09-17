@@ -2,13 +2,13 @@
   "service": "device",
   "path": "src/services/device/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "d45ce76",
-  "generated_at": "2026-09-06T22:01:28.317Z",
+  "derived_at": "38f2f24",
+  "generated_at": "2026-09-17T08:14:16.782Z",
   "fns": {
     "upsertDeviceOnLogin": {
       "name": "upsertDeviceOnLogin",
       "file": "src/services/device/database/device.mutations.ts",
-      "sig": "(input: { userId: string deviceId: string userAgent: string | null ipAddress: string | null authSessionId: string | null }) => Promise<{ device: { id: string; revokedAt: Date | null; }; session: { id: string; deviceId: string; createdAt: Date; }; }>",
+      "sig": "(input: { userId: string deviceId: string userAgent: string | null ipAddress: string | null authSessionId: string | null }) => Promise<{ device: { id: string; revokedAt: Date | null; }; session: { id: string; createdAt: Date; deviceId: string; }; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -55,6 +55,26 @@
       "layer": "db",
       "kind": "mutation"
     },
+    "updateDeviceLabel": {
+      "name": "updateDeviceLabel",
+      "file": "src/services/device/database/device.mutations.ts",
+      "sig": "(deviceId: string, userId: string, label: string | null) => Promise<{ id: string; label: string | null; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "setDeviceTrusted": {
+      "name": "setDeviceTrusted",
+      "file": "src/services/device/database/device.mutations.ts",
+      "sig": "(deviceId: string, userId: string, isTrusted: boolean) => Promise<{ id: string; isTrusted: boolean; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
     "getUserDevices": {
       "name": "getUserDevices",
       "file": "src/services/device/database/device.queries.ts",
@@ -68,7 +88,7 @@
     "getUserSessions": {
       "name": "getUserSessions",
       "file": "src/services/device/database/device.queries.ts",
-      "sig": "(userId: string, deviceId?: string) => Promise<{ id: string; revokedAt: Date | null; ipAddress: string | null; orgId: string | null; status: UserSessionStatus; createdAt: Date; lastActivityAt: Date; revokedReason: SessionRevokeReason | null; device: { ...; }; }[]>",
+      "sig": "(userId: string, deviceId?: string) => Promise<{ id: string; orgId: string | null; status: UserSessionStatus; createdAt: Date; ipAddress: string | null; revokedAt: Date | null; lastActivityAt: Date; revokedReason: SessionRevokeReason | null; device: { ...; }; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -78,7 +98,7 @@
     "getSession": {
       "name": "getSession",
       "file": "src/services/device/database/device.queries.ts",
-      "sig": "(sessionId: string) => Promise<{ id: string; userId: string; orgId: string | null; status: UserSessionStatus; authSessionId: string | null; } | null>",
+      "sig": "(sessionId: string) => Promise<{ id: string; orgId: string | null; status: UserSessionStatus; userId: string; authSessionId: string | null; } | null>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -88,9 +108,22 @@
     "captureLoginDeviceAction": {
       "name": "captureLoginDeviceAction",
       "file": "src/services/device/actions/device.mutations.ts",
-      "sig": "(input: CaptureLoginDeviceInput) => Promise<{ error: string; data?: undefined; } | { data: { device: { id: string; revokedAt: Date | null; }; session: { id: string; deviceId: string; createdAt: Date; }; }; error?: undefined; }>",
+      "sig": "(input: CaptureLoginDeviceInput) => Promise<{ error: string; data?: undefined; } | { data: { device: { id: string; revokedAt: Date | null; }; session: { id: string; createdAt: Date; deviceId: string; }; }; error?: undefined; }>",
       "calls": [
         "upsertDeviceOnLogin"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "captureLoginDevice": {
+      "name": "captureLoginDevice",
+      "file": "src/services/device/actions/device.mutations.ts",
+      "sig": "(userId: string, accessToken: string) => Promise<{ error: string; data?: undefined; } | { data: { device: { id: string; revokedAt: Date | null; }; session: { id: string; createdAt: Date; deviceId: string; }; }; error?: undefined; }>",
+      "calls": [
+        "captureLoginDeviceAction"
       ],
       "auth": {},
       "rules": [],
@@ -137,6 +170,32 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "updateDeviceLabelAction": {
+      "name": "updateDeviceLabelAction",
+      "file": "src/services/device/actions/device.mutations.ts",
+      "sig": "(input: UpdateDeviceLabelInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; label: string | null; }; error?: undefined; }>",
+      "calls": [
+        "updateDeviceLabel"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "setDeviceTrustedAction": {
+      "name": "setDeviceTrustedAction",
+      "file": "src/services/device/actions/device.mutations.ts",
+      "sig": "(input: SetDeviceTrustedInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; isTrusted: boolean; }; error?: undefined; }>",
+      "calls": [
+        "setDeviceTrusted"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "getMyDevicesAction": {
       "name": "getMyDevicesAction",
       "file": "src/services/device/actions/device.queries.ts",
@@ -153,7 +212,7 @@
     "getMySessionsAction": {
       "name": "getMySessionsAction",
       "file": "src/services/device/actions/device.queries.ts",
-      "sig": "(input?: { deviceId?: string }) => Promise<{ error: string; data?: undefined; } | { data: { id: string; revokedAt: Date | null; ipAddress: string | null; orgId: string | null; status: UserSessionStatus; createdAt: Date; lastActivityAt: Date; revokedReason: SessionRevokeReason | null; device: { ...; }; }[]; error?: undefined; }>",
+      "sig": "(input?: { deviceId?: string }) => Promise<{ error: string; data?: undefined; } | { data: { id: string; orgId: string | null; status: UserSessionStatus; createdAt: Date; ipAddress: string | null; revokedAt: Date | null; lastActivityAt: Date; revokedReason: SessionRevokeReason | null; device: { ...; }; }[]; error?: undefined; }>",
       "calls": [
         "getUserSessions"
       ],
@@ -178,6 +237,12 @@
       "revokeDeviceAction"
     ],
     "touchSessionActivity": [],
+    "updateDeviceLabel": [
+      "updateDeviceLabelAction"
+    ],
+    "setDeviceTrusted": [
+      "setDeviceTrustedAction"
+    ],
     "getUserDevices": [
       "getMyDevicesAction"
     ],
@@ -185,10 +250,15 @@
       "getMySessionsAction"
     ],
     "getSession": [],
-    "captureLoginDeviceAction": [],
+    "captureLoginDeviceAction": [
+      "captureLoginDevice"
+    ],
+    "captureLoginDevice": [],
     "endSessionOnLogoutAction": [],
     "revokeSessionAction": [],
     "revokeDeviceAction": [],
+    "updateDeviceLabelAction": [],
+    "setDeviceTrustedAction": [],
     "getMyDevicesAction": [],
     "getMySessionsAction": []
   },

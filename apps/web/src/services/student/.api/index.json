@@ -2,7 +2,7 @@
   "service": "student",
   "path": "src/services/student/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "6803174",
+  "derived_at": "38f2f24",
   "utils_dir": null,
   "fns": {
     "getStudentsStats": {
@@ -216,6 +216,9 @@
     "getStudentByIdForDirectionAction": [],
     "getParentsForDirectionAction": [],
     "getDirectionStudentsAction": [],
+    "getSchedules": [
+      "getStudentSchedules"
+    ],
     "getActiveSessions": [
       "getStudentActiveSession"
     ],
@@ -225,6 +228,7 @@
     ]
   },
   "deps": {
+    "getSchedules": "schedule",
     "getActiveSessions": "session",
     "getUserAttendance": "attendance"
   }

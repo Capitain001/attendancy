@@ -2,8 +2,8 @@
   "service": "ue-course",
   "path": "src/services/ue-course/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "2dc6b24",
-  "generated_at": "2026-08-06T12:17:34.989Z",
+  "derived_at": "38f2f24",
+  "generated_at": "2026-09-17T08:14:18.469Z",
   "fns": {
     "createUECourse": {
       "name": "createUECourse",
@@ -18,7 +18,7 @@
     "updateUECourse": {
       "name": "updateUECourse",
       "file": "src/services/ue-course/database/ue-course.mutations.ts",
-      "sig": "(ueCourseId: string, orgId: string, data: UpdateUECourseData) => Promise<{ name: string; id: string; ueId: string; code: string | null; }>",
+      "sig": "(ueCourseId: string, orgId: string, data: UpdateUECourseOutput) => Promise<{ name: string; id: string; ueId: string; code: string | null; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -38,7 +38,7 @@
     "getUECoursesByUE": {
       "name": "getUECoursesByUE",
       "file": "src/services/ue-course/database/ue-course.queries.ts",
-      "sig": "(ueId: string, orgId: string) => Promise<{ name: string; id: string; description: string | null; credits: number; duration: number; code: string | null; order: number | null; }[]>",
+      "sig": "(ueId: string, orgId: string) => Promise<{ name: string; id: string; credits: number; description: string | null; duration: number; code: string | null; order: number | null; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -48,7 +48,7 @@
     "createUECourseAction": {
       "name": "createUECourseAction",
       "file": "src/services/ue-course/actions/ue-course.mutations.ts",
-      "sig": "(input: CreateUECourseInput) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; ueId: string; code: string | null; }; error?: undefined; }>",
+      "sig": "(input: CreateUECourseInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; ueId: string; code: string | null; }; error?: undefined; }>",
       "calls": [
         "createUECourse"
       ],
@@ -61,7 +61,7 @@
     "updateUECourseAction": {
       "name": "updateUECourseAction",
       "file": "src/services/ue-course/actions/ue-course.mutations.ts",
-      "sig": "(ueCourseId: string, data: UpdateUECourseData) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; ueId: string; code: string | null; }; error?: undefined; }>",
+      "sig": "({ ueCourseId, data }: { ueCourseId: string; data: UpdateUECourseInput }) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; ueId: string; code: string | null; }; error?: undefined; }>",
       "calls": [
         "updateUECourse"
       ],
@@ -74,7 +74,7 @@
     "removeUECourseAction": {
       "name": "removeUECourseAction",
       "file": "src/services/ue-course/actions/ue-course.mutations.ts",
-      "sig": "(ueCourseId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; ueId: string; }; error?: undefined; }>",
+      "sig": "(ueCourseId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; ueId: string; }; error?: undefined; }>",
       "calls": [
         "removeUECourse"
       ],
@@ -87,7 +87,7 @@
     "getUECoursesAction": {
       "name": "getUECoursesAction",
       "file": "src/services/ue-course/actions/ue-course.queries.ts",
-      "sig": "(ueId: string) => Promise<{ error: any; data?: undefined; } | { data: { name: string; id: string; description: string | null; credits: number; duration: number; code: string | null; order: number | null; }[]; error?: undefined; }>",
+      "sig": "(ueId: string) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; credits: number; description: string | null; duration: number; code: string | null; order: number | null; }[]; error?: undefined; }>",
       "calls": [
         "getUECoursesByUE"
       ],

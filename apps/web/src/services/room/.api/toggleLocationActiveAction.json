@@ -1,7 +1,7 @@
 {
   "name": "toggleLocationActiveAction",
   "file": "src/services/room/actions/room.mutations.ts",
-  "sig": "(locationId: string) => Promise<{ error: any; data?: undefined; } | { data: { id: string; active: boolean; }; error?: undefined; }>",
+  "sig": "(locationId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; active: boolean; }; error?: undefined; }>",
   "calls": [
     "toggleLocationActive"
   ],

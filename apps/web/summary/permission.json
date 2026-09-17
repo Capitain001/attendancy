@@ -2,13 +2,13 @@
   "service": "permission",
   "path": "src/services/permission/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "60bd946",
-  "generated_at": "2026-09-07T14:20:37.144Z",
+  "derived_at": "38f2f24",
+  "generated_at": "2026-09-17T08:14:17.953Z",
   "fns": {
     "grantPermission": {
       "name": "grantPermission",
       "file": "src/services/permission/database/permission.mutations.ts",
-      "sig": "(data: CreatePermissionData) => Promise<{ id: string; userId: string | null; functionId: string | null; action: Action; resource: Resource | null; resourceId: string | null; }>",
+      "sig": "(data: CreatePermissionData) => Promise<{ id: string; userId: string | null; action: Action; resource: Resource | null; resourceId: string | null; functionId: string | null; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -28,7 +28,7 @@
     "getUserPermissions": {
       "name": "getUserPermissions",
       "file": "src/services/permission/database/permission.queries.ts",
-      "sig": "(userId: string, orgId: string) => Promise<{ id: string; action: Action; resource: Resource | null; resourceId: string | null; description: string | null; }[]>",
+      "sig": "(userId: string, orgId: string) => Promise<{ id: string; description: string | null; action: Action; resource: Resource | null; resourceId: string | null; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -38,7 +38,7 @@
     "getFunctionPermissions": {
       "name": "getFunctionPermissions",
       "file": "src/services/permission/database/permission.queries.ts",
-      "sig": "(functionId: string, orgId: string) => Promise<{ id: string; action: Action; resource: Resource | null; resourceId: string | null; description: string | null; }[]>",
+      "sig": "(functionId: string, orgId: string) => Promise<{ id: string; description: string | null; action: Action; resource: Resource | null; resourceId: string | null; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -61,7 +61,7 @@
     "grantPermissionAction": {
       "name": "grantPermissionAction",
       "file": "src/services/permission/actions/permission.mutations.ts",
-      "sig": "(input: GrantPermissionInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; userId: string | null; functionId: string | null; action: Action; resource: Resource | null; resourceId: string | null; }; error?: undefined; }>",
+      "sig": "(input: GrantPermissionInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; userId: string | null; action: Action; resource: Resource | null; resourceId: string | null; functionId: string | null; }; error?: undefined; }>",
       "calls": [
         "grantPermission"
       ],
@@ -87,7 +87,7 @@
     "getUserPermissionsAction": {
       "name": "getUserPermissionsAction",
       "file": "src/services/permission/actions/permission.queries.ts",
-      "sig": "(input: GetUserPermissionsInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; action: Action; resource: Resource | null; resourceId: string | null; description: string | null; }[]; error?: undefined; }>",
+      "sig": "(input: GetUserPermissionsInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; description: string | null; action: Action; resource: Resource | null; resourceId: string | null; }[]; error?: undefined; }>",
       "calls": [
         "getUserPermissions"
       ],
@@ -100,7 +100,7 @@
     "getCurrentUserPermissionsAction": {
       "name": "getCurrentUserPermissionsAction",
       "file": "src/services/permission/actions/permission.queries.ts",
-      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { id: string; action: Action; resource: Resource | null; resourceId: string | null; description: string | null; }[]; error?: undefined; }>",
+      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { id: string; description: string | null; action: Action; resource: Resource | null; resourceId: string | null; }[]; error?: undefined; }>",
       "calls": [
         "getUserPermissions"
       ],
@@ -113,7 +113,7 @@
     "getFunctionPermissionsAction": {
       "name": "getFunctionPermissionsAction",
       "file": "src/services/permission/actions/permission.queries.ts",
-      "sig": "(input: GetFunctionPermissionsInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; action: Action; resource: Resource | null; resourceId: string | null; description: string | null; }[]; error?: undefined; }>",
+      "sig": "(input: GetFunctionPermissionsInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; description: string | null; action: Action; resource: Resource | null; resourceId: string | null; }[]; error?: undefined; }>",
       "calls": [
         "getFunctionPermissions"
       ],

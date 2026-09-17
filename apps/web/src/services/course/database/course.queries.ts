@@ -155,3 +155,4 @@ export async function getCourses(orgId: string, classId?: string, limit?: number
     ...(limit ? { take: limit } : {}),
   })
 }
+

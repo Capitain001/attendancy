@@ -2,7 +2,7 @@
   "service": "device",
   "path": "src/services/device/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "d45ce76",
+  "derived_at": "38f2f24",
   "utils_dir": null,
   "fns": {
     "upsertDeviceOnLogin": {
@@ -30,6 +30,16 @@
       "layer": "db",
       "kind": "mutation"
     },
+    "updateDeviceLabel": {
+      "f": ".api/updateDeviceLabel.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "setDeviceTrusted": {
+      "f": ".api/setDeviceTrusted.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
     "getUserDevices": {
       "f": ".api/getUserDevices.json",
       "layer": "db",
@@ -50,6 +60,11 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "captureLoginDevice": {
+      "f": ".api/captureLoginDevice.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "endSessionOnLogoutAction": {
       "f": ".api/endSessionOnLogoutAction.json",
       "layer": "action",
@@ -62,6 +77,16 @@
     },
     "revokeDeviceAction": {
       "f": ".api/revokeDeviceAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateDeviceLabelAction": {
+      "f": ".api/updateDeviceLabelAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "setDeviceTrustedAction": {
+      "f": ".api/setDeviceTrustedAction.json",
       "layer": "action",
       "kind": "server-action"
     },
@@ -90,6 +115,12 @@
       "revokeDeviceAction"
     ],
     "touchSessionActivity": [],
+    "updateDeviceLabel": [
+      "updateDeviceLabelAction"
+    ],
+    "setDeviceTrusted": [
+      "setDeviceTrustedAction"
+    ],
     "getUserDevices": [
       "getMyDevicesAction"
     ],
@@ -97,10 +128,15 @@
       "getMySessionsAction"
     ],
     "getSession": [],
-    "captureLoginDeviceAction": [],
+    "captureLoginDeviceAction": [
+      "captureLoginDevice"
+    ],
+    "captureLoginDevice": [],
     "endSessionOnLogoutAction": [],
     "revokeSessionAction": [],
     "revokeDeviceAction": [],
+    "updateDeviceLabelAction": [],
+    "setDeviceTrustedAction": [],
     "getMyDevicesAction": [],
     "getMySessionsAction": []
   },

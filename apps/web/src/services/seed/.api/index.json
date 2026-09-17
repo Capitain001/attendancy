@@ -1,0 +1,42 @@
+{
+  "service": "seed",
+  "path": "src/services/seed/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "38f2f24",
+  "utils_dir": null,
+  "fns": {
+    "generateTeachersAction": {
+      "f": ".api/generateTeachersAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "generateStudentsAction": {
+      "f": ".api/generateStudentsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "generateParentsAction": {
+      "f": ".api/generateParentsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "linkRandomTeachersToCoursesAction": {
+      "f": ".api/linkRandomTeachersToCoursesAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "purgeSeedDataAction": {
+      "f": ".api/purgeSeedDataAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "generateTeachersAction": [],
+    "generateStudentsAction": [],
+    "generateParentsAction": [],
+    "linkRandomTeachersToCoursesAction": [],
+    "purgeSeedDataAction": []
+  },
+  "deps": {}
+}

@@ -1,0 +1,51 @@
+{
+  "service": "curriculum",
+  "path": "src/services/curriculum/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "38f2f24",
+  "generated_at": "2026-09-17T08:14:16.770Z",
+  "fns": {
+    "applyProgramToClass": {
+      "name": "applyProgramToClass",
+      "file": "src/services/curriculum/database/curriculum.mutations.ts",
+      "sig": "({ classId, orgId }: { classId: string orgId: string }) => Promise<{ termsCreated: { name: string; id: string; startDate: Date | null; endDate: Date | null; createdAt: Date; updatedAt: Date; classId: string; order: number; lockedAt: Date | null; }[]; coursesCreated: { ...; }[]; coursesSkipped: number; }>",
+      "composes": [
+        "generateTermsFromProgram",
+        "generateCoursesFromProgram"
+      ],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "applyProgramToClassAction": {
+      "name": "applyProgramToClassAction",
+      "file": "src/services/curriculum/actions/curriculum.mutations.ts",
+      "sig": "(classId: string) => Promise<{ error: string; data?: undefined; } | { data: { termsCreated: { name: string; id: string; startDate: Date | null; endDate: Date | null; createdAt: Date; updatedAt: Date; classId: string; order: number; lockedAt: Date | null; }[]; coursesCreated: { ...; }[]; coursesSkipped: number; }; error?: undefined; }>",
+      "calls": [
+        "applyProgramToClass"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "applyProgramToClass": [
+      "applyProgramToClassAction"
+    ],
+    "applyProgramToClassAction": [],
+    "generateTermsFromProgram": [
+      "applyProgramToClass"
+    ],
+    "generateCoursesFromProgram": [
+      "applyProgramToClass"
+    ]
+  },
+  "deps": {
+    "generateTermsFromProgram": "term",
+    "generateCoursesFromProgram": "course"
+  }
+}

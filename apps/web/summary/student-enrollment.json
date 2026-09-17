@@ -1,0 +1,255 @@
+{
+  "service": "student-enrollment",
+  "path": "src/services/student-enrollment/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "38f2f24",
+  "generated_at": "2026-09-17T08:14:18.266Z",
+  "fns": {
+    "createStudentEnrollment": {
+      "name": "createStudentEnrollment",
+      "file": "src/services/student-enrollment/database/student-enrollment.mutations.ts",
+      "sig": "(data: CreateStudentEnrollmentOutput, orgId: string) => Promise<{ id: string; studentId: string; classId: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "removeStudentEnrollment": {
+      "name": "removeStudentEnrollment",
+      "file": "src/services/student-enrollment/database/student-enrollment.mutations.ts",
+      "sig": "(studentEnrollmentId: string, orgId: string) => Promise<{ id: string; classId: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateStudentEnrollment": {
+      "name": "updateStudentEnrollment",
+      "file": "src/services/student-enrollment/database/student-enrollment.mutations.ts",
+      "sig": "(studentEnrollmentId: string, orgId: string, data: UpdateStudentEnrollmentDataOutput) => Promise<{ id: string; classId: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "transferStudentEnrollment": {
+      "name": "transferStudentEnrollment",
+      "file": "src/services/student-enrollment/database/student-enrollment.mutations.ts",
+      "sig": "(studentEnrollmentId: string, studentId: string, newClassId: string, orgId: string) => Promise<{ ended: { id: string; classId: string; }; created: { id: string; studentId: string; classId: string; }; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "enrollStudentsInClass": {
+      "name": "enrollStudentsInClass",
+      "file": "src/services/student-enrollment/database/student-enrollment.mutations.ts",
+      "sig": "(data: EnrollStudentsInClassOutput, orgId: string) => Promise<EnrollmentMutationResult[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getStudentsEnrollments": {
+      "name": "getStudentsEnrollments",
+      "file": "src/services/student-enrollment/database/student-enrollment.queries.ts",
+      "sig": "(orgId: string, filters: GetStudentsEnrollmentsFilters = {}) => Promise<{ id: string; student: { id: string; user: { email: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; studentId: string; createdAt: Date; classId: string; studentGroups: { ...; }[]; endedAt: Date | null; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getStudentEnrollmentDetails": {
+      "name": "getStudentEnrollmentDetails",
+      "file": "src/services/student-enrollment/database/student-enrollment.queries.ts",
+      "sig": "(studentEnrollmentId: string, orgId: string) => Promise<{ id: string; studentId: string; createdAt: Date; classId: string; endedAt: Date | null; } | null>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getStudentEnrollmentByClass": {
+      "name": "getStudentEnrollmentByClass",
+      "file": "src/services/student-enrollment/database/student-enrollment.queries.ts",
+      "sig": "(studentId: string, classId: string, orgId: string) => Promise<{ id: string; studentId: string; createdAt: Date; classId: string; endedAt: Date | null; } | null>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "searchStudentsForEnrollment": {
+      "name": "searchStudentsForEnrollment",
+      "file": "src/services/student-enrollment/database/student-enrollment.queries.ts",
+      "sig": "(orgId: string, classId: string, query: string) => Promise<{ id: string; user: { email: string; avatar_url: string | null; phone: string | null; firstName: string | null; lastName: string | null; }; studentEnrollments: { id: string; endedAt: Date | null; }[]; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createStudentEnrollmentAction": {
+      "name": "createStudentEnrollmentAction",
+      "file": "src/services/student-enrollment/actions/student-enrollment.mutations.ts",
+      "sig": "(input: CreateStudentEnrollmentInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; studentId: string; classId: string; }; error?: undefined; }>",
+      "calls": [
+        "createStudentEnrollment"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removeStudentEnrollmentAction": {
+      "name": "removeStudentEnrollmentAction",
+      "file": "src/services/student-enrollment/actions/student-enrollment.mutations.ts",
+      "sig": "(studentEnrollmentId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; classId: string; }; error?: undefined; }>",
+      "calls": [
+        "removeStudentEnrollment"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateStudentEnrollmentAction": {
+      "name": "updateStudentEnrollmentAction",
+      "file": "src/services/student-enrollment/actions/student-enrollment.mutations.ts",
+      "sig": "(input: UpdateStudentEnrollmentInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; classId: string; }; error?: undefined; }>",
+      "calls": [
+        "updateStudentEnrollment"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "transferStudentEnrollmentAction": {
+      "name": "transferStudentEnrollmentAction",
+      "file": "src/services/student-enrollment/actions/student-enrollment.mutations.ts",
+      "sig": "(input: TransferStudentEnrollmentInput) => Promise<{ error: string; data?: undefined; } | { data: { ended: { id: string; classId: string; }; created: { id: string; studentId: string; classId: string; }; }; error?: undefined; }>",
+      "calls": [
+        "transferStudentEnrollment"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "enrollStudentsInClassAction": {
+      "name": "enrollStudentsInClassAction",
+      "file": "src/services/student-enrollment/actions/student-enrollment.mutations.ts",
+      "sig": "(input: EnrollStudentsInClassInput) => Promise<{ error: string; data?: undefined; } | { data: EnrollmentMutationResult[]; error?: undefined; }>",
+      "calls": [
+        "enrollStudentsInClass"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getStudentEnrollmentsAction": {
+      "name": "getStudentEnrollmentsAction",
+      "file": "src/services/student-enrollment/actions/student-enrollment.queries.ts",
+      "sig": "(filters?: GetStudentsEnrollmentsFilters) => Promise<{ error: string; data?: undefined; } | { data: { id: string; student: { id: string; user: { email: string; avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; studentId: string; createdAt: Date; classId: string; studentGroups: { ...; }[]; endedAt: Date | null; }[]; error?: und...",
+      "calls": [
+        "getStudentsEnrollments"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getStudentEnrollmentDetailsAction": {
+      "name": "getStudentEnrollmentDetailsAction",
+      "file": "src/services/student-enrollment/actions/student-enrollment.queries.ts",
+      "sig": "(studentEnrollmentId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; studentId: string; createdAt: Date; classId: string; endedAt: Date | null; } | null; error?: undefined; }>",
+      "calls": [
+        "getStudentEnrollmentDetails"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getStudentEnrollmentByClassAction": {
+      "name": "getStudentEnrollmentByClassAction",
+      "file": "src/services/student-enrollment/actions/student-enrollment.queries.ts",
+      "sig": "(studentId: string, classId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; studentId: string; createdAt: Date; classId: string; endedAt: Date | null; } | null; error?: undefined; }>",
+      "calls": [
+        "getStudentEnrollmentByClass"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "searchStudentsForEnrollmentAction": {
+      "name": "searchStudentsForEnrollmentAction",
+      "file": "src/services/student-enrollment/actions/student-enrollment.queries.ts",
+      "sig": "(input: SearchStudentsForEnrollmentInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; user: { email: string; avatar_url: string | null; phone: string | null; firstName: string | null; lastName: string | null; }; studentEnrollments: { ...; }[]; }[]; error?: undefined; }>",
+      "calls": [
+        "searchStudentsForEnrollment"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createStudentEnrollment": [
+      "createStudentEnrollmentAction"
+    ],
+    "removeStudentEnrollment": [
+      "removeStudentEnrollmentAction"
+    ],
+    "updateStudentEnrollment": [
+      "updateStudentEnrollmentAction"
+    ],
+    "transferStudentEnrollment": [
+      "transferStudentEnrollmentAction"
+    ],
+    "enrollStudentsInClass": [
+      "enrollStudentsInClassAction"
+    ],
+    "getStudentsEnrollments": [
+      "getStudentEnrollmentsAction"
+    ],
+    "getStudentEnrollmentDetails": [
+      "getStudentEnrollmentDetailsAction"
+    ],
+    "getStudentEnrollmentByClass": [
+      "getStudentEnrollmentByClassAction"
+    ],
+    "searchStudentsForEnrollment": [
+      "searchStudentsForEnrollmentAction"
+    ],
+    "createStudentEnrollmentAction": [],
+    "removeStudentEnrollmentAction": [],
+    "updateStudentEnrollmentAction": [],
+    "transferStudentEnrollmentAction": [],
+    "enrollStudentsInClassAction": [],
+    "getStudentEnrollmentsAction": [],
+    "getStudentEnrollmentDetailsAction": [],
+    "getStudentEnrollmentByClassAction": [],
+    "searchStudentsForEnrollmentAction": []
+  },
+  "deps": {}
+}

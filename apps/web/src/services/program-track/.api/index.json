@@ -2,7 +2,7 @@
   "service": "program-track",
   "path": "src/services/program-track/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "45af45e",
+  "derived_at": "38f2f24",
   "utils_dir": null,
   "fns": {
     "createProgramTrack": {

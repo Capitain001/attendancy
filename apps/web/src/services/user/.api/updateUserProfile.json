@@ -1,7 +1,7 @@
 {
   "name": "updateUserProfile",
   "file": "src/services/user/database/user.mutations.ts",
-  "sig": "(userId: string, data: UpdateCurrentUserOutput, orgId: string) => Promise<{ id: string; }>",
+  "sig": "(userId: string, data: UpdateCurrentUserOutput, orgId: string) => Promise<{ id: string; firstName: string | null; lastName: string | null; }>",
   "composes": [],
   "rules": [],
   "why_ref": ""

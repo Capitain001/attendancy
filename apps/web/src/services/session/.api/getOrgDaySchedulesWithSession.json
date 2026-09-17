@@ -1,7 +1,7 @@
 {
   "name": "getOrgDaySchedulesWithSession",
   "file": "src/services/session/database/session.queries.ts",
-  "sig": "(orgId: string, rangeStart: Date, rangeEnd: Date) => Promise<{ class: { id: string; _count: { studentEnrollments: number; }; name: string; }; course: { id: string; name: string; }; group: { id: string; _count: { studentGroups: number; }; name: string; } | null; session: { ...; } | null; ... 7 more ...; attendances: { ...; }[]; }[]>",
+  "sig": "(orgId: string, rangeStart: Date, rangeEnd: Date) => Promise<{ id: string; class: { name: string; id: string; _count: { studentEnrollments: number; }; }; course: { name: string; id: string; }; group: { name: string; id: string; _count: { studentGroups: number; }; } | null; ... 7 more ...; attendances: { ...; }[]; }[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

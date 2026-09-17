@@ -1,7 +1,7 @@
 {
   "name": "getScheduleDays",
   "file": "src/services/schedule/database/schedule.queries.ts",
-  "sig": "(orgId: string, month: string) => Promise<string[]>",
+  "sig": "(orgId: string, month: string, filters: ScheduleDaysFilterParams = {}) => Promise<string[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

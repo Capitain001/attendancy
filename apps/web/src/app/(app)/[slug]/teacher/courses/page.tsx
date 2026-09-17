@@ -1,6 +1,7 @@
 import { connection } from 'next/server'
 import { BookOpen, Star } from 'lucide-react'
-import { getCurrentTeacherId, getTeacherCoursesAction } from '@/services/teacher'
+import { getCurrentTeacherId } from '@/services/teacher'
+import { getTeacherCoursesAction } from '@/services/course-teacher'
 
 export default async function Page() {
   await connection()

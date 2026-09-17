@@ -2,6 +2,7 @@
 // Régénérer : npx tsx scripts/generate/types/types.ts user
 // Pour surcharger un type, définissez-le dans ./types.ts (jamais écrasé).
 
-import { updateUser } from './database'
+import { updateUserProfile, updateUser } from './database'
 
+export type UpdateUserProfileDto = Awaited<ReturnType<typeof updateUserProfile>>
 export type UpdateUserDto = Awaited<ReturnType<typeof updateUser>>

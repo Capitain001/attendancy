@@ -1,7 +1,7 @@
 {
   "name": "updateMemberFunctionsAction",
   "file": "src/services/direction/actions/direction.mutations.ts",
-  "sig": "(params: AssignFunctionsParams) => Promise<{ error: any; data?: undefined; } | { data: true; error?: undefined; }>",
+  "sig": "(params: AssignFunctionsParams) => Promise<{ error: string; data?: undefined; } | { data: true; error?: undefined; }>",
   "calls": [
     "updateMemberFunctions"
   ],

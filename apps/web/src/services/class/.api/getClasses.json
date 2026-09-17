@@ -1,7 +1,7 @@
 {
   "name": "getClasses",
   "file": "src/services/class/database/class.queries.ts",
-  "sig": "({ orgId, yearId, programTrackId, name, level }: { orgId: string; yearId?: string; programTrackId?: string; name?: string; level?: Level }) => Promise<{ level: Level; name: string; id: string; programTrackId: string; academicYearId: string; academicYear: { name: string; id: string; }; programTrack: { name: string; id: string; }; _count: { courses: number; studentEnrollments: number; }; }[]>",
+  "sig": "({ orgId, yearId, programTrackId, name, level }: { orgId: string; yearId?: string; programTrackId?: string; name?: string; level?: Level }) => Promise<{ level: Level; name: string; academicYear: { name: string; id: string; }; id: string; _count: { studentEnrollments: number; courses: number; }; programTrack: { name: string; id: string; }; academicYearId: string; programTrackId: string; }[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

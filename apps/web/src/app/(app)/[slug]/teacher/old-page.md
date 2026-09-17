@@ -3,7 +3,6 @@ import {
   getTeacherAction,
   getTeacherStatsAction,
   getTeacherTodaySchedulesAction,
-  getTeacherCoursesAction,
   getCurrentTeacherId,
 } from "@/services/teacher/actions"
 import { DailyScheduleItem, TeacherDailyTimeline } from "./TeacherDailyTimeline"
@@ -26,7 +25,7 @@ export default async function Page() {
     getTeacherAction(teacherId),
     getTeacherStatsAction(teacherId),
     getTeacherTodaySchedulesAction(teacherId),
-    getTeacherCoursesAction(teacherId),
+    // getTeacherCoursesAction(teacherId),
   ])
 
   const teacher = "data" in teacherRes ? (teacherRes.data ?? null) : null

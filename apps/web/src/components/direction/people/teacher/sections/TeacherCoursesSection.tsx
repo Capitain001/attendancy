@@ -1,9 +1,9 @@
 import { BookOpen } from 'lucide-react'
 import { card, typography } from '@/styles'
 import { cn } from '@/lib/utils'
-import type { GetTeacherCoursesDto } from '@/services/teacher'
+import type { TeacherCoursesItem } from '@/services/course-teacher'
 
-export function TeacherCoursesSection({ courses }: { courses: GetTeacherCoursesDto }) {
+export function TeacherCoursesSection({ courses }: { courses: TeacherCoursesItem[] }) {
   return (
     <section className="flex flex-col gap-2">
       <div className="flex items-center gap-2 px-1">
