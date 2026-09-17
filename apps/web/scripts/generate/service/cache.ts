@@ -7,8 +7,7 @@
 //   - graph.ts → import du `<X>_GRAPH` + spread dans CACHE_GRAPH
 //
 // Logique pure (ne lit aucun état de CLI — tout est passé en paramètre),
-// partagée par service.ts et create-service.ts. À importer, jamais à
-// redupliquer dans un générateur. Chemins par défaut : voir ./config.ts.
+// Chemins par défaut : voir ./config.ts.
 
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { IMPORT_PATHS } from "./config";

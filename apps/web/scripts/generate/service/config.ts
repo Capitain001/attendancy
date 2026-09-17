@@ -6,9 +6,7 @@
 // (service.ts) ni au contenu des gabarits (templates.ts).
 //
 // Règle : un alias qui apparaît dans plusieurs gabarits doit vivre ICI et
-// nulle part ailleurs. C'est ce qui évite la divergence silencieuse (ex :
-// service.ts et create-service.ts avaient fini par pointer vers deux chemins
-// Prisma différents — @/lib/prisma vs @/lib/db — faute d'une source unique).
+// nulle part ailleurs. C'est ce qui évite la divergence silencieuse 
 
 import { join } from "node:path";
 

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { StudentsTable } from '@/components/direction/students/table/StudentsTable'
-import { mockGetDirectionStudents } from '@/data/mocks/students'
+import { mockGetDirectionStudents } from '@/data/mocks/mock.students'
 
 export default function TestStudentsTablePage() {
   const [selected, setSelected] = useState<Set<string>>(new Set())

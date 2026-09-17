@@ -1,16 +1,14 @@
 "use client";
 
-import { ReactNode } from "react";
-import { BookOpen, Clock, MapPin, Users, StickyNote, QrCode, UserCheck } from "lucide-react";
+import { ReactNode, useState } from "react";
+import type { LucideIcon } from "lucide-react";
+import { BookOpen, Clock, MapPin, Users, QrCode, UserCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselIndicator,
-} from "@/components/ui/carouselx";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carouselx";
+import { Gauge } from "@/components/ui/gauge";
 import { SessionQRDisplay } from "@/components/session/SessionQRDisplay";
 import { AttendanceSection } from "@/components/attendance/AttendanceSection";
+import { useAttendanceStats } from "@/hooks/data/attendances/use-attendance-stats";
 import type { TeacherNextSchedule } from "@/services/schedule";
 
 type Schedule = NonNullable<TeacherNextSchedule>;
@@ -23,31 +21,23 @@ type SessionCarouselSchedule = Pick<
 interface SessionCarouselProps {
   schedule: SessionCarouselSchedule;
   studentCount: number;
+  /** Pourcentage écoulé de la séance (0–100), calculé par la page appelante. */
+  progressPercent: number;
+  /** Libellé affiché sous la gauge — ex. "1h 56m" ou la durée totale hors session active. */
+  gaugeLabel: string;
   className?: string;
 }
 
+// --- une seule slide à la fois, hauteur fixe pour que rien ne saute au swipe ---
 function Slide({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("flex flex-col h-full w-full", className)}>{children}</div>;
-}
-
-function SlideLabel({
-  icon: Icon,
-  label,
-  className,
-}: {
-  icon: React.ElementType;
-  label: string;
-  className?: string;
-}) {
   return (
-    <div className={cn("flex flex-col items-start gap-1.5 mb-1", className)}>
-      <div className="flex items-center justify-center gap-1.5">
-        <Icon className="size-3 text-muted-foreground" />
-        <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
-          {label}
-        </span>
-      </div>
-      <div className="h-px w-10 rounded-full bg-border/50" />
+    <div
+      className={cn(
+        "flex h-full min-h-72 w-full flex-col items-center justify-center",
+        className
+      )}
+    >
+      {children}
     </div>
   );
 }
@@ -57,7 +47,7 @@ function InfoRow({
   label,
   value,
 }: {
-  icon: React.ElementType;
+  icon: LucideIcon;
   label: string;
   value: string;
 }) {
@@ -67,12 +57,37 @@ function InfoRow({
         <Icon className="size-3.5 shrink-0" />
         <span className="text-[11px] uppercase tracking-wider font-medium">{label}</span>
       </div>
-      <span className="text-[12px] font-medium text-foreground tabular-nums">{value}</span>
+      <span className="text-[12px] font-medium text-foreground tabular-nums text-right">
+        {value}
+      </span>
     </div>
   );
 }
 
-function ScheduleInfoSlide({
+function TimeSlide({
+  progressPercent,
+  gaugeLabel,
+}: {
+  progressPercent: number;
+  gaugeLabel: string;
+}) {
+  return (
+    <Slide>
+      <Gauge
+        value={Math.round(progressPercent)}
+        size={172}
+        strokeWidth={9}
+        showPercentage
+        unit="%"
+        gradient
+        label={gaugeLabel}
+        primary="info"
+      />
+    </Slide>
+  );
+}
+
+function InfoSlide({
   schedule,
   studentCount,
 }: Pick<SessionCarouselProps, "schedule" | "studentCount">) {
@@ -84,8 +99,7 @@ function ScheduleInfoSlide({
     : `${schedule.class.name} · ${schedule.class.level}`;
 
   return (
-    <Slide>
-      <SlideLabel icon={BookOpen} label="Informations" />
+    <Slide className="items-stretch justify-start">
       <div className="flex flex-col">
         <InfoRow icon={BookOpen} label="Cours" value={schedule.course.name} />
         {schedule.course.ueCourse.code && (
@@ -100,44 +114,36 @@ function ScheduleInfoSlide({
           value={`${studentCount} étudiant${studentCount > 1 ? "s" : ""}`}
         />
       </div>
+
+      {schedule.notes && (
+        <div className="mt-4 rounded-lg bg-muted/40 px-3.5 py-3">
+          <p className="mb-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+            Note du cours
+          </p>
+          <p className="text-[12px] leading-relaxed text-foreground whitespace-pre-wrap">
+            {schedule.notes}
+          </p>
+        </div>
+      )}
     </Slide>
   );
 }
 
-function NotesSlide({ notes }: { notes: string }) {
-  return (
-    <Slide className="gap-y-10">
-      <SlideLabel icon={StickyNote} label="Notes du cours" />
-      <div className="flex-1 flex rounded-lg border border-dashed border-border bg-muted/30 px-4 py-3">
-        <p className="text-[12px] leading-relaxed text-muted-foreground whitespace-pre-wrap">
-          {notes}
-        </p>
-      </div>
-    </Slide>
-  );
-}
-
-function QRSlide({ sessionId }: { sessionId: string }) {
-  return (
-    <Slide className="items-center">
-      <SlideLabel icon={QrCode} label="QR Code" />
-      <div className="flex-1 flex items-center justify-center">
-        <SessionQRDisplay sessionId={sessionId} />
-      </div>
-    </Slide>
-  );
-}
-
-function QREmptySlide() {
-  return (
-    <Slide className="items-center">
-      <SlideLabel icon={QrCode} label="QR Code" />
-      <div className="flex-1 min-h-40 my-5 flex flex-col items-center justify-center gap-2 text-center">
+function QRSlide({ sessionId }: { sessionId: string | null }) {
+  if (!sessionId) {
+    return (
+      <Slide>
         <QrCode className="size-8 text-muted-foreground/25" />
-        <p className="text-[11px] text-muted-foreground">
+        <p className="mt-3 max-w-[22ch] text-center text-[11px] text-muted-foreground">
           Démarrez la session pour afficher le QR code
         </p>
-      </div>
+      </Slide>
+    );
+  }
+
+  return (
+    <Slide>
+      <SessionQRDisplay sessionId={sessionId} />
     </Slide>
   );
 }
@@ -151,49 +157,132 @@ function AttendanceSlide({
 }) {
   return (
     <Slide>
-      <SlideLabel icon={UserCheck} label="Présences" />
-      <div className="flex-1 py-10 flex items-center justify-center">
-        <AttendanceSection
-          scheduleId={scheduleId}
-          studentCount={studentCount}
-          triggerClassName="rounded-full aspect-square"
-        />
-      </div>
+      <AttendanceSection
+        scheduleId={scheduleId}
+        studentCount={studentCount}
+        triggerClassName="h-36 w-36 rounded-2xl"
+      />
     </Slide>
   );
 }
 
-export function SessionCarousel({ schedule, studentCount, className }: SessionCarouselProps) {
-  const slides: ReactNode[] = [
-    <ScheduleInfoSlide key="info" schedule={schedule} studentCount={studentCount} />,
-  ];
+// --- nav en icônes, pilote directement l'index contrôlé du carrousel ---
+const TABS: { label: string; Icon: LucideIcon }[] = [
+  { label: "Temps", Icon: Clock },
+  { label: "Cours", Icon: BookOpen },
+  { label: "QR code", Icon: QrCode },
+  { label: "Présences", Icon: UserCheck },
+];
 
-  if (schedule.notes) {
-    slides.push(<NotesSlide key="notes" notes={schedule.notes} />);
-  }
+export function SessionCarousel({
+  schedule,
+  studentCount,
+  progressPercent,
+  gaugeLabel,
+  className,
+}: SessionCarouselProps) {
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  if (schedule.session?.id) {
-    slides.push(<QRSlide key="qr" sessionId={schedule.session.id} />);
-  } else {
-    slides.push(<QREmptySlide key="qr-empty" />);
-  }
-
-  slides.push(
-    <AttendanceSlide key="attendance" scheduleId={schedule.id} studentCount={studentCount} />
-  );
+  // pour le badge sur l'onglet Présences — même source que le bouton du modal
+  const { checkedCount, isStale } = useAttendanceStats(schedule.id);
 
   return (
-    <div className={cn("relative w-full", className)}>
-      <Carousel className="w-full">
+    <div className={cn("w-full", className)}>
+      <Carousel index={activeIndex} onIndexChange={setActiveIndex} className="w-full">
         <CarouselContent>
-          {slides.map((slide, i) => (
-            <CarouselItem key={i} className="px-1">
-              <div className="min-h-50 h-full px-4 py-4">{slide}</div>
-            </CarouselItem>
-          ))}
+          <CarouselItem className="px-1">
+            <div className="px-4 py-4">
+              <TimeSlide progressPercent={progressPercent} gaugeLabel={gaugeLabel} />
+            </div>
+          </CarouselItem>
+          <CarouselItem className="px-1">
+            <div className="px-4 py-4">
+              <InfoSlide schedule={schedule} studentCount={studentCount} />
+            </div>
+          </CarouselItem>
+          <CarouselItem className="px-1">
+            <div className="px-4 py-4">
+              <QRSlide sessionId={schedule.session?.id ?? null} />
+            </div>
+          </CarouselItem>
+          <CarouselItem className="px-1">
+            <div className="px-4 py-4">
+              <AttendanceSlide scheduleId={schedule.id} studentCount={studentCount} />
+            </div>
+          </CarouselItem>
         </CarouselContent>
-        <CarouselIndicator className="bottom-2" />
       </Carousel>
+
+      {/* <nav className="flex border-t border-border/60 px-2 pb-1 pt-1.5">
+        {TABS.map(({ label, Icon }, i) => (
+          <button
+            key={label}
+            type="button"
+            role="tab"
+            aria-selected={activeIndex === i}
+            onClick={() => setActiveIndex(i)}
+            className={cn(
+              "relative flex flex-1 flex-col items-center gap-1 rounded-lg py-1.5 text-muted-foreground transition-colors",
+              activeIndex === i && "text-primary"
+            )}
+          >
+            <Icon className="size-[18px]" strokeWidth={1.7} />
+            {label === "Présences" && !isStale && checkedCount > 0 && (
+              <span className="absolute right-[22%] top-0 flex size-4 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">
+                {checkedCount}
+              </span>
+            )}
+            <span className="text-[10px] font-medium">{label}</span>
+          </button>
+        ))}
+      </nav> */}
+
+
     </div>
   );
 }
+
+
+/* mise  a jour prevu :
+nav a gauche de la gauge :
+info cours => click sur note remplace le contenue info cours par note 
+nav a droite => qr code
+
+
+swiper en bas (new interface )
+UI liste students 
+
+
+NOTE: session qr doit etre plus epurer :
+-le button session en cours devien un indicateur visuel :
+liquide de progression (visuel gauche droite , si button remplis => temps fini )  en fond sur le button
+effet suggestif pas intrusif 
+
+
+- le temps avant epuration doit etre purement visuel : dashed opblique lign sur le button regenerer 
+- plus de texte pr les action share ( juste icon )
+
+- gauge a besoin de bg pattern (motif )
+
+- coter etudiant lorsqu on scan le qr code ca doit emetre un bruit 
+
+
+plus besoin de la ligne cours dans info cours , puisque que stable dans le header
+*/
+
+/* setting profile :
+les donner douvent  nourrir un hook client et le changement de nom doit etre optimist ds l ui
+a retrester avec une meilleur conexion mais : actuelement l operation prend trop de temps 
+*/
+
+/* 
+user button :
+
+si aniversaire de l user afficher des confetie dans son user menu 
+en fond 
+
+ajouter un icon gateau sur ton user Icon ( header)
+et user icon des chats et commentaires
+
+
+*/

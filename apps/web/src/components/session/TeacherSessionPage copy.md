@@ -13,6 +13,7 @@ import {
 import { differenceInMinutes } from "date-fns";
 
 import { Button } from "@/components/ui/button";
+import { Gauge } from "@/components/ui/gauge";
 
 import { useStartSession } from "@/hooks/data/sessions/use-start-session";
 import { useNextSchedule } from "@/hooks/data/sessions/useNextSchedule";
@@ -20,10 +21,13 @@ import {
   useSessionState,
   type DBSession,
 } from "@/hooks/data/sessions/use-session-state";
+import type { SessionCountdownState } from "@/hooks/pratical/use-session-countdown";
 import type { UISessionStatus } from "@/services/session/policy";
 import type { TeacherNextSchedule } from "@/services/schedule";
 
 import { SessionCarousel } from "./SessionCarousel";
+import { CollapseSection } from "@/components/layout/CollapseSection";
+import { SessionStatusBadge } from "./ui/SessionStatusBadge";
 
 type TeacherSchedule = NonNullable<TeacherNextSchedule>;
 type SessionPrimaryAction = "start" | "end" | null;
@@ -42,6 +46,31 @@ function getAudience(schedule: TeacherSchedule): number {
     schedule.class._count.studentEnrollments ??
     0
   );
+}
+
+function sessionSubtitle(
+  uiStatus: UISessionStatus,
+  countdown: SessionCountdownState,
+  isLate: boolean
+): string {
+  switch (uiStatus) {
+    case "upcoming":
+      return `Ouverture du pointage dans ${countdown.checkTime}.`;
+    case "can-check-in":
+      if (isLate) return "Démarrage possible (retard).";
+      if (countdown.timeUntilStart > 0) return `Début dans ${countdown.checkTime}.`;
+      return "Vous pouvez démarrer.";
+    case "ongoing":
+      return `Fin dans ${fmtDuration(countdown.timeUntilEnd)}.`;
+    case "can-check-out":
+      return isLate ? "Clôture possible (retard)." : "Vous pouvez clôturer.";
+    case "done":
+      return "Session terminée.";
+    case "missed":
+      return "Session manquée.";
+    default:
+      return "";
+  }
 }
 
 function getSessionActionButton({
@@ -119,6 +148,7 @@ function SessionPageInner({
 
   const isBusy = isStarting || isEnding;
   const audience = getAudience(schedule);
+  const subtitle = sessionSubtitle(uiStatus, countdown, isLate);
   const hasMissedStartWindow = uiStatus === "ongoing" && optimisticSession === null;
   const isActiveSession = optimisticSession?.status === "ACTIVE";
   const activeSession =
@@ -138,18 +168,38 @@ function SessionPageInner({
 
   return (
     <div className="min-h-dvh bg-background">
-      <header className="text-center pt-8 pb-2 px-5">
+      <header className="space-y-2 text-center pt-8 pb-2 px-5">
+        {/* <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+          {schedule.course.ueCourse.code ?? "Session en cours"}
+        </p> */}
         <h1 className="text-xl font-semibold leading-tight">{schedule.course.name}</h1>
+        {/* <div className="flex items-center justify-center gap-2">
+          <SessionStatusBadge status={uiStatus} />
+        </div> */}
+        {/* <p className="text-[12px] text-muted-foreground">{subtitle}</p> */}
       </header>
 
-      <div className="mx-auto flex min-h-[calc(100dvh-11rem)] max-w-lg flex-col justify-center gap-5 px-5 pb-14 pt-6">
-        <div className="">
-          <SessionCarousel
-            schedule={{ ...schedule, startTime: startAt, endTime: endAt, session: activeSession }}
-            studentCount={audience}
-            progressPercent={countdown.progressPercent}
-            gaugeLabel={gaugeLabel}
+      <div className="mx-auto max-w-lg flex flex-col gap-5 px-5 pb-14 pt-6">
+        <div className="flex justify-center">
+          <Gauge
+            value={Math.round(countdown.progressPercent)}
+            size={180}
+            strokeWidth={9}
+            showPercentage
+            unit="%"
+            gradient
+            label={gaugeLabel}
+            primary="info"
           />
+        </div>
+
+        <div className="bg-card border border-border/60 rounded-2xl shadow-sm overflow-hidden">
+          <CollapseSection label="Détails de la séance" defaultOpen className="mt-0">
+            <SessionCarousel
+              schedule={{ ...schedule, startTime: startAt, endTime: endAt, session: activeSession }}
+              studentCount={audience}
+            />
+          </CollapseSection>
         </div>
 
         {isLate && (canCheckIn || canCheckOut) && (
