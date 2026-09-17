@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
-import type { ScheduleStatus } from '@/generated/prisma'
+import type { ScheduleStatus } from '@/generated/prisma/browser'
 import { GetTeacherSchedulesInfoDto } from '@/services/schedule'
 import StatusClock from '@/components/ux/StatusClock'
 
