@@ -9,7 +9,7 @@ export type ApiResponse<T> =
   | { data: T }
   | { error: string }
 
-  
+
 export const ERRORS = {
   // AUTH: "Not authenticated, please login first.",
   // FORBIDDEN: "You don't have permission to access this resource.",
@@ -44,6 +44,7 @@ export const ERRORS = {
   AUTH: {
     UNAUTHORIZED: "Not authenticated, please login first.",
     FORBIDDEN: "Accès non autorisé",
+    PROFILE: "Profil requis introuvable",
   },
 } as const;
 

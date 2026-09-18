@@ -36,17 +36,13 @@ export function TeacherDaySchedulesSheet({
   onClose,
   initialTodaySchedules,
 }: TeacherDaySchedulesSheetProps) {
-  const { data: daySchedulesRaw, isLoading } = useTeacherDaySchedules({
+  // Données déjà triées par startTime côté serveur (orderBy dans getTeacherSchedulesInfo) — pas de tri client nécessaire.
+  const { data: daySchedules = [], isLoading } = useTeacherDaySchedules({
     teacherId,
     date: selectedDate ?? new Date(),
     initialTodaySchedules,
   });
-
-  const daySchedules = [...(daySchedulesRaw ?? [])].sort(
-    (a, b) =>
-      new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
-  );
-
+  
   if (!selectedDate) return null;
 
   return (

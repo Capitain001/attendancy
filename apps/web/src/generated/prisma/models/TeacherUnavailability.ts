@@ -40,8 +40,8 @@ export type TeacherUnavailabilityMinAggregateOutputType = {
   orgId: string | null
   type: $Enums.UnavailabilityType | null
   dayOfWeek: number | null
-  startTime: string | null
-  endTime: string | null
+  startTime: Date | null
+  endTime: Date | null
   startDate: Date | null
   endDate: Date | null
   reason: string | null
@@ -55,8 +55,8 @@ export type TeacherUnavailabilityMaxAggregateOutputType = {
   orgId: string | null
   type: $Enums.UnavailabilityType | null
   dayOfWeek: number | null
-  startTime: string | null
-  endTime: string | null
+  startTime: Date | null
+  endTime: Date | null
   startDate: Date | null
   endDate: Date | null
   reason: string | null
@@ -227,8 +227,8 @@ export type TeacherUnavailabilityGroupByOutputType = {
   orgId: string
   type: $Enums.UnavailabilityType
   dayOfWeek: number | null
-  startTime: string | null
-  endTime: string | null
+  startTime: Date | null
+  endTime: Date | null
   startDate: Date | null
   endDate: Date | null
   reason: string | null
@@ -265,8 +265,8 @@ export type TeacherUnavailabilityWhereInput = {
   orgId?: Prisma.UuidFilter<"TeacherUnavailability"> | string
   type?: Prisma.EnumUnavailabilityTypeFilter<"TeacherUnavailability"> | $Enums.UnavailabilityType
   dayOfWeek?: Prisma.IntNullableFilter<"TeacherUnavailability"> | number | null
-  startTime?: Prisma.StringNullableFilter<"TeacherUnavailability"> | string | null
-  endTime?: Prisma.StringNullableFilter<"TeacherUnavailability"> | string | null
+  startTime?: Prisma.DateTimeNullableFilter<"TeacherUnavailability"> | Date | string | null
+  endTime?: Prisma.DateTimeNullableFilter<"TeacherUnavailability"> | Date | string | null
   startDate?: Prisma.DateTimeNullableFilter<"TeacherUnavailability"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"TeacherUnavailability"> | Date | string | null
   reason?: Prisma.StringNullableFilter<"TeacherUnavailability"> | string | null
@@ -302,8 +302,8 @@ export type TeacherUnavailabilityWhereUniqueInput = Prisma.AtLeast<{
   orgId?: Prisma.UuidFilter<"TeacherUnavailability"> | string
   type?: Prisma.EnumUnavailabilityTypeFilter<"TeacherUnavailability"> | $Enums.UnavailabilityType
   dayOfWeek?: Prisma.IntNullableFilter<"TeacherUnavailability"> | number | null
-  startTime?: Prisma.StringNullableFilter<"TeacherUnavailability"> | string | null
-  endTime?: Prisma.StringNullableFilter<"TeacherUnavailability"> | string | null
+  startTime?: Prisma.DateTimeNullableFilter<"TeacherUnavailability"> | Date | string | null
+  endTime?: Prisma.DateTimeNullableFilter<"TeacherUnavailability"> | Date | string | null
   startDate?: Prisma.DateTimeNullableFilter<"TeacherUnavailability"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"TeacherUnavailability"> | Date | string | null
   reason?: Prisma.StringNullableFilter<"TeacherUnavailability"> | string | null
@@ -342,8 +342,8 @@ export type TeacherUnavailabilityScalarWhereWithAggregatesInput = {
   orgId?: Prisma.UuidWithAggregatesFilter<"TeacherUnavailability"> | string
   type?: Prisma.EnumUnavailabilityTypeWithAggregatesFilter<"TeacherUnavailability"> | $Enums.UnavailabilityType
   dayOfWeek?: Prisma.IntNullableWithAggregatesFilter<"TeacherUnavailability"> | number | null
-  startTime?: Prisma.StringNullableWithAggregatesFilter<"TeacherUnavailability"> | string | null
-  endTime?: Prisma.StringNullableWithAggregatesFilter<"TeacherUnavailability"> | string | null
+  startTime?: Prisma.DateTimeNullableWithAggregatesFilter<"TeacherUnavailability"> | Date | string | null
+  endTime?: Prisma.DateTimeNullableWithAggregatesFilter<"TeacherUnavailability"> | Date | string | null
   startDate?: Prisma.DateTimeNullableWithAggregatesFilter<"TeacherUnavailability"> | Date | string | null
   endDate?: Prisma.DateTimeNullableWithAggregatesFilter<"TeacherUnavailability"> | Date | string | null
   reason?: Prisma.StringNullableWithAggregatesFilter<"TeacherUnavailability"> | string | null
@@ -355,8 +355,8 @@ export type TeacherUnavailabilityCreateInput = {
   id?: string
   type: $Enums.UnavailabilityType
   dayOfWeek?: number | null
-  startTime?: string | null
-  endTime?: string | null
+  startTime?: Date | string | null
+  endTime?: Date | string | null
   startDate?: Date | string | null
   endDate?: Date | string | null
   reason?: string | null
@@ -372,8 +372,8 @@ export type TeacherUnavailabilityUncheckedCreateInput = {
   orgId: string
   type: $Enums.UnavailabilityType
   dayOfWeek?: number | null
-  startTime?: string | null
-  endTime?: string | null
+  startTime?: Date | string | null
+  endTime?: Date | string | null
   startDate?: Date | string | null
   endDate?: Date | string | null
   reason?: string | null
@@ -385,8 +385,8 @@ export type TeacherUnavailabilityUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumUnavailabilityTypeFieldUpdateOperationsInput | $Enums.UnavailabilityType
   dayOfWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -402,8 +402,8 @@ export type TeacherUnavailabilityUncheckedUpdateInput = {
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumUnavailabilityTypeFieldUpdateOperationsInput | $Enums.UnavailabilityType
   dayOfWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -417,8 +417,8 @@ export type TeacherUnavailabilityCreateManyInput = {
   orgId: string
   type: $Enums.UnavailabilityType
   dayOfWeek?: number | null
-  startTime?: string | null
-  endTime?: string | null
+  startTime?: Date | string | null
+  endTime?: Date | string | null
   startDate?: Date | string | null
   endDate?: Date | string | null
   reason?: string | null
@@ -430,8 +430,8 @@ export type TeacherUnavailabilityUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumUnavailabilityTypeFieldUpdateOperationsInput | $Enums.UnavailabilityType
   dayOfWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -445,8 +445,8 @@ export type TeacherUnavailabilityUncheckedUpdateManyInput = {
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumUnavailabilityTypeFieldUpdateOperationsInput | $Enums.UnavailabilityType
   dayOfWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -609,8 +609,8 @@ export type TeacherUnavailabilityCreateWithoutTeacherInput = {
   id?: string
   type: $Enums.UnavailabilityType
   dayOfWeek?: number | null
-  startTime?: string | null
-  endTime?: string | null
+  startTime?: Date | string | null
+  endTime?: Date | string | null
   startDate?: Date | string | null
   endDate?: Date | string | null
   reason?: string | null
@@ -624,8 +624,8 @@ export type TeacherUnavailabilityUncheckedCreateWithoutTeacherInput = {
   orgId: string
   type: $Enums.UnavailabilityType
   dayOfWeek?: number | null
-  startTime?: string | null
-  endTime?: string | null
+  startTime?: Date | string | null
+  endTime?: Date | string | null
   startDate?: Date | string | null
   endDate?: Date | string | null
   reason?: string | null
@@ -668,8 +668,8 @@ export type TeacherUnavailabilityScalarWhereInput = {
   orgId?: Prisma.UuidFilter<"TeacherUnavailability"> | string
   type?: Prisma.EnumUnavailabilityTypeFilter<"TeacherUnavailability"> | $Enums.UnavailabilityType
   dayOfWeek?: Prisma.IntNullableFilter<"TeacherUnavailability"> | number | null
-  startTime?: Prisma.StringNullableFilter<"TeacherUnavailability"> | string | null
-  endTime?: Prisma.StringNullableFilter<"TeacherUnavailability"> | string | null
+  startTime?: Prisma.DateTimeNullableFilter<"TeacherUnavailability"> | Date | string | null
+  endTime?: Prisma.DateTimeNullableFilter<"TeacherUnavailability"> | Date | string | null
   startDate?: Prisma.DateTimeNullableFilter<"TeacherUnavailability"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"TeacherUnavailability"> | Date | string | null
   reason?: Prisma.StringNullableFilter<"TeacherUnavailability"> | string | null
@@ -681,8 +681,8 @@ export type TeacherUnavailabilityCreateWithoutOrganizationInput = {
   id?: string
   type: $Enums.UnavailabilityType
   dayOfWeek?: number | null
-  startTime?: string | null
-  endTime?: string | null
+  startTime?: Date | string | null
+  endTime?: Date | string | null
   startDate?: Date | string | null
   endDate?: Date | string | null
   reason?: string | null
@@ -696,8 +696,8 @@ export type TeacherUnavailabilityUncheckedCreateWithoutOrganizationInput = {
   teacherId: string
   type: $Enums.UnavailabilityType
   dayOfWeek?: number | null
-  startTime?: string | null
-  endTime?: string | null
+  startTime?: Date | string | null
+  endTime?: Date | string | null
   startDate?: Date | string | null
   endDate?: Date | string | null
   reason?: string | null
@@ -736,8 +736,8 @@ export type TeacherUnavailabilityCreateManyTeacherInput = {
   orgId: string
   type: $Enums.UnavailabilityType
   dayOfWeek?: number | null
-  startTime?: string | null
-  endTime?: string | null
+  startTime?: Date | string | null
+  endTime?: Date | string | null
   startDate?: Date | string | null
   endDate?: Date | string | null
   reason?: string | null
@@ -749,8 +749,8 @@ export type TeacherUnavailabilityUpdateWithoutTeacherInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumUnavailabilityTypeFieldUpdateOperationsInput | $Enums.UnavailabilityType
   dayOfWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -764,8 +764,8 @@ export type TeacherUnavailabilityUncheckedUpdateWithoutTeacherInput = {
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumUnavailabilityTypeFieldUpdateOperationsInput | $Enums.UnavailabilityType
   dayOfWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -778,8 +778,8 @@ export type TeacherUnavailabilityUncheckedUpdateManyWithoutTeacherInput = {
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumUnavailabilityTypeFieldUpdateOperationsInput | $Enums.UnavailabilityType
   dayOfWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -792,8 +792,8 @@ export type TeacherUnavailabilityCreateManyOrganizationInput = {
   teacherId: string
   type: $Enums.UnavailabilityType
   dayOfWeek?: number | null
-  startTime?: string | null
-  endTime?: string | null
+  startTime?: Date | string | null
+  endTime?: Date | string | null
   startDate?: Date | string | null
   endDate?: Date | string | null
   reason?: string | null
@@ -805,8 +805,8 @@ export type TeacherUnavailabilityUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumUnavailabilityTypeFieldUpdateOperationsInput | $Enums.UnavailabilityType
   dayOfWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -820,8 +820,8 @@ export type TeacherUnavailabilityUncheckedUpdateWithoutOrganizationInput = {
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumUnavailabilityTypeFieldUpdateOperationsInput | $Enums.UnavailabilityType
   dayOfWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -834,8 +834,8 @@ export type TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationInput = {
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumUnavailabilityTypeFieldUpdateOperationsInput | $Enums.UnavailabilityType
   dayOfWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -937,8 +937,8 @@ export type $TeacherUnavailabilityPayload<ExtArgs extends runtime.Types.Extensio
     orgId: string
     type: $Enums.UnavailabilityType
     dayOfWeek: number | null
-    startTime: string | null
-    endTime: string | null
+    startTime: Date | null
+    endTime: Date | null
     startDate: Date | null
     endDate: Date | null
     reason: string | null
@@ -1374,8 +1374,8 @@ export interface TeacherUnavailabilityFieldRefs {
   readonly orgId: Prisma.FieldRef<"TeacherUnavailability", 'String'>
   readonly type: Prisma.FieldRef<"TeacherUnavailability", 'UnavailabilityType'>
   readonly dayOfWeek: Prisma.FieldRef<"TeacherUnavailability", 'Int'>
-  readonly startTime: Prisma.FieldRef<"TeacherUnavailability", 'String'>
-  readonly endTime: Prisma.FieldRef<"TeacherUnavailability", 'String'>
+  readonly startTime: Prisma.FieldRef<"TeacherUnavailability", 'DateTime'>
+  readonly endTime: Prisma.FieldRef<"TeacherUnavailability", 'DateTime'>
   readonly startDate: Prisma.FieldRef<"TeacherUnavailability", 'DateTime'>
   readonly endDate: Prisma.FieldRef<"TeacherUnavailability", 'DateTime'>
   readonly reason: Prisma.FieldRef<"TeacherUnavailability", 'String'>

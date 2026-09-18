@@ -1,52 +1,55 @@
-import { prisma } from '@/lib/prisma'
-import { tryConstraint } from '@/utils/server/prisma'
-import { invalidateEvent } from '@/cache/server/graph'
-import type { CreateWeeklyUnavailabilityInput, CreateDateRangeUnavailabilityInput } from '../validation'
+import { prisma } from "@/lib/prisma";
+import { tryConstraint } from "@/utils/server/prisma";
+import { invalidateEvent } from "@/cache/server/graph";
+import type { CreateUnavailabilityInput, UpdateUnavailabilityDataOutput } from "../validation";
+import { resolveUnavailabilityFields } from "../utils";
 
-export async function createWeeklyUnavailability(
-  orgId: string,
-  data: Omit<CreateWeeklyUnavailabilityInput, 'teacherId'> & { teacherId: string },
-) {
+export async function createTeacherUnavailability(orgId: string, teacherId: string, data: CreateUnavailabilityInput) {
   const record = await tryConstraint(
     prisma.teacherUnavailability.create({
       data: {
-        orgId,
-        teacherId: data.teacherId,
-        type:      'WEEKLY',
-        dayOfWeek: data.dayOfWeek,
-        startTime: data.startTime,
-        endTime:   data.endTime,
-        reason:    data.reason ?? null,
+        ...resolveUnavailabilityFields(data),
       },
-      select: { id: true },
-    })
-  )
-  invalidateEvent('TEACHER_UNAVAILABILITY_CREATED', orgId)
-  return record
+      select: { id:true, teacherId: true }, // ← Sélectionne teacherId pour l'invalidation
+    }),
+  );
+
+  invalidateEvent("TEACHER_UNAVAILABILITY_CREATED", orgId, record.teacherId);
+  return record;
 }
 
-export async function createDateRangeUnavailability(
+export async function updateTeacherUnavailability(
+  teacherUnavailabilityId: string,
   orgId: string,
-  data: Omit<CreateDateRangeUnavailabilityInput, 'teacherId'> & { teacherId: string },
+  teacherId: string,
+  data: UpdateUnavailabilityDataOutput,
 ) {
+   const { reason, dayOfWeek, startDate, endDate } = data;
+
   const record = await tryConstraint(
-    prisma.teacherUnavailability.create({
+    prisma.teacherUnavailability.update({
+      where: { id: teacherUnavailabilityId, orgId },
       data: {
-        orgId,
-        teacherId:  data.teacherId,
-        type:       'DATE_RANGE',
-        startDate:  data.startDate,
-        endDate:    data.endDate,
-        reason:     data.reason ?? null,
+        ...(teacherId !== undefined && { teacherId }),
+        ...(reason !== undefined && { reason }),
+        ...(startDate !== undefined && endDate !== undefined
+          ? resolveUnavailabilityFields({ dayOfWeek, startDate, endDate }, { resetUnusedFields: true })
+          : {}),
       },
-      select: { id: true },
-    })
-  )
-  invalidateEvent('TEACHER_UNAVAILABILITY_CREATED', orgId)
-  return record
+      select: {id:true, teacherId: true }, // ← On récupère teacherId même s'il n'a pas été modifié
+    }),
+  );
+
+  invalidateEvent("TEACHER_UNAVAILABILITY_UPDATED", orgId, record.teacherId);
+  return record;
 }
 
 export async function deleteTeacherUnavailability(id: string, orgId: string) {
-  await prisma.teacherUnavailability.delete({ where: { id, orgId } })
-  invalidateEvent('TEACHER_UNAVAILABILITY_DELETED', orgId)
+  const record = await prisma.teacherUnavailability.delete({
+    where: { id, orgId },
+    select: { teacherId: true }, 
+  });
+
+  invalidateEvent("TEACHER_UNAVAILABILITY_DELETED", orgId, record.teacherId);
+  return record;
 }

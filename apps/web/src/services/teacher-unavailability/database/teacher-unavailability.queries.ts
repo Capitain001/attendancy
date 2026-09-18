@@ -18,3 +18,5 @@ export async function getTeacherUnavailabilities(teacherId: string, orgId: strin
     orderBy: { createdAt: 'desc' },
   })
 }
+
+

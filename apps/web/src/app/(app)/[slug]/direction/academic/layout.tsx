@@ -2,7 +2,7 @@
 
 interface LayoutProps {
   children: React.ReactNode;
-  params: Promise<{ slug: string }>;
+  params: Promise<any>;
 }
 
 export default async function AcademicLayout({ children, params }: LayoutProps) {

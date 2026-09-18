@@ -1,59 +1,63 @@
-//action : mutation
-'use server'
-import * as v from 'valibot'
-import { authAccess } from '@/services/auth'
-import { ERRORS } from '@/config'
-import {
-  createWeeklyUnavailabilitySchema,
-  createDateRangeUnavailabilitySchema,
-} from '../validation'
-import type {
-  CreateWeeklyUnavailabilityInput,
-  CreateDateRangeUnavailabilityInput,
-} from '../validation'
-import {
-  createWeeklyUnavailability,
-  createDateRangeUnavailability,
-  deleteTeacherUnavailability,
-} from '../database'
+"use server";
 
-export async function createWeeklyUnavailabilityAction(input: CreateWeeklyUnavailabilityInput) {
+import * as v from "valibot";
+
+import { ERRORS } from "@/config";
+import { requireTeacherContext } from "../auth";
+import { createUnavailabilitySchema, updateUnavailabilitySchema } from "../validation";
+import type { CreateUnavailabilityInput, UpdateUnavailabilityInput } from "../validation";
+import { createTeacherUnavailability, deleteTeacherUnavailability, updateTeacherUnavailability } from "../database";
+
+export async function createTeacherUnavailabilityAction(input: CreateUnavailabilityInput) {
+  const auth = await requireTeacherContext();
+  if (!auth.data) return { error: auth.error };
+  const { orgId, teacherId } = auth.data;
+
+  const parsed = v.safeParse(createUnavailabilitySchema, input);
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? "Données invalides" };
+
   try {
-    const auth = await authAccess({ requiredRole: 'TEACHER' })
-    if (!auth.data) return { error: auth.error }
-    const { orgId } = auth.data
-
-    const parsed = v.safeParse(createWeeklyUnavailabilitySchema, input)
-    if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
-    return { data: await createWeeklyUnavailability(orgId, parsed.output) }
+    return { data: await createTeacherUnavailability(orgId, teacherId, parsed.output) };
   } catch (e) {
-    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER };
   }
 }
 
-export async function createDateRangeUnavailabilityAction(input: CreateDateRangeUnavailabilityInput) {
-  try {
-    const auth = await authAccess({ requiredRole: 'TEACHER' })
-    if (!auth.data) return { error: auth.error }
-    const { orgId } = auth.data
+export async function updateTeacherUnavailabilityAction(input: UpdateUnavailabilityInput) {
+  const auth = await requireTeacherContext();
+  if (!auth.data) return { error: auth.error };
+  const { orgId, teacherId } = auth.data;
 
-    const parsed = v.safeParse(createDateRangeUnavailabilitySchema, input)
-    if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
-    return { data: await createDateRangeUnavailability(orgId, parsed.output) }
+  const parsed = v.safeParse(updateUnavailabilitySchema, input);
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? "Données invalides" };
+
+  try {
+    return {
+      data: await updateTeacherUnavailability(
+        parsed.output.teacherUnavailabilityId,
+        orgId,
+        teacherId,
+        parsed.output.data,
+      ),
+    };
   } catch (e) {
-    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER };
   }
 }
 
-export async function deleteTeacherUnavailabilityAction(id: string) {
-  try {
-    const auth = await authAccess({ requiredRole: 'TEACHER' })
-    if (!auth.data) return { error: auth.error }
-    const { orgId } = auth.data
+export async function deleteTeacherUnavailabilityAction({
+  teacherUnavailabilityId
+}: {
+  teacherUnavailabilityId: string;
+}) {
+  const auth = await requireTeacherContext();
+  if (!auth.data) return { error: auth.error };
+  const { orgId, teacherId } = auth.data;
 
-    await deleteTeacherUnavailability(id, orgId)
-    return { data: { id } }
+  try {
+    await deleteTeacherUnavailability(teacherUnavailabilityId, orgId);
+    return { data: { teacherUnavailabilityId } };
   } catch (e) {
-    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER };
   }
 }

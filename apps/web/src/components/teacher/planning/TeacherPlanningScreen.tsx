@@ -3,9 +3,9 @@
 import { useState, type ComponentProps } from "react"
 import { ChevronUp } from "lucide-react"
 
-import { SwipeNavigator, type SwipeNavState } from "@/components/swipe-navigator"
+import { SwipeNavigator } from "@/components/swipe-navigator"
 import { TeacherScheduleCalendar } from "@/components/teacher/planning/TeacherScheduleCalendar"
-import { DailyScheduleView } from "@/components/teacher/planning/DailyScheduleView"
+import { DailyScheduleView } from "@/components/teacher/planning/daily-schedule"
 
 interface TeacherPlanningScreenProps {
   teacherId: string
@@ -18,25 +18,23 @@ export function TeacherPlanningScreen({
   initialSchedules,
   dailySchedules,
 }: TeacherPlanningScreenProps) {
-  const [screen, setScreen] = useState<SwipeNavState>("main")
+  const [screen, setScreen] = useState(0)
 
   return (
     <SwipeNavigator
       value={screen}
       onValueChange={setScreen}
-      main={
-        <div className="flex h-full flex-col overflow-hidden">
+      panels={[
+        <div key="calendar" className="flex h-full flex-col overflow-hidden">
           <TeacherScheduleCalendar
             teacherId={teacherId}
             initialSchedules={initialSchedules}
           />
-        </div>
-      }
-      secondary={
-        <div className="flex h-full flex-col overflow-hidden">
+        </div>,
+        <div key="daily" className="flex h-full flex-col overflow-hidden">
           <DailyScheduleView schedules={dailySchedules} />
-        </div>
-      }
+        </div>,
+      ]}
       hint={
         <>
           <ChevronUp className="h-4 w-4 animate-bounce" />

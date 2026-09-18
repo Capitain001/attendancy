@@ -9,53 +9,53 @@
 // PENDING est figé (trigger prevent_locked_schedule_update).
 // CANCELED/MISSED ne réservent plus la ressource (exclus des contraintes).
 model Schedule {
-  id               String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  courseId         String                    @db.Uuid
-  roomId           String                    @db.Uuid
-  teacherId        String                    @db.Uuid
-  orgId            String                    @db.Uuid
-  startTime        DateTime
-  endTime          DateTime
-  status           ScheduleStatus            @default(PENDING)
-  statusChangedAt  DateTime?
+  id              String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  courseId        String         @db.Uuid
+  roomId          String         @db.Uuid
+  teacherId       String         @db.Uuid
+  orgId           String         @db.Uuid
+  startTime       DateTime
+  endTime         DateTime
+  status          ScheduleStatus @default(PENDING)
+  statusChangedAt DateTime?
   // validation du 'teacher' : seule les seances 'confirmed' sont visible aux 'students'
-  confirmed        Boolean                   @default(false)
-  
+  confirmed       Boolean        @default(false)
+
   // notes de la 'direction' sur la seance
-  notes            String?
+  notes String?
 
   // Séance verrouillée : les informations de la séance ne peuvent plus être modifiées.
-  isLocked       Boolean      @default(false)
+  isLocked Boolean @default(false)
 
-  createdAt        DateTime                  @default(now())
-  updatedAt        DateTime                  @updatedAt
-  classId          String                    @db.Uuid
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  classId          String    @db.Uuid
   // groupId NULL = séance pour la classe ENTIÈRE (prédicat des contraintes
   // d'exclusion). Restrict : un hard delete de Group ne doit jamais
   // requalifier silencieusement des séances de groupe en séances de classe.
-  groupId          String?                   @db.Uuid
-  weekRecurrenceId String?                   @db.Uuid
+  groupId          String?   @db.Uuid
+  weekRecurrenceId String?   @db.Uuid
   deletedAt        DateTime?
 
   // Notification de CRÉATION (manuelle) : PENDING à la création, SENT après
   // envoi. null = hors flux (modifications, séances créées avant la feature).
-  notifyState      ScheduleNotifyState?
-  notifiedAt       DateTime?
+  notifyState ScheduleNotifyState?
+  notifiedAt  DateTime?
 
   // Colonne Postgres dérivée (trigger sync_schedule_during) — support des
   // contraintes d'exclusion GiST. Jamais écrite par l'applicatif.
-  during           Unsupported("tstzrange")?
-  attendances      Attendance[]
-  class            Class                     @relation(fields: [classId], references: [id])
-  course           Course                    @relation(fields: [courseId], references: [id])
-  group            Group?                    @relation(fields: [groupId], references: [id], onDelete: Restrict)
-  organization     Organization              @relation(fields: [orgId], references: [id])
-  room             Room                      @relation(fields: [roomId], references: [id])
-  teacher          Teacher                   @relation(fields: [teacherId], references: [id])
-  weekRecurence    WeekRecurence?            @relation(fields: [weekRecurrenceId], references: [id], onDelete: SetNull)
-  session          Session?
-  justifications   Justification[]
-  notifications    Notification[]
+  during         Unsupported("tstzrange")?
+  attendances    Attendance[]
+  class          Class                     @relation(fields: [classId], references: [id])
+  course         Course                    @relation(fields: [courseId], references: [id])
+  group          Group?                    @relation(fields: [groupId], references: [id], onDelete: Restrict)
+  organization   Organization              @relation(fields: [orgId], references: [id])
+  room           Room                      @relation(fields: [roomId], references: [id])
+  teacher        Teacher                   @relation(fields: [teacherId], references: [id])
+  weekRecurence  WeekRecurence?            @relation(fields: [weekRecurrenceId], references: [id], onDelete: SetNull)
+  session        Session?
+  justifications Justification[]
+  notifications  Notification[]
 
   @@index([classId])
   @@index([groupId])
@@ -139,16 +139,16 @@ model WeekRecurence {
 // verify_point_in_radius côté DB. active=false = géofencing suspendu
 // (cours en ligne, GPS défaillant) sans perdre la configuration.
 model Location {
-  id           String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name         String
-  address      String
-  latitude     Float
-  longitude    Float
-  radius       Float                     @default(50)
-  active       Boolean                   @default(true)
-  orgId        String                    @db.Uuid
-  createdAt    DateTime                  @default(now())
-  updatedAt    DateTime                  @updatedAt
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  address   String
+  latitude  Float
+  longitude Float
+  radius    Float    @default(50)
+  active    Boolean  @default(true)
+  orgId     String   @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Colonne PostGIS dérivée (trigger sync_location_position). Index GiST en
   // post-migrate.
@@ -236,8 +236,8 @@ model EventParticipant {
 // indisponibilité est une déclaration que la direction peut arbitrer — le
 // conflit est signalé (+ AuditLog si passage en force), jamais bloqué.
 // Deux formes selon type (validation Valibot par forme) :
-//   WEEKLY     → dayOfWeek (1=lundi…7, ISO) + startTime/endTime (String
-//                "08:00", heure locale org — même convention que WeeklySlot)
+//   WEEKLY     → dayOfWeek (1=lundi…7, ISO) + startTime/endTime (@db.Time,
+//                heure de la journée isolée)
 //   DATE_RANGE → startDate/endDate (bornes réelles)
 // Hard delete : déclaration retirée = supprimée, rien ne la référence.
 model TeacherUnavailability {
@@ -248,16 +248,17 @@ model TeacherUnavailability {
 
   // Forme WEEKLY (récurrente)
   dayOfWeek Int?
-  startTime String?
-  endTime   String?
+
+  startTime DateTime? @db.Time() 
+  endTime   DateTime? @db.Time() 
 
   // Forme DATE_RANGE (ponctuelle)
   startDate DateTime?
   endDate   DateTime?
 
   reason    String?
-  createdAt DateTime           @default(now())
-  updatedAt DateTime           @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   teacher      Teacher      @relation(fields: [teacherId], references: [id], onDelete: Cascade)
   organization Organization @relation(fields: [orgId], references: [id])
@@ -273,6 +274,7 @@ enum UnavailabilityType {
 
   @@schema("public")
 }
+
 enum ScheduleStatus {
   PENDING
   COMPLETED

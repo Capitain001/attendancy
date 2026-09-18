@@ -5,19 +5,16 @@ import { motion, type PanInfo } from "framer-motion"
 
 import { cn } from "@/lib/utils"
 
-export type SwipeNavState = "main" | "secondary"
-
 interface SwipeNavigatorProps {
-  /** Écran du haut, affiché par défaut */
-  main: ReactNode
-  /** Écran du bas, révélé par swipe ↑ */
-  secondary: ReactNode
-  value: SwipeNavState
-  onValueChange: (value: SwipeNavState) => void
+  /** Écrans empilés verticalement, dans l'ordre de navigation. */
+  panels: ReactNode[]
+  /** Index du panneau actif. */
+  value: number
+  onValueChange: (index: number) => void
   className?: string
   /**
-   * Contenu optionnel affiché en bas de l'écran principal pour indiquer
-   * qu'on peut glisser vers le haut (ex: chevron + texte).
+   * Contenu affiché en bas du panneau actif pour indiquer qu'on peut
+   * glisser vers le haut. Masqué automatiquement sur le dernier panneau.
    */
   hint?: ReactNode
 }
@@ -40,17 +37,16 @@ function useViewportHeight() {
 }
 
 export function SwipeNavigator({
-  main,
-  secondary,
+  panels,
   value,
   onValueChange,
   className,
   hint,
 }: SwipeNavigatorProps) {
   const viewportHeight = useViewportHeight()
+  const lastIndex = panels.length - 1
 
-  // main → y = 0 (rien caché) · secondary → y = -viewportHeight (translaté vers le haut)
-  const snapY = value === "main" ? 0 : -viewportHeight
+  const snapY = -value * viewportHeight
 
   const handleDragEnd = useCallback(
     (_: unknown, info: PanInfo) => {
@@ -61,20 +57,20 @@ export function SwipeNavigator({
       const isSwipeDown =
         offset.y > SWIPE_THRESHOLD || velocity.y > VELOCITY_THRESHOLD
 
-      if (isSwipeUp && value === "main") {
-        onValueChange("secondary")
+      if (isSwipeUp && value < lastIndex) {
+        onValueChange(value + 1)
         return
       }
 
-      if (isSwipeDown && value === "secondary") {
-        onValueChange("main")
+      if (isSwipeDown && value > 0) {
+        onValueChange(value - 1)
         return
       }
 
-      // Pas assez de mouvement → on reste sur l'état courant
+      // Pas assez de mouvement, ou déjà à une extrémité → on reste en place
       onValueChange(value)
     },
-    [value, onValueChange],
+    [value, lastIndex, onValueChange],
   )
 
   return (
@@ -82,29 +78,29 @@ export function SwipeNavigator({
       <motion.div
         drag="y"
         dragElastic={0.15}
-        dragConstraints={{ top: -viewportHeight, bottom: 0 }}
+        dragConstraints={{ top: -lastIndex * viewportHeight, bottom: 0 }}
         animate={{ y: snapY }}
         transition={{ type: "spring", stiffness: 350, damping: 35 }}
         onDragEnd={handleDragEnd}
         className="flex flex-col"
-        style={{ height: viewportHeight * 2, touchAction: "none" }}
+        style={{ height: panels.length * viewportHeight, touchAction: "none" }}
       >
-        <section className="relative flex h-dvh w-full shrink-0 flex-col">
-          {main}
+        {panels.map((panel, index) => (
+          <section key={index} className="relative flex h-dvh w-full shrink-0 flex-col">
+            {panel}
 
-          {value === "main" && hint && (
-            <button
-              type="button"
-              onClick={() => onValueChange("secondary")}
-              className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-1.5 pb-5 pt-4 text-muted-foreground"
-              aria-label="Voir l'écran suivant"
-            >
-              {hint}
-            </button>
-          )}
-        </section>
-
-        <section className="h-dvh w-full shrink-0">{secondary}</section>
+            {value === index && index < lastIndex && hint && (
+              <button
+                type="button"
+                onClick={() => onValueChange(index + 1)}
+                className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-1.5 pb-5 pt-4 text-muted-foreground"
+                aria-label="Voir l'écran suivant"
+              >
+                {hint}
+              </button>
+            )}
+          </section>
+        ))}
       </motion.div>
     </div>
   )

@@ -16,6 +16,12 @@ function formatDate(d: Date | string | null) {
   return new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
+function formatTime(d: Date | string | null) {
+  if (!d) return '—'
+  const date = new Date(d)
+  return `${date.getUTCHours().toString().padStart(2, '0')}:${date.getUTCMinutes().toString().padStart(2, '0')}`
+}
+
 export function TeacherUnavailabilitiesSection({
   unavailabilities,
 }: {
@@ -37,7 +43,7 @@ export function TeacherUnavailabilitiesSection({
                   {u.dayOfWeek !== null && ` — ${DAYS[u.dayOfWeek]}`}
                 </p>
                 {u.startTime && u.endTime && (
-                  <p className={typography.small}>{u.startTime} – {u.endTime}</p>
+                  <p className={typography.small}>{formatTime(u.startTime)} – {formatTime(u.endTime)}</p>
                 )}
                 {u.startDate && (
                   <p className={typography.small}>

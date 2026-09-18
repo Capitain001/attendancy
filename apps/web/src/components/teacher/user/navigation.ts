@@ -20,6 +20,12 @@ export const teacherRoutes: Route[] = [
     link: "/teacher/planning",
   },
   {
+    id: "unavailabilities",
+    title: "Indisponibilités",
+    icon: "CalendarOff",
+    link: "/teacher/unavailabilities",
+  },
+  {
     id: "presences",
     title: "Présences",
     icon: "ClipboardCheck",
