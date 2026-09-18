@@ -10,29 +10,21 @@ export type UnavailabilityInputSlot = Pick<
   "dayOfWeek" | "startDate" | "endDate"
 >;
 
-// 1. Types Prisma stricts
-type CreateSlotFields = Prisma.TeacherUnavailabilityUncheckedCreateInput;
-type UpdateSlotFields = Prisma.TeacherUnavailabilityUncheckedUpdateInput;
+export type BaseFields = "orgId" | "teacherId" | "reason";
 
-// Overload 1 : Utilisé en CREATE ou quand startDate/endDate sont garantis présents
-export function resolveUnavailabilityFields(
-  data: UnavailabilityInputSlot & { startDate: Date; endDate: Date },
-  options?: { resetUnusedFields?: boolean }
-): CreateSlotFields;
+// Le type de retour garantit la présence de `type` tout en ignorant les champs gérés par la mutation
+export type ResolvedSlotFields = Omit<
+  Prisma.TeacherUnavailabilityUncheckedCreateInput,
+  BaseFields
+>;
 
-// Overload 2 : Utilisé en UPDATE (champs optionnels)
 export function resolveUnavailabilityFields(
-  data: UnavailabilityInputSlot,
-  options?: { resetUnusedFields?: boolean }
-): UpdateSlotFields;
-
-// Implémentation
-export function resolveUnavailabilityFields(
-  data: UnavailabilityInputSlot,
+  data: Partial<UnavailabilityInputSlot>,
   options: { resetUnusedFields?: boolean } = {}
-): UpdateSlotFields {
-  if (data.startDate == null || data.endDate == null) {
-    return {};
+) {
+  // Guard explicite : sécurise le runtime et garantit le typage strict pour TypeScript
+  if (!data.startDate || !data.endDate) {
+    throw new Error("startDate et endDate sont requis pour calculer les créneaux.");
   }
 
   const { resetUnusedFields = false } = options;

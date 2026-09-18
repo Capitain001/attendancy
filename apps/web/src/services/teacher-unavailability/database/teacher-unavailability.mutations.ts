@@ -8,9 +8,13 @@ export async function createTeacherUnavailability(orgId: string, teacherId: stri
   const record = await tryConstraint(
     prisma.teacherUnavailability.create({
       data: {
+        orgId,
+        teacherId,
+        reason: data.reason ?? null,
+
         ...resolveUnavailabilityFields(data),
       },
-      select: { id:true, teacherId: true }, // ← Sélectionne teacherId pour l'invalidation
+      select: { id: true, teacherId: true }, // ← Sélectionne teacherId pour l'invalidation
     }),
   );
 
@@ -24,19 +28,22 @@ export async function updateTeacherUnavailability(
   teacherId: string,
   data: UpdateUnavailabilityDataOutput,
 ) {
-   const { reason, dayOfWeek, startDate, endDate } = data;
+  const { reason, dayOfWeek, startDate, endDate } = data;
+
+  // Calcul propre des champs de créneau 
+  const slotFields = startDate !== undefined && endDate !== undefined
+    ? resolveUnavailabilityFields({ dayOfWeek, startDate, endDate }, { resetUnusedFields: true })
+    : undefined;
 
   const record = await tryConstraint(
     prisma.teacherUnavailability.update({
       where: { id: teacherUnavailabilityId, orgId },
       data: {
-        ...(teacherId !== undefined && { teacherId }),
-        ...(reason !== undefined && { reason }),
-        ...(startDate !== undefined && endDate !== undefined
-          ? resolveUnavailabilityFields({ dayOfWeek, startDate, endDate }, { resetUnusedFields: true })
-          : {}),
+        teacherId,
+        reason,
+        ...slotFields,
       },
-      select: {id:true, teacherId: true }, // ← On récupère teacherId même s'il n'a pas été modifié
+      select: { id: true, teacherId: true , startTime:true , endTime:true }, // ← On récupère teacherId même s'il n'a pas été modifié
     }),
   );
 
@@ -47,7 +54,7 @@ export async function updateTeacherUnavailability(
 export async function deleteTeacherUnavailability(id: string, orgId: string) {
   const record = await prisma.teacherUnavailability.delete({
     where: { id, orgId },
-    select: { teacherId: true }, 
+    select: { teacherId: true },
   });
 
   invalidateEvent("TEACHER_UNAVAILABILITY_DELETED", orgId, record.teacherId);
