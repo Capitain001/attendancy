@@ -59,6 +59,13 @@ bunx prisma migrate dev --name init
 Créer une nouvelle migration :
 
 ```bash
+bunx prisma migrate dev --create-only --name update-teacher-unavailabilities-fields-types
+```
+
+
+Créer une nouvelle migration :
+
+```bash
 bunx prisma migrate dev --name add_users
 ```
 
