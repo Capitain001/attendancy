@@ -16,19 +16,23 @@ export function ScheduleListItem({ schedule, isSelected, onSelect }: ScheduleLis
     <button
       type="button"
       onClick={() => onSelect(schedule.id)}
-      className={`group/btn w-full flex items-center justify-between p-3 rounded-lg text-sm text-left transition-colors ${
-        isSelected ? 'bg-muted font-medium' : 'hover:bg-muted'
+      className={`group/btn flex h-10 w-full shrink-0 items-center gap-3 rounded-lg px-4 text-sm transition-colors ${
+        isSelected
+          ? 'bg-foreground/10 text-foreground'
+          : 'bg-foreground/5 text-foreground/40 hover:bg-foreground/10 hover:text-foreground/70'
       }`}
     >
-      <div className="flex items-center gap-4 min-w-0">
-        <span className="text-xs font-mono text-teacher-muted w-24 shrink-0">{formatRange(schedule)}</span>
-        <span className="truncate text-teacher-fg">{schedule.course.name}</span>
-      </div>
+      <span className="shrink-0 font-mono text-xs tabular-nums">{formatRange(schedule)}</span>
 
-      <div className="flex items-center gap-3 shrink-0 text-xs text-teacher-muted">
-        <span>{schedule.room.name}</span>
-        <span aria-label={status.label} className={`w-1.5 h-1.5 rounded-full ${status.dot}`} />
-      </div>
+      <span className="h-px flex-1 bg-foreground/10" />
+
+      <span className={`truncate ${isSelected ? 'font-medium' : ''}`}>
+        {schedule.course.name}
+      </span>
+
+      <span className="shrink-0 text-xs text-foreground/40">{schedule.room.name}</span>
+
+      <span aria-label={status.label} className={`h-1.5 w-1.5 shrink-0 rounded-full ${status.dot}`} />
     </button>
   )
 }

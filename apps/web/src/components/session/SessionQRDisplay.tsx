@@ -40,6 +40,37 @@ function QRCanvas({
   );
 }
 
+function ProgressBg({
+  progressPercent,
+  secondsLeft,
+  isExpired,
+}: {
+  progressPercent: number;
+  secondsLeft: number;
+  isExpired: boolean;
+}) {
+  const urgent = secondsLeft < 60;
+  const warning = secondsLeft < 180;
+
+  const bgFillColor = isExpired
+    ? "bg-red-500/20"
+    : urgent
+    ? "bg-red-500/15"
+    : warning
+    ? "bg-amber-500/15"
+    : "bg-emerald-500/15";
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[inherit]">
+      <motion.div
+        className={cn("h-full", bgFillColor)}
+        animate={{ width: `${progressPercent}%` }}
+        transition={{ duration: 0.8, ease: "linear" }}
+      />
+    </div>
+  );
+}
+
 function TimerBar({
   secondsLeft,
   progressPercent,
@@ -140,16 +171,16 @@ export function SessionQRDisplay({ sessionId, className }: SessionQRDisplayProps
         </AnimatePresence>
       </div>
 
-      {tokenState && (
+      {/* {tokenState && (
         <TimerBar secondsLeft={secondsLeft} progressPercent={progressPercent} isExpired={isExpired} />
-      )}
+      )} */}
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center w-full gap-1">
         <button
           onClick={generate}
           disabled={isGenerating}
           className={cn(
-            "inline-flex items-center gap-2 px-4 py-2 rounded-[10px]",
+            "relative  overflow-hidden h-9 inline-flex flex-1 items-center gap-2 px-4 rounded-[10px] rounded-r-none",
             "text-[12px] font-medium border transition-all duration-150",
             "disabled:opacity-50 disabled:cursor-not-allowed",
             tokenState
@@ -157,8 +188,18 @@ export function SessionQRDisplay({ sessionId, className }: SessionQRDisplayProps
               : "bg-foreground text-background border-transparent hover:opacity-85"
           )}
         >
-          <RefreshCw size={12} className={cn(isGenerating && "animate-spin")} />
-          {tokenState ? "Regénérer" : "Générer le QR code"}
+          {tokenState && (
+            <ProgressBg
+              progressPercent={progressPercent}
+              secondsLeft={secondsLeft}
+              isExpired={isExpired}
+            />
+          )}
+
+          <span className="relative z-10 flex items-center gap-2">
+            <RefreshCw size={12} className={cn(isGenerating && "animate-spin")} />
+            {tokenState ? "Regénérer" : "Générer le QR code"}
+          </span>
         </button>
 
         {tokenState && (
@@ -167,6 +208,8 @@ export function SessionQRDisplay({ sessionId, className }: SessionQRDisplayProps
             success={success}
             onSelect={setSelectedAction}
             onRun={run}
+            showLabel={false}
+            className="h-9 rounded-l-none"
           />
         )}
       </div>

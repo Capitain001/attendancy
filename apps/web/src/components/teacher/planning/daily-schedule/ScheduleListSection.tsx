@@ -1,5 +1,6 @@
 'use client'
 
+import { ScrollArea } from '@/components/ui/scroll-area'
 import type { ScheduleItem } from './types'
 import { ScheduleListItem } from './ScheduleListItem'
 
@@ -19,22 +20,27 @@ export function ScheduleListSection({
   defaultOpen = true,
 }: ScheduleListSectionProps) {
   return (
-    <details open={defaultOpen} className="group space-y-1">
-      <summary className="cursor-pointer select-none text-xs font-mono uppercase tracking-wider text-teacher-muted mb-2 inline-flex items-center list-none [&::-webkit-details-marker]:hidden">
-        <span className="border-b border-dashed border-teacher-surface-muted pb-0.5 hover:text-teacher-fg transition-colors">
+    <details open={defaultOpen} className="group">
+      <summary className="mb-2 inline-flex cursor-pointer select-none list-none items-center text-xs text-foreground/40 [&::-webkit-details-marker]:hidden">
+        <span className="border-b border-dashed border-foreground/20 pb-0.5 transition-colors hover:text-foreground/70">
           {title}
         </span>
+        <span className="ml-2 text-foreground/20">({schedules.length})</span>
       </summary>
 
-      <div className="space-y-1">
-        {schedules.map((schedule) => (
-          <ScheduleListItem
-            key={schedule.id}
-            schedule={schedule}
-            isSelected={schedule.id === selectedId}
-            onSelect={onSelect}
-          />
-        ))}
+      <div className="rounded-xl border border-foreground/10">
+        <ScrollArea className="max-h-72">
+          <div className="space-y-1 p-1">
+            {schedules.map((schedule) => (
+              <ScheduleListItem
+                key={schedule.id}
+                schedule={schedule}
+                isSelected={schedule.id === selectedId}
+                onSelect={onSelect}
+              />
+            ))}
+          </div>
+        </ScrollArea>
       </div>
     </details>
   )

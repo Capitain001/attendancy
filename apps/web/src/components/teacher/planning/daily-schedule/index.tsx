@@ -5,6 +5,7 @@ import type { GetTeacherSchedulesInfoDto } from '@/services/schedule'
 import { getPinnedLabel } from './format'
 import { PinnedScheduleCard } from './PinnedScheduleCard'
 import { ScheduleListSection } from './ScheduleListSection'
+import { EmptySchedule } from './EmptySchedule'
 
 type DailyScheduleViewProps = {
   schedules: GetTeacherSchedulesInfoDto
@@ -33,7 +34,11 @@ export function DailyScheduleView({ schedules }: DailyScheduleViewProps) {
       </div>
 
       {schedules.length === 0 ? (
-        <p className="text-sm text-teacher-muted py-8">Aucun cours prévu pour cette journée.</p>
+        
+        <div className='flex flex-col py-10 gap-8'>
+          <p className="text-sm text-center text-teacher-muted py-8">Aucun cours prévu pour cette journée.</p>
+          <EmptySchedule/>
+        </div>
       ) : (
         <div className="space-y-6">
           {pinnedSchedule && (
@@ -54,6 +59,8 @@ export function DailyScheduleView({ schedules }: DailyScheduleViewProps) {
                 onSelect={handleSelectSchedule}
               />
             )}
+
+       
 
             {completedSchedules.length > 0 && remainingSchedules.length > 0 && (
               <div className="relative my-4 flex items-center justify-center">

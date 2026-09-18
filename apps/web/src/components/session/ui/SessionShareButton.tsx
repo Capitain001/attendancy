@@ -34,9 +34,18 @@ interface SessionShareButtonProps {
   success: ShareAction | null;
   onSelect: (action: ShareAction) => void;
   onRun: (action: ShareAction) => void;
+  showLabel?: boolean;
+  className?: string;
 }
 
-export function SessionShareButton({ selected, success, onSelect, onRun }: SessionShareButtonProps) {
+export function SessionShareButton({ 
+  selected, 
+  success, 
+  onSelect, 
+  onRun,
+  showLabel = true,
+  className
+}: SessionShareButtonProps) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -55,18 +64,21 @@ export function SessionShareButton({ selected, success, onSelect, onRun }: Sessi
   const MainIcon = isSuccess ? Check : current.icon;
 
   return (
-    <div ref={rootRef} className="relative inline-flex">
-      <div className="inline-flex border border-border/50 rounded-[10px] overflow-hidden">
+    <div ref={rootRef} className={cn("relative inline-flex h-full rounded-[10px]", className)}>
+      <div className="inline-flex h-full w-full border border-border/50 rounded-[inherit] overflow-hidden">
         <button
           onClick={() => onRun(selected)}
+          aria-label={current.label}
           className={cn(
-            "inline-flex items-center gap-1.5 px-3.5 py-2 text-[12px] font-medium",
-            "border-r border-border/50 bg-card hover:bg-muted/50 transition-all duration-150",
+            "inline-flex items-center gap-1.5 py-2 text-[12px] font-medium border-r border-border/50 bg-card hover:bg-muted/50 transition-all duration-150",
+            showLabel ? "px-3.5" : "px-2.5",
             isSuccess ? "text-emerald-600 dark:text-emerald-400" : "text-foreground"
           )}
         >
           <MainIcon size={12} strokeWidth={isSuccess ? 2.5 : 2} />
-          <span>{isSuccess ? current.successLabel : current.label}</span>
+          {showLabel && (
+            <span>{isSuccess ? current.successLabel : current.label}</span>
+          )}
         </button>
 
         <button
@@ -102,7 +114,7 @@ export function SessionShareButton({ selected, success, onSelect, onRun }: Sessi
                   <div className="flex items-center justify-center w-7 h-7 rounded-[7px] border border-border/50 bg-background shrink-0 text-muted-foreground">
                     <ItemIcon size={13} />
                   </div>
-                  <div className="flex flex-col gap-px flex-1 min-w-0">
+                  <div className="flex flex-col gap-px flex-1 min-w-0 text-left">
                     <span className="text-[12px] font-medium text-foreground">{action.label}</span>
                     <span className="text-[11px] text-muted-foreground">{action.description}</span>
                   </div>

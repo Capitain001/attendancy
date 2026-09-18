@@ -34,6 +34,7 @@ export const MODEL_SERVICES = {
   'notification': { model: 'Notification', path: '../services/notification' },
   'organization': { model: 'Organization', path: '../services/organization' },
   'parent': { model: 'Parent', path: '../services/parent' },
+  'permission': { model: 'Permission', path: '../services/permission' },
   'program': { model: 'Program', path: '../services/program' },
   'program-track': { model: 'ProgramTrack', path: '../services/program-track' },
   'program-ue': { model: 'ProgramUE', path: '../services/program-ue' },
@@ -93,6 +94,7 @@ export type GroupServiceIndex = typeof import('../services/group')
 export type NotificationServiceIndex = typeof import('../services/notification')
 export type OrganizationServiceIndex = typeof import('../services/organization')
 export type ParentServiceIndex = typeof import('../services/parent')
+export type PermissionServiceIndex = typeof import('../services/permission')
 export type PlanningServiceIndex = typeof import('../services/planning')
 export type ProgramServiceIndex = typeof import('../services/program')
 export type ProgramTrackServiceIndex = typeof import('../services/program-track')
