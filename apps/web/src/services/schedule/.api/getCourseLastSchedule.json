@@ -1,0 +1,8 @@
+{
+  "name": "getCourseLastSchedule",
+  "file": "src/services/schedule/database/schedule.queries.ts",
+  "sig": "(courseId: string, orgId: string) => Promise<{ id: string; startTime: Date; endTime: Date; status: ScheduleStatus; attendances: { status: AttendanceStatus; }[]; room: { name: string; id: string; }; } | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

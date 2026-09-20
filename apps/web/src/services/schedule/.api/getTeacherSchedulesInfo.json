@@ -1,7 +1,7 @@
 {
   "name": "getTeacherSchedulesInfo",
   "file": "src/services/schedule/database/schedule.queries.ts",
-  "sig": "(teacherId: string, orgId: string, rangeStart: Date, rangeEnd: Date) => Promise<{ id: string; class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; status: ScheduleStatus; notes: string | null; startTime: Date; endTime: Date; }[]>",
+  "sig": "(teacherId: string, orgId: string, rangeStart: Date, rangeEnd: Date) => Promise<{ id: string; startTime: Date; endTime: Date; status: ScheduleStatus; notes: string | null; class: { name: string; id: string; }; course: { name: string; id: string; }; group: { ...; } | null; room: { ...; }; }[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

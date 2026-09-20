@@ -402,8 +402,10 @@ export async function getTeacherSchedulesInfo(
  * pas "une session à revoir".
  */
 export async function getCourseLastSchedule(courseId: string, orgId: string) {
+  'use cache'
+  cacheTag(CACHE.SCHEDULE(orgId))
+  cacheLife({ revalidate: 60 })
 
-  //cache a ajouter
   return prisma.schedule.findFirst({
     where: {
       courseId,

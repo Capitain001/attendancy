@@ -74,6 +74,9 @@ export async function getCourseDetail(courseId: string, orgId: string) {
       durationTotal: true,
       classId: true,
       termId: true,
+      term: {
+        select: { id: true, name: true },
+      },
       class: {
         select: {
           id: true,

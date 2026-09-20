@@ -2,72 +2,43 @@
 
 import Link from 'next/link'
 import { ArrowLeft, Clock, GraduationCap, Users } from 'lucide-react'
+import type { GetCourseDetailDto } from '@/services/course/generated.types'
+import type { GetCourseLastScheduleDto, GetTeacherNextScheduleDto } from '@/services/schedule/generated.types'
+import type { ScheduleStatus } from '@/generated/prisma/client'
 
-type LastSessionStatus = 'COMPLETED' | 'CANCELED' | 'MISSED' | 'PENDING'
-
-interface CourseTeacherView {
-  id: string
-  isMain: boolean
-  hours: number | null
-  teacher: {
-    id: string
-    user: { firstName: string | null; lastName: string | null }
-  } | null
-}
-
-interface LastSessionSummary {
-  date: Date
-  status: LastSessionStatus
-  presentCount: number | null
-  totalCount: number | null
-}
-
-interface NextSessionSummary {
-  date: Date
-}
-
-export interface CourseDetailView {
-  id: string
-  name: string
-  description: string | null
-  credits: number
-  durationDone: number
-  durationTotal: number
-  class: { id: string; name: string }
-  term: { id: string; name: string } | null
-  teachers: CourseTeacherView[]
-  lastSession: LastSessionSummary | null
-  nextSession: NextSessionSummary | null
-}
+export type CourseDetailDto = NonNullable<GetCourseDetailDto>
+export type CourseTeacherItem = CourseDetailDto['teachers'][number]
 
 interface CoursePageProps {
-  course: CourseDetailView
+  course: CourseDetailDto
+  lastSchedule: GetCourseLastScheduleDto | null
+  nextSchedule: GetTeacherNextScheduleDto | null
 }
 
-function teacherName(ct: CourseTeacherView) {
+function teacherName(ct: CourseTeacherItem) {
   const { firstName, lastName } = ct.teacher?.user ?? {}
   const name = [firstName, lastName].filter(Boolean).join(' ')
   return name || 'Enseignant inconnu'
 }
 
-function formatSessionDate(date: Date) {
+function formatSessionDate(date: Date | string) {
   return new Intl.DateTimeFormat('fr-FR', {
     weekday: 'short',
     day: 'numeric',
     month: 'short',
     hour: '2-digit',
     minute: '2-digit',
-  }).format(date)
+  }).format(new Date(date))
 }
 
-const LAST_SESSION_CONFIG: Record<LastSessionStatus, { label: string; dot: string }> = {
+const LAST_SESSION_CONFIG: Record<ScheduleStatus, { label: string; dot: string }> = {
   COMPLETED: { label: 'Effectuée', dot: 'bg-emerald-500/70' },
   CANCELED: { label: 'Annulée', dot: 'bg-amber-500/70' },
-  MISSED: { label: 'Non tenue', dot: 'bg-rose-500/70' },
   PENDING: { label: 'En attente', dot: 'bg-foreground/30' },
+  MISSED: { label: 'Non tenue', dot: 'bg-rose-500/70' },
 }
 
-export function CoursePage({ course }: CoursePageProps) {
+export function CoursePage({ course, lastSchedule, nextSchedule }: CoursePageProps) {
   const progress =
     course.durationTotal > 0
       ? Math.min(100, Math.round((course.durationDone / course.durationTotal) * 100))
@@ -75,7 +46,9 @@ export function CoursePage({ course }: CoursePageProps) {
 
   const mainTeacher = course.teachers.find((t) => t.isMain)
   const coTeachers = course.teachers.filter((t) => !t.isMain)
-  const lastConfig = course.lastSession ? LAST_SESSION_CONFIG[course.lastSession.status] : null
+  const lastConfig = lastSchedule ? LAST_SESSION_CONFIG[lastSchedule.status] : null
+  const presentCount = lastSchedule?.attendances.filter((a) => a.status === 'PRESENT').length ?? 0
+  const totalCount = course.class._count.studentEnrollments
 
   return (
     <div className="flex flex-col gap-6 pb-20">
@@ -160,59 +133,58 @@ export function CoursePage({ course }: CoursePageProps) {
         </div>
       )}
 
-{/* Séances */}
-<div className="flex flex-col gap-1.5">
-  <p className="text-xs text-foreground/40">Séances</p>
-  <div className="overflow-hidden rounded-xl border border-foreground/10">
-    <div className="p-1">
-      {/* Dernière séance */}
-      <div className="flex h-12 items-center gap-3 border-b border-foreground/[0.06] bg-foreground/[0.02] px-3 text-sm sm:h-10 sm:rounded-lg sm:border-b-0 sm:bg-transparent sm:hover:bg-foreground/5">
-        <span
-          className={`size-1.5 shrink-0 rounded-full ${lastConfig ? lastConfig.dot : 'bg-foreground/15'}`}
-        />
-        <span className="shrink-0 text-foreground/70">Dernière séance</span>
-        <span className="h-px flex-1 bg-foreground/10" />
-        <span
-          className={`shrink-0 text-right text-xs tabular-nums ${
-            !course.lastSession
-              ? 'text-foreground/25'
-              : course.lastSession.status === 'CANCELED'
-                ? 'text-rose-500/60 line-through'
-                : course.lastSession.status === 'MISSED'
-                  ? 'text-foreground/25'
-                  : 'text-foreground/50'
-          }`}
-        >
-          {course.lastSession ? (
-            <>
-              {formatSessionDate(course.lastSession.date)}
-              {course.lastSession.status === 'COMPLETED' &&
-                course.lastSession.presentCount !== null &&
-                course.lastSession.totalCount !== null &&
-                ` · ${course.lastSession.presentCount}/${course.lastSession.totalCount}`}
-            </>
-          ) : (
-            'Aucune'
-          )}
-        </span>
-      </div>
+      {/* Séances */}
+      <div className="flex flex-col gap-1.5">
+        <p className="text-xs text-foreground/40">Séances</p>
+        <div className="overflow-hidden rounded-xl border border-foreground/10">
+          <div className="p-1">
+            {/* Dernière séance */}
+            <div className="flex h-12 items-center gap-3 border-b border-foreground/[0.06] bg-foreground/[0.02] px-3 text-sm sm:h-10 sm:rounded-lg sm:border-b-0 sm:bg-transparent sm:hover:bg-foreground/5">
+              <span
+                className={`size-1.5 shrink-0 rounded-full ${lastConfig ? lastConfig.dot : 'bg-foreground/15'}`}
+              />
+              <span className="shrink-0 text-foreground/70">Dernière séance</span>
+              <span className="h-px flex-1 bg-foreground/10" />
+              <span
+                className={`shrink-0 text-right text-xs tabular-nums ${
+                  !lastSchedule
+                    ? 'text-foreground/25'
+                    : lastSchedule.status === 'CANCELED'
+                      ? 'text-rose-500/60 line-through'
+                      : lastSchedule.status === 'MISSED'
+                        ? 'text-foreground/25'
+                        : 'text-foreground/50'
+                }`}
+              >
+                {lastSchedule ? (
+                  <>
+                    {formatSessionDate(lastSchedule.startTime)}
+                    {lastSchedule.status === 'COMPLETED' &&
+                      totalCount > 0 &&
+                      ` · ${presentCount}/${totalCount}`}
+                  </>
+                ) : (
+                  'Aucune'
+                )}
+              </span>
+            </div>
 
-      {/* Prochaine séance */}
-      <div className="flex h-12 items-center gap-3 bg-foreground/[0.02] px-3 text-sm sm:h-10 sm:rounded-lg sm:bg-transparent sm:hover:bg-foreground/5">
-        <span
-          className={`size-1.5 shrink-0 rounded-full ${
-            course.nextSession ? 'border border-foreground/30' : 'border border-dashed border-foreground/20'
-          }`}
-        />
-        <span className="shrink-0 text-foreground/70">Prochaine séance</span>
-        <span className="h-px flex-1 bg-foreground/10" />
-        <span className="shrink-0 text-right text-xs tabular-nums text-foreground/40">
-          {course.nextSession ? formatSessionDate(course.nextSession.date) : 'Aucune prévue'}
-        </span>
+            {/* Prochaine séance */}
+            <div className="flex h-12 items-center gap-3 bg-foreground/[0.02] px-3 text-sm sm:h-10 sm:rounded-lg sm:bg-transparent sm:hover:bg-foreground/5">
+              <span
+                className={`size-1.5 shrink-0 rounded-full ${
+                  nextSchedule ? 'border border-foreground/30' : 'border border-dashed border-foreground/20'
+                }`}
+              />
+              <span className="shrink-0 text-foreground/70">Prochaine séance</span>
+              <span className="h-px flex-1 bg-foreground/10" />
+              <span className="shrink-0 text-right text-xs tabular-nums text-foreground/40">
+                {nextSchedule ? formatSessionDate(nextSchedule.startTime) : 'Aucune prévue'}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
 
       {/* Progression */}
       {progress !== null && (

@@ -99,8 +99,8 @@ export async function getTeacherNextScheduleAction({ teacherId }: { teacherId: s
   const { orgId } = auth.data
 
   try {
-    // return { data: await getTeacherNextSchedule(teacherId, orgId) }
-    return {data: mockGetTeacherNextSchedule}
+    return { data: await getTeacherNextSchedule(teacherId, orgId) }
+    // return {data: mockGetTeacherNextSchedule}
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

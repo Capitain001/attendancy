@@ -1,4 +1,31 @@
-import { CourseDetailView } from "@/components/teacher/courses/CoursePage"
+export interface CourseDetailView {
+  id: string
+  name: string
+  description: string | null
+  credits: number
+  durationDone: number
+  durationTotal: number
+  class: { id: string; name: string }
+  term: { id: string; name: string } | null
+  teachers: Array<{
+    id: string
+    isMain: boolean
+    hours: number | null
+    teacher: {
+      id: string
+      user: { firstName: string | null; lastName: string | null }
+    } | null
+  }>
+  lastSession: {
+    date: Date
+    status: 'COMPLETED' | 'CANCELED' | 'MISSED' | 'PENDING'
+    presentCount: number | null
+    totalCount: number | null
+  } | null
+  nextSession: {
+    date: Date
+  } | null
+}
 
 export const mockCourse: CourseDetailView = {
   id: 'a1e4f2c0-1234-4a9b-8f21-000000000001',
