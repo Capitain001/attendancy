@@ -44,6 +44,7 @@ export async function getTeacherCourses(teacherId: string, orgId: string) {
     },
     select: {
       isMain: true,
+      hours:true, // ici
       course: { select: { id: true, name: true, class: { select: { id: true, name: true } } } },
     },
     orderBy: { course: { name: 'asc' } },
@@ -52,5 +53,6 @@ export async function getTeacherCourses(teacherId: string, orgId: string) {
   return rows.map((r) => ({
     ...r.course,
     isMain: r.isMain,
+    hours: r.hours,
   }))
 }

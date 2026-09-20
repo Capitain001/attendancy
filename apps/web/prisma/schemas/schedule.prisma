@@ -248,7 +248,6 @@ model TeacherUnavailability {
 
   // Forme WEEKLY (récurrente)
   dayOfWeek Int?
-
   startTime DateTime? @db.Time() 
   endTime   DateTime? @db.Time() 
 

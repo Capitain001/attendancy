@@ -6,6 +6,7 @@ import { getPinnedLabel } from './format'
 import { PinnedScheduleCard } from './PinnedScheduleCard'
 import { ScheduleListSection } from './ScheduleListSection'
 import { EmptySchedule } from './EmptySchedule'
+import { ChevronRight } from 'lucide-react'
 
 type DailyScheduleViewProps = {
   schedules: GetTeacherSchedulesInfoDto

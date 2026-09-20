@@ -32,7 +32,7 @@ model Teacher {
   departmentId String?         @db.Uuid
   courses      CourseTeacher[]
   schedules    Schedule[]
-    unavailabilities TeacherUnavailability[]
+  unavailabilities TeacherUnavailability[]
   department   Department?     @relation(fields: [departmentId], references: [id], onDelete: SetNull)
   user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   
