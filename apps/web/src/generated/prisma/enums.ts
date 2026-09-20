@@ -147,6 +147,16 @@ export const SessionRevokeReason = {
 export type SessionRevokeReason = (typeof SessionRevokeReason)[keyof typeof SessionRevokeReason]
 
 
+export const GradeStatus = {
+  GRADED: 'GRADED',
+  ABSENT: 'ABSENT',
+  EXCUSED: 'EXCUSED',
+  PENDING: 'PENDING'
+} as const
+
+export type GradeStatus = (typeof GradeStatus)[keyof typeof GradeStatus]
+
+
 export const EvaluationType = {
   DEVOIR: 'DEVOIR',
   EXAMEN: 'EXAMEN',

@@ -1,33 +1,67 @@
 // ─── Évaluation ──────────────────────────────────────────────────────────────
 // Fait immuable (pas de soft delete) : correction = UPDATE + trace AuditLog.
-// Le bulletin se partitionne STRUCTURELLEMENT (Course → UECourse → UE →
-// ProgramUE.semester) ; Term ne fait que dater/clôturer les périodes — pas
-// de termId ici tant qu'aucune UE ne court sur plusieurs semestres.
+// Deux niveaux : Evaluation = l'évaluation comme ÉVÉNEMENT (« Devoir 2 d'Algo »,
+// avec son barème et son coefficient), Grade = la note d'UNE inscription à cet
+// événement. Le bulletin se partitionne STRUCTURELLEMENT (Course → UECourse →
+// UE → ProgramUE.semester) ; Term ne fait que dater/clôturer les périodes.
 // La clôture d'un Term (lockedAt) fige les évaluations de ses cours (garde
 // applicative dans le service).
 
 model Evaluation {
-  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  courseId     String         @db.Uuid
-  studentId    String         @db.Uuid
-  type         EvaluationType
-  score        Float
-  maxScore     Float          @default(20)
-  comment      String?
-  datedAt      DateTime       @default(now())
-  createdAt    DateTime       @default(now())
-  classId      String         @db.Uuid
-  // orgId dénormalisé : table chaude, requêtes org-wide sans join Course.
-  orgId        String         @db.Uuid
-  class        Class          @relation(fields: [classId], references: [id])
-  course       Course         @relation(fields: [courseId], references: [id])
-  student      Student        @relation(fields: [studentId], references: [id])
-  organization Organization   @relation(fields: [orgId], references: [id])
+  id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orgId       String         @db.Uuid
+  courseId    String         @db.Uuid
+  type        EvaluationType
+  title       String
+  // Poids dans la moyenne du cours. Decimal : pas d'erreur d'arrondi flottant
+  // sur des moyennes pondérées.
+  coefficient Float        @default(1)
+  maxScore    Float        @default(20) 
+  datedAt     DateTime
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
 
-  @@index([studentId])
+  organization Organization @relation(fields: [orgId], references: [id])
+  course       Course       @relation(fields: [courseId], references: [id])
+  grades       Grade[]
+
   @@index([courseId])
-  @@index([classId])
   @@index([orgId, datedAt])
+  @@schema("public")
+}
+
+// Note d'une INSCRIPTION (pas d'un étudiant) à une évaluation, comme Attendance :
+// l'inscription porte l'ancrage classe/année. Aucun contrôle de classe en base :
+// un rattrapage peut viser des étudiants d'une autre classe. score est NULL tant
+// que status ≠ GRADED : ABSENT (absent à l'épreuve), EXCUSED (dispensé),
+// PENDING (pas encore saisi) — ce qui distingue « absent » de « non saisi ».
+// Cascade sur evaluation : la feuille de notes meurt avec son évaluation.
+// Restrict sur enrollment : dès la première note, l'inscription devient
+// insupprimable (historique).
+model Grade {
+  id           String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  evaluationId String      @db.Uuid
+  enrollmentId String      @db.Uuid
+  status       GradeStatus @default(PENDING)
+  score        Float? //   Float? car en js decimal sera convertie en float de tte facon
+  comment      String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  evaluation Evaluation        @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+  enrollment StudentEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Restrict)
+
+  @@unique([evaluationId, enrollmentId])
+  @@index([enrollmentId])
+  @@schema("public")
+}
+
+enum GradeStatus {
+  GRADED
+  ABSENT
+  EXCUSED
+  PENDING
+
   @@schema("public")
 }
 

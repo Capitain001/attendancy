@@ -393,3 +393,35 @@ export async function getTeacherSchedulesInfo(
     orderBy: { startTime: 'asc' },
   })
 }
+
+
+/**
+ * Dernière séance (Schedule) déjà entamée d'un cours — pour affichage
+ * "résumé du cours" (date, statut, effectif, présence). Ne renvoie que les
+ * séances passées ou en cours (startTime <= now) : une séance future n'est
+ * pas "une session à revoir".
+ */
+export async function getCourseLastSchedule(courseId: string, orgId: string) {
+
+  //cache a ajouter
+  return prisma.schedule.findFirst({
+    where: {
+      courseId,
+      orgId,
+      deletedAt: null,
+      startTime: { lte: new Date() },
+    },
+    orderBy: { startTime: 'desc' },
+      select: {
+      id: true,
+      startTime: true,
+      endTime: true,
+      status: true,
+      room: { select: { id: true, name: true } },
+      attendances: {
+        select: { status: true },
+      },
+    },
+  })
+}
+ 

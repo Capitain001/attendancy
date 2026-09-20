@@ -597,7 +597,6 @@ export type AttendanceCreateWithoutEnrollmentInput = {
 export type AttendanceUncheckedCreateWithoutEnrollmentInput = {
   id?: string
   scheduleId: string
-  studentId: string
   status?: $Enums.AttendanceStatus
   recordedAt?: Date | string
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -793,7 +792,6 @@ export type AttendanceUpdateManyWithWhereWithoutOrganizationInput = {
 export type AttendanceCreateManyEnrollmentInput = {
   id?: string
   scheduleId: string
-  studentId: string
   status?: $Enums.AttendanceStatus
   recordedAt?: Date | string
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -815,7 +813,6 @@ export type AttendanceUpdateWithoutEnrollmentInput = {
 export type AttendanceUncheckedUpdateWithoutEnrollmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   scheduleId?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -826,7 +823,6 @@ export type AttendanceUncheckedUpdateWithoutEnrollmentInput = {
 export type AttendanceUncheckedUpdateManyWithoutEnrollmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   scheduleId?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue

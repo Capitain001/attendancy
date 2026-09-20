@@ -63,6 +63,7 @@ import { USER_ORGANIZATION_GRAPH } from "@/services/user-organization/cache";
 import { DEVICE_GRAPH } from "@/services/device/cache";
 import { PERMISSION_GRAPH } from "@/services/permission/cache";
 
+import { TEACHER_COURSE_HOURS_GRAPH } from "@/services/teacher-course-hours/cache";
 // ⚠ À ÉTENDRE PAR PROJET — un import par service à données cachées :
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -104,6 +105,7 @@ export const CACHE_GRAPH = {
   ...USER_ORGANIZATION_GRAPH,
   ...DEVICE_GRAPH,
   ...PERMISSION_GRAPH,
+  ...TEACHER_COURSE_HOURS_GRAPH,
 // ⚠ À ÉTENDRE PAR PROJET — spreader chaque <SERVICE>_GRAPH importé :
 } as const;
 

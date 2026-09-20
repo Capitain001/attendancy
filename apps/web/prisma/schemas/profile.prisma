@@ -52,7 +52,6 @@ model Student {
   updatedAt          DateTime            @updatedAt
   deletedAt          DateTime?
   attendances        Attendance[]
-  evaluations        Evaluation[]
   justifications     Justification[]
   optionalUEs        OptionalUE[]
   childrenRelations  ParentRelation[]    @relation("StudentToParent")

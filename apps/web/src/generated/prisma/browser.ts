@@ -188,6 +188,11 @@ export type UserSession = Prisma.UserSessionModel
  */
 export type Evaluation = Prisma.EvaluationModel
 /**
+ * Model Grade
+ * 
+ */
+export type Grade = Prisma.GradeModel
+/**
  * Model Admin
  * 
  */

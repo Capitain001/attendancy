@@ -457,14 +457,6 @@ export type UETemplateUncheckedUpdateManyWithoutReferentialNestedInput = {
   deleteMany?: Prisma.UETemplateScalarWhereInput | Prisma.UETemplateScalarWhereInput[]
 }
 
-export type NullableFloatFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type UETemplateCreateNestedOneWithoutElementsInput = {
   create?: Prisma.XOR<Prisma.UETemplateCreateWithoutElementsInput, Prisma.UETemplateUncheckedCreateWithoutElementsInput>
   connectOrCreate?: Prisma.UETemplateCreateOrConnectWithoutElementsInput

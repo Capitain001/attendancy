@@ -27,6 +27,11 @@ ALTER TABLE "public"."Session"
 CREATE INDEX IF NOT EXISTS session_position_idx
   ON "public"."Session" USING GIST (position);
 
+-- Une seule demande PENDING par (séance, étudiant) — garde de workflow en base.
+CREATE UNIQUE INDEX IF NOT EXISTS "justification_pending_unique_idx"
+  ON "public"."Justification" ("scheduleId", "studentId")
+  WHERE status = 'PENDING';
+  
 -- ─── Fonctions ───────────────────────────────────────────────────────────────
 
 -- Calcul spatial pur — aucune requête interne, testable sans fixture :

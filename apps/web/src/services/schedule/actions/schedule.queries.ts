@@ -13,6 +13,7 @@ import {
   getTeacherSchedules,
   ScheduleDaysFilterParams,
   getTeacherSchedulesInfo,
+  getCourseLastSchedule,
 } from '../database'
 import { getCourses } from '@/services/course/database'
 // import { getGroupsByClass } from '@/services/group/database'
@@ -183,6 +184,18 @@ export async function getTeacherSchedulesInfoAction({
     const { orgId } = auth.data
 
     return { data: await getTeacherSchedulesInfo(teacherId, orgId, rangeStart, rangeEnd) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+
+export async function getCourseLastScheduleAction(courseId: string) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
+  try {
+    return { data: await getCourseLastSchedule(courseId, orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

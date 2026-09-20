@@ -85,6 +85,7 @@ export const ModelName = {
   UserDevice: 'UserDevice',
   UserSession: 'UserSession',
   Evaluation: 'Evaluation',
+  Grade: 'Grade',
   Admin: 'Admin',
   Teacher: 'Teacher',
   Student: 'Student',
@@ -626,19 +627,32 @@ export type UserSessionScalarFieldEnum = (typeof UserSessionScalarFieldEnum)[key
 
 export const EvaluationScalarFieldEnum = {
   id: 'id',
+  orgId: 'orgId',
   courseId: 'courseId',
-  studentId: 'studentId',
   type: 'type',
-  score: 'score',
+  title: 'title',
+  coefficient: 'coefficient',
   maxScore: 'maxScore',
-  comment: 'comment',
   datedAt: 'datedAt',
   createdAt: 'createdAt',
-  classId: 'classId',
-  orgId: 'orgId'
+  updatedAt: 'updatedAt'
 } as const
 
 export type EvaluationScalarFieldEnum = (typeof EvaluationScalarFieldEnum)[keyof typeof EvaluationScalarFieldEnum]
+
+
+export const GradeScalarFieldEnum = {
+  id: 'id',
+  evaluationId: 'evaluationId',
+  enrollmentId: 'enrollmentId',
+  status: 'status',
+  score: 'score',
+  comment: 'comment',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GradeScalarFieldEnum = (typeof GradeScalarFieldEnum)[keyof typeof GradeScalarFieldEnum]
 
 
 export const AdminScalarFieldEnum = {

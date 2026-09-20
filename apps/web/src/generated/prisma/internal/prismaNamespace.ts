@@ -431,6 +431,7 @@ export const ModelName = {
   UserDevice: 'UserDevice',
   UserSession: 'UserSession',
   Evaluation: 'Evaluation',
+  Grade: 'Grade',
   Admin: 'Admin',
   Teacher: 'Teacher',
   Student: 'Student',
@@ -481,7 +482,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "academicYear" | "department" | "programTrack" | "program" | "programUE" | "uE" | "uECourse" | "class" | "term" | "course" | "courseTeacher" | "teacherCourseHours" | "optionalUE" | "studentEnrollment" | "group" | "studentGroup" | "session" | "sessionToken" | "attendance" | "qRCode" | "qRScan" | "justification" | "plan" | "subscription" | "channel" | "channelMember" | "message" | "realtimeItem" | "comment" | "notification" | "pushSubscription" | "userDevice" | "userSession" | "evaluation" | "admin" | "teacher" | "student" | "parent" | "direction" | "parentRelation" | "referential" | "programTemplate" | "uETemplate" | "uETemplateEC" | "programUETemplate" | "orgProgramTemplate" | "orgUETemplate" | "schedule" | "weeklyTemplate" | "weeklySlot" | "weekRecurence" | "location" | "room" | "event" | "eventParticipant" | "teacherUnavailability" | "superAdmin" | "user" | "organization" | "organizationSettings" | "organizationUsage" | "userOrganization" | "function" | "userFunction" | "permission" | "invitation" | "document" | "auditLog" | "approvalRequest"
+    modelProps: "academicYear" | "department" | "programTrack" | "program" | "programUE" | "uE" | "uECourse" | "class" | "term" | "course" | "courseTeacher" | "teacherCourseHours" | "optionalUE" | "studentEnrollment" | "group" | "studentGroup" | "session" | "sessionToken" | "attendance" | "qRCode" | "qRScan" | "justification" | "plan" | "subscription" | "channel" | "channelMember" | "message" | "realtimeItem" | "comment" | "notification" | "pushSubscription" | "userDevice" | "userSession" | "evaluation" | "grade" | "admin" | "teacher" | "student" | "parent" | "direction" | "parentRelation" | "referential" | "programTemplate" | "uETemplate" | "uETemplateEC" | "programUETemplate" | "orgProgramTemplate" | "orgUETemplate" | "schedule" | "weeklyTemplate" | "weeklySlot" | "weekRecurence" | "location" | "room" | "event" | "eventParticipant" | "teacherUnavailability" | "superAdmin" | "user" | "organization" | "organizationSettings" | "organizationUsage" | "userOrganization" | "function" | "userFunction" | "permission" | "invitation" | "document" | "auditLog" | "approvalRequest"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2998,6 +2999,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.EvaluationCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.EvaluationCountAggregateOutputType> | number
+        }
+      }
+    }
+    Grade: {
+      payload: Prisma.$GradePayload<ExtArgs>
+      fields: Prisma.GradeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GradeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GradePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GradeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GradePayload>
+        }
+        findFirst: {
+          args: Prisma.GradeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GradePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GradeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GradePayload>
+        }
+        findMany: {
+          args: Prisma.GradeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GradePayload>[]
+        }
+        create: {
+          args: Prisma.GradeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GradePayload>
+        }
+        createMany: {
+          args: Prisma.GradeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GradeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GradePayload>[]
+        }
+        delete: {
+          args: Prisma.GradeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GradePayload>
+        }
+        update: {
+          args: Prisma.GradeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GradePayload>
+        }
+        deleteMany: {
+          args: Prisma.GradeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GradeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GradeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GradePayload>[]
+        }
+        upsert: {
+          args: Prisma.GradeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GradePayload>
+        }
+        aggregate: {
+          args: Prisma.GradeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGrade>
+        }
+        groupBy: {
+          args: Prisma.GradeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GradeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GradeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GradeCountAggregateOutputType> | number
         }
       }
     }
@@ -6118,19 +6193,32 @@ export type UserSessionScalarFieldEnum = (typeof UserSessionScalarFieldEnum)[key
 
 export const EvaluationScalarFieldEnum = {
   id: 'id',
+  orgId: 'orgId',
   courseId: 'courseId',
-  studentId: 'studentId',
   type: 'type',
-  score: 'score',
+  title: 'title',
+  coefficient: 'coefficient',
   maxScore: 'maxScore',
-  comment: 'comment',
   datedAt: 'datedAt',
   createdAt: 'createdAt',
-  classId: 'classId',
-  orgId: 'orgId'
+  updatedAt: 'updatedAt'
 } as const
 
 export type EvaluationScalarFieldEnum = (typeof EvaluationScalarFieldEnum)[keyof typeof EvaluationScalarFieldEnum]
+
+
+export const GradeScalarFieldEnum = {
+  id: 'id',
+  evaluationId: 'evaluationId',
+  enrollmentId: 'enrollmentId',
+  status: 'status',
+  score: 'score',
+  comment: 'comment',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GradeScalarFieldEnum = (typeof GradeScalarFieldEnum)[keyof typeof GradeScalarFieldEnum]
 
 
 export const AdminScalarFieldEnum = {
@@ -7047,6 +7135,20 @@ export type ListEnumEvaluationTypeFieldRefInput<$PrismaModel> = FieldRefInputTyp
 
 
 /**
+ * Reference to a field of type 'GradeStatus'
+ */
+export type EnumGradeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GradeStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'GradeStatus[]'
+ */
+export type ListEnumGradeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GradeStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'DegreeType'
  */
 export type EnumDegreeTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DegreeType'>
@@ -7440,6 +7542,7 @@ export type GlobalOmitConfig = {
   userDevice?: Prisma.UserDeviceOmit
   userSession?: Prisma.UserSessionOmit
   evaluation?: Prisma.EvaluationOmit
+  grade?: Prisma.GradeOmit
   admin?: Prisma.AdminOmit
   teacher?: Prisma.TeacherOmit
   student?: Prisma.StudentOmit

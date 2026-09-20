@@ -633,21 +633,11 @@ export type EnumEvaluationTypeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumEvaluationTypeFilter<$PrismaModel>
 }
 
-export type EnumDegreeTypeFilter<$PrismaModel = never> = {
-  equals?: $Enums.DegreeType | Prisma.EnumDegreeTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.DegreeType[] | Prisma.ListEnumDegreeTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.DegreeType[] | Prisma.ListEnumDegreeTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumDegreeTypeFilter<$PrismaModel> | $Enums.DegreeType
-}
-
-export type EnumDegreeTypeWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.DegreeType | Prisma.EnumDegreeTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.DegreeType[] | Prisma.ListEnumDegreeTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.DegreeType[] | Prisma.ListEnumDegreeTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumDegreeTypeWithAggregatesFilter<$PrismaModel> | $Enums.DegreeType
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumDegreeTypeFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumDegreeTypeFilter<$PrismaModel>
+export type EnumGradeStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.GradeStatus | Prisma.EnumGradeStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.GradeStatus[] | Prisma.ListEnumGradeStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.GradeStatus[] | Prisma.ListEnumGradeStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumGradeStatusFilter<$PrismaModel> | $Enums.GradeStatus
 }
 
 export type FloatNullableFilter<$PrismaModel = never> = {
@@ -659,6 +649,16 @@ export type FloatNullableFilter<$PrismaModel = never> = {
   gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   not?: Prisma.NestedFloatNullableFilter<$PrismaModel> | number | null
+}
+
+export type EnumGradeStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.GradeStatus | Prisma.EnumGradeStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.GradeStatus[] | Prisma.ListEnumGradeStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.GradeStatus[] | Prisma.ListEnumGradeStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumGradeStatusWithAggregatesFilter<$PrismaModel> | $Enums.GradeStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumGradeStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumGradeStatusFilter<$PrismaModel>
 }
 
 export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -675,6 +675,23 @@ export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedFloatNullableFilter<$PrismaModel>
   _min?: Prisma.NestedFloatNullableFilter<$PrismaModel>
   _max?: Prisma.NestedFloatNullableFilter<$PrismaModel>
+}
+
+export type EnumDegreeTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.DegreeType | Prisma.EnumDegreeTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.DegreeType[] | Prisma.ListEnumDegreeTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DegreeType[] | Prisma.ListEnumDegreeTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDegreeTypeFilter<$PrismaModel> | $Enums.DegreeType
+}
+
+export type EnumDegreeTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DegreeType | Prisma.EnumDegreeTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.DegreeType[] | Prisma.ListEnumDegreeTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DegreeType[] | Prisma.ListEnumDegreeTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDegreeTypeWithAggregatesFilter<$PrismaModel> | $Enums.DegreeType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDegreeTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDegreeTypeFilter<$PrismaModel>
 }
 
 export type EnumUETemplateTypeFilter<$PrismaModel = never> = {
@@ -1583,21 +1600,21 @@ export type NestedEnumEvaluationTypeWithAggregatesFilter<$PrismaModel = never> =
   _max?: Prisma.NestedEnumEvaluationTypeFilter<$PrismaModel>
 }
 
-export type NestedEnumDegreeTypeFilter<$PrismaModel = never> = {
-  equals?: $Enums.DegreeType | Prisma.EnumDegreeTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.DegreeType[] | Prisma.ListEnumDegreeTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.DegreeType[] | Prisma.ListEnumDegreeTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumDegreeTypeFilter<$PrismaModel> | $Enums.DegreeType
+export type NestedEnumGradeStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.GradeStatus | Prisma.EnumGradeStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.GradeStatus[] | Prisma.ListEnumGradeStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.GradeStatus[] | Prisma.ListEnumGradeStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumGradeStatusFilter<$PrismaModel> | $Enums.GradeStatus
 }
 
-export type NestedEnumDegreeTypeWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.DegreeType | Prisma.EnumDegreeTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.DegreeType[] | Prisma.ListEnumDegreeTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.DegreeType[] | Prisma.ListEnumDegreeTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumDegreeTypeWithAggregatesFilter<$PrismaModel> | $Enums.DegreeType
+export type NestedEnumGradeStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.GradeStatus | Prisma.EnumGradeStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.GradeStatus[] | Prisma.ListEnumGradeStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.GradeStatus[] | Prisma.ListEnumGradeStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumGradeStatusWithAggregatesFilter<$PrismaModel> | $Enums.GradeStatus
   _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumDegreeTypeFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumDegreeTypeFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumGradeStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumGradeStatusFilter<$PrismaModel>
 }
 
 export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -1614,6 +1631,23 @@ export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedFloatNullableFilter<$PrismaModel>
   _min?: Prisma.NestedFloatNullableFilter<$PrismaModel>
   _max?: Prisma.NestedFloatNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumDegreeTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.DegreeType | Prisma.EnumDegreeTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.DegreeType[] | Prisma.ListEnumDegreeTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DegreeType[] | Prisma.ListEnumDegreeTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDegreeTypeFilter<$PrismaModel> | $Enums.DegreeType
+}
+
+export type NestedEnumDegreeTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DegreeType | Prisma.EnumDegreeTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.DegreeType[] | Prisma.ListEnumDegreeTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DegreeType[] | Prisma.ListEnumDegreeTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDegreeTypeWithAggregatesFilter<$PrismaModel> | $Enums.DegreeType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDegreeTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDegreeTypeFilter<$PrismaModel>
 }
 
 export type NestedEnumUETemplateTypeFilter<$PrismaModel = never> = {

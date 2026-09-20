@@ -67,8 +67,18 @@ model Attendance {
   orgId        String            @db.Uuid
   schedule     Schedule          @relation(fields: [scheduleId], references: [id])
   student      Student           @relation(fields: [studentId], references: [id])
-  enrollment   StudentEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Restrict)
+
+  // FK composite (enrollmentId, studentId) → StudentEnrollment(id, studentId).
+  // Attendance désigne l'étudiant de deux façons : `student` directement, et
+  // `enrollment` via son inscription. Cette FK force les deux chemins à
+  // converger : impossible d'enregistrer une présence pour l'étudiant A
+  // rattachée à l'inscription de l'étudiant B. Sans elle, la même ligne
+  // apparaîtrait dans l'historique de A (requêtes par studentId) mais dans la
+  // liste de classe de B (requêtes par enrollmentId), sans aucune erreur.
+  // Violation → P2003.
+  enrollment   StudentEnrollment @relation(fields: [enrollmentId, studentId], references: [id, studentId], onDelete: Restrict)
   organization   Organization      @relation(fields: [orgId], references: [id])
+
 
   @@unique([scheduleId, studentId])
   @@index([studentId])

@@ -40,6 +40,56 @@ export async function getActiveSessions(orgId: string) {
   })
 }
 
+
+// Select PARTAGÉ avec getOrgDaySchedulesWithSession — même forme de ligne,
+// volontairement, pour que les helpers purs de utils.ts (classifyDaySession,
+// effectiveCount, presenceStats, teacherName) s'appliquent identiquement,
+// que la ligne vienne d'un scan "jour de l'org" ou d'un lookup "dernière
+// séance d'un cours". Ne pas diverger cette forme sans mettre à jour les
+// deux appelants + les helpers.
+const courseDaySessionSelect = {
+  id: true,
+  startTime: true,
+  endTime: true,
+  status: true,
+  notes: true,
+  course: { select: { id: true, name: true } },
+  room: { select: { id: true, name: true } },
+  class: {
+    select: {
+      id: true,
+      name: true,
+      _count: { select: { studentEnrollments: true } },
+    },
+  },
+  group: {
+    select: {
+      id: true,
+      name: true,
+      _count: { select: { studentGroups: true } },
+    },
+  },
+  teacher: {
+    select: {
+      id: true,
+      user: { select: { firstName: true, lastName: true, avatar_url: true } },
+    },
+  },
+  session: {
+    select: {
+      id: true,
+      status: true,
+      checkIn: true,
+      checkOut: true,
+      isLate: true,
+    },
+  },
+  attendances: {
+    select: { status: true },
+  },
+} as const
+ 
+
 export async function getOrgDaySchedulesWithSession(
   orgId: string,
   rangeStart: Date,
@@ -52,50 +102,10 @@ export async function getOrgDaySchedulesWithSession(
       startTime: { gte: rangeStart, lte: rangeEnd },
     },
     orderBy: { startTime: 'asc' },
-    select: {
-      id: true,
-      startTime: true,
-      endTime: true,
-      status: true,
-      notes: true,
-      course: { select: { id: true, name: true } },
-      room: { select: { id: true, name: true } },
-      class: {
-        select: {
-          id: true,
-          name: true,
-          _count: { select: { studentEnrollments: true } },
-        },
-      },
-      group: {
-        select: {
-          id: true,
-          name: true,
-          _count: { select: { studentGroups: true } },
-        },
-      },
-      teacher: {
-        select: {
-          id: true,
-          user: { select: { firstName: true, lastName: true, avatar_url: true } },
-        },
-      },
-      session: {
-        select: {
-          id: true,
-          status: true,
-          checkIn: true,
-          checkOut: true,
-          isLate: true,
-        },
-      },
-      attendances: {
-        // where: { deletedAt: null },
-        select: { status: true },
-      },
-    },
+    select: courseDaySessionSelect,
   })
 }
+ 
 
 export async function getTeacherNextSchedule(teacherId: string, orgId: string) {
   'use cache'
@@ -150,3 +160,6 @@ export async function getTeacherNextSchedule(teacherId: string, orgId: string) {
     },
   })
 }
+
+
+

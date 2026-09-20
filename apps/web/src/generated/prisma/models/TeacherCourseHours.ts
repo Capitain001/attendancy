@@ -297,7 +297,7 @@ export type TeacherCourseHoursScalarWhereWithAggregatesInput = {
 
 export type TeacherCourseHoursCreateInput = {
   id?: string
-  scheduleType?: $Enums.ScheduleType
+  scheduleType: $Enums.ScheduleType
   completedHours?: number
   updatedAt?: Date | string
   teacher: Prisma.TeacherCreateNestedOneWithoutCourseHoursInput
@@ -310,7 +310,7 @@ export type TeacherCourseHoursUncheckedCreateInput = {
   orgId: string
   teacherId: string
   courseId: string
-  scheduleType?: $Enums.ScheduleType
+  scheduleType: $Enums.ScheduleType
   completedHours?: number
   updatedAt?: Date | string
 }
@@ -340,7 +340,7 @@ export type TeacherCourseHoursCreateManyInput = {
   orgId: string
   teacherId: string
   courseId: string
-  scheduleType?: $Enums.ScheduleType
+  scheduleType: $Enums.ScheduleType
   completedHours?: number
   updatedAt?: Date | string
 }
@@ -548,7 +548,7 @@ export type TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput 
 
 export type TeacherCourseHoursCreateWithoutCourseInput = {
   id?: string
-  scheduleType?: $Enums.ScheduleType
+  scheduleType: $Enums.ScheduleType
   completedHours?: number
   updatedAt?: Date | string
   teacher: Prisma.TeacherCreateNestedOneWithoutCourseHoursInput
@@ -559,7 +559,7 @@ export type TeacherCourseHoursUncheckedCreateWithoutCourseInput = {
   id?: string
   orgId: string
   teacherId: string
-  scheduleType?: $Enums.ScheduleType
+  scheduleType: $Enums.ScheduleType
   completedHours?: number
   updatedAt?: Date | string
 }
@@ -605,7 +605,7 @@ export type TeacherCourseHoursScalarWhereInput = {
 
 export type TeacherCourseHoursCreateWithoutTeacherInput = {
   id?: string
-  scheduleType?: $Enums.ScheduleType
+  scheduleType: $Enums.ScheduleType
   completedHours?: number
   updatedAt?: Date | string
   course: Prisma.CourseCreateNestedOneWithoutTeacherHoursInput
@@ -616,7 +616,7 @@ export type TeacherCourseHoursUncheckedCreateWithoutTeacherInput = {
   id?: string
   orgId: string
   courseId: string
-  scheduleType?: $Enums.ScheduleType
+  scheduleType: $Enums.ScheduleType
   completedHours?: number
   updatedAt?: Date | string
 }
@@ -649,7 +649,7 @@ export type TeacherCourseHoursUpdateManyWithWhereWithoutTeacherInput = {
 
 export type TeacherCourseHoursCreateWithoutOrganizationInput = {
   id?: string
-  scheduleType?: $Enums.ScheduleType
+  scheduleType: $Enums.ScheduleType
   completedHours?: number
   updatedAt?: Date | string
   teacher: Prisma.TeacherCreateNestedOneWithoutCourseHoursInput
@@ -660,7 +660,7 @@ export type TeacherCourseHoursUncheckedCreateWithoutOrganizationInput = {
   id?: string
   teacherId: string
   courseId: string
-  scheduleType?: $Enums.ScheduleType
+  scheduleType: $Enums.ScheduleType
   completedHours?: number
   updatedAt?: Date | string
 }
@@ -695,7 +695,7 @@ export type TeacherCourseHoursCreateManyCourseInput = {
   id?: string
   orgId: string
   teacherId: string
-  scheduleType?: $Enums.ScheduleType
+  scheduleType: $Enums.ScheduleType
   completedHours?: number
   updatedAt?: Date | string
 }
@@ -731,7 +731,7 @@ export type TeacherCourseHoursCreateManyTeacherInput = {
   id?: string
   orgId: string
   courseId: string
-  scheduleType?: $Enums.ScheduleType
+  scheduleType: $Enums.ScheduleType
   completedHours?: number
   updatedAt?: Date | string
 }
@@ -767,7 +767,7 @@ export type TeacherCourseHoursCreateManyOrganizationInput = {
   id?: string
   teacherId: string
   courseId: string
-  scheduleType?: $Enums.ScheduleType
+  scheduleType: $Enums.ScheduleType
   completedHours?: number
   updatedAt?: Date | string
 }

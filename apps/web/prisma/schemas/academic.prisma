@@ -191,7 +191,6 @@ model Class {
   program            Program?            @relation(fields: [programId], references: [id], onDelete: SetNull)
   programTrack       ProgramTrack        @relation(fields: [programTrackId], references: [id])
   courses            Course[]
-  evaluations        Evaluation[]
   groups             Group[]
   schedules          Schedule[]
   studentEnrollments StudentEnrollment[]
@@ -302,7 +301,7 @@ model TeacherCourseHours {
   orgId          String     @db.Uuid
   teacherId      String     @db.Uuid
   courseId       String     @db.Uuid
-  scheduleType  ScheduleType @default(CM)
+  scheduleType  ScheduleType
   completedHours Float      @default(0)
   updatedAt      DateTime   @updatedAt
 
@@ -349,8 +348,15 @@ model StudentEnrollment {
   student       Student        @relation(fields: [studentId], references: [id])
   studentGroups StudentGroup[]
   attendances   Attendance[]
+  grades Grade[]
 
+  // Un étudiant a au plus UNE inscription par classe (mais peut en avoir
+  // plusieurs, dans des classes différentes).
   @@unique([studentId, classId])
+  // Cible de la FK composite Attendance(enrollmentId, studentId). `id` étant
+  // déjà PK, cet unique ne restreint RIEN : il existe uniquement parce que
+  // Postgres exige une contrainte d'unicité pour cibler une FK composite.
+  @@unique([id, studentId])
   @@index([classId])
   @@schema("public")
 }

@@ -219,7 +219,6 @@ export type ClassWhereInput = {
   program?: Prisma.XOR<Prisma.ProgramNullableScalarRelationFilter, Prisma.ProgramWhereInput> | null
   programTrack?: Prisma.XOR<Prisma.ProgramTrackScalarRelationFilter, Prisma.ProgramTrackWhereInput>
   courses?: Prisma.CourseListRelationFilter
-  evaluations?: Prisma.EvaluationListRelationFilter
   groups?: Prisma.GroupListRelationFilter
   schedules?: Prisma.ScheduleListRelationFilter
   studentEnrollments?: Prisma.StudentEnrollmentListRelationFilter
@@ -241,7 +240,6 @@ export type ClassOrderByWithRelationInput = {
   program?: Prisma.ProgramOrderByWithRelationInput
   programTrack?: Prisma.ProgramTrackOrderByWithRelationInput
   courses?: Prisma.CourseOrderByRelationAggregateInput
-  evaluations?: Prisma.EvaluationOrderByRelationAggregateInput
   groups?: Prisma.GroupOrderByRelationAggregateInput
   schedules?: Prisma.ScheduleOrderByRelationAggregateInput
   studentEnrollments?: Prisma.StudentEnrollmentOrderByRelationAggregateInput
@@ -267,7 +265,6 @@ export type ClassWhereUniqueInput = Prisma.AtLeast<{
   program?: Prisma.XOR<Prisma.ProgramNullableScalarRelationFilter, Prisma.ProgramWhereInput> | null
   programTrack?: Prisma.XOR<Prisma.ProgramTrackScalarRelationFilter, Prisma.ProgramTrackWhereInput>
   courses?: Prisma.CourseListRelationFilter
-  evaluations?: Prisma.EvaluationListRelationFilter
   groups?: Prisma.GroupListRelationFilter
   schedules?: Prisma.ScheduleListRelationFilter
   studentEnrollments?: Prisma.StudentEnrollmentListRelationFilter
@@ -316,7 +313,6 @@ export type ClassCreateInput = {
   program?: Prisma.ProgramCreateNestedOneWithoutClassesInput
   programTrack: Prisma.ProgramTrackCreateNestedOneWithoutClassesInput
   courses?: Prisma.CourseCreateNestedManyWithoutClassInput
-  evaluations?: Prisma.EvaluationCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupCreateNestedManyWithoutClassInput
   schedules?: Prisma.ScheduleCreateNestedManyWithoutClassInput
   studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutClassInput
@@ -335,7 +331,6 @@ export type ClassUncheckedCreateInput = {
   academicYearId: string
   channels?: Prisma.ChannelUncheckedCreateNestedManyWithoutClassInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutClassInput
-  evaluations?: Prisma.EvaluationUncheckedCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutClassInput
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutClassInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutClassInput
@@ -354,7 +349,6 @@ export type ClassUpdateInput = {
   program?: Prisma.ProgramUpdateOneWithoutClassesNestedInput
   programTrack?: Prisma.ProgramTrackUpdateOneRequiredWithoutClassesNestedInput
   courses?: Prisma.CourseUpdateManyWithoutClassNestedInput
-  evaluations?: Prisma.EvaluationUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUpdateManyWithoutClassNestedInput
   schedules?: Prisma.ScheduleUpdateManyWithoutClassNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutClassNestedInput
@@ -373,7 +367,6 @@ export type ClassUncheckedUpdateInput = {
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   channels?: Prisma.ChannelUncheckedUpdateManyWithoutClassNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutClassNestedInput
-  evaluations?: Prisma.EvaluationUncheckedUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutClassNestedInput
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutClassNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutClassNestedInput
@@ -677,20 +670,6 @@ export type ClassUpdateOneWithoutChannelsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClassUpdateToOneWithWhereWithoutChannelsInput, Prisma.ClassUpdateWithoutChannelsInput>, Prisma.ClassUncheckedUpdateWithoutChannelsInput>
 }
 
-export type ClassCreateNestedOneWithoutEvaluationsInput = {
-  create?: Prisma.XOR<Prisma.ClassCreateWithoutEvaluationsInput, Prisma.ClassUncheckedCreateWithoutEvaluationsInput>
-  connectOrCreate?: Prisma.ClassCreateOrConnectWithoutEvaluationsInput
-  connect?: Prisma.ClassWhereUniqueInput
-}
-
-export type ClassUpdateOneRequiredWithoutEvaluationsNestedInput = {
-  create?: Prisma.XOR<Prisma.ClassCreateWithoutEvaluationsInput, Prisma.ClassUncheckedCreateWithoutEvaluationsInput>
-  connectOrCreate?: Prisma.ClassCreateOrConnectWithoutEvaluationsInput
-  upsert?: Prisma.ClassUpsertWithoutEvaluationsInput
-  connect?: Prisma.ClassWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ClassUpdateToOneWithWhereWithoutEvaluationsInput, Prisma.ClassUpdateWithoutEvaluationsInput>, Prisma.ClassUncheckedUpdateWithoutEvaluationsInput>
-}
-
 export type ClassCreateNestedOneWithoutSchedulesInput = {
   create?: Prisma.XOR<Prisma.ClassCreateWithoutSchedulesInput, Prisma.ClassUncheckedCreateWithoutSchedulesInput>
   connectOrCreate?: Prisma.ClassCreateOrConnectWithoutSchedulesInput
@@ -716,7 +695,6 @@ export type ClassCreateWithoutAcademicYearInput = {
   program?: Prisma.ProgramCreateNestedOneWithoutClassesInput
   programTrack: Prisma.ProgramTrackCreateNestedOneWithoutClassesInput
   courses?: Prisma.CourseCreateNestedManyWithoutClassInput
-  evaluations?: Prisma.EvaluationCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupCreateNestedManyWithoutClassInput
   schedules?: Prisma.ScheduleCreateNestedManyWithoutClassInput
   studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutClassInput
@@ -734,7 +712,6 @@ export type ClassUncheckedCreateWithoutAcademicYearInput = {
   programId?: string | null
   channels?: Prisma.ChannelUncheckedCreateNestedManyWithoutClassInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutClassInput
-  evaluations?: Prisma.EvaluationUncheckedCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutClassInput
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutClassInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutClassInput
@@ -793,7 +770,6 @@ export type ClassCreateWithoutProgramTrackInput = {
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutClassesInput
   program?: Prisma.ProgramCreateNestedOneWithoutClassesInput
   courses?: Prisma.CourseCreateNestedManyWithoutClassInput
-  evaluations?: Prisma.EvaluationCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupCreateNestedManyWithoutClassInput
   schedules?: Prisma.ScheduleCreateNestedManyWithoutClassInput
   studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutClassInput
@@ -811,7 +787,6 @@ export type ClassUncheckedCreateWithoutProgramTrackInput = {
   academicYearId: string
   channels?: Prisma.ChannelUncheckedCreateNestedManyWithoutClassInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutClassInput
-  evaluations?: Prisma.EvaluationUncheckedCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutClassInput
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutClassInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutClassInput
@@ -855,7 +830,6 @@ export type ClassCreateWithoutProgramInput = {
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutClassesInput
   programTrack: Prisma.ProgramTrackCreateNestedOneWithoutClassesInput
   courses?: Prisma.CourseCreateNestedManyWithoutClassInput
-  evaluations?: Prisma.EvaluationCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupCreateNestedManyWithoutClassInput
   schedules?: Prisma.ScheduleCreateNestedManyWithoutClassInput
   studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutClassInput
@@ -873,7 +847,6 @@ export type ClassUncheckedCreateWithoutProgramInput = {
   academicYearId: string
   channels?: Prisma.ChannelUncheckedCreateNestedManyWithoutClassInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutClassInput
-  evaluations?: Prisma.EvaluationUncheckedCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutClassInput
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutClassInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutClassInput
@@ -918,7 +891,6 @@ export type ClassCreateWithoutTermsInput = {
   program?: Prisma.ProgramCreateNestedOneWithoutClassesInput
   programTrack: Prisma.ProgramTrackCreateNestedOneWithoutClassesInput
   courses?: Prisma.CourseCreateNestedManyWithoutClassInput
-  evaluations?: Prisma.EvaluationCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupCreateNestedManyWithoutClassInput
   schedules?: Prisma.ScheduleCreateNestedManyWithoutClassInput
   studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutClassInput
@@ -936,7 +908,6 @@ export type ClassUncheckedCreateWithoutTermsInput = {
   academicYearId: string
   channels?: Prisma.ChannelUncheckedCreateNestedManyWithoutClassInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutClassInput
-  evaluations?: Prisma.EvaluationUncheckedCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutClassInput
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutClassInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutClassInput
@@ -970,7 +941,6 @@ export type ClassUpdateWithoutTermsInput = {
   program?: Prisma.ProgramUpdateOneWithoutClassesNestedInput
   programTrack?: Prisma.ProgramTrackUpdateOneRequiredWithoutClassesNestedInput
   courses?: Prisma.CourseUpdateManyWithoutClassNestedInput
-  evaluations?: Prisma.EvaluationUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUpdateManyWithoutClassNestedInput
   schedules?: Prisma.ScheduleUpdateManyWithoutClassNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutClassNestedInput
@@ -988,7 +958,6 @@ export type ClassUncheckedUpdateWithoutTermsInput = {
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   channels?: Prisma.ChannelUncheckedUpdateManyWithoutClassNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutClassNestedInput
-  evaluations?: Prisma.EvaluationUncheckedUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutClassNestedInput
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutClassNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutClassNestedInput
@@ -1005,7 +974,6 @@ export type ClassCreateWithoutCoursesInput = {
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutClassesInput
   program?: Prisma.ProgramCreateNestedOneWithoutClassesInput
   programTrack: Prisma.ProgramTrackCreateNestedOneWithoutClassesInput
-  evaluations?: Prisma.EvaluationCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupCreateNestedManyWithoutClassInput
   schedules?: Prisma.ScheduleCreateNestedManyWithoutClassInput
   studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutClassInput
@@ -1023,7 +991,6 @@ export type ClassUncheckedCreateWithoutCoursesInput = {
   programId?: string | null
   academicYearId: string
   channels?: Prisma.ChannelUncheckedCreateNestedManyWithoutClassInput
-  evaluations?: Prisma.EvaluationUncheckedCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutClassInput
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutClassInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutClassInput
@@ -1057,7 +1024,6 @@ export type ClassUpdateWithoutCoursesInput = {
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutClassesNestedInput
   program?: Prisma.ProgramUpdateOneWithoutClassesNestedInput
   programTrack?: Prisma.ProgramTrackUpdateOneRequiredWithoutClassesNestedInput
-  evaluations?: Prisma.EvaluationUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUpdateManyWithoutClassNestedInput
   schedules?: Prisma.ScheduleUpdateManyWithoutClassNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutClassNestedInput
@@ -1075,7 +1041,6 @@ export type ClassUncheckedUpdateWithoutCoursesInput = {
   programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   channels?: Prisma.ChannelUncheckedUpdateManyWithoutClassNestedInput
-  evaluations?: Prisma.EvaluationUncheckedUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutClassNestedInput
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutClassNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutClassNestedInput
@@ -1094,7 +1059,6 @@ export type ClassCreateWithoutStudentEnrollmentsInput = {
   program?: Prisma.ProgramCreateNestedOneWithoutClassesInput
   programTrack: Prisma.ProgramTrackCreateNestedOneWithoutClassesInput
   courses?: Prisma.CourseCreateNestedManyWithoutClassInput
-  evaluations?: Prisma.EvaluationCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupCreateNestedManyWithoutClassInput
   schedules?: Prisma.ScheduleCreateNestedManyWithoutClassInput
   terms?: Prisma.TermCreateNestedManyWithoutClassInput
@@ -1112,7 +1076,6 @@ export type ClassUncheckedCreateWithoutStudentEnrollmentsInput = {
   academicYearId: string
   channels?: Prisma.ChannelUncheckedCreateNestedManyWithoutClassInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutClassInput
-  evaluations?: Prisma.EvaluationUncheckedCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutClassInput
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutClassInput
   terms?: Prisma.TermUncheckedCreateNestedManyWithoutClassInput
@@ -1146,7 +1109,6 @@ export type ClassUpdateWithoutStudentEnrollmentsInput = {
   program?: Prisma.ProgramUpdateOneWithoutClassesNestedInput
   programTrack?: Prisma.ProgramTrackUpdateOneRequiredWithoutClassesNestedInput
   courses?: Prisma.CourseUpdateManyWithoutClassNestedInput
-  evaluations?: Prisma.EvaluationUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUpdateManyWithoutClassNestedInput
   schedules?: Prisma.ScheduleUpdateManyWithoutClassNestedInput
   terms?: Prisma.TermUpdateManyWithoutClassNestedInput
@@ -1164,7 +1126,6 @@ export type ClassUncheckedUpdateWithoutStudentEnrollmentsInput = {
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   channels?: Prisma.ChannelUncheckedUpdateManyWithoutClassNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutClassNestedInput
-  evaluations?: Prisma.EvaluationUncheckedUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutClassNestedInput
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutClassNestedInput
   terms?: Prisma.TermUncheckedUpdateManyWithoutClassNestedInput
@@ -1182,7 +1143,6 @@ export type ClassCreateWithoutGroupsInput = {
   program?: Prisma.ProgramCreateNestedOneWithoutClassesInput
   programTrack: Prisma.ProgramTrackCreateNestedOneWithoutClassesInput
   courses?: Prisma.CourseCreateNestedManyWithoutClassInput
-  evaluations?: Prisma.EvaluationCreateNestedManyWithoutClassInput
   schedules?: Prisma.ScheduleCreateNestedManyWithoutClassInput
   studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutClassInput
   terms?: Prisma.TermCreateNestedManyWithoutClassInput
@@ -1200,7 +1160,6 @@ export type ClassUncheckedCreateWithoutGroupsInput = {
   academicYearId: string
   channels?: Prisma.ChannelUncheckedCreateNestedManyWithoutClassInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutClassInput
-  evaluations?: Prisma.EvaluationUncheckedCreateNestedManyWithoutClassInput
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutClassInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutClassInput
   terms?: Prisma.TermUncheckedCreateNestedManyWithoutClassInput
@@ -1234,7 +1193,6 @@ export type ClassUpdateWithoutGroupsInput = {
   program?: Prisma.ProgramUpdateOneWithoutClassesNestedInput
   programTrack?: Prisma.ProgramTrackUpdateOneRequiredWithoutClassesNestedInput
   courses?: Prisma.CourseUpdateManyWithoutClassNestedInput
-  evaluations?: Prisma.EvaluationUpdateManyWithoutClassNestedInput
   schedules?: Prisma.ScheduleUpdateManyWithoutClassNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutClassNestedInput
   terms?: Prisma.TermUpdateManyWithoutClassNestedInput
@@ -1252,7 +1210,6 @@ export type ClassUncheckedUpdateWithoutGroupsInput = {
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   channels?: Prisma.ChannelUncheckedUpdateManyWithoutClassNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutClassNestedInput
-  evaluations?: Prisma.EvaluationUncheckedUpdateManyWithoutClassNestedInput
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutClassNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutClassNestedInput
   terms?: Prisma.TermUncheckedUpdateManyWithoutClassNestedInput
@@ -1269,7 +1226,6 @@ export type ClassCreateWithoutChannelsInput = {
   program?: Prisma.ProgramCreateNestedOneWithoutClassesInput
   programTrack: Prisma.ProgramTrackCreateNestedOneWithoutClassesInput
   courses?: Prisma.CourseCreateNestedManyWithoutClassInput
-  evaluations?: Prisma.EvaluationCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupCreateNestedManyWithoutClassInput
   schedules?: Prisma.ScheduleCreateNestedManyWithoutClassInput
   studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutClassInput
@@ -1287,7 +1243,6 @@ export type ClassUncheckedCreateWithoutChannelsInput = {
   programId?: string | null
   academicYearId: string
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutClassInput
-  evaluations?: Prisma.EvaluationUncheckedCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutClassInput
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutClassInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutClassInput
@@ -1321,7 +1276,6 @@ export type ClassUpdateWithoutChannelsInput = {
   program?: Prisma.ProgramUpdateOneWithoutClassesNestedInput
   programTrack?: Prisma.ProgramTrackUpdateOneRequiredWithoutClassesNestedInput
   courses?: Prisma.CourseUpdateManyWithoutClassNestedInput
-  evaluations?: Prisma.EvaluationUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUpdateManyWithoutClassNestedInput
   schedules?: Prisma.ScheduleUpdateManyWithoutClassNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutClassNestedInput
@@ -1338,95 +1292,6 @@ export type ClassUncheckedUpdateWithoutChannelsInput = {
   level?: Prisma.EnumLevelFieldUpdateOperationsInput | $Enums.Level
   programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
-  courses?: Prisma.CourseUncheckedUpdateManyWithoutClassNestedInput
-  evaluations?: Prisma.EvaluationUncheckedUpdateManyWithoutClassNestedInput
-  groups?: Prisma.GroupUncheckedUpdateManyWithoutClassNestedInput
-  schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutClassNestedInput
-  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutClassNestedInput
-  terms?: Prisma.TermUncheckedUpdateManyWithoutClassNestedInput
-}
-
-export type ClassCreateWithoutEvaluationsInput = {
-  id?: string
-  name: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  level?: $Enums.Level
-  channels?: Prisma.ChannelCreateNestedManyWithoutClassInput
-  academicYear: Prisma.AcademicYearCreateNestedOneWithoutClassesInput
-  program?: Prisma.ProgramCreateNestedOneWithoutClassesInput
-  programTrack: Prisma.ProgramTrackCreateNestedOneWithoutClassesInput
-  courses?: Prisma.CourseCreateNestedManyWithoutClassInput
-  groups?: Prisma.GroupCreateNestedManyWithoutClassInput
-  schedules?: Prisma.ScheduleCreateNestedManyWithoutClassInput
-  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutClassInput
-  terms?: Prisma.TermCreateNestedManyWithoutClassInput
-}
-
-export type ClassUncheckedCreateWithoutEvaluationsInput = {
-  id?: string
-  name: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  programTrackId: string
-  level?: $Enums.Level
-  programId?: string | null
-  academicYearId: string
-  channels?: Prisma.ChannelUncheckedCreateNestedManyWithoutClassInput
-  courses?: Prisma.CourseUncheckedCreateNestedManyWithoutClassInput
-  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutClassInput
-  schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutClassInput
-  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutClassInput
-  terms?: Prisma.TermUncheckedCreateNestedManyWithoutClassInput
-}
-
-export type ClassCreateOrConnectWithoutEvaluationsInput = {
-  where: Prisma.ClassWhereUniqueInput
-  create: Prisma.XOR<Prisma.ClassCreateWithoutEvaluationsInput, Prisma.ClassUncheckedCreateWithoutEvaluationsInput>
-}
-
-export type ClassUpsertWithoutEvaluationsInput = {
-  update: Prisma.XOR<Prisma.ClassUpdateWithoutEvaluationsInput, Prisma.ClassUncheckedUpdateWithoutEvaluationsInput>
-  create: Prisma.XOR<Prisma.ClassCreateWithoutEvaluationsInput, Prisma.ClassUncheckedCreateWithoutEvaluationsInput>
-  where?: Prisma.ClassWhereInput
-}
-
-export type ClassUpdateToOneWithWhereWithoutEvaluationsInput = {
-  where?: Prisma.ClassWhereInput
-  data: Prisma.XOR<Prisma.ClassUpdateWithoutEvaluationsInput, Prisma.ClassUncheckedUpdateWithoutEvaluationsInput>
-}
-
-export type ClassUpdateWithoutEvaluationsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  level?: Prisma.EnumLevelFieldUpdateOperationsInput | $Enums.Level
-  channels?: Prisma.ChannelUpdateManyWithoutClassNestedInput
-  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutClassesNestedInput
-  program?: Prisma.ProgramUpdateOneWithoutClassesNestedInput
-  programTrack?: Prisma.ProgramTrackUpdateOneRequiredWithoutClassesNestedInput
-  courses?: Prisma.CourseUpdateManyWithoutClassNestedInput
-  groups?: Prisma.GroupUpdateManyWithoutClassNestedInput
-  schedules?: Prisma.ScheduleUpdateManyWithoutClassNestedInput
-  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutClassNestedInput
-  terms?: Prisma.TermUpdateManyWithoutClassNestedInput
-}
-
-export type ClassUncheckedUpdateWithoutEvaluationsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  programTrackId?: Prisma.StringFieldUpdateOperationsInput | string
-  level?: Prisma.EnumLevelFieldUpdateOperationsInput | $Enums.Level
-  programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
-  channels?: Prisma.ChannelUncheckedUpdateManyWithoutClassNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutClassNestedInput
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutClassNestedInput
@@ -1446,7 +1311,6 @@ export type ClassCreateWithoutSchedulesInput = {
   program?: Prisma.ProgramCreateNestedOneWithoutClassesInput
   programTrack: Prisma.ProgramTrackCreateNestedOneWithoutClassesInput
   courses?: Prisma.CourseCreateNestedManyWithoutClassInput
-  evaluations?: Prisma.EvaluationCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupCreateNestedManyWithoutClassInput
   studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutClassInput
   terms?: Prisma.TermCreateNestedManyWithoutClassInput
@@ -1464,7 +1328,6 @@ export type ClassUncheckedCreateWithoutSchedulesInput = {
   academicYearId: string
   channels?: Prisma.ChannelUncheckedCreateNestedManyWithoutClassInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutClassInput
-  evaluations?: Prisma.EvaluationUncheckedCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutClassInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutClassInput
   terms?: Prisma.TermUncheckedCreateNestedManyWithoutClassInput
@@ -1498,7 +1361,6 @@ export type ClassUpdateWithoutSchedulesInput = {
   program?: Prisma.ProgramUpdateOneWithoutClassesNestedInput
   programTrack?: Prisma.ProgramTrackUpdateOneRequiredWithoutClassesNestedInput
   courses?: Prisma.CourseUpdateManyWithoutClassNestedInput
-  evaluations?: Prisma.EvaluationUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUpdateManyWithoutClassNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutClassNestedInput
   terms?: Prisma.TermUpdateManyWithoutClassNestedInput
@@ -1516,7 +1378,6 @@ export type ClassUncheckedUpdateWithoutSchedulesInput = {
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   channels?: Prisma.ChannelUncheckedUpdateManyWithoutClassNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutClassNestedInput
-  evaluations?: Prisma.EvaluationUncheckedUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutClassNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutClassNestedInput
   terms?: Prisma.TermUncheckedUpdateManyWithoutClassNestedInput
@@ -1544,7 +1405,6 @@ export type ClassUpdateWithoutAcademicYearInput = {
   program?: Prisma.ProgramUpdateOneWithoutClassesNestedInput
   programTrack?: Prisma.ProgramTrackUpdateOneRequiredWithoutClassesNestedInput
   courses?: Prisma.CourseUpdateManyWithoutClassNestedInput
-  evaluations?: Prisma.EvaluationUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUpdateManyWithoutClassNestedInput
   schedules?: Prisma.ScheduleUpdateManyWithoutClassNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutClassNestedInput
@@ -1562,7 +1422,6 @@ export type ClassUncheckedUpdateWithoutAcademicYearInput = {
   programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channels?: Prisma.ChannelUncheckedUpdateManyWithoutClassNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutClassNestedInput
-  evaluations?: Prisma.EvaluationUncheckedUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutClassNestedInput
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutClassNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutClassNestedInput
@@ -1602,7 +1461,6 @@ export type ClassUpdateWithoutProgramTrackInput = {
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutClassesNestedInput
   program?: Prisma.ProgramUpdateOneWithoutClassesNestedInput
   courses?: Prisma.CourseUpdateManyWithoutClassNestedInput
-  evaluations?: Prisma.EvaluationUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUpdateManyWithoutClassNestedInput
   schedules?: Prisma.ScheduleUpdateManyWithoutClassNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutClassNestedInput
@@ -1620,7 +1478,6 @@ export type ClassUncheckedUpdateWithoutProgramTrackInput = {
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   channels?: Prisma.ChannelUncheckedUpdateManyWithoutClassNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutClassNestedInput
-  evaluations?: Prisma.EvaluationUncheckedUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutClassNestedInput
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutClassNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutClassNestedInput
@@ -1660,7 +1517,6 @@ export type ClassUpdateWithoutProgramInput = {
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutClassesNestedInput
   programTrack?: Prisma.ProgramTrackUpdateOneRequiredWithoutClassesNestedInput
   courses?: Prisma.CourseUpdateManyWithoutClassNestedInput
-  evaluations?: Prisma.EvaluationUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUpdateManyWithoutClassNestedInput
   schedules?: Prisma.ScheduleUpdateManyWithoutClassNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutClassNestedInput
@@ -1678,7 +1534,6 @@ export type ClassUncheckedUpdateWithoutProgramInput = {
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   channels?: Prisma.ChannelUncheckedUpdateManyWithoutClassNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutClassNestedInput
-  evaluations?: Prisma.EvaluationUncheckedUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutClassNestedInput
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutClassNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutClassNestedInput
@@ -1704,7 +1559,6 @@ export type ClassUncheckedUpdateManyWithoutProgramInput = {
 export type ClassCountOutputType = {
   channels: number
   courses: number
-  evaluations: number
   groups: number
   schedules: number
   studentEnrollments: number
@@ -1714,7 +1568,6 @@ export type ClassCountOutputType = {
 export type ClassCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   channels?: boolean | ClassCountOutputTypeCountChannelsArgs
   courses?: boolean | ClassCountOutputTypeCountCoursesArgs
-  evaluations?: boolean | ClassCountOutputTypeCountEvaluationsArgs
   groups?: boolean | ClassCountOutputTypeCountGroupsArgs
   schedules?: boolean | ClassCountOutputTypeCountSchedulesArgs
   studentEnrollments?: boolean | ClassCountOutputTypeCountStudentEnrollmentsArgs
@@ -1743,13 +1596,6 @@ export type ClassCountOutputTypeCountChannelsArgs<ExtArgs extends runtime.Types.
  */
 export type ClassCountOutputTypeCountCoursesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CourseWhereInput
-}
-
-/**
- * ClassCountOutputType without action
- */
-export type ClassCountOutputTypeCountEvaluationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.EvaluationWhereInput
 }
 
 /**
@@ -1796,7 +1642,6 @@ export type ClassSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   program?: boolean | Prisma.Class$programArgs<ExtArgs>
   programTrack?: boolean | Prisma.ProgramTrackDefaultArgs<ExtArgs>
   courses?: boolean | Prisma.Class$coursesArgs<ExtArgs>
-  evaluations?: boolean | Prisma.Class$evaluationsArgs<ExtArgs>
   groups?: boolean | Prisma.Class$groupsArgs<ExtArgs>
   schedules?: boolean | Prisma.Class$schedulesArgs<ExtArgs>
   studentEnrollments?: boolean | Prisma.Class$studentEnrollmentsArgs<ExtArgs>
@@ -1853,7 +1698,6 @@ export type ClassInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   program?: boolean | Prisma.Class$programArgs<ExtArgs>
   programTrack?: boolean | Prisma.ProgramTrackDefaultArgs<ExtArgs>
   courses?: boolean | Prisma.Class$coursesArgs<ExtArgs>
-  evaluations?: boolean | Prisma.Class$evaluationsArgs<ExtArgs>
   groups?: boolean | Prisma.Class$groupsArgs<ExtArgs>
   schedules?: boolean | Prisma.Class$schedulesArgs<ExtArgs>
   studentEnrollments?: boolean | Prisma.Class$studentEnrollmentsArgs<ExtArgs>
@@ -1879,7 +1723,6 @@ export type $ClassPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     program: Prisma.$ProgramPayload<ExtArgs> | null
     programTrack: Prisma.$ProgramTrackPayload<ExtArgs>
     courses: Prisma.$CoursePayload<ExtArgs>[]
-    evaluations: Prisma.$EvaluationPayload<ExtArgs>[]
     groups: Prisma.$GroupPayload<ExtArgs>[]
     schedules: Prisma.$SchedulePayload<ExtArgs>[]
     studentEnrollments: Prisma.$StudentEnrollmentPayload<ExtArgs>[]
@@ -2294,7 +2137,6 @@ export interface Prisma__ClassClient<T, Null = never, ExtArgs extends runtime.Ty
   program<T extends Prisma.Class$programArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Class$programArgs<ExtArgs>>): Prisma.Prisma__ProgramClient<runtime.Types.Result.GetResult<Prisma.$ProgramPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   programTrack<T extends Prisma.ProgramTrackDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProgramTrackDefaultArgs<ExtArgs>>): Prisma.Prisma__ProgramTrackClient<runtime.Types.Result.GetResult<Prisma.$ProgramTrackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   courses<T extends Prisma.Class$coursesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Class$coursesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  evaluations<T extends Prisma.Class$evaluationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Class$evaluationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EvaluationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   groups<T extends Prisma.Class$groupsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Class$groupsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   schedules<T extends Prisma.Class$schedulesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Class$schedulesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   studentEnrollments<T extends Prisma.Class$studentEnrollmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Class$studentEnrollmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentEnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2802,30 +2644,6 @@ export type Class$coursesArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.CourseScalarFieldEnum | Prisma.CourseScalarFieldEnum[]
-}
-
-/**
- * Class.evaluations
- */
-export type Class$evaluationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Evaluation
-   */
-  select?: Prisma.EvaluationSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Evaluation
-   */
-  omit?: Prisma.EvaluationOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.EvaluationInclude<ExtArgs> | null
-  where?: Prisma.EvaluationWhereInput
-  orderBy?: Prisma.EvaluationOrderByWithRelationInput | Prisma.EvaluationOrderByWithRelationInput[]
-  cursor?: Prisma.EvaluationWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.EvaluationScalarFieldEnum | Prisma.EvaluationScalarFieldEnum[]
 }
 
 /**
