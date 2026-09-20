@@ -7,6 +7,8 @@ import type { ReactNode } from "react";
 import { UserSidebarSlot } from "@/components/layout/sidebar";
 import { teacherRoutes } from "@/components/teacher/user/navigation";
 
+import MobileNavMenu from "@/components/layout/to-implemente/mobile-navbar";
+
 interface LayoutProps {
   children: ReactNode;
   params: Promise<{ slug: string }>;
@@ -14,6 +16,11 @@ interface LayoutProps {
 
 const Layout = async ({ children, params }: LayoutProps) => {
   const [user, { slug }] = await Promise.all([getUserInfo(), params]);
+
+  const navItems = teacherRoutes.map((route) => ({
+    heading: route.title,
+    href: `/${slug}${route.link}`,
+  }));
 
   return (
     <SidebarProvider className="h-full overflow-hidden teacher-theme">
@@ -32,6 +39,7 @@ const Layout = async ({ children, params }: LayoutProps) => {
             </div>
           </div>
         </header>
+            <MobileNavMenu navItems={navItems} />
         <div className="flex flex-1 flex-col overflow-y-auto scrollbar-hidden gap-4 p-2 md:p-4 pt-0 min-w-0">
           {children}
         </div>

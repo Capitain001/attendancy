@@ -7,6 +7,7 @@ import {
   RoleStep,
   ConfirmStep,
 } from '@/components/auth/signup/flow/invited/InvitationSteps'
+import MobileNavMenu from '@/components/layout/to-implemente/mobile-navbar'
 import type { UserInfo } from '@/types/user'
 
 const mockUser: UserInfo = {
@@ -47,6 +48,8 @@ export default function Page() {
     //   onDecline={async () => { await new Promise((r) => setTimeout(r, 800)) }}
     // />
 
-    <div>  </div>
+    <div className='min-h-screen'> 
+      	<MobileNavMenu navItems={[{ heading: "Home", href: "/" },]} />
+       </div>
   )
 }

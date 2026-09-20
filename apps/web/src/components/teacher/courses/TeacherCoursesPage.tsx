@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import { ArrowLeft, ChevronRight } from 'lucide-react'
 import { cn } from 'cn'
 import { GetTeacherCoursesDto } from '@/services/course-teacher'
+import Link from 'next/link'
 
 type Course = GetTeacherCoursesDto[number]
 
@@ -54,10 +55,12 @@ export function TeacherCourses({ courses }: TeacherCoursesProps) {
                             >
                                 <span className="w-4 shrink-0 text-right font-mono text-[11px] tabular-nums text-foreground/25">
                                     {String(index + 1).padStart(2, '0')}
-                              
+
                                 </span>
                                 <span className="h-px w-3 shrink-0 bg-foreground/10" />
-                                <span className="truncate text-foreground/70">{course.name}</span>
+                                <Link href={`./courses/${course.id}`} className="truncate text-foreground/70 hover:underline">
+                                    {course.name}
+                                </Link>
                                 <span className="h-px flex-1 bg-foreground/10" />
                                 {course.hours !== null && (
                                     <span className="shrink-0 font-mono text-xs tabular-nums text-foreground/30">

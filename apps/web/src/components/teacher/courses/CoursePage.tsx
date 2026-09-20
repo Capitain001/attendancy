@@ -5,6 +5,7 @@ import { ArrowLeft, Clock, GraduationCap, Users } from 'lucide-react'
 import type { GetCourseDetailDto } from '@/services/course/generated.types'
 import type { GetCourseLastScheduleDto, GetTeacherNextScheduleDto } from '@/services/schedule/generated.types'
 import type { ScheduleStatus } from '@/generated/prisma/client'
+import UserIcon from '@/components/users/UserIcon'
 
 export type CourseDetailDto = NonNullable<GetCourseDetailDto>
 export type CourseTeacherItem = CourseDetailDto['teachers'][number]
@@ -54,7 +55,7 @@ export function CoursePage({ course, lastSchedule, nextSchedule }: CoursePagePro
     <div className="flex flex-col gap-6 pb-20">
       {/* Retour */}
       <Link
-        href={`/teacher/classes`}
+        href={`../`}
         className="inline-flex w-fit items-center gap-1 text-xs text-foreground/40 transition-colors hover:text-foreground/70"
       >
         <ArrowLeft className="size-3" />
@@ -119,6 +120,7 @@ export function CoursePage({ course, lastSchedule, nextSchedule }: CoursePagePro
                     }`}
                     aria-label={ct.isMain ? 'Enseignant principal' : undefined}
                   />
+                  <span> <UserIcon className='size-8' avatarUrl={ct.teacher?.user?.avatar_url}/> </span>
                   <span className="truncate text-foreground/70">{teacherName(ct)}</span>
                   <span className="h-px flex-1 bg-foreground/10" />
                   {ct.hours !== null && (

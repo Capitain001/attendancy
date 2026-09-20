@@ -19,7 +19,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   ])
 
   if (!('data' in courseRes) || !courseRes.data) {
-    notFound()
+    // notFound()
+    return <div> no data </div>
   }
 
   const course = courseRes.data
@@ -33,4 +34,4 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
       nextSchedule={nextSchedule}
     />
   )
-}
+}
