@@ -1,0 +1,8 @@
+{
+  "name": "deleteEvaluation",
+  "file": "src/services/evaluation/database/evaluation.mutations.ts",
+  "sig": "(evaluationId: string, orgId: string) => Promise<{ id: string; courseId: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

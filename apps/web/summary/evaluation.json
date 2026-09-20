@@ -1,0 +1,201 @@
+{
+  "service": "evaluation",
+  "path": "src/services/evaluation/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "93d358d",
+  "generated_at": "2026-09-20T19:52:27.601Z",
+  "fns": {
+    "createEvaluation": {
+      "name": "createEvaluation",
+      "file": "src/services/evaluation/database/evaluation.mutations.ts",
+      "sig": "(data: CreateEvaluationOutput & { orgId: string }) => Promise<{ id: string; courseId: string; title: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateEvaluation": {
+      "name": "updateEvaluation",
+      "file": "src/services/evaluation/database/evaluation.mutations.ts",
+      "sig": "(evaluationId: string, orgId: string, data: UpdateEvaluationDataOutput) => Promise<{ id: string; courseId: string; title: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "deleteEvaluation": {
+      "name": "deleteEvaluation",
+      "file": "src/services/evaluation/database/evaluation.mutations.ts",
+      "sig": "(evaluationId: string, orgId: string) => Promise<{ id: string; courseId: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "upsertGrades": {
+      "name": "upsertGrades",
+      "file": "src/services/evaluation/database/evaluation.mutations.ts",
+      "sig": "(evaluationId: string, orgId: string, grades: GradeEntryOutput[]) => Promise<{ id: string; enrollmentId: string; status: GradeStatus; score: number | null; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getCourseEvaluations": {
+      "name": "getCourseEvaluations",
+      "file": "src/services/evaluation/database/evaluation.queries.ts",
+      "sig": "(courseId: string, orgId: string) => Promise<{ id: string; courseId: string; type: EvaluationType; title: string; coefficient: number; maxScore: number; datedAt: Date; createdAt: Date; grades: { id: string; status: GradeStatus; score: number | null; }[]; _count: { ...; }; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getEvaluationDetail": {
+      "name": "getEvaluationDetail",
+      "file": "src/services/evaluation/database/evaluation.queries.ts",
+      "sig": "(evaluationId: string, orgId: string) => Promise<{ id: string; courseId: string; type: EvaluationType; title: string; coefficient: number; maxScore: number; datedAt: Date; course: { name: string; id: string; class: { name: string; id: string; studentEnrollments: { ...; }[]; }; }; grades: { ...; }[]; } | null>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getEvaluation": {
+      "name": "getEvaluation",
+      "file": "src/services/evaluation/database/evaluation.queries.ts",
+      "sig": "(evaluationId: string, orgId: string) => Promise<{ id: string; courseId: string; type: EvaluationType; title: string; coefficient: number; maxScore: number; datedAt: Date; createdAt: Date; updatedAt: Date; } | null>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createEvaluationAction": {
+      "name": "createEvaluationAction",
+      "file": "src/services/evaluation/actions/evaluation.mutations.ts",
+      "sig": "(input: CreateEvaluationInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; courseId: string; title: string; }; error?: undefined; }>",
+      "calls": [
+        "createEvaluation"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateEvaluationAction": {
+      "name": "updateEvaluationAction",
+      "file": "src/services/evaluation/actions/evaluation.mutations.ts",
+      "sig": "(input: UpdateEvaluationInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; courseId: string; title: string; }; error?: undefined; }>",
+      "calls": [
+        "updateEvaluation"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "deleteEvaluationAction": {
+      "name": "deleteEvaluationAction",
+      "file": "src/services/evaluation/actions/evaluation.mutations.ts",
+      "sig": "(evaluationId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; courseId: string; }; error?: undefined; }>",
+      "calls": [
+        "deleteEvaluation"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "upsertGradesAction": {
+      "name": "upsertGradesAction",
+      "file": "src/services/evaluation/actions/evaluation.mutations.ts",
+      "sig": "(input: UpsertGradesInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; enrollmentId: string; status: GradeStatus; score: number | null; }[]; error?: undefined; }>",
+      "calls": [
+        "upsertGrades"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getCourseEvaluationsAction": {
+      "name": "getCourseEvaluationsAction",
+      "file": "src/services/evaluation/actions/evaluation.queries.ts",
+      "sig": "(courseId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; courseId: string; type: EvaluationType; title: string; coefficient: number; maxScore: number; datedAt: Date; createdAt: Date; grades: { ...; }[]; _count: { ...; }; }[]; error?: undefined; }>",
+      "calls": [
+        "getCourseEvaluations"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getEvaluationDetailAction": {
+      "name": "getEvaluationDetailAction",
+      "file": "src/services/evaluation/actions/evaluation.queries.ts",
+      "sig": "(evaluationId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; courseId: string; type: EvaluationType; title: string; coefficient: number; maxScore: number; datedAt: Date; course: { ...; }; grades: { ...; }[]; } | null; error?: undefined; }>",
+      "calls": [
+        "getEvaluationDetail"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getEvaluationAction": {
+      "name": "getEvaluationAction",
+      "file": "src/services/evaluation/actions/evaluation.queries.ts",
+      "sig": "(evaluationId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; courseId: string; type: EvaluationType; title: string; coefficient: number; maxScore: number; datedAt: Date; createdAt: Date; updatedAt: Date; } | null; error?: undefined; }>",
+      "calls": [
+        "getEvaluation"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createEvaluation": [
+      "createEvaluationAction"
+    ],
+    "updateEvaluation": [
+      "updateEvaluationAction"
+    ],
+    "deleteEvaluation": [
+      "deleteEvaluationAction"
+    ],
+    "upsertGrades": [
+      "upsertGradesAction"
+    ],
+    "getCourseEvaluations": [
+      "getCourseEvaluationsAction"
+    ],
+    "getEvaluationDetail": [
+      "getEvaluationDetailAction"
+    ],
+    "getEvaluation": [
+      "getEvaluationAction"
+    ],
+    "createEvaluationAction": [],
+    "updateEvaluationAction": [],
+    "deleteEvaluationAction": [],
+    "upsertGradesAction": [],
+    "getCourseEvaluationsAction": [],
+    "getEvaluationDetailAction": [],
+    "getEvaluationAction": []
+  },
+  "deps": {}
+}

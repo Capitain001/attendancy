@@ -1,0 +1,8 @@
+{
+  "name": "upsertGrades",
+  "file": "src/services/evaluation/database/evaluation.mutations.ts",
+  "sig": "(evaluationId: string, orgId: string, grades: GradeEntryOutput[]) => Promise<{ id: string; enrollmentId: string; status: GradeStatus; score: number | null; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,11 @@
+{
+  "name": "createEvaluationAction",
+  "file": "src/services/evaluation/actions/evaluation.mutations.ts",
+  "sig": "(input: CreateEvaluationInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; courseId: string; title: string; }; error?: undefined; }>",
+  "calls": [
+    "createEvaluation"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -20,6 +20,8 @@ service dans `src/services/*`.
 | `CourseTeacher` | `course-teacher` |
 | `UserOrganization` | `user-organization` |
 | `UserDevice` & `UserSession` | `device` |
+| `Evaluation` | `evaluation` |
+| `Grade` | `evaluation` |
 | ⚠ À ÉTENDRE PAR PROJET — une ligne par modèle | |
 
 La couche Prisma d'un modèle vit dans son domaine propriétaire — **une seule

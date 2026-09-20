@@ -1,0 +1,11 @@
+{
+  "name": "deleteEvaluationAction",
+  "file": "src/services/evaluation/actions/evaluation.mutations.ts",
+  "sig": "(evaluationId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; courseId: string; }; error?: undefined; }>",
+  "calls": [
+    "deleteEvaluation"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

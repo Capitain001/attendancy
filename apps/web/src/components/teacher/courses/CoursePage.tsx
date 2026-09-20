@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowLeft, Clock, GraduationCap, Users } from 'lucide-react'
+import { ArrowLeft, Award, ChevronRight, Clock, GraduationCap, Users } from 'lucide-react'
 import type { GetCourseDetailDto } from '@/services/course/generated.types'
 import type { GetCourseLastScheduleDto, GetTeacherNextScheduleDto } from '@/services/schedule/generated.types'
 import type { ScheduleStatus } from '@/generated/prisma/client'
@@ -92,6 +92,23 @@ export function CoursePage({ course, lastSchedule, nextSchedule }: CoursePagePro
           </span>
         </div>
       </div>
+
+      {/* Lien vers les évaluations du cours */}
+      <Link
+        href={`./${course.id}/evaluations`}
+        className="group flex items-center justify-between rounded-xl border border-foreground/10 bg-foreground/[0.02] p-3.5 transition-colors hover:bg-foreground/5"
+      >
+        <div className="flex items-center gap-3">
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-foreground/5 text-foreground/70">
+            <Award className="size-4" />
+          </span>
+          <div className="flex flex-col">
+            <span className="text-sm font-medium text-foreground/80">Évaluations</span>
+            <span className="text-xs text-foreground/40">Devoirs, examens et notes de ce cours</span>
+          </div>
+        </div>
+        <ChevronRight className="size-4 text-foreground/30 transition-transform group-hover:translate-x-0.5" />
+      </Link>
 
       {/* Description */}
       {course.description && (

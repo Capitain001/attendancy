@@ -1,0 +1,11 @@
+{
+  "name": "upsertGradesAction",
+  "file": "src/services/evaluation/actions/evaluation.mutations.ts",
+  "sig": "(input: UpsertGradesInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; enrollmentId: string; status: GradeStatus; score: number | null; }[]; error?: undefined; }>",
+  "calls": [
+    "upsertGrades"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

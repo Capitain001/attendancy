@@ -64,6 +64,7 @@ import { DEVICE_GRAPH } from "@/services/device/cache";
 import { PERMISSION_GRAPH } from "@/services/permission/cache";
 
 import { TEACHER_COURSE_HOURS_GRAPH } from "@/services/teacher-course-hours/cache";
+import { EVALUATION_GRAPH } from "@/services/evaluation/cache";
 // ⚠ À ÉTENDRE PAR PROJET — un import par service à données cachées :
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -106,6 +107,7 @@ export const CACHE_GRAPH = {
   ...DEVICE_GRAPH,
   ...PERMISSION_GRAPH,
   ...TEACHER_COURSE_HOURS_GRAPH,
+  ...EVALUATION_GRAPH,
 // ⚠ À ÉTENDRE PAR PROJET — spreader chaque <SERVICE>_GRAPH importé :
 } as const;
 

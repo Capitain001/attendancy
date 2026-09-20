@@ -1,0 +1,8 @@
+{
+  "name": "createEvaluation",
+  "file": "src/services/evaluation/database/evaluation.mutations.ts",
+  "sig": "(data: CreateEvaluationOutput & { orgId: string }) => Promise<{ id: string; courseId: string; title: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

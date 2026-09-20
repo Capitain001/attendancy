@@ -57,6 +57,7 @@ export const CACHE = {
   USER_FUNCTIONS: key("user-functions"),
   PERMISSION: key("permission"),
   TEACHER_COURSE_HOURS: key("teacher-course-hours"),
+  EVALUATION: key("evaluation"),
 // ⚠ À ÉTENDRE PAR PROJET — une entrée par entité cachée :
   // ENTITY: key("entity"),
   // RESOURCE: key("resource", CACHE_LIFE.SHORT),

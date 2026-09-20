@@ -1,0 +1,11 @@
+{
+  "name": "getCourseEvaluationsAction",
+  "file": "src/services/evaluation/actions/evaluation.queries.ts",
+  "sig": "(courseId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; courseId: string; type: EvaluationType; title: string; coefficient: number; maxScore: number; datedAt: Date; createdAt: Date; grades: { ...; }[]; _count: { ...; }; }[]; error?: undefined; }>",
+  "calls": [
+    "getCourseEvaluations"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,0 +1,110 @@
+{
+  "service": "evaluation",
+  "path": "src/services/evaluation/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "93d358d",
+  "utils_dir": null,
+  "fns": {
+    "createEvaluation": {
+      "f": ".api/createEvaluation.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updateEvaluation": {
+      "f": ".api/updateEvaluation.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "deleteEvaluation": {
+      "f": ".api/deleteEvaluation.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "upsertGrades": {
+      "f": ".api/upsertGrades.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getCourseEvaluations": {
+      "f": ".api/getCourseEvaluations.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getEvaluationDetail": {
+      "f": ".api/getEvaluationDetail.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getEvaluation": {
+      "f": ".api/getEvaluation.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createEvaluationAction": {
+      "f": ".api/createEvaluationAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updateEvaluationAction": {
+      "f": ".api/updateEvaluationAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "deleteEvaluationAction": {
+      "f": ".api/deleteEvaluationAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "upsertGradesAction": {
+      "f": ".api/upsertGradesAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getCourseEvaluationsAction": {
+      "f": ".api/getCourseEvaluationsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getEvaluationDetailAction": {
+      "f": ".api/getEvaluationDetailAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getEvaluationAction": {
+      "f": ".api/getEvaluationAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createEvaluation": [
+      "createEvaluationAction"
+    ],
+    "updateEvaluation": [
+      "updateEvaluationAction"
+    ],
+    "deleteEvaluation": [
+      "deleteEvaluationAction"
+    ],
+    "upsertGrades": [
+      "upsertGradesAction"
+    ],
+    "getCourseEvaluations": [
+      "getCourseEvaluationsAction"
+    ],
+    "getEvaluationDetail": [
+      "getEvaluationDetailAction"
+    ],
+    "getEvaluation": [
+      "getEvaluationAction"
+    ],
+    "createEvaluationAction": [],
+    "updateEvaluationAction": [],
+    "deleteEvaluationAction": [],
+    "upsertGradesAction": [],
+    "getCourseEvaluationsAction": [],
+    "getEvaluationDetailAction": [],
+    "getEvaluationAction": []
+  },
+  "deps": {}
+}
