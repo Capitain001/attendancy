@@ -62,6 +62,7 @@ export const ModelName = {
   Term: 'Term',
   Course: 'Course',
   CourseTeacher: 'CourseTeacher',
+  TeacherCourseHours: 'TeacherCourseHours',
   OptionalUE: 'OptionalUE',
   StudentEnrollment: 'StudentEnrollment',
   Group: 'Group',
@@ -300,6 +301,19 @@ export const CourseTeacherScalarFieldEnum = {
 } as const
 
 export type CourseTeacherScalarFieldEnum = (typeof CourseTeacherScalarFieldEnum)[keyof typeof CourseTeacherScalarFieldEnum]
+
+
+export const TeacherCourseHoursScalarFieldEnum = {
+  id: 'id',
+  orgId: 'orgId',
+  teacherId: 'teacherId',
+  courseId: 'courseId',
+  scheduleType: 'scheduleType',
+  completedHours: 'completedHours',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TeacherCourseHoursScalarFieldEnum = (typeof TeacherCourseHoursScalarFieldEnum)[keyof typeof TeacherCourseHoursScalarFieldEnum]
 
 
 export const OptionalUEScalarFieldEnum = {
@@ -803,6 +817,7 @@ export const ScheduleScalarFieldEnum = {
   startTime: 'startTime',
   endTime: 'endTime',
   status: 'status',
+  scheduleType: 'scheduleType',
   statusChangedAt: 'statusChangedAt',
   confirmed: 'confirmed',
   notes: 'notes',
@@ -842,6 +857,7 @@ export const WeeklySlotScalarFieldEnum = {
   courseId: 'courseId',
   teacherId: 'teacherId',
   roomId: 'roomId',
+  scheduleType: 'scheduleType',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',

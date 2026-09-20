@@ -36,6 +36,7 @@ model Teacher {
   department   Department?     @relation(fields: [departmentId], references: [id], onDelete: SetNull)
   user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   
+  courseHours TeacherCourseHours[]
   weeklySlots  WeeklySlot[]
 
   @@unique([userId, orgId])

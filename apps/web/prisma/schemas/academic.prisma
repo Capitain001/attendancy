@@ -260,6 +260,7 @@ model Course {
   evaluations   Evaluation[]
   schedules     Schedule[]
   weeklySlots   WeeklySlot[]
+  teacherHours  TeacherCourseHours[]
 
   // Unicité (classId, ueCourseId) gérée par index UNIQUE PARTIEL
   // WHERE "deletedAt" IS NULL — non exprimable en Prisma, défini en
@@ -288,6 +289,29 @@ model CourseTeacher {
   @@unique([teacherId, courseId])
   @@index([courseId])
   @@index([teacherId])
+  @@schema("public")
+}
+
+// Compteur incrémental heures effectuées par (prof, cours, type de séance).
+// Maintenu par trigger DB (sync_teacher_course_hours_stats) sur Schedule —
+// jamais écrit par l'applicatif. ScheduleType figé dès qu'un Schedule quitte
+// PENDING (trigger_prevent_locked_schedule_update) : pas de transfert de
+// clé à gérer ici.
+model TeacherCourseHours {
+  id             String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orgId          String     @db.Uuid
+  teacherId      String     @db.Uuid
+  courseId       String     @db.Uuid
+  scheduleType  ScheduleType @default(CM)
+  completedHours Float      @default(0)
+  updatedAt      DateTime   @updatedAt
+
+  teacher      Teacher      @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  course       Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([teacherId, courseId, scheduleType])
+  @@index([orgId])
   @@schema("public")
 }
 

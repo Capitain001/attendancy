@@ -368,6 +368,23 @@ export type EnumLevelWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumLevelFilter<$PrismaModel>
 }
 
+export type EnumScheduleTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.ScheduleType | Prisma.EnumScheduleTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ScheduleType[] | Prisma.ListEnumScheduleTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ScheduleType[] | Prisma.ListEnumScheduleTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumScheduleTypeFilter<$PrismaModel> | $Enums.ScheduleType
+}
+
+export type EnumScheduleTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ScheduleType | Prisma.EnumScheduleTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ScheduleType[] | Prisma.ListEnumScheduleTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ScheduleType[] | Prisma.ListEnumScheduleTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumScheduleTypeWithAggregatesFilter<$PrismaModel> | $Enums.ScheduleType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumScheduleTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumScheduleTypeFilter<$PrismaModel>
+}
+
 export type EnumSessionStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.SessionStatus | Prisma.EnumSessionStatusFieldRefInput<$PrismaModel>
   in?: $Enums.SessionStatus[] | Prisma.ListEnumSessionStatusFieldRefInput<$PrismaModel>
@@ -1299,6 +1316,23 @@ export type NestedEnumLevelWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumLevelFilter<$PrismaModel>
   _max?: Prisma.NestedEnumLevelFilter<$PrismaModel>
+}
+
+export type NestedEnumScheduleTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.ScheduleType | Prisma.EnumScheduleTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ScheduleType[] | Prisma.ListEnumScheduleTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ScheduleType[] | Prisma.ListEnumScheduleTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumScheduleTypeFilter<$PrismaModel> | $Enums.ScheduleType
+}
+
+export type NestedEnumScheduleTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ScheduleType | Prisma.EnumScheduleTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ScheduleType[] | Prisma.ListEnumScheduleTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ScheduleType[] | Prisma.ListEnumScheduleTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumScheduleTypeWithAggregatesFilter<$PrismaModel> | $Enums.ScheduleType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumScheduleTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumScheduleTypeFilter<$PrismaModel>
 }
 
 export type NestedEnumSessionStatusFilter<$PrismaModel = never> = {

@@ -224,6 +224,17 @@ export const EventStatus = {
 export type EventStatus = (typeof EventStatus)[keyof typeof EventStatus]
 
 
+export const ScheduleType = {
+  CM: 'CM',
+  TD: 'TD',
+  TP: 'TP',
+  EXAM: 'EXAM',
+  RATTRAPAGE: 'RATTRAPAGE'
+} as const
+
+export type ScheduleType = (typeof ScheduleType)[keyof typeof ScheduleType]
+
+
 export const ApprovalStatus = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',

@@ -257,6 +257,7 @@ export type OrganizationWhereInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateListRelationFilter
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityListRelationFilter
   userSessions?: Prisma.UserSessionListRelationFilter
+  teacherCourseHours?: Prisma.TeacherCourseHoursListRelationFilter
 }
 
 export type OrganizationOrderByWithRelationInput = {
@@ -302,6 +303,7 @@ export type OrganizationOrderByWithRelationInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateOrderByRelationAggregateInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityOrderByRelationAggregateInput
   userSessions?: Prisma.UserSessionOrderByRelationAggregateInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursOrderByRelationAggregateInput
 }
 
 export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
@@ -350,6 +352,7 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   weeklyTemplates?: Prisma.WeeklyTemplateListRelationFilter
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityListRelationFilter
   userSessions?: Prisma.UserSessionListRelationFilter
+  teacherCourseHours?: Prisma.TeacherCourseHoursListRelationFilter
 }, "id" | "name" | "email" | "slug" | "domain">
 
 export type OrganizationOrderByWithAggregationInput = {
@@ -429,6 +432,7 @@ export type OrganizationCreateInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateInput = {
@@ -474,6 +478,7 @@ export type OrganizationUncheckedCreateInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUpdateInput = {
@@ -519,6 +524,7 @@ export type OrganizationUpdateInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateInput = {
@@ -564,6 +570,7 @@ export type OrganizationUncheckedUpdateInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateManyInput = {
@@ -754,6 +761,20 @@ export type OrganizationUpdateOneRequiredWithoutCoursesNestedInput = {
   upsert?: Prisma.OrganizationUpsertWithoutCoursesInput
   connect?: Prisma.OrganizationWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutCoursesInput, Prisma.OrganizationUpdateWithoutCoursesInput>, Prisma.OrganizationUncheckedUpdateWithoutCoursesInput>
+}
+
+export type OrganizationCreateNestedOneWithoutTeacherCourseHoursInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutTeacherCourseHoursInput, Prisma.OrganizationUncheckedCreateWithoutTeacherCourseHoursInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutTeacherCourseHoursInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutTeacherCourseHoursNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutTeacherCourseHoursInput, Prisma.OrganizationUncheckedCreateWithoutTeacherCourseHoursInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutTeacherCourseHoursInput
+  upsert?: Prisma.OrganizationUpsertWithoutTeacherCourseHoursInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutTeacherCourseHoursInput, Prisma.OrganizationUpdateWithoutTeacherCourseHoursInput>, Prisma.OrganizationUncheckedUpdateWithoutTeacherCourseHoursInput>
 }
 
 export type OrganizationCreateNestedOneWithoutAttendancesInput = {
@@ -1140,6 +1161,7 @@ export type OrganizationCreateWithoutAcademicYearsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutAcademicYearsInput = {
@@ -1184,6 +1206,7 @@ export type OrganizationUncheckedCreateWithoutAcademicYearsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutAcademicYearsInput = {
@@ -1244,6 +1267,7 @@ export type OrganizationUpdateWithoutAcademicYearsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutAcademicYearsInput = {
@@ -1288,6 +1312,7 @@ export type OrganizationUncheckedUpdateWithoutAcademicYearsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutDepartmentsInput = {
@@ -1332,6 +1357,7 @@ export type OrganizationCreateWithoutDepartmentsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutDepartmentsInput = {
@@ -1376,6 +1402,7 @@ export type OrganizationUncheckedCreateWithoutDepartmentsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutDepartmentsInput = {
@@ -1436,6 +1463,7 @@ export type OrganizationUpdateWithoutDepartmentsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutDepartmentsInput = {
@@ -1480,6 +1508,7 @@ export type OrganizationUncheckedUpdateWithoutDepartmentsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutProgramTracksInput = {
@@ -1524,6 +1553,7 @@ export type OrganizationCreateWithoutProgramTracksInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutProgramTracksInput = {
@@ -1568,6 +1598,7 @@ export type OrganizationUncheckedCreateWithoutProgramTracksInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutProgramTracksInput = {
@@ -1628,6 +1659,7 @@ export type OrganizationUpdateWithoutProgramTracksInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutProgramTracksInput = {
@@ -1672,6 +1704,7 @@ export type OrganizationUncheckedUpdateWithoutProgramTracksInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutProgramsInput = {
@@ -1716,6 +1749,7 @@ export type OrganizationCreateWithoutProgramsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutProgramsInput = {
@@ -1760,6 +1794,7 @@ export type OrganizationUncheckedCreateWithoutProgramsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutProgramsInput = {
@@ -1820,6 +1855,7 @@ export type OrganizationUpdateWithoutProgramsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutProgramsInput = {
@@ -1864,6 +1900,7 @@ export type OrganizationUncheckedUpdateWithoutProgramsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutUesInput = {
@@ -1908,6 +1945,7 @@ export type OrganizationCreateWithoutUesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutUesInput = {
@@ -1952,6 +1990,7 @@ export type OrganizationUncheckedCreateWithoutUesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutUesInput = {
@@ -2012,6 +2051,7 @@ export type OrganizationUpdateWithoutUesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutUesInput = {
@@ -2056,6 +2096,7 @@ export type OrganizationUncheckedUpdateWithoutUesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutUeCoursesInput = {
@@ -2100,6 +2141,7 @@ export type OrganizationCreateWithoutUeCoursesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutUeCoursesInput = {
@@ -2144,6 +2186,7 @@ export type OrganizationUncheckedCreateWithoutUeCoursesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutUeCoursesInput = {
@@ -2204,6 +2247,7 @@ export type OrganizationUpdateWithoutUeCoursesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutUeCoursesInput = {
@@ -2248,6 +2292,7 @@ export type OrganizationUncheckedUpdateWithoutUeCoursesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutCoursesInput = {
@@ -2292,6 +2337,7 @@ export type OrganizationCreateWithoutCoursesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutCoursesInput = {
@@ -2336,6 +2382,7 @@ export type OrganizationUncheckedCreateWithoutCoursesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutCoursesInput = {
@@ -2396,6 +2443,7 @@ export type OrganizationUpdateWithoutCoursesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutCoursesInput = {
@@ -2419,6 +2467,203 @@ export type OrganizationUncheckedUpdateWithoutCoursesInput = {
   channels?: Prisma.ChannelUncheckedUpdateManyWithoutOrganizationNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutOrganizationNestedInput
   justifications?: Prisma.JustificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  departments?: Prisma.DepartmentUncheckedUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
+  functions?: Prisma.FunctionUncheckedUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+  locations?: Prisma.LocationUncheckedUpdateManyWithoutOrganizationNestedInput
+  parentRelations?: Prisma.ParentRelationUncheckedUpdateManyWithoutOrganizationNestedInput
+  settings?: Prisma.OrganizationSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+  usage?: Prisma.OrganizationUsageUncheckedUpdateOneWithoutOrganizationNestedInput
+  permissions?: Prisma.PermissionUncheckedUpdateManyWithoutOrganizationNestedInput
+  programs?: Prisma.ProgramUncheckedUpdateManyWithoutOrganizationNestedInput
+  programTracks?: Prisma.ProgramTrackUncheckedUpdateManyWithoutOrganizationNestedInput
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutOrganizationNestedInput
+  schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutOrganizationNestedInput
+  ues?: Prisma.UEUncheckedUpdateManyWithoutOrganizationNestedInput
+  ueCourses?: Prisma.UECourseUncheckedUpdateManyWithoutOrganizationNestedInput
+  userOrganizations?: Prisma.UserOrganizationUncheckedUpdateManyWithoutOrganizationNestedInput
+  weekRecurences?: Prisma.WeekRecurenceUncheckedUpdateManyWithoutOrganizationNestedInput
+  weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
+  userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutTeacherCourseHoursInput = {
+  id?: string
+  name: string
+  email?: string | null
+  slug?: string | null
+  logo?: string | null
+  domain?: string | null
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  isActive?: boolean
+  deletedAt?: Date | string | null
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutOrganizationInput
+  academicYears?: Prisma.AcademicYearCreateNestedManyWithoutOrganizationInput
+  approvalRequests?: Prisma.ApprovalRequestCreateNestedManyWithoutOrganizationInput
+  attendances?: Prisma.AttendanceCreateNestedManyWithoutOrganizationInput
+  auditLog?: Prisma.AuditLogCreateNestedManyWithoutOrganizationInput
+  evaluations?: Prisma.EvaluationCreateNestedManyWithoutOrganizationInput
+  channels?: Prisma.ChannelCreateNestedManyWithoutOrganizationInput
+  comments?: Prisma.CommentCreateNestedManyWithoutOrganizationInput
+  justifications?: Prisma.JustificationCreateNestedManyWithoutOrganizationInput
+  courses?: Prisma.CourseCreateNestedManyWithoutOrganizationInput
+  departments?: Prisma.DepartmentCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
+  events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
+  functions?: Prisma.FunctionCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutOrganizationInput
+  locations?: Prisma.LocationCreateNestedManyWithoutOrganizationInput
+  parentRelations?: Prisma.ParentRelationCreateNestedManyWithoutOrganizationInput
+  settings?: Prisma.OrganizationSettingsCreateNestedOneWithoutOrganizationInput
+  usage?: Prisma.OrganizationUsageCreateNestedOneWithoutOrganizationInput
+  permissions?: Prisma.PermissionCreateNestedManyWithoutOrganizationInput
+  programs?: Prisma.ProgramCreateNestedManyWithoutOrganizationInput
+  programTracks?: Prisma.ProgramTrackCreateNestedManyWithoutOrganizationInput
+  rooms?: Prisma.RoomCreateNestedManyWithoutOrganizationInput
+  schedules?: Prisma.ScheduleCreateNestedManyWithoutOrganizationInput
+  ues?: Prisma.UECreateNestedManyWithoutOrganizationInput
+  ueCourses?: Prisma.UECourseCreateNestedManyWithoutOrganizationInput
+  userOrganizations?: Prisma.UserOrganizationCreateNestedManyWithoutOrganizationInput
+  weekRecurences?: Prisma.WeekRecurenceCreateNestedManyWithoutOrganizationInput
+  weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
+  teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
+  userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutTeacherCourseHoursInput = {
+  id?: string
+  name: string
+  email?: string | null
+  slug?: string | null
+  logo?: string | null
+  domain?: string | null
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  isActive?: boolean
+  deletedAt?: Date | string | null
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
+  academicYears?: Prisma.AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedCreateNestedManyWithoutOrganizationInput
+  attendances?: Prisma.AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
+  auditLog?: Prisma.AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+  evaluations?: Prisma.EvaluationUncheckedCreateNestedManyWithoutOrganizationInput
+  channels?: Prisma.ChannelUncheckedCreateNestedManyWithoutOrganizationInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutOrganizationInput
+  justifications?: Prisma.JustificationUncheckedCreateNestedManyWithoutOrganizationInput
+  courses?: Prisma.CourseUncheckedCreateNestedManyWithoutOrganizationInput
+  departments?: Prisma.DepartmentUncheckedCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
+  functions?: Prisma.FunctionUncheckedCreateNestedManyWithoutOrganizationInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+  locations?: Prisma.LocationUncheckedCreateNestedManyWithoutOrganizationInput
+  parentRelations?: Prisma.ParentRelationUncheckedCreateNestedManyWithoutOrganizationInput
+  settings?: Prisma.OrganizationSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+  usage?: Prisma.OrganizationUsageUncheckedCreateNestedOneWithoutOrganizationInput
+  permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutOrganizationInput
+  programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutOrganizationInput
+  programTracks?: Prisma.ProgramTrackUncheckedCreateNestedManyWithoutOrganizationInput
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutOrganizationInput
+  schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutOrganizationInput
+  ues?: Prisma.UEUncheckedCreateNestedManyWithoutOrganizationInput
+  ueCourses?: Prisma.UECourseUncheckedCreateNestedManyWithoutOrganizationInput
+  userOrganizations?: Prisma.UserOrganizationUncheckedCreateNestedManyWithoutOrganizationInput
+  weekRecurences?: Prisma.WeekRecurenceUncheckedCreateNestedManyWithoutOrganizationInput
+  weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
+  userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutTeacherCourseHoursInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutTeacherCourseHoursInput, Prisma.OrganizationUncheckedCreateWithoutTeacherCourseHoursInput>
+}
+
+export type OrganizationUpsertWithoutTeacherCourseHoursInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutTeacherCourseHoursInput, Prisma.OrganizationUncheckedUpdateWithoutTeacherCourseHoursInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutTeacherCourseHoursInput, Prisma.OrganizationUncheckedCreateWithoutTeacherCourseHoursInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutTeacherCourseHoursInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutTeacherCourseHoursInput, Prisma.OrganizationUncheckedUpdateWithoutTeacherCourseHoursInput>
+}
+
+export type OrganizationUpdateWithoutTeacherCourseHoursInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subscription?: Prisma.SubscriptionUpdateOneWithoutOrganizationNestedInput
+  academicYears?: Prisma.AcademicYearUpdateManyWithoutOrganizationNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUpdateManyWithoutOrganizationNestedInput
+  attendances?: Prisma.AttendanceUpdateManyWithoutOrganizationNestedInput
+  auditLog?: Prisma.AuditLogUpdateManyWithoutOrganizationNestedInput
+  evaluations?: Prisma.EvaluationUpdateManyWithoutOrganizationNestedInput
+  channels?: Prisma.ChannelUpdateManyWithoutOrganizationNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutOrganizationNestedInput
+  justifications?: Prisma.JustificationUpdateManyWithoutOrganizationNestedInput
+  courses?: Prisma.CourseUpdateManyWithoutOrganizationNestedInput
+  departments?: Prisma.DepartmentUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
+  events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
+  functions?: Prisma.FunctionUpdateManyWithoutOrganizationNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutOrganizationNestedInput
+  locations?: Prisma.LocationUpdateManyWithoutOrganizationNestedInput
+  parentRelations?: Prisma.ParentRelationUpdateManyWithoutOrganizationNestedInput
+  settings?: Prisma.OrganizationSettingsUpdateOneWithoutOrganizationNestedInput
+  usage?: Prisma.OrganizationUsageUpdateOneWithoutOrganizationNestedInput
+  permissions?: Prisma.PermissionUpdateManyWithoutOrganizationNestedInput
+  programs?: Prisma.ProgramUpdateManyWithoutOrganizationNestedInput
+  programTracks?: Prisma.ProgramTrackUpdateManyWithoutOrganizationNestedInput
+  rooms?: Prisma.RoomUpdateManyWithoutOrganizationNestedInput
+  schedules?: Prisma.ScheduleUpdateManyWithoutOrganizationNestedInput
+  ues?: Prisma.UEUpdateManyWithoutOrganizationNestedInput
+  ueCourses?: Prisma.UECourseUpdateManyWithoutOrganizationNestedInput
+  userOrganizations?: Prisma.UserOrganizationUpdateManyWithoutOrganizationNestedInput
+  weekRecurences?: Prisma.WeekRecurenceUpdateManyWithoutOrganizationNestedInput
+  weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
+  teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
+  userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutTeacherCourseHoursInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
+  academicYears?: Prisma.AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
+  approvalRequests?: Prisma.ApprovalRequestUncheckedUpdateManyWithoutOrganizationNestedInput
+  attendances?: Prisma.AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
+  auditLog?: Prisma.AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  evaluations?: Prisma.EvaluationUncheckedUpdateManyWithoutOrganizationNestedInput
+  channels?: Prisma.ChannelUncheckedUpdateManyWithoutOrganizationNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutOrganizationNestedInput
+  justifications?: Prisma.JustificationUncheckedUpdateManyWithoutOrganizationNestedInput
+  courses?: Prisma.CourseUncheckedUpdateManyWithoutOrganizationNestedInput
   departments?: Prisma.DepartmentUncheckedUpdateManyWithoutOrganizationNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2484,6 +2729,7 @@ export type OrganizationCreateWithoutAttendancesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutAttendancesInput = {
@@ -2528,6 +2774,7 @@ export type OrganizationUncheckedCreateWithoutAttendancesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutAttendancesInput = {
@@ -2588,6 +2835,7 @@ export type OrganizationUpdateWithoutAttendancesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutAttendancesInput = {
@@ -2632,6 +2880,7 @@ export type OrganizationUncheckedUpdateWithoutAttendancesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutJustificationsInput = {
@@ -2676,6 +2925,7 @@ export type OrganizationCreateWithoutJustificationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutJustificationsInput = {
@@ -2720,6 +2970,7 @@ export type OrganizationUncheckedCreateWithoutJustificationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutJustificationsInput = {
@@ -2780,6 +3031,7 @@ export type OrganizationUpdateWithoutJustificationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutJustificationsInput = {
@@ -2824,6 +3076,7 @@ export type OrganizationUncheckedUpdateWithoutJustificationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutSubscriptionInput = {
@@ -2868,6 +3121,7 @@ export type OrganizationCreateWithoutSubscriptionInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutSubscriptionInput = {
@@ -2912,6 +3166,7 @@ export type OrganizationUncheckedCreateWithoutSubscriptionInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutSubscriptionInput = {
@@ -2972,6 +3227,7 @@ export type OrganizationUpdateWithoutSubscriptionInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutSubscriptionInput = {
@@ -3016,6 +3272,7 @@ export type OrganizationUncheckedUpdateWithoutSubscriptionInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutChannelsInput = {
@@ -3060,6 +3317,7 @@ export type OrganizationCreateWithoutChannelsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutChannelsInput = {
@@ -3104,6 +3362,7 @@ export type OrganizationUncheckedCreateWithoutChannelsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutChannelsInput = {
@@ -3164,6 +3423,7 @@ export type OrganizationUpdateWithoutChannelsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutChannelsInput = {
@@ -3208,6 +3468,7 @@ export type OrganizationUncheckedUpdateWithoutChannelsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutCommentsInput = {
@@ -3252,6 +3513,7 @@ export type OrganizationCreateWithoutCommentsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutCommentsInput = {
@@ -3296,6 +3558,7 @@ export type OrganizationUncheckedCreateWithoutCommentsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutCommentsInput = {
@@ -3356,6 +3619,7 @@ export type OrganizationUpdateWithoutCommentsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutCommentsInput = {
@@ -3400,6 +3664,7 @@ export type OrganizationUncheckedUpdateWithoutCommentsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutUserSessionsInput = {
@@ -3444,6 +3709,7 @@ export type OrganizationCreateWithoutUserSessionsInput = {
   weekRecurences?: Prisma.WeekRecurenceCreateNestedManyWithoutOrganizationInput
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutUserSessionsInput = {
@@ -3488,6 +3754,7 @@ export type OrganizationUncheckedCreateWithoutUserSessionsInput = {
   weekRecurences?: Prisma.WeekRecurenceUncheckedCreateNestedManyWithoutOrganizationInput
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutUserSessionsInput = {
@@ -3548,6 +3815,7 @@ export type OrganizationUpdateWithoutUserSessionsInput = {
   weekRecurences?: Prisma.WeekRecurenceUpdateManyWithoutOrganizationNestedInput
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutUserSessionsInput = {
@@ -3592,6 +3860,7 @@ export type OrganizationUncheckedUpdateWithoutUserSessionsInput = {
   weekRecurences?: Prisma.WeekRecurenceUncheckedUpdateManyWithoutOrganizationNestedInput
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutEvaluationsInput = {
@@ -3636,6 +3905,7 @@ export type OrganizationCreateWithoutEvaluationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutEvaluationsInput = {
@@ -3680,6 +3950,7 @@ export type OrganizationUncheckedCreateWithoutEvaluationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutEvaluationsInput = {
@@ -3740,6 +4011,7 @@ export type OrganizationUpdateWithoutEvaluationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutEvaluationsInput = {
@@ -3784,6 +4056,7 @@ export type OrganizationUncheckedUpdateWithoutEvaluationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutParentRelationsInput = {
@@ -3828,6 +4101,7 @@ export type OrganizationCreateWithoutParentRelationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutParentRelationsInput = {
@@ -3872,6 +4146,7 @@ export type OrganizationUncheckedCreateWithoutParentRelationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutParentRelationsInput = {
@@ -3932,6 +4207,7 @@ export type OrganizationUpdateWithoutParentRelationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutParentRelationsInput = {
@@ -3976,6 +4252,7 @@ export type OrganizationUncheckedUpdateWithoutParentRelationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutSchedulesInput = {
@@ -4020,6 +4297,7 @@ export type OrganizationCreateWithoutSchedulesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutSchedulesInput = {
@@ -4064,6 +4342,7 @@ export type OrganizationUncheckedCreateWithoutSchedulesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutSchedulesInput = {
@@ -4124,6 +4403,7 @@ export type OrganizationUpdateWithoutSchedulesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutSchedulesInput = {
@@ -4168,6 +4448,7 @@ export type OrganizationUncheckedUpdateWithoutSchedulesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutWeeklyTemplatesInput = {
@@ -4212,6 +4493,7 @@ export type OrganizationCreateWithoutWeeklyTemplatesInput = {
   weekRecurences?: Prisma.WeekRecurenceCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutWeeklyTemplatesInput = {
@@ -4256,6 +4538,7 @@ export type OrganizationUncheckedCreateWithoutWeeklyTemplatesInput = {
   weekRecurences?: Prisma.WeekRecurenceUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutWeeklyTemplatesInput = {
@@ -4316,6 +4599,7 @@ export type OrganizationUpdateWithoutWeeklyTemplatesInput = {
   weekRecurences?: Prisma.WeekRecurenceUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutWeeklyTemplatesInput = {
@@ -4360,6 +4644,7 @@ export type OrganizationUncheckedUpdateWithoutWeeklyTemplatesInput = {
   weekRecurences?: Prisma.WeekRecurenceUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutWeekRecurencesInput = {
@@ -4404,6 +4689,7 @@ export type OrganizationCreateWithoutWeekRecurencesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutWeekRecurencesInput = {
@@ -4448,6 +4734,7 @@ export type OrganizationUncheckedCreateWithoutWeekRecurencesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutWeekRecurencesInput = {
@@ -4508,6 +4795,7 @@ export type OrganizationUpdateWithoutWeekRecurencesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutWeekRecurencesInput = {
@@ -4552,6 +4840,7 @@ export type OrganizationUncheckedUpdateWithoutWeekRecurencesInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutLocationsInput = {
@@ -4596,6 +4885,7 @@ export type OrganizationCreateWithoutLocationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutLocationsInput = {
@@ -4640,6 +4930,7 @@ export type OrganizationUncheckedCreateWithoutLocationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutLocationsInput = {
@@ -4700,6 +4991,7 @@ export type OrganizationUpdateWithoutLocationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutLocationsInput = {
@@ -4744,6 +5036,7 @@ export type OrganizationUncheckedUpdateWithoutLocationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutRoomsInput = {
@@ -4788,6 +5081,7 @@ export type OrganizationCreateWithoutRoomsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutRoomsInput = {
@@ -4832,6 +5126,7 @@ export type OrganizationUncheckedCreateWithoutRoomsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutRoomsInput = {
@@ -4892,6 +5187,7 @@ export type OrganizationUpdateWithoutRoomsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutRoomsInput = {
@@ -4936,6 +5232,7 @@ export type OrganizationUncheckedUpdateWithoutRoomsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutEventsInput = {
@@ -4980,6 +5277,7 @@ export type OrganizationCreateWithoutEventsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutEventsInput = {
@@ -5024,6 +5322,7 @@ export type OrganizationUncheckedCreateWithoutEventsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutEventsInput = {
@@ -5084,6 +5383,7 @@ export type OrganizationUpdateWithoutEventsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutEventsInput = {
@@ -5128,6 +5428,7 @@ export type OrganizationUncheckedUpdateWithoutEventsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutTeacherUnavailabilitiesInput = {
@@ -5172,6 +5473,7 @@ export type OrganizationCreateWithoutTeacherUnavailabilitiesInput = {
   weekRecurences?: Prisma.WeekRecurenceCreateNestedManyWithoutOrganizationInput
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutTeacherUnavailabilitiesInput = {
@@ -5216,6 +5518,7 @@ export type OrganizationUncheckedCreateWithoutTeacherUnavailabilitiesInput = {
   weekRecurences?: Prisma.WeekRecurenceUncheckedCreateNestedManyWithoutOrganizationInput
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutTeacherUnavailabilitiesInput = {
@@ -5276,6 +5579,7 @@ export type OrganizationUpdateWithoutTeacherUnavailabilitiesInput = {
   weekRecurences?: Prisma.WeekRecurenceUpdateManyWithoutOrganizationNestedInput
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutTeacherUnavailabilitiesInput = {
@@ -5320,6 +5624,7 @@ export type OrganizationUncheckedUpdateWithoutTeacherUnavailabilitiesInput = {
   weekRecurences?: Prisma.WeekRecurenceUncheckedUpdateManyWithoutOrganizationNestedInput
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutSettingsInput = {
@@ -5364,6 +5669,7 @@ export type OrganizationCreateWithoutSettingsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutSettingsInput = {
@@ -5408,6 +5714,7 @@ export type OrganizationUncheckedCreateWithoutSettingsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutSettingsInput = {
@@ -5468,6 +5775,7 @@ export type OrganizationUpdateWithoutSettingsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutSettingsInput = {
@@ -5512,6 +5820,7 @@ export type OrganizationUncheckedUpdateWithoutSettingsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutUsageInput = {
@@ -5556,6 +5865,7 @@ export type OrganizationCreateWithoutUsageInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutUsageInput = {
@@ -5600,6 +5910,7 @@ export type OrganizationUncheckedCreateWithoutUsageInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutUsageInput = {
@@ -5660,6 +5971,7 @@ export type OrganizationUpdateWithoutUsageInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutUsageInput = {
@@ -5704,6 +6016,7 @@ export type OrganizationUncheckedUpdateWithoutUsageInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutUserOrganizationsInput = {
@@ -5748,6 +6061,7 @@ export type OrganizationCreateWithoutUserOrganizationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutUserOrganizationsInput = {
@@ -5792,6 +6106,7 @@ export type OrganizationUncheckedCreateWithoutUserOrganizationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutUserOrganizationsInput = {
@@ -5852,6 +6167,7 @@ export type OrganizationUpdateWithoutUserOrganizationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutUserOrganizationsInput = {
@@ -5896,6 +6212,7 @@ export type OrganizationUncheckedUpdateWithoutUserOrganizationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutFunctionsInput = {
@@ -5940,6 +6257,7 @@ export type OrganizationCreateWithoutFunctionsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutFunctionsInput = {
@@ -5984,6 +6302,7 @@ export type OrganizationUncheckedCreateWithoutFunctionsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutFunctionsInput = {
@@ -6044,6 +6363,7 @@ export type OrganizationUpdateWithoutFunctionsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutFunctionsInput = {
@@ -6088,6 +6408,7 @@ export type OrganizationUncheckedUpdateWithoutFunctionsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutPermissionsInput = {
@@ -6132,6 +6453,7 @@ export type OrganizationCreateWithoutPermissionsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutPermissionsInput = {
@@ -6176,6 +6498,7 @@ export type OrganizationUncheckedCreateWithoutPermissionsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutPermissionsInput = {
@@ -6236,6 +6559,7 @@ export type OrganizationUpdateWithoutPermissionsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutPermissionsInput = {
@@ -6280,6 +6604,7 @@ export type OrganizationUncheckedUpdateWithoutPermissionsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutInvitationsInput = {
@@ -6324,6 +6649,7 @@ export type OrganizationCreateWithoutInvitationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutInvitationsInput = {
@@ -6368,6 +6694,7 @@ export type OrganizationUncheckedCreateWithoutInvitationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutInvitationsInput = {
@@ -6428,6 +6755,7 @@ export type OrganizationUpdateWithoutInvitationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutInvitationsInput = {
@@ -6472,6 +6800,7 @@ export type OrganizationUncheckedUpdateWithoutInvitationsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutDocumentsInput = {
@@ -6516,6 +6845,7 @@ export type OrganizationCreateWithoutDocumentsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutDocumentsInput = {
@@ -6560,6 +6890,7 @@ export type OrganizationUncheckedCreateWithoutDocumentsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutDocumentsInput = {
@@ -6620,6 +6951,7 @@ export type OrganizationUpdateWithoutDocumentsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutDocumentsInput = {
@@ -6664,6 +6996,7 @@ export type OrganizationUncheckedUpdateWithoutDocumentsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutAuditLogInput = {
@@ -6708,6 +7041,7 @@ export type OrganizationCreateWithoutAuditLogInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutAuditLogInput = {
@@ -6752,6 +7086,7 @@ export type OrganizationUncheckedCreateWithoutAuditLogInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutAuditLogInput = {
@@ -6812,6 +7147,7 @@ export type OrganizationUpdateWithoutAuditLogInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutAuditLogInput = {
@@ -6856,6 +7192,7 @@ export type OrganizationUncheckedUpdateWithoutAuditLogInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutApprovalRequestsInput = {
@@ -6900,6 +7237,7 @@ export type OrganizationCreateWithoutApprovalRequestsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutApprovalRequestsInput = {
@@ -6944,6 +7282,7 @@ export type OrganizationUncheckedCreateWithoutApprovalRequestsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutOrganizationInput
   userSessions?: Prisma.UserSessionUncheckedCreateNestedManyWithoutOrganizationInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutApprovalRequestsInput = {
@@ -7004,6 +7343,7 @@ export type OrganizationUpdateWithoutApprovalRequestsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutApprovalRequestsInput = {
@@ -7048,6 +7388,7 @@ export type OrganizationUncheckedUpdateWithoutApprovalRequestsInput = {
   weeklyTemplates?: Prisma.WeeklyTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutOrganizationNestedInput
   userSessions?: Prisma.UserSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  teacherCourseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 
@@ -7084,6 +7425,7 @@ export type OrganizationCountOutputType = {
   weeklyTemplates: number
   teacherUnavailabilities: number
   userSessions: number
+  teacherCourseHours: number
 }
 
 export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -7115,6 +7457,7 @@ export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Exte
   weeklyTemplates?: boolean | OrganizationCountOutputTypeCountWeeklyTemplatesArgs
   teacherUnavailabilities?: boolean | OrganizationCountOutputTypeCountTeacherUnavailabilitiesArgs
   userSessions?: boolean | OrganizationCountOutputTypeCountUserSessionsArgs
+  teacherCourseHours?: boolean | OrganizationCountOutputTypeCountTeacherCourseHoursArgs
 }
 
 /**
@@ -7323,6 +7666,13 @@ export type OrganizationCountOutputTypeCountUserSessionsArgs<ExtArgs extends run
   where?: Prisma.UserSessionWhereInput
 }
 
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountTeacherCourseHoursArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TeacherCourseHoursWhereInput
+}
+
 
 export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -7367,6 +7717,7 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   weeklyTemplates?: boolean | Prisma.Organization$weeklyTemplatesArgs<ExtArgs>
   teacherUnavailabilities?: boolean | Prisma.Organization$teacherUnavailabilitiesArgs<ExtArgs>
   userSessions?: boolean | Prisma.Organization$userSessionsArgs<ExtArgs>
+  teacherCourseHours?: boolean | Prisma.Organization$teacherCourseHoursArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["organization"]>
 
@@ -7445,6 +7796,7 @@ export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.Interna
   weeklyTemplates?: boolean | Prisma.Organization$weeklyTemplatesArgs<ExtArgs>
   teacherUnavailabilities?: boolean | Prisma.Organization$teacherUnavailabilitiesArgs<ExtArgs>
   userSessions?: boolean | Prisma.Organization$userSessionsArgs<ExtArgs>
+  teacherCourseHours?: boolean | Prisma.Organization$teacherCourseHoursArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -7484,6 +7836,7 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     weeklyTemplates: Prisma.$WeeklyTemplatePayload<ExtArgs>[]
     teacherUnavailabilities: Prisma.$TeacherUnavailabilityPayload<ExtArgs>[]
     userSessions: Prisma.$UserSessionPayload<ExtArgs>[]
+    teacherCourseHours: Prisma.$TeacherCourseHoursPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -7922,6 +8275,7 @@ export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends run
   weeklyTemplates<T extends Prisma.Organization$weeklyTemplatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$weeklyTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WeeklyTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   teacherUnavailabilities<T extends Prisma.Organization$teacherUnavailabilitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$teacherUnavailabilitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TeacherUnavailabilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   userSessions<T extends Prisma.Organization$userSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$userSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  teacherCourseHours<T extends Prisma.Organization$teacherCourseHoursArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$teacherCourseHoursArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TeacherCourseHoursPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9081,6 +9435,30 @@ export type Organization$userSessionsArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.UserSessionScalarFieldEnum | Prisma.UserSessionScalarFieldEnum[]
+}
+
+/**
+ * Organization.teacherCourseHours
+ */
+export type Organization$teacherCourseHoursArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TeacherCourseHours
+   */
+  select?: Prisma.TeacherCourseHoursSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TeacherCourseHours
+   */
+  omit?: Prisma.TeacherCourseHoursOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TeacherCourseHoursInclude<ExtArgs> | null
+  where?: Prisma.TeacherCourseHoursWhereInput
+  orderBy?: Prisma.TeacherCourseHoursOrderByWithRelationInput | Prisma.TeacherCourseHoursOrderByWithRelationInput[]
+  cursor?: Prisma.TeacherCourseHoursWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TeacherCourseHoursScalarFieldEnum | Prisma.TeacherCourseHoursScalarFieldEnum[]
 }
 
 /**

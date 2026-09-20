@@ -62,6 +62,7 @@ import { STUDENT_ENROLLMENT_GRAPH } from "@/services/student-enrollment/cache";
 import { USER_ORGANIZATION_GRAPH } from "@/services/user-organization/cache";
 import { DEVICE_GRAPH } from "@/services/device/cache";
 import { PERMISSION_GRAPH } from "@/services/permission/cache";
+
 // ⚠ À ÉTENDRE PAR PROJET — un import par service à données cachées :
 
 // ─────────────────────────────────────────────────────────────────────────────

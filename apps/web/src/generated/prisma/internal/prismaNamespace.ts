@@ -408,6 +408,7 @@ export const ModelName = {
   Term: 'Term',
   Course: 'Course',
   CourseTeacher: 'CourseTeacher',
+  TeacherCourseHours: 'TeacherCourseHours',
   OptionalUE: 'OptionalUE',
   StudentEnrollment: 'StudentEnrollment',
   Group: 'Group',
@@ -480,7 +481,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "academicYear" | "department" | "programTrack" | "program" | "programUE" | "uE" | "uECourse" | "class" | "term" | "course" | "courseTeacher" | "optionalUE" | "studentEnrollment" | "group" | "studentGroup" | "session" | "sessionToken" | "attendance" | "qRCode" | "qRScan" | "justification" | "plan" | "subscription" | "channel" | "channelMember" | "message" | "realtimeItem" | "comment" | "notification" | "pushSubscription" | "userDevice" | "userSession" | "evaluation" | "admin" | "teacher" | "student" | "parent" | "direction" | "parentRelation" | "referential" | "programTemplate" | "uETemplate" | "uETemplateEC" | "programUETemplate" | "orgProgramTemplate" | "orgUETemplate" | "schedule" | "weeklyTemplate" | "weeklySlot" | "weekRecurence" | "location" | "room" | "event" | "eventParticipant" | "teacherUnavailability" | "superAdmin" | "user" | "organization" | "organizationSettings" | "organizationUsage" | "userOrganization" | "function" | "userFunction" | "permission" | "invitation" | "document" | "auditLog" | "approvalRequest"
+    modelProps: "academicYear" | "department" | "programTrack" | "program" | "programUE" | "uE" | "uECourse" | "class" | "term" | "course" | "courseTeacher" | "teacherCourseHours" | "optionalUE" | "studentEnrollment" | "group" | "studentGroup" | "session" | "sessionToken" | "attendance" | "qRCode" | "qRScan" | "justification" | "plan" | "subscription" | "channel" | "channelMember" | "message" | "realtimeItem" | "comment" | "notification" | "pushSubscription" | "userDevice" | "userSession" | "evaluation" | "admin" | "teacher" | "student" | "parent" | "direction" | "parentRelation" | "referential" | "programTemplate" | "uETemplate" | "uETemplateEC" | "programUETemplate" | "orgProgramTemplate" | "orgUETemplate" | "schedule" | "weeklyTemplate" | "weeklySlot" | "weekRecurence" | "location" | "room" | "event" | "eventParticipant" | "teacherUnavailability" | "superAdmin" | "user" | "organization" | "organizationSettings" | "organizationUsage" | "userOrganization" | "function" | "userFunction" | "permission" | "invitation" | "document" | "auditLog" | "approvalRequest"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1295,6 +1296,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CourseTeacherCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CourseTeacherCountAggregateOutputType> | number
+        }
+      }
+    }
+    TeacherCourseHours: {
+      payload: Prisma.$TeacherCourseHoursPayload<ExtArgs>
+      fields: Prisma.TeacherCourseHoursFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TeacherCourseHoursFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeacherCourseHoursPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TeacherCourseHoursFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeacherCourseHoursPayload>
+        }
+        findFirst: {
+          args: Prisma.TeacherCourseHoursFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeacherCourseHoursPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TeacherCourseHoursFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeacherCourseHoursPayload>
+        }
+        findMany: {
+          args: Prisma.TeacherCourseHoursFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeacherCourseHoursPayload>[]
+        }
+        create: {
+          args: Prisma.TeacherCourseHoursCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeacherCourseHoursPayload>
+        }
+        createMany: {
+          args: Prisma.TeacherCourseHoursCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TeacherCourseHoursCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeacherCourseHoursPayload>[]
+        }
+        delete: {
+          args: Prisma.TeacherCourseHoursDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeacherCourseHoursPayload>
+        }
+        update: {
+          args: Prisma.TeacherCourseHoursUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeacherCourseHoursPayload>
+        }
+        deleteMany: {
+          args: Prisma.TeacherCourseHoursDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TeacherCourseHoursUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TeacherCourseHoursUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeacherCourseHoursPayload>[]
+        }
+        upsert: {
+          args: Prisma.TeacherCourseHoursUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeacherCourseHoursPayload>
+        }
+        aggregate: {
+          args: Prisma.TeacherCourseHoursAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTeacherCourseHours>
+        }
+        groupBy: {
+          args: Prisma.TeacherCourseHoursGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TeacherCourseHoursGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TeacherCourseHoursCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TeacherCourseHoursCountAggregateOutputType> | number
         }
       }
     }
@@ -5720,6 +5795,19 @@ export const CourseTeacherScalarFieldEnum = {
 export type CourseTeacherScalarFieldEnum = (typeof CourseTeacherScalarFieldEnum)[keyof typeof CourseTeacherScalarFieldEnum]
 
 
+export const TeacherCourseHoursScalarFieldEnum = {
+  id: 'id',
+  orgId: 'orgId',
+  teacherId: 'teacherId',
+  courseId: 'courseId',
+  scheduleType: 'scheduleType',
+  completedHours: 'completedHours',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TeacherCourseHoursScalarFieldEnum = (typeof TeacherCourseHoursScalarFieldEnum)[keyof typeof TeacherCourseHoursScalarFieldEnum]
+
+
 export const OptionalUEScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
@@ -6221,6 +6309,7 @@ export const ScheduleScalarFieldEnum = {
   startTime: 'startTime',
   endTime: 'endTime',
   status: 'status',
+  scheduleType: 'scheduleType',
   statusChangedAt: 'statusChangedAt',
   confirmed: 'confirmed',
   notes: 'notes',
@@ -6260,6 +6349,7 @@ export const WeeklySlotScalarFieldEnum = {
   courseId: 'courseId',
   teacherId: 'teacherId',
   roomId: 'roomId',
+  scheduleType: 'scheduleType',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -6743,6 +6833,20 @@ export type EnumLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMode
  * Reference to a field of type 'Level[]'
  */
 export type ListEnumLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Level[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ScheduleType'
+ */
+export type EnumScheduleTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ScheduleType'>
+    
+
+
+/**
+ * Reference to a field of type 'ScheduleType[]'
+ */
+export type ListEnumScheduleTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ScheduleType[]'>
     
 
 
@@ -7313,6 +7417,7 @@ export type GlobalOmitConfig = {
   term?: Prisma.TermOmit
   course?: Prisma.CourseOmit
   courseTeacher?: Prisma.CourseTeacherOmit
+  teacherCourseHours?: Prisma.TeacherCourseHoursOmit
   optionalUE?: Prisma.OptionalUEOmit
   studentEnrollment?: Prisma.StudentEnrollmentOmit
   group?: Prisma.GroupOmit

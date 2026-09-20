@@ -203,6 +203,7 @@ export type TeacherWhereInput = {
   unavailabilities?: Prisma.TeacherUnavailabilityListRelationFilter
   department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  courseHours?: Prisma.TeacherCourseHoursListRelationFilter
   weeklySlots?: Prisma.WeeklySlotListRelationFilter
 }
 
@@ -219,6 +220,7 @@ export type TeacherOrderByWithRelationInput = {
   unavailabilities?: Prisma.TeacherUnavailabilityOrderByRelationAggregateInput
   department?: Prisma.DepartmentOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
+  courseHours?: Prisma.TeacherCourseHoursOrderByRelationAggregateInput
   weeklySlots?: Prisma.WeeklySlotOrderByRelationAggregateInput
 }
 
@@ -239,6 +241,7 @@ export type TeacherWhereUniqueInput = Prisma.AtLeast<{
   unavailabilities?: Prisma.TeacherUnavailabilityListRelationFilter
   department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  courseHours?: Prisma.TeacherCourseHoursListRelationFilter
   weeklySlots?: Prisma.WeeklySlotListRelationFilter
 }, "id" | "userId_orgId">
 
@@ -279,6 +282,7 @@ export type TeacherCreateInput = {
   unavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutTeacherInput
   department?: Prisma.DepartmentCreateNestedOneWithoutTeachersInput
   user: Prisma.UserCreateNestedOneWithoutTeacherInput
+  courseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutTeacherInput
   weeklySlots?: Prisma.WeeklySlotCreateNestedManyWithoutTeacherInput
 }
 
@@ -293,6 +297,7 @@ export type TeacherUncheckedCreateInput = {
   courses?: Prisma.CourseTeacherUncheckedCreateNestedManyWithoutTeacherInput
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutTeacherInput
   unavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutTeacherInput
+  courseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutTeacherInput
   weeklySlots?: Prisma.WeeklySlotUncheckedCreateNestedManyWithoutTeacherInput
 }
 
@@ -307,6 +312,7 @@ export type TeacherUpdateInput = {
   unavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutTeacherNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutTeachersNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutTeacherNestedInput
+  courseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutTeacherNestedInput
   weeklySlots?: Prisma.WeeklySlotUpdateManyWithoutTeacherNestedInput
 }
 
@@ -321,6 +327,7 @@ export type TeacherUncheckedUpdateInput = {
   courses?: Prisma.CourseTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutTeacherNestedInput
   unavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutTeacherNestedInput
+  courseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutTeacherNestedInput
   weeklySlots?: Prisma.WeeklySlotUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
@@ -367,6 +374,11 @@ export type TeacherNullableScalarRelationFilter = {
   isNot?: Prisma.TeacherWhereInput | null
 }
 
+export type TeacherScalarRelationFilter = {
+  is?: Prisma.TeacherWhereInput
+  isNot?: Prisma.TeacherWhereInput
+}
+
 export type TeacherUserIdOrgIdCompoundUniqueInput = {
   userId: string
   orgId: string
@@ -400,11 +412,6 @@ export type TeacherMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
-}
-
-export type TeacherScalarRelationFilter = {
-  is?: Prisma.TeacherWhereInput
-  isNot?: Prisma.TeacherWhereInput
 }
 
 export type TeacherCreateNestedManyWithoutDepartmentInput = {
@@ -463,6 +470,20 @@ export type TeacherUpdateOneWithoutCoursesNestedInput = {
   delete?: Prisma.TeacherWhereInput | boolean
   connect?: Prisma.TeacherWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.TeacherUpdateToOneWithWhereWithoutCoursesInput, Prisma.TeacherUpdateWithoutCoursesInput>, Prisma.TeacherUncheckedUpdateWithoutCoursesInput>
+}
+
+export type TeacherCreateNestedOneWithoutCourseHoursInput = {
+  create?: Prisma.XOR<Prisma.TeacherCreateWithoutCourseHoursInput, Prisma.TeacherUncheckedCreateWithoutCourseHoursInput>
+  connectOrCreate?: Prisma.TeacherCreateOrConnectWithoutCourseHoursInput
+  connect?: Prisma.TeacherWhereUniqueInput
+}
+
+export type TeacherUpdateOneRequiredWithoutCourseHoursNestedInput = {
+  create?: Prisma.XOR<Prisma.TeacherCreateWithoutCourseHoursInput, Prisma.TeacherUncheckedCreateWithoutCourseHoursInput>
+  connectOrCreate?: Prisma.TeacherCreateOrConnectWithoutCourseHoursInput
+  upsert?: Prisma.TeacherUpsertWithoutCourseHoursInput
+  connect?: Prisma.TeacherWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TeacherUpdateToOneWithWhereWithoutCourseHoursInput, Prisma.TeacherUpdateWithoutCourseHoursInput>, Prisma.TeacherUncheckedUpdateWithoutCourseHoursInput>
 }
 
 export type TeacherCreateNestedOneWithoutSchedulesInput = {
@@ -559,6 +580,7 @@ export type TeacherCreateWithoutDepartmentInput = {
   schedules?: Prisma.ScheduleCreateNestedManyWithoutTeacherInput
   unavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutTeacherInput
   user: Prisma.UserCreateNestedOneWithoutTeacherInput
+  courseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutTeacherInput
   weeklySlots?: Prisma.WeeklySlotCreateNestedManyWithoutTeacherInput
 }
 
@@ -572,6 +594,7 @@ export type TeacherUncheckedCreateWithoutDepartmentInput = {
   courses?: Prisma.CourseTeacherUncheckedCreateNestedManyWithoutTeacherInput
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutTeacherInput
   unavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutTeacherInput
+  courseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutTeacherInput
   weeklySlots?: Prisma.WeeklySlotUncheckedCreateNestedManyWithoutTeacherInput
 }
 
@@ -624,6 +647,7 @@ export type TeacherCreateWithoutCoursesInput = {
   unavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutTeacherInput
   department?: Prisma.DepartmentCreateNestedOneWithoutTeachersInput
   user: Prisma.UserCreateNestedOneWithoutTeacherInput
+  courseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutTeacherInput
   weeklySlots?: Prisma.WeeklySlotCreateNestedManyWithoutTeacherInput
 }
 
@@ -637,6 +661,7 @@ export type TeacherUncheckedCreateWithoutCoursesInput = {
   departmentId?: string | null
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutTeacherInput
   unavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutTeacherInput
+  courseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutTeacherInput
   weeklySlots?: Prisma.WeeklySlotUncheckedCreateNestedManyWithoutTeacherInput
 }
 
@@ -666,6 +691,7 @@ export type TeacherUpdateWithoutCoursesInput = {
   unavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutTeacherNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutTeachersNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutTeacherNestedInput
+  courseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutTeacherNestedInput
   weeklySlots?: Prisma.WeeklySlotUpdateManyWithoutTeacherNestedInput
 }
 
@@ -677,6 +703,79 @@ export type TeacherUncheckedUpdateWithoutCoursesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutTeacherNestedInput
+  unavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutTeacherNestedInput
+  courseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutTeacherNestedInput
+  weeklySlots?: Prisma.WeeklySlotUncheckedUpdateManyWithoutTeacherNestedInput
+}
+
+export type TeacherCreateWithoutCourseHoursInput = {
+  id?: string
+  orgId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  courses?: Prisma.CourseTeacherCreateNestedManyWithoutTeacherInput
+  schedules?: Prisma.ScheduleCreateNestedManyWithoutTeacherInput
+  unavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutTeacherInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutTeachersInput
+  user: Prisma.UserCreateNestedOneWithoutTeacherInput
+  weeklySlots?: Prisma.WeeklySlotCreateNestedManyWithoutTeacherInput
+}
+
+export type TeacherUncheckedCreateWithoutCourseHoursInput = {
+  id?: string
+  userId: string
+  orgId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  departmentId?: string | null
+  courses?: Prisma.CourseTeacherUncheckedCreateNestedManyWithoutTeacherInput
+  schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutTeacherInput
+  unavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutTeacherInput
+  weeklySlots?: Prisma.WeeklySlotUncheckedCreateNestedManyWithoutTeacherInput
+}
+
+export type TeacherCreateOrConnectWithoutCourseHoursInput = {
+  where: Prisma.TeacherWhereUniqueInput
+  create: Prisma.XOR<Prisma.TeacherCreateWithoutCourseHoursInput, Prisma.TeacherUncheckedCreateWithoutCourseHoursInput>
+}
+
+export type TeacherUpsertWithoutCourseHoursInput = {
+  update: Prisma.XOR<Prisma.TeacherUpdateWithoutCourseHoursInput, Prisma.TeacherUncheckedUpdateWithoutCourseHoursInput>
+  create: Prisma.XOR<Prisma.TeacherCreateWithoutCourseHoursInput, Prisma.TeacherUncheckedCreateWithoutCourseHoursInput>
+  where?: Prisma.TeacherWhereInput
+}
+
+export type TeacherUpdateToOneWithWhereWithoutCourseHoursInput = {
+  where?: Prisma.TeacherWhereInput
+  data: Prisma.XOR<Prisma.TeacherUpdateWithoutCourseHoursInput, Prisma.TeacherUncheckedUpdateWithoutCourseHoursInput>
+}
+
+export type TeacherUpdateWithoutCourseHoursInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orgId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  courses?: Prisma.CourseTeacherUpdateManyWithoutTeacherNestedInput
+  schedules?: Prisma.ScheduleUpdateManyWithoutTeacherNestedInput
+  unavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutTeacherNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutTeachersNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutTeacherNestedInput
+  weeklySlots?: Prisma.WeeklySlotUpdateManyWithoutTeacherNestedInput
+}
+
+export type TeacherUncheckedUpdateWithoutCourseHoursInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  orgId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  courses?: Prisma.CourseTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutTeacherNestedInput
   unavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutTeacherNestedInput
   weeklySlots?: Prisma.WeeklySlotUncheckedUpdateManyWithoutTeacherNestedInput
@@ -692,6 +791,7 @@ export type TeacherCreateWithoutSchedulesInput = {
   unavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutTeacherInput
   department?: Prisma.DepartmentCreateNestedOneWithoutTeachersInput
   user: Prisma.UserCreateNestedOneWithoutTeacherInput
+  courseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutTeacherInput
   weeklySlots?: Prisma.WeeklySlotCreateNestedManyWithoutTeacherInput
 }
 
@@ -705,6 +805,7 @@ export type TeacherUncheckedCreateWithoutSchedulesInput = {
   departmentId?: string | null
   courses?: Prisma.CourseTeacherUncheckedCreateNestedManyWithoutTeacherInput
   unavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutTeacherInput
+  courseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutTeacherInput
   weeklySlots?: Prisma.WeeklySlotUncheckedCreateNestedManyWithoutTeacherInput
 }
 
@@ -734,6 +835,7 @@ export type TeacherUpdateWithoutSchedulesInput = {
   unavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutTeacherNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutTeachersNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutTeacherNestedInput
+  courseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutTeacherNestedInput
   weeklySlots?: Prisma.WeeklySlotUpdateManyWithoutTeacherNestedInput
 }
 
@@ -747,6 +849,7 @@ export type TeacherUncheckedUpdateWithoutSchedulesInput = {
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   courses?: Prisma.CourseTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   unavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutTeacherNestedInput
+  courseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutTeacherNestedInput
   weeklySlots?: Prisma.WeeklySlotUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
@@ -761,6 +864,7 @@ export type TeacherCreateWithoutWeeklySlotsInput = {
   unavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutTeacherInput
   department?: Prisma.DepartmentCreateNestedOneWithoutTeachersInput
   user: Prisma.UserCreateNestedOneWithoutTeacherInput
+  courseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutTeacherInput
 }
 
 export type TeacherUncheckedCreateWithoutWeeklySlotsInput = {
@@ -774,6 +878,7 @@ export type TeacherUncheckedCreateWithoutWeeklySlotsInput = {
   courses?: Prisma.CourseTeacherUncheckedCreateNestedManyWithoutTeacherInput
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutTeacherInput
   unavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutTeacherInput
+  courseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutTeacherInput
 }
 
 export type TeacherCreateOrConnectWithoutWeeklySlotsInput = {
@@ -803,6 +908,7 @@ export type TeacherUpdateWithoutWeeklySlotsInput = {
   unavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutTeacherNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutTeachersNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutTeacherNestedInput
+  courseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutTeacherNestedInput
 }
 
 export type TeacherUncheckedUpdateWithoutWeeklySlotsInput = {
@@ -816,6 +922,7 @@ export type TeacherUncheckedUpdateWithoutWeeklySlotsInput = {
   courses?: Prisma.CourseTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutTeacherNestedInput
   unavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutTeacherNestedInput
+  courseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
 export type TeacherCreateWithoutUnavailabilitiesInput = {
@@ -828,6 +935,7 @@ export type TeacherCreateWithoutUnavailabilitiesInput = {
   schedules?: Prisma.ScheduleCreateNestedManyWithoutTeacherInput
   department?: Prisma.DepartmentCreateNestedOneWithoutTeachersInput
   user: Prisma.UserCreateNestedOneWithoutTeacherInput
+  courseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutTeacherInput
   weeklySlots?: Prisma.WeeklySlotCreateNestedManyWithoutTeacherInput
 }
 
@@ -841,6 +949,7 @@ export type TeacherUncheckedCreateWithoutUnavailabilitiesInput = {
   departmentId?: string | null
   courses?: Prisma.CourseTeacherUncheckedCreateNestedManyWithoutTeacherInput
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutTeacherInput
+  courseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutTeacherInput
   weeklySlots?: Prisma.WeeklySlotUncheckedCreateNestedManyWithoutTeacherInput
 }
 
@@ -870,6 +979,7 @@ export type TeacherUpdateWithoutUnavailabilitiesInput = {
   schedules?: Prisma.ScheduleUpdateManyWithoutTeacherNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutTeachersNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutTeacherNestedInput
+  courseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutTeacherNestedInput
   weeklySlots?: Prisma.WeeklySlotUpdateManyWithoutTeacherNestedInput
 }
 
@@ -883,6 +993,7 @@ export type TeacherUncheckedUpdateWithoutUnavailabilitiesInput = {
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   courses?: Prisma.CourseTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutTeacherNestedInput
+  courseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutTeacherNestedInput
   weeklySlots?: Prisma.WeeklySlotUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
@@ -896,6 +1007,7 @@ export type TeacherCreateWithoutUserInput = {
   schedules?: Prisma.ScheduleCreateNestedManyWithoutTeacherInput
   unavailabilities?: Prisma.TeacherUnavailabilityCreateNestedManyWithoutTeacherInput
   department?: Prisma.DepartmentCreateNestedOneWithoutTeachersInput
+  courseHours?: Prisma.TeacherCourseHoursCreateNestedManyWithoutTeacherInput
   weeklySlots?: Prisma.WeeklySlotCreateNestedManyWithoutTeacherInput
 }
 
@@ -909,6 +1021,7 @@ export type TeacherUncheckedCreateWithoutUserInput = {
   courses?: Prisma.CourseTeacherUncheckedCreateNestedManyWithoutTeacherInput
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutTeacherInput
   unavailabilities?: Prisma.TeacherUnavailabilityUncheckedCreateNestedManyWithoutTeacherInput
+  courseHours?: Prisma.TeacherCourseHoursUncheckedCreateNestedManyWithoutTeacherInput
   weeklySlots?: Prisma.WeeklySlotUncheckedCreateNestedManyWithoutTeacherInput
 }
 
@@ -957,6 +1070,7 @@ export type TeacherUpdateWithoutDepartmentInput = {
   schedules?: Prisma.ScheduleUpdateManyWithoutTeacherNestedInput
   unavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutTeacherNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutTeacherNestedInput
+  courseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutTeacherNestedInput
   weeklySlots?: Prisma.WeeklySlotUpdateManyWithoutTeacherNestedInput
 }
 
@@ -970,6 +1084,7 @@ export type TeacherUncheckedUpdateWithoutDepartmentInput = {
   courses?: Prisma.CourseTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutTeacherNestedInput
   unavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutTeacherNestedInput
+  courseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutTeacherNestedInput
   weeklySlots?: Prisma.WeeklySlotUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
@@ -1001,6 +1116,7 @@ export type TeacherUpdateWithoutUserInput = {
   schedules?: Prisma.ScheduleUpdateManyWithoutTeacherNestedInput
   unavailabilities?: Prisma.TeacherUnavailabilityUpdateManyWithoutTeacherNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutTeachersNestedInput
+  courseHours?: Prisma.TeacherCourseHoursUpdateManyWithoutTeacherNestedInput
   weeklySlots?: Prisma.WeeklySlotUpdateManyWithoutTeacherNestedInput
 }
 
@@ -1014,6 +1130,7 @@ export type TeacherUncheckedUpdateWithoutUserInput = {
   courses?: Prisma.CourseTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutTeacherNestedInput
   unavailabilities?: Prisma.TeacherUnavailabilityUncheckedUpdateManyWithoutTeacherNestedInput
+  courseHours?: Prisma.TeacherCourseHoursUncheckedUpdateManyWithoutTeacherNestedInput
   weeklySlots?: Prisma.WeeklySlotUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
@@ -1035,6 +1152,7 @@ export type TeacherCountOutputType = {
   courses: number
   schedules: number
   unavailabilities: number
+  courseHours: number
   weeklySlots: number
 }
 
@@ -1042,6 +1160,7 @@ export type TeacherCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   courses?: boolean | TeacherCountOutputTypeCountCoursesArgs
   schedules?: boolean | TeacherCountOutputTypeCountSchedulesArgs
   unavailabilities?: boolean | TeacherCountOutputTypeCountUnavailabilitiesArgs
+  courseHours?: boolean | TeacherCountOutputTypeCountCourseHoursArgs
   weeklySlots?: boolean | TeacherCountOutputTypeCountWeeklySlotsArgs
 }
 
@@ -1079,6 +1198,13 @@ export type TeacherCountOutputTypeCountUnavailabilitiesArgs<ExtArgs extends runt
 /**
  * TeacherCountOutputType without action
  */
+export type TeacherCountOutputTypeCountCourseHoursArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TeacherCourseHoursWhereInput
+}
+
+/**
+ * TeacherCountOutputType without action
+ */
 export type TeacherCountOutputTypeCountWeeklySlotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.WeeklySlotWhereInput
 }
@@ -1097,6 +1223,7 @@ export type TeacherSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   unavailabilities?: boolean | Prisma.Teacher$unavailabilitiesArgs<ExtArgs>
   department?: boolean | Prisma.Teacher$departmentArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  courseHours?: boolean | Prisma.Teacher$courseHoursArgs<ExtArgs>
   weeklySlots?: boolean | Prisma.Teacher$weeklySlotsArgs<ExtArgs>
   _count?: boolean | Prisma.TeacherCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["teacher"]>
@@ -1142,6 +1269,7 @@ export type TeacherInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   unavailabilities?: boolean | Prisma.Teacher$unavailabilitiesArgs<ExtArgs>
   department?: boolean | Prisma.Teacher$departmentArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  courseHours?: boolean | Prisma.Teacher$courseHoursArgs<ExtArgs>
   weeklySlots?: boolean | Prisma.Teacher$weeklySlotsArgs<ExtArgs>
   _count?: boolean | Prisma.TeacherCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1162,6 +1290,7 @@ export type $TeacherPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     unavailabilities: Prisma.$TeacherUnavailabilityPayload<ExtArgs>[]
     department: Prisma.$DepartmentPayload<ExtArgs> | null
     user: Prisma.$UserPayload<ExtArgs>
+    courseHours: Prisma.$TeacherCourseHoursPayload<ExtArgs>[]
     weeklySlots: Prisma.$WeeklySlotPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1571,6 +1700,7 @@ export interface Prisma__TeacherClient<T, Null = never, ExtArgs extends runtime.
   unavailabilities<T extends Prisma.Teacher$unavailabilitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Teacher$unavailabilitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TeacherUnavailabilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   department<T extends Prisma.Teacher$departmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Teacher$departmentArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  courseHours<T extends Prisma.Teacher$courseHoursArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Teacher$courseHoursArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TeacherCourseHoursPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   weeklySlots<T extends Prisma.Teacher$weeklySlotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Teacher$weeklySlotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WeeklySlotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2097,6 +2227,30 @@ export type Teacher$departmentArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   include?: Prisma.DepartmentInclude<ExtArgs> | null
   where?: Prisma.DepartmentWhereInput
+}
+
+/**
+ * Teacher.courseHours
+ */
+export type Teacher$courseHoursArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TeacherCourseHours
+   */
+  select?: Prisma.TeacherCourseHoursSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TeacherCourseHours
+   */
+  omit?: Prisma.TeacherCourseHoursOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TeacherCourseHoursInclude<ExtArgs> | null
+  where?: Prisma.TeacherCourseHoursWhereInput
+  orderBy?: Prisma.TeacherCourseHoursOrderByWithRelationInput | Prisma.TeacherCourseHoursOrderByWithRelationInput[]
+  cursor?: Prisma.TeacherCourseHoursWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TeacherCourseHoursScalarFieldEnum | Prisma.TeacherCourseHoursScalarFieldEnum[]
 }
 
 /**

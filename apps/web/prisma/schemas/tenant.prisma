@@ -114,6 +114,7 @@ model Organization {
   weeklyTemplates         WeeklyTemplate[]
   teacherUnavailabilities TeacherUnavailability[]
   userSessions            UserSession[]
+  teacherCourseHours      TeacherCourseHours[]
 
   @@schema("public")
 }

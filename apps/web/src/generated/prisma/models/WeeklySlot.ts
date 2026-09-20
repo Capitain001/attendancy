@@ -43,6 +43,7 @@ export type WeeklySlotMinAggregateOutputType = {
   courseId: string | null
   teacherId: string | null
   roomId: string | null
+  scheduleType: $Enums.ScheduleType | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -58,6 +59,7 @@ export type WeeklySlotMaxAggregateOutputType = {
   courseId: string | null
   teacherId: string | null
   roomId: string | null
+  scheduleType: $Enums.ScheduleType | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -73,6 +75,7 @@ export type WeeklySlotCountAggregateOutputType = {
   courseId: number
   teacherId: number
   roomId: number
+  scheduleType: number
   isActive: number
   createdAt: number
   updatedAt: number
@@ -98,6 +101,7 @@ export type WeeklySlotMinAggregateInputType = {
   courseId?: true
   teacherId?: true
   roomId?: true
+  scheduleType?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -113,6 +117,7 @@ export type WeeklySlotMaxAggregateInputType = {
   courseId?: true
   teacherId?: true
   roomId?: true
+  scheduleType?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -128,6 +133,7 @@ export type WeeklySlotCountAggregateInputType = {
   courseId?: true
   teacherId?: true
   roomId?: true
+  scheduleType?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -230,6 +236,7 @@ export type WeeklySlotGroupByOutputType = {
   courseId: string
   teacherId: string
   roomId: string
+  scheduleType: $Enums.ScheduleType
   isActive: boolean
   createdAt: Date
   updatedAt: Date
@@ -268,6 +275,7 @@ export type WeeklySlotWhereInput = {
   courseId?: Prisma.UuidFilter<"WeeklySlot"> | string
   teacherId?: Prisma.UuidFilter<"WeeklySlot"> | string
   roomId?: Prisma.UuidFilter<"WeeklySlot"> | string
+  scheduleType?: Prisma.EnumScheduleTypeFilter<"WeeklySlot"> | $Enums.ScheduleType
   isActive?: Prisma.BoolFilter<"WeeklySlot"> | boolean
   createdAt?: Prisma.DateTimeFilter<"WeeklySlot"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WeeklySlot"> | Date | string
@@ -287,6 +295,7 @@ export type WeeklySlotOrderByWithRelationInput = {
   courseId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
+  scheduleType?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -309,6 +318,7 @@ export type WeeklySlotWhereUniqueInput = Prisma.AtLeast<{
   courseId?: Prisma.UuidFilter<"WeeklySlot"> | string
   teacherId?: Prisma.UuidFilter<"WeeklySlot"> | string
   roomId?: Prisma.UuidFilter<"WeeklySlot"> | string
+  scheduleType?: Prisma.EnumScheduleTypeFilter<"WeeklySlot"> | $Enums.ScheduleType
   isActive?: Prisma.BoolFilter<"WeeklySlot"> | boolean
   createdAt?: Prisma.DateTimeFilter<"WeeklySlot"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WeeklySlot"> | Date | string
@@ -328,6 +338,7 @@ export type WeeklySlotOrderByWithAggregationInput = {
   courseId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
+  scheduleType?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -351,6 +362,7 @@ export type WeeklySlotScalarWhereWithAggregatesInput = {
   courseId?: Prisma.UuidWithAggregatesFilter<"WeeklySlot"> | string
   teacherId?: Prisma.UuidWithAggregatesFilter<"WeeklySlot"> | string
   roomId?: Prisma.UuidWithAggregatesFilter<"WeeklySlot"> | string
+  scheduleType?: Prisma.EnumScheduleTypeWithAggregatesFilter<"WeeklySlot"> | $Enums.ScheduleType
   isActive?: Prisma.BoolWithAggregatesFilter<"WeeklySlot"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"WeeklySlot"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"WeeklySlot"> | Date | string
@@ -362,6 +374,7 @@ export type WeeklySlotCreateInput = {
   dayOfWeek: number
   startTime: string
   endTime: string
+  scheduleType?: $Enums.ScheduleType
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -381,6 +394,7 @@ export type WeeklySlotUncheckedCreateInput = {
   courseId: string
   teacherId: string
   roomId: string
+  scheduleType?: $Enums.ScheduleType
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -392,6 +406,7 @@ export type WeeklySlotUpdateInput = {
   dayOfWeek?: Prisma.IntFieldUpdateOperationsInput | number
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -411,6 +426,7 @@ export type WeeklySlotUncheckedUpdateInput = {
   courseId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -426,6 +442,7 @@ export type WeeklySlotCreateManyInput = {
   courseId: string
   teacherId: string
   roomId: string
+  scheduleType?: $Enums.ScheduleType
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -437,6 +454,7 @@ export type WeeklySlotUpdateManyMutationInput = {
   dayOfWeek?: Prisma.IntFieldUpdateOperationsInput | number
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -452,6 +470,7 @@ export type WeeklySlotUncheckedUpdateManyInput = {
   courseId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -477,6 +496,7 @@ export type WeeklySlotCountOrderByAggregateInput = {
   courseId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
+  scheduleType?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -496,6 +516,7 @@ export type WeeklySlotMaxOrderByAggregateInput = {
   courseId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
+  scheduleType?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -511,6 +532,7 @@ export type WeeklySlotMinOrderByAggregateInput = {
   courseId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
+  scheduleType?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -694,6 +716,7 @@ export type WeeklySlotCreateWithoutCourseInput = {
   dayOfWeek: number
   startTime: string
   endTime: string
+  scheduleType?: $Enums.ScheduleType
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -711,6 +734,7 @@ export type WeeklySlotUncheckedCreateWithoutCourseInput = {
   endTime: string
   teacherId: string
   roomId: string
+  scheduleType?: $Enums.ScheduleType
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -755,6 +779,7 @@ export type WeeklySlotScalarWhereInput = {
   courseId?: Prisma.UuidFilter<"WeeklySlot"> | string
   teacherId?: Prisma.UuidFilter<"WeeklySlot"> | string
   roomId?: Prisma.UuidFilter<"WeeklySlot"> | string
+  scheduleType?: Prisma.EnumScheduleTypeFilter<"WeeklySlot"> | $Enums.ScheduleType
   isActive?: Prisma.BoolFilter<"WeeklySlot"> | boolean
   createdAt?: Prisma.DateTimeFilter<"WeeklySlot"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WeeklySlot"> | Date | string
@@ -766,6 +791,7 @@ export type WeeklySlotCreateWithoutTeacherInput = {
   dayOfWeek: number
   startTime: string
   endTime: string
+  scheduleType?: $Enums.ScheduleType
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -783,6 +809,7 @@ export type WeeklySlotUncheckedCreateWithoutTeacherInput = {
   endTime: string
   courseId: string
   roomId: string
+  scheduleType?: $Enums.ScheduleType
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -820,6 +847,7 @@ export type WeeklySlotCreateWithoutTemplateInput = {
   dayOfWeek: number
   startTime: string
   endTime: string
+  scheduleType?: $Enums.ScheduleType
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -837,6 +865,7 @@ export type WeeklySlotUncheckedCreateWithoutTemplateInput = {
   courseId: string
   teacherId: string
   roomId: string
+  scheduleType?: $Enums.ScheduleType
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -874,6 +903,7 @@ export type WeeklySlotCreateWithoutRoomInput = {
   dayOfWeek: number
   startTime: string
   endTime: string
+  scheduleType?: $Enums.ScheduleType
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -891,6 +921,7 @@ export type WeeklySlotUncheckedCreateWithoutRoomInput = {
   endTime: string
   courseId: string
   teacherId: string
+  scheduleType?: $Enums.ScheduleType
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -931,6 +962,7 @@ export type WeeklySlotCreateManyCourseInput = {
   endTime: string
   teacherId: string
   roomId: string
+  scheduleType?: $Enums.ScheduleType
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -942,6 +974,7 @@ export type WeeklySlotUpdateWithoutCourseInput = {
   dayOfWeek?: Prisma.IntFieldUpdateOperationsInput | number
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -959,6 +992,7 @@ export type WeeklySlotUncheckedUpdateWithoutCourseInput = {
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -973,6 +1007,7 @@ export type WeeklySlotUncheckedUpdateManyWithoutCourseInput = {
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -987,6 +1022,7 @@ export type WeeklySlotCreateManyTeacherInput = {
   endTime: string
   courseId: string
   roomId: string
+  scheduleType?: $Enums.ScheduleType
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -998,6 +1034,7 @@ export type WeeklySlotUpdateWithoutTeacherInput = {
   dayOfWeek?: Prisma.IntFieldUpdateOperationsInput | number
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1015,6 +1052,7 @@ export type WeeklySlotUncheckedUpdateWithoutTeacherInput = {
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
   courseId?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1029,6 +1067,7 @@ export type WeeklySlotUncheckedUpdateManyWithoutTeacherInput = {
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
   courseId?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1043,6 +1082,7 @@ export type WeeklySlotCreateManyTemplateInput = {
   courseId: string
   teacherId: string
   roomId: string
+  scheduleType?: $Enums.ScheduleType
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1054,6 +1094,7 @@ export type WeeklySlotUpdateWithoutTemplateInput = {
   dayOfWeek?: Prisma.IntFieldUpdateOperationsInput | number
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1071,6 +1112,7 @@ export type WeeklySlotUncheckedUpdateWithoutTemplateInput = {
   courseId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1085,6 +1127,7 @@ export type WeeklySlotUncheckedUpdateManyWithoutTemplateInput = {
   courseId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1099,6 +1142,7 @@ export type WeeklySlotCreateManyRoomInput = {
   endTime: string
   courseId: string
   teacherId: string
+  scheduleType?: $Enums.ScheduleType
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1110,6 +1154,7 @@ export type WeeklySlotUpdateWithoutRoomInput = {
   dayOfWeek?: Prisma.IntFieldUpdateOperationsInput | number
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1127,6 +1172,7 @@ export type WeeklySlotUncheckedUpdateWithoutRoomInput = {
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
   courseId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1141,6 +1187,7 @@ export type WeeklySlotUncheckedUpdateManyWithoutRoomInput = {
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
   courseId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1158,6 +1205,7 @@ export type WeeklySlotSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   courseId?: boolean
   teacherId?: boolean
   roomId?: boolean
+  scheduleType?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1177,6 +1225,7 @@ export type WeeklySlotSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   courseId?: boolean
   teacherId?: boolean
   roomId?: boolean
+  scheduleType?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1196,6 +1245,7 @@ export type WeeklySlotSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   courseId?: boolean
   teacherId?: boolean
   roomId?: boolean
+  scheduleType?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1215,13 +1265,14 @@ export type WeeklySlotSelectScalar = {
   courseId?: boolean
   teacherId?: boolean
   roomId?: boolean
+  scheduleType?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type WeeklySlotOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "templateId" | "dayOfWeek" | "startTime" | "endTime" | "courseId" | "teacherId" | "roomId" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["weeklySlot"]>
+export type WeeklySlotOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "templateId" | "dayOfWeek" | "startTime" | "endTime" | "courseId" | "teacherId" | "roomId" | "scheduleType" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["weeklySlot"]>
 export type WeeklySlotInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   course?: boolean | Prisma.CourseDefaultArgs<ExtArgs>
   room?: boolean | Prisma.RoomDefaultArgs<ExtArgs>
@@ -1258,6 +1309,7 @@ export type $WeeklySlotPayload<ExtArgs extends runtime.Types.Extensions.Internal
     courseId: string
     teacherId: string
     roomId: string
+    scheduleType: $Enums.ScheduleType
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -1697,6 +1749,7 @@ export interface WeeklySlotFieldRefs {
   readonly courseId: Prisma.FieldRef<"WeeklySlot", 'String'>
   readonly teacherId: Prisma.FieldRef<"WeeklySlot", 'String'>
   readonly roomId: Prisma.FieldRef<"WeeklySlot", 'String'>
+  readonly scheduleType: Prisma.FieldRef<"WeeklySlot", 'ScheduleType'>
   readonly isActive: Prisma.FieldRef<"WeeklySlot", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"WeeklySlot", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"WeeklySlot", 'DateTime'>

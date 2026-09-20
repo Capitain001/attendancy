@@ -33,6 +33,7 @@ export type ScheduleMinAggregateOutputType = {
   startTime: Date | null
   endTime: Date | null
   status: $Enums.ScheduleStatus | null
+  scheduleType: $Enums.ScheduleType | null
   statusChangedAt: Date | null
   confirmed: boolean | null
   notes: string | null
@@ -56,6 +57,7 @@ export type ScheduleMaxAggregateOutputType = {
   startTime: Date | null
   endTime: Date | null
   status: $Enums.ScheduleStatus | null
+  scheduleType: $Enums.ScheduleType | null
   statusChangedAt: Date | null
   confirmed: boolean | null
   notes: string | null
@@ -79,6 +81,7 @@ export type ScheduleCountAggregateOutputType = {
   startTime: number
   endTime: number
   status: number
+  scheduleType: number
   statusChangedAt: number
   confirmed: number
   notes: number
@@ -104,6 +107,7 @@ export type ScheduleMinAggregateInputType = {
   startTime?: true
   endTime?: true
   status?: true
+  scheduleType?: true
   statusChangedAt?: true
   confirmed?: true
   notes?: true
@@ -127,6 +131,7 @@ export type ScheduleMaxAggregateInputType = {
   startTime?: true
   endTime?: true
   status?: true
+  scheduleType?: true
   statusChangedAt?: true
   confirmed?: true
   notes?: true
@@ -150,6 +155,7 @@ export type ScheduleCountAggregateInputType = {
   startTime?: true
   endTime?: true
   status?: true
+  scheduleType?: true
   statusChangedAt?: true
   confirmed?: true
   notes?: true
@@ -246,6 +252,7 @@ export type ScheduleGroupByOutputType = {
   startTime: Date
   endTime: Date
   status: $Enums.ScheduleStatus
+  scheduleType: $Enums.ScheduleType
   statusChangedAt: Date | null
   confirmed: boolean
   notes: string | null
@@ -290,6 +297,7 @@ export type ScheduleWhereInput = {
   startTime?: Prisma.DateTimeFilter<"Schedule"> | Date | string
   endTime?: Prisma.DateTimeFilter<"Schedule"> | Date | string
   status?: Prisma.EnumScheduleStatusFilter<"Schedule"> | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFilter<"Schedule"> | $Enums.ScheduleType
   statusChangedAt?: Prisma.DateTimeNullableFilter<"Schedule"> | Date | string | null
   confirmed?: Prisma.BoolFilter<"Schedule"> | boolean
   notes?: Prisma.StringNullableFilter<"Schedule"> | string | null
@@ -324,6 +332,7 @@ export type ScheduleOrderByWithRelationInput = {
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  scheduleType?: Prisma.SortOrder
   statusChangedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   confirmed?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -361,6 +370,7 @@ export type ScheduleWhereUniqueInput = Prisma.AtLeast<{
   startTime?: Prisma.DateTimeFilter<"Schedule"> | Date | string
   endTime?: Prisma.DateTimeFilter<"Schedule"> | Date | string
   status?: Prisma.EnumScheduleStatusFilter<"Schedule"> | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFilter<"Schedule"> | $Enums.ScheduleType
   statusChangedAt?: Prisma.DateTimeNullableFilter<"Schedule"> | Date | string | null
   confirmed?: Prisma.BoolFilter<"Schedule"> | boolean
   notes?: Prisma.StringNullableFilter<"Schedule"> | string | null
@@ -395,6 +405,7 @@ export type ScheduleOrderByWithAggregationInput = {
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  scheduleType?: Prisma.SortOrder
   statusChangedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   confirmed?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -424,6 +435,7 @@ export type ScheduleScalarWhereWithAggregatesInput = {
   startTime?: Prisma.DateTimeWithAggregatesFilter<"Schedule"> | Date | string
   endTime?: Prisma.DateTimeWithAggregatesFilter<"Schedule"> | Date | string
   status?: Prisma.EnumScheduleStatusWithAggregatesFilter<"Schedule"> | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeWithAggregatesFilter<"Schedule"> | $Enums.ScheduleType
   statusChangedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Schedule"> | Date | string | null
   confirmed?: Prisma.BoolWithAggregatesFilter<"Schedule"> | boolean
   notes?: Prisma.StringNullableWithAggregatesFilter<"Schedule"> | string | null
@@ -443,6 +455,7 @@ export type ScheduleCreateInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -474,6 +487,7 @@ export type ScheduleUncheckedCreateInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -497,6 +511,7 @@ export type ScheduleUpdateInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -528,6 +543,7 @@ export type ScheduleUncheckedUpdateInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -555,6 +571,7 @@ export type ScheduleCreateManyInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -574,6 +591,7 @@ export type ScheduleUpdateManyMutationInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -594,6 +612,7 @@ export type ScheduleUncheckedUpdateManyInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -637,6 +656,7 @@ export type ScheduleCountOrderByAggregateInput = {
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  scheduleType?: Prisma.SortOrder
   statusChangedAt?: Prisma.SortOrder
   confirmed?: Prisma.SortOrder
   notes?: Prisma.SortOrder
@@ -660,6 +680,7 @@ export type ScheduleMaxOrderByAggregateInput = {
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  scheduleType?: Prisma.SortOrder
   statusChangedAt?: Prisma.SortOrder
   confirmed?: Prisma.SortOrder
   notes?: Prisma.SortOrder
@@ -683,6 +704,7 @@ export type ScheduleMinOrderByAggregateInput = {
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  scheduleType?: Prisma.SortOrder
   statusChangedAt?: Prisma.SortOrder
   confirmed?: Prisma.SortOrder
   notes?: Prisma.SortOrder
@@ -1062,6 +1084,7 @@ export type ScheduleCreateWithoutClassInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -1092,6 +1115,7 @@ export type ScheduleUncheckedCreateWithoutClassInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -1147,6 +1171,7 @@ export type ScheduleScalarWhereInput = {
   startTime?: Prisma.DateTimeFilter<"Schedule"> | Date | string
   endTime?: Prisma.DateTimeFilter<"Schedule"> | Date | string
   status?: Prisma.EnumScheduleStatusFilter<"Schedule"> | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFilter<"Schedule"> | $Enums.ScheduleType
   statusChangedAt?: Prisma.DateTimeNullableFilter<"Schedule"> | Date | string | null
   confirmed?: Prisma.BoolFilter<"Schedule"> | boolean
   notes?: Prisma.StringNullableFilter<"Schedule"> | string | null
@@ -1166,6 +1191,7 @@ export type ScheduleCreateWithoutCourseInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -1195,6 +1221,7 @@ export type ScheduleUncheckedCreateWithoutCourseInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -1244,6 +1271,7 @@ export type ScheduleCreateWithoutGroupInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -1274,6 +1302,7 @@ export type ScheduleUncheckedCreateWithoutGroupInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -1322,6 +1351,7 @@ export type ScheduleCreateWithoutSessionInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -1352,6 +1382,7 @@ export type ScheduleUncheckedCreateWithoutSessionInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -1390,6 +1421,7 @@ export type ScheduleUpdateWithoutSessionInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1420,6 +1452,7 @@ export type ScheduleUncheckedUpdateWithoutSessionInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1442,6 +1475,7 @@ export type ScheduleCreateWithoutAttendancesInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -1472,6 +1506,7 @@ export type ScheduleUncheckedCreateWithoutAttendancesInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -1510,6 +1545,7 @@ export type ScheduleUpdateWithoutAttendancesInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1540,6 +1576,7 @@ export type ScheduleUncheckedUpdateWithoutAttendancesInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1562,6 +1599,7 @@ export type ScheduleCreateWithoutJustificationsInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -1592,6 +1630,7 @@ export type ScheduleUncheckedCreateWithoutJustificationsInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -1630,6 +1669,7 @@ export type ScheduleUpdateWithoutJustificationsInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1660,6 +1700,7 @@ export type ScheduleUncheckedUpdateWithoutJustificationsInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1682,6 +1723,7 @@ export type ScheduleCreateWithoutNotificationsInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -1712,6 +1754,7 @@ export type ScheduleUncheckedCreateWithoutNotificationsInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -1750,6 +1793,7 @@ export type ScheduleUpdateWithoutNotificationsInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1780,6 +1824,7 @@ export type ScheduleUncheckedUpdateWithoutNotificationsInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1802,6 +1847,7 @@ export type ScheduleCreateWithoutTeacherInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -1831,6 +1877,7 @@ export type ScheduleUncheckedCreateWithoutTeacherInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -1880,6 +1927,7 @@ export type ScheduleCreateWithoutWeekRecurenceInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -1910,6 +1958,7 @@ export type ScheduleUncheckedCreateWithoutWeekRecurenceInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -1958,6 +2007,7 @@ export type ScheduleCreateWithoutRoomInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -1987,6 +2037,7 @@ export type ScheduleUncheckedCreateWithoutRoomInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -2036,6 +2087,7 @@ export type ScheduleCreateWithoutOrganizationInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -2065,6 +2117,7 @@ export type ScheduleUncheckedCreateWithoutOrganizationInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -2118,6 +2171,7 @@ export type ScheduleCreateManyClassInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -2136,6 +2190,7 @@ export type ScheduleUpdateWithoutClassInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2166,6 +2221,7 @@ export type ScheduleUncheckedUpdateWithoutClassInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2192,6 +2248,7 @@ export type ScheduleUncheckedUpdateManyWithoutClassInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2213,6 +2270,7 @@ export type ScheduleCreateManyCourseInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -2232,6 +2290,7 @@ export type ScheduleUpdateWithoutCourseInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2261,6 +2320,7 @@ export type ScheduleUncheckedUpdateWithoutCourseInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2287,6 +2347,7 @@ export type ScheduleUncheckedUpdateManyWithoutCourseInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2310,6 +2371,7 @@ export type ScheduleCreateManyGroupInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -2328,6 +2390,7 @@ export type ScheduleUpdateWithoutGroupInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2358,6 +2421,7 @@ export type ScheduleUncheckedUpdateWithoutGroupInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2384,6 +2448,7 @@ export type ScheduleUncheckedUpdateManyWithoutGroupInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2405,6 +2470,7 @@ export type ScheduleCreateManyTeacherInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -2424,6 +2490,7 @@ export type ScheduleUpdateWithoutTeacherInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2453,6 +2520,7 @@ export type ScheduleUncheckedUpdateWithoutTeacherInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2479,6 +2547,7 @@ export type ScheduleUncheckedUpdateManyWithoutTeacherInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2502,6 +2571,7 @@ export type ScheduleCreateManyWeekRecurenceInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -2520,6 +2590,7 @@ export type ScheduleUpdateWithoutWeekRecurenceInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2550,6 +2621,7 @@ export type ScheduleUncheckedUpdateWithoutWeekRecurenceInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2576,6 +2648,7 @@ export type ScheduleUncheckedUpdateManyWithoutWeekRecurenceInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2597,6 +2670,7 @@ export type ScheduleCreateManyRoomInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -2616,6 +2690,7 @@ export type ScheduleUpdateWithoutRoomInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2645,6 +2720,7 @@ export type ScheduleUncheckedUpdateWithoutRoomInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2671,6 +2747,7 @@ export type ScheduleUncheckedUpdateManyWithoutRoomInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2693,6 +2770,7 @@ export type ScheduleCreateManyOrganizationInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.ScheduleStatus
+  scheduleType?: $Enums.ScheduleType
   statusChangedAt?: Date | string | null
   confirmed?: boolean
   notes?: string | null
@@ -2712,6 +2790,7 @@ export type ScheduleUpdateWithoutOrganizationInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2741,6 +2820,7 @@ export type ScheduleUncheckedUpdateWithoutOrganizationInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2767,6 +2847,7 @@ export type ScheduleUncheckedUpdateManyWithoutOrganizationInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumScheduleStatusFieldUpdateOperationsInput | $Enums.ScheduleStatus
+  scheduleType?: Prisma.EnumScheduleTypeFieldUpdateOperationsInput | $Enums.ScheduleType
   statusChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2839,6 +2920,7 @@ export type ScheduleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   startTime?: boolean
   endTime?: boolean
   status?: boolean
+  scheduleType?: boolean
   statusChangedAt?: boolean
   confirmed?: boolean
   notes?: boolean
@@ -2874,6 +2956,7 @@ export type ScheduleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   startTime?: boolean
   endTime?: boolean
   status?: boolean
+  scheduleType?: boolean
   statusChangedAt?: boolean
   confirmed?: boolean
   notes?: boolean
@@ -2904,6 +2987,7 @@ export type ScheduleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   startTime?: boolean
   endTime?: boolean
   status?: boolean
+  scheduleType?: boolean
   statusChangedAt?: boolean
   confirmed?: boolean
   notes?: boolean
@@ -2934,6 +3018,7 @@ export type ScheduleSelectScalar = {
   startTime?: boolean
   endTime?: boolean
   status?: boolean
+  scheduleType?: boolean
   statusChangedAt?: boolean
   confirmed?: boolean
   notes?: boolean
@@ -2948,7 +3033,7 @@ export type ScheduleSelectScalar = {
   notifiedAt?: boolean
 }
 
-export type ScheduleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "courseId" | "roomId" | "teacherId" | "orgId" | "startTime" | "endTime" | "status" | "statusChangedAt" | "confirmed" | "notes" | "isLocked" | "createdAt" | "updatedAt" | "classId" | "groupId" | "weekRecurrenceId" | "deletedAt" | "notifyState" | "notifiedAt", ExtArgs["result"]["schedule"]>
+export type ScheduleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "courseId" | "roomId" | "teacherId" | "orgId" | "startTime" | "endTime" | "status" | "scheduleType" | "statusChangedAt" | "confirmed" | "notes" | "isLocked" | "createdAt" | "updatedAt" | "classId" | "groupId" | "weekRecurrenceId" | "deletedAt" | "notifyState" | "notifiedAt", ExtArgs["result"]["schedule"]>
 export type ScheduleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   attendances?: boolean | Prisma.Schedule$attendancesArgs<ExtArgs>
   class?: boolean | Prisma.ClassDefaultArgs<ExtArgs>
@@ -3006,6 +3091,7 @@ export type $SchedulePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     startTime: Date
     endTime: Date
     status: $Enums.ScheduleStatus
+    scheduleType: $Enums.ScheduleType
     statusChangedAt: Date | null
     confirmed: boolean
     notes: string | null
@@ -3460,6 +3546,7 @@ export interface ScheduleFieldRefs {
   readonly startTime: Prisma.FieldRef<"Schedule", 'DateTime'>
   readonly endTime: Prisma.FieldRef<"Schedule", 'DateTime'>
   readonly status: Prisma.FieldRef<"Schedule", 'ScheduleStatus'>
+  readonly scheduleType: Prisma.FieldRef<"Schedule", 'ScheduleType'>
   readonly statusChangedAt: Prisma.FieldRef<"Schedule", 'DateTime'>
   readonly confirmed: Prisma.FieldRef<"Schedule", 'Boolean'>
   readonly notes: Prisma.FieldRef<"Schedule", 'String'>

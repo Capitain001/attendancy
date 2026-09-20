@@ -97,6 +97,11 @@ export type Course = Prisma.CourseModel
  */
 export type CourseTeacher = Prisma.CourseTeacherModel
 /**
+ * Model TeacherCourseHours
+ * 
+ */
+export type TeacherCourseHours = Prisma.TeacherCourseHoursModel
+/**
  * Model OptionalUE
  * 
  */

@@ -17,6 +17,7 @@ model Schedule {
   startTime       DateTime
   endTime         DateTime
   status          ScheduleStatus @default(PENDING)
+  scheduleType    ScheduleType   @default(CM)
   statusChangedAt DateTime?
   // validation du 'teacher' : seule les seances 'confirmed' sont visible aux 'students'
   confirmed       Boolean        @default(false)
@@ -89,22 +90,23 @@ model WeeklyTemplate {
 // de grille sans date ni fuseau — la matérialisation en DateTime se fait à
 // la génération des Schedules.
 model WeeklySlot {
-  id         String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  templateId String         @db.Uuid
-  dayOfWeek  Int
-  startTime  String
-  endTime    String
-  courseId   String         @db.Uuid
-  teacherId  String         @db.Uuid
-  roomId     String         @db.Uuid
-  isActive   Boolean        @default(true)
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
-  deletedAt  DateTime?
-  course     Course         @relation(fields: [courseId], references: [id])
-  room       Room           @relation(fields: [roomId], references: [id])
-  teacher    Teacher        @relation(fields: [teacherId], references: [id])
-  template   WeeklyTemplate @relation(fields: [templateId], references: [id])
+  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  templateId   String         @db.Uuid
+  dayOfWeek    Int
+  startTime    String
+  endTime      String
+  courseId     String         @db.Uuid
+  teacherId    String         @db.Uuid
+  roomId       String         @db.Uuid
+  scheduleType ScheduleType   @default(CM)
+  isActive     Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  deletedAt    DateTime?
+  course       Course         @relation(fields: [courseId], references: [id])
+  room         Room           @relation(fields: [roomId], references: [id])
+  teacher      Teacher        @relation(fields: [teacherId], references: [id])
+  template     WeeklyTemplate @relation(fields: [templateId], references: [id])
 
   @@index([templateId])
   @@schema("public")
@@ -248,8 +250,8 @@ model TeacherUnavailability {
 
   // Forme WEEKLY (récurrente)
   dayOfWeek Int?
-  startTime DateTime? @db.Time() 
-  endTime   DateTime? @db.Time() 
+  startTime DateTime? @db.Time()
+  endTime   DateTime? @db.Time()
 
   // Forme DATE_RANGE (ponctuelle)
   startDate DateTime?
@@ -305,6 +307,16 @@ enum EventStatus {
   PENDING
   ACCEPTED
   DECLINED
+
+  @@schema("public")
+}
+
+enum ScheduleType {
+  CM
+  TD
+  TP
+  EXAM
+  RATTRAPAGE
 
   @@schema("public")
 }
