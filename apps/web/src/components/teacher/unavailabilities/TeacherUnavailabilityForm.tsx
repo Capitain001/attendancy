@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -121,51 +121,31 @@ export function TeacherUnavailabilityForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5 text-foreground">
-      {/* Header Modal/Drawer style iOS */}
-      <div className="flex items-center justify-between pb-2">
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={onCancel}
-          className="h-8 w-8 rounded-full bg-muted/60 hover:bg-muted"
-        >
-          <X className="h-4 w-4" />
-        </Button>
+      {/* Titre */}
+      {/* <div className="pb-2 text-center">
         <span className="text-base font-semibold">
           {initialData?.id ? "Modifier l'indisponibilité" : "Définir l'indisponibilité"}
         </span>
-        <div className="w-8" />
-      </div>
+      </div> */}
 
-      {/* Selecteur de type (Segmented Control) */}
-      <div className="grid grid-cols-2 gap-1 rounded-xl bg-muted p-1">
-        <button
-          type="button"
-          onClick={() => setType("DATE_RANGE")}
-          className={`rounded-lg py-2 text-xs font-medium transition-all ${
-            type === "DATE_RANGE"
-              ? "bg-card text-foreground shadow-sm"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          Ponctuelle (Dates)
-        </button>
-        <button
-          type="button"
-          onClick={() => setType("WEEKLY")}
-          className={`rounded-lg py-2 text-xs font-medium transition-all ${
-            type === "WEEKLY"
-              ? "bg-card text-foreground shadow-sm"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          Récurrente (Hebdo)
-        </button>
-      </div>
-
-      {/* Form Fields : Range style iOS / Pill inputs */}
+      {/* Ensemble des champs style iOS */}
       <div className="flex flex-col gap-2">
+        {/* Champ Récurrence */}
+        <div className="flex items-center justify-between rounded-xl bg-muted/40 px-4 py-2.5">
+          <Label
+            htmlFor="unavailability-recurring"
+            className="text-sm font-medium text-foreground cursor-pointer"
+          >
+            Récurrence
+          </Label>
+          <Switch
+            id="unavailability-recurring"
+            checked={type === "WEEKLY"}
+            onCheckedChange={(checked) => setType(checked ? "WEEKLY" : "DATE_RANGE")}
+          />
+        </div>
+
+        {/* Champs conditionnels */}
         {type === "DATE_RANGE" ? (
           <>
             <div className="flex items-center justify-between rounded-xl bg-muted/40 px-4 py-2.5">
@@ -230,7 +210,7 @@ export function TeacherUnavailabilityForm({
         )}
       </div>
 
-      {/* Note / Motif avec compteur de caractères (comme la maquette) */}
+      {/* Note / Motif */}
       <div className="space-y-1.5 pt-1">
         <Label className="text-xs font-medium text-muted-foreground">
           Ajouter une note (optionnel)
@@ -252,14 +232,14 @@ export function TeacherUnavailabilityForm({
         </p>
       </div>
 
-      {/* Gestion des erreurs */}
+      {/* Erreurs */}
       {error && (
         <div className="p-3 bg-destructive/10 text-destructive text-xs rounded-xl font-medium">
           {error}
         </div>
       )}
 
-      {/* Bouton de confirmation Full Width */}
+      {/* Bouton de confirmation */}
       <Button
         type="submit"
         disabled={isPending}

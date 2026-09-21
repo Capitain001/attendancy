@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { format, getDay, startOfDay, isSameDay } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Plus, Trash2, Edit2, Calendar as CalendarIcon, X } from "lucide-react";
+import type { DateRange } from "react-day-picker";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +21,7 @@ import {
   TeacherUnavailabilityForm,
   type TeacherUnavailabilityFormProps,
 } from "./TeacherUnavailabilityForm";
-import { UnavailabilityCalendar, type PendingRange } from "./UnavailabilityCalendar";
+import { UnavailabilityCalendar } from "./UnavailabilityCalendar";
 
 type FormInitialData = NonNullable<TeacherUnavailabilityFormProps["initialData"]>;
 
@@ -59,18 +60,23 @@ export function TeacherUnavailabilitiesScreen({
   teacherId: string;
   initialData: TeacherUnavailabilityItem[];
 }) {
-  // Jour ouvert via un tap normal
+  // Mode du calendrier : "single" = tap classique (ouvre le drawer tout de suite),
+  // "range" = déclenché par un appui long, en attente d'une 2e date puis d'une confirmation.
+  const [pickerMode, setPickerMode] = useState<"single" | "range">("single");
+
+  // Jour sélectionné en mode "single".
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-  // Plage en cours de sélection, démarrée par un appui long. Tant que `end` est null,
-  // le prochain tap pose la date de fin ET ouvre directement le formulaire (comme un
-  // date-range picker classique) — pas d'étape de confirmation intermédiaire.
-  const [pendingRange, setPendingRange] = useState<PendingRange>({ start: null, end: null });
+  // Plage en cours de construction en mode "range" (native react-day-picker).
+  const [range, setRange] = useState<DateRange | undefined>(undefined);
 
-  // Plage figée passée au formulaire au moment de la création. `type` est fixé
-  // explicitement à DATE_RANGE pour que le formulaire s'ouvre dans le bon mode
-  // (le resolver serveur tranche WEEKLY/DATE_RANGE via dayOfWeek, mais le form,
-  // lui, a besoin de le savoir tout de suite pour son affichage).
+  // Plage complète (from + to) en attente de confirmation via la coche affichée sur le jour de fin.
+  const [pendingConfirmRange, setPendingConfirmRange] = useState<DateRange | null>(null);
+
+  // Plage figée passée au formulaire une fois la création confirmée. `type` est fixé
+  // explicitement à DATE_RANGE pour que le formulaire s'ouvre dans le bon mode (le
+  // resolver serveur tranche WEEKLY/DATE_RANGE via dayOfWeek, mais le form, lui, a
+  // besoin de le savoir tout de suite pour son affichage).
   const [formRange, setFormRange] = useState<FormRangeSelection | null>(null);
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -91,54 +97,77 @@ export function TeacherUnavailabilitiesScreen({
     return displayItems.filter((item) => isItemActiveOnDate(item, selectedDate));
   }, [displayItems, selectedDate]);
 
-  // Début posé, fin pas encore choisie -> on est en train de choisir la fin de la plage
-  const isPickingRangeEnd = pendingRange.start !== null && pendingRange.end === null;
-
-  const resetRangeSelection = () => {
-    setPendingRange({ start: null, end: null });
-    setFormRange(null);
+  const resetRangeMode = () => {
+    setPickerMode("single");
+    setRange(undefined);
+    setPendingConfirmRange(null);
   };
 
-  // Appui long sur un jour — (re)démarre une sélection de plage à partir de ce jour
-  const handleDayLongPress = (date: Date) => {
-    setPendingRange({ start: date, end: null });
-    setSelectedDate(null);
-    setIsDrawerOpen(false);
-  };
-
-  // Tap normal sur un jour
-  const handleDayClick = (date: Date) => {
-    // Une plage est en cours -> ce tap pose la fin et ouvre directement le formulaire
-    if (pendingRange.start && !pendingRange.end) {
-      const start = date < pendingRange.start ? date : pendingRange.start;
-      const end = date < pendingRange.start ? pendingRange.start : date;
-
-      setPendingRange({ start, end });
-      setFormRange({ type: UnavailabilityType.DATE_RANGE, startDate: start, endDate: end });
-      setEditingItem(null);
-      setIsFormVisible(true);
-      setIsDrawerOpen(true);
-      return;
-    }
-
-    // Le calendrier communique déjà via la couleur si le jour a des indisponibilités.
-    // Jour "vide" -> on va droit au formulaire de création, pas besoin de montrer une liste vide.
-    const itemsForDay = displayItems.filter((item) => isItemActiveOnDate(item, date));
-    const hasData = itemsForDay.length > 0;
+  // Tap normal sur un jour (mode "single") -> ouverture immédiate du drawer :
+  // liste si le jour a déjà des données, formulaire de création sinon.
+  const handleDaySelect = (date: Date | undefined) => {
+    if (!date) return;
 
     setSelectedDate(date);
+    setFormRange(null);
+
+    const hasData = displayItems.some((item) => isItemActiveOnDate(item, date));
     setEditingItem(null);
     setIsFormVisible(!hasData);
     setIsDrawerOpen(true);
   };
 
+  // Appui long sur un jour -> démarre (ou redémarre) une sélection de plage.
+  const handleLongPressDay = (date: Date) => {
+    setIsDrawerOpen(false);
+    setIsFormVisible(false);
+    setSelectedDate(null);
+    setPickerMode("range");
+    setRange({ from: date, to: undefined });
+    setPendingConfirmRange(null);
+  };
+
+  // Callback du calendrier natif en mode "range" : appelé à chaque clic pendant la
+  // sélection de la 2e date. react-day-picker recalcule la plage lui-même.
+  const handleRangeChange = (next: DateRange | undefined) => {
+    if (!next?.from) {
+      resetRangeMode();
+      return;
+    }
+
+    setRange(next);
+    setPendingConfirmRange(next.to && !isSameDay(next.from, next.to) ? next : null);
+  };
+
+  // Coche cliquée sur le jour de fin -> on ouvre le drawer avec le formulaire de création.
+  const handleConfirmRange = () => {
+    if (!pendingConfirmRange?.from || !pendingConfirmRange.to) return;
+
+    setFormRange({
+      type: UnavailabilityType.DATE_RANGE,
+      startDate: pendingConfirmRange.from,
+      endDate: pendingConfirmRange.to,
+    });
+    setEditingItem(null);
+    setIsFormVisible(true);
+    setIsDrawerOpen(true);
+    setPickerMode("single");
+    setRange(undefined);
+    setPendingConfirmRange(null);
+  };
+
+  // Croix cliquée sur le jour de fin -> on annule la plage et on repasse en mode "single".
+  const handleCancelRange = () => {
+    resetRangeMode();
+  };
+
   const handleCloseDrawer = () => {
     setIsDrawerOpen(false);
-    setSelectedDate(null);
     setIsFormVisible(false);
     setEditingItem(null);
+    setSelectedDate(null);
     setFormRange(null);
-    resetRangeSelection();
+    resetRangeMode();
   };
 
   const handleEdit = (item: TeacherUnavailabilityItem) => {
@@ -151,10 +180,24 @@ export function TeacherUnavailabilitiesScreen({
     setIsFormVisible(true);
   };
 
-  const formInitialData =
+  const formInitialData: FormInitialData | null =
     editingItem ??
     formRange ??
     (selectedDate ? { startDate: selectedDate, endDate: selectedDate } : null);
+
+
+  const formattedDate = (() => {
+    if (formRange) {
+      const { startDate, endDate } = formRange;
+      return isSameDay(startDate, endDate)
+        ? format(startDate, "EEEE d MMMM yyyy", { locale: fr })
+        : `${format(startDate, "d MMM", { locale: fr })} – ${format(endDate, "d MMM yyyy", { locale: fr })}`;
+    }
+    if (selectedDate) {
+      return format(selectedDate, "EEEE d MMMM yyyy", { locale: fr });
+    }
+    return null;
+  })();
 
   return (
     <div className="flex flex-col gap-6 p-6 max-w-4xl mx-auto">
@@ -162,77 +205,43 @@ export function TeacherUnavailabilitiesScreen({
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Indisponibilités</h1>
         <p className="text-sm text-muted-foreground">
-          {isPickingRangeEnd
-            ? "Choisissez la date de fin de la plage."
-            : "Tapez une date pour voir ou ajouter une indisponibilité. Restez appuyé pour définir une plage."}
+          Tapez une date pour voir ou ajouter une indisponibilité. Restez appuyé pour définir une
+          plage.
         </p>
       </div>
 
       {/* Calendrier de consultation */}
-      <div className="flex flex-col items-center gap-3">
+      <div className="flex flex-col items-center">
         <UnavailabilityCalendar
           items={displayItems}
-          selected={selectedDate}
-          range={pendingRange}
-          onDayClick={handleDayClick}
-          onDayLongPress={handleDayLongPress}
+          pickerMode={pickerMode}
+          selectedDate={selectedDate}
+          range={range}
+          pendingConfirmRange={pendingConfirmRange}
+          onDaySelect={handleDaySelect}
+          onRangeChange={handleRangeChange}
+          onLongPressDay={handleLongPressDay}
+          onConfirmRange={handleConfirmRange}
+          onCancelRange={handleCancelRange}
         />
-
-        {/* Pendant le choix de la date de fin : juste un moyen d'annuler la sélection */}
-        {isPickingRangeEnd && pendingRange.start && (
-          <div className="flex w-full max-w-sm items-center justify-between gap-2 rounded-2xl border border-border bg-muted/50 px-4 py-2.5">
-            <span className="text-sm font-medium">
-              Début : {format(pendingRange.start, "d MMMM yyyy", { locale: fr })} — survolez /
-              choisissez la fin
-            </span>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="h-7 w-7 text-muted-foreground"
-              onClick={resetRangeSelection}
-              aria-label="Annuler la sélection de plage"
-            >
-              <X className="h-3.5 w-3.5" />
-            </Button>
-          </div>
-        )}
       </div>
 
-      {/* Drawer Bottom pour les actions au clic sur une date / la validation d'une plage */}
+      {/* Drawer Bottom pour les actions au clic sur une date / la confirmation d'une plage */}
       <Drawer open={isDrawerOpen} onOpenChange={(open) => !open && handleCloseDrawer()}>
         <DrawerContent className="mx-auto flex h-[80vh] max-w-lg flex-col bg-card text-foreground">
-          <DrawerHeader className="border-b border-border pb-4 text-left">
+          <DrawerHeader className="border-b border-border pb-2 text-left">
             <div className="flex items-center justify-between">
-              <DrawerTitle className="text-lg font-bold flex items-center gap-2">
-                <CalendarIcon className="h-5 w-5 text-primary" />
-                {formRange
-                  ? isSameDay(formRange.startDate, formRange.endDate)
-                    ? format(formRange.startDate, "EEEE d MMMM yyyy", { locale: fr })
-                    : `${format(formRange.startDate, "d MMM", { locale: fr })} – ${format(
-                        formRange.endDate,
-                        "d MMM yyyy",
-                        { locale: fr }
-                      )}`
-                  : selectedDate
-                    ? format(selectedDate, "EEEE d MMMM yyyy", { locale: fr })
-                    : "Date sélectionnée"}
+              <DrawerTitle className="text-sm font-semibold flex items-center justify-center gap-1.5 w-full">
+                <CalendarIcon className="h-4 w-4 text-primary" />
+                {formattedDate || "Date sélectionnée"}
               </DrawerTitle>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleCloseDrawer}
-                className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground"
-                aria-label="Fermer"
-              >
-                <X className="h-4 w-4" />
-              </Button>
             </div>
             <DrawerDescription className="text-xs text-muted-foreground">
-              {isFormVisible
+              {/* {isFormVisible
                 ? editingItem
                   ? "Modifier l'indisponibilité"
                   : "Créer un nouveau créneau d'indisponibilité"
-                : `${dayItems.length} indisponibilité(s) enregistrée(s) pour ce jour.`}
+                : `${dayItems.length} indisponibilité(s) enregistrée(s) pour ce jour.`} */}
             </DrawerDescription>
           </DrawerHeader>
 
