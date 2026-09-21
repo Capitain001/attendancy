@@ -166,3 +166,177 @@ export async function getAttendanceReport(
     })
     .sort((a, b) => (a.rate ?? 100) - (b.rate ?? 100))
 }
+
+
+
+// ⚠ AJOUTS à fusionner dans src/services/attendance/database/analytics.ts
+// Imports à dédupliquer avec ceux du fichier existant (prisma, date-fns, ../policy).
+import { startOfWeek, subDays } from "date-fns";
+
+import type { AttendanceStatus } from "@/generated/prisma/browser";
+import {
+  isAbsenteeism,
+} from "../policy";
+import { ABSENTEEISM_LIST_LIMIT, RECENT_SESSIONS_LIMIT } from "../constants";
+
+// ─── Vue d'ensemble enseignant ───────────────────────────────────────────────
+
+type StatusCounts = Record<AttendanceStatus, number>;
+
+type Bucket<Meta> = {
+  meta: Meta;
+  counts: StatusCounts;
+  scheduleIds: Set<string>;
+};
+
+const emptyCounts = (): StatusCounts => ({
+  PRESENT: 0,
+  ABSENT: 0,
+  LATE: 0,
+  EXCUSED: 0,
+  PENDING: 0,
+});
+
+const sum = (counts: StatusCounts, statuses: readonly AttendanceStatus[]) =>
+  statuses.reduce((acc, status) => acc + counts[status], 0);
+
+// Taux selon policy.ts : numérateur PRESENT + LATE, dénominateur
+// PRESENT + LATE + ABSENT + EXCUSED (PENDING exclu), pourcentage entier.
+function summarize(counts: StatusCounts) {
+  const numerator = sum(counts, ATTENDANCE_NUMERATOR_STATUSES);
+  const denominator = sum(counts, ATTENDANCE_DENOMINATOR_STATUSES);
+  return {
+    present: counts.PRESENT,
+    late: counts.LATE,
+    absent: counts.ABSENT,
+    excused: counts.EXCUSED,
+    denominator,
+    rate: denominator > 0 ? Math.round((numerator / denominator) * 100) : null,
+  };
+}
+
+function addToBucket<Meta>(
+  buckets: Map<string, Bucket<Meta>>,
+  key: string,
+  meta: Meta,
+  scheduleId: string,
+  status: AttendanceStatus,
+) {
+  const bucket = buckets.get(key) ?? { meta, counts: emptyCounts(), scheduleIds: new Set<string>() };
+  bucket.counts[status]++;
+  bucket.scheduleIds.add(scheduleId);
+  buckets.set(key, bucket);
+}
+
+/**
+ * Vue globale des présences aux séances d'un enseignant : totaux, taux par
+ * cours, tendance hebdomadaire, étudiants en absentéisme, dernières séances.
+ * Séances effectives uniquement (Session COMPLETED, cf. policy.ts) : après
+ * clôture il n'y a plus de PENDING, donc pas de compteur « à confirmer » ici.
+ * Une seule lecture agrégée en mémoire (la semaine et le cours ne sont pas
+ * groupables en groupBy Prisma) : le volume d'un enseignant reste faible.
+ * `sinceDays` borne sur `schedule.startTime` (undefined = tout).
+ * Scope orgId via `schedule.orgId`, comme le reste du service.
+ * Caché : tag liste `CACHE.ATTENDANCES(orgId)`, à invalider par les mutations
+ * qui changent une présence ou clôturent une séance.
+ */
+export async function getTeacherAttendanceOverview(
+  userId: string,
+  orgId: string,
+  sinceDays?: number,
+) {
+  // "use cache";
+  // cacheTag(CACHE.ATTENDANCES(orgId));
+  // cacheLife("minutes");
+
+  const rows = await prisma.attendance.findMany({
+    where: {
+      schedule: {
+        orgId,
+        deletedAt: null,
+        teacher: { userId },
+        session: { status: "COMPLETED" },
+        startTime:
+          sinceDays === undefined
+            ? undefined
+            : { gte: startOfDay(subDays(new Date(), sinceDays)) },
+      },
+    },
+    select: {
+      status: true,
+      studentId: true,
+      scheduleId: true,
+      student: { select: { user: { select: { firstName: true, lastName: true } } } },
+      schedule: {
+        select: {
+          startTime: true,
+          course: { select: { id: true, name: true } },
+          class: { select: { id: true, name: true } },
+        },
+      },
+    },
+  });
+
+  const totals = emptyCounts();
+  const allScheduleIds = new Set<string>();
+  const byCourse = new Map<string, Bucket<{ courseId: string; courseName: string; classId: string; className: string }>>();
+  const byWeek = new Map<string, Bucket<{ weekStart: Date }>>();
+  const byStudent = new Map<string, Bucket<{ studentId: string; firstName: string | null; lastName: string | null }>>();
+  const bySchedule = new Map<string, Bucket<{ scheduleId: string; courseName: string; className: string; startTime: Date }>>();
+
+  for (const { status, studentId, scheduleId, student, schedule } of rows) {
+    const { startTime, course, class: class_ } = schedule;
+    const weekStart = startOfWeek(startTime, { weekStartsOn: 1 });
+
+    totals[status]++;
+    allScheduleIds.add(scheduleId);
+
+    addToBucket(
+      byCourse,
+      `${course.id}:${class_.id}`,
+      { courseId: course.id, courseName: course.name, classId: class_.id, className: class_.name },
+      scheduleId,
+      status,
+    );
+    addToBucket(byWeek, weekStart.toISOString(), { weekStart }, scheduleId, status);
+    addToBucket(
+      byStudent,
+      studentId,
+      { studentId, firstName: student.user.firstName, lastName: student.user.lastName },
+      scheduleId,
+      status,
+    );
+    addToBucket(
+      bySchedule,
+      scheduleId,
+      { scheduleId, courseName: course.name, className: class_.name, startTime },
+      scheduleId,
+      status,
+    );
+  }
+
+  return {
+    totals: { sessions: allScheduleIds.size, ...summarize(totals) },
+
+    byCourse: [...byCourse.values()]
+      .map(({ meta, counts, scheduleIds }) => ({ ...meta, sessions: scheduleIds.size, ...summarize(counts) }))
+      .sort((a, b) => a.courseName.localeCompare(b.courseName, "fr")),
+
+    trend: [...byWeek.values()]
+      .map(({ meta, counts, scheduleIds }) => ({ ...meta, sessions: scheduleIds.size, ...summarize(counts) }))
+      .sort((a, b) => a.weekStart.getTime() - b.weekStart.getTime()),
+
+    // Même règle que la direction (isAbsenteeism), mais calculée sur les
+    // séances de cet enseignant uniquement.
+    absentees: [...byStudent.values()]
+      .map(({ meta, counts }) => ({ ...meta, ...summarize(counts) }))
+      .filter(isAbsenteeism)
+      .sort((a, b) => (a.rate ?? 100) - (b.rate ?? 100))
+      .slice(0, ABSENTEEISM_LIST_LIMIT),
+
+    recentSessions: [...bySchedule.values()]
+      .map(({ meta, counts }) => ({ ...meta, ...summarize(counts) }))
+      .sort((a, b) => b.startTime.getTime() - a.startTime.getTime())
+      .slice(0, RECENT_SESSIONS_LIMIT),
+  };
+}
