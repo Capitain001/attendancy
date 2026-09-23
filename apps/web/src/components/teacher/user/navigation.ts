@@ -31,12 +31,12 @@ export const teacherRoutes: Route[] = [
     icon: "ClipboardCheck",
     link: "/teacher/attendance",
   },
-  {
-    id: "evaluations",
-    title: "Évaluations",
-    icon: "Award",
-    link: "/teacher/evaluations",
-  },
+  // {
+  //   id: "evaluations",
+  //   title: "Évaluations",
+  //   icon: "Award",
+  //   link: "/teacher/evaluations",
+  // },
   {
     id: "students",
     title: "Mes étudiants",

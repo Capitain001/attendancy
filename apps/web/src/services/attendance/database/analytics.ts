@@ -171,13 +171,14 @@ export async function getAttendanceReport(
 
 // ⚠ AJOUTS à fusionner dans src/services/attendance/database/analytics.ts
 // Imports à dédupliquer avec ceux du fichier existant (prisma, date-fns, ../policy).
-import { startOfWeek, subDays } from "date-fns";
+import { subDays } from "date-fns";
 
-import type { AttendanceStatus } from "@/generated/prisma/browser";
+
+import type { AttendanceStatus } from "@/generated/prisma/client";
 import {
   isAbsenteeism,
 } from "../policy";
-import { ABSENTEEISM_LIST_LIMIT, RECENT_SESSIONS_LIMIT } from "../constants";
+import { ABSENTEEISM_LIST_LIMIT, TEACHER_OVERVIEW_WINDOW_DAYS } from "../constants";
 
 // ─── Vue d'ensemble enseignant ───────────────────────────────────────────────
 
@@ -229,22 +230,17 @@ function addToBucket<Meta>(
 }
 
 /**
- * Vue globale des présences aux séances d'un enseignant : totaux, taux par
- * cours, tendance hebdomadaire, étudiants en absentéisme, dernières séances.
- * Séances effectives uniquement (Session COMPLETED, cf. policy.ts) : après
- * clôture il n'y a plus de PENDING, donc pas de compteur « à confirmer » ici.
- * Une seule lecture agrégée en mémoire (la semaine et le cours ne sont pas
- * groupables en groupBy Prisma) : le volume d'un enseignant reste faible.
- * `sinceDays` borne sur `schedule.startTime` (undefined = tout).
+ * Vue globale des présences aux séances d'un enseignant sur les 30 derniers
+ * jours (fenêtre fixe, pas de sélecteur) : totaux, taux par cours, étudiants
+ * en absentéisme. Séances effectives uniquement (Session COMPLETED, cf.
+ * policy.ts) : après clôture il n'y a plus de PENDING.
+ * Une seule lecture agrégée en mémoire : le volume d'un enseignant sur 30
+ * jours reste faible.
  * Scope orgId via `schedule.orgId`, comme le reste du service.
- * Caché : tag liste `CACHE.ATTENDANCES(orgId)`, à invalider par les mutations
- * qui changent une présence ou clôturent une séance.
+ * Caché : tag liste `CACHE.ATTENDANCES(orgId)`, à invalider par les
+ * mutations qui changent une présence ou clôturent une séance.
  */
-export async function getTeacherAttendanceOverview(
-  userId: string,
-  orgId: string,
-  sinceDays?: number,
-) {
+export async function getTeacherAttendanceOverview(userId: string, orgId: string) {
   // "use cache";
   // cacheTag(CACHE.ATTENDANCES(orgId));
   // cacheLife("minutes");
@@ -256,10 +252,7 @@ export async function getTeacherAttendanceOverview(
         deletedAt: null,
         teacher: { userId },
         session: { status: "COMPLETED" },
-        startTime:
-          sinceDays === undefined
-            ? undefined
-            : { gte: startOfDay(subDays(new Date(), sinceDays)) },
+        startTime: { gte: startOfDay(subDays(new Date(), TEACHER_OVERVIEW_WINDOW_DAYS)) },
       },
     },
     select: {
@@ -269,7 +262,6 @@ export async function getTeacherAttendanceOverview(
       student: { select: { user: { select: { firstName: true, lastName: true } } } },
       schedule: {
         select: {
-          startTime: true,
           course: { select: { id: true, name: true } },
           class: { select: { id: true, name: true } },
         },
@@ -280,13 +272,10 @@ export async function getTeacherAttendanceOverview(
   const totals = emptyCounts();
   const allScheduleIds = new Set<string>();
   const byCourse = new Map<string, Bucket<{ courseId: string; courseName: string; classId: string; className: string }>>();
-  const byWeek = new Map<string, Bucket<{ weekStart: Date }>>();
   const byStudent = new Map<string, Bucket<{ studentId: string; firstName: string | null; lastName: string | null }>>();
-  const bySchedule = new Map<string, Bucket<{ scheduleId: string; courseName: string; className: string; startTime: Date }>>();
 
   for (const { status, studentId, scheduleId, student, schedule } of rows) {
-    const { startTime, course, class: class_ } = schedule;
-    const weekStart = startOfWeek(startTime, { weekStartsOn: 1 });
+    const { course, class: class_ } = schedule;
 
     totals[status]++;
     allScheduleIds.add(scheduleId);
@@ -298,18 +287,10 @@ export async function getTeacherAttendanceOverview(
       scheduleId,
       status,
     );
-    addToBucket(byWeek, weekStart.toISOString(), { weekStart }, scheduleId, status);
     addToBucket(
       byStudent,
       studentId,
       { studentId, firstName: student.user.firstName, lastName: student.user.lastName },
-      scheduleId,
-      status,
-    );
-    addToBucket(
-      bySchedule,
-      scheduleId,
-      { scheduleId, courseName: course.name, className: class_.name, startTime },
       scheduleId,
       status,
     );
@@ -320,23 +301,14 @@ export async function getTeacherAttendanceOverview(
 
     byCourse: [...byCourse.values()]
       .map(({ meta, counts, scheduleIds }) => ({ ...meta, sessions: scheduleIds.size, ...summarize(counts) }))
-      .sort((a, b) => a.courseName.localeCompare(b.courseName, "fr")),
+      .sort((a, b) => (a.rate ?? 100) - (b.rate ?? 100)),
 
-    trend: [...byWeek.values()]
-      .map(({ meta, counts, scheduleIds }) => ({ ...meta, sessions: scheduleIds.size, ...summarize(counts) }))
-      .sort((a, b) => a.weekStart.getTime() - b.weekStart.getTime()),
-
-    // Même règle que la direction (isAbsenteeism), mais calculée sur les
-    // séances de cet enseignant uniquement.
+    // Même règle que la direction (isAbsenteeism), calculée sur les seules
+    // séances de cet enseignant.
     absentees: [...byStudent.values()]
       .map(({ meta, counts }) => ({ ...meta, ...summarize(counts) }))
       .filter(isAbsenteeism)
       .sort((a, b) => (a.rate ?? 100) - (b.rate ?? 100))
       .slice(0, ABSENTEEISM_LIST_LIMIT),
-
-    recentSessions: [...bySchedule.values()]
-      .map(({ meta, counts }) => ({ ...meta, ...summarize(counts) }))
-      .sort((a, b) => b.startTime.getTime() - a.startTime.getTime())
-      .slice(0, RECENT_SESSIONS_LIMIT),
   };
 }

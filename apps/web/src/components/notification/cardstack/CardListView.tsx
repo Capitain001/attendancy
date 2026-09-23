@@ -46,7 +46,7 @@ export function CardListView({
       <NotificationTypeTabs category={activeCategory} onChange={onCategoryChange} />
 
       {cards.length === 0 ? (
-        <div className=" relative flex h-40 flex-col items-center justify-between rounded-lg border border-dashed border-border bg-card/75 py-4 text-center pattern-noise">
+        <div className="relative flex h-40 flex-col items-center justify-between rounded-lg border border-dashed border-border bg-card/75 py-4 text-center pattern-noise">
           <div className="flex size-12 items-center justify-center rounded-full bg-secondary/90 border border-primary/10 text-foreground">
             <EmptyIcon className="size-6" />
           </div>

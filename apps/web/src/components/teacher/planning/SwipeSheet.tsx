@@ -12,11 +12,8 @@ interface SwipeSheetProps {
   value: SwipeSheetSnapPoint
   onValueChange: (value: SwipeSheetSnapPoint) => void
   className?: string
-  /** Hauteur visible en mode aperçu */
   peekHeight?: number
-  /** Distance entre le haut du sheet et le haut de l'écran quand il est ouvert */
   expandedOffset?: number
-  /** Ferme le sheet au clic sur l'overlay (mode expanded uniquement) */
   closeOnOverlayClick?: boolean
 }
 
@@ -84,6 +81,7 @@ export function SwipeSheet({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => closeOnOverlayClick && onValueChange("closed")}
+            /* Overlay assombri */
             className="fixed inset-0 z-40 bg-black/40"
           />
         )}
@@ -101,20 +99,23 @@ export function SwipeSheet({
         role="dialog"
         aria-expanded={value !== "closed"}
         className={cn(
-          "fixed inset-x-0 bottom-0 z-50 flex h-[100dvh] flex-col rounded-t-3xl bg-card shadow-2xl",
+          /* Effet iOS Modal : Fond translucide + fort flou interne + boost de saturation */
+          "fixed inset-x-0 bottom-0 z-50 flex h-[100dvh] flex-col rounded-t-[32px]",
+          "border-t border-border/40 bg-background/70 dark:bg-card/70 backdrop-blur-2xl backdrop-saturate-180",
+          "shadow-[0_-8px_30px_rgb(0,0,0,0.12)]",
           className,
         )}
       >
-        {/* Handle — tap pour toggle, drag pour suivre le doigt */}
+        {/* Poignée de glissement style iOS */}
         <button
           type="button"
           onClick={() =>
             onValueChange(value === "expanded" ? "closed" : "expanded")
           }
-          className="flex h-8 shrink-0 cursor-grab items-center justify-center active:cursor-grabbing"
+          className="flex h-7 shrink-0 cursor-grab items-center justify-center pt-2 active:cursor-grabbing"
           aria-label={value === "expanded" ? "Réduire" : "Agrandir"}
         >
-          <div className="h-1 w-10 rounded-full bg-muted-foreground/30" />
+          <div className="h-1.5 w-9 rounded-full bg-muted-foreground/30" />
         </button>
 
         <div className="min-h-0 flex-1 overflow-hidden overscroll-contain">

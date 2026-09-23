@@ -51,30 +51,22 @@ export async function getOrgTodayAbsencesAction() {
 
 // ⚠ AJOUTS à fusionner dans src/services/attendance/actions/analytics.ts
 // ('use server' déjà présent en tête du fichier ; dédupliquer les imports).
-import * as v from 'valibot'
 
 import { getTeacherAttendanceOverview } from '../database'
-import { TEACHER_OVERVIEW_PERIOD_DAYS } from '../constants'
-import { getTeacherAttendanceOverviewSchema } from '../validation'
-import type { GetTeacherAttendanceOverviewInput } from '../validation'
+import { mockGetTeacherAttendanceOverview } from "@/data/mocks/mock.attendance";
 
 // L'enseignant est déduit du token : jamais d'id enseignant en paramètre.
-export async function getTeacherAttendanceOverviewAction(input: GetTeacherAttendanceOverviewInput) {
+export async function getTeacherAttendanceOverviewAction() {
   const auth = await authAccess({ requiredRole: 'TEACHER' })
   if (!auth.data) return { error: auth.error }
   const { user, orgId } = auth.data
-
-  const parsed = v.safeParse(getTeacherAttendanceOverviewSchema, input)
-  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
-
+ 
   try {
-    const overview = await getTeacherAttendanceOverview(
-      user.id,
-      orgId,
-      TEACHER_OVERVIEW_PERIOD_DAYS[parsed.output.period],
-    )
+    const overview = await getTeacherAttendanceOverview(user.id, orgId)
+        return { data: mockGetTeacherAttendanceOverview() }
     return { data: overview }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
+ 

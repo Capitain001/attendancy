@@ -43,6 +43,7 @@ export async function getUnread() {
 
 export async function getNotifications(limit?: number) {
   const user = await getAuthUser()
+
   return await getUserNotifications(user.id!, limit)
 }
 

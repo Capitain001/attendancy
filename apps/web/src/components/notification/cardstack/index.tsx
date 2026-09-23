@@ -54,7 +54,7 @@ export function NotificationCardStack({
       <div className={cn("w-full h-full select-none relative", className)}>
         <AnimatePresence mode="wait">
           {!selectedCard ? (
-            <CardListView
+            <CardListView 
               cards={filteredCards}
               activeCategory={activeCategory}
               onCategoryChange={handleCategoryChange}
