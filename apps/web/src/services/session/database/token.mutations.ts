@@ -56,6 +56,7 @@ export async function validateSessionToken(token: string) {
 export async function recordStudentAttendance(
   scheduleId: string,
   studentId: string,
+  orgId:string,
   coords?: { lat: number; lng: number },
 ) {
   const enrollment = await prisma.studentEnrollment.findFirst({
@@ -81,7 +82,7 @@ export async function recordStudentAttendance(
       studentId,
       enrollmentId: enrollment.id,
       status: "PENDING",
-      orgId:""
+      orgId
     },
     select: { id: true, status: true  },
   });

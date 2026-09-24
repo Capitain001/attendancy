@@ -2,24 +2,24 @@
 
 import { ChevronDown } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
-import { STATUS_CONFIG, type ScheduleItem } from './types'
+import { STATUS_CONFIG, type ScheduleWithUi } from './types'
 import { formatRange, getAudienceLabel } from './format'
 import StatusClock from '@/components/ux/StatusClock'
 
 interface PinnedScheduleCardProps {
-  schedule: ScheduleItem
+  schedule: ScheduleWithUi
   label: string
   isExpanded: boolean
   onToggle: () => void
 }
 
 export function PinnedScheduleCard({ schedule, label, isExpanded, onToggle }: PinnedScheduleCardProps) {
-  const status = STATUS_CONFIG[schedule.status]
+  const status = STATUS_CONFIG[schedule.uiStatus]
 
   return (
     <div className="space-y-2 min-h-[320px]">
       <div className="text-xs font-mono uppercase tracking-wider text-teacher-muted flex items-center gap-1.5">
-        <StatusClock status={schedule.status} />
+        <StatusClock status={schedule.uiStatus} />
         {label}
       </div>
 

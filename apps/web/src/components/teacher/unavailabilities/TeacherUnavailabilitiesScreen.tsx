@@ -21,7 +21,8 @@ import {
   TeacherUnavailabilityForm,
   type TeacherUnavailabilityFormProps,
 } from "./TeacherUnavailabilityForm";
-import { UnavailabilityCalendar } from "./UnavailabilityCalendar";
+import { TYPE_STYLES, UnavailabilityCalendar } from "./UnavailabilityCalendar";
+import { cn } from "@/lib/utils";
 
 type FormInitialData = NonNullable<TeacherUnavailabilityFormProps["initialData"]>;
 
@@ -200,14 +201,18 @@ export function TeacherUnavailabilitiesScreen({
   })();
 
   return (
-    <div className="flex flex-col gap-6 p-6 max-w-4xl mx-auto">
+    <div className="flex flex-col gap-6 p-6  mx-auto">
       {/* En-tête */}
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Indisponibilités</h1>
-        <p className="text-sm text-muted-foreground">
-          Tapez une date pour voir ou ajouter une indisponibilité. Restez appuyé pour définir une
-          plage.
-        </p>
+              {/* <span className="flex items-center  gap-4 ">
+              {(Object.keys(TYPE_STYLES) as Array<keyof typeof TYPE_STYLES>).map((key) => (
+                  <div key={key} className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <span className={cn("size-2.5 rounded-full", TYPE_STYLES[key].dot)} />
+                    {TYPE_STYLES[key].label}
+                  </div>
+                ))}
+              </span> */}
       </div>
 
       {/* Calendrier de consultation */}
@@ -237,11 +242,6 @@ export function TeacherUnavailabilitiesScreen({
               </DrawerTitle>
             </div>
             <DrawerDescription className="text-xs text-muted-foreground">
-              {/* {isFormVisible
-                ? editingItem
-                  ? "Modifier l'indisponibilité"
-                  : "Créer un nouveau créneau d'indisponibilité"
-                : `${dayItems.length} indisponibilité(s) enregistrée(s) pour ce jour.`} */}
             </DrawerDescription>
           </DrawerHeader>
 

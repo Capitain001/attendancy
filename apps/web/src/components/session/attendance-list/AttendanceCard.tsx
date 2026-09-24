@@ -29,7 +29,7 @@ function Initials({ name }: { name: string }) {
 
   return (
     <div
-      className="size-6 rounded-full flex items-center justify-center shrink-0 text-[10px] font-semibold text-white"
+      className="size-6 rounded-full flex items-center justify-center shrink-0 text-xs font-semibold text-white"
       style={{ backgroundColor: getNameColor(name) }}
       aria-hidden="true"
     >

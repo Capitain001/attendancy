@@ -27,12 +27,12 @@ export async function attendAction(
   token: string,
   coords?: { lat: number; lng: number }
 ) {
-  
-      // Seuls les étudiants peuvent s'enregistrer via token
-    const auth = await authAccess({ requiredRole: ['TEACHER', 'DIRECTION'] })
-    if (!auth.data) return { error: auth.error }
 
-        // const { user, orgId } = auth.data
+  // Seuls les étudiants peuvent s'enregistrer via token
+  const auth = await authAccess({ requiredRole: ['STUDENT'] })
+  if (!auth.data) return { error: auth.error }
+
+  const { user, orgId } = auth.data
   try {
 
     // ✅ remplacement ici
@@ -43,7 +43,7 @@ export async function attendAction(
     const { scheduleId } = await validateSessionToken(token);
 
     // Enregistre la présence
-    const data = await recordStudentAttendance(scheduleId, studentId, coords);
+    const data = await recordStudentAttendance(scheduleId, studentId,orgId, coords);
 
     return { data };
   } catch (error) {

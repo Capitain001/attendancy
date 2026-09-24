@@ -1,27 +1,52 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import type { GetTeacherSchedulesInfoDto } from '@/services/schedule'
+import { resolveScheduleUiStatus } from '@/services/schedule/policy'
+
 import { getPinnedLabel } from './format'
+import type { ScheduleWithUi } from './types'
 import { PinnedScheduleCard } from './PinnedScheduleCard'
 import { ScheduleListSection } from './ScheduleListSection'
 import { EmptySchedule } from './EmptySchedule'
-import { ChevronRight } from 'lucide-react'
+import { useScheduleClock } from '@/hooks/data/schedule/useScheduleClock'
 
 type DailyScheduleViewProps = {
   schedules: GetTeacherSchedulesInfoDto
 }
 
 export function DailyScheduleView({ schedules }: DailyScheduleViewProps) {
-  const [pinnedId, setPinnedId] = useState<string | null>(schedules.at(0)?.id ?? null)
+  // null = l'utilisateur n'a encore rien choisi → le pin suit le défaut automatiquement
+  const [pinnedId, setPinnedId] = useState<string | null>(null)
   const [isExpanded, setIsExpanded] = useState(true)
 
-  const pinnedSchedule = schedules.find((s) => s.id === pinnedId) ?? schedules.at(0) ?? null
+  // `now` ne change qu'aux frontières de transition (début/fin d'une séance PENDING)
+  const now = useScheduleClock(schedules)
 
-  const completedSchedules = schedules.filter(
-    (s) => s.status === 'COMPLETED' || s.status === 'MISSED' || s.status === 'CANCELED'
+  // Source unique du statut affiché : resolveScheduleUiStatus
+  const items: ScheduleWithUi[] = useMemo(
+    () =>
+      schedules
+        .map((s) => ({ ...s, uiStatus: resolveScheduleUiStatus(s, now) }))
+        .sort((a, b) => a.startTime.getTime() - b.startTime.getTime()),
+    [schedules, now],
   )
-  const remainingSchedules = schedules.filter((s) => s.status === 'PENDING')
+
+  const completedSchedules = items.filter((s) =>
+    s.uiStatus === 'COMPLETED' || s.uiStatus === 'MISSED' || s.uiStatus === 'CANCELED',
+  )
+  const remainingSchedules = items.filter(
+    (s) => s.uiStatus === 'PENDING' || s.uiStatus === 'ONGOING',
+  )
+
+  // Défaut : séance en cours, sinon la prochaine, sinon la première
+  const defaultPinned =
+    items.find((s) => s.uiStatus === 'ONGOING') ??
+    items.find((s) => s.uiStatus === 'PENDING') ??
+    items.at(0) ??
+    null
+
+  const pinnedSchedule = items.find((s) => s.id === pinnedId) ?? defaultPinned
 
   const handleSelectSchedule = (id: string) => {
     setPinnedId(id)
@@ -34,18 +59,19 @@ export function DailyScheduleView({ schedules }: DailyScheduleViewProps) {
         <h1 className="text-sm text-center font-medium tracking-tight">Aujourd'hui</h1>
       </div>
 
-      {schedules.length === 0 ? (
-        
-        <div className='flex flex-col py-10 gap-8'>
-          <p className="text-sm text-center text-teacher-muted py-8">Aucun cours prévu pour cette journée.</p>
-          <EmptySchedule/>
+      {items.length === 0 ? (
+        <div className="flex flex-col py-10 gap-8">
+          <p className="text-sm text-center text-teacher-muted py-8">
+            Aucun cours prévu pour cette journée.
+          </p>
+          <EmptySchedule />
         </div>
       ) : (
         <div className="space-y-6">
           {pinnedSchedule && (
             <PinnedScheduleCard
               schedule={pinnedSchedule}
-              label={getPinnedLabel(pinnedSchedule, schedules)}
+              label={getPinnedLabel(pinnedSchedule, items,now)}
               isExpanded={isExpanded}
               onToggle={() => setIsExpanded((prev) => !prev)}
             />
@@ -60,8 +86,6 @@ export function DailyScheduleView({ schedules }: DailyScheduleViewProps) {
                 onSelect={handleSelectSchedule}
               />
             )}
-
-       
 
             {completedSchedules.length > 0 && remainingSchedules.length > 0 && (
               <div className="relative my-4 flex items-center justify-center">

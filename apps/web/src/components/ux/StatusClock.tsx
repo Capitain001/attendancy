@@ -1,24 +1,28 @@
-import { CircleCheckBig, Clock, ClockAlert } from "lucide-react";
-import type { ScheduleStatus } from "@/generated/prisma/browser";
+import { CircleCheckBig, Clock, ClockAlert, Hourglass } from "lucide-react";
+import {
+  SCHEDULE_UI_STATUS_LABEL,
+  type ScheduleUiStatus,
+} from "@/services/schedule/policy";
 import { cn } from "@/lib/utils";
 
-const STATUS: Partial<
-  Record<ScheduleStatus, { icon: React.ComponentType<{ className?: string }>; label: string }>
-> = {
-  PENDING: { icon: Clock, label: "À venir" },
-  MISSED: { icon: ClockAlert, label: "Manqué" },
-  COMPLETED: { icon: CircleCheckBig, label: "Terminé" },
-  CANCELED: { icon: ClockAlert, label: "Annulé" },
+// Record complet (pas Partial) : un nouveau statut dans la policy
+// provoque une erreur TypeScript ici tant que son icône n'est pas définie.
+const STATUS_ICON: Record<ScheduleUiStatus, React.ComponentType<{ className?: string }>> = {
+  PENDING: Clock,
+  ONGOING: Hourglass,
+  COMPLETED: CircleCheckBig,
+  CANCELED: ClockAlert,
+  MISSED: ClockAlert,
 };
 
 interface StatusIconProps {
-  status: ScheduleStatus;
+  status: ScheduleUiStatus;
   className?: string;
 }
 
 export default function StatusClock({ status, className }: StatusIconProps) {
-  const Icon = STATUS[status]?.icon || Clock;
-  const label = STATUS[status]?.label || "À venir";
+  const Icon = STATUS_ICON[status];
+  const label = SCHEDULE_UI_STATUS_LABEL[status];
 
   return (
     <div className={cn("group relative flex flex-col items-center", className)}>

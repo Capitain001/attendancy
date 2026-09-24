@@ -7,30 +7,19 @@ import { Check } from "lucide-react";
 import type { DateRange } from "react-day-picker";
 
 import type { TeacherUnavailabilityItem } from "@/services/teacher-unavailability/types";
-import { Calendar, CalendarDayButton } from "@/components/ui/calendar";
+import { Calendar, CalendarDayButton } from "@/components/ui/custom/calendar";
 import { cn } from "@/lib/utils";
 
 /** Durée de l'appui long (ms) avant de déclencher le mode sélection de plage. */
 const LONG_PRESS_MS = 450;
 
-/**
- * Couleurs "en dur" associées à chaque type d'indisponibilité existante.
- * WEEKLY = récurrente (rose) / DATE_RANGE = ponctuelle (bleu).
- */
-const TYPE_STYLES: Record<
+/** Point affiché sous chaque jour concerné : WEEKLY = récurrente (rose) / DATE_RANGE = ponctuelle (bleu). */
+export const TYPE_STYLES: Record<
   TeacherUnavailabilityItem["type"],
-  { dot: string; className: string; label: string }
+  { dot: string; label: string }
 > = {
-  WEEKLY: {
-    dot: "bg-pink-400",
-    className: "bg-pink-100 text-pink-700 hover:bg-pink-100 hover:text-pink-700",
-    label: "Récurrente",
-  },
-  DATE_RANGE: {
-    dot: "bg-blue-400",
-    className: "bg-blue-100 text-blue-700 hover:bg-blue-100 hover:text-blue-700",
-    label: "Ponctuelle",
-  },
+  WEEKLY: { dot: "bg-pink-400", label: "Récurrente" },
+  DATE_RANGE: { dot: "bg-blue-400", label: "Ponctuelle" },
 };
 
 function isItemActiveOnDate(item: TeacherUnavailabilityItem, date: Date): boolean {
@@ -50,21 +39,18 @@ function isItemActiveOnDate(item: TeacherUnavailabilityItem, date: Date): boolea
 }
 
 type DayButtonContextValue = {
-  isDateRangeDay: (date: Date) => boolean;
-  isWeeklyDay: (date: Date) => boolean;
   onLongPressDay: (date: Date) => void;
   /** Jour de fin d'une plage complète en attente de confirmation (coche affichée dessus). */
   pendingConfirmDate: Date | null;
   onConfirmRange: () => void;
-  onCancelRange: () => void;
 };
 
 const DayButtonContext = React.createContext<DayButtonContextValue | null>(null);
 
 /**
- * DayButton custom : détecte l'appui long (démarre le mode plage), superpose la teinte
- * rose/bleue selon le type d'indisponibilité, et affiche une coche de confirmation
- * centrée sur le jour de fin une fois la plage complète.
+ * DayButton custom : détecte l'appui long (démarre le mode plage) et affiche une coche
+ * de confirmation sur le jour de fin une fois la plage complète. Le rendu du jour (cercle,
+ * bulle « aujourd'hui », points) est délégué à CalendarDayButton.
  */
 function UnavailabilityDayButton(props: React.ComponentProps<typeof CalendarDayButton>) {
   const { day, modifiers, className, onClick, ...rest } = props;
@@ -80,6 +66,9 @@ function UnavailabilityDayButton(props: React.ComponentProps<typeof CalendarDayB
     }
   };
 
+  // Nettoyage si le bouton est démonté pendant un appui
+  React.useEffect(() => clearPressTimer, []);
+
   const handlePointerDown: React.PointerEventHandler<HTMLButtonElement> = () => {
     longPressFiredRef.current = false;
     clearPressTimer();
@@ -89,6 +78,8 @@ function UnavailabilityDayButton(props: React.ComponentProps<typeof CalendarDayB
     }, LONG_PRESS_MS);
   };
 
+  const showConfirm = ctx?.pendingConfirmDate ? isSameDay(ctx.pendingConfirmDate, day.date) : false;
+
   const handleClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
     // Le clic qui suit le relâchement d'un appui long ne doit pas déclencher la sélection normale
     if (longPressFiredRef.current) {
@@ -96,22 +87,17 @@ function UnavailabilityDayButton(props: React.ComponentProps<typeof CalendarDayB
       event.preventDefault();
       return;
     }
+    // Sur le jour de fin en attente de confirmation, le clic valide la plage
+    if (showConfirm) {
+      event.preventDefault();
+      ctx?.onConfirmRange();
+      return;
+    }
     onClick?.(event);
   };
 
-  const dayType = ctx?.isDateRangeDay(day.date)
-    ? "dateRange"
-    : ctx?.isWeeklyDay(day.date)
-      ? "weekly"
-      : null;
-
-  const isPartOfRangeSelection =
-    modifiers.selected || modifiers.range_start || modifiers.range_end || modifiers.range_middle;
-
-  const showConfirm = ctx?.pendingConfirmDate ? isSameDay(ctx.pendingConfirmDate, day.date) : false;
-
   return (
-    <span className="relative inline-flex">
+    <span className="relative flex w-full justify-center">
       <CalendarDayButton
         day={day}
         modifiers={modifiers}
@@ -120,30 +106,16 @@ function UnavailabilityDayButton(props: React.ComponentProps<typeof CalendarDayB
         onPointerLeave={clearPressTimer}
         onPointerCancel={clearPressTimer}
         onContextMenu={(event) => event.preventDefault()}
-        onClick={(event) => {
-          // Sur le jour de fin en attente de confirmation, le clic valide la plage
-          // plutôt que de rouvrir la sélection normale.
-          if (showConfirm) {
-            event.preventDefault();
-            ctx?.onConfirmRange();
-            return;
-          }
-          handleClick(event);
-        }}
-        className={cn(
-          className,
-          "touch-manipulation select-none",
-          dayType && !isPartOfRangeSelection && "font-medium",
-          dayType === "weekly" && !isPartOfRangeSelection && TYPE_STYLES.WEEKLY.className,
-          dayType === "dateRange" && !isPartOfRangeSelection && TYPE_STYLES.DATE_RANGE.className,
-          showConfirm && "text-transparent"
-        )}
+        onClick={handleClick}
+        className={cn(className, "touch-manipulation select-none")}
         {...rest}
       />
 
-      {/* Plage complète en attente de confirmation : coche centrée sur le jour de fin. */}
+      {/* Plage complète en attente de confirmation : coche posée sur le cercle du jour de fin */}
       {showConfirm && (
-        <Check className="pointer-events-none absolute inset-0 m-auto h-4 w-4 text-primary-foreground" />
+        <span className="pointer-events-none absolute top-0 left-1/2 flex size-(--cell-size) -translate-x-1/2 items-center justify-center rounded-full bg-primary text-primary-foreground">
+          <Check className="size-4" />
+        </span>
       )}
     </span>
   );
@@ -174,25 +146,28 @@ export function UnavailabilityCalendar({
   onConfirmRange: () => void;
   onCancelRange: () => void;
 }) {
-  const isDateRangeDay = React.useCallback(
-    (date: Date) =>
-      items.some((item) => item.type === "DATE_RANGE" && isItemActiveOnDate(item, date)),
+  // Points sous chaque jour : un point par type d'indisponibilité active ce jour-là
+  const dayFooter = React.useCallback(
+    (date: Date) => {
+      const hasWeekly = items.some((i) => i.type === "WEEKLY" && isItemActiveOnDate(i, date));
+      const hasRange = items.some((i) => i.type === "DATE_RANGE" && isItemActiveOnDate(i, date));
+      if (!hasWeekly && !hasRange) return null;
+
+      return (
+        <span className="flex gap-0.5">
+          {hasWeekly && <span className={cn("size-1.5 rounded-full", TYPE_STYLES.WEEKLY.dot)} />}
+          {hasRange && <span className={cn("size-1.5 rounded-full", TYPE_STYLES.DATE_RANGE.dot)} />}
+        </span>
+      );
+    },
     [items]
-  );
-  const isWeeklyDay = React.useCallback(
-    (date: Date) =>
-      !isDateRangeDay(date) &&
-      items.some((item) => item.type === "WEEKLY" && isItemActiveOnDate(item, date)),
-    [items, isDateRangeDay]
   );
 
   // Mois affiché conservé indépendamment du bascule single/range pour ne pas sauter de mois
   // quand on entre/sort du mode plage.
   const [month, setMonth] = React.useState<Date>(selectedDate ?? new Date());
 
-  // Plage complète en attente de confirmation : un clic n'importe où en dehors du calendrier
-  // annule la sélection (pas de bouton croix nécessaire, cliquer un autre jour la remplace déjà
-  // nativement via onRangeChange).
+  // Plage complète en attente de confirmation : un clic en dehors du calendrier l'annule.
   const containerRef = React.useRef<HTMLDivElement>(null);
   React.useEffect(() => {
     if (!pendingConfirmRange) return;
@@ -207,19 +182,14 @@ export function UnavailabilityCalendar({
     return () => document.removeEventListener("pointerdown", handlePointerDownOutside);
   }, [pendingConfirmRange, onCancelRange]);
 
-  const contextValue: DayButtonContextValue = {
-    isDateRangeDay,
-    isWeeklyDay,
-    onLongPressDay,
-    pendingConfirmDate: pendingConfirmRange?.to ?? null,
-    onConfirmRange,
-    onCancelRange,
-  };
+  const pendingConfirmDate = pendingConfirmRange?.to ?? null;
+  const contextValue = React.useMemo<DayButtonContextValue>(
+    () => ({ onLongPressDay, pendingConfirmDate, onConfirmRange }),
+    [onLongPressDay, pendingConfirmDate, onConfirmRange]
+  );
 
-  // `mode` est une union discriminée côté react-day-picker : le type de `selected`/`onSelect`
-  // dépend de sa valeur ("single" -> Date | undefined, "range" -> DateRange | undefined).
-  // On construit donc les props propres à chaque mode dans leur branche respective (chacune
-  // correctement typée), pour ensuite les spreader sur un unique <Calendar />.
+  // `mode` est une union discriminée côté react-day-picker : on construit les props propres
+  // à chaque mode dans leur branche (correctement typée), puis on les spread sur <Calendar />.
   const modeProps =
     pickerMode === "single"
       ? ({
@@ -235,34 +205,36 @@ export function UnavailabilityCalendar({
         } as const);
 
   return (
-    <div ref={containerRef} className=" rounded-3xl bg-card/40 p-1">
+    <div ref={containerRef} className="w-full  p-1">
       <DayButtonContext.Provider value={contextValue}>
         <Calendar
           locale={fr}
           month={month}
           onMonthChange={setMonth}
-          modifiers={{ weekly: isWeeklyDay, dateRange: isDateRangeDay }}
+          todayLabel="Auj."
+          dayFooter={dayFooter}
           components={{ DayButton: UnavailabilityDayButton }}
-          className="mx-auto p-2"
+          classNames={{ root: "w-full max-w-sm" }}
+          className="mx-auto p-2 "
           {...modeProps}
         />
       </DayButtonContext.Provider>
 
-      {pickerMode === "range" && !pendingConfirmRange && (
+      {/* {pickerMode === "range" && !pendingConfirmRange && (
         <p className="mt-3 text-center text-xs text-muted-foreground">
           Sélectionnez la date de fin de la plage.
         </p>
-      )}
+      )} */}
 
-      {/* Légende */}
-      {/* <div className="mt-4 flex items-center gap-4 border-t border-border pt-3">
+      {/* Légende : nécessaire maintenant que les types ne sont distingués que par les points */}
+      <div className="mt-4 flex items-center justify-center gap-4 border-t border-border pt-3">
         {(Object.keys(TYPE_STYLES) as Array<keyof typeof TYPE_STYLES>).map((key) => (
           <div key={key} className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <span className={cn("h-2.5 w-2.5 rounded-full", TYPE_STYLES[key].dot)} />
+            <span className={cn("size-2.5 rounded-full", TYPE_STYLES[key].dot)} />
             {TYPE_STYLES[key].label}
           </div>
         ))}
-      </div> */}
+      </div>
     </div>
   );
 }

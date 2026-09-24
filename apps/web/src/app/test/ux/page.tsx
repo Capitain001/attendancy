@@ -1,252 +1,112 @@
 'use client'
 
-import InvitationFlow from '@/components/auth/signup/flow/invited/InvitationFlow'
-import {
-  WelcomeStep,
-  InvitationStep,
-  RoleStep,
-  ConfirmStep,
-} from '@/components/auth/signup/flow/invited/InvitationSteps'
-import MobileNavMenu from '@/components/layout/to-implemente/mobile-navbar'
-import { Calendar } from '@/components/ui/calendar-mini'
-import type { UserInfo } from '@/types/user'
+import { useState } from 'react'
+import { fr } from 'date-fns/locale'
+import type { DateRange } from 'react-day-picker'
+import { Calendar } from '@/components/ui/custom/calendar'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
-const mockUser: UserInfo = {
-  id: 'usr_mock_001',
-  email: 'sarah.diallo@example.com',
-  name: 'Sarah Diallo',
-  avatar_url: 'https://i.pravatar.cc/150?img=47',
-  role: 'TEACHER',
-  function: 'ASSISTANT',
-  status: 'INVITED',
-  invitationToken: 'mock-token-abc123',
-  organization: {
-    id: 'org_mock_001',
-    name: 'Lycée Excelsior',
-    slug: 'lycee-excelsior',
-    logo: 'https://api.dicebear.com/9.x/initials/svg?seed=Lycee%20Excelsior',
-    responsable: false,
-  },
-  invited_by: {
-    name: 'Moussa Kone',
-    email: 'moussa.kone@example.com',
-  },
-}
+// Données factices : un jour "a des données" selon un motif déterministe
+const CHIPS = [
+  { id: 'presences', label: 'Présences', dot: 'bg-emerald-500' },
+  { id: 'absences', label: 'Absences', dot: 'bg-red-500' },
+  { id: 'annulees', label: 'Annulées', dot: 'bg-orange-400' },
+  { id: 'rattrapages', label: 'Rattrapages', dot: 'bg-sky-400' },
+] as const
 
-import { SwipeSheet, SwipeSheetSnapPoint } from '@/components/teacher/planning/SwipeSheet'
+const hasData = (date: Date, seed: number) => (date.getDate() * (seed + 2)) % 4 === 0
 
-import { useState } from "react"
-import {
-  CheckCircle2,
-  Clock,
-  Search,
-  UserCheck,
-  UserX,
-  Users,
-  X,
-} from "lucide-react"
+export default function TestCalendarPage() {
+  const [mode, setMode] = useState<'single' | 'range'>('single')
+  const [chipIndex, setChipIndex] = useState(0)
+  const [month, setMonth] = useState(() => new Date())
+  const [date, setDate] = useState<Date | undefined>(() => new Date())
+  const [range, setRange] = useState<DateRange | undefined>()
 
-// Données d'exemple pour la liste d'émargement
-const STUDENTS = [
-  { id: 1, name: "Thomas Dubois", status: "present", time: "08:55" },
-  { id: 2, name: "Camille Martin", status: "present", time: "09:01" },
-  { id: 3, name: "Lucas Bernard", status: "late", time: "09:18" },
-  { id: 4, name: "Sophie Petit", status: "absent", time: "-" },
-  { id: 5, name: "Antoine Moreau", status: "present", time: "08:58" },
-]
+  const chip = CHIPS[chipIndex]
 
-export default function StudentAttendancePage() {
-  const [sheetState, setSheetState] = useState<SwipeSheetSnapPoint>("peek")
-  const [searchQuery, setSearchQuery] = useState("")
+  const dayFooter = (d: Date) =>
+    hasData(d, chipIndex) ? (
+      <span className={cn('block size-1.5 rounded-full', chip.dot)} />
+    ) : null
 
-  const filteredStudents = STUDENTS.filter((student) =>
-    student.name.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+  const goToday = () => {
+    const today = new Date()
+    setMonth(today)
+    setDate(today)
+  }
 
-  const presentCount = STUDENTS.filter((s) => s.status === "present").length
+  const shared = {
+    locale: fr,
+    month,
+    onMonthChange: setMonth,
+    todayLabel: 'Auj.',
+    dayFooter,
+    classNames: { root: 'w-full' },
+  }
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center bg-background p-6 text-foreground">
-      {/* Contenu principal de la page (ex: cours / cours amphi) */}
-      <div className="flex max-w-md flex-col items-center text-center pb-20">
-        <div className="rounded-full bg-muted p-3 mb-4">
-          <Users className="h-6 w-6 text-foreground" />
+    <div className="flex min-h-screen justify-center bg-background">
+      <div className="flex w-full max-w-md flex-col gap-5 p-4">
+        {/* Bascule single / range */}
+        <div className="flex gap-2">
+          {(['single', 'range'] as const).map((m) => (
+            <Button
+              key={m}
+              size="sm"
+              variant={mode === m ? 'default' : 'outline'}
+              className="rounded-full"
+              onClick={() => setMode(m)}
+            >
+              {m === 'single' ? 'Jour' : 'Plage'}
+            </Button>
+          ))}
         </div>
-        <h1 className="text-xl font-semibold tracking-tight">
-          Cours : Algorithmique Avancée
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Master 1 - Amphi B • Prof. Martin
-        </p>
 
-        {/* Indication d'état */}
-        <div className="mt-6 flex items-center gap-2 rounded-lg border bg-card px-4 py-2 text-sm text-muted-foreground">
-          <span>État du panneau :</span>
-          <span className="font-mono font-medium text-foreground">
-            {sheetState}
-          </span>
+        {/* Pastilles de filtre : changent la couleur des points */}
+        <div className="flex gap-2 overflow-x-auto pb-1">
+          {CHIPS.map((c, i) => (
+            <button
+              key={c.id}
+              type="button"
+              onClick={() => setChipIndex(i)}
+              className={cn(
+                'flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors',
+                i === chipIndex
+                  ? 'bg-foreground text-background'
+                  : 'bg-muted text-foreground',
+              )}
+            >
+              <span className={cn('size-3 rounded-full', c.dot)} />
+              {c.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Calendrier */}
+        {mode === 'single' ? (
+          <Calendar {...shared} mode="single" selected={date} onSelect={setDate} />
+        ) : (
+          <Calendar {...shared} mode="range" selected={range} onSelect={setRange} />
+        )}
+
+        {/* Barre d'actions */}
+        <div className="mt-auto flex gap-3">
+          <Button variant="secondary" className="h-12 rounded-full px-6" onClick={goToday}>
+            Aujourd'hui
+          </Button>
+          <Button className="h-12 flex-1 rounded-full">
+            {mode === 'single'
+              ? date
+                ? `Aller au ${date.toLocaleDateString('fr-FR')}`
+                : 'Choisir une date'
+              : range?.from
+                ? `${range.from.toLocaleDateString('fr-FR')}${range.to ? ` → ${range.to.toLocaleDateString('fr-FR')}` : ''}`
+                : 'Choisir une plage'}
+          </Button>
         </div>
       </div>
-
-      {/*TRIGGER : Déclencheur fixe en bas de page lorsque le sheet est fermé ou minimisé */}
-      {sheetState === "closed" && (
-        <div className="fixed bottom-6 z-30">
-          <button
-            type="button"
-            onClick={() => setSheetState("peek")}
-            className="flex items-center gap-2 rounded-xs border bg-background p-2 text-sm font-medium text-foreground shadow-lg transition-transform hover:scale-105 active:scale-95"
-          >
-            <Users className="h-4 w-4 text-muted-foreground" />
-            <span className="rounded-xs bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-              {presentCount}/5 etudiants
-            </span>
-          </button>
-        </div>
-      )}
-
-      {/* Composant SwipeSheet avec le contenu de présence */}
-      <SwipeSheet
-        value={sheetState}
-        onValueChange={setSheetState}
-        peekHeight={150}
-        expandedOffset={80}
-      >
-        <div className="flex h-full flex-col px-6 pb-6">
-          {/* En-tête visible en mode Peek & Expanded */}
-          <div className="flex items-center justify-between border-b pb-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
-                <UserCheck className="h-5 w-5 text-foreground" />
-              </div>
-              <div>
-                <h2 className="text-base font-semibold">5 étudiants</h2>
-                <p className="text-xs text-muted-foreground">
-                  {presentCount} présents • 1 en retard • 1 absent
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              {sheetState !== "expanded" ? (
-                <button
-                  type="button"
-                  onClick={() => setSheetState("expanded")}
-                  className="rounded-lg border bg-background px-3 py-1.5 text-xs font-medium text-foreground hover:bg-muted transition-colors"
-                >
-                  Voir tout
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setSheetState("peek")}
-                  className="rounded-full p-1 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                  aria-label="Réduire"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Recherche & Filtres */}
-          <div className="mt-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Rechercher un étudiant..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-xl border bg-muted/40 py-2 pl-9 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-              />
-            </div>
-          </div>
-
-          {/* Liste déroulante des étudiants */}
-          <div className="mt-4 flex-1 space-y-2 overflow-y-auto pr-1">
-            {filteredStudents.map((student) => (
-              <div
-                key={student.id}
-                className="flex items-center justify-between rounded-xl border bg-card p-3 transition-colors hover:bg-muted/30"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs font-medium text-foreground">
-                    {student.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-foreground">
-                      {student.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground flex items-center gap-1">
-                      <Clock className="h-3 w-3" /> {student.time}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Badges d'état neutres */}
-                <div>
-                  {student.status === "present" && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-foreground">
-                      <CheckCircle2 className="h-3.5 w-3.5" /> Présent
-                    </span>
-                  )}
-                  {student.status === "late" && (
-                    <span className="inline-flex items-center gap-1 rounded-full border bg-background px-2.5 py-1 text-xs font-medium text-muted-foreground">
-                      <Clock className="h-3.5 w-3.5" /> En retard
-                    </span>
-                  )}
-                  {student.status === "absent" && (
-                    <span className="inline-flex items-center gap-1 rounded-full border bg-muted/60 px-2.5 py-1 text-xs font-medium text-muted-foreground line-through">
-                      <UserX className="h-3.5 w-3.5" /> Absent
-                    </span>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </SwipeSheet>
-    </main>
+    </div>
   )
 }
-
-// import * as React from "react";
-// import { DateRange } from 'react-day-picker'
-
-
-// export default function Particle() {
-//   const [range, setRange] = React.useState<DateRange | undefined>({
-//     from: new Date(),
-//     to: new Date(new Date().setDate(new Date().getDate() + 7)),
-//   });
-
-//   return <Calendar mode="range" onSelect={setRange} selected={range} />;
-// }
-
-
-// export default function Page() {
-//   return (
-//     // <InvitationFlow
-//     //   steps={[
-//     //     { key: 'welcome',    render: () => <WelcomeStep    user={mockUser} /> },
-//     //     { key: 'invitation', render: () => <InvitationStep user={mockUser} /> },
-//     //     { key: 'role',       render: () => <RoleStep       user={mockUser} /> },
-//     //   ]}
-//     //   confirm={{
-//     //     key: 'confirm',
-//     //     render: (status) => <ConfirmStep user={mockUser} status={status} />,
-//     //   }}
-//     //   onAccept={async () => { await new Promise((r) => setTimeout(r, 1500)) }}
-//     //   onDecline={async () => { await new Promise((r) => setTimeout(r, 800)) }}
-//     // />
-
-//     <div className='min-h-screen'> 
-//       	<MobileNavMenu navItems={[{ heading: "Home", href: "/" },]} />
-
-//         <Calendar/>
-//        </div>
-//   )
-// }

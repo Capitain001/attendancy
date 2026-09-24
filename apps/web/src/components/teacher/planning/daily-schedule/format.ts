@@ -1,4 +1,4 @@
-import type { ScheduleItem } from './types'
+import type { ScheduleItem, ScheduleWithUi } from './types'
 
 const timeFormatter = new Intl.DateTimeFormat('fr-FR', {
   hour: '2-digit',
@@ -6,17 +6,15 @@ const timeFormatter = new Intl.DateTimeFormat('fr-FR', {
 })
 
 export function formatRange({ startTime, endTime }: { startTime: Date; endTime: Date }) {
-  return `${timeFormatter.format(new Date(startTime))} - ${timeFormatter.format(new Date(endTime))}`
+  return `${timeFormatter.format(startTime)} - ${timeFormatter.format(endTime)}`
 }
 
 export function getAudienceLabel(schedule: ScheduleItem) {
   return schedule.group ? `${schedule.class.name} · ${schedule.group.name}` : schedule.class.name
 }
 
-function getRelativeTimeString(startTime: Date) {
-  const now = new Date()
-  const start = new Date(startTime)
-  const diffMs = start.getTime() - now.getTime()
+function getRelativeTimeString(startTime: Date, now: Date) {
+  const diffMs = startTime.getTime() - now.getTime()
 
   if (diffMs <= 0) return "Aujourd'hui"
 
@@ -28,17 +26,30 @@ function getRelativeTimeString(startTime: Date) {
   return `Aujourd'hui · Dans ${diffHours} h`
 }
 
-export function getPinnedLabel(schedule: ScheduleItem, schedules: ScheduleItem[]) {
-  if (schedule.status === 'COMPLETED') return 'Cours terminé'
-  if (schedule.status === 'CANCELED') return 'Cours annulé'
-  if (schedule.status === 'MISSED') return 'Cours manqué'
-
-  const upcoming = schedules.filter((s) => s.status === 'PENDING')
-  const nextCourse = upcoming[0]
-
-  if (nextCourse && nextCourse.id === schedule.id) {
-    return 'Cours suivant'
+/**
+ * `schedules` doit être trié par startTime croissant (fait dans DailyScheduleView).
+ * Toute la logique temporelle est déjà résolue dans `uiStatus`
+ * (via resolveScheduleUiStatus) : ici on ne relit plus le statut DB brut.
+ */
+export function getPinnedLabel(
+  schedule: ScheduleWithUi,
+  schedules: ScheduleWithUi[],
+  now: Date,
+) {
+  switch (schedule.uiStatus) {
+    case 'COMPLETED':
+      return 'Cours terminé'
+    case 'CANCELED':
+      return 'Cours annulé'
+    case 'MISSED':
+      return 'Cours manqué'
+    case 'ONGOING':
+      return 'En cours'
   }
 
-  return getRelativeTimeString(schedule.startTime)
+  // uiStatus === 'PENDING' : réellement à venir (now < startTime)
+  const next = schedules.find((s) => s.uiStatus === 'PENDING')
+  if (next?.id === schedule.id) return 'Cours suivant'
+
+  return getRelativeTimeString(schedule.startTime, now)
 }
