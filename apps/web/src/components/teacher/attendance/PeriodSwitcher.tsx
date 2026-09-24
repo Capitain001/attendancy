@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
-import { TEACHER_OVERVIEW_PERIODS, TEACHER_OVERVIEW_PERIOD_LABELS } from '@/services/attendance/constants'
+import { TEACHER_OVERVIEW_PERIODS, getPeriodLabel } from '@/services/attendance/constants'
 import type { TeacherOverviewPeriod } from '@/services/attendance/constants'
 
 // Simples liens vers ?period= : la page (RSC) relit le searchParam,
@@ -20,7 +20,7 @@ export function PeriodSwitcher({ current }: { current: TeacherOverviewPeriod }) 
             period === current ? 'bg-background shadow-sm' : 'text-muted-foreground hover:text-foreground',
           )}
         >
-          {TEACHER_OVERVIEW_PERIOD_LABELS[period]}
+          {getPeriodLabel(period)}
         </Link>
       ))}
     </nav>

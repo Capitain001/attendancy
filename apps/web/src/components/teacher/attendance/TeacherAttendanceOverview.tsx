@@ -8,11 +8,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { cn } from '@/lib/utils'
+import { cn, getInitials } from '@/lib/utils'
 import type { GetTeacherAttendanceOverviewDto } from '@/services/attendance'
 import { TEACHER_OVERVIEW_WINDOW_DAYS } from '@/services/attendance/constants'
 import { ABSENTEEISM_MIN_SESSIONS, ABSENTEEISM_RATE_THRESHOLD } from '@/services/attendance/policy'
-import { formatRate, initials, plural } from './format'
+import { formatRate, plural } from './format'
 
 type Props = {
   overview: GetTeacherAttendanceOverviewDto
@@ -159,7 +159,7 @@ function AtRiskDetail({ students }: { students: GetTeacherAttendanceOverviewDto[
           {students.map(({ studentId, firstName, lastName, rate, absent }) => (
             <li key={studentId} className="flex items-center gap-3">
               <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#DFF6E2] text-xs font-medium text-[#0E3324]">
-                {initials(firstName, lastName)}
+                {getInitials(firstName, lastName)}
               </span>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium">{[firstName, lastName].filter(Boolean).join(' ') || 'Étudiant'}</p>

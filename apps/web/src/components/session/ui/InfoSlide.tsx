@@ -55,17 +55,16 @@ export function InfoSlide({ schedule, studentCount, className }: InfoSlideProps)
     : `${schedule.class.name} · ${schedule.class.level}`;
 
   return (
-    <div className={cn("relative grid grid-cols-1 grid-rows-1 w-full h-full min-h-72 overflow-hidden", className)}>
+    <div className={cn("relative grid grid-cols-1 grid-rows-1 w-full h-full overflow-hidden", className)}>
       
       {/* --- PANEL 1 : INFOS + BOUTON NOTE --- */}
       <div
         className={cn(
-          "col-start-1 row-start-1 flex flex-col w-full h-full transition-transform duration-300 ease-in-out",
+          "col-start-1 row-start-1 flex flex-col justify-center w-full h-full transition-transform duration-300 ease-in-out",
           isOpen ? "-translate-y-full opacity-0 pointer-events-none" : "translate-y-0 opacity-100"
         )}
       >
-        <div className="flex flex-col">
-          {/* <InfoRow icon={BookOpen} label="Cours" value={schedule.course.name} /> */}
+        <div className="flex flex-col w-full">
           {schedule.course.ueCourse.code && (
             <InfoRow
               icon={BookOpen}
@@ -87,7 +86,7 @@ export function InfoSlide({ schedule, studentCount, className }: InfoSlideProps)
           />
         </div>
 
-        {/* Bouton "Note" + Poignée (placé juste sous la liste) */}
+        {/* Bouton "Note" + Poignée */}
         {schedule.notes && (
           <div className="mt-3">
             <button

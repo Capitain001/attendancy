@@ -1,15 +1,13 @@
 "use client";
 
 import { ReactNode, useState } from "react";
-import type { LucideIcon } from "lucide-react";
-import { BookOpen, Clock, QrCode, UserCheck } from "lucide-react";
+import { QrCode } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carouselx";
 import { Gauge } from "@/components/ui/gauge";
 import { SessionQRDisplay } from "@/components/session/SessionQRDisplay";
 import { AttendanceSection } from "@/components/attendance/AttendanceSection";
 import { InfoSlide } from "@/components/session/ui/InfoSlide";
-import { useAttendanceStats } from "@/hooks/data/attendances/use-attendance-stats";
 import type { TeacherNextSchedule } from "@/services/schedule";
 
 type Schedule = NonNullable<TeacherNextSchedule>;
@@ -31,7 +29,7 @@ function Slide({ children, className }: { children: ReactNode; className?: strin
   return (
     <div
       className={cn(
-        "flex h-full min-h-72 w-full flex-col items-center justify-center",
+        "flex h-full min-h-72 w-full flex-col items-center justify-center px-4 py-2",
         className
       )}
     >
@@ -51,7 +49,7 @@ function TimeSlide({
     <Slide>
       <Gauge
         value={Math.round(progressPercent)}
-        size={172}
+        size={200}
         strokeWidth={9}
         showPercentage
         unit="%"
@@ -115,30 +113,24 @@ export function SessionCarousel({
         <CarouselContent>
           {/* Index 0: Infos du cours (avec le drawer de Note) */}
           <CarouselItem className="px-1">
-            <div className="px-4 py-4 h-full">
+            <Slide>
               <InfoSlide schedule={schedule} studentCount={studentCount} />
-            </div>
+            </Slide>
           </CarouselItem>
 
           {/* Index 1: Temps (Gauge) */}
           <CarouselItem className="px-1">
-            <div className="px-4 py-4">
-              <TimeSlide progressPercent={progressPercent} gaugeLabel={gaugeLabel} />
-            </div>
+            <TimeSlide progressPercent={progressPercent} gaugeLabel={gaugeLabel} />
           </CarouselItem>
 
           {/* Index 2: QR Code */}
           <CarouselItem className="px-1">
-            <div className="px-4 py-4">
-              <QRSlide sessionId={schedule.session?.id ?? null} />
-            </div>
+            <QRSlide sessionId={schedule.session?.id ?? null} />
           </CarouselItem>
 
           {/* Index 3: Présences */}
           <CarouselItem className="px-1">
-            <div className="px-4 py-4">
-              <AttendanceSlide scheduleId={schedule.id} studentCount={studentCount} />
-            </div>
+            <AttendanceSlide scheduleId={schedule.id} studentCount={studentCount} />
           </CarouselItem>
         </CarouselContent>
       </Carousel>

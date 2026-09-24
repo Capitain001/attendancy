@@ -4,7 +4,7 @@ import type { GetTeacherAttendanceOverviewDto } from '@/services/attendance'
 import { formatRate, formatShortDate, getRateBarTone, plural } from './format'
 
 type Props = {
-  trend: GetTeacherAttendanceOverviewDto['trend']
+  trend: GetTeacherAttendanceOverviewDto['absentees']
   className?: string
 }
 
@@ -16,7 +16,7 @@ export function WeeklyTrendCard({ trend, className }: Props) {
         <CardDescription>Taux de présence par semaine</CardDescription>
       </CardHeader>
       <CardContent>
-        <ol className="flex gap-2 overflow-x-auto pb-1">
+        {/* <ol className="flex gap-2 overflow-x-auto pb-1">
           {trend.map(({ weekStart, rate, sessions }) => (
             <li
               key={weekStart.toISOString()}
@@ -33,7 +33,7 @@ export function WeeklyTrendCard({ trend, className }: Props) {
               <span className="text-[10px] text-muted-foreground">{formatShortDate(weekStart)}</span>
             </li>
           ))}
-        </ol>
+        </ol> */}
       </CardContent>
     </Card>
   )

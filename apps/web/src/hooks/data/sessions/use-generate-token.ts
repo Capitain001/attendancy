@@ -4,7 +4,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { generateTokenAction } from "@/services/session/token.actions";
+import { generateTokenAction } from "@/services/session";
 
 const TOKEN_DURATION_MS = 15 * 60 * 1000; // 15 minutes
 
