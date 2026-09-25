@@ -1,80 +1,86 @@
+// src/services/teacher-unavailability/validation.ts
 import * as v from "valibot";
 
 import { validateWithId } from "@/utils/server/validation";
-import { CreateUnavailabilityData, UpdateUnavailabilityData } from "./types";
+import type { CreateUnavailabilityData } from "./types";
 
-// Compare uniquement l'heure (UTC) d'une Date — le jour porté par la valeur
-// est ignoré, cohérent avec `toTimeOfDayUTC` côté service qui ne retient
-// que l'heure pour les champs WEEKLY (dayOfWeek + startTime/endTime en
-// @db.Time).
-function timeOfDayMinutesUTC(date: Date): number {
-  return date.getUTCHours() * 60 + date.getUTCMinutes();
-}
+// "HH:mm" sur 24 h, zéro-paddé : la comparaison lexicographique = comparaison horaire.
+const hhmm = v.pipe(v.string(), v.regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Heure invalide (format HH:mm)"));
 
-// --- Schéma create : pas de teacherId (résolu côté action depuis
-// l'utilisateur authentifié, jamais depuis l'input client). Pas de
-// discriminant `type` non plus — c'est la présence de `dayOfWeek` qui route
-// la validation croisée, exactement comme `resolveUnavailabilityFields`
-// route l'écriture Prisma :
-//   dayOfWeek présent → WEEKLY, comparaison de l'heure seule (Date ignorée)
-//   dayOfWeek absent  → DATE_RANGE, comparaison des dates complètes
+const optionalDate = v.optional(v.nullable(v.date()));
 
+/**
+ * Contrat d'entrée UNIQUE, identique pour toute forme d'indisponibilité — l'UI envoie
+ * toujours les mêmes champs, la résolution vers les colonnes se fait dans
+ * `resolveUnavailabilityFields` (jamais côté UI) :
+ *
+ *   dayOfWeek            : un jour de semaine précis (ISO, 1 = lundi)   — null = tous les jours
+ *   startDate / endDate  : période de validité, vraies dates (inclusive) — null = sans limite
+ *   timeRange            : { start, end } en "HH:mm"                     — null = journée entière
+ *
+ * Contrainte : au moins un jour de semaine OU une période.
+ *
+ * Exemples :
+ *   tous les mardis 8h-10h du 1er sept. au 15 déc. → dayOfWeek + période + timeRange
+ *   de 8h à 10h du 1er au 30 sept.                 → période + timeRange
+ *   congés du 1er au 15 août                       → période seule
+ */
 export const createUnavailabilitySchema = v.pipe(
   v.object({
     reason: v.optional(v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(200)))),
-    dayOfWeek: v.optional(v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(7)))), // ISO, 1=lundi
-    startDate: v.date(),
-    endDate: v.date(),
+    dayOfWeek: v.optional(v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(7)))),
+    startDate: optionalDate,
+    endDate: optionalDate,
+    timeRange: v.optional(v.nullable(v.object({ start: hhmm, end: hhmm }))),
   } satisfies Record<keyof CreateUnavailabilityData, unknown>),
+
+  // Période : les deux bornes ou aucune, dans le bon ordre
   v.forward(
     v.partialCheck(
-      [["dayOfWeek"], ["startDate"], ["endDate"]],
-      (input) =>
-        input.dayOfWeek != null
-          ? timeOfDayMinutesUTC(input.startDate) < timeOfDayMinutesUTC(input.endDate)
-          : input.startDate <= input.endDate,
-      "La fin doit être après le début",
+      [["startDate"], ["endDate"]],
+      (i) => (i.startDate == null) === (i.endDate == null),
+      "Renseignez le premier et le dernier jour, ou aucun des deux",
     ),
     ["endDate"],
+  ),
+  v.forward(
+    v.partialCheck(
+      [["startDate"], ["endDate"]],
+      (i) => !i.startDate || !i.endDate || i.startDate <= i.endDate,
+      "Le dernier jour doit être après le premier",
+    ),
+    ["endDate"],
+  ),
+
+  // Heures : fin après début
+  v.forward(
+    v.partialCheck(
+      [["timeRange"]],
+      (i) => i.timeRange == null || i.timeRange.start < i.timeRange.end,
+      "L'heure de fin doit être après l'heure de début",
+    ),
+    ["timeRange"],
+  ),
+
+  // Il faut au moins une borne de portée
+  v.forward(
+    v.partialCheck(
+      [["dayOfWeek"], ["startDate"]],
+      (i) => i.dayOfWeek != null || i.startDate != null,
+      "Choisissez un jour récurrent ou une période",
+    ),
+    ["startDate"],
   ),
 );
 
 export type CreateUnavailabilityInput = v.InferInput<typeof createUnavailabilitySchema>;
 export type CreateUnavailabilityOutput = v.InferOutput<typeof createUnavailabilitySchema>;
 
-// --- Update : même principe, pas de teacherId côté client — un enseignant
-// ne peut jamais réassigner une indisponibilité à quelqu'un d'autre via
-// cette action. Le créneau (dayOfWeek + startDate/endDate) se modifie en
-// bloc — si une des trois clés est fournie, les deux dates doivent l'être,
-// sinon on ne peut pas revalider "fin après début".
+// Modification = remplacement complet de la règle : même schéma que la création.
+export const updateUnavailabilityDataSchema = createUnavailabilitySchema;
 
-export const updateUnavailabilityDataSchema = v.pipe(
-  v.object({
-    reason: v.optional(v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(200)))),
-    dayOfWeek: v.optional(v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(7)))),
-    startDate: v.optional(v.date()),
-    endDate: v.optional(v.date()),
-  } satisfies Record<keyof UpdateUnavailabilityData, unknown>),
-  v.forward(
-    v.partialCheck(
-      [["dayOfWeek"], ["startDate"], ["endDate"]],
-      (input) => {
-        const touchesSlot = input.dayOfWeek != null || input.startDate != null || input.endDate != null;
-        if (!touchesSlot) return true;
-        if (input.startDate == null || input.endDate == null) return false;
-
-        return input.dayOfWeek != null
-          ? timeOfDayMinutesUTC(input.startDate) < timeOfDayMinutesUTC(input.endDate)
-          : input.startDate <= input.endDate;
-      },
-      "startDate et endDate doivent être fournis ensemble, avec la fin après le début",
-    ),
-    ["endDate"],
-  ),
-);
-
-export type UpdateUnavailabilityDataInput = v.InferInput<typeof updateUnavailabilityDataSchema>;
-export type UpdateUnavailabilityDataOutput = v.InferOutput<typeof updateUnavailabilityDataSchema>;
+export type UpdateUnavailabilityDataInput = CreateUnavailabilityInput;
+export type UpdateUnavailabilityDataOutput = CreateUnavailabilityOutput;
 
 export const updateUnavailabilitySchema = validateWithId("teacherUnavailabilityId", updateUnavailabilityDataSchema);
 

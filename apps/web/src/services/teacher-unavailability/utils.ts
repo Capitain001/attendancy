@@ -1,52 +1,50 @@
-import { Prisma, UnavailabilityType } from "@/generated/prisma/browser";
-import type { UpdateUnavailabilityDataOutput } from "./validation";
+// src/services/teacher-unavailability/utils.ts
+import { UnavailabilityType } from "@/generated/prisma/browser";
+import type { CreateUnavailabilityOutput } from "./validation";
 
-function toTimeOfDayUTC(date: Date): Date {
-  return new Date(Date.UTC(1970, 0, 1, date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()));
+/** "HH:mm" → valeur de colonne @db.Time (1970-01-01 UTC, seul l'horaire compte). */
+function hhmmToTime(value: string): Date {
+  const [hours, minutes] = value.split(":").map(Number);
+  return new Date(Date.UTC(1970, 0, 1, hours ?? 0, minutes ?? 0));
 }
 
-export type UnavailabilityInputSlot = Pick<
-  UpdateUnavailabilityDataOutput,
-  "dayOfWeek" | "startDate" | "endDate"
+export type UnavailabilitySlotInput = Pick<
+  CreateUnavailabilityOutput,
+  "dayOfWeek" | "startDate" | "endDate" | "timeRange"
 >;
 
-export type BaseFields = "orgId" | "teacherId" | "reason";
+type ResolvedTimeAndPeriod = {
+  startDate: Date | null;
+  endDate: Date | null;
+  startTime: Date | null;
+  endTime: Date | null;
+};
 
-// Le type de retour garantit la présence de `type` tout en ignorant les champs gérés par la mutation
-export type ResolvedSlotFields = Omit<
-  Prisma.TeacherUnavailabilityUncheckedCreateInput,
-  BaseFields
->;
+/**
+ * Le seul invariant qui survit au modèle à trois axes : `type` ⇔ `dayOfWeek`.
+ * Période et heures sont indépendantes (nullables dans les deux branches).
+ */
+export type ResolvedUnavailabilityFields =
+  | (ResolvedTimeAndPeriod & { type: "WEEKLY"; dayOfWeek: number })
+  | (ResolvedTimeAndPeriod & { type: "DATE_RANGE"; dayOfWeek: null });
 
-export function resolveUnavailabilityFields(
-  data: Partial<UnavailabilityInputSlot>,
-  options: { resetUnusedFields?: boolean } = {}
-) {
-  // Guard explicite : sécurise le runtime et garantit le typage strict pour TypeScript
-  if (!data.startDate || !data.endDate) {
-    throw new Error("startDate et endDate sont requis pour calculer les créneaux.");
-  }
-
-  const { resetUnusedFields = false } = options;
-  const unused = resetUnusedFields ? null : undefined;
-
-  if (data.dayOfWeek != null) {
-    return {
-      type: UnavailabilityType.WEEKLY,
-      dayOfWeek: data.dayOfWeek,
-      startTime: toTimeOfDayUTC(data.startDate),
-      endTime: toTimeOfDayUTC(data.endDate),
-      startDate: unused,
-      endDate: unused,
-    };
-  }
-
-  return {
-    type: UnavailabilityType.DATE_RANGE,
-    dayOfWeek: unused,
-    startTime: unused,
-    endTime: unused,
-    startDate: data.startDate,
-    endDate: data.endDate,
+/**
+ * Seul endroit où le contrat d'entrée (dayOfWeek / startDate / endDate / timeRange)
+ * est traduit en colonnes Prisma. L'UI n'a jamais connaissance de startTime/endTime.
+ *
+ * Chaque colonne est écrite telle quelle, `null` si l'axe est absent (jamais `undefined`,
+ * qui signifierait « ne pas toucher » pour Prisma). Même résultat pour create et update
+ * (remplacement complet).
+ */
+export function resolveUnavailabilityFields(data: UnavailabilitySlotInput) {
+  const shared: ResolvedTimeAndPeriod = {
+    startDate: data.startDate ?? null,
+    endDate: data.endDate ?? null,
+    startTime: data.timeRange ? hhmmToTime(data.timeRange.start) : null,
+    endTime: data.timeRange ? hhmmToTime(data.timeRange.end) : null,
   };
+
+  return data.dayOfWeek != null
+    ? { ...shared, type: UnavailabilityType.WEEKLY, dayOfWeek: data.dayOfWeek }
+    : { ...shared, type: UnavailabilityType.DATE_RANGE, dayOfWeek: null };
 }

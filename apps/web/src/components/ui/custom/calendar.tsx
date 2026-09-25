@@ -15,6 +15,27 @@ import {
 import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
 
+/** Couleur CSS par défaut des rayures quand `hatchColor: true` est utilisé. */
+export const DEFAULT_HATCH_COLOR = "rgba(128,128,128,0.35)"
+
+/**
+ * Décoration visuelle cumulable appliquée au cercle du jour.
+ * Chaque propriété correspond à une déclaration CSS indépendante
+ * (background-color / background-image / box-shadow via ring-*),
+ * donc elles peuvent toutes s'appliquer en même temps sans conflit.
+ */
+export type DayDecoration = {
+  /**
+   * Active la hachure du cercle. `true` = couleur par défaut (voir `DEFAULT_HATCH_COLOR`,
+   * exportée par ce module). Une chaîne CSS = couleur personnalisée. Omis = pas de hachure.
+   */
+  hatchColor?: string | true
+  /** Classes Tailwind pour l'anneau autour du cercle (ex: récurrence). */
+  ringClassName?: string
+  /** Classes Tailwind pour la couleur de fond du cercle (ex: jour spécifique). */
+  fillClassName?: string
+}
+
 // Données propres à notre variante, transmises à CalendarDayButton via un
 // contexte : définir DayButton en ligne recréerait le composant à chaque rendu.
 type CalendarExtras = {
@@ -22,6 +43,8 @@ type CalendarExtras = {
   dayFooter?: (date: Date) => React.ReactNode
   /** Texte de la bulle au-dessus du jour courant. */
   todayLabel: string
+  /** Décoration visuelle cumulable sur le cercle du jour (hachure, anneau, couleur). */
+  dayDecoration?: (date: Date) => DayDecoration | undefined
 }
 
 const CalendarExtrasContext = React.createContext<CalendarExtras>({
@@ -37,6 +60,7 @@ function Calendar({
   formatters,
   components,
   dayFooter,
+  dayDecoration,
   todayLabel = "Auj.",
   ...props
 }: React.ComponentProps<typeof DayPicker> & {
@@ -45,8 +69,8 @@ function Calendar({
   const defaultClassNames = getDefaultClassNames()
 
   const extras = React.useMemo(
-    () => ({ dayFooter, todayLabel }),
-    [dayFooter, todayLabel]
+    () => ({ dayFooter, dayDecoration, todayLabel }),
+    [dayFooter, dayDecoration, todayLabel]
   )
 
   return (
@@ -161,7 +185,11 @@ function CalendarDayButton({
   modifiers,
   ...props
 }: React.ComponentProps<typeof DayButton>) {
-  const { dayFooter, todayLabel } = React.useContext(CalendarExtrasContext)
+  const { dayFooter, todayLabel, dayDecoration } = React.useContext(CalendarExtrasContext)
+  const deco = dayDecoration?.(day.date)
+
+  const resolvedHatchColor =
+    deco?.hatchColor === true ? DEFAULT_HATCH_COLOR : deco?.hatchColor
 
   const ref = React.useRef<HTMLButtonElement>(null)
   React.useEffect(() => {
@@ -201,10 +229,12 @@ function CalendarDayButton({
         </span>
       )}
 
-      {/* Cercle du jour */}
+      {/* Cercle du jour — hachure / anneau / couleur cumulables via `deco` */}
       <span
         className={cn(
           "flex size-(--cell-size) items-center justify-center rounded-full bg-muted text-sm font-semibold transition-colors",
+          deco?.fillClassName,
+          deco?.ringClassName,
           "group-hover/btn:bg-accent",
           "group-data-[selected-single=true]/btn:bg-primary group-data-[selected-single=true]/btn:text-primary-foreground",
           "group-data-[range-start=true]/btn:bg-primary group-data-[range-start=true]/btn:text-primary-foreground",
@@ -212,6 +242,13 @@ function CalendarDayButton({
           "group-data-[range-middle=true]/btn:bg-accent group-data-[range-middle=true]/btn:text-accent-foreground",
           "group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50"
         )}
+        style={
+          resolvedHatchColor
+            ? {
+                backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 5px, ${resolvedHatchColor} 5px, ${resolvedHatchColor} 10px)`,
+              }
+            : undefined
+        }
       >
         {day.date.getDate()}
       </span>

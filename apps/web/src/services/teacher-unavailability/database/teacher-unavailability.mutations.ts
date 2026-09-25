@@ -1,20 +1,24 @@
+// src/services/teacher-unavailability/database/teacher-unavailability.mutations.ts
 import { prisma } from "@/lib/prisma";
 import { tryConstraint } from "@/utils/server/prisma";
 import { invalidateEvent } from "@/cache/server/graph";
-import type { CreateUnavailabilityInput, UpdateUnavailabilityDataOutput } from "../validation";
+import type { CreateUnavailabilityOutput, UpdateUnavailabilityDataOutput } from "../validation";
 import { resolveUnavailabilityFields } from "../utils";
 
-export async function createTeacherUnavailability(orgId: string, teacherId: string, data: CreateUnavailabilityInput) {
+export async function createTeacherUnavailability(
+  orgId: string,
+  teacherId: string,
+  data: CreateUnavailabilityOutput,
+) {
   const record = await tryConstraint(
     prisma.teacherUnavailability.create({
       data: {
         orgId,
         teacherId,
         reason: data.reason ?? null,
-
         ...resolveUnavailabilityFields(data),
       },
-      select: { id: true, teacherId: true }, // ← Sélectionne teacherId pour l'invalidation
+      select: { id: true, teacherId: true },
     }),
   );
 
@@ -28,22 +32,16 @@ export async function updateTeacherUnavailability(
   teacherId: string,
   data: UpdateUnavailabilityDataOutput,
 ) {
-  const { reason, dayOfWeek, startDate, endDate } = data;
-
-  // Calcul propre des champs de créneau 
-  const slotFields = startDate !== undefined && endDate !== undefined
-    ? resolveUnavailabilityFields({ dayOfWeek, startDate, endDate }, { resetUnusedFields: true })
-    : undefined;
-
   const record = await tryConstraint(
     prisma.teacherUnavailability.update({
-      where: { id: teacherUnavailabilityId, orgId },
+      // teacherId dans le where : un enseignant ne peut modifier que SES indisponibilités.
+      where: { id: teacherUnavailabilityId, orgId, teacherId },
       data: {
-        teacherId,
-        reason,
-        ...slotFields,
+        // teacherId n'est plus écrit : avant, il réaffectait l'enregistrement à l'appelant.
+        reason: data.reason ?? null,
+        ...resolveUnavailabilityFields(data),
       },
-      select: { id: true, teacherId: true , startTime:true , endTime:true }, // ← On récupère teacherId même s'il n'a pas été modifié
+      select: { id: true, teacherId: true, startTime: true, endTime: true },
     }),
   );
 
@@ -51,9 +49,10 @@ export async function updateTeacherUnavailability(
   return record;
 }
 
-export async function deleteTeacherUnavailability(id: string, orgId: string) {
+export async function deleteTeacherUnavailability(id: string, orgId: string, teacherId: string) {
   const record = await prisma.teacherUnavailability.delete({
-    where: { id, orgId },
+    // teacherId dans le where : même règle de propriété que pour l'update.
+    where: { id, orgId, teacherId },
     select: { teacherId: true },
   });
 

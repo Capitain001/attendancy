@@ -1,3 +1,4 @@
+// src/services/teacher-unavailability/auth.ts
 import { authAccess } from "@/services/auth";
 import { ERRORS } from "@/config";
 

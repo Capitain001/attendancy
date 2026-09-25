@@ -28,11 +28,6 @@ const DAYS = [
 
 const REASON_MAX_LENGTH = 200;
 
-function timeToDate(timeStr: string): Date {
-  const [hours, minutes] = timeStr.split(":").map(Number);
-  return new Date(Date.UTC(1970, 0, 1, hours ?? 0, minutes ?? 0));
-}
-
 function dateToTime(d: Date | string | null | undefined): string {
   if (!d) return "";
   const date = new Date(d);
@@ -44,6 +39,33 @@ function dateToYMD(d: Date | string | null | undefined): string {
   const date = new Date(d);
   return date.toISOString().split("T")[0] ?? "";
 }
+
+/** Jour ISO (1 = lundi) d'une date "YYYY-MM-DD". Midi local : évite les décalages de fuseau. */
+function isoDayFromYMD(ymd: string): number {
+  const day = new Date(`${ymd}T12:00:00`).getDay();
+  return day === 0 ? 7 : day;
+}
+
+function Row({
+  label,
+  htmlFor,
+  children,
+}: {
+  label: string;
+  htmlFor?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-center justify-between rounded-xl bg-muted/40 px-4 py-2.5">
+      <Label htmlFor={htmlFor} className="cursor-pointer text-sm font-medium text-foreground">
+        {label}
+      </Label>
+      {children}
+    </div>
+  );
+}
+
+const inputClass = "h-8 rounded-lg border-none bg-muted px-3 text-xs font-medium";
 
 export interface TeacherUnavailabilityFormProps {
   initialData?: Partial<TeacherUnavailabilityItem> | null;
@@ -57,32 +79,41 @@ export function TeacherUnavailabilityForm({
   onCancel,
 }: TeacherUnavailabilityFormProps) {
   const [isPending, setIsPending] = useState(false);
-  const [type, setType] = useState<"WEEKLY" | "DATE_RANGE">(
-    initialData?.type ?? "DATE_RANGE"
-  );
-
-  // States pour WEEKLY
-  const [dayOfWeek, setDayOfWeek] = useState<string>(
-    initialData?.dayOfWeek?.toString() ?? "1"
-  );
-  const [startTime, setStartTime] = useState(
-    dateToTime(initialData?.startTime) || "08:00"
-  );
-  const [endTime, setEndTime] = useState(
-    dateToTime(initialData?.endTime) || "10:00"
-  );
-
-  // States pour DATE_RANGE
-  const [startDateStr, setStartDateStr] = useState(
-    dateToYMD(initialData?.startDate) || dateToYMD(new Date())
-  );
-  const [endDateStr, setEndDateStr] = useState(
-    dateToYMD(initialData?.endDate) || dateToYMD(new Date())
-  );
-
-  // Reason
-  const [reason, setReason] = useState(initialData?.reason ?? "");
   const [error, setError] = useState("");
+
+  const initialStartYMD = dateToYMD(initialData?.startDate);
+
+  // Axe 1 — Récurrence : un jour de semaine précis
+  const [recurring, setRecurring] = useState(initialData?.dayOfWeek != null);
+  const [dayOfWeek, setDayOfWeek] = useState<string>(
+    initialData?.dayOfWeek?.toString() ??
+      (initialStartYMD ? String(isoDayFromYMD(initialStartYMD)) : "1"),
+  );
+
+  // Axe 2 — Période : obligatoire pour une absence ponctuelle, optionnelle si récurrente
+  const [limitPeriod, setLimitPeriod] = useState(
+    initialData?.dayOfWeek == null || initialData?.startDate != null,
+  );
+  const [startDateStr, setStartDateStr] = useState(initialStartYMD || dateToYMD(new Date()));
+  const [endDateStr, setEndDateStr] = useState(
+    dateToYMD(initialData?.endDate) || initialStartYMD || dateToYMD(new Date()),
+  );
+
+  // Axe 3 — Heures : sinon, journée entière
+  const [timed, setTimed] = useState(initialData?.startTime != null);
+  const [startTime, setStartTime] = useState(dateToTime(initialData?.startTime) || "08:00");
+  const [endTime, setEndTime] = useState(dateToTime(initialData?.endTime) || "10:00");
+
+  const [reason, setReason] = useState(initialData?.reason ?? "");
+
+  const hasPeriod = !recurring || limitPeriod;
+
+  const handleRecurringChange = (checked: boolean) => {
+    setRecurring(checked);
+    // Nouvelle récurrence : par défaut sans limite (sinon elle serait bornée au seul jour cliqué)
+    if (checked && !initialData?.id) setLimitPeriod(false);
+    if (!checked) setLimitPeriod(true);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,26 +121,23 @@ export function TeacherUnavailabilityForm({
     setIsPending(true);
 
     try {
-      let payload: CreateUnavailabilityInput;
-
-      if (type === "WEEKLY") {
-        payload = {
-          reason: reason.trim() || null,
-          dayOfWeek: parseInt(dayOfWeek, 10),
-          startDate: timeToDate(startTime),
-          endDate: timeToDate(endTime),
-        };
-      } else {
-        if (!startDateStr || !endDateStr) {
-          throw new Error("Veuillez sélectionner les dates de début et de fin.");
-        }
-        payload = {
-          reason: reason.trim() || null,
-          dayOfWeek: null,
-          startDate: new Date(startDateStr),
-          endDate: new Date(endDateStr),
-        };
+      if (hasPeriod && (!startDateStr || !endDateStr)) {
+        throw new Error("Veuillez sélectionner les dates de début et de fin.");
       }
+      if (hasPeriod && startDateStr > endDateStr) {
+        throw new Error("Le dernier jour doit être après le premier.");
+      }
+      if (timed && startTime >= endTime) {
+        throw new Error("L'heure de fin doit être après l'heure de début.");
+      }
+
+      const payload: CreateUnavailabilityInput = {
+        reason: reason.trim() || null,
+        dayOfWeek: recurring ? parseInt(dayOfWeek, 10) : null,
+        startDate: hasPeriod ? new Date(startDateStr) : null,
+        endDate: hasPeriod ? new Date(endDateStr) : null,
+        timeRange: timed ? { start: startTime, end: endTime } : null,
+      };
 
       await onSubmit(payload);
     } catch (err) {
@@ -121,91 +149,92 @@ export function TeacherUnavailabilityForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5 text-foreground">
-      {/* Titre */}
-      {/* <div className="pb-2 text-center">
-        <span className="text-base font-semibold">
-          {initialData?.id ? "Modifier l'indisponibilité" : "Définir l'indisponibilité"}
-        </span>
-      </div> */}
-
-      {/* Ensemble des champs style iOS */}
       <div className="flex flex-col gap-2">
-        {/* Champ Récurrence */}
-        <div className="flex items-center justify-between rounded-xl bg-muted/40 px-4 py-2.5">
-          <Label
-            htmlFor="unavailability-recurring"
-            className="text-sm font-medium text-foreground cursor-pointer"
-          >
-            Récurrence
-          </Label>
+        {/* Récurrence hebdomadaire */}
+        <Row label="Chaque semaine" htmlFor="unavailability-recurring">
           <Switch
             id="unavailability-recurring"
-            checked={type === "WEEKLY"}
-            onCheckedChange={(checked) => setType(checked ? "WEEKLY" : "DATE_RANGE")}
+            checked={recurring}
+            onCheckedChange={handleRecurringChange}
           />
-        </div>
+        </Row>
 
-        {/* Champs conditionnels */}
-        {type === "DATE_RANGE" ? (
+        {recurring && (
+          <Row label="Jour">
+            <Select value={dayOfWeek} onValueChange={setDayOfWeek}>
+              <SelectTrigger className={`${inputClass} w-32`}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {DAYS.map((d) => (
+                  <SelectItem key={d.value} value={d.value.toString()}>
+                    {d.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </Row>
+        )}
+
+        {/* Heures précises (sinon journée entière) */}
+        <Row label="Heures précises" htmlFor="unavailability-timed">
+          <Switch id="unavailability-timed" checked={timed} onCheckedChange={setTimed} />
+        </Row>
+
+        {timed && (
           <>
-            <div className="flex items-center justify-between rounded-xl bg-muted/40 px-4 py-2.5">
-              <Label className="text-sm font-medium text-foreground">Premier jour</Label>
-              <Input
-                type="date"
-                value={startDateStr}
-                onChange={(e) => setStartDateStr(e.target.value)}
-                required
-                className="w-auto h-8 rounded-lg bg-muted border-none text-xs font-medium px-3 text-right"
-              />
-            </div>
-            <div className="flex items-center justify-between rounded-xl bg-muted/40 px-4 py-2.5">
-              <Label className="text-sm font-medium text-foreground">Dernier jour</Label>
-              <Input
-                type="date"
-                value={endDateStr}
-                onChange={(e) => setEndDateStr(e.target.value)}
-                required
-                className="w-auto h-8 rounded-lg bg-muted border-none text-xs font-medium px-3 text-right"
-              />
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="flex items-center justify-between rounded-xl bg-muted/40 px-4 py-2.5">
-              <Label className="text-sm font-medium text-foreground">Jour</Label>
-              <Select value={dayOfWeek} onValueChange={setDayOfWeek}>
-                <SelectTrigger className="w-32 h-8 rounded-lg bg-muted border-none text-xs font-medium px-3">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {DAYS.map((d) => (
-                    <SelectItem key={d.value} value={d.value.toString()}>
-                      {d.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex items-center justify-between rounded-xl bg-muted/40 px-4 py-2.5">
-              <Label className="text-sm font-medium text-foreground">Heure de début</Label>
+            <Row label="Heure de début">
               <Input
                 type="time"
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
                 required
-                className="w-28 h-8 rounded-lg bg-muted border-none text-xs font-medium px-3 text-center"
+                className={`${inputClass} w-28 text-center`}
               />
-            </div>
-            <div className="flex items-center justify-between rounded-xl bg-muted/40 px-4 py-2.5">
-              <Label className="text-sm font-medium text-foreground">Heure de fin</Label>
+            </Row>
+            <Row label="Heure de fin">
               <Input
                 type="time"
                 value={endTime}
                 onChange={(e) => setEndTime(e.target.value)}
                 required
-                className="w-28 h-8 rounded-lg bg-muted border-none text-xs font-medium px-3 text-center"
+                className={`${inputClass} w-28 text-center`}
               />
-            </div>
+            </Row>
+          </>
+        )}
+
+        {/* Période : facultative si récurrente */}
+        {recurring && (
+          <Row label="Limiter à une période" htmlFor="unavailability-period">
+            <Switch
+              id="unavailability-period"
+              checked={limitPeriod}
+              onCheckedChange={setLimitPeriod}
+            />
+          </Row>
+        )}
+
+        {hasPeriod && (
+          <>
+            <Row label="Premier jour">
+              <Input
+                type="date"
+                value={startDateStr}
+                onChange={(e) => setStartDateStr(e.target.value)}
+                required
+                className={`${inputClass} w-auto text-right`}
+              />
+            </Row>
+            <Row label="Dernier jour">
+              <Input
+                type="date"
+                value={endDateStr}
+                onChange={(e) => setEndDateStr(e.target.value)}
+                required
+                className={`${inputClass} w-auto text-right`}
+              />
+            </Row>
           </>
         )}
       </div>
@@ -221,29 +250,27 @@ export function TeacherUnavailabilityForm({
             value={reason}
             maxLength={REASON_MAX_LENGTH}
             onChange={(e) => setReason(e.target.value)}
-            className="resize-none border-none bg-transparent p-0 text-sm shadow-none focus-visible:ring-0 min-h-[80px]"
+            className="min-h-[80px] resize-none border-none bg-transparent p-0 text-sm shadow-none focus-visible:ring-0"
           />
-          <div className="text-right text-[10px] text-muted-foreground mt-1">
+          <div className="mt-1 text-right text-[10px] text-muted-foreground">
             {reason.length} / {REASON_MAX_LENGTH}
           </div>
         </div>
-        <p className="text-[11px] text-muted-foreground leading-tight px-1">
+        <p className="px-1 text-[11px] leading-tight text-muted-foreground">
           Cette note sera enregistrée dans votre planning d'absence.
         </p>
       </div>
 
-      {/* Erreurs */}
       {error && (
-        <div className="p-3 bg-destructive/10 text-destructive text-xs rounded-xl font-medium">
+        <div className="rounded-xl bg-destructive/10 p-3 text-xs font-medium text-destructive">
           {error}
         </div>
       )}
 
-      {/* Bouton de confirmation */}
       <Button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-xl py-6 text-sm font-semibold mt-2"
+        className="mt-2 w-full rounded-xl py-6 text-sm font-semibold"
       >
         {isPending ? "Enregistrement..." : "Confirmer les dates"}
       </Button>

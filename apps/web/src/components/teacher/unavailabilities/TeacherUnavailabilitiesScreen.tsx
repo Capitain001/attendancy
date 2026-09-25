@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { format, getDay, startOfDay, isSameDay } from "date-fns";
+import { format, isSameDay } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Plus, Trash2, Edit2, Calendar as CalendarIcon, X } from "lucide-react";
 import type { DateRange } from "react-day-picker";
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/drawer";
 import { useTeacherUnavailabilities } from "@/hooks/data/teacher-unavailability/useTeacherUnavailabilities";
 import type { TeacherUnavailabilityItem } from "@/services/teacher-unavailability/types";
+import { appliesOnDay } from "@/services/teacher-unavailability/policy";
 import { UnavailabilityType } from "@/generated/prisma/browser";
 import {
   TeacherUnavailabilityForm,
@@ -23,6 +24,7 @@ import {
 } from "./TeacherUnavailabilityForm";
 import { TYPE_STYLES, UnavailabilityCalendar } from "./UnavailabilityCalendar";
 import { cn } from "@/lib/utils";
+import { formatPeriod, formatRecurrence, formatTimeRange } from "./utils";
 
 type FormInitialData = NonNullable<TeacherUnavailabilityFormProps["initialData"]>;
 
@@ -34,25 +36,6 @@ type FormRangeSelection = {
   startDate: Date;
   endDate: Date;
 };
-
-// Helper pour vérifier si un item s'applique à une date donnée
-function isItemActiveOnDate(item: TeacherUnavailabilityItem, date: Date): boolean {
-  const target = startOfDay(date);
-
-  if (item.type === "WEEKLY" && item.dayOfWeek != null) {
-    const jsDay = getDay(target);
-    const isoDay = jsDay === 0 ? 7 : jsDay;
-    return isoDay === item.dayOfWeek;
-  }
-
-  if (item.type === "DATE_RANGE" && item.startDate && item.endDate) {
-    const start = startOfDay(new Date(item.startDate));
-    const end = startOfDay(new Date(item.endDate));
-    return target >= start && target <= end;
-  }
-
-  return false;
-}
 
 export function TeacherUnavailabilitiesScreen({
   teacherId,
@@ -95,7 +78,7 @@ export function TeacherUnavailabilitiesScreen({
 
   const dayItems = useMemo(() => {
     if (!selectedDate) return [];
-    return displayItems.filter((item) => isItemActiveOnDate(item, selectedDate));
+    return displayItems.filter((item) => appliesOnDay(item, selectedDate));
   }, [displayItems, selectedDate]);
 
   const resetRangeMode = () => {
@@ -112,7 +95,7 @@ export function TeacherUnavailabilitiesScreen({
     setSelectedDate(date);
     setFormRange(null);
 
-    const hasData = displayItems.some((item) => isItemActiveOnDate(item, date));
+    const hasData = displayItems.some((item) => appliesOnDay(item, date));
     setEditingItem(null);
     setIsFormVisible(!hasData);
     setIsDrawerOpen(true);
@@ -186,7 +169,6 @@ export function TeacherUnavailabilitiesScreen({
     formRange ??
     (selectedDate ? { startDate: selectedDate, endDate: selectedDate } : null);
 
-
   const formattedDate = (() => {
     if (formRange) {
       const { startDate, endDate } = formRange;
@@ -201,22 +183,14 @@ export function TeacherUnavailabilitiesScreen({
   })();
 
   return (
-    <div className="flex flex-col gap-6 p-6  mx-auto">
+    <div className="flex flex-col h-full gap-6 md:p-6 w-full mx-auto">
       {/* En-tête */}
-      <div>
+      <div className="hidden md:flex">
         <h1 className="text-2xl font-bold tracking-tight">Indisponibilités</h1>
-              {/* <span className="flex items-center  gap-4 ">
-              {(Object.keys(TYPE_STYLES) as Array<keyof typeof TYPE_STYLES>).map((key) => (
-                  <div key={key} className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <span className={cn("size-2.5 rounded-full", TYPE_STYLES[key].dot)} />
-                    {TYPE_STYLES[key].label}
-                  </div>
-                ))}
-              </span> */}
       </div>
 
       {/* Calendrier de consultation */}
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col max-w-md w-full h-full items-center">
         <UnavailabilityCalendar
           items={displayItems}
           pickerMode={pickerMode}
@@ -281,16 +255,12 @@ export function TeacherUnavailabilitiesScreen({
                       >
                         <div className="flex flex-col gap-1">
                           <span className="text-xs font-semibold px-2 py-0.5 rounded-md w-max bg-primary/10 text-primary">
-                            {item.type === "WEEKLY" ? "Récurrente (Hebdo)" : "Ponctuelle"}
+                            {formatRecurrence(item)}
                           </span>
-                          <span className="text-sm font-medium">
-                            {item.reason || "Sans motif précisé"}
-                          </span>
-                          {item.startTime && item.endTime && (
-                            <span className="text-xs text-muted-foreground">
-                              {format(new Date(item.startTime), "HH:mm")} –{" "}
-                              {format(new Date(item.endTime), "HH:mm")}
-                            </span>
+                          <span className="text-sm font-medium">{item.reason || "----"}</span>
+                          <span className="text-xs text-muted-foreground">{formatTimeRange(item)}</span>
+                          {formatPeriod(item) && (
+                            <span className="text-xs text-muted-foreground">{formatPeriod(item)}</span>
                           )}
                         </div>
 

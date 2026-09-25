@@ -1,19 +1,24 @@
 "use client";
 
 import * as React from "react";
-import { isSameDay, isWithinInterval, startOfDay } from "date-fns";
+import { isSameDay } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Check } from "lucide-react";
 import type { DateRange } from "react-day-picker";
 
 import type { TeacherUnavailabilityItem } from "@/services/teacher-unavailability/types";
-import { Calendar, CalendarDayButton } from "@/components/ui/custom/calendar";
+import { appliesOnDay, getTimeWindow } from "@/services/teacher-unavailability/policy";
+import { Calendar, CalendarDayButton, type DayDecoration } from "@/components/ui/custom/calendar";
 import { cn } from "@/lib/utils";
 
 /** Durée de l'appui long (ms) avant de déclencher le mode sélection de plage. */
 const LONG_PRESS_MS = 450;
 
-/** Point affiché sous chaque jour concerné : WEEKLY = récurrente (rose) / DATE_RANGE = ponctuelle (bleu). */
+/**
+ * Point affiché sous chaque jour concerné : WEEKLY = récurrente (rose) / DATE_RANGE = ponctuelle (bleu).
+ * Conservée pour compatibilité API (branchable sur `dayFooter`), non utilisée par défaut :
+ * l'information est désormais portée par le cercle du jour via DAY_DECORATION_STYLES.
+ */
 export const TYPE_STYLES: Record<
   TeacherUnavailabilityItem["type"],
   { dot: string; label: string }
@@ -22,21 +27,28 @@ export const TYPE_STYLES: Record<
   DATE_RANGE: { dot: "bg-blue-400", label: "Ponctuelle" },
 };
 
-function isItemActiveOnDate(item: TeacherUnavailabilityItem, date: Date): boolean {
-  if (item.type === "WEEKLY" && item.dayOfWeek != null) {
-    const jsDay = date.getDay(); // 0 = Dimanche
-    const isoDay = jsDay === 0 ? 7 : jsDay;
-    return isoDay === item.dayOfWeek;
-  }
-
-  if (item.type === "DATE_RANGE" && item.startDate && item.endDate) {
-    const start = startOfDay(new Date(item.startDate));
-    const end = startOfDay(new Date(item.endDate));
-    return isWithinInterval(startOfDay(date), { start, end });
-  }
-
-  return false;
-}
+/**
+ * Config visuelle des indicateurs cumulables sur le cercle du jour.
+ * Seul endroit à modifier pour ajuster la palette (ex: brancher des tokens
+ * de design system plus tard à la place de couleurs Tailwind brutes).
+ */
+export const DAY_DECORATION_STYLES = {
+  /** Indispo. sur toute la journée (aucune plage horaire définie sur l'item). */
+  fullDay: {
+    /** Couleur CSS brute des rayures (injectée en style inline, pas une classe Tailwind). */
+    hatchColor: "rgba(128,128,128,0.35)",
+  },
+  /** Récurrence hebdomadaire (type WEEKLY). */
+  weekly: {
+    ringClassName: "ring-2 ring-pink-400",
+    legendClassName: "ring-2 ring-pink-400",
+  },
+  /** Indisponibilité restreinte à un jour précis (DATE_RANGE d'un seul jour). */
+  singleDay: {
+    fillClassName: "bg-blue-400/25",
+    legendClassName: "bg-blue-400/25 border border-border",
+  },
+} as const;
 
 type DayButtonContextValue = {
   onLongPressDay: (date: Date) => void;
@@ -50,7 +62,7 @@ const DayButtonContext = React.createContext<DayButtonContextValue | null>(null)
 /**
  * DayButton custom : détecte l'appui long (démarre le mode plage) et affiche une coche
  * de confirmation sur le jour de fin une fois la plage complète. Le rendu du jour (cercle,
- * bulle « aujourd'hui », points) est délégué à CalendarDayButton.
+ * bulle « aujourd'hui », points, décoration) est délégué à CalendarDayButton.
  */
 function UnavailabilityDayButton(props: React.ComponentProps<typeof CalendarDayButton>) {
   const { day, modifiers, className, onClick, ...rest } = props;
@@ -146,11 +158,13 @@ export function UnavailabilityCalendar({
   onConfirmRange: () => void;
   onCancelRange: () => void;
 }) {
-  // Points sous chaque jour : un point par type d'indisponibilité active ce jour-là
+  // API conservée (non branchée sur <Calendar/> par défaut, cf. TYPE_STYLES) :
+  // un point par type d'indisponibilité active ce jour-là. Réactivable en
+  // passant `dayFooter={dayFooter}` à <Calendar/> ci-dessous.
   const dayFooter = React.useCallback(
     (date: Date) => {
-      const hasWeekly = items.some((i) => i.type === "WEEKLY" && isItemActiveOnDate(i, date));
-      const hasRange = items.some((i) => i.type === "DATE_RANGE" && isItemActiveOnDate(i, date));
+      const hasWeekly = items.some((i) => i.type === "WEEKLY" && appliesOnDay(i, date));
+      const hasRange = items.some((i) => i.type === "DATE_RANGE" && appliesOnDay(i, date));
       if (!hasWeekly && !hasRange) return null;
 
       return (
@@ -159,6 +173,47 @@ export function UnavailabilityCalendar({
           {hasRange && <span className={cn("size-1.5 rounded-full", TYPE_STYLES.DATE_RANGE.dot)} />}
         </span>
       );
+    },
+    [items]
+  );
+
+  // Décoration du cercle : hachure (journée entière) + anneau (récurrence hebdo)
+  // + couleur (jour spécifique) — cumulables, 3 propriétés CSS indépendantes.
+  // `appliesOnDay` retourne systématiquement `false` pour un item sans aucune
+  // contrainte (ni dayOfWeek, ni startDate/endDate) : un item transitoire/incomplet
+  // (ex: optimistic update le temps qu'une mutation de création se résolve) ne
+  // peut donc jamais faire hachurer tout le calendrier (cf. policy.ts).
+  const dayDecoration = React.useCallback(
+    (date: Date): DayDecoration | undefined => {
+      let fullDay = false;
+      let weekly = false;
+      let singleDayOnly = false;
+
+      for (const item of items) {
+        if (!appliesOnDay(item, date)) continue;
+
+        // Pas de plage horaire sur l'item -> l'indisponibilité couvre la journée entière.
+        if (!getTimeWindow(item)) fullDay = true;
+
+        if (item.type === "WEEKLY") weekly = true;
+
+        if (
+          item.type === "DATE_RANGE" &&
+          item.startDate &&
+          item.endDate &&
+          isSameDay(new Date(item.startDate), new Date(item.endDate))
+        ) {
+          singleDayOnly = true;
+        }
+      }
+
+      if (!fullDay && !weekly && !singleDayOnly) return undefined;
+
+      return {
+        hatchColor: fullDay ? DAY_DECORATION_STYLES.fullDay.hatchColor : undefined,
+        ringClassName: weekly ? DAY_DECORATION_STYLES.weekly.ringClassName : undefined,
+        fillClassName: singleDayOnly ? DAY_DECORATION_STYLES.singleDay.fillClassName : undefined,
+      };
     },
     [items]
   );
@@ -205,35 +260,40 @@ export function UnavailabilityCalendar({
         } as const);
 
   return (
-    <div ref={containerRef} className="w-full  p-1">
+    <div ref={containerRef} className="w-full h-full flex-1 flex flex-col justify-between p-1">
       <DayButtonContext.Provider value={contextValue}>
         <Calendar
           locale={fr}
           month={month}
           onMonthChange={setMonth}
           todayLabel="Auj."
-          dayFooter={dayFooter}
+          dayDecoration={dayDecoration}
           components={{ DayButton: UnavailabilityDayButton }}
-          classNames={{ root: "w-full max-w-sm" }}
-          className="mx-auto p-2 "
+          classNames={{ root: "w-full " }}
+          className="mx-auto p-2 gap-3 h-[580px]" // taille stable sans décalage entre les mois
           {...modeProps}
         />
       </DayButtonContext.Provider>
 
-      {/* {pickerMode === "range" && !pendingConfirmRange && (
-        <p className="mt-3 text-center text-xs text-muted-foreground">
-          Sélectionnez la date de fin de la plage.
-        </p>
-      )} */}
-
-      {/* Légende : nécessaire maintenant que les types ne sont distingués que par les points */}
-      <div className="mt-4 flex items-center justify-center gap-4 border-t border-border pt-3">
-        {(Object.keys(TYPE_STYLES) as Array<keyof typeof TYPE_STYLES>).map((key) => (
-          <div key={key} className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <span className={cn("size-2.5 rounded-full", TYPE_STYLES[key].dot)} />
-            {TYPE_STYLES[key].label}
-          </div>
-        ))}
+      {/* Légende — dérivée de DAY_DECORATION_STYLES, un seul endroit à synchroniser */}
+      <div className="flex flex-col items-center gap-2 border-t border-border pt-3 text-xs text-muted-foreground">
+        <div className="flex items-center gap-1.5">
+          <span
+            className="size-3.5 rounded-full border border-border"
+            style={{
+              backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 3px, ${DAY_DECORATION_STYLES.fullDay.hatchColor} 3px, ${DAY_DECORATION_STYLES.fullDay.hatchColor} 6px)`,
+            }}
+          />
+          Journée entière
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className={cn("size-3.5 rounded-full", DAY_DECORATION_STYLES.weekly.legendClassName)} />
+          Récurrente (hebdo)
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className={cn("size-3.5 rounded-full", DAY_DECORATION_STYLES.singleDay.legendClassName)} />
+          Jour spécifique
+        </div>
       </div>
     </div>
   );
