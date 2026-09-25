@@ -8,6 +8,7 @@ import {
   deleteTeacherUnavailabilityAction,
 } from "@/services/teacher-unavailability/actions/teacher-unavailability.mutations";
 import { getTeacherUnavailabilitiesAction } from "@/services/teacher-unavailability/actions/teacher-unavailability.queries";
+import { toUnavailabilityEntityPatch } from "@/services/teacher-unavailability/utils";
 import type { TeacherUnavailabilityItem } from "@/services/teacher-unavailability/types";
 import type {
   CreateUnavailabilityInput,
@@ -37,6 +38,10 @@ export function useTeacherUnavailabilities(options: UseTeacherUnavailabilitiesOp
       create,
       update,
       delete: deleteFn,
+      // Comble create/update qui ne renvoient que { id, teacherId, startTime, endTime } :
+      // type/dayOfWeek/reason/startDate/endDate sont reconstruits depuis ce que l'UI a
+      // elle-même envoyé, avec la même logique que l'écriture DB (resolveUnavailabilityFields).
+      toEntityPatch: toUnavailabilityEntityPatch,
       messages: {
         create: "Indisponibilité ajoutée avec succès",
         update: "Indisponibilité modifiée avec succès",

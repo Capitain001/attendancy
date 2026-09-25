@@ -1,3 +1,4 @@
+// src/components/courses/direction/sections/fallbacks.tsx
 import { cn } from '@/lib/utils'
 
 export function BannerSkeleton() {

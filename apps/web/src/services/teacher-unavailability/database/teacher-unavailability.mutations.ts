@@ -18,7 +18,7 @@ export async function createTeacherUnavailability(
         reason: data.reason ?? null,
         ...resolveUnavailabilityFields(data),
       },
-      select: { id: true, teacherId: true },
+      select: { id: true, teacherId: true , startTime: true, endTime: true },
     }),
   );
 

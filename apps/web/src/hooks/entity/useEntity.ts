@@ -1,6 +1,4 @@
-//@/hooks/entity/useEntity.ts
-//@ts-nocheck
-
+// @/hooks/entity/useEntity.ts
 "use client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { EntityFetchFn, EntityParams } from "./types";
@@ -22,6 +20,17 @@ export type Payload<T> =
 export interface UseEntityOptions<T> {
   entityName: string;
   fetchFn?: EntityFetchFn<T>;
+  /**
+   * Transforme les items bruts avant qu'ils n'atteignent le composant
+   * (passé tel quel à `select` de react-query, voir plus bas).
+   *
+   * DOIT être une référence stable : une fonction inline recréée à
+   * chaque render (`transformFn={() => ...}`) change de référence à
+   * chaque passage, et react-query recalcule `select` à chaque render
+   * au lieu de réutiliser le résultat mémoïsé — même si `data` n'a pas
+   * changé. Définissez-la au niveau module, ou stabilisez-la avec
+   * `useCallback` si elle dépend de props/state du composant appelant.
+   */
   transformFn?: (items: T[]) => any;
   suspense?: boolean;
   enabled?: boolean;
@@ -47,19 +56,17 @@ export interface EntityResultWithCRUD<T> extends BaseEntityResult<T> {
   applyPayload: (payload: Payload<T>) => void;
 }
 
-// 🔥 OVERLOADS - Déclaration des signatures
-export function useEntity<T extends { id: string }>(
-  options: UseEntityOptions<T> & { revalidateMode: "patch" | "invalidate" }
-): EntityResultWithCRUD<T>;
-
-export function useEntity<T extends { id: string }>(
-  options: UseEntityOptions<T>
-): BaseEntityResult<T>;
-
 // 🔥 IMPLÉMENTATION
+// Signature unique : applyPayload est toujours retourné (garde-fou runtime
+// ci-dessous s'il est appelé sans revalidateMode configuré), plutôt que
+// deux overloads dont la sélection dépendait d'un littéral "patch" |
+// "invalidate" écrit en dur — tout `revalidateMode` construit dynamiquement
+// (ex: `crud ? "patch" : undefined`) faisait retomber TS sur le mauvais
+// overload, ce qui obligeait chaque appelant à un cast/`!` manuel pour
+// contourner un type qui ne reflétait plus la réalité à l'exécution.
 export function useEntity<T extends { id: string }>(
   options: UseEntityOptions<T>
-) {
+): EntityResultWithCRUD<T> {
   const {
     entityName,
     fetchFn,
@@ -93,6 +100,8 @@ export function useEntity<T extends { id: string }>(
     enabled: queryEnabled,
     ...(suspense ? { suspense: true } : {}),
 
+    // `transformFn` doit être stable (voir JSDoc sur UseEntityOptions.transformFn) :
+    // select recalcule à chaque render si la référence change, même sans nouvelle donnée.
     select: transformFn || itemsToById,
   });
 
@@ -106,30 +115,34 @@ export function useEntity<T extends { id: string }>(
 
     const newQueryKey = [entityName, newParams].filter(Boolean);
     const newData = await fetchFn(newParams);
-    const transformedNewData = transformFn
-      ? transformFn(newData)
-      : itemsToById(newData);
 
-    queryClient.setQueryData(newQueryKey, (oldData: any) => {
-      if (!oldData) return transformedNewData;
-
-      const mergedItems = mergeItemsById(oldData.items, newData);
-      const mergedTransformed = transformFn
-        ? transformFn(mergedItems)
-        : itemsToById(mergedItems);
-
-      return mergedTransformed;
+    queryClient.setQueryData<T[]>(newQueryKey, (oldData: T[] | undefined) => {
+      if (!oldData) return newData;
+      return mergeItemsById(oldData, newData);
     });
 
     return newData;
   };
 
-  
 
   /**
    * Appliquer un payload pour mise à jour optimiste du cache
    */
   const applyPayload = (payload: Payload<T>) => {
+    // Garde-fou runtime : sans overload pour l'imposer à la compilation,
+    // c'est ici que l'erreur d'usage (appeler applyPayload sur une entité
+    // qui n'a pas configuré revalidateMode) doit être détectée — un throw
+    // explicite plutôt qu'un no-op silencieux, pour que l'erreur remonte
+    // au premier appel fautif plutôt que de se manifester en cache
+    // incohérent plus tard.
+    if (!revalidateMode) {
+      throw new Error(
+        `useEntity("${entityName}") : applyPayload() appelé sans revalidateMode ` +
+        `("patch" | "invalidate") configuré sur ce hook. Passez revalidateMode ` +
+        `à useEntity, ou n'appelez pas applyPayload pour cette entité.`
+      );
+    }
+
     if (revalidateMode === "invalidate") {
       queryClient.invalidateQueries({ queryKey });
       return;
@@ -139,9 +152,13 @@ export function useEntity<T extends { id: string }>(
     queryClient.setQueryData<any>(queryKey, (old: any) => {
       if (!old) return old;
 
-      const currentItems = Array.isArray(old) ? old : old.items || [];
-      const currentById = Array.isArray(old)
-        ? old.reduce((acc, item) => ({ ...acc, [item.id]: item }), {} as Record<string, T>)
+      // Annotations explicites : sans elles, `Array.isArray(old) ? old : old.items || []`
+      // s'effondre en `any` pur (branche vraie `any[]`, branche fausse `any` → union = `any`),
+      // ce qui prive .map/.filter de toute inférence contextuelle sur `item` (implicit any).
+      // En typant la variable ici, T se propage normalement aux callbacks ci-dessous.
+      const currentItems: T[] = Array.isArray(old) ? old : old.items || [];
+      const currentById: Record<string, T> = Array.isArray(old)
+        ? old.reduce((acc: Record<string, T>, item: T) => ({ ...acc, [item.id]: item }), {})
         : old.byId || {};
 
       let newItems: T[];
@@ -183,7 +200,7 @@ export function useEntity<T extends { id: string }>(
     });
   };
 
-  const baseResult = {
+  return {
     data: data || { items: [], byId: {} },
     loading: isLoading,
     refreshing: isFetching,
@@ -193,17 +210,8 @@ export function useEntity<T extends { id: string }>(
     refetch,
     refetchWithParams,
     queryClient,
+    applyPayload,
   };
-
-  // Retourner avec applyPayload seulement si revalidateMode est spécifié
-  if (revalidateMode) {
-    return {
-      ...baseResult,
-      applyPayload,
-    };
-  }
-
-  return baseResult;
 }
 
 // Helpers pour la manipulation des données et la fusion

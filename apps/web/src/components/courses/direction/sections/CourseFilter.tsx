@@ -1,3 +1,4 @@
+// src/components/courses/direction/sections/CourseFilter.tsx
 "use client";
 
 import { Search, X } from "lucide-react";

@@ -31,22 +31,40 @@ export const TYPE_STYLES: Record<
  * Config visuelle des indicateurs cumulables sur le cercle du jour.
  * Seul endroit à modifier pour ajuster la palette (ex: brancher des tokens
  * de design system plus tard à la place de couleurs Tailwind brutes).
+ *
+ * Modèle : 3 axes indépendants, chacun porté par une propriété CSS distincte,
+ * donc librement cumulables sur un même jour (un jour peut avoir un item
+ * récurrent ET un item ponctuel qui s'appliquent tous les deux) :
+ *
+ *   - hachure  -> au moins un item qui s'applique ce jour-là couvre la
+ *                 journée entière (aucun horaire défini dessus)
+ *   - anneau   -> au moins un item récurrent (WEEKLY) s'applique ce jour-là
+ *   - fond     -> au moins un item ponctuel (DATE_RANGE, un jour ou une
+ *                 période) s'applique ce jour-là
+ *
+ * Un item avec horaire restreint (ex: 8h-10h) et non récurrent n'a donc ni
+ * hachure ni anneau, seulement le fond — c'est le cas "journée normale sauf
+ * un créneau précis", visuellement distinct d'une indispo. sur toute la
+ * journée ou d'une récurrence hebdomadaire.
  */
 export const DAY_DECORATION_STYLES = {
-  /** Indispo. sur toute la journée (aucune plage horaire définie sur l'item). */
+  /** Au moins un item applicable ce jour n'a pas d'horaire défini (= journée entière). */
   fullDay: {
     /** Couleur CSS brute des rayures (injectée en style inline, pas une classe Tailwind). */
-    hatchColor: "rgba(128,128,128,0.35)",
+    hatchColor: "rgba(120,120,120,0.35)",
+    legendLabel: "Journée entière",
   },
-  /** Récurrence hebdomadaire (type WEEKLY). */
+  /** Au moins un item récurrent (WEEKLY) s'applique ce jour. */
   weekly: {
     ringClassName: "ring-2 ring-pink-400",
     legendClassName: "ring-2 ring-pink-400",
+    legendLabel: "Récurrente (hebdo)",
   },
-  /** Indisponibilité restreinte à un jour précis (DATE_RANGE d'un seul jour). */
-  singleDay: {
+  /** Au moins un item ponctuel (DATE_RANGE — un jour ou une période) s'applique ce jour. */
+  dateRange: {
     fillClassName: "bg-blue-400/25",
     legendClassName: "bg-blue-400/25 border border-border",
+    legendLabel: "Date ou période spécifique",
   },
 } as const;
 
@@ -177,42 +195,37 @@ export function UnavailabilityCalendar({
     [items]
   );
 
-  // Décoration du cercle : hachure (journée entière) + anneau (récurrence hebdo)
-  // + couleur (jour spécifique) — cumulables, 3 propriétés CSS indépendantes.
-  // `appliesOnDay` retourne systématiquement `false` pour un item sans aucune
-  // contrainte (ni dayOfWeek, ni startDate/endDate) : un item transitoire/incomplet
-  // (ex: optimistic update le temps qu'une mutation de création se résolve) ne
-  // peut donc jamais faire hachurer tout le calendrier (cf. policy.ts).
+  // Décoration du cercle : hachure (au moins un item "journée entière" ce jour)
+  // + anneau (au moins un item récurrent) + fond (au moins un item ponctuel
+  // DATE_RANGE, quelle que soit sa durée) — 3 axes indépendants, cumulables.
+  //
+  // Important : on ne restreint PAS le fond aux items d'un seul jour. Un item
+  // DATE_RANGE sur plusieurs jours (vacances, absence d'une semaine...) doit
+  // recevoir le même indicateur "date/période spécifique" sur chacun des
+  // jours qu'il couvre — la durée de la période n'est pas pertinente pour
+  // ce channel visuel, seul le fait que ce soit un item "non récurrent" l'est.
   const dayDecoration = React.useCallback(
     (date: Date): DayDecoration | undefined => {
-      let fullDay = false;
-      let weekly = false;
-      let singleDayOnly = false;
+      let hasFullDay = false;
+      let hasWeekly = false;
+      let hasDateRange = false;
 
       for (const item of items) {
         if (!appliesOnDay(item, date)) continue;
 
-        // Pas de plage horaire sur l'item -> l'indisponibilité couvre la journée entière.
-        if (!getTimeWindow(item)) fullDay = true;
+        // Aucune plage horaire sur l'item -> l'indisponibilité couvre la journée entière.
+        if (!getTimeWindow(item)) hasFullDay = true;
 
-        if (item.type === "WEEKLY") weekly = true;
-
-        if (
-          item.type === "DATE_RANGE" &&
-          item.startDate &&
-          item.endDate &&
-          isSameDay(new Date(item.startDate), new Date(item.endDate))
-        ) {
-          singleDayOnly = true;
-        }
+        if (item.type === "WEEKLY") hasWeekly = true;
+        if (item.type === "DATE_RANGE") hasDateRange = true;
       }
 
-      if (!fullDay && !weekly && !singleDayOnly) return undefined;
+      if (!hasFullDay && !hasWeekly && !hasDateRange) return undefined;
 
       return {
-        hatchColor: fullDay ? DAY_DECORATION_STYLES.fullDay.hatchColor : undefined,
-        ringClassName: weekly ? DAY_DECORATION_STYLES.weekly.ringClassName : undefined,
-        fillClassName: singleDayOnly ? DAY_DECORATION_STYLES.singleDay.fillClassName : undefined,
+        hatchColor: hasFullDay ? DAY_DECORATION_STYLES.fullDay.hatchColor : undefined,
+        ringClassName: hasWeekly ? DAY_DECORATION_STYLES.weekly.ringClassName : undefined,
+        fillClassName: hasDateRange ? DAY_DECORATION_STYLES.dateRange.fillClassName : undefined,
       };
     },
     [items]
@@ -275,7 +288,12 @@ export function UnavailabilityCalendar({
         />
       </DayButtonContext.Provider>
 
-      {/* Légende — dérivée de DAY_DECORATION_STYLES, un seul endroit à synchroniser */}
+      {/* Légende — dérivée de DAY_DECORATION_STYLES, un seul endroit à synchroniser.
+          Les 3 indicateurs sont cumulables : un jour peut afficher plusieurs
+          d'entre eux en même temps (ex: hachure + anneau = récurrence sur
+          toute la journée ; hachure + fond = période ponctuelle sur toute la
+          journée). Un item à horaire partiel, non récurrent, n'affiche que le
+          fond, sans hachure ni anneau. */}
       <div className="flex flex-col items-center gap-2 border-t border-border pt-3 text-xs text-muted-foreground">
         <div className="flex items-center gap-1.5">
           <span
@@ -284,15 +302,15 @@ export function UnavailabilityCalendar({
               backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 3px, ${DAY_DECORATION_STYLES.fullDay.hatchColor} 3px, ${DAY_DECORATION_STYLES.fullDay.hatchColor} 6px)`,
             }}
           />
-          Journée entière
+          {DAY_DECORATION_STYLES.fullDay.legendLabel}
         </div>
         <div className="flex items-center gap-1.5">
           <span className={cn("size-3.5 rounded-full", DAY_DECORATION_STYLES.weekly.legendClassName)} />
-          Récurrente (hebdo)
+          {DAY_DECORATION_STYLES.weekly.legendLabel}
         </div>
         <div className="flex items-center gap-1.5">
-          <span className={cn("size-3.5 rounded-full", DAY_DECORATION_STYLES.singleDay.legendClassName)} />
-          Jour spécifique
+          <span className={cn("size-3.5 rounded-full", DAY_DECORATION_STYLES.dateRange.legendClassName)} />
+          {DAY_DECORATION_STYLES.dateRange.legendLabel}
         </div>
       </div>
     </div>

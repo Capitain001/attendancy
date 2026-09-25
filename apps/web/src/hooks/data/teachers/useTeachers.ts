@@ -1,6 +1,6 @@
 "use client";
 // src/hooks/data/teachers/useTeachers.ts
-//@ts-ignore
+
 
 import { useCallback } from "react";
 import { useEntity } from "@/hooks/entity/useEntity";
@@ -39,7 +39,7 @@ export function useTeachers({
   }, [departmentId, status]);
 
   const entityName = `teachers-${departmentId}-${status}`;
-//@ts-ignore
+
   const entity = useEntity<GetTeacherItem>({
     entityName,
     fetchFn,

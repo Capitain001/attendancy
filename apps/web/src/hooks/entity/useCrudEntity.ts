@@ -2,7 +2,7 @@
 "use client";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useEntity, BaseEntityResult, EntityResultWithCRUD } from "./useEntity";
+import { useEntity } from "./useEntity";
 
 export type FlexiblePartial<T> = {
   [P in keyof T]?: T[P] extends Date ? Date | string : T[P] extends Date | null ? Date | string | null : T[P];
@@ -35,6 +35,37 @@ interface CrudConfig<T, CreateInput = any, UpdateInput extends FlexiblePartial<T
   update?: (id: string, data: UpdateInput) => Promise<Partial<T> & { id: string }>;
   delete?: (id: string) => Promise<void>;
 
+  /**
+   * Convertit ce que l'UI a envoyé (CreateInput ou UpdateInput — la forme
+   * "écriture" du formulaire) en un patch partiel de l'entité T (la forme
+   * "lecture"), AVANT le merge avec le retour serveur.
+   *
+   * Pourquoi c'est nécessaire : CreateInput/UpdateInput n'ont aucune raison
+   * de partager la forme exacte de T (un champ groupé côté formulaire qui se
+   * décompose en plusieurs colonnes, ou un champ dérivé d'un autre plutôt que
+   * saisi directement). Sans ce mapper, les variables brutes sont fusionnées
+   * telles quelles dans le cache (`{...variables, ...serverResponse}`) : si
+   * le serveur ne renvoie qu'un sous-ensemble de champs (cas normal et
+   * documenté ci-dessus), les champs "écriture" incompatibles polluent le
+   * cache et les champs "lecture" qu'ils étaient censés représenter restent
+   * absents ou périmés — jusqu'au prochain refetch complet.
+   *
+   * Optionnel : si omis, comportement inchangé (merge des variables brutes,
+   * valable quand CreateInput/UpdateInput sont déjà structurellement des
+   * Partial<T>, ce qui reste le cas par défaut pour beaucoup d'entités —
+   * n'ajoutez ce mapper que lorsque ce n'est plus vrai).
+   *
+   * Écrire ce mapper en réutilisant la fonction qui produit déjà les colonnes
+   * côté DB (ex: `resolveXFields` du service), plutôt qu'en dupliquant la
+   * traduction : les deux DOIVENT rester en phase, ou le cache optimiste et
+   * l'écriture réelle divergent silencieusement.
+   *
+   * Premier usage : services/teacher-unavailability (toUnavailabilityEntityPatch,
+   * qui réutilise resolveUnavailabilityFields). Détail du raisonnement et du
+   * bug que ça corrige : docs/patterns/toEntityPatch.md
+   */
+  toEntityPatch?: (data: CreateInput | UpdateInput) => Partial<T>;
+
   // Messages optionnels
   messages?: {
     create?: string;
@@ -62,28 +93,25 @@ export function useCrudEntity<
 >(options: UseCrudEntityOptions<T, CreateInput, UpdateInput>) {
   const { entityName, fetchFn, crud, ...entityOptions } = options;
 
-  // ✅ Utilise useEntity existant
-  // NB TypeScript : `revalidateMode: crud ? "patch" : undefined` a pour type
-  // inféré "patch" | undefined, ce qui ne matche PAS le premier overload de
-  // useEntity (qui exige littéralement "patch" | "invalidate"). TS retombe
-  // donc sur le second overload (BaseEntityResult, sans applyPayload), alors
-  // qu'à l'exécution applyPayload EST bien présent dès que crud est défini.
-  // On type donc le résultat manuellement au lieu de compter sur la
-  // résolution d'overload sur une valeur ternaire.
+  // useEntity retourne toujours applyPayload (voir useEntity.ts) : plus besoin
+  // du cast manuel qui compensait ici l'ancien overload mal résolu par TS
+  // dès que revalidateMode était construit dynamiquement.
   const entity = useEntity({
     entityName,
     fetchFn,
     revalidateMode: crud ? "patch" : undefined, // Active applyPayload seulement si CRUD
     ...entityOptions
-  }) as BaseEntityResult<T> & Partial<Pick<EntityResultWithCRUD<T>, "applyPayload">>;
+  });
 
   // 🔄 CREATE Mutation
   const createMutation = useMutation({
     // ✅ crud!.create! (et non crud?.create!) : cohérence avec le fix
     // appliqué sur update — évite de dépendre du comportement d'optional
     // chaining sur une référence de fonction plutôt qu'un appel direct.
-    mutationFn: crud!.create!,
-    onSuccess: (newItem) => {
+      mutationFn: (data: CreateInput) => crud!.create!(data),
+    // `variables` ajouté : nécessaire pour dériver le patch de cache via
+    // `toEntityPatch` à partir de ce que l'UI a réellement envoyé.
+    onSuccess: (newItem, variables) => {
       // ✅ Réutilise applyPayload (déjà branché sur la bonne queryKey,
       // [entityName, initialParams]) au lieu de réécrire à la main un
       // setQueryData([entityName]) qui ratait le cache réel dès que
@@ -92,9 +120,12 @@ export function useCrudEntity<
       // plus bas que si crud.create existe, ce qui implique
       // revalidateMode === "patch" au moment du render.
       //
-      // ✅ createDefaults comble les champs que le serveur ne renvoie pas
-      // (ex: _count.users: 0 pour une entité neuve). Le retour serveur
-      // (`newItem`) reste prioritaire s'il fournit malgré tout ces champs.
+      // Ordre de priorité croissante (chaque couche peut compléter/écraser
+      // la précédente) :
+      //   1. createDefaults : valeurs par défaut génériques (ex: compteurs)
+      //   2. toEntityPatch(variables) : ce que l'UI vient d'envoyer, déjà
+      //      mappé vers la forme T (ex: timeRange -> startTime/endTime)
+      //   3. newItem : retour serveur, source de vérité si présente
       // Cast via `unknown` pour la même raison que sur update : T n'est
       // connu ici que par sa contrainte `{ id: string }`, TS ne peut pas
       // prouver le recouvrement structurel même s'il est réel.
@@ -102,6 +133,7 @@ export function useCrudEntity<
         type: "INSERT",
         record: {
           ...(crud?.createDefaults ?? {}),
+          ...(crud?.toEntityPatch?.(variables) ?? {}),
           ...newItem,
         } as unknown as T,
       });
@@ -129,12 +161,18 @@ export function useCrudEntity<
       // serveur confirme via id et peut renvoyer aussi peu que { id } seul,
       // ou plus s'il le souhaite (ex: champs recalculés côté serveur).
       // Le merge se fait en 3 couches, dans l'ordre de priorité croissante :
-      //   1. item existant en cache (source de départ)
-      //   2. `data` envoyée par l'UI (reflète immédiatement le changement
-      //      voulu, même si le serveur ne renvoie que { id })
+      //   1. item existant en cache (source de départ, via merge
+      //      superficiel fait par applyPayload lui-même)
+      //   2. toEntityPatch(variables.data) si fourni, sinon variables.data
+      //      brut — reflète immédiatement le changement voulu, même si le
+      //      serveur ne renvoie que { id }. `toEntityPatch` mappe la forme
+      //      "écriture" (ex: timeRange) vers la forme "lecture" (T) pour
+      //      que ce reflet immédiat soit structurellement correct plutôt
+      //      que de poser des champs qui n'existent pas sur T.
       //   3. `updatedItem` retourné par le serveur (source de vérité si
-      //      des champs sont présents — écrase data au besoin, ex: valeur
-      //      recalculée/validée côté serveur différente de celle envoyée)
+      //      des champs sont présents — écrase le patch au besoin, ex:
+      //      valeur recalculée/validée côté serveur différente de celle
+      //      envoyée)
       // Le cast passe par `unknown` : TS ne peut pas prouver le recouvrement
       // direct vers T ici, car T n'est connu dans ce générique que comme
       // `{ id: string }` (contrainte minimale). La compatibilité réelle est
@@ -145,7 +183,7 @@ export function useCrudEntity<
       entity.applyPayload!({
         type: "UPDATE",
         record: {
-          ...variables.data,
+          ...(crud?.toEntityPatch?.(variables.data) ?? variables.data),
           ...updatedItem,
         } as unknown as T,
         old_record: undefined as any, // non utilisé en mode "patch"
@@ -161,7 +199,7 @@ export function useCrudEntity<
 
   // 🔄 DELETE Mutation
   const deleteMutation = useMutation({
-    mutationFn: crud!.delete!,
+     mutationFn: (id: string) => crud!.delete!(id),
     onSuccess: (_, id) => {
       entity.applyPayload!({ type: "DELETE", old_record: { id } as T });
 

@@ -1,3 +1,4 @@
+// src/components/courses/direction/sections/CourseSessionsSection.tsx
 import { getCourseDetailAction } from '@/services/course'
 import { UpcomingSessionsCard } from '../components/UpcomingSessionsCard'
 import { HistoryCard } from '../components/HistoryCard'

@@ -1,3 +1,4 @@
+// src/components/courses/direction/sections/CourseBannerSection.tsx
 import { getCourseDetailAction } from '@/services/course'
 import { CourseBanner } from '../CourseBanner'
 

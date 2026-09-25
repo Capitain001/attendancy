@@ -56,7 +56,7 @@ export async function deleteTeacherUnavailabilityAction({
   const { orgId, teacherId } = auth.data;
 
   try {
-    await deleteTeacherUnavailability(teacherUnavailabilityId, orgId);
+    await deleteTeacherUnavailability(teacherUnavailabilityId, orgId, teacherId);
     return { data: { teacherUnavailabilityId } };
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER };

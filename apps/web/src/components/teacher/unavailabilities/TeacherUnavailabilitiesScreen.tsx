@@ -23,7 +23,6 @@ import {
   type TeacherUnavailabilityFormProps,
 } from "./TeacherUnavailabilityForm";
 import { TYPE_STYLES, UnavailabilityCalendar } from "./UnavailabilityCalendar";
-import { cn } from "@/lib/utils";
 import { formatPeriod, formatRecurrence, formatTimeRange } from "./utils";
 
 type FormInitialData = NonNullable<TeacherUnavailabilityFormProps["initialData"]>;
@@ -188,7 +187,6 @@ export function TeacherUnavailabilitiesScreen({
       <div className="hidden md:flex">
         <h1 className="text-2xl font-bold tracking-tight">Indisponibilités</h1>
       </div>
-
       {/* Calendrier de consultation */}
       <div className="flex flex-col max-w-md w-full h-full items-center">
         <UnavailabilityCalendar

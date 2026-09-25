@@ -1,3 +1,4 @@
+// src/components/courses/direction/sections/CourseTeachersIsland.tsx
 'use client'
 
 import { useMemo } from 'react'

@@ -1,3 +1,4 @@
+// src/components/courses/direction/sections/PromotionCoursesSection.tsx
 // src/components/promotion/PromotionCoursesSection.tsx
 'use client'
 

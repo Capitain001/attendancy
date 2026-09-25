@@ -50,3 +50,5 @@ export function formatPeriod(
     ? `${format(start, "d MMM", { locale: fr })} – ${format(end, "d MMM yyyy", { locale: fr })}`
     : `${format(start, "d MMM yyyy", { locale: fr })} – ${format(end, "d MMM yyyy", { locale: fr })}`;
 }
+
+

@@ -43,27 +43,32 @@ export interface EntityFilterResult<T> {
 }
 
 /**
- * Hook useEntityFilter optimisé avec stabilisation des options et applyPayload 
+ * Hook useEntityFilter optimisé avec stabilisation des options et applyPayload
  */
 export const useEntityFilter = <T extends { id: string }>(
   options: UseEntityFilterOptions<T>
 ): EntityFilterResult<T> => {
-  // ✅ STABILISATION DES OPTIONS
-  const stableOptions = useDeepMemo(options);
-  const { where, sort, page = 1, limit, ...entityOptions } = stableOptions;
+  const { where, sort, page = 1, limit, ...entityOptions } = options;
 
-  // ✅ FORCER revalidateMode POUR AVOIR applyPayload
+  // Deep-memo ciblé : seuls where/sort sont susceptibles d'être recréés
+  // avec un contenu identique à chaque render côté appelant.
+  const stableWhere = useDeepMemo(where);
+  const stableSort = useDeepMemo(sort);
+
+  // revalidateMode par défaut à "patch" : utile en soi (sans lui, applyPayload
+  // lèverait le garde-fou runtime de useEntity), pas un contournement de type —
+  // useEntity retourne désormais toujours applyPayload quel que soit revalidateMode.
   const enhancedEntityOptions = {
     ...entityOptions,
-    revalidateMode: entityOptions.revalidateMode || "patch" // Default to "patch"
+    revalidateMode: entityOptions.revalidateMode || "patch"
   };
 
   // Utilise le hook principal pour récupérer les données de base
   const entityData = useEntity<T>(enhancedEntityOptions);
 
   // ✅ FILTRES OPTIMISÉS AVEC CACHE
-  const filterFn = useFilterFn<T>(where);
-  const sortFn = useSortFn<T>(sort);
+  const filterFn = useFilterFn<T>(stableWhere);
+  const sortFn = useSortFn<T>(stableSort);
 
   // ✅ EXTRACTION DES DONNÉES POUR DÉPENDANCES STABLES
   const { items, byId } = entityData.data;
@@ -94,7 +99,7 @@ export const useEntityFilter = <T extends { id: string }>(
     };
   }, [items, byId, filterFn, sortFn, page, limit]); // ✅ Dépendances stabilisées
 
-  //  RETOUR avec applyPayload toujour disponible
+  // Retour avec applyPayload toujours disponible (type garanti par useEntity)
   return {
     data: {
       items: viewData.items,
@@ -109,6 +114,6 @@ export const useEntityFilter = <T extends { id: string }>(
     refetch: entityData.refetch,
     refetchWithParams: entityData.refetchWithParams,
     isFilteredView: viewData.isFilteredView,
-    applyPayload: entityData.applyPayload! // Toujours présent 
+    applyPayload: entityData.applyPayload,
   };
 };

@@ -1,3 +1,4 @@
+// src/components/courses/direction/sections/CourseMetricsSection.tsx
 import { getCourseDetailAction } from '@/services/course'
 import { MetricCard } from '../ui/MetricCard'
 

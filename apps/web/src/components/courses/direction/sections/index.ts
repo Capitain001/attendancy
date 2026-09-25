@@ -1,3 +1,4 @@
+// src/components/courses/direction/sections/index.ts
 export { CourseBannerSection } from './CourseBannerSection'
 export { CourseMetricsSection } from './CourseMetricsSection'
 export { CourseInfoAndStatsSection } from './CourseInfoAndStatsSection'

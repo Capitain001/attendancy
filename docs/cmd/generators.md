@@ -276,6 +276,7 @@ npm run generate:comment
 
 # Dossier spécifique — commande directe
 npx tsx scripts/generate/path/comment.ts src/services/teacher
+npx tsx scripts/generate/path/comment.ts src/components/courses/direction/sections
 ```
 
 **Comportement** :

@@ -1,7 +1,7 @@
 // src/hooks/entity/entityFilters.ts
 import { useMemo } from "react";
 import { PartialDeep } from "./types";
-import { createValueGetter, FilterCache, useDeepMemo, isOperatorObject } from "./cache";
+import { createValueGetter, isOperatorObject } from "./cache";
 
 /**
  * Applique un filtre à un tableau d'items
@@ -182,34 +182,29 @@ const createFilterTest = (path: string[], condition: any) => {
 };
 
 /**
- * Filtre récursif optimisé avec cache WeakMap et getters pré-compilés
+ * Filtre récursif optimisé avec getters pré-compilés.
+ *
+ * Pas de cache global (WeakMap) : `where` arrive déjà stabilisé par
+ * `useDeepMemo` côté `useEntityFilter`, avec une ref *propre à cette
+ * instance du hook*. Un cache global ne peut donc quasiment jamais
+ * servir entre deux composants différents — il ne fait que dupliquer
+ * ce que le `useMemo` ci-dessous fait déjà pour cette instance, avec
+ * la complexité d'une classe singleton en plus. Le `useMemo` seul,
+ * dépendant de `where`, suffit.
  */
 export const useFilterFn = <T>(where?: PartialDeep<T>): ((item: T) => boolean) | undefined => {
-  const cache = FilterCache.getInstance();
-
   return useMemo(() => {
     if (!where) return undefined;
 
-    // ✅ VÉRIFICATION DU CACHE
-    const cachedFn = cache.get<(item: T) => boolean>(where);
-    if (cachedFn) {
-      return cachedFn;
-    }
-
-    // ✅ COMPILATION AVEC GETTERS OPTIMISÉS
     const compiledFilters = compileFilters(where);
 
-    const filterFn = (item: T) => {
+    return (item: T) => {
       // Évaluation court-circuit : s'arrête au premier échec
       for (const filter of compiledFilters) {
         if (!filter.test(item)) return false;
       }
       return true;
     };
-
-    // ✅ MISE EN CACHE
-    cache.set(where, filterFn);
-    return filterFn;
   }, [where]);
 };
 

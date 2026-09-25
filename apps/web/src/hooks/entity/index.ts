@@ -1,4 +1,7 @@
 export * from "./entityFilters"
 export * from "./useEntityFilter"
 export * from "./useEntity"
+export * from "./useCrudEntity"
+export * from "./actionHelpers"
 export * from "./utils"
+export * from "./types"

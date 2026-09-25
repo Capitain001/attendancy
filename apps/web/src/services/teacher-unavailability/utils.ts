@@ -1,6 +1,7 @@
 // src/services/teacher-unavailability/utils.ts
 import { UnavailabilityType } from "@/generated/prisma/browser";
-import type { CreateUnavailabilityOutput } from "./validation";
+import type { CreateUnavailabilityInput, CreateUnavailabilityOutput, UpdateUnavailabilityDataInput } from "./validation";
+import { TeacherUnavailabilityItem } from "./types";
 
 /** "HH:mm" → valeur de colonne @db.Time (1970-01-01 UTC, seul l'horaire compte). */
 function hhmmToTime(value: string): Date {
@@ -48,3 +49,27 @@ export function resolveUnavailabilityFields(data: UnavailabilitySlotInput) {
     ? { ...shared, type: UnavailabilityType.WEEKLY, dayOfWeek: data.dayOfWeek }
     : { ...shared, type: UnavailabilityType.DATE_RANGE, dayOfWeek: null };
 }
+
+/**
+ * `toEntityPatch` pour useCrudEntity : traduit ce que l'UI vient d'envoyer
+ * (CreateUnavailabilityInput / UpdateUnavailabilityDataInput — timeRange en "HH:mm")
+ * en un patch de l'entité affichée (TeacherUnavailabilityItem — startTime/endTime en
+ * Date, type dérivé). Même transformation que resolveUnavailabilityFields côté DB :
+ * les deux DOIVENT rester en phase, sinon le cache optimiste et l'écriture divergent.
+ *
+ * Sans ce mapper, `variables` brut (forme UI) était fusionné tel quel dans le cache :
+ * `type`/`dayOfWeek` n'y figurent sous aucune forme lisible par TeacherUnavailabilityItem,
+ * et restaient absents/périmés tant que le serveur ne les renvoyait pas explicitement
+ * (ce qu'il ne fait pas — `select` ne renvoie que id/teacherId/startTime/endTime,
+ * volontairement : le reste est reconstruit côté UI à partir de ce qu'elle a elle-même
+ * envoyé, pas revalidé par un aller-retour serveur inutile).
+ */
+export function toUnavailabilityEntityPatch(
+  data: CreateUnavailabilityInput | UpdateUnavailabilityDataInput,
+): Partial<TeacherUnavailabilityItem> {
+  return {
+    reason: data.reason ?? null,
+    ...resolveUnavailabilityFields(data),
+  };
+}
+ 
