@@ -13,8 +13,7 @@ model Evaluation {
   courseId    String         @db.Uuid
   type        EvaluationType
   title       String
-  // Poids dans la moyenne du cours. Decimal : pas d'erreur d'arrondi flottant
-  // sur des moyennes pondérées.
+  
   coefficient Float        @default(1)
   maxScore    Float        @default(20) 
   datedAt     DateTime

@@ -273,7 +273,7 @@ export function UnavailabilityCalendar({
         } as const);
 
   return (
-    <div ref={containerRef} className="w-full h-full flex-1 flex flex-col justify-between p-1">
+  <div ref={containerRef} className="w-full h-full flex-1 flex flex-col justify-between p-1">
       <DayButtonContext.Provider value={contextValue}>
         <Calendar
           locale={fr}
