@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/academic/promotions/[classId]/layout.tsx
 // src/app/(attendancy)/[slug]/direction/classes/[classId]/layout.tsx
 import { notFound } from "next/navigation";
 import { getClassAction } from "@/services/class";

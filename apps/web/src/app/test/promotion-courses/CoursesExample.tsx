@@ -1,3 +1,4 @@
+// src/app/test/promotion-courses/CoursesExample.tsx
   'use client'
 
   import { PCourse, PCourseCard } from '@/components/courses/direction/ui/PCourseCard'

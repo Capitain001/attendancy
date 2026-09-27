@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/teacher/courses/page.tsx
 import { connection } from 'next/server'
 import { getCurrentTeacherId } from '@/services/teacher'
 import { getTeacherCoursesAction } from '@/services/course-teacher'

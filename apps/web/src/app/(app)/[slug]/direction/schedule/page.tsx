@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/schedule/page.tsx
 import { redirect } from "next/navigation";
 
 interface Props {

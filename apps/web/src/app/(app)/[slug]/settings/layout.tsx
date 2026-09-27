@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/settings/layout.tsx
 import { getUserInfo } from "@/modules/user";
 import { redirect } from "next/navigation";
 import { SettingsSidebar } from "@/components/users/settings/SettingsSidebar";

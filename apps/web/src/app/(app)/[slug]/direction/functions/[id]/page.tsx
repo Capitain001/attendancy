@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/functions/[id]/page.tsx
 import Link from 'next/link'
 import { ArrowLeft, HelpCircle, ShieldCheck, TriangleAlert, Users } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'

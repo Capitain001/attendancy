@@ -1,3 +1,4 @@
+// src/app/(app)/subscription/success/page.tsx
   // app/cancel/page.tsx
   export default function CancelPage() {
     return (

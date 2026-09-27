@@ -1,3 +1,4 @@
+// src/app/test/page.tsx
 import { getUserInfo } from '@/modules/user'
 import { clearCache, getUser } from '@/modules/user/lru-cache'
 import { createClient } from '@/utils/supabase/server'

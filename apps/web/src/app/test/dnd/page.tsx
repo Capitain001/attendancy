@@ -1,3 +1,4 @@
+// src/app/test/dnd/page.tsx
 "use client"
 import DragDrop from '@/components/programs/dnd-basic-exemple'
 import ExampleNoiseUsage from './NoiseExemple'

@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/schedule/calendar/page.tsx
 import { connection } from 'next/server'
 import { getSchedulesAction } from '@/services/schedule'
 import { DirectionCalendar } from '@/components/direction/schedule/DirectionCalendar'

@@ -5816,7 +5816,9 @@ export const ClassScalarFieldEnum = {
   programTrackId: 'programTrackId',
   level: 'level',
   programId: 'programId',
-  academicYearId: 'academicYearId'
+  academicYearId: 'academicYearId',
+  isActive: 'isActive',
+  feeStructureId: 'feeStructureId'
 } as const
 
 export type ClassScalarFieldEnum = (typeof ClassScalarFieldEnum)[keyof typeof ClassScalarFieldEnum]
@@ -6588,6 +6590,7 @@ export const OrganizationScalarFieldEnum = {
   logo: 'logo',
   domain: 'domain',
   details: 'details',
+  type: 'type',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   isActive: 'isActive',
@@ -7285,6 +7288,20 @@ export type EnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
  * Reference to a field of type 'UserStatus[]'
  */
 export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'OrganizationType'
+ */
+export type EnumOrganizationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrganizationType'>
+    
+
+
+/**
+ * Reference to a field of type 'OrganizationType[]'
+ */
+export type ListEnumOrganizationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrganizationType[]'>
     
 
 

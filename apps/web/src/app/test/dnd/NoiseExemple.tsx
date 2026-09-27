@@ -1,3 +1,4 @@
+// src/app/test/dnd/NoiseExemple.tsx
 // app/example-noise-usage.tsx
 // import { BackgroundPattern, NoiseFilterDefs } from "@/components/design/BackgroundPattern";
 

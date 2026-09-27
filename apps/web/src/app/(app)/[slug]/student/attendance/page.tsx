@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/student/attendance/page.tsx
 // Historique de présence étudiant — visuel porté de la V1.
 import { connection } from "next/server";
 

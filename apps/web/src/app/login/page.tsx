@@ -1,3 +1,4 @@
+// src/app/login/page.tsx
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import Image from 'next/image'

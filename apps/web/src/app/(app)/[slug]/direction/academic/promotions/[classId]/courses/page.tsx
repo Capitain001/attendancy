@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/academic/promotions/[classId]/courses/page.tsx
 import { connection } from 'next/server'
 import { notFound } from 'next/navigation'
 

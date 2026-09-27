@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/people/students/[studentId]/page.tsx
 import { connection } from 'next/server'
 import { notFound } from 'next/navigation'
 import { getStudentByIdForDirectionAction } from '@/services/student'

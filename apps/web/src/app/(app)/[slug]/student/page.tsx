@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/student/page.tsx
 // Dashboard étudiant — visuel porté de la V1.
 import { connection } from "next/server";
 import { addDays, endOfDay, format, isSameDay, startOfDay } from "date-fns";

@@ -5,6 +5,7 @@ import { createOrgAction } from '@/services/organization'
 import type { CreateOrgResult } from '@/services/organization'
 import { input } from "@/styles/input";
 import { cn } from "@/lib/utils";
+import { REDIRECT_URL } from '@/config'
 
 function toSlug(value: string): string {
   return value
@@ -36,7 +37,8 @@ export function OrgSetupForm() {
 
   useEffect(() => {
     if (state && 'data' in state) {
-      router.push(`/${state.data.slug}/direction`)
+      // router.push(`/${state.data.slug}/direction`)
+       router.push(REDIRECT_URL)
     }
   }, [state, router])
 

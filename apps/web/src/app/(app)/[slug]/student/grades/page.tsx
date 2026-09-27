@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/student/grades/page.tsx
 // Notes étudiant — placeholder (porté à l'identique de la V1 ; suivi des notes à venir).
 import {
   NotebookIllustration,

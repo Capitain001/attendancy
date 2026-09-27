@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/academic/promotions/[classId]/enrollment/page.tsx
 import { notFound } from "next/navigation";
 
 

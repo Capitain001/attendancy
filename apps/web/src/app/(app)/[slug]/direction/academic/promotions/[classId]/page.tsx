@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/academic/promotions/[classId]/page.tsx
 import { DirectionPromotionDetailPage } from '@/components/classes/direction'
 import { notFound } from 'next/navigation'
 

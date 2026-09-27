@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/academic/courses/[courseId]/page.tsx
 import { DirectionCourseDetailPage } from '@/components/courses/direction'
 import { validateUUID } from '@/utils/server/validation'
 

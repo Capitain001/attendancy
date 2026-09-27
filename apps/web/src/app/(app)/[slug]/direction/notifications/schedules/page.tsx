@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/notifications/schedules/page.tsx
 import { DirectionNotificationsView } from "@/components/direction/notifications/DirectionNotificationsView";
 
 export default function DirectionScheduleNotificationsPage() {

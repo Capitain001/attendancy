@@ -5,10 +5,9 @@ import fs from 'fs/promises';
 import path from 'path';
 
 /**
- * Extensions de fichiers à traiter (fichiers texte source)
+ * Extensions compatibles avec les commentaires JS/TS (`//`)
  */
-const EXTENSIONS = ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.json', '.css', '.scss', '.html', '.vue', '.svelte'];
-
+const EXTENSIONS = ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs'];
 /**
  * Dossiers à ignorer (pattern glob)
  */

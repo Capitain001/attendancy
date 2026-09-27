@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/teacher/unavailabilities/page.tsx
 import { notFound } from "next/navigation";
 import { getCurrentTeacherId } from "@/services/teacher/actions";
 import { getTeacherUnavailabilitiesAction } from "@/services/teacher-unavailability/actions/teacher-unavailability.queries";

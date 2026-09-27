@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/teacher/students/TeacherStudents.tsx
 'use client'
 
 import { useState, useMemo } from 'react'

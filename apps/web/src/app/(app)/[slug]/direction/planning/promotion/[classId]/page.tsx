@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/planning/promotion/[classId]/page.tsx
 import { connection } from "next/server";
 import { addMonths, endOfMonth, startOfMonth, subMonths } from "date-fns";
 

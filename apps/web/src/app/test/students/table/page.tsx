@@ -1,3 +1,4 @@
+// src/app/test/students/table/page.tsx
 'use client'
 
 import { useState } from 'react'

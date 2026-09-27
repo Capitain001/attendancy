@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/teacher/page.tsx
 import { getCurrentTeacherId } from "@/services/teacher/actions"
 import {
   getTeacherSchedulesAction,

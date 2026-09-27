@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/settings/devices/DeviceTrustToggle.tsx
 "use client"
 
 import { useState } from "react"

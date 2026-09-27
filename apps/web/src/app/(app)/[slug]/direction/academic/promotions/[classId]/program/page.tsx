@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/academic/promotions/[classId]/program/page.tsx
 import { getUEsAction } from "@/services/ue";
 import { getClassProgramAction } from "@/services/program";
 import { getOrgDetailsAction } from "@/services/organization";

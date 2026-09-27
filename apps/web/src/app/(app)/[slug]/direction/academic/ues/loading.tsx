@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/academic/ues/loading.tsx
 import { Skeleton } from "@/components/ui/skeleton"
 import { SectionHeader } from '@/components/direction/SectionHeader'
 import { card } from "@/styles"

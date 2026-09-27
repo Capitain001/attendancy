@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/student/layout.tsx
 //src/app/(attendancy)/[slug]/direction/layout.tsx
 import {
   SidebarInset,

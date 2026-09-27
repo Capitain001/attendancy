@@ -1,3 +1,4 @@
+//apps\web\src\services\permission\types.ts
 export * from './generated.types'
 
 import type { Action, Resource, Prisma } from '@/generated/prisma/browser'

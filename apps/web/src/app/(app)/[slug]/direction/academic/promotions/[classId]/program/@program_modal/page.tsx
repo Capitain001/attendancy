@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/academic/promotions/[classId]/program/@program_modal/page.tsx
 export default async function ProgramModalPage(props: {
   params?: Promise<any>
   searchParams?: Promise<any>

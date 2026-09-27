@@ -1,3 +1,4 @@
+// src/app/auth/signup/page.tsx
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { getUserInfo } from '@/modules/user'

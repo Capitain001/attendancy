@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/academic/program-tracks/page.tsx
 import { connection } from 'next/server'
 import { getProgramTracksAction } from '@/services/program-track'
 import { getDepartmentsAction } from '@/services/department'

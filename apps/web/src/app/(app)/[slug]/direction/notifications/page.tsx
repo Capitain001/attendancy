@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/notifications/page.tsx
 // Notifications direction — notifs personnelles de l'utilisateur connecté.
 import { NotificationsView } from "@/components/student/notifications";
 

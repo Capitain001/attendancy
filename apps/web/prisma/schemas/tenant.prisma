@@ -65,6 +65,8 @@ model User {
   // devices
   devices                UserDevice[]
   sessions               UserSession[]
+  // payments               Payment[]
+  // feeWaivers             FeeWaiver[]
 
   @@schema("public")
 }
@@ -79,6 +81,7 @@ model Organization {
   logo                    String?
   domain                  String?                 @unique
   details                 Json?
+  type                    OrganizationType        @default(INSTITUTION)
   createdAt               DateTime                @default(now())
   updatedAt               DateTime                @updatedAt
   isActive                Boolean                 @default(true)
@@ -115,6 +118,10 @@ model Organization {
   teacherUnavailabilities TeacherUnavailability[]
   userSessions            UserSession[]
   teacherCourseHours      TeacherCourseHours[]
+  // feeStructures           FeeStructure[]
+  // invoices                Invoice[]
+  // payments                Payment[]
+  // feeWaivers              FeeWaiver[]
 
   @@schema("public")
 }
@@ -428,6 +435,13 @@ enum Resource {
 enum InvitationType {
   DIRECT_CREATE
   INVITE_ONLY
+
+  @@schema("public")
+}
+
+enum OrganizationType {
+  INSTITUTION
+  PERSONAL
 
   @@schema("public")
 }

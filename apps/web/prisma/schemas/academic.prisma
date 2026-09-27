@@ -9,16 +9,17 @@
 // ProgramUE.semester (Int structurel) → Term (période datée par classe).
 
 model AcademicYear {
-  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name         String
-  startDate    DateTime
-  endDate      DateTime
-  orgId        String       @db.Uuid
-  isActive     Boolean      @default(true)
-  isCurrent    Boolean      @default(false)
-  organization Organization @relation(fields: [orgId], references: [id])
-  classes      Class[]
-  optionalUEs  OptionalUE[]
+  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String
+  startDate     DateTime
+  endDate       DateTime
+  orgId         String         @db.Uuid
+  isActive      Boolean        @default(true)
+  isCurrent     Boolean        @default(false)
+  organization  Organization   @relation(fields: [orgId], references: [id])
+  classes       Class[]
+  optionalUEs   OptionalUE[]
+  // feeStructures FeeStructure[]
 
   @@unique([name, orgId])
   @@index([orgId, isCurrent])
@@ -62,16 +63,16 @@ model ProgramTrack {
 // Maquette pédagogique — structurelle, indépendante du temps : un Program
 // s'applique à n classes sur n années.
 model Program {
-  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name           String
-  description    String?
-  orgId          String       @db.Uuid
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  deletedAt      DateTime?
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  description String?
+  orgId       String    @db.Uuid
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
 
-    // Disponible pour l'application à de nouvelles classes.
-  isActive       Boolean      @default(false)
+  // Disponible pour l'application à de nouvelles classes.
+  isActive Boolean @default(true)
 
   // Maquette figée : les ProgramUE ne peuvent plus être modifiés.
   isLocked       Boolean      @default(false)
@@ -116,21 +117,21 @@ model ProgramUE {
 // n'est plus proposée pour de nouvelles affectations (garde applicative dans
 // attachUEToProgram). Le hard delete ne passe que si l'UE n'a jamais servi.
 model UE {
-  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name         String
   code         String?
   description  String?
   imageUrl     String?
-  departmentId String?      @db.Uuid
-  orgId        String       @db.Uuid
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  departmentId String?   @db.Uuid
+  orgId        String    @db.Uuid
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
   deletedAt    DateTime?
-  isOptional   Boolean      @default(false) // consever pr ne pas casser l'existant sera progressivement retirer puis suprimer , l,info de l optionel est gerer dans program UE
+  isOptional   Boolean   @default(false) // consever pr ne pas casser l'existant sera progressivement retirer puis suprimer , l,info de l optionel est gerer dans program UE
   //une UE peut etre optionel dans un program et pas dans un autre
 
-   type UEType @default(FONDAMENTALE)
-  optionalUEs  OptionalUE[] 
+  type         UEType       @default(FONDAMENTALE)
+  optionalUEs  OptionalUE[]
   programUEs   ProgramUE[]
   department   Department?  @relation(fields: [departmentId], references: [id], onDelete: SetNull)
   organization Organization @relation(fields: [orgId], references: [id])
@@ -186,6 +187,7 @@ model Class {
   level              Level               @default(L1)
   programId          String?             @db.Uuid
   academicYearId     String              @db.Uuid
+  isActive           Boolean             @default(true)
   channels           Channel[]
   academicYear       AcademicYear        @relation(fields: [academicYearId], references: [id])
   program            Program?            @relation(fields: [programId], references: [id], onDelete: SetNull)
@@ -195,6 +197,8 @@ model Class {
   schedules          Schedule[]
   studentEnrollments StudentEnrollment[]
   terms              Term[]
+  // feeStructure       FeeStructure?       @relation(fields: [feeStructureId], references: [id])
+  // feeStructureId     String?             @db.Uuid
 
   // Unicité réelle : un nom de classe par filière et par année. (Pas d'unique
   // incluant programId : nullable → NULLs distincts, contrainte inopérante.)
@@ -235,26 +239,26 @@ model Term {
 // termId nullable : un cours hors maquette (rattrapage, module exceptionnel)
 // peut exister sans période.
 model Course {
-  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id            String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   settings      Json?
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
   deletedAt     DateTime?
-  classId       String          @db.Uuid
+  classId       String               @db.Uuid
   // Progression : réalisé / total planifié. Pas de CHECK done <= total :
   // un cours peut légitimement dépasser le prévu (réalité > plan).
-  durationDone  Int             @default(0)
-  durationTotal Int             @default(0)
-  orgId         String          @db.Uuid
+  durationDone  Int                  @default(0)
+  durationTotal Int                  @default(0)
+  orgId         String               @db.Uuid
   name          String
-  credits       Float           @default(2)
+  credits       Float                @default(2)
   description   String?
-  ueCourseId    String          @db.Uuid
-  termId        String?         @db.Uuid
-  class         Class           @relation(fields: [classId], references: [id], onDelete: Cascade)
-  organization  Organization    @relation(fields: [orgId], references: [id])
-  term          Term?           @relation(fields: [termId], references: [id], onDelete: SetNull)
-  ueCourse      UECourse        @relation(fields: [ueCourseId], references: [id])
+  ueCourseId    String               @db.Uuid
+  termId        String?              @db.Uuid
+  class         Class                @relation(fields: [classId], references: [id], onDelete: Cascade)
+  organization  Organization         @relation(fields: [orgId], references: [id])
+  term          Term?                @relation(fields: [termId], references: [id], onDelete: SetNull)
+  ueCourse      UECourse             @relation(fields: [ueCourseId], references: [id])
   teachers      CourseTeacher[]
   evaluations   Evaluation[]
   schedules     Schedule[]
@@ -297,13 +301,13 @@ model CourseTeacher {
 // PENDING (trigger_prevent_locked_schedule_update) : pas de transfert de
 // clé à gérer ici.
 model TeacherCourseHours {
-  id             String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  orgId          String     @db.Uuid
-  teacherId      String     @db.Uuid
-  courseId       String     @db.Uuid
-  scheduleType  ScheduleType
-  completedHours Float      @default(0)
-  updatedAt      DateTime   @updatedAt
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orgId          String       @db.Uuid
+  teacherId      String       @db.Uuid
+  courseId       String       @db.Uuid
+  scheduleType   ScheduleType
+  completedHours Float        @default(0)
+  updatedAt      DateTime     @updatedAt
 
   teacher      Teacher      @relation(fields: [teacherId], references: [id], onDelete: Cascade)
   course       Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
@@ -348,7 +352,8 @@ model StudentEnrollment {
   student       Student        @relation(fields: [studentId], references: [id])
   studentGroups StudentGroup[]
   attendances   Attendance[]
-  grades Grade[]
+  grades        Grade[]
+  // invoice       Invoice?
 
   // Un étudiant a au plus UNE inscription par classe (mais peut en avoir
   // plusieurs, dans des classes différentes).

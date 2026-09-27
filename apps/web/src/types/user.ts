@@ -22,6 +22,7 @@ export interface Organization {
   name?: string;
   slug?: string;
   logo?: string;
+  //  type?: OrganizationType // 'INSTITUTION' | 'PERSONAL'
   permissions?: string[];
   responsable?: boolean
   departmentId?: string;
@@ -43,7 +44,6 @@ export type PresenceUser = Pick<
   | 'organization'
   | 'online_at'
 >
-
 
 
 export const UserStatus = {

@@ -1,3 +1,4 @@
+// src/app/auth/redirect/page.ts
 import {  redirectUser } from '@/config'
 import {  PROFILE_URL } from '@/config/url'
 import { checkUserProfile } from '@/modules/auth/profile'

@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/teacher/planning/page.tsx
 import { connection } from 'next/server'
 import { CalendarDays, Clock, MapPin } from 'lucide-react'
 import { getCurrentTeacherId, getTeacherSchedulesAction } from '@/services/teacher'

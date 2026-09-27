@@ -1,3 +1,4 @@
+// src/app/auth/check-email/page.tsx
 import { connection } from 'next/server'
 import type { Metadata } from 'next'
 import Link from 'next/link'

@@ -316,6 +316,14 @@ export const InvitationType = {
 export type InvitationType = (typeof InvitationType)[keyof typeof InvitationType]
 
 
+export const OrganizationType = {
+  INSTITUTION: 'INSTITUTION',
+  PERSONAL: 'PERSONAL'
+} as const
+
+export type OrganizationType = (typeof OrganizationType)[keyof typeof OrganizationType]
+
+
 export const Sex = {
   MALE: 'MALE',
   FEMALE: 'FEMALE',

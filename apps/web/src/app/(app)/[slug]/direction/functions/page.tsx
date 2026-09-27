@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/functions/page.tsx
 import { Suspense } from 'react'
 import { connection } from 'next/server'
 import { getFunctionsAction } from '@/services/function'

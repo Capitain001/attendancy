@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/loading.tsx
 
 import { Loader } from '@/components/loaders/AppLoaders'
 import React from 'react'

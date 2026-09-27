@@ -92,10 +92,10 @@ function Calendar({
         classNames={{
           root: cn("w-fit", defaultClassNames.root),
           months: cn("relative flex flex-col gap-4 md:flex-row", defaultClassNames.months),
-          month: cn("flex w-full flex-col gap-4", defaultClassNames.month),
-          // Navigation en haut à droite (le titre est aligné à gauche)
+          month: cn("relative flex w-full flex-col gap-4", defaultClassNames.month),
+          // Navigation aux deux extrémités autour du mois
           nav: cn(
-            "absolute top-0 right-0 flex items-center gap-1",
+            "absolute inset-x-0 top-0 z-10 flex h-(--cell-size) w-full items-center justify-between pointer-events-none [&>button]:pointer-events-auto",
             defaultClassNames.nav
           ),
           button_previous: cn(
@@ -108,13 +108,13 @@ function Calendar({
             "size-8 rounded-full p-0 select-none aria-disabled:opacity-50",
             defaultClassNames.button_next
           ),
-          // Titre à gauche, en grand
+          // Titre centré au milieu
           month_caption: cn(
-            "flex h-(--cell-size) w-full items-center justify-start pr-20",
+            "flex h-(--cell-size) w-full items-center justify-center px-10",
             defaultClassNames.month_caption
           ),
           dropdowns: cn(
-            "flex h-(--cell-size) items-center justify-start gap-1.5 text-sm font-medium",
+            "flex h-(--cell-size) items-center justify-center gap-1.5 text-sm font-medium",
             defaultClassNames.dropdowns
           ),
           dropdown_root: cn(

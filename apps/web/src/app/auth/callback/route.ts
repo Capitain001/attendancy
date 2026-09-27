@@ -1,3 +1,5 @@
+// src/app/auth/callback/route.ts
+
 import { NextResponse, type NextRequest } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
 import { getUserInfo } from '@/modules/user'
@@ -39,15 +41,3 @@ export async function GET(request: NextRequest) {
   return NextResponse.redirect(new URL(redirectUser(user), request.url))
 }
 
-
-/* 
-SignupSection doit etre un step appeller par InvitationFlow
-
-ainsi plus de client side dans apps\web\src\components\auth\signup\flow\invited\NewUserPage.tsx
-
-la redirection se fait via une logique simple , apres signup l user est deja par defaut diriger vers apps\web\src\app\auth\callback\route.ts
-
-pr  user n ayant pas a signup (not new user dans ses metadata) simplemente le diriger vers apps\web\src\app\auth\callback\route.ts
-
-apres avoir update sont org actuelle 
-*/

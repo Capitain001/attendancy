@@ -101,7 +101,7 @@ export function TeacherPlanning({
       />
 
       <TeacherPlanningDrawer
-      className="max-h-[380px]"
+      className="max-h-[90vh]"
         selectedDate={selectedDate}
         schedules={selectedDaySchedules}
         open={isDrawerOpen}

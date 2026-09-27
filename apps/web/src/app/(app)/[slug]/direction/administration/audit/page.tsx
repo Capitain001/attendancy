@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/administration/audit/page.tsx
 import { connection } from 'next/server'
 import { getOrgAuditLogsAction } from '@/services/audit'
 import { typography, card } from '@/styles'

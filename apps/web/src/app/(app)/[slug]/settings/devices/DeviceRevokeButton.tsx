@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/settings/devices/DeviceRevokeButton.tsx
 "use client";
 
 import { useTransition } from "react";

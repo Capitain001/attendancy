@@ -1,0 +1,410 @@
+// // ─── Frais de scolarité (fees) ───────────────────────────────────────────────
+// // ⚠️ MODULE DIFFÉRÉ — hors périmètre PRD v1 (PRD-attendancy.md §14 : "Frais de
+// // scolarité / paiements : hors domaine, dilue le différenciant"). Ce fichier
+// // est écrit à l'avance pour une implémentation post période de test de la v
+// // actuelle — voir P-XX (PRODUCT.md) à créer avant intégration effective.
+// //
+// // Nommé `fees` (pas `billing`) pour éviter la confusion avec billing.prisma,
+// // qui gère l'abonnement SaaS d'Attendancy (nous facturons l'établissement).
+// // Ce module gère l'inverse : l'établissement facture ses étudiants.
+// //
+// // Même logique structure/instance que le domaine académique :
+// //   STRUCTURE (hors du temps) : FeeStructure → FeeStructureItem +
+// //                                InstallmentTemplate. La grille tarifaire,
+// //                                définie par org/année, rattachable à une ou
+// //                                plusieurs Class (Class.feeStructureId, cf.
+// //                                note "Rattachements requis" en bas de fichier).
+// //   INSTANCE (un étudiant réel) : Invoice → InvoiceItem / Installment →
+// //                                Payment. Ce qui est réellement dû et payé.
+// //
+// // Principe de snapshot : Invoice.totalAmount + InvoiceItem sont COPIÉS depuis
+// // FeeStructure au moment de la génération, jamais recalculés dynamiquement —
+// // si la grille tarifaire change en cours d'année, les factures déjà émises ne
+// // bougent jamais rétroactivement. Même logique que ProgramUE.isLocked : une
+// // fois qu'une FeeStructure a servi à générer au moins une Invoice, elle doit
+// // être verrouillée (garde applicative, cf. isLocked).
+// //
+// // Paiement immuable (comme Attendance/Grade) : jamais d'UPDATE sur un Payment
+// // une fois écrit. Un remboursement est un NOUVEAU Payment à montant négatif,
+// // relié à l'original via `refundOfId` — jamais une transition de statut sur
+// // la ligne existante (voir Payment plus bas, corrige l'ambiguïté du statut
+// // REFUNDED d'une version précédente de ce schéma).
+
+// // Grille tarifaire — structurelle. Résolution à la génération d'Invoice :
+// // on part de Class.feeStructureId (ajout suggéré sur le modèle Class
+// // existant, cf. note en bas de fichier) — pas de matching implicite par
+// // niveau/filière, pour rester explicite et éviter les grilles qui se
+// // chevauchent.
+// //
+// // Cohérence académicYear ↔ Class : rien ici n'empêche par construction de
+// // lier une Class de l'année N à une FeeStructure de l'année N-1. Garde ajoutée
+// // en post-migrate (voir 90_fees.sql · validate_class_fee_structure_year),
+// // même esprit que validate_student_class_group (30_academic.sql).
+// model FeeStructure {
+//   id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+//   orgId          String    @db.Uuid
+//   academicYearId String    @db.Uuid
+//   name           String // "L1 Informatique 2026-2027"
+//   description    String?
+//   currency       String    @default("XOF")
+
+//   // Verrouillage : dès qu'une Invoice a été générée depuis cette grille,
+//   // elle ne doit plus être modifiable (garde applicative) — seule une
+//   // nouvelle FeeStructure peut remplacer une politique tarifaire en vigueur.
+//   isLocked  Boolean   @default(false)
+//   isActive  Boolean   @default(true)
+//   createdAt DateTime  @default(now())
+//   updatedAt DateTime  @updatedAt
+//   deletedAt DateTime?
+
+//   organization         Organization          @relation(fields: [orgId], references: [id])
+//   academicYear         AcademicYear          @relation(fields: [academicYearId], references: [id])
+//   items                FeeStructureItem[]
+//   installmentTemplates InstallmentTemplate[]
+//   classes              Class[] // 0..n classes appliquent cette grille
+//   invoices             Invoice[]
+
+//   @@unique([name, orgId, academicYearId])
+//   @@index([orgId, academicYearId])
+//   @@schema("public")
+// }
+
+// // Ligne de composition du montant total — sert la transparence vis-à-vis de
+// // l'étudiant/parent ("Inscription: 50 000, Scolarité: 250 000, Bibliothèque:
+// // 10 000") et le reporting comptable par type. La somme des items DEVRAIT
+// // égaler le total facturé — garde applicative à la génération d'Invoice
+// // (et à toute modification de la grille tant qu'elle n'est pas isLocked),
+// // pas de contrainte DB (un item peut être ajouté/retiré en cours d'édition
+// // sans que la somme soit encore cohérente).
+// //
+// // Même garde à prévoir côté InstallmentTemplate.percentage (doit sommer à
+// // 100 par FeeStructure) — volontairement applicatif ici aussi, pas de
+// // contrainte DB (une somme sur plusieurs lignes n'est pas exprimable en
+// // CHECK simple ; cohérent avec le choix déjà fait pour ce fichier de ne pas
+// // tout mettre en trigger — voir 60_evaluation.sql pour un choix similaire).
+// model FeeStructureItem {
+//   id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+//   feeStructureId String   @db.Uuid
+//   type           FeeType
+//   label          String // libellé affiché ("Frais de bibliothèque")
+//   amount         Decimal  @db.Decimal(12, 2)
+//   isMandatory    Boolean  @default(true) // false = optionnel (ex. assurance)
+//   order          Int?
+//   createdAt      DateTime @default(now())
+
+//   feeStructure FeeStructure @relation(fields: [feeStructureId], references: [id], onDelete: Cascade)
+
+//   @@index([feeStructureId])
+//   @@schema("public")
+// }
+
+// // Comment le montant total se répartit en tranches — modèle STRUCTUREL,
+// // instancié en Installment réels à la génération de l'Invoice.
+// // dueOffsetDays : nombre de jours après la date de génération de l'Invoice
+// // (donc après l'inscription réelle) — pas de date absolue, sinon la même
+// // grille ne pourrait pas s'appliquer à des étudiants inscrits à des dates
+// // différentes (inscriptions tardives, transferts).
+// model InstallmentTemplate {
+//   id             String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+//   feeStructureId String  @db.Uuid
+//   order          Int // 1, 2, 3...
+//   label          String // "Tranche 1", "Acompte à l'inscription"
+//   // Pourcentage du total (0-100) — Decimal pour éviter les erreurs
+//   // d'arrondi cumulées quand on répartit un total sur plusieurs tranches.
+//   percentage     Decimal @db.Decimal(5, 2)
+//   dueOffsetDays  Int     @default(0) // 0 = exigible dès l'inscription
+
+//   feeStructure FeeStructure @relation(fields: [feeStructureId], references: [id], onDelete: Cascade)
+
+//   @@unique([feeStructureId, order])
+//   @@schema("public")
+// }
+
+// // Facture d'UNE inscription — instance. 1-1 avec StudentEnrollment : une
+// // nouvelle inscription (nouvelle année, transfert) génère une nouvelle
+// // Invoice, cohérent avec StudentEnrollment déjà scopé par année via
+// // Class.academicYearId.
+// //
+// // ⚠️ Limite assumée de ce 1-1 : un frais supplémentaire en cours d'année
+// // (rattrapage, amende bibliothèque) n'a pas sa propre Invoice — soit il
+// // passe par un nouvel InvoiceItem ad hoc sur l'Invoice existante (si pas
+// // encore lockée par des paiements), soit ce module devra évoluer vers un
+// // 1-N si le besoin se confirme à l'implémentation. Documenté ici pour ne
+// // pas être découvert en prod.
+// //
+// // totalAmount/discountAmount snapshottés à la génération (cf. note en tête
+// // de fichier) — jamais recalculés depuis FeeStructure après coup.
+// // Restrict sur enrollment : comme Attendance/Grade, dès qu'une facture
+// // existe (a fortiori un paiement), l'inscription devient insupprimable.
+// model Invoice {
+//   id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+//   orgId          String        @db.Uuid
+//   enrollmentId   String        @unique @db.Uuid
+//   feeStructureId String?       @db.Uuid // nullable : facture ad hoc sans grille (cas rare)
+//   totalAmount    Decimal       @db.Decimal(12, 2) // snapshot
+//   discountAmount Decimal       @default(0) @db.Decimal(12, 2) // somme des FeeWaiver appliqués
+//   currency       String        @default("XOF")
+//   status         InvoiceStatus @default(PENDING)
+//   notes          String?
+//   createdAt      DateTime      @default(now())
+//   updatedAt      DateTime      @updatedAt
+
+//   organization Organization      @relation(fields: [orgId], references: [id])
+//   enrollment   StudentEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Restrict)
+//   feeStructure FeeStructure?     @relation(fields: [feeStructureId], references: [id], onDelete: SetNull)
+//   items        InvoiceItem[]
+//   installments Installment[]
+//   payments     Payment[]
+//   waivers      FeeWaiver[]
+
+//   @@index([orgId, status])
+//   @@schema("public")
+// }
+
+// // Ligne de détail SNAPSHOTTÉE au niveau de la facture — corrige un trou du
+// // schéma initial : quand feeStructureId est null (facture ad hoc), il n'y
+// // avait aucune ligne de composition, cassant la transparence promise par
+// // FeeStructureItem. Ici, InvoiceItem existe TOUJOURS :
+// //   - facture issue d'une grille → copie 1:1 des FeeStructureItem au moment
+// //     de la génération (snapshot, comme totalAmount) ;
+// //   - facture ad hoc → saisie directe des lignes, sans grille parente.
+// // La somme des items DEVRAIT égaler totalAmount — garde applicative à la
+// // génération, pas de contrainte DB (même raisonnement que FeeStructureItem).
+// model InvoiceItem {
+//   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+//   invoiceId String   @db.Uuid
+//   type      FeeType
+//   label     String
+//   amount    Decimal  @db.Decimal(12, 2)
+//   order     Int?
+//   createdAt DateTime @default(now())
+
+//   invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+//   @@index([invoiceId])
+//   @@schema("public")
+// }
+
+// // Tranche réelle, instanciée depuis InstallmentTemplate à la génération de
+// // l'Invoice (dueDate calculée = date de génération + dueOffsetDays).
+// // status dérivé des Payment qui la référencent (maintenu applicativement,
+// // pas par trigger — volume plus faible qu'Attendance, pas besoin de
+// // dénormaliser côté DB pour l'instant).
+// //
+// // WAIVED : si une FeeWaiver est approuvée APRÈS que les tranches existent
+// // déjà, la règle n'est PAS de réécrire Installment.amount (ça romprait le
+// // snapshot / l'audit de l'engagement initial). La règle est d'annuler des
+// // tranches non payées à hauteur de la remise (généralement les dernières,
+// // FIFO inversé) en passant leur status à WAIVED — logique de service à
+// // documenter dans le service fees, pas dans le schéma.
+// model Installment {
+//   id        String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+//   invoiceId String            @db.Uuid
+//   order     Int
+//   label     String
+//   amount    Decimal           @db.Decimal(12, 2)
+//   dueDate   DateTime?         @db.Date
+//   status    InstallmentStatus @default(PENDING)
+//   createdAt DateTime          @default(now())
+//   updatedAt DateTime          @updatedAt
+
+//   invoice  Invoice   @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+//   payments Payment[]
+
+//   @@unique([invoiceId, order])
+//   @@index([invoiceId, status])
+//   @@schema("public")
+// }
+
+// // Fait de paiement — IMMUABLE, comme Attendance/Grade (cf. note en tête de
+// // fichier). installmentId nullable : un paiement peut être un versement
+// // libre non encore alloué à une tranche précise (allocation applicative,
+// // souvent FIFO sur les tranches impayées).
+// //
+// // method reste générique (MOBILE_MONEY) plutôt que scindé par opérateur
+// // (Flooz/T-Money) — un enum par opérateur n'est pas évolutif (nouvel
+// // opérateur = migration). Le détail spécifique au rail de paiement
+// // (opérateur, numéro, banque, n° chèque...) vit dans `details` (Json),
+// // libre par méthode et extensible sans migration. `reference` reste le
+// // SEUL champ structuré et interrogeable directement (id transaction, n° de
+// // chèque) — c'est lui qu'on indexe/recherche pour la réconciliation ; les
+// // détails additionnels au format libre vont dans `details`, ex :
+// //   { operator: "FLOOZ", phone: "+22890xxxxxx" }
+// //   { operator: "TMONEY", phone: "+22892xxxxxx" }
+// //   { bankName: "Ecobank", accountLast4: "1234" }
+// //
+// // status PENDING pertinent pour le Mobile Money (confirmation asynchrone
+// // par webhook opérateur) — un paiement CASH/ADMIN_OVERRIDE passe
+// // généralement direct à CONFIRMED. Transitions autorisées : PENDING →
+// // CONFIRMED | FAILED, avant tout traitement définitif. Une fois CONFIRMED,
+// // la ligne n'est plus jamais modifiée (pas de transition CONFIRMED →
+// // REFUNDED : voir refundOfId ci-dessous).
+// //
+// // refundOfId : un remboursement n'est PAS un changement de statut sur le
+// // paiement original (qui resterait alors immuable en apparence mais mute
+// // en pratique) — c'est un NOUVEAU Payment, à montant négatif, qui référence
+// // l'original. La ligne originale n'est jamais touchée. `amount < 0` est
+// // vérifié en base pour toute ligne avec refundOfId renseigné (voir
+// // 90_fees.sql).
+// // receiptNumber : numérotation de reçu, unique par org — condition sine qua
+// // non pour qu'un service comptable universitaire togolais accepte l'outil
+// // (traçabilité fiscale/administrative).
+// model Payment {
+//   id            String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+//   orgId         String        @db.Uuid
+//   invoiceId     String        @db.Uuid
+//   installmentId String?       @db.Uuid
+//   amount        Decimal       @db.Decimal(12, 2) // négatif pour un remboursement (refundOfId non null)
+//   method        PaymentMethod
+//   details       Json? // métadonnées libres par méthode (opérateur, banque, etc.) — voir note ci-dessus
+//   status        PaymentStatus @default(CONFIRMED)
+//   reference     String? // id transaction opérateur, n° chèque, etc.
+//   receiptNumber String?
+//   recordedById  String?       @db.Uuid // staff guichet ; null si webhook automatique
+//   refundOfId    String?       @db.Uuid // non null = ce paiement REMBOURSE le paiement référencé
+//   notes         String?
+//   paidAt        DateTime      @default(now())
+//   createdAt     DateTime      @default(now())
+
+//   organization Organization @relation(fields: [orgId], references: [id])
+//   invoice      Invoice      @relation(fields: [invoiceId], references: [id])
+//   installment  Installment? @relation(fields: [installmentId], references: [id], onDelete: SetNull)
+//   recordedBy   User?        @relation("PaymentRecordedBy", fields: [recordedById], references: [id], onDelete: SetNull)
+//   refundOf     Payment?     @relation("PaymentRefund", fields: [refundOfId], references: [id], onDelete: SetNull)
+//   refunds      Payment[]    @relation("PaymentRefund")
+
+//   @@unique([receiptNumber, orgId])
+//   @@index([invoiceId])
+//   @@index([installmentId])
+//   @@index([orgId, paidAt])
+//   @@index([refundOfId])
+//   @@schema("public")
+// }
+
+// // Bourse / exonération / réduction — tracée avec approbation (qui, pourquoi)
+// // car ça touche directement le montant dû. Appliquée à une Invoice précise
+// // (pas au niveau Student) : une bourse peut varier d'une année à l'autre,
+// // cohérent avec Invoice déjà scopé par inscription/année.
+// model FeeWaiver {
+//   id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+//   orgId        String     @db.Uuid
+//   invoiceId    String     @db.Uuid
+//   type         WaiverType
+//   // L'un des deux selon `type` (garde applicative + CHECK DB, voir
+//   // 90_fees.sql) : pourcentage OU montant fixe, jamais les deux.
+//   percentage   Decimal?   @db.Decimal(5, 2)
+//   fixedAmount  Decimal?   @db.Decimal(12, 2)
+//   reason       String
+//   approvedById String     @db.Uuid
+//   createdAt    DateTime   @default(now())
+
+//   organization Organization @relation(fields: [orgId], references: [id])
+//   invoice      Invoice      @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+//   approvedBy   User         @relation("FeeWaiverApprovedBy", fields: [approvedById], references: [id])
+
+//   @@index([invoiceId])
+//   @@index([orgId])
+//   @@schema("public")
+// }
+
+// enum FeeType {
+//   INSCRIPTION
+//   SCOLARITE
+//   EXAMEN
+//   BIBLIOTHEQUE
+//   ASSURANCE
+//   HEBERGEMENT
+//   AUTRE
+
+//   @@schema("public")
+// }
+
+// enum InvoiceStatus {
+//   PENDING
+//   PARTIALLY_PAID
+//   PAID
+//   OVERDUE
+//   CANCELED
+
+//   @@schema("public")
+// }
+
+// enum InstallmentStatus {
+//   PENDING
+//   PARTIAL
+//   PAID
+//   OVERDUE
+//   WAIVED
+
+//   @@schema("public")
+// }
+
+// // Méthode générique par rail de paiement — volontairement PAS scindée par
+// // opérateur mobile money (cf. note sur Payment.details plus haut). Ajouter
+// // un nouvel opérateur = une valeur dans `details.operator`, jamais une
+// // migration d'enum.
+// enum PaymentMethod {
+//   CASH
+//   MOBILE_MONEY
+//   BANK_TRANSFER
+//   CHEQUE
+//   CARD
+//   ADMIN_OVERRIDE // régularisation manuelle (ex. erreur de saisie corrigée)
+
+//   @@schema("public")
+// }
+
+// // Transitions autorisées : PENDING → CONFIRMED | FAILED uniquement, avant
+// // tout traitement définitif. Un remboursement n'est jamais une transition
+// // de statut (voir Payment.refundOfId) — pas de valeur REFUNDED ici.
+// enum PaymentStatus {
+//   PENDING // ex. Mobile Money en attente de confirmation opérateur
+//   CONFIRMED
+//   FAILED
+
+//   @@schema("public")
+// }
+
+// enum WaiverType {
+//   PERCENTAGE
+//   FIXED_AMOUNT
+
+//   @@schema("public")
+// }
+
+
+
+// ─── Rattachements requis sur les modèles existants ─────────────────────────
+//
+// 1. Sur `Class` (academic.prisma) — lien vers la grille tarifaire appliquée
+//    à cette classe (optionnel : SetNull, une classe peut exister sans
+//    tarification encore définie) :
+//
+//    model Class {
+//      ...
+//      feeStructureId String?       @db.Uuid
+//      feeStructure   FeeStructure? @relation(fields: [feeStructureId], references: [id], onDelete: SetNull)
+//    }
+//
+// 2. Sur `StudentEnrollment` (academic.prisma) — relation inverse vers sa
+//    facture :
+//
+//    model StudentEnrollment {
+//      ...
+//      invoice Invoice?
+//    }
+//
+// 3. Sur `Organization` (tenant.prisma) — back-relations (purge RGPD,
+//    cohérent avec le reste du fichier) :
+//
+//    feeStructures FeeStructure[]
+//    invoices      Invoice[]
+//    payments      Payment[]
+//    feeWaivers    FeeWaiver[]
+//
+// 4. Sur `User` (tenant.prisma) — relations inverses nommées (évite
+//    l'ambiguïté Prisma vu qu'un User peut à la fois enregistrer un Payment
+//    et approuver une FeeWaiver) :
+//
+//    recordedPayments Payment[]   @relation("PaymentRecordedBy")
+//    approvedWaivers  FeeWaiver[] @relation("FeeWaiverApprovedBy")

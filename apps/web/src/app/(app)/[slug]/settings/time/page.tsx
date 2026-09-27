@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/settings/time/page.tsx
 export default function TimeSettingsPage() {
   return (
     <div className="space-y-6 max-w-2xl">

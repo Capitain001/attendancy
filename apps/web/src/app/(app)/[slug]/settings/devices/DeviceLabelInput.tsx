@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/settings/devices/DeviceLabelInput.tsx
 "use client"
 
 import { useState, useRef } from "react"

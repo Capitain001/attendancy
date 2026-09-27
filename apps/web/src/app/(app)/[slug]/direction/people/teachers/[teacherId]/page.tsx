@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/people/teachers/[teacherId]/page.tsx
 import { connection } from 'next/server'
 import { notFound } from 'next/navigation'
 import { addMonths, startOfMonth, endOfMonth } from 'date-fns'

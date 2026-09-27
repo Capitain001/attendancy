@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/academic/promotions/layout.tsx
 
 interface LayoutProps {
   children: React.ReactNode;

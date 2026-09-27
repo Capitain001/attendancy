@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/academic/ues/[ueId]/page.tsx
 import { validateUUID } from '@/utils/server/validation'
 import { notFound } from 'next/navigation'
 import { getUEByIdAction } from '@/services/ue'

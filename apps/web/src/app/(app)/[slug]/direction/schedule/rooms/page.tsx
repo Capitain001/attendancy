@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/schedule/rooms/page.tsx
 import { connection } from 'next/server'
 import { getRoomsAction } from '@/services/room'
 import { MetricCard } from '@/components/stats/ui/MetricCard'

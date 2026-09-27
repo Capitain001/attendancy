@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/people/teachers/page.tsx
 import { connection } from 'next/server'
 import { getTeachersAction } from '@/services/teacher'
 import { Suspense } from 'react'

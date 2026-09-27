@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/teacher/test/page.tsx
 import TeacherSessionPage from '@/components/session/TeacherSessionPage'
 import { getCurrentTeacherId } from '@/services/teacher'
 

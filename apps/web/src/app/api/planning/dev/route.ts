@@ -1,3 +1,4 @@
+// src/app/api/planning/dev/route.ts
 import { type NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import type { DayScheduleDto, ScheduleSlot } from '@attendancy/types'

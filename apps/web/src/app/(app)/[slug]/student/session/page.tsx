@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/student/session/page.tsx
 // Séance en cours étudiant — visuel porté de la V1.
 import { connection } from "next/server";
 import { format } from "date-fns";

@@ -1,3 +1,4 @@
+// src/app/(app)/subscription/page.tsx
 import { getSubscriptionAction, getPlansAction } from '@/services/subscription'
 import type { GetSubscriptionDto, GetPlansDto } from '@/services/subscription'
 import { getUserInfo } from '@/modules/user'

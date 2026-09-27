@@ -59,10 +59,10 @@ Contraintes importantes (SSR, cache, dépendances, invariants).
 | Dossier | Composant principal | CLAUDE.md |
 |---|---|---|
 | `planning/` | `ClassPlanning` | ✅ présent |
-| `event-calendar/` | `EventCalendar` | ⚠️ à créer |
+| `event-calendar/` | `EventCalendar` | ✅ présent |
 | `direction/dashboard/` | `TodaySessionsWidget`, `DailyMetricsCard` | ⚠️ à créer |
-| `layout/` | `CollapseSection`, Sidebar | ⚠️ à créer |
-| `schedule/` | composants séance | ⚠️ à créer |
+| `layout/` | `CollapseSection`, Sidebar | ✅ présent |
+| `schedule/` | composants séance | ✅ présent|
 
 ---
 

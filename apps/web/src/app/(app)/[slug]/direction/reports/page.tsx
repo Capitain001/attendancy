@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/reports/page.tsx
 import React from 'react'
 
 export default function page() {

@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/teacher/layout.tsx
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { BreadcrumbLayout } from "@/components/layout/sidebar/ui/BreadcrumbLayout";

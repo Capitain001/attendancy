@@ -1,3 +1,4 @@
+// src/app/auth/welcome/page.tsx
 import { redirect } from "next/navigation";
 
 import { getUserInfo } from "@/modules/user";
@@ -6,7 +7,7 @@ import NewUserPage from "@/components/auth/signup/flow/invited/NewUserPage";
 
 
 export default async function WelcomePage() {
-  // Vérifier l'utilisateur et l'invitation
+  // Vérifier l'utilisateur 
   const user = await getUserInfo();
 
   if (!user) {

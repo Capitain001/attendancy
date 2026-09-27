@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/academic/promotions/[classId]/program/@modal/page.tsx
 import { getClassProgramAction, getProgramsAction } from '@/services/program'
 import { ProgramModalRoute } from '@/components/programs/modal/ProgramModalRoute'
 import { LinkProgramModalRoute } from '@/components/programs/modal/LinkProgramModalRoute'

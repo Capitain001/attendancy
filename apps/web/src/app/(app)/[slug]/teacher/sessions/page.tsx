@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/teacher/sessions/page.tsx
 import { connection } from "next/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { getQueryClient } from "@/lib/react-query";

@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/academic/ues/templates/page.tsx
 import { connection } from 'next/server'
 import { getReferentialsAction } from '@/services/ue-template'
 import { SectionHeader } from '@/components/direction/SectionHeader'

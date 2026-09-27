@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/admin/functions/page.tsx
 'use client'
 import { useState } from 'react'
 import { Plus } from 'lucide-react'

@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/layout.tsx
 
 // import { OrganizationProvider } from "@/providers/OrganizationProvider";
 import { UserProvider } from "@/contexts/UserContext";

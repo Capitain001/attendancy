@@ -76,7 +76,7 @@ export function TeacherPlanningDrawer({
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
 
-      <DrawerContent className={cn("border rounded-2xl p-[0.2px] max-h-[85vh]", className )} >
+      <DrawerContent className={cn("p-[0.2px] ", className )} >
         <div className="mx-auto w-full max-w-lg">
           {/* Header */}
           <DrawerHeader className="border-b pb-3 text-left">

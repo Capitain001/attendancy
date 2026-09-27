@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/page.tsx
 import { Suspense } from 'react'
 import { format } from 'date-fns'
 import { connection } from 'next/server'

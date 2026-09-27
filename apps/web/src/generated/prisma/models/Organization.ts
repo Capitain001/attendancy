@@ -31,6 +31,7 @@ export type OrganizationMinAggregateOutputType = {
   slug: string | null
   logo: string | null
   domain: string | null
+  type: $Enums.OrganizationType | null
   createdAt: Date | null
   updatedAt: Date | null
   isActive: boolean | null
@@ -44,6 +45,7 @@ export type OrganizationMaxAggregateOutputType = {
   slug: string | null
   logo: string | null
   domain: string | null
+  type: $Enums.OrganizationType | null
   createdAt: Date | null
   updatedAt: Date | null
   isActive: boolean | null
@@ -58,6 +60,7 @@ export type OrganizationCountAggregateOutputType = {
   logo: number
   domain: number
   details: number
+  type: number
   createdAt: number
   updatedAt: number
   isActive: number
@@ -73,6 +76,7 @@ export type OrganizationMinAggregateInputType = {
   slug?: true
   logo?: true
   domain?: true
+  type?: true
   createdAt?: true
   updatedAt?: true
   isActive?: true
@@ -86,6 +90,7 @@ export type OrganizationMaxAggregateInputType = {
   slug?: true
   logo?: true
   domain?: true
+  type?: true
   createdAt?: true
   updatedAt?: true
   isActive?: true
@@ -100,6 +105,7 @@ export type OrganizationCountAggregateInputType = {
   logo?: true
   domain?: true
   details?: true
+  type?: true
   createdAt?: true
   updatedAt?: true
   isActive?: true
@@ -187,6 +193,7 @@ export type OrganizationGroupByOutputType = {
   logo: string | null
   domain: string | null
   details: runtime.JsonValue | null
+  type: $Enums.OrganizationType
   createdAt: Date
   updatedAt: Date
   isActive: boolean
@@ -222,6 +229,7 @@ export type OrganizationWhereInput = {
   logo?: Prisma.StringNullableFilter<"Organization"> | string | null
   domain?: Prisma.StringNullableFilter<"Organization"> | string | null
   details?: Prisma.JsonNullableFilter<"Organization">
+  type?: Prisma.EnumOrganizationTypeFilter<"Organization"> | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFilter<"Organization"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Organization"> | Date | string
   isActive?: Prisma.BoolFilter<"Organization"> | boolean
@@ -268,6 +276,7 @@ export type OrganizationOrderByWithRelationInput = {
   logo?: Prisma.SortOrderInput | Prisma.SortOrder
   domain?: Prisma.SortOrderInput | Prisma.SortOrder
   details?: Prisma.SortOrderInput | Prisma.SortOrder
+  type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -317,6 +326,7 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.OrganizationWhereInput | Prisma.OrganizationWhereInput[]
   logo?: Prisma.StringNullableFilter<"Organization"> | string | null
   details?: Prisma.JsonNullableFilter<"Organization">
+  type?: Prisma.EnumOrganizationTypeFilter<"Organization"> | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFilter<"Organization"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Organization"> | Date | string
   isActive?: Prisma.BoolFilter<"Organization"> | boolean
@@ -363,6 +373,7 @@ export type OrganizationOrderByWithAggregationInput = {
   logo?: Prisma.SortOrderInput | Prisma.SortOrder
   domain?: Prisma.SortOrderInput | Prisma.SortOrder
   details?: Prisma.SortOrderInput | Prisma.SortOrder
+  type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -383,6 +394,7 @@ export type OrganizationScalarWhereWithAggregatesInput = {
   logo?: Prisma.StringNullableWithAggregatesFilter<"Organization"> | string | null
   domain?: Prisma.StringNullableWithAggregatesFilter<"Organization"> | string | null
   details?: Prisma.JsonNullableWithAggregatesFilter<"Organization">
+  type?: Prisma.EnumOrganizationTypeWithAggregatesFilter<"Organization"> | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Organization"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Organization"> | Date | string
   isActive?: Prisma.BoolWithAggregatesFilter<"Organization"> | boolean
@@ -397,6 +409,7 @@ export type OrganizationCreateInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -443,6 +456,7 @@ export type OrganizationUncheckedCreateInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -489,6 +503,7 @@ export type OrganizationUpdateInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -535,6 +550,7 @@ export type OrganizationUncheckedUpdateInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -581,6 +597,7 @@ export type OrganizationCreateManyInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -595,6 +612,7 @@ export type OrganizationUpdateManyMutationInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -609,6 +627,7 @@ export type OrganizationUncheckedUpdateManyInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -633,6 +652,7 @@ export type OrganizationCountOrderByAggregateInput = {
   logo?: Prisma.SortOrder
   domain?: Prisma.SortOrder
   details?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -646,6 +666,7 @@ export type OrganizationMaxOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   logo?: Prisma.SortOrder
   domain?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -659,6 +680,7 @@ export type OrganizationMinOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   logo?: Prisma.SortOrder
   domain?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -989,6 +1011,10 @@ export type OrganizationUpdateOneRequiredWithoutTeacherUnavailabilitiesNestedInp
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutTeacherUnavailabilitiesInput, Prisma.OrganizationUpdateWithoutTeacherUnavailabilitiesInput>, Prisma.OrganizationUncheckedUpdateWithoutTeacherUnavailabilitiesInput>
 }
 
+export type EnumOrganizationTypeFieldUpdateOperationsInput = {
+  set?: $Enums.OrganizationType
+}
+
 export type OrganizationCreateNestedOneWithoutSettingsInput = {
   create?: Prisma.XOR<Prisma.OrganizationCreateWithoutSettingsInput, Prisma.OrganizationUncheckedCreateWithoutSettingsInput>
   connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutSettingsInput
@@ -1127,6 +1153,7 @@ export type OrganizationCreateWithoutAcademicYearsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -1172,6 +1199,7 @@ export type OrganizationUncheckedCreateWithoutAcademicYearsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -1233,6 +1261,7 @@ export type OrganizationUpdateWithoutAcademicYearsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1278,6 +1307,7 @@ export type OrganizationUncheckedUpdateWithoutAcademicYearsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1323,6 +1353,7 @@ export type OrganizationCreateWithoutDepartmentsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -1368,6 +1399,7 @@ export type OrganizationUncheckedCreateWithoutDepartmentsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -1429,6 +1461,7 @@ export type OrganizationUpdateWithoutDepartmentsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1474,6 +1507,7 @@ export type OrganizationUncheckedUpdateWithoutDepartmentsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1519,6 +1553,7 @@ export type OrganizationCreateWithoutProgramTracksInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -1564,6 +1599,7 @@ export type OrganizationUncheckedCreateWithoutProgramTracksInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -1625,6 +1661,7 @@ export type OrganizationUpdateWithoutProgramTracksInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1670,6 +1707,7 @@ export type OrganizationUncheckedUpdateWithoutProgramTracksInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1715,6 +1753,7 @@ export type OrganizationCreateWithoutProgramsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -1760,6 +1799,7 @@ export type OrganizationUncheckedCreateWithoutProgramsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -1821,6 +1861,7 @@ export type OrganizationUpdateWithoutProgramsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1866,6 +1907,7 @@ export type OrganizationUncheckedUpdateWithoutProgramsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1911,6 +1953,7 @@ export type OrganizationCreateWithoutUesInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -1956,6 +1999,7 @@ export type OrganizationUncheckedCreateWithoutUesInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -2017,6 +2061,7 @@ export type OrganizationUpdateWithoutUesInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2062,6 +2107,7 @@ export type OrganizationUncheckedUpdateWithoutUesInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2107,6 +2153,7 @@ export type OrganizationCreateWithoutUeCoursesInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -2152,6 +2199,7 @@ export type OrganizationUncheckedCreateWithoutUeCoursesInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -2213,6 +2261,7 @@ export type OrganizationUpdateWithoutUeCoursesInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2258,6 +2307,7 @@ export type OrganizationUncheckedUpdateWithoutUeCoursesInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2303,6 +2353,7 @@ export type OrganizationCreateWithoutCoursesInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -2348,6 +2399,7 @@ export type OrganizationUncheckedCreateWithoutCoursesInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -2409,6 +2461,7 @@ export type OrganizationUpdateWithoutCoursesInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2454,6 +2507,7 @@ export type OrganizationUncheckedUpdateWithoutCoursesInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2499,6 +2553,7 @@ export type OrganizationCreateWithoutTeacherCourseHoursInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -2544,6 +2599,7 @@ export type OrganizationUncheckedCreateWithoutTeacherCourseHoursInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -2605,6 +2661,7 @@ export type OrganizationUpdateWithoutTeacherCourseHoursInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2650,6 +2707,7 @@ export type OrganizationUncheckedUpdateWithoutTeacherCourseHoursInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2695,6 +2753,7 @@ export type OrganizationCreateWithoutAttendancesInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -2740,6 +2799,7 @@ export type OrganizationUncheckedCreateWithoutAttendancesInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -2801,6 +2861,7 @@ export type OrganizationUpdateWithoutAttendancesInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2846,6 +2907,7 @@ export type OrganizationUncheckedUpdateWithoutAttendancesInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2891,6 +2953,7 @@ export type OrganizationCreateWithoutJustificationsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -2936,6 +2999,7 @@ export type OrganizationUncheckedCreateWithoutJustificationsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -2997,6 +3061,7 @@ export type OrganizationUpdateWithoutJustificationsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3042,6 +3107,7 @@ export type OrganizationUncheckedUpdateWithoutJustificationsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3087,6 +3153,7 @@ export type OrganizationCreateWithoutSubscriptionInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -3132,6 +3199,7 @@ export type OrganizationUncheckedCreateWithoutSubscriptionInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -3193,6 +3261,7 @@ export type OrganizationUpdateWithoutSubscriptionInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3238,6 +3307,7 @@ export type OrganizationUncheckedUpdateWithoutSubscriptionInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3283,6 +3353,7 @@ export type OrganizationCreateWithoutChannelsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -3328,6 +3399,7 @@ export type OrganizationUncheckedCreateWithoutChannelsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -3389,6 +3461,7 @@ export type OrganizationUpdateWithoutChannelsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3434,6 +3507,7 @@ export type OrganizationUncheckedUpdateWithoutChannelsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3479,6 +3553,7 @@ export type OrganizationCreateWithoutCommentsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -3524,6 +3599,7 @@ export type OrganizationUncheckedCreateWithoutCommentsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -3585,6 +3661,7 @@ export type OrganizationUpdateWithoutCommentsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3630,6 +3707,7 @@ export type OrganizationUncheckedUpdateWithoutCommentsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3675,6 +3753,7 @@ export type OrganizationCreateWithoutUserSessionsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -3720,6 +3799,7 @@ export type OrganizationUncheckedCreateWithoutUserSessionsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -3781,6 +3861,7 @@ export type OrganizationUpdateWithoutUserSessionsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3826,6 +3907,7 @@ export type OrganizationUncheckedUpdateWithoutUserSessionsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3871,6 +3953,7 @@ export type OrganizationCreateWithoutEvaluationsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -3916,6 +3999,7 @@ export type OrganizationUncheckedCreateWithoutEvaluationsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -3977,6 +4061,7 @@ export type OrganizationUpdateWithoutEvaluationsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -4022,6 +4107,7 @@ export type OrganizationUncheckedUpdateWithoutEvaluationsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -4067,6 +4153,7 @@ export type OrganizationCreateWithoutParentRelationsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -4112,6 +4199,7 @@ export type OrganizationUncheckedCreateWithoutParentRelationsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -4173,6 +4261,7 @@ export type OrganizationUpdateWithoutParentRelationsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -4218,6 +4307,7 @@ export type OrganizationUncheckedUpdateWithoutParentRelationsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -4263,6 +4353,7 @@ export type OrganizationCreateWithoutSchedulesInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -4308,6 +4399,7 @@ export type OrganizationUncheckedCreateWithoutSchedulesInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -4369,6 +4461,7 @@ export type OrganizationUpdateWithoutSchedulesInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -4414,6 +4507,7 @@ export type OrganizationUncheckedUpdateWithoutSchedulesInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -4459,6 +4553,7 @@ export type OrganizationCreateWithoutWeeklyTemplatesInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -4504,6 +4599,7 @@ export type OrganizationUncheckedCreateWithoutWeeklyTemplatesInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -4565,6 +4661,7 @@ export type OrganizationUpdateWithoutWeeklyTemplatesInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -4610,6 +4707,7 @@ export type OrganizationUncheckedUpdateWithoutWeeklyTemplatesInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -4655,6 +4753,7 @@ export type OrganizationCreateWithoutWeekRecurencesInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -4700,6 +4799,7 @@ export type OrganizationUncheckedCreateWithoutWeekRecurencesInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -4761,6 +4861,7 @@ export type OrganizationUpdateWithoutWeekRecurencesInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -4806,6 +4907,7 @@ export type OrganizationUncheckedUpdateWithoutWeekRecurencesInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -4851,6 +4953,7 @@ export type OrganizationCreateWithoutLocationsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -4896,6 +4999,7 @@ export type OrganizationUncheckedCreateWithoutLocationsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -4957,6 +5061,7 @@ export type OrganizationUpdateWithoutLocationsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -5002,6 +5107,7 @@ export type OrganizationUncheckedUpdateWithoutLocationsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -5047,6 +5153,7 @@ export type OrganizationCreateWithoutRoomsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -5092,6 +5199,7 @@ export type OrganizationUncheckedCreateWithoutRoomsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -5153,6 +5261,7 @@ export type OrganizationUpdateWithoutRoomsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -5198,6 +5307,7 @@ export type OrganizationUncheckedUpdateWithoutRoomsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -5243,6 +5353,7 @@ export type OrganizationCreateWithoutEventsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -5288,6 +5399,7 @@ export type OrganizationUncheckedCreateWithoutEventsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -5349,6 +5461,7 @@ export type OrganizationUpdateWithoutEventsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -5394,6 +5507,7 @@ export type OrganizationUncheckedUpdateWithoutEventsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -5439,6 +5553,7 @@ export type OrganizationCreateWithoutTeacherUnavailabilitiesInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -5484,6 +5599,7 @@ export type OrganizationUncheckedCreateWithoutTeacherUnavailabilitiesInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -5545,6 +5661,7 @@ export type OrganizationUpdateWithoutTeacherUnavailabilitiesInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -5590,6 +5707,7 @@ export type OrganizationUncheckedUpdateWithoutTeacherUnavailabilitiesInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -5635,6 +5753,7 @@ export type OrganizationCreateWithoutSettingsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -5680,6 +5799,7 @@ export type OrganizationUncheckedCreateWithoutSettingsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -5741,6 +5861,7 @@ export type OrganizationUpdateWithoutSettingsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -5786,6 +5907,7 @@ export type OrganizationUncheckedUpdateWithoutSettingsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -5831,6 +5953,7 @@ export type OrganizationCreateWithoutUsageInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -5876,6 +5999,7 @@ export type OrganizationUncheckedCreateWithoutUsageInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -5937,6 +6061,7 @@ export type OrganizationUpdateWithoutUsageInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -5982,6 +6107,7 @@ export type OrganizationUncheckedUpdateWithoutUsageInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -6027,6 +6153,7 @@ export type OrganizationCreateWithoutUserOrganizationsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -6072,6 +6199,7 @@ export type OrganizationUncheckedCreateWithoutUserOrganizationsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -6133,6 +6261,7 @@ export type OrganizationUpdateWithoutUserOrganizationsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -6178,6 +6307,7 @@ export type OrganizationUncheckedUpdateWithoutUserOrganizationsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -6223,6 +6353,7 @@ export type OrganizationCreateWithoutFunctionsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -6268,6 +6399,7 @@ export type OrganizationUncheckedCreateWithoutFunctionsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -6329,6 +6461,7 @@ export type OrganizationUpdateWithoutFunctionsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -6374,6 +6507,7 @@ export type OrganizationUncheckedUpdateWithoutFunctionsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -6419,6 +6553,7 @@ export type OrganizationCreateWithoutPermissionsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -6464,6 +6599,7 @@ export type OrganizationUncheckedCreateWithoutPermissionsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -6525,6 +6661,7 @@ export type OrganizationUpdateWithoutPermissionsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -6570,6 +6707,7 @@ export type OrganizationUncheckedUpdateWithoutPermissionsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -6615,6 +6753,7 @@ export type OrganizationCreateWithoutInvitationsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -6660,6 +6799,7 @@ export type OrganizationUncheckedCreateWithoutInvitationsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -6721,6 +6861,7 @@ export type OrganizationUpdateWithoutInvitationsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -6766,6 +6907,7 @@ export type OrganizationUncheckedUpdateWithoutInvitationsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -6811,6 +6953,7 @@ export type OrganizationCreateWithoutDocumentsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -6856,6 +6999,7 @@ export type OrganizationUncheckedCreateWithoutDocumentsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -6917,6 +7061,7 @@ export type OrganizationUpdateWithoutDocumentsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -6962,6 +7107,7 @@ export type OrganizationUncheckedUpdateWithoutDocumentsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -7007,6 +7153,7 @@ export type OrganizationCreateWithoutAuditLogInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -7052,6 +7199,7 @@ export type OrganizationUncheckedCreateWithoutAuditLogInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -7113,6 +7261,7 @@ export type OrganizationUpdateWithoutAuditLogInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -7158,6 +7307,7 @@ export type OrganizationUncheckedUpdateWithoutAuditLogInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -7203,6 +7353,7 @@ export type OrganizationCreateWithoutApprovalRequestsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -7248,6 +7399,7 @@ export type OrganizationUncheckedCreateWithoutApprovalRequestsInput = {
   logo?: string | null
   domain?: string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: $Enums.OrganizationType
   createdAt?: Date | string
   updatedAt?: Date | string
   isActive?: boolean
@@ -7309,6 +7461,7 @@ export type OrganizationUpdateWithoutApprovalRequestsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -7354,6 +7507,7 @@ export type OrganizationUncheckedUpdateWithoutApprovalRequestsInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -7682,6 +7836,7 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   logo?: boolean
   domain?: boolean
   details?: boolean
+  type?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   isActive?: boolean
@@ -7729,6 +7884,7 @@ export type OrganizationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   logo?: boolean
   domain?: boolean
   details?: boolean
+  type?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   isActive?: boolean
@@ -7743,6 +7899,7 @@ export type OrganizationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   logo?: boolean
   domain?: boolean
   details?: boolean
+  type?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   isActive?: boolean
@@ -7757,13 +7914,14 @@ export type OrganizationSelectScalar = {
   logo?: boolean
   domain?: boolean
   details?: boolean
+  type?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   isActive?: boolean
   deletedAt?: boolean
 }
 
-export type OrganizationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "slug" | "logo" | "domain" | "details" | "createdAt" | "updatedAt" | "isActive" | "deletedAt", ExtArgs["result"]["organization"]>
+export type OrganizationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "slug" | "logo" | "domain" | "details" | "type" | "createdAt" | "updatedAt" | "isActive" | "deletedAt", ExtArgs["result"]["organization"]>
 export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   subscription?: boolean | Prisma.Organization$subscriptionArgs<ExtArgs>
   academicYears?: boolean | Prisma.Organization$academicYearsArgs<ExtArgs>
@@ -7846,6 +8004,7 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     logo: string | null
     domain: string | null
     details: runtime.JsonValue | null
+    type: $Enums.OrganizationType
     createdAt: Date
     updatedAt: Date
     isActive: boolean
@@ -8312,6 +8471,7 @@ export interface OrganizationFieldRefs {
   readonly logo: Prisma.FieldRef<"Organization", 'String'>
   readonly domain: Prisma.FieldRef<"Organization", 'String'>
   readonly details: Prisma.FieldRef<"Organization", 'Json'>
+  readonly type: Prisma.FieldRef<"Organization", 'OrganizationType'>
   readonly createdAt: Prisma.FieldRef<"Organization", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Organization", 'DateTime'>
   readonly isActive: Prisma.FieldRef<"Organization", 'Boolean'>

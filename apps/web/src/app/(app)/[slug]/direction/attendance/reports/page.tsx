@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/attendance/reports/page.tsx
 import { Suspense } from 'react'
 import { connection } from 'next/server'
 import { startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from 'date-fns'

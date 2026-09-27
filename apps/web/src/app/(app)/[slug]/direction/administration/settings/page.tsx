@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/administration/settings/page.tsx
 import { connection } from 'next/server'
 import { getOrgIdentityAction, getOrgDetailsAction } from '@/services/organization'
 import { typography } from '@/styles'

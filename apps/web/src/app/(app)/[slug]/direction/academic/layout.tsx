@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/academic/layout.tsx
 
 
 interface LayoutProps {

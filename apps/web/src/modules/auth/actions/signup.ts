@@ -23,6 +23,7 @@ export async function signupPrincipalAction(
   }
 
   const { email, password } = result.output;
+  //creation du compte auth supabase
   const { data, error } = await signUpPrincipal(email, password);
 
   if (error || !data.user) {
@@ -30,6 +31,7 @@ export async function signupPrincipalAction(
   }
 
   try {
+    //enregistrement de l user dans la table profile avec les donnees minimaliste , il les completera plus tard dans PROFILE_URL
     await createUserRecord({ id: data.user.id, email });
   } catch (error) {
     return { 

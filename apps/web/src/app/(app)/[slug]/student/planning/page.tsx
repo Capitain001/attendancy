@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/student/planning/page.tsx
 // Planning global étudiant — visuel porté de la V1.
 import { connection } from "next/server";
 import { addMonths, endOfMonth, startOfMonth, subMonths } from "date-fns";

@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/teacher/students/page.tsx
 // page.tsx (server component — même logique de fetch, aucune nouvelle action)
 import { connection } from 'next/server'
 import { getCurrentTeacherId } from '@/services/teacher'

@@ -1,3 +1,4 @@
+// src/app/admin/seed/page.tsx
 import { connection } from 'next/server'
 import { SeedPanel } from '@/components/seed'
 

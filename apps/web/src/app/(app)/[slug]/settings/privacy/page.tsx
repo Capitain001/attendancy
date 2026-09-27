@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/settings/privacy/page.tsx
 export default function PrivacySettingsPage() {
   return (
     <div className="space-y-6 max-w-2xl">

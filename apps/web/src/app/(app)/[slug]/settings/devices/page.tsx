@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/settings/devices/page.tsx
 import { cookies } from "next/headers";
 import { getUserInfo } from "@/modules/user";
 import { getUserDevices } from "@/services/device/database";

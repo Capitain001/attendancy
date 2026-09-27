@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/academic/promotions/[classId]/program/@program_modal/loading.tsx
 import { Loader1 } from "@/components/loaders/Loader";
 
 

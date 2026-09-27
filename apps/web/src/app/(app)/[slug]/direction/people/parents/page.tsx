@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/people/parents/page.tsx
 import { Suspense } from 'react'
 import { connection } from 'next/server'
 import { getParentsForDirectionAction } from '@/services/student'

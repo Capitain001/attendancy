@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/invitations/page.tsx
 import { connection } from 'next/server'
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
 

@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/student/notifications/page.tsx
 // Notifications étudiant — visuel porté de la V1.
 import { NotificationsView } from "@/components/student/notifications";
 

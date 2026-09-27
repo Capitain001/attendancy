@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/teacher/TeacherDailyTimeline.tsx
 "use client"
 
 import { useState } from "react"

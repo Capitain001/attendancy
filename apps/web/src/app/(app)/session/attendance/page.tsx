@@ -1,3 +1,4 @@
+// src/app/(app)/session/attendance/page.tsx
 import AttendPage from "@/components/student/session/AttendPage";
 
 export default function page() {

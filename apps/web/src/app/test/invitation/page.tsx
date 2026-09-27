@@ -1,3 +1,4 @@
+// src/app/test/invitation/page.tsx
 // import InvitationCard from '@/components/invitation/InvitationCard'
 import PhoneMockupBasic from '@/components/design/phone/phone-mock-up'
 import PhoneCarousel from '@/components/design/PhoneCarousel'

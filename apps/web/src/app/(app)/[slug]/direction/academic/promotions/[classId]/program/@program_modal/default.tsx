@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/academic/promotions/[classId]/program/@program_modal/default.tsx
 export default async function Default(props: any) {
   const resolvedSearchParams = props?.searchParams ? await props.searchParams : null
   const resolvedParams = props?.params ? await props.params : null

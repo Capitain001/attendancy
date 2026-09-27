@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/academic/years/page.tsx
 import { connection } from 'next/server'
 import { getAcademicYearsAction } from '@/services/academic-year'
 import { MetricCard } from '@/components/stats/ui/MetricCard'

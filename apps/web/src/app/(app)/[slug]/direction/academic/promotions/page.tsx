@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/academic/promotions/page.tsx
 import { connection } from 'next/server'
 import { getClassesAction } from '@/services/class'
 import { getCurrentYearAction, getAcademicYearsAction } from '@/services/academic-year'

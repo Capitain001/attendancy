@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/settings/notifications/page.tsx
 "use client";
 
 import { useState } from "react";

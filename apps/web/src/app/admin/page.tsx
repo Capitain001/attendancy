@@ -1,3 +1,4 @@
+// src/app/admin/page.tsx
 import { connection } from 'next/server'
 import {
   getOrgIdentityAction,

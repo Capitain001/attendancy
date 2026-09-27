@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/settings/page.tsx
 import Link from "next/link";
 import {
   User,

@@ -1,3 +1,4 @@
+// src/app/api/auth/me/route.ts
 import { type NextRequest, NextResponse } from 'next/server'
 import { extractBearerToken, verifyBearerToken } from '@/utils/supabase/api'
 import { prisma } from '@/lib/prisma'

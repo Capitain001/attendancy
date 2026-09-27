@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/teacher/evaluations/page.tsx
 import { redirect } from 'next/navigation'
 
 export default async function Page({

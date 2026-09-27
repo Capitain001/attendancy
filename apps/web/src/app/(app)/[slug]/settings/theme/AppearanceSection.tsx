@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/settings/theme/AppearanceSection.tsx
 // apps/web/src/components/settings/appearance-section.tsx
 "use client";
 

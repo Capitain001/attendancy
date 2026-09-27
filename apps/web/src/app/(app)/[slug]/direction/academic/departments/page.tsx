@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/academic/departments/page.tsx
 import { connection } from 'next/server'
 import { getDepartmentsAction } from '@/services/department'
 import { MetricCard } from '@/components/stats/ui/MetricCard'

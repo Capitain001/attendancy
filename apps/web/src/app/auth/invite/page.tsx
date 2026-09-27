@@ -1,3 +1,4 @@
+// src/app/auth/invite/page.tsx
 'use client'
 import { useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'

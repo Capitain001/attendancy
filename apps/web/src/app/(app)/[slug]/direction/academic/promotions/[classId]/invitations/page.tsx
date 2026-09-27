@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/academic/promotions/[classId]/invitations/page.tsx
 import { notFound } from 'next/navigation'
 import { connection } from 'next/server'
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query'

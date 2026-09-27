@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/direction/attendance/sessions/page.tsx
 import { Suspense } from 'react'
 import { connection } from 'next/server'
 import { getDirectionSessionsByDateAction } from '@/services/session'

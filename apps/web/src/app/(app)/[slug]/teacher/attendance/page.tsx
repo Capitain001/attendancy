@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/teacher/attendance/page.tsx
 // ⚠ Chemin à adapter à ton arborescence de routes (route group, préfixe rôle…).
 import { TeacherAttendanceOverview } from '@/components/teacher/attendance/TeacherAttendanceOverview'
 import { Card, CardContent } from '@/components/ui/card'

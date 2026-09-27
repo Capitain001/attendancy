@@ -1,3 +1,4 @@
+// src/app/page.tsx
 import OrgLink from "@/components/auth/ui/OrgLink";
 import { BackgroundPattern } from "@/components/design/BackgroundPattern";
 import { getUserInfo } from "@/modules/user";

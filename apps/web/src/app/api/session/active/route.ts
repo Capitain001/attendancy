@@ -1,3 +1,4 @@
+// src/app/api/session/active/route.ts
 import { type NextRequest, NextResponse } from 'next/server'
 import { authAccess } from '@/services/auth'
 import { extractBearerToken, verifyBearerToken } from '@/utils/supabase/api'
