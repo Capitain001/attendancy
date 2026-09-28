@@ -1,6 +1,7 @@
 //src/types/user.ts
 import { FUNCTIONS } from "@/config/data";
 import { InvitedBy } from "./invitation";
+import { OrganizationType } from "@/generated/prisma/browser";
 
 export const UserRoles = {
   ADMIN: "ADMIN",
@@ -22,7 +23,7 @@ export interface Organization {
   name?: string;
   slug?: string;
   logo?: string;
-  //  type?: OrganizationType // 'INSTITUTION' | 'PERSONAL'
+   type?: OrganizationType // 'INSTITUTION' | 'PERSONAL'
   permissions?: string[];
   responsable?: boolean
   departmentId?: string;

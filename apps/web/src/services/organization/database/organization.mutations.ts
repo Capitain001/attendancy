@@ -160,3 +160,104 @@ export async function setMemberStatusWithAudit(params: {
   await invalidateEvent('ORG_UPDATED', orgId)
   return result
 }
+
+
+
+
+/* PERSONAL MUTATION */
+// → À AJOUTER dans src/services/org/database/org.mutations.ts
+// (Organization en est le modèle propriétaire ; même précédent transactionnel
+// multi-modèles que createOrgWithDefaults.)
+import { buildOrgSlug } from '@/lib/slug'
+
+// Quota gratuit d'un espace personnel (FEATURE-teacher-personal-org §3.3).
+// Initialisé explicitement : le défaut générique (10) est pensé pour les institutions.
+// → à déplacer dans org/constants.ts si tu préfères.
+const PERSONAL_MAX_CLASSES = 5
+
+export type CreatePersonalOrgParams = {
+  userId: string
+  displayName?: string | null // alimente uniquement le slug et le nom technique
+  isFirstOrg: boolean // true → l'espace perso devient l'org principale (isMainOrg)
+}
+
+export type CreatePersonalOrgData = {
+  org: { id: string; name: string; slug: string }
+  teacherId: string
+  created: boolean
+}
+
+// Idempotent : si l'user a déjà un espace personnel actif, on le renvoie
+// (created: false). L'action re-projette alors les metadata Supabase, ce qui
+// répare l'échec partiel « DB écrite, metadata non ».
+//
+// Ce que l'espace perso NE reçoit PAS, volontairement :
+//   - pas de Direction ni de UserOrganization DIRECTION (FEATURE §3.1)
+//   - pas de Subscription : gratuit par construction (FEATURE §3.3 / §8)
+//   - pas de structure académique : créée à la demande par le service academic
+//     à la première classe, pas ici (elle lui appartient).
+export async function createPersonalOrgWithDefaults(params: CreatePersonalOrgParams) {
+  const { userId } = params
+
+  const result = await tryConstraint(
+    prisma.$transaction(async (tx): Promise<CreatePersonalOrgData> => {
+      const existing = await tx.userOrganization.findFirst({
+        where: { userId, organization: { type: 'PERSONAL', deletedAt: null } },
+        select: { organization: { select: { id: true, name: true, slug: true } } },
+      })
+
+      if (existing) {
+        const { organization: org } = existing
+        if (!org.slug) throw new Error('Espace personnel invalide : slug manquant')
+
+        const teacher = await tx.teacher.findUnique({
+          where: { userId_orgId: { userId, orgId: org.id } },
+          select: { id: true },
+        })
+        if (!teacher) throw new Error('Profil enseignant introuvable pour cet espace personnel')
+
+        return { org: { id: org.id, name: org.name, slug: org.slug }, teacherId: teacher.id, created: false }
+      }
+
+      const { slug, name } = buildOrgSlug('PERSONAL', params.displayName)
+
+      const org = await tx.organization.create({
+        data: { name, slug, type: 'PERSONAL' },
+        select: { id: true, name: true },
+      })
+
+      await tx.organizationSettings.create({
+        data: { orgId: org.id, maxClasses: PERSONAL_MAX_CLASSES },
+      })
+      await tx.organizationUsage.create({ data: { orgId: org.id } })
+
+      await tx.userOrganization.create({
+        data: {
+          userId,
+          orgId: org.id,
+          role: 'TEACHER',
+          isMainOrg: params.isFirstOrg,
+          isResponsable: true,
+          status: 'ACTIVE',
+        },
+      })
+
+      const teacher = await tx.teacher.create({
+        data: { userId, orgId: org.id },
+        select: { id: true },
+      })
+
+      // Compte issu d'un signup solo : PENDING → ACTIVE. updateMany + filtre :
+      // n'écrase jamais un SUSPENDED/INACTIVE d'un enseignant déjà rattaché.
+      await tx.user.updateMany({
+        where: { id: userId, status: 'PENDING' },
+        data: { status: 'ACTIVE' },
+      })
+
+      return { org: { id: org.id, name: org.name, slug }, teacherId: teacher.id, created: true }
+    })
+  )
+
+  if (result.created) await invalidateEvent('ORG_CREATED', result.org.id)
+  return result
+}

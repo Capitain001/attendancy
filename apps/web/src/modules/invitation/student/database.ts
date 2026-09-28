@@ -1,7 +1,6 @@
 // src/services/invitation/student/database.ts
 
 import { prisma } from "@/lib/prisma";
-import type { InvitationListItem } from "../database";
 import type { DatabaseInvitationDetails } from "@/types/invitation";
 
 interface CheckInvitationResourcesParams {
@@ -10,10 +9,6 @@ interface CheckInvitationResourcesParams {
   groupIds?: string[];
 }
 
-interface CheckResult {
-  valid:  boolean;
-  error?: string;
-}
 
 /**
  * Vérifie en une seule passe (Promise.all) que :

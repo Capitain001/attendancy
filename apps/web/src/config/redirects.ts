@@ -1,5 +1,6 @@
 // src/config/redirects.ts
-import { Functions, Role, UserInfo, UserRoles } from "@/types/user";
+import type { Organization, Role, UserInfo } from "@/types/user";
+import { UserRoles } from "@/types/user";
 
 // Mapping des chemins par rôle
 export const ROLE_PATHS: Record<Role, string> = {
@@ -11,6 +12,29 @@ export const ROLE_PATHS: Record<Role, string> = {
   [UserRoles.GUEST]: "/invite",
 };
 
+// Segment racine de l'arbre de routes des espaces personnels : `/personal/{slug}`.
+// Propre au type PERSONAL (ce n'est pas une règle générique par type — ne pas le
+// dériver de `org.type`). Doit rester aligné avec RESERVED_SLUGS (src/lib/slug.ts)
+// et le dossier de route correspondant dans src/app.
+const PERSONAL_ROUTE_SEGMENT = "personal";
+
+/**
+ * Base d'URL d'une organisation pour un rôle donné.
+ *
+ * Espace personnel : arbre dédié `/personal/{slug}` pour son propriétaire
+ * (TEACHER) uniquement — l'interface diffère (création de classes, quota).
+ * Élèves et parents invités n'ont rien de spécifique : ils utilisent l'arbre
+ * standard `/{slug}/…`. `type` absent (snapshot antérieur à Organization.type)
+ * = institution.
+ */
+function orgBasePath(
+  org: { slug: string; type?: Organization["type"] },
+  role: Role,
+): string {
+  return org.type === "PERSONAL" && role === UserRoles.TEACHER
+    ? `/${PERSONAL_ROUTE_SEGMENT}/${org.slug}/${ROLE_PATHS[role]}`
+    : `/${org.slug}`;
+}
 
 /**
  * Résout la destination post-login selon le profil utilisateur.
@@ -18,24 +42,24 @@ export const ROLE_PATHS: Record<Role, string> = {
  * Règles :
  * - Pas d'organisation → /auth/org/info (aucune distinction de fonction/rôle)
  * - Pas de rôle (ou rôle inconnu) → /login (fallback, sans préfixe)
+ * - Espace personnel + TEACHER → /personal/{orgSlug}/teacher
  * - Sinon → /{orgSlug}/{rolePath} (aucune distinction pour GUEST)
  */
 export function redirectUser(user: Partial<UserInfo>): string {
-  if (!user.organization?.slug) {
-    return '/auth/org/info'
+  const { organization: org, role } = user;
+
+  if (!org?.slug) {
+    return "/auth/org/info";
   }
 
-  const rolePath = user.role ? ROLE_PATHS[user.role] : undefined
+  const rolePath = role ? ROLE_PATHS[role] : undefined;
 
-  if (!rolePath) {
-    return '/login'
+  if (!role || !rolePath) {
+    return "/login";
   }
 
-  return `/${user.organization.slug}/${rolePath}`
+  return `${orgBasePath({ slug: org.slug, type: org.type }, role)}/${rolePath}`;
 }
-
-
-
 
 /**
  * Retourne le path de l'utilisateur en fonction de son rôle et de son organisation
@@ -43,17 +67,15 @@ export function redirectUser(user: Partial<UserInfo>): string {
  * @returns path sous forme de string
  */
 export function orgPath(user?: UserInfo): string {
-  if (!user || !user.role) return "/";
+  if (!user?.role) return "/";
 
-  const roleBase = ROLE_PATHS[user.role] ?? "/"; 
+  const roleBase = ROLE_PATHS[user.role] ?? "/";
+  const org = user.organization;
 
-  const path = user.organization?.slug 
-    ? `/${user.organization.slug}/${roleBase}` 
+  return org?.slug
+    ? `${orgBasePath({ slug: org.slug, type: org.type }, user.role)}/${roleBase}`
     : `/${roleBase}`;
-
-  return path;
 }
-
 
 /**
  * Retourne le chemin de redirection pour un rôle donné

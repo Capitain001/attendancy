@@ -1,4 +1,4 @@
-# Flow DIRECTION — PRINCIPAL
+# Flow auth DIRECTION — PRINCIPAL
 
 > La direction est le **fondateur** de l'organisation.
 > Elle s'inscrit en premier, cree l'etablissement, puis complete son profil.
@@ -88,7 +88,7 @@
 1. Recupere `code` et `inviteToken` depuis `searchParams`
 2. `supabase.auth.exchangeCodeForSession(code)` — cree la session
 3. Si `inviteToken` present → `/auth/invite?token=...` *(flow invite)*
-4. [getUserInfo({ cache: false })](../../../apps/web/src/modules/user/userInfo.ts) — **sans cache**
+4. [getUserInfo({ cache: false })](../../../apps/web/src/modules/user/userInfo.ts#L194) — **sans cache**
 5. `needsOrgSetup = user.function === 'PRINCIPAL' && !user.organization?.id`
    - **Vrai** → `/auth/org/setup`
    - **Faux** → [redirectUser(user)](../../../apps/web/src/config/redirects.ts#L23) → `/{orgSlug}/direction`
@@ -103,7 +103,7 @@
 - Guard : si l'user a deja une org → `redirectUser(user)` immediat
 - Affiche [OrgSetupForm](../../../apps/web/src/components/auth/org/OrgSetupForm.tsx)
   - Champs : `name`, `slug` (auto-genere), `email` (optionnel)
-  - Action : [createOrgAction()](../../../apps/web/src/services/organization/index.ts)
+  - Action : [createOrgAction()](../../../apps/web/src/services/organization/actions/organization.mutations.ts#L23)
   - Succes : `router.push(REDIRECT_URL)` → `/auth/redirect`
 
 > A ce stade : org creee, profil user toujours incomplet (pas de dateOfBirth).
@@ -162,9 +162,9 @@ User pleinement onboarde :
 | `createUserRecord()` | Creation row Prisma minimale | [user.mutations.ts:9](../../../apps/web/src/modules/auth/database/user.mutations.ts#L9) |
 | `resendSignupEmail()` | Renvoi email confirmation | [supabase.ts:86](../../../apps/web/src/modules/auth/supabase.ts#L86) |
 | `GET /auth/callback` | Echange code/session + routing | [callback/route.ts](../../../apps/web/src/app/auth/callback/route.ts) |
-| `getUserInfo()` | Lecture profil user | [modules/user/userInfo.ts](../../../apps/web/src/modules/user/userInfo.ts) |
+| `getUserInfo()` | Lecture profil user | [userInfo.ts:194](../../../apps/web/src/modules/user/userInfo.ts#L194) |
 | `redirectUser()` | Calcul destination selon role/org | [redirects.ts:23](../../../apps/web/src/config/redirects.ts#L23) |
-| `createOrgAction()` | Creation de l'organisation | [services/organization](../../../apps/web/src/services/organization/index.ts) |
+| `createOrgAction()` | Creation de l'organisation | [organization.mutations.ts:23](../../../apps/web/src/services/organization/actions/organization.mutations.ts#L23) |
 | `checkUserProfile()` | Verifie si dateOfBirth est renseigne | [profile/user.ts:109](../../../apps/web/src/modules/auth/profile/user.ts#L109) |
 | `upsertUserProfile()` | Complete le profil user | [profile/user.ts:48](../../../apps/web/src/modules/auth/profile/user.ts#L48) |
 | `ensureRoleProfile()` | Cree entite Direction + injecte profileId | [profile/user.ts:36](../../../apps/web/src/modules/auth/profile/user.ts#L36) |
