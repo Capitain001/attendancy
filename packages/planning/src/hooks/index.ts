@@ -1,2 +1,2 @@
-export { usePlanning } from './usePlanning'
+export { usePlanning, useTeacherPlanning } from './usePlanning'
 export { useActiveSession } from './useActiveSession'

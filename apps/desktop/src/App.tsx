@@ -34,23 +34,27 @@ function AppShell() {
   const { session, loading, logout } = useAuth()
   const qc = useQueryClient()
   useTraySync()
-  const [classId, setClassId]     = useState<string | null>(null)
-  const [meLoading, setMeLoading] = useState(false)
+  const [classId, setClassId]       = useState<string | null>(null)
+  const [teacherId, setTeacherId]   = useState<string | null>(null)
+  const [role, setRole]             = useState<string | null>(null)
+  const [meLoading, setMeLoading]   = useState(false)
 
   // Sync token + classId
   useEffect(() => {
     setAuthToken(session?.access_token ?? null)
-    if (!session) { setClassId(null); return }
+    if (!session) { setClassId(null); setTeacherId(null); setRole(null); return }
 
     setMeLoading(true)
     fetch(`${API_BASE}/api/auth/me`, {
       headers: { Authorization: `Bearer ${session.access_token}` },
     })
       .then((r) => r.json())
-      .then((body: { data?: { classId?: string | null } }) => {
+      .then((body: { data?: { classId?: string | null; teacherId?: string | null; role?: string | null } }) => {
         setClassId(body.data?.classId ?? null)
+        setTeacherId(body.data?.teacherId ?? null)
+        setRole(body.data?.role ?? null)
       })
-      .catch(() => setClassId(null))
+      .catch(() => { setClassId(null); setTeacherId(null); setRole(null) })
       .finally(() => setMeLoading(false))
   }, [session])
 
@@ -79,7 +83,9 @@ function AppShell() {
 
   if (!session) return <LoginView />
 
-  if (meLoading || !classId) {
+  const isTeacher = role === 'TEACHER' && !!teacherId
+
+  if (meLoading || (!classId && !isTeacher)) {
     return (
       <div className="flex min-h-screen flex-col bg-background text-foreground">
         <AppHeader email={session.user.email} onLogout={logout} />
@@ -93,7 +99,7 @@ function AppShell() {
   }
 
   return (
-    <AppContextProvider value={{ classId }}>
+      <AppContextProvider value={{ classId, teacherId, role }}>
       <div className="flex min-h-screen flex-col bg-background text-foreground">
         <AppHeader email={session.user.email} onLogout={logout} />
         <div className="flex-1">

@@ -1,50 +1,37 @@
 // src/services/org/validation.ts
-import {
-  object,
-  string,
-  pipe,
-  trim,
-  minLength,
-  maxLength,
-  regex,
-  optional,
-  email,
-  toLowerCase,
-} from 'valibot'
-import type { InferInput, InferOutput } from 'valibot'
+import * as v from 'valibot'
+import { isReservedSlug } from '@/lib/slug'
+import type { CreateOrgData, UpdateOrgIdentityData } from './types'
 
-// Setup initial d'une org par le fondateur (DIRECTION).
+// Setup initial d'une org INSTITUTIONNELLE par le fondateur (DIRECTION).
 // slug = segment d'URL du tenant : minuscules, chiffres, tirets.
-export const orgSetupSchema = object({
-  name: pipe(string(), trim(), minLength(2, 'Nom trop court'), maxLength(100)),
-  slug: pipe(
-    string(),
-    trim(),
-    toLowerCase(),
-    minLength(2, 'Slug trop court'),
-    maxLength(50),
-    regex(/^[a-z0-9-]+$/, 'Slug invalide (a-z, 0-9, tirets)')
+// Le formulaire permet l'édition manuelle du slug : les slugs réservés (segments
+// de routes, préfixes de types d'org générés) sont donc refusés ici, côté serveur.
+export const orgSetupSchema = v.object({
+  name: v.pipe(v.string(), v.trim(), v.minLength(2, 'Nom trop court'), v.maxLength(100)),
+  slug: v.pipe(
+    v.string(),
+    v.trim(),
+    v.toLowerCase(),
+    v.minLength(2, 'Slug trop court'),
+    v.maxLength(50),
+    v.regex(/^[a-z0-9-]+$/, 'Slug invalide (a-z, 0-9, tirets)'),
+    v.check((slug) => !isReservedSlug(slug), 'Identifiant réservé'),
   ),
-  email: optional(pipe(string(), trim(), email('Email invalide'))),
-})
+  email: v.optional(v.pipe(v.string(), v.trim(), v.email('Email invalide'))),
+} satisfies Record<keyof CreateOrgData, unknown>)
 
-export type OrgSetupInput = InferInput<typeof orgSetupSchema>
-export type OrgSetupOutput = InferOutput<typeof orgSetupSchema>
+export type OrgSetupInput = v.InferInput<typeof orgSetupSchema>
+export type OrgSetupOutput = v.InferOutput<typeof orgSetupSchema>
 
 // Édition identité par DIRECTION/PRINCIPAL (name, email, domain, logo uniquement).
-export const updateOrgIdentitySchema = object({
-  name: optional(pipe(string(), trim(), minLength(2), maxLength(120))),
-  email: optional(pipe(string(), trim(), email('Email invalide'))),
-  domain: optional(pipe(string(), trim(), maxLength(255))),
-  logo: optional(string()),
-})
+// Pas de validateWithId : l'id de l'org vient du token (orgId), jamais de l'input.
+export const updateOrgIdentitySchema = v.object({
+  name: v.optional(v.pipe(v.string(), v.trim(), v.minLength(2), v.maxLength(120))),
+  email: v.optional(v.pipe(v.string(), v.trim(), v.email('Email invalide'))),
+  domain: v.optional(v.pipe(v.string(), v.trim(), v.maxLength(255))),
+  logo: v.optional(v.string()),
+} satisfies Record<keyof UpdateOrgIdentityData, unknown>)
 
-export type UpdateOrgIdentityInput = InferInput<typeof updateOrgIdentitySchema>
-export type UpdateOrgIdentityOutput = InferOutput<typeof updateOrgIdentitySchema>
-
-// Alias rétrocompatibilité — à utiliser dans les nouveaux fichiers.
-export const createOrgSchema = orgSetupSchema
-export const createOrganizationSchema = orgSetupSchema
-export const updateOrgSchema = updateOrgIdentitySchema
-export type CreateOrgInput = OrgSetupInput
-export type UpdateOrgInput = UpdateOrgIdentityInput
+export type UpdateOrgIdentityInput = v.InferInput<typeof updateOrgIdentitySchema>
+export type UpdateOrgIdentityOutput = v.InferOutput<typeof updateOrgIdentitySchema>

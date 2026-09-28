@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader } from '@attendancy/ui'
-import { usePlanning } from '../hooks/usePlanning'
+import { usePlanning, useTeacherPlanning } from '../hooks/usePlanning'
 
 function useOnlineStatus() {
   const [online, setOnline] = useState(() =>
@@ -22,11 +22,15 @@ type Props = {
   classId: string
   from: string
   to: string
+  scope?: 'class' | 'teacher'
 }
 
-export function PlanningView({ classId, from, to }: Props) {
+export function PlanningView({ classId, from, to, scope = 'class' }: Props) {
   const isOnline = useOnlineStatus()
-  const { data, isLoading, isError, isStale } = usePlanning(classId, from, to)
+  const { data, isLoading, isError, isStale } =
+    scope === 'teacher'
+      ? useTeacherPlanning(classId, from, to)
+      : usePlanning(classId, from, to)
 
   if (isLoading) return <div className="p-4 text-sm text-muted-foreground">Chargement…</div>
   if (isError && !data)   return <div className="p-4 text-sm text-destructive">Erreur de chargement</div>

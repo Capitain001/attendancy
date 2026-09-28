@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 
-type AppCtx = { classId: string }
+type AppCtx = { classId: string | null; teacherId: string | null; role: string | null }
 
 const Ctx = createContext<AppCtx | null>(null)
 

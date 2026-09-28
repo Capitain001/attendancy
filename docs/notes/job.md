@@ -75,9 +75,32 @@ boutique
 https://www.tiktok.com/@rosebest17/video/7688414030897204487
 
 
+boutique seira parfum : Agoè Cacaveli
+https://www.tiktok.com/@sairaperfumes228/video/7689781550761643285
+
+
+
+boutique :
+
+https://www.tiktok.com/@228g.generation.nkegue/video/7689418474636070164
+
+
+https://www.tiktok.com/@vict_oire.09/video/7688800543535385877
+
 
 etudiant stage
 https://www.tiktok.com/@sylvestre.kedegno/video/7672673637370957076
+
+
+
+
+
+
+
+
+
+
+
 
 
 chariow

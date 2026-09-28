@@ -17,9 +17,18 @@ function getWeekRange(offset: number): { from: string; to: string; label: string
 }
 
 export function PlanningScreen() {
-  const { classId } = useAppContext()
+  const { classId, teacherId, role } = useAppContext()
   const [weekOffset, setWeekOffset] = useState(0)
   const { from, to, label } = getWeekRange(weekOffset)
+
+  const scope = role === 'TEACHER' && teacherId ? 'teacher' : 'class'
+  const id = scope === 'teacher' ? teacherId! : classId!
+
+  if (!id) {
+    return (
+      <div className="p-4 text-sm text-muted-foreground">Aucun planning disponible.</div>
+    )
+  }
 
   return (
     <div>
@@ -31,7 +40,7 @@ export function PlanningScreen() {
           canNext={weekOffset < 4}
         />
       </div>
-      <PlanningView classId={classId} from={from} to={to} />
+      <PlanningView classId={id} from={from} to={to} scope={scope} />
     </div>
   )
 }

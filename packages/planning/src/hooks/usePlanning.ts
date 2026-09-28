@@ -21,3 +21,15 @@ export function usePlanning(classId: string, from: string, to: string) {
     gcTime:    7 * 24 * 60 * 60 * 1000, // 7 jours (offline)
   })
 }
+
+export function useTeacherPlanning(teacherId: string, from: string, to: string) {
+  return useQuery({
+    queryKey: ['planning', 'teacher', teacherId, from, to],
+    queryFn:  () =>
+      apiFetch<DayScheduleDto[]>(
+        `${planningEndpoint}?scope=teacher&from=${from}&to=${to}`
+      ),
+    staleTime: 5 * 60 * 1000,
+    gcTime:    7 * 24 * 60 * 60 * 1000,
+  })
+}

@@ -3,6 +3,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { authAccess } from '@/services/auth'
 import { extractBearerToken, verifyBearerToken } from '@/utils/supabase/api'
 import { getSchedules } from '@/services/schedule/database'
+import { prisma } from '@/lib/prisma'
 import type { DayScheduleDto, ScheduleSlot } from '@attendancy/types'
 
 function corsHeaders(req: NextRequest) {
@@ -34,6 +35,12 @@ async function resolveOrgId(req: NextRequest): Promise<string | null> {
   return auth.data.orgId
 }
 
+async function resolveBearerUser(req: NextRequest) {
+  const token = extractBearerToken(req)
+  if (!token) return null
+  return verifyBearerToken(token)
+}
+
 export async function GET(req: NextRequest) {
   const cors = corsHeaders(req)
 
@@ -43,12 +50,16 @@ export async function GET(req: NextRequest) {
   }
 
   const { searchParams } = req.nextUrl
+  const scope   = searchParams.get('scope') ?? 'class'
   const classId = searchParams.get('classId')
   const from    = searchParams.get('from')
   const to      = searchParams.get('to')
 
-  if (!classId || !from || !to) {
-    return NextResponse.json({ error: 'classId, from et to sont requis' }, { status: 400, headers: cors })
+  if (!from || !to) {
+    return NextResponse.json({ error: 'from et to sont requis' }, { status: 400, headers: cors })
+  }
+  if (scope === 'class' && !classId) {
+    return NextResponse.json({ error: 'classId est requis' }, { status: 400, headers: cors })
   }
 
   const rangeStart = new Date(from)
@@ -59,7 +70,25 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const schedules = await getSchedules({ orgId, classId, rangeStart, rangeEnd })
+    let schedules
+    if (scope === 'teacher') {
+      // teacherId résolu depuis le token UNIQUEMENT — jamais du query
+      const user = await resolveBearerUser(req)
+      const meta = (user?.user_metadata ?? {}) as { organization?: { id?: string }; role?: string }
+      if (!user || !orgId || meta.role !== 'TEACHER') {
+        return NextResponse.json({ error: 'Non authentifié' }, { status: 401, headers: cors })
+      }
+      const teacher = await prisma.teacher.findFirst({
+        where: { userId: user.id, orgId },
+        select: { id: true },
+      })
+      if (!teacher) {
+        return NextResponse.json({ error: 'Teacher introuvable' }, { status: 403, headers: cors })
+      }
+      schedules = await getSchedules({ orgId, teacherId: teacher.id, rangeStart, rangeEnd })
+    } else {
+      schedules = await getSchedules({ orgId, classId: classId!, rangeStart, rangeEnd })
+    }
 
     const byDay = new Map<string, ScheduleSlot[]>()
     for (const s of schedules) {

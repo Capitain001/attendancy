@@ -1,6 +1,6 @@
 // src/services/org/types.ts
-// DTOs inférés depuis les fonctions database/ — pattern Awaited<ReturnType>.
-// Régénérable via : npx tsx scripts/generate/types/types.ts org
+export * from './generated.types'
+import type { Prisma } from '@/generated/prisma/client'
 
 // Champ JSON `Organization.details` — ⚠ à étendre selon les besoins du projet.
 export type OrgContactSite = {
@@ -17,4 +17,16 @@ export type OrgDetails = {
 }
 
 export type CreateOrgResult = { data: { slug: string } } | { error: string }
-export * from './generated.types'
+
+
+// Setup d'une org INSTITUTIONNELLE par le fondateur — typent orgSetupSchema (validation.ts).
+export type CreateOrgData = Pick<
+  Prisma.OrganizationUncheckedCreateInput,
+  'name' | 'slug' | 'email'
+>
+ 
+
+export type UpdateOrgIdentityData = Partial<
+  Pick<Prisma.OrganizationUncheckedCreateInput, 'name' | 'email' | 'domain' | 'logo'>
+>
+ 

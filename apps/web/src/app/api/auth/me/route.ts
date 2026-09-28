@@ -22,12 +22,14 @@ export async function GET(req: NextRequest) {
 
   const orgId = meta.organization?.id ?? null
 
-  // Récupère la première classe associée au teacher (si role TEACHER)
+  // Récupère le teacher + la première classe associée (si role TEACHER)
   let classId: string | null = null
+  let teacherId: string | null = null
   if (orgId && meta.role === 'TEACHER') {
     const teacher = await prisma.teacher.findFirst({
       where: { userId: user.id, orgId },
       select: {
+        id: true,
         schedules: {
           where: { deletedAt: null, startTime: { gte: new Date() } },
           orderBy: { startTime: 'asc' },
@@ -36,6 +38,7 @@ export async function GET(req: NextRequest) {
         },
       },
     })
+    teacherId = teacher?.id ?? null
     classId = teacher?.schedules[0]?.classId ?? null
   }
 
@@ -46,6 +49,7 @@ export async function GET(req: NextRequest) {
       name:   meta.name ?? user.email,
       orgId,
       role:   meta.role ?? null,
+      teacherId,
       classId,
     },
   })
