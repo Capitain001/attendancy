@@ -38,7 +38,7 @@ const DEFAULT_MOVE_TOAST = {
   description: "Le cours sera déplacé à la nouvelle position.",
 };
 
-export function ClassPlanningnning({
+export function ClassPlanning({
   slug,
   classId,
   resources,

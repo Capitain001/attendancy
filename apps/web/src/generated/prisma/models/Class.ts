@@ -35,7 +35,6 @@ export type ClassMinAggregateOutputType = {
   programId: string | null
   academicYearId: string | null
   isActive: boolean | null
-  feeStructureId: string | null
 }
 
 export type ClassMaxAggregateOutputType = {
@@ -49,7 +48,6 @@ export type ClassMaxAggregateOutputType = {
   programId: string | null
   academicYearId: string | null
   isActive: boolean | null
-  feeStructureId: string | null
 }
 
 export type ClassCountAggregateOutputType = {
@@ -63,7 +61,6 @@ export type ClassCountAggregateOutputType = {
   programId: number
   academicYearId: number
   isActive: number
-  feeStructureId: number
   _all: number
 }
 
@@ -79,7 +76,6 @@ export type ClassMinAggregateInputType = {
   programId?: true
   academicYearId?: true
   isActive?: true
-  feeStructureId?: true
 }
 
 export type ClassMaxAggregateInputType = {
@@ -93,7 +89,6 @@ export type ClassMaxAggregateInputType = {
   programId?: true
   academicYearId?: true
   isActive?: true
-  feeStructureId?: true
 }
 
 export type ClassCountAggregateInputType = {
@@ -107,7 +102,6 @@ export type ClassCountAggregateInputType = {
   programId?: true
   academicYearId?: true
   isActive?: true
-  feeStructureId?: true
   _all?: true
 }
 
@@ -194,7 +188,6 @@ export type ClassGroupByOutputType = {
   programId: string | null
   academicYearId: string
   isActive: boolean
-  feeStructureId: string | null
   _count: ClassCountAggregateOutputType | null
   _min: ClassMinAggregateOutputType | null
   _max: ClassMaxAggregateOutputType | null
@@ -229,7 +222,6 @@ export type ClassWhereInput = {
   programId?: Prisma.UuidNullableFilter<"Class"> | string | null
   academicYearId?: Prisma.UuidFilter<"Class"> | string
   isActive?: Prisma.BoolFilter<"Class"> | boolean
-  feeStructureId?: Prisma.UuidNullableFilter<"Class"> | string | null
   channels?: Prisma.ChannelListRelationFilter
   academicYear?: Prisma.XOR<Prisma.AcademicYearScalarRelationFilter, Prisma.AcademicYearWhereInput>
   program?: Prisma.XOR<Prisma.ProgramNullableScalarRelationFilter, Prisma.ProgramWhereInput> | null
@@ -252,7 +244,6 @@ export type ClassOrderByWithRelationInput = {
   programId?: Prisma.SortOrderInput | Prisma.SortOrder
   academicYearId?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  feeStructureId?: Prisma.SortOrderInput | Prisma.SortOrder
   channels?: Prisma.ChannelOrderByRelationAggregateInput
   academicYear?: Prisma.AcademicYearOrderByWithRelationInput
   program?: Prisma.ProgramOrderByWithRelationInput
@@ -279,7 +270,6 @@ export type ClassWhereUniqueInput = Prisma.AtLeast<{
   programId?: Prisma.UuidNullableFilter<"Class"> | string | null
   academicYearId?: Prisma.UuidFilter<"Class"> | string
   isActive?: Prisma.BoolFilter<"Class"> | boolean
-  feeStructureId?: Prisma.UuidNullableFilter<"Class"> | string | null
   channels?: Prisma.ChannelListRelationFilter
   academicYear?: Prisma.XOR<Prisma.AcademicYearScalarRelationFilter, Prisma.AcademicYearWhereInput>
   program?: Prisma.XOR<Prisma.ProgramNullableScalarRelationFilter, Prisma.ProgramWhereInput> | null
@@ -302,7 +292,6 @@ export type ClassOrderByWithAggregationInput = {
   programId?: Prisma.SortOrderInput | Prisma.SortOrder
   academicYearId?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  feeStructureId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ClassCountOrderByAggregateInput
   _max?: Prisma.ClassMaxOrderByAggregateInput
   _min?: Prisma.ClassMinOrderByAggregateInput
@@ -322,7 +311,6 @@ export type ClassScalarWhereWithAggregatesInput = {
   programId?: Prisma.UuidNullableWithAggregatesFilter<"Class"> | string | null
   academicYearId?: Prisma.UuidWithAggregatesFilter<"Class"> | string
   isActive?: Prisma.BoolWithAggregatesFilter<"Class"> | boolean
-  feeStructureId?: Prisma.UuidNullableWithAggregatesFilter<"Class"> | string | null
 }
 
 export type ClassCreateInput = {
@@ -333,7 +321,6 @@ export type ClassCreateInput = {
   deletedAt?: Date | string | null
   level?: $Enums.Level
   isActive?: boolean
-  feeStructureId?: string | null
   channels?: Prisma.ChannelCreateNestedManyWithoutClassInput
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutClassesInput
   program?: Prisma.ProgramCreateNestedOneWithoutClassesInput
@@ -356,7 +343,6 @@ export type ClassUncheckedCreateInput = {
   programId?: string | null
   academicYearId: string
   isActive?: boolean
-  feeStructureId?: string | null
   channels?: Prisma.ChannelUncheckedCreateNestedManyWithoutClassInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutClassInput
@@ -373,7 +359,6 @@ export type ClassUpdateInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   level?: Prisma.EnumLevelFieldUpdateOperationsInput | $Enums.Level
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channels?: Prisma.ChannelUpdateManyWithoutClassNestedInput
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutClassesNestedInput
   program?: Prisma.ProgramUpdateOneWithoutClassesNestedInput
@@ -396,7 +381,6 @@ export type ClassUncheckedUpdateInput = {
   programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channels?: Prisma.ChannelUncheckedUpdateManyWithoutClassNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutClassNestedInput
@@ -416,7 +400,6 @@ export type ClassCreateManyInput = {
   programId?: string | null
   academicYearId: string
   isActive?: boolean
-  feeStructureId?: string | null
 }
 
 export type ClassUpdateManyMutationInput = {
@@ -427,7 +410,6 @@ export type ClassUpdateManyMutationInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   level?: Prisma.EnumLevelFieldUpdateOperationsInput | $Enums.Level
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ClassUncheckedUpdateManyInput = {
@@ -441,7 +423,6 @@ export type ClassUncheckedUpdateManyInput = {
   programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ClassListRelationFilter = {
@@ -471,7 +452,6 @@ export type ClassCountOrderByAggregateInput = {
   programId?: Prisma.SortOrder
   academicYearId?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  feeStructureId?: Prisma.SortOrder
 }
 
 export type ClassMaxOrderByAggregateInput = {
@@ -485,7 +465,6 @@ export type ClassMaxOrderByAggregateInput = {
   programId?: Prisma.SortOrder
   academicYearId?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  feeStructureId?: Prisma.SortOrder
 }
 
 export type ClassMinOrderByAggregateInput = {
@@ -499,7 +478,6 @@ export type ClassMinOrderByAggregateInput = {
   programId?: Prisma.SortOrder
   academicYearId?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  feeStructureId?: Prisma.SortOrder
 }
 
 export type ClassScalarRelationFilter = {
@@ -736,7 +714,6 @@ export type ClassCreateWithoutAcademicYearInput = {
   deletedAt?: Date | string | null
   level?: $Enums.Level
   isActive?: boolean
-  feeStructureId?: string | null
   channels?: Prisma.ChannelCreateNestedManyWithoutClassInput
   program?: Prisma.ProgramCreateNestedOneWithoutClassesInput
   programTrack: Prisma.ProgramTrackCreateNestedOneWithoutClassesInput
@@ -757,7 +734,6 @@ export type ClassUncheckedCreateWithoutAcademicYearInput = {
   level?: $Enums.Level
   programId?: string | null
   isActive?: boolean
-  feeStructureId?: string | null
   channels?: Prisma.ChannelUncheckedCreateNestedManyWithoutClassInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutClassInput
@@ -806,7 +782,6 @@ export type ClassScalarWhereInput = {
   programId?: Prisma.UuidNullableFilter<"Class"> | string | null
   academicYearId?: Prisma.UuidFilter<"Class"> | string
   isActive?: Prisma.BoolFilter<"Class"> | boolean
-  feeStructureId?: Prisma.UuidNullableFilter<"Class"> | string | null
 }
 
 export type ClassCreateWithoutProgramTrackInput = {
@@ -817,7 +792,6 @@ export type ClassCreateWithoutProgramTrackInput = {
   deletedAt?: Date | string | null
   level?: $Enums.Level
   isActive?: boolean
-  feeStructureId?: string | null
   channels?: Prisma.ChannelCreateNestedManyWithoutClassInput
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutClassesInput
   program?: Prisma.ProgramCreateNestedOneWithoutClassesInput
@@ -838,7 +812,6 @@ export type ClassUncheckedCreateWithoutProgramTrackInput = {
   programId?: string | null
   academicYearId: string
   isActive?: boolean
-  feeStructureId?: string | null
   channels?: Prisma.ChannelUncheckedCreateNestedManyWithoutClassInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutClassInput
@@ -881,7 +854,6 @@ export type ClassCreateWithoutProgramInput = {
   deletedAt?: Date | string | null
   level?: $Enums.Level
   isActive?: boolean
-  feeStructureId?: string | null
   channels?: Prisma.ChannelCreateNestedManyWithoutClassInput
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutClassesInput
   programTrack: Prisma.ProgramTrackCreateNestedOneWithoutClassesInput
@@ -902,7 +874,6 @@ export type ClassUncheckedCreateWithoutProgramInput = {
   level?: $Enums.Level
   academicYearId: string
   isActive?: boolean
-  feeStructureId?: string | null
   channels?: Prisma.ChannelUncheckedCreateNestedManyWithoutClassInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutClassInput
@@ -945,7 +916,6 @@ export type ClassCreateWithoutTermsInput = {
   deletedAt?: Date | string | null
   level?: $Enums.Level
   isActive?: boolean
-  feeStructureId?: string | null
   channels?: Prisma.ChannelCreateNestedManyWithoutClassInput
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutClassesInput
   program?: Prisma.ProgramCreateNestedOneWithoutClassesInput
@@ -967,7 +937,6 @@ export type ClassUncheckedCreateWithoutTermsInput = {
   programId?: string | null
   academicYearId: string
   isActive?: boolean
-  feeStructureId?: string | null
   channels?: Prisma.ChannelUncheckedCreateNestedManyWithoutClassInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutClassInput
@@ -999,7 +968,6 @@ export type ClassUpdateWithoutTermsInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   level?: Prisma.EnumLevelFieldUpdateOperationsInput | $Enums.Level
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channels?: Prisma.ChannelUpdateManyWithoutClassNestedInput
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutClassesNestedInput
   program?: Prisma.ProgramUpdateOneWithoutClassesNestedInput
@@ -1021,7 +989,6 @@ export type ClassUncheckedUpdateWithoutTermsInput = {
   programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channels?: Prisma.ChannelUncheckedUpdateManyWithoutClassNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutClassNestedInput
@@ -1037,7 +1004,6 @@ export type ClassCreateWithoutCoursesInput = {
   deletedAt?: Date | string | null
   level?: $Enums.Level
   isActive?: boolean
-  feeStructureId?: string | null
   channels?: Prisma.ChannelCreateNestedManyWithoutClassInput
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutClassesInput
   program?: Prisma.ProgramCreateNestedOneWithoutClassesInput
@@ -1059,7 +1025,6 @@ export type ClassUncheckedCreateWithoutCoursesInput = {
   programId?: string | null
   academicYearId: string
   isActive?: boolean
-  feeStructureId?: string | null
   channels?: Prisma.ChannelUncheckedCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutClassInput
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutClassInput
@@ -1091,7 +1056,6 @@ export type ClassUpdateWithoutCoursesInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   level?: Prisma.EnumLevelFieldUpdateOperationsInput | $Enums.Level
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channels?: Prisma.ChannelUpdateManyWithoutClassNestedInput
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutClassesNestedInput
   program?: Prisma.ProgramUpdateOneWithoutClassesNestedInput
@@ -1113,7 +1077,6 @@ export type ClassUncheckedUpdateWithoutCoursesInput = {
   programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channels?: Prisma.ChannelUncheckedUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutClassNestedInput
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutClassNestedInput
@@ -1129,7 +1092,6 @@ export type ClassCreateWithoutStudentEnrollmentsInput = {
   deletedAt?: Date | string | null
   level?: $Enums.Level
   isActive?: boolean
-  feeStructureId?: string | null
   channels?: Prisma.ChannelCreateNestedManyWithoutClassInput
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutClassesInput
   program?: Prisma.ProgramCreateNestedOneWithoutClassesInput
@@ -1151,7 +1113,6 @@ export type ClassUncheckedCreateWithoutStudentEnrollmentsInput = {
   programId?: string | null
   academicYearId: string
   isActive?: boolean
-  feeStructureId?: string | null
   channels?: Prisma.ChannelUncheckedCreateNestedManyWithoutClassInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutClassInput
@@ -1183,7 +1144,6 @@ export type ClassUpdateWithoutStudentEnrollmentsInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   level?: Prisma.EnumLevelFieldUpdateOperationsInput | $Enums.Level
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channels?: Prisma.ChannelUpdateManyWithoutClassNestedInput
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutClassesNestedInput
   program?: Prisma.ProgramUpdateOneWithoutClassesNestedInput
@@ -1205,7 +1165,6 @@ export type ClassUncheckedUpdateWithoutStudentEnrollmentsInput = {
   programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channels?: Prisma.ChannelUncheckedUpdateManyWithoutClassNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutClassNestedInput
@@ -1221,7 +1180,6 @@ export type ClassCreateWithoutGroupsInput = {
   deletedAt?: Date | string | null
   level?: $Enums.Level
   isActive?: boolean
-  feeStructureId?: string | null
   channels?: Prisma.ChannelCreateNestedManyWithoutClassInput
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutClassesInput
   program?: Prisma.ProgramCreateNestedOneWithoutClassesInput
@@ -1243,7 +1201,6 @@ export type ClassUncheckedCreateWithoutGroupsInput = {
   programId?: string | null
   academicYearId: string
   isActive?: boolean
-  feeStructureId?: string | null
   channels?: Prisma.ChannelUncheckedCreateNestedManyWithoutClassInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutClassInput
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutClassInput
@@ -1275,7 +1232,6 @@ export type ClassUpdateWithoutGroupsInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   level?: Prisma.EnumLevelFieldUpdateOperationsInput | $Enums.Level
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channels?: Prisma.ChannelUpdateManyWithoutClassNestedInput
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutClassesNestedInput
   program?: Prisma.ProgramUpdateOneWithoutClassesNestedInput
@@ -1297,7 +1253,6 @@ export type ClassUncheckedUpdateWithoutGroupsInput = {
   programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channels?: Prisma.ChannelUncheckedUpdateManyWithoutClassNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutClassNestedInput
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutClassNestedInput
@@ -1313,7 +1268,6 @@ export type ClassCreateWithoutChannelsInput = {
   deletedAt?: Date | string | null
   level?: $Enums.Level
   isActive?: boolean
-  feeStructureId?: string | null
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutClassesInput
   program?: Prisma.ProgramCreateNestedOneWithoutClassesInput
   programTrack: Prisma.ProgramTrackCreateNestedOneWithoutClassesInput
@@ -1335,7 +1289,6 @@ export type ClassUncheckedCreateWithoutChannelsInput = {
   programId?: string | null
   academicYearId: string
   isActive?: boolean
-  feeStructureId?: string | null
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutClassInput
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutClassInput
@@ -1367,7 +1320,6 @@ export type ClassUpdateWithoutChannelsInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   level?: Prisma.EnumLevelFieldUpdateOperationsInput | $Enums.Level
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutClassesNestedInput
   program?: Prisma.ProgramUpdateOneWithoutClassesNestedInput
   programTrack?: Prisma.ProgramTrackUpdateOneRequiredWithoutClassesNestedInput
@@ -1389,7 +1341,6 @@ export type ClassUncheckedUpdateWithoutChannelsInput = {
   programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   courses?: Prisma.CourseUncheckedUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutClassNestedInput
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutClassNestedInput
@@ -1405,7 +1356,6 @@ export type ClassCreateWithoutSchedulesInput = {
   deletedAt?: Date | string | null
   level?: $Enums.Level
   isActive?: boolean
-  feeStructureId?: string | null
   channels?: Prisma.ChannelCreateNestedManyWithoutClassInput
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutClassesInput
   program?: Prisma.ProgramCreateNestedOneWithoutClassesInput
@@ -1427,7 +1377,6 @@ export type ClassUncheckedCreateWithoutSchedulesInput = {
   programId?: string | null
   academicYearId: string
   isActive?: boolean
-  feeStructureId?: string | null
   channels?: Prisma.ChannelUncheckedCreateNestedManyWithoutClassInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutClassInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutClassInput
@@ -1459,7 +1408,6 @@ export type ClassUpdateWithoutSchedulesInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   level?: Prisma.EnumLevelFieldUpdateOperationsInput | $Enums.Level
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channels?: Prisma.ChannelUpdateManyWithoutClassNestedInput
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutClassesNestedInput
   program?: Prisma.ProgramUpdateOneWithoutClassesNestedInput
@@ -1481,7 +1429,6 @@ export type ClassUncheckedUpdateWithoutSchedulesInput = {
   programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channels?: Prisma.ChannelUncheckedUpdateManyWithoutClassNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutClassNestedInput
@@ -1499,7 +1446,6 @@ export type ClassCreateManyAcademicYearInput = {
   level?: $Enums.Level
   programId?: string | null
   isActive?: boolean
-  feeStructureId?: string | null
 }
 
 export type ClassUpdateWithoutAcademicYearInput = {
@@ -1510,7 +1456,6 @@ export type ClassUpdateWithoutAcademicYearInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   level?: Prisma.EnumLevelFieldUpdateOperationsInput | $Enums.Level
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channels?: Prisma.ChannelUpdateManyWithoutClassNestedInput
   program?: Prisma.ProgramUpdateOneWithoutClassesNestedInput
   programTrack?: Prisma.ProgramTrackUpdateOneRequiredWithoutClassesNestedInput
@@ -1531,7 +1476,6 @@ export type ClassUncheckedUpdateWithoutAcademicYearInput = {
   level?: Prisma.EnumLevelFieldUpdateOperationsInput | $Enums.Level
   programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channels?: Prisma.ChannelUncheckedUpdateManyWithoutClassNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutClassNestedInput
@@ -1550,7 +1494,6 @@ export type ClassUncheckedUpdateManyWithoutAcademicYearInput = {
   level?: Prisma.EnumLevelFieldUpdateOperationsInput | $Enums.Level
   programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ClassCreateManyProgramTrackInput = {
@@ -1563,7 +1506,6 @@ export type ClassCreateManyProgramTrackInput = {
   programId?: string | null
   academicYearId: string
   isActive?: boolean
-  feeStructureId?: string | null
 }
 
 export type ClassUpdateWithoutProgramTrackInput = {
@@ -1574,7 +1516,6 @@ export type ClassUpdateWithoutProgramTrackInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   level?: Prisma.EnumLevelFieldUpdateOperationsInput | $Enums.Level
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channels?: Prisma.ChannelUpdateManyWithoutClassNestedInput
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutClassesNestedInput
   program?: Prisma.ProgramUpdateOneWithoutClassesNestedInput
@@ -1595,7 +1536,6 @@ export type ClassUncheckedUpdateWithoutProgramTrackInput = {
   programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channels?: Prisma.ChannelUncheckedUpdateManyWithoutClassNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutClassNestedInput
@@ -1614,7 +1554,6 @@ export type ClassUncheckedUpdateManyWithoutProgramTrackInput = {
   programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ClassCreateManyProgramInput = {
@@ -1627,7 +1566,6 @@ export type ClassCreateManyProgramInput = {
   level?: $Enums.Level
   academicYearId: string
   isActive?: boolean
-  feeStructureId?: string | null
 }
 
 export type ClassUpdateWithoutProgramInput = {
@@ -1638,7 +1576,6 @@ export type ClassUpdateWithoutProgramInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   level?: Prisma.EnumLevelFieldUpdateOperationsInput | $Enums.Level
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channels?: Prisma.ChannelUpdateManyWithoutClassNestedInput
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutClassesNestedInput
   programTrack?: Prisma.ProgramTrackUpdateOneRequiredWithoutClassesNestedInput
@@ -1659,7 +1596,6 @@ export type ClassUncheckedUpdateWithoutProgramInput = {
   level?: Prisma.EnumLevelFieldUpdateOperationsInput | $Enums.Level
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   channels?: Prisma.ChannelUncheckedUpdateManyWithoutClassNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutClassNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutClassNestedInput
@@ -1678,7 +1614,6 @@ export type ClassUncheckedUpdateManyWithoutProgramInput = {
   level?: Prisma.EnumLevelFieldUpdateOperationsInput | $Enums.Level
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  feeStructureId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1768,7 +1703,6 @@ export type ClassSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   programId?: boolean
   academicYearId?: boolean
   isActive?: boolean
-  feeStructureId?: boolean
   channels?: boolean | Prisma.Class$channelsArgs<ExtArgs>
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   program?: boolean | Prisma.Class$programArgs<ExtArgs>
@@ -1792,7 +1726,6 @@ export type ClassSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   programId?: boolean
   academicYearId?: boolean
   isActive?: boolean
-  feeStructureId?: boolean
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   program?: boolean | Prisma.Class$programArgs<ExtArgs>
   programTrack?: boolean | Prisma.ProgramTrackDefaultArgs<ExtArgs>
@@ -1809,7 +1742,6 @@ export type ClassSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   programId?: boolean
   academicYearId?: boolean
   isActive?: boolean
-  feeStructureId?: boolean
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   program?: boolean | Prisma.Class$programArgs<ExtArgs>
   programTrack?: boolean | Prisma.ProgramTrackDefaultArgs<ExtArgs>
@@ -1826,10 +1758,9 @@ export type ClassSelectScalar = {
   programId?: boolean
   academicYearId?: boolean
   isActive?: boolean
-  feeStructureId?: boolean
 }
 
-export type ClassOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt" | "deletedAt" | "programTrackId" | "level" | "programId" | "academicYearId" | "isActive" | "feeStructureId", ExtArgs["result"]["class"]>
+export type ClassOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt" | "deletedAt" | "programTrackId" | "level" | "programId" | "academicYearId" | "isActive", ExtArgs["result"]["class"]>
 export type ClassInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   channels?: boolean | Prisma.Class$channelsArgs<ExtArgs>
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
@@ -1877,7 +1808,6 @@ export type $ClassPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     programId: string | null
     academicYearId: string
     isActive: boolean
-    feeStructureId: string | null
   }, ExtArgs["result"]["class"]>
   composites: {}
 }
@@ -2320,7 +2250,6 @@ export interface ClassFieldRefs {
   readonly programId: Prisma.FieldRef<"Class", 'String'>
   readonly academicYearId: Prisma.FieldRef<"Class", 'String'>
   readonly isActive: Prisma.FieldRef<"Class", 'Boolean'>
-  readonly feeStructureId: Prisma.FieldRef<"Class", 'String'>
 }
     
 

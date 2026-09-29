@@ -28,6 +28,7 @@ export const MODEL_SERVICES = {
   'course-teacher': { model: 'CourseTeacher', path: '../services/course-teacher' },
   'department': { model: 'Department', path: '../services/department' },
   'direction': { model: 'Direction', path: '../services/direction' },
+  'evaluation': { model: 'Evaluation', path: '../services/evaluation' },
   'event': { model: 'Event', path: '../services/event' },
   'function': { model: 'Function', path: '../services/function' },
   'group': { model: 'Group', path: '../services/group' },
@@ -45,6 +46,7 @@ export const MODEL_SERVICES = {
   'student-enrollment': { model: 'StudentEnrollment', path: '../services/student-enrollment' },
   'subscription': { model: 'Subscription', path: '../services/subscription' },
   'teacher': { model: 'Teacher', path: '../services/teacher' },
+  'teacher-course-hours': { model: 'TeacherCourseHours', path: '../services/teacher-course-hours' },
   'teacher-unavailability': { model: 'TeacherUnavailability', path: '../services/teacher-unavailability' },
   'term': { model: 'Term', path: '../services/term' },
   'ue': { model: 'UE', path: '../services/ue' },
@@ -88,6 +90,7 @@ export type DepartmentServiceIndex = typeof import('../services/department')
 export type DeviceServiceIndex = typeof import('../services/device')
 export type DirectionServiceIndex = typeof import('../services/direction')
 export type EntityServiceIndex = typeof import('../services/entity')
+export type EvaluationServiceIndex = typeof import('../services/evaluation')
 export type EventServiceIndex = typeof import('../services/event')
 export type FunctionServiceIndex = typeof import('../services/function')
 export type GroupServiceIndex = typeof import('../services/group')
@@ -107,6 +110,7 @@ export type StudentServiceIndex = typeof import('../services/student')
 export type StudentEnrollmentServiceIndex = typeof import('../services/student-enrollment')
 export type SubscriptionServiceIndex = typeof import('../services/subscription')
 export type TeacherServiceIndex = typeof import('../services/teacher')
+export type TeacherCourseHoursServiceIndex = typeof import('../services/teacher-course-hours')
 export type TeacherUnavailabilityServiceIndex = typeof import('../services/teacher-unavailability')
 export type TermServiceIndex = typeof import('../services/term')
 export type UeServiceIndex = typeof import('../services/ue')
