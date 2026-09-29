@@ -9,7 +9,7 @@
         "SUPABASE_SERVICE_ROLE_KEY",
         "DATABASE_URL",
         "DIRECT_URL",
-        "TEST_DATABASE_URL",
+      "TEST_DATABASE_URL",
         "SUPABASE_SECRET_KEY",
         "SUPABASE_JWKS_URL",
         "STRIPE_PRO_PRICE_ID",
@@ -20,6 +20,12 @@
         "VAPID_PRIVATE_KEY"
       ]
     },
+    "build:types": {
+      "inputs": ["$TURBO_ROOT$/apps/web/src/**", "$TURBO_ROOT$/apps/web/tsconfig.json", "tsup.config.ts"],
+      "outputs": ["dist/**"]
+    },
+    "desktop#build": { "dependsOn": ["@attendancy/types#build:types"] },
+    "desktop#dev": { "dependsOn": ["@attendancy/types#build:types"] },
     "dev": {
       "cache": false,
       "persistent": true

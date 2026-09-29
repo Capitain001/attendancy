@@ -4,7 +4,10 @@ import { useActionState } from 'react'
 import { SubmitButton } from '../ui'
 import { signupPrincipalAction } from '@/modules/auth'
 
-
+//SignupPrincipalFormProps peut on l inferer de la fn action ?
+// type Props = {
+//   action: (prevState: FormState, formData: FormData) => Promise<FormState>
+// }
 
 export function SignupPrincipalForm() {
   const [state, formAction] = useActionState(signupPrincipalAction, null)

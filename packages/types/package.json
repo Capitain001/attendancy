@@ -2,14 +2,22 @@
   "name": "@attendancy/types",
   "version": "0.0.0",
   "private": true,
+  "types": "./dist/contract.d.ts",
   "exports": {
-    ".": "./src/index.ts",
+    ".": {
+      "types": "./dist/contract.d.ts"
+    },
     "./*": "./src/*.ts"
   },
   "scripts": {
+    "build:types": "tsup",
     "check-types": "tsc --noEmit"
   },
+  "dependencies": {
+    "type-fest": "^4"
+  },
   "devDependencies": {
+    "tsup": "^8",
     "typescript": "^6"
   }
 }

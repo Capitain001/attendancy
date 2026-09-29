@@ -1,16 +1,21 @@
 //src/types/user.ts
 import { FUNCTIONS } from "@/config/data";
 import { InvitedBy } from "./invitation";
-import { OrganizationType } from "@/generated/prisma/browser";
+import { OrganizationType, Role as DBRole } from "@/generated/prisma/browser";
 
+export const ROLES = [
+  DBRole.ADMIN,
+  DBRole.TEACHER,
+  DBRole.STUDENT,
+  DBRole.PARENT,
+  DBRole.DIRECTION,
+] as const satisfies readonly DBRole[]
+
+// rôles applicatifs (étendu avec GUEST)
 export const UserRoles = {
-  ADMIN: "ADMIN",
-  TEACHER: "TEACHER",
-  STUDENT: "STUDENT",
-  PARENT: "PARENT",
-  GUEST: "GUEST",
-  DIRECTION: "DIRECTION"
-} as const;
+  GUEST: 'GUEST',
+  ...DBRole,
+} as const
 
 
 export type Role = typeof UserRoles[keyof typeof UserRoles];

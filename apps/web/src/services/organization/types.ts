@@ -19,13 +19,13 @@ export type OrgDetails = {
 export type CreateOrgResult = { data: { slug: string } } | { error: string }
 
 
-// Setup d'une org INSTITUTIONNELLE par le fondateur — typent orgSetupSchema (validation.ts).
+// userId n'y figure pas : il vient de l'auth token (createOrgAction), jamais
+// de l'input utilisateur — seuls les champs réellement saisis sont validés.
 export type CreateOrgData = Pick<
   Prisma.OrganizationUncheckedCreateInput,
   'name' | 'slug' | 'email'
 >
  
-
 export type UpdateOrgIdentityData = Partial<
   Pick<Prisma.OrganizationUncheckedCreateInput, 'name' | 'email' | 'domain' | 'logo'>
 >

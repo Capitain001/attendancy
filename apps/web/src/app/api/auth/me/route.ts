@@ -2,6 +2,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { extractBearerToken, verifyBearerToken } from '@/utils/supabase/api'
 import { prisma } from '@/lib/prisma'
+//NB: il s agit d un test pas d une api final 
 
 export async function GET(req: NextRequest) {
   const token = extractBearerToken(req)

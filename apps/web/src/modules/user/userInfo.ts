@@ -5,6 +5,9 @@ import { createClient } from "@/utils/supabase/server"
 import { Functions, UserMetadata, UserRoles, UserStatus, type UserInfo } from "@/types/user"
 import { jwtDecode } from "jwt-decode"
 import { getUser, setUser, removeUser } from "./lru-cache"
+import { mapUserInfo } from "./utils"
+import { headers } from "next/headers"
+import { createBearerClient } from "@/utils/supabase/bearer"
 
 
 export interface GetUserInfoOptions {
@@ -40,16 +43,31 @@ const getSessionOnce = cache(async () => {
   return supabase.auth.getSession()
 })
 
+
+const getBearerToken = cache(async (): Promise<string | null> => {
+  const auth = (await headers()).get("authorization")
+  return auth?.startsWith("Bearer ") ? auth.slice(7) : null
+})
+
+
 /**
  * Extrait l'userId depuis la session cachée.
  * Wrappé dans cache() : même si 10 composants appellent getUserInfo(),
  * getSession() ne tourne qu'une seule fois par request.
  */
 const getUserId = cache(async (): Promise<string | null> => {
+  const bearer = await getBearerToken()
+
+  if (bearer) {
+    // pas de middleware sur ce chemin → signature vérifiée ici, avant le LRU
+    const { data, error } = await createBearerClient().auth.getClaims(bearer)
+    return error || !data ? null : (data.claims.sub ?? null)
+  }
+
+  // chemin cookies inchangé : le middleware a déjà vérifié le JWT
   const { data: { session } } = await getSessionOnce()
   if (!session?.access_token) return null
-  const token = jwtDecode<{ sub: string }>(session.access_token)
-  return token.sub ?? null
+  return jwtDecode<{ sub: string }>(session.access_token).sub ?? null
 })
 
 /**
@@ -62,37 +80,21 @@ const getUserId = cache(async (): Promise<string | null> => {
  * 
  * @param userId - ID utilisateur pour la clé de cache
  */
-const fetchUserFromSupabase = cache(async (userId: string): Promise<Partial<UserInfo> | null> => {
-  const supabase = await createClient()
+const fetchUserFromSupabase = cache(async (userId: string) => {
+  const bearer = await getBearerToken()
+  const { data: { user }, error } = bearer
+    ? await createBearerClient().auth.getUser(bearer)
+    : await (await createClient()).auth.getUser()
 
-  const { data: { user }, error } = await supabase.auth.getUser()
-  if (error || !user) return null
-
-  // Vérification de sécurité: l'userId doit correspondre
+    if (error || !user) return null
+    // Vérification de sécurité: l'userId doit correspondre
   if (user.id !== userId) {
     console.error(`Security: userId mismatch. Expected ${userId}, got ${user.id}`)
     return null
   }
 
   const userMetadata: UserMetadata = user.user_metadata || {}
-
-  return {
-    id: user.id,
-    email: user.email ?? undefined,
-    role: userMetadata.role || UserRoles.GUEST,
-    name: userMetadata.name || user.email?.split("@")[0] || "",
-    avatar_url: userMetadata.avatar_url,
-    // || "/avatar.png"
-    function: userMetadata.function || Functions.MEMBER,
-    organization: userMetadata.organization ?? undefined,
-    organizations: userMetadata.organizations || [],
-    invited_by: userMetadata.invited_by ?? undefined,
-    status: userMetadata.status || UserStatus.PENDING,
-    invitationToken: userMetadata.invitationToken ?? undefined,
-    invitationType: userMetadata.invitationType ?? undefined,
-    isConnected: userMetadata.isConnected || true,
-    updated_at: user.updated_at, // ← champ racine Supabase, pas user_metadata
-  }
+  return mapUserInfo({ user, userMetadata })
 })
 
 /**
@@ -200,7 +202,6 @@ export async function getUserInfo(
   // Utiliser le cache avec userId comme clé
   return getUserInfoWithCache(userId, options)
 }
-
 
 
 // Utiliser directement getUserInfo() avec les options appropriées

@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { getUserInfo } from '@/modules/user'
 import { redirectUser } from '@/config/redirects'
 import ForgotPassword from '@/components/auth/password/ForgotPassword'
+import { LOGIN_URL } from '@/config'
 
 export const metadata: Metadata = {
   title: 'Mot de passe oublié | Attendancy',
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 
 export default async function ForgotPasswordPage() {
   const user = await getUserInfo()
-  if (user?.id) redirect(redirectUser(user))
+  if (!user) redirect(LOGIN_URL)
 
   return (
     <div className="flex min-h-screen items-center justify-center p-6">

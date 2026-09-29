@@ -40,10 +40,20 @@ const SERVICES_DIR = path.join(ROOT, "src/services");
 // exposées. Le barrel réexporte, il ne définit rien à typer.
 const EXCLUDED_DB_FILES = new Set(["index.ts"]);
 
-function isDbFile(fileName: string, fullPath: string): boolean {
-  if (!fileName.endsWith(".ts")) return false;
-  if (EXCLUDED_DB_FILES.has(fileName)) return false;
-  return fs.statSync(fullPath).isFile();
+function listTsFiles(dir: string): string[] {
+  if (!fs.existsSync(dir)) return [];
+  return fs
+    .readdirSync(dir)
+    .filter((f) => f.endsWith(".ts") && !EXCLUDED_DB_FILES.has(f))
+    .filter((f) => fs.statSync(path.join(dir, f)).isFile());
+}
+
+function collectFns(dir: string): string[] {
+  const seen = new Set<string>();
+  for (const f of listTsFiles(dir)) {
+    for (const fn of extractExportedFns(path.join(dir, f))) seen.add(fn);
+  }
+  return [...seen];
 }
 
 // ── Extraction des noms de fonctions exportées ────────────────────────────────
@@ -137,63 +147,32 @@ function generateForService(servicePath: string): boolean {
     return false;
   }
 
-  const dbDir = path.join(serviceDir, "database");
-  if (!fs.existsSync(dbDir)) {
-    console.log(`  ⚠ ${servicePath} : pas de dossier database/ — skip`);
+  const dbFns = collectFns(path.join(serviceDir, "database"));
+  const actionFns = collectFns(path.join(serviceDir, "actions"));
+
+  if (!dbFns.length && !actionFns.length) {
+    console.log(`  ⚠ ${servicePath} : rien à typer — skip`);
     return true;
   }
 
-  const dbFiles = fs
-    .readdirSync(dbDir)
-    .filter((f) => isDbFile(f, path.join(dbDir, f)));
-
-  if (!dbFiles.length) {
-    console.log(`  ⚠ ${servicePath} : aucun fichier .ts dans database/ (hors index.ts) — skip`);
-    return true;
-  }
-
-  const fns: string[] = [];
-  for (const f of dbFiles) {
-    fns.push(...extractExportedFns(path.join(dbDir, f)));
-  }
-
-  if (!fns.length) {
-    console.log(`  ⚠ ${servicePath} : aucune fonction 'export function' dans database/ — skip`);
-    return true;
-  }
-
-  // Garde-fou : deux fonctions de même nom (ex. dans queries.ts et analytics.ts)
-  // généreraient un type dupliqué — on dédoublonne en gardant la 1ère occurrence
-  // et on avertit, plutôt que d'écrire un fichier invalide.
-  const seen = new Set<string>();
-  const dupes: string[] = [];
-  const uniqueFns = fns.filter((fn) => {
-    if (seen.has(fn)) {
-      dupes.push(fn);
-      return false;
-    }
-    seen.add(fn);
-    return true;
-  });
-  if (dupes.length) {
-    console.warn(
-      `  ⚠ ${servicePath} : fonction(s) exportée(s) en double dans database/ — ignorée(s) après la 1ère occurrence : ${dupes.join(", ")}`
-    );
-  }
-
-  const generatedTypeNames = uniqueFns.map((fn) => `${toPascalCase(fn)}Dto`);
+  const generatedTypeNames = [
+    ...dbFns.map((f) => `${toPascalCase(f)}Dto`),
+    ...actionFns.flatMap((f) => [`${toPascalCase(f)}Input`, `${toPascalCase(f)}Output`]),
+  ];
 
   const lines = [
     `// ⚠ Fichier généré automatiquement — NE PAS ÉDITER À LA MAIN`,
     `// Régénérer : npx tsx scripts/generate/types/types.ts ${servicePath}`,
     `// Pour surcharger un type, définissez-le dans ./types.ts (jamais écrasé).`,
     "",
-    `import { ${uniqueFns.join(", ")} } from './database'`,
+    ...(dbFns.length ? [`import type { ${dbFns.join(", ")} } from './database'`] : []),
+    ...(actionFns.length ? [`import type { ${actionFns.join(", ")} } from './actions'`] : []),
     "",
-    ...uniqueFns.map(
-      (fn) =>
-        `export type ${toPascalCase(fn)}Dto = Awaited<ReturnType<typeof ${fn}>>`
-    ),
+    ...dbFns.map((fn) => `export type ${toPascalCase(fn)}Dto = Awaited<ReturnType<typeof ${fn}>>`),
+    ...actionFns.flatMap((fn) => [
+      `export type ${toPascalCase(fn)}Input = Parameters<typeof ${fn}>[0]`,
+      `export type ${toPascalCase(fn)}Output = Awaited<ReturnType<typeof ${fn}>>`,
+    ]),
     "",
   ];
 
@@ -219,12 +198,10 @@ function collectEligibleServices(dir: string, base = ""): string[] {
     if (!fs.statSync(fullPath).isDirectory()) continue;
 
     const servicePath = base ? `${base}/${entry}` : entry;
-    const dbDir = path.join(fullPath, "database");
-    const hasDbFiles =
-      fs.existsSync(dbDir) &&
-      fs.readdirSync(dbDir).some((f) => isDbFile(f, path.join(dbDir, f)));
+    const hasDbFiles = collectFns(path.join(fullPath, "database")).length > 0;
+    const hasActionFiles = collectFns(path.join(fullPath, "actions")).length > 0;
 
-    if (hasDbFiles) results.push(servicePath);
+    if (hasDbFiles || hasActionFiles) results.push(servicePath);
 
     results.push(...collectEligibleServices(fullPath, servicePath));
   }

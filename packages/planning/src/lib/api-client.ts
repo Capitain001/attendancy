@@ -1,3 +1,4 @@
+//packages\planning\src\lib\api-client.ts
 // URL de base de l'API Next.js
 // Web  : '' (même origine, NEXT_PUBLIC_API_URL absent)
 // Tauri: VITE_API_URL = URL de l'instance Next.js déployée

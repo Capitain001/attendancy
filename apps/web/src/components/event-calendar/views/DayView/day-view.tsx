@@ -7,7 +7,6 @@ import {
   areIntervalsOverlapping,
   differenceInMinutes,
   eachHourOfInterval,
-  format,
   getHours,
   getMinutes,
   isSameDay,

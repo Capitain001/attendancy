@@ -1,0 +1,13 @@
+{
+  "extends": "../../apps/web/tsconfig.json",
+  "compilerOptions": {
+    "incremental": false,
+    "types": [],
+    "ignoreDeprecations": "6.0",
+    "paths": {
+      "@/*": ["../../apps/web/src/*"],
+      "@ui/*": ["../../packages/ui/src/*"]
+    }
+  },
+  "include": ["../../apps/web/src/app/api/rpc/[action]/contract.ts", "../../apps/web/src/**/*.ts"]
+}

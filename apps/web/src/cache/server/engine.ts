@@ -5,7 +5,7 @@
 // AUCUNE référence métier ici : ce fichier ne connaît ni le nom du projet ni
 // aucune donnée applicative — il est copiable tel quel d'un projet à l'autre.
 // Le registre métier (CACHE, CACHE_GRAPH) vit dans ./keys.
-import { updateTag } from "next/cache";
+import { revalidateTag, updateTag } from "next/cache";
 
 /** Profils cacheLife (next.config custom ou profils intégrés Next). */
 export const CACHE_LIFE = {
@@ -46,10 +46,34 @@ export function key<L extends CacheLifeProfile = typeof CACHE_LIFE.MEDIUM>(
   );
 }
 
+
+
+/**
+ * Expire un tag de cache selon le contexte d'exécution.
+ * - Contexte Server Action : `updateTag` (l'utilisateur voit sa propre écriture)
+ * - Contexte Route Handler (/api/rpc) : fallback sur `revalidateTag(tag, { expire: 0 })`
+ * - Hors runtime Next (scripts, seed) : ignoré silencieusement
+ */
+function expireTag(tag: string) {
+  try {
+    updateTag(tag);
+    return;
+  } catch {
+    // Hors Server Action (Route Handler /api/rpc, scripts)
+  }
+
+  try {
+    revalidateTag(tag, { expire: 0 });
+  } catch (err) {
+    if (process.env.NODE_ENV === "development") {
+      console.warn(`[cache] expiration ignorée pour "${tag}"`, err);
+    }
+  }
+}
+
 /**
  * Construit `invalidateCache`/`invalidateEvent` liés à UN registre (CACHE) et
- * UN graphe d'événements (CACHE_GRAPH) donnés en paramètre. Le moteur ignore
- * totalement leur contenu — il ne fait qu'appeler `updateTag` en silencieux.
+ * UN graphe d'événements (CACHE_GRAPH) donnés en paramètre.
  *
  * @example
  * // dans keys.ts (métier) :
@@ -61,8 +85,7 @@ export function createInvalidators<
   G extends Record<string, (...args: any[]) => string[]>,
 >(CACHE: C, CACHE_GRAPH: G) {
   /**
-   * Invalide un tag (updateTag — expire immédiat, l'utilisateur voit sa propre
-   * écriture). try/catch silencieux : safe hors runtime Next (scripts, seed).
+   * Invalide un tag (expireTag — compatible Server Actions et Route Handlers /api/rpc).
    *
    * LISTE  : invalidateCache("EXAMPLES", scopeId)
    * DÉTAIL : invalidateCache("EXAMPLES", scopeId, exampleId)
@@ -72,11 +95,7 @@ export function createInvalidators<
     scopeId?: string,
     id?: string
   ) {
-    try {
-      updateTag(CACHE[keyName](scopeId, id));
-    } catch {
-      // silencieux volontaire (scripts / hors contexte Server Action)
-    }
+    expireTag(CACHE[keyName](scopeId, id));
   }
 
   /**
@@ -89,16 +108,13 @@ export function createInvalidators<
     event: E,
     ...args: Parameters<G[E]>
   ) {
-    try {
-      const fn = CACHE_GRAPH[event];
-      const tags = (fn as (...a: typeof args) => string[])(...args);
-      for (const tag of tags) {
-        updateTag(tag);
-      }
-    } catch {
-      // silencieux volontaire (scripts / hors contexte Server Action)
+    const fn = CACHE_GRAPH[event];
+    const tags = (fn as (...a: typeof args) => string[])(...args);
+    for (const tag of tags) {
+      expireTag(tag);
     }
   }
 
   return { invalidateCache, invalidateEvent };
 }
+

@@ -9,6 +9,7 @@ import { CALL_BACK, SITE_URL } from '@/config/url';
 // import { UserStatus } from '@/types';
 import { Functions, UserStatus, UserInfo } from '@/types/user';
 import { Role } from '@/generated/prisma/browser';
+import { PersonalSignupRole } from './constants';
 
 
 interface SignUpParams {
@@ -69,6 +70,29 @@ export async function signUpPrincipal(
   });
 }
 
+
+
+/**
+ * Compte "personal" (espace hors organisation institution),
+ */
+export async function signUpPersonal(
+  email: string,
+  password: string,
+  info?: Partial<Pick<UserInfo, "name" | "phone" | "avatar_url">>
+) {
+  const supabase = await createClient();
+  return supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: CALL_BACK,
+      data: {
+        ...(info || {}),
+        status: UserStatus.NEW,
+      },
+    },
+  });
+}
 // ── Auth opérations courantes ─────────────────────────────────────────────────
 
 /**

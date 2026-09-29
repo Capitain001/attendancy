@@ -24,26 +24,30 @@ export async function superAdminStatus(user:UserInfo) {
   }
   
 
-  export function mapUserInfo({user, userMetadata}: {user:SupabaseUser, userMetadata:UserMetadata}): UserInfo {
-
-    const userInfo: UserInfo = {
-      id: user.id,
-      email: user.email || undefined,
-      role: userMetadata.role || UserRoles.GUEST,
-      name: userMetadata.name || user.email?.split("@")[0] || "",
-      avatar_url: userMetadata.avatar_url || "/avatar.png",
-      function: userMetadata.function || Functions.MEMBER ,
-      organization: userMetadata.organization || undefined,
-      organizations: userMetadata.organizations || [],
-      invited_by: userMetadata.invited_by || undefined,
-      status: userMetadata.status || UserStatus.PENDING,
-      invitationToken: userMetadata.invitationToken || undefined,
-      invitationType: userMetadata.invitationType || undefined,                
-    };
-  
-    return userInfo;
+export function mapUserInfo({
+  user,
+  userMetadata,
+}: {
+  user: SupabaseUser
+  userMetadata: UserMetadata
+}): UserInfo {
+  return {
+    id: user.id,
+    email: user.email ?? undefined,
+    role: userMetadata.role || UserRoles.GUEST,
+    name: userMetadata.name || user.email?.split("@")[0] || "",
+    avatar_url: userMetadata.avatar_url,
+    function: userMetadata.function || Functions.MEMBER,
+    organization: userMetadata.organization ?? undefined,
+    organizations: userMetadata.organizations || [],
+    invited_by: userMetadata.invited_by ?? undefined,
+    status: userMetadata.status || UserStatus.PENDING,
+    invitationToken: userMetadata.invitationToken ?? undefined,
+    invitationType: userMetadata.invitationType ?? undefined,
+    isConnected: userMetadata.isConnected || true,
+    updated_at: user.updated_at,
   }
-  
+}
 
 /**
  * Génère un objet UserInfo limité aux champs souhaités
