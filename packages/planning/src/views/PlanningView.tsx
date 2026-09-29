@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Card, CardContent, CardHeader } from '@attendancy/ui'
+
 import { usePlanning, useTeacherPlanning } from '../hooks/usePlanning'
 
 function useOnlineStatus() {
@@ -48,15 +48,15 @@ export function PlanningView({ classId, from, to, scope = 'class' }: Props) {
           <p className="font-semibold text-sm mb-2">{day.date}</p>
           <div className="space-y-2">
             {day.slots.map((slot) => (
-              <Card key={slot.id}>
-                <CardHeader className="pb-1 pt-3 px-3">
+              <div key={slot.id}>
+                <div className="pb-1 pt-3 px-3">
                   <span className="font-medium text-sm">{slot.courseName}</span>
-                </CardHeader>
-                <CardContent className="pb-3 px-3 pt-0 text-xs text-muted-foreground">
+                </div>
+                <div className="pb-3 px-3 pt-0 text-xs text-muted-foreground">
                   {slot.startTime} – {slot.endTime}
                   {slot.roomName && ` · ${slot.roomName}`}
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             ))}
           </div>
         </div>

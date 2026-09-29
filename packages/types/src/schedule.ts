@@ -28,3 +28,18 @@ export type ScheduleDto = {
   className: string
   days: DayScheduleDto[]
 }
+
+export type ScheduleDbStatus = 'PENDING' | 'COMPLETED' | 'CANCELED' | 'MISSED'
+
+export type TeacherScheduleItemDto = {
+  id: string
+  startTime: string // ISO
+  endTime: string   // ISO
+  status: ScheduleDbStatus
+  notes: string | null
+  isLocked: boolean
+  courseName: string
+  roomName: string
+  className: string
+  groupName: string | null
+}
