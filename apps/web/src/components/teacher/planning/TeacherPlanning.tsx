@@ -97,7 +97,7 @@ export function TeacherPlanning({
         locale={fr}
         todayLabel="Auj."
         classNames={{ root: "w-full " }}
-        className="mx-auto p-2 gap-3 h-[580px]"
+        className="mx-auto p-2 gap-3 h-145"
       />
 
       <TeacherPlanningDrawer
