@@ -29,7 +29,7 @@
       "@/*": [
         "./src/*"
       ],
-      // "@/generated/prisma/*": ["../../packages/db/src/generated/*"],
+      "@/generated/prisma/*": ["../../packages/db/src/generated/*"],
       "@ui/*": ["../../packages/ui/src/*"]
     }
   },
