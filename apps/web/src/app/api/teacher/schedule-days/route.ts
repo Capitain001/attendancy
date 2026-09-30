@@ -1,7 +1,7 @@
 // src/app/api/teacher/schedule-days/route.ts
 import { type NextRequest, NextResponse } from 'next/server'
 import { extractBearerToken, verifyBearerToken } from '@/utils/supabase/api'
-import { getScheduleDays } from '@/services/schedule/database'
+// import { getScheduleDays } from '@/services/schedule/database'
 import { prisma } from '@/lib/prisma'
 
 function corsHeaders(req: NextRequest) {
@@ -50,7 +50,8 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const days = await getScheduleDays(orgId, month, { teacherId: teacher.id })
+    // const days = await getScheduleDays(orgId, month, { teacherId: teacher.id })
+    const days ={}
     return NextResponse.json({ data: days }, { headers: cors })
   } catch (e) {
     return NextResponse.json(

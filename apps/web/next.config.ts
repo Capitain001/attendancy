@@ -7,15 +7,15 @@
 // `await connection()` (next/server) en tête de fonction, sinon Next lève
 // "Uncached data was accessed outside of <Suspense>".
 
+const path = require('path')
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 
 module.exports = {
-  // Packages workspace partagés — nécessaire pour que Next.js transpile leurs sources
-  transpilePackages: ['@attendancy/types', '@attendancy/planning'],
-
+  turbopack: { root: path.join(__dirname, '../..') },
   experimental: {
     // Transforme les imports barrel en imports directs au build (bundle size)
     optimizePackageImports: ['lucide-react'],
+  
   },
 
   cacheComponents: true,

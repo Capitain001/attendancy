@@ -1,5 +1,6 @@
 import type { Prisma } from '@/generated/prisma/client'
-import { GetStudentsEnrollmentsDto } from './types'
+import { GetStudentsEnrollmentsDto } from './generated.types'
+
 
 export type CreateStudentEnrollmentData = Pick<
   Prisma.StudentEnrollmentUncheckedCreateInput,

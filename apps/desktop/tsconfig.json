@@ -10,6 +10,7 @@
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,
     "paths": {
+      "@/generated/prisma/browser": ["../../packages/db/src/generated/browser.ts"],
       "@ui/*": ["../../packages/ui/src/*"]
     }
   },

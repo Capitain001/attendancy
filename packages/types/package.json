@@ -2,10 +2,10 @@
   "name": "@attendancy/types",
   "version": "0.0.0",
   "private": true,
-  "types": "./dist/contract.d.ts",
+  "types": "./dist/contract.d.mts",
   "exports": {
     ".": {
-      "types": "./dist/contract.d.ts"
+      "types": "./dist/contract.d.mts"
     },
     "./*": "./src/*.ts"
   },
@@ -13,10 +13,8 @@
     "build:types": "tsup",
     "check-types": "tsc --noEmit"
   },
-  "dependencies": {
-    "type-fest": "^4"
-  },
   "devDependencies": {
+    "@prisma/client": "^7.8.0",
     "tsup": "^8",
     "typescript": "^6"
   }

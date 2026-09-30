@@ -1,6 +1,6 @@
 // prisma/seed/referential-togo-2022.ts
 import { PrismaPg } from '@prisma/adapter-pg'
-import { PrismaClient, UETemplateType, DegreeType } from '../../src/generated/prisma/client'
+import { PrismaClient, UETemplateType, DegreeType } from '@/generated/prisma/client'
 
 const connectionString = process.env.DIRECT_URL ?? process.env.DATABASE_URL
 

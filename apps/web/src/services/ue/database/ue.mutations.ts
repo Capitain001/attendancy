@@ -4,7 +4,7 @@ import { tryConstraint } from '@/utils/server/prisma'
 import { invalidateEvent } from '@/cache/server/graph'
 import type { CreateUEOutput } from '../validation'
 import type { UEOrder, CourseOrder } from '../validation'
-import { UE } from '@/generated/prisma/client'
+import { UE } from '@/generated/prisma/browser'
 
 // Ré-export depuis la couche database de program-track (jamais depuis actions/,
 // voir SKILL.md service-module-pattern — "un service peut importer les fonctions

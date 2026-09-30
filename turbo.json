@@ -18,14 +18,26 @@
         "STRIPE_WEBHOOK_SECRET",
         "STRIPE_ENDPOINT_SECRET",
         "VAPID_PRIVATE_KEY"
-      ]
+      ],
+      "@attendancy/web#db:generate": {
+  "inputs": ["$TURBO_DEFAULT$", ".env*"],
+  "outputs": ["$TURBO_ROOT$/packages/db/src/generated/**"],
+  "env": ["DATABASE_URL", "DIRECT_URL"]
+},
+"@attendancy/types#build:types": {
+  "dependsOn": ["@attendancy/web#db:generate"],
+  "inputs": [
+    "$TURBO_ROOT$/apps/web/src/**",
+    "$TURBO_ROOT$/apps/web/tsconfig.json",
+    "tsup.config.ts",
+    "tsconfig.dts.json"
+  ],
+  "outputs": ["dist/**"]
+},
+"@attendancy/desktop#dev":   { "dependsOn": ["@attendancy/types#build:types"] },
+"@attendancy/desktop#build": { "dependsOn": ["@attendancy/types#build:types"] },
+"@attendancy/web#build":     { "dependsOn": ["@attendancy/web#db:generate"] }
     },
-    "build:types": {
-      "inputs": ["$TURBO_ROOT$/apps/web/src/**", "$TURBO_ROOT$/apps/web/tsconfig.json", "tsup.config.ts"],
-      "outputs": ["dist/**"]
-    },
-    "desktop#build": { "dependsOn": ["@attendancy/types#build:types"] },
-    "desktop#dev": { "dependsOn": ["@attendancy/types#build:types"] },
     "dev": {
       "cache": false,
       "persistent": true

@@ -5,7 +5,7 @@
  * Crée (si inexistants) : Room, UE, UECourse, Course, User(teacher), Teacher
  * Puis génère 2 semaines de séances pour la classe cible.
  */
-import { PrismaClient } from '../src/generated/prisma/client'
+import { PrismaClient } from '@/generated/prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! })

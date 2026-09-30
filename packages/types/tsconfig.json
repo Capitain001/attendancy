@@ -5,7 +5,15 @@
     "moduleResolution": "bundler",
     "strict": true,
     "declaration": true,
-    "noEmit": true
+    "noEmit": true,
+    "paths": {
+      "@/generated/prisma/*": [
+        "../../packages/db/src/generated/*"
+      ],
+      
+    },
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

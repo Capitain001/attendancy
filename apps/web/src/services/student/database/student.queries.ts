@@ -66,7 +66,7 @@ export async function getStudentStats(params: {
     ...(params.groupIds.length > 0 ? [{ groupId: { in: params.groupIds } }] : []),
   ]
 
-  const [total, present, coursesCount, todaySchedules, absencesToday, evaluations] = await Promise.all([
+  const [total, present, coursesCount, todaySchedules, absencesToday, grades] = await Promise.all([
     prisma.attendance.count({
       where: { studentId: params.studentId, orgId: params.orgId },
     }),
@@ -90,15 +90,23 @@ export async function getStudentStats(params: {
         schedule: { startTime: { gte: start, lte: end } },
       },
     }),
-    prisma.evaluation.findMany({
-      where: { studentId: params.studentId, orgId: params.orgId },
-      select: { score: true, maxScore: true },
+    prisma.grade.findMany({
+      where: {
+        status: 'GRADED',
+        enrollment: { studentId: params.studentId, classId: params.classId },
+        evaluation: { orgId: params.orgId },
+      },
+      select: { score: true, evaluation: { select: { maxScore: true } } },
     }),
   ])
 
   let totalScore = 0
   let totalMaxScore = 0
-  for (const e of evaluations) { totalScore += e.score; totalMaxScore += e.maxScore }
+  for (const g of grades) {
+    if (g.score === null) continue
+    totalScore += g.score
+    totalMaxScore += g.evaluation.maxScore
+  }
 
   // Bloc « ta journée » — CANCELED exclu (pas de séance fantôme, D22).
   const activeToday = todaySchedules.filter((s) => s.status !== 'CANCELED')
@@ -111,7 +119,7 @@ export async function getStudentStats(params: {
     totalCourses:     coursesCount,
     todayCount:       todaySchedules.length,
     averageGrade:     totalMaxScore > 0 ? Math.round((totalScore / totalMaxScore) * 100 * 100) / 100 : 0,
-    totalEvaluations: evaluations.length,
+    totalEvaluations: grades.length,
     today: {
       doneSessions:  doneToday.length,
       totalSessions: activeToday.length,

@@ -5,9 +5,10 @@
     "types": [],
     "ignoreDeprecations": "6.0",
     "paths": {
+      "@/generated/prisma/*": ["../../packages/db/src/generated/*"],
       "@/*": ["../../apps/web/src/*"],
       "@ui/*": ["../../packages/ui/src/*"]
     }
   },
-  "include": ["../../apps/web/src/app/api/rpc/[action]/contract.ts", "../../apps/web/src/**/*.ts"]
+  "include": ["src/index.ts", "../../apps/web/src/**/*.ts"]
 }

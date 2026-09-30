@@ -1,5 +1,5 @@
 // src/services/schedule/database/schedule.queries.ts
-import type { Schedule } from '@/generated/prisma/client'
+import type { Schedule } from '@/generated/prisma/browser'
 import { cacheTag, cacheLife } from 'next/cache'
 import { startOfMonth, endOfMonth } from 'date-fns'
 import { prisma } from '@/lib/prisma'
