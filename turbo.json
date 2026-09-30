@@ -9,7 +9,7 @@
         "SUPABASE_SERVICE_ROLE_KEY",
         "DATABASE_URL",
         "DIRECT_URL",
-      "TEST_DATABASE_URL",
+        "TEST_DATABASE_URL",
         "SUPABASE_SECRET_KEY",
         "SUPABASE_JWKS_URL",
         "STRIPE_PRO_PRICE_ID",
@@ -18,26 +18,26 @@
         "STRIPE_WEBHOOK_SECRET",
         "STRIPE_ENDPOINT_SECRET",
         "VAPID_PRIVATE_KEY"
-      ],
-      "@attendancy/web#db:generate": {
-  "inputs": ["$TURBO_DEFAULT$", ".env*"],
-  "outputs": ["$TURBO_ROOT$/packages/db/src/generated/**"],
-  "env": ["DATABASE_URL", "DIRECT_URL"]
-},
-"@attendancy/types#build:types": {
-  "dependsOn": ["@attendancy/web#db:generate"],
-  "inputs": [
-    "$TURBO_ROOT$/apps/web/src/**",
-    "$TURBO_ROOT$/apps/web/tsconfig.json",
-    "tsup.config.ts",
-    "tsconfig.dts.json"
-  ],
-  "outputs": ["dist/**"]
-},
-"@attendancy/desktop#dev":   { "dependsOn": ["@attendancy/types#build:types"] },
-"@attendancy/desktop#build": { "dependsOn": ["@attendancy/types#build:types"] },
-"@attendancy/web#build":     { "dependsOn": ["@attendancy/web#db:generate"] }
+      ]
     },
+    "@attendancy/web#db:generate": {
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": ["$TURBO_ROOT$/packages/db/src/generated/**"],
+      "env": ["DATABASE_URL", "DIRECT_URL"]
+    },
+    "@attendancy/types#build:types": {
+      "dependsOn": ["@attendancy/web#db:generate"],
+      "inputs": [
+        "$TURBO_ROOT$/apps/web/src/**",
+        "$TURBO_ROOT$/apps/web/tsconfig.json",
+        "tsup.config.ts",
+        "tsconfig.dts.json"
+      ],
+      "outputs": ["dist/**"]
+    },
+    "@attendancy/desktop#dev": { "dependsOn": ["@attendancy/types#build:types"] },
+    "@attendancy/desktop#build": { "dependsOn": ["@attendancy/types#build:types"] },
+    "@attendancy/web#build": { "dependsOn": ["@attendancy/web#db:generate"] },
     "dev": {
       "cache": false,
       "persistent": true

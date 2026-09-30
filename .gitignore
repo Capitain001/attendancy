@@ -20,10 +20,9 @@ next-env.d.ts
 .env*.local
 
 # prisma — client généré (recréé par `prisma generate`)
-src/generated/
-
 #reference type service
-src/generated/referentiel.ts
+/apps/web/src/generated/
+
 
 # rust build artifacts
 src-tauri/target/
@@ -41,3 +40,5 @@ yarn-error.log*
 # tests
 coverage/
 apps/desktop/src-tauri/*
+.gitignore
+.gitignore
