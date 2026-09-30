@@ -34,7 +34,7 @@ export function TeacherCourses({ courses }: TeacherCoursesProps) {
                     <button
                         type="button"
                         onClick={() => setSelectedClassId(null)}
-                        className="inline-flex w-fit items-center gap-1 text-xs text-foreground/40 transition-colors hover:text-foreground/70"
+                        className="hiden md:inline-flex w-fit items-center gap-1 text-xs text-foreground/40 transition-colors hover:text-foreground/70"
                     >
                         <ArrowLeft className="size-3" />
                         Mes classes

@@ -35,9 +35,9 @@ export default function TeacherSessionPage({ teacherId }: { teacherId: string })
       onValueChange={setScreen}
       panels={[
         <SessionPageInner key="session" schedule={schedule} teacherId={teacherId} />,
-        // <div key="attendance" className="flex h-full flex-col overflow-hidden">
-        //   <AttendanceList scheduleId={schedule.id} className="min-h-0 flex-1 rounded-none bg-background border-0" />
-        // </div>,
+        <div key="attendance" className="flex h-full flex-col overflow-hidden">
+          <AttendanceList scheduleId={schedule.id} className="min-h-0 flex-1 rounded-none bg-background border-0" />
+        </div>,
       ]}
       hint={
         <>

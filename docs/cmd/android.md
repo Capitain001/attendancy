@@ -79,3 +79,16 @@ bun run tauri android dev
   futures (`opt-level = "z"`, `lto`, `strip` dans `Cargo.toml`) → ~8 MB.
 - `gen/android` est commité (décision plan offline-local-builds) — les symlinks
   jniLibs pointent vers `src-tauri/target/`, ne pas copier les `.so` à la main.
+
+
+##BUILD & sign
+# 1. Build
+$env:ANDROID_HOME='D:\ANDROID'; $env:NDK_HOME='D:\ANDROID\ndk\27.3.13750724'; $env:JAVA_HOME='C:\Program Files\Java\jdk-21'
+bun run tauri android build --apk --target aarch64
+
+# 2. Signature
+& "D:\ANDROID\build-tools\36.0.0\apksigner.bat" sign `
+  --ks "$env:USERPROFILE\.android\debug.keystore" `
+  --ks-pass pass:android `
+  --out "src-tauri\gen\android\app\build\outputs\apk\universal\release\Attendancy-0.1.0-arm64-signed.apk" `
+  "src-tauri\gen\android\app\build\outputs\apk\universal\release\app-universal-release-unsigned.apk"
