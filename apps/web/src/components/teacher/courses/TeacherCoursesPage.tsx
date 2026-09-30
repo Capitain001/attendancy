@@ -50,7 +50,7 @@ export function TeacherCourses({ courses }: TeacherCoursesProps) {
                                 key={course.id}
                                 className={cn(
                                     'group/row flex h-14 items-center gap-3 px-3 text-sm transition-colors bg-foreground/2 sm:h-10 sm:rounded-lg sm:bg-transparent sm:hover:bg-foreground/5',
-                                    index !== selectedClass.courses.length - 1 && 'border-b border-foreground/[0.06] sm:border-b-0'
+                                    index !== selectedClass.courses.length - 1 && 'border-b border-foreground/6 sm:border-b-0'
                                 )}
                             >
                                 <span className="w-4 shrink-0 text-right font-mono text-[11px] tabular-nums text-foreground/25">
