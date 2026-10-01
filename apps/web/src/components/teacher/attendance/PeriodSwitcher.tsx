@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/PeriodSwitcher.tsx
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { TEACHER_OVERVIEW_PERIODS, getPeriodLabel } from '@/services/attendance/constants'

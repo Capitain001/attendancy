@@ -1,83 +1,60 @@
+// src/components/teacher/planning/TeacherPlanning.tsx
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
-import { startOfDay } from "date-fns";
+import { useCallback, useState } from "react";
+import { format } from "date-fns/format";
+import { startOfDay } from "date-fns/startOfDay";
 import { fr } from "date-fns/locale";
 
 import {
   Calendar,
   type DayDecoration,
 } from "@/components/ui/custom/calendar";
-import type { GetSchedulesDto } from "@/services/schedule";
+import { usePlanningMonth } from "@/hooks/data/planning/use-planning-month";
+import { useScheduleDays } from "@/hooks/data/planning/useScheduleDays";
+import { useTeacherDaySchedules } from "@/hooks/data/planning/useTeacherDaySchedules";
 import { TeacherPlanningDrawer } from "./ui/TeacherPlanningDrawer";
 
-type ScheduleItem = GetSchedulesDto[number];
+// Indicateur visuel des jours ayant au moins une séance — isolé de la logique
+// métier (le composant ne fait que décider *si* un jour est marqué).
+const HAS_SCHEDULE_DECORATION: DayDecoration = {
+  fillClassName: "bg-primary/10",
+  ringClassName: "ring-2 ring-primary/80",
+};
 
-function dayKey(date: Date) {
-  return startOfDay(date).toISOString();
-}
+const HAS_SCHEDULE_FOOTER = "•";
 
-export function TeacherPlanning({
-  schedules,
-}: {
-  schedules: GetSchedulesDto;
-}) {
+export function TeacherPlanning({ teacherId }: { teacherId: string }) {
+  const [visibleMonth, setVisibleMonth] = usePlanningMonth();
   const [selectedDate, setSelectedDate] = useState(() =>
     startOfDay(new Date())
   );
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const schedulesByDay = useMemo(() => {
-    const map = new Map<string, ScheduleItem[]>();
+  // Jours du mois visible (avec prefetch des mois adjacents) — piloté par l'URL.
+  const scheduleDays = useScheduleDays({
+    visibleMonth,
+    filters: { teacherId },
+  });
 
-    for (const schedule of schedules) {
-      const key = dayKey(new Date(schedule.startTime));
-      const list = map.get(key) ?? [];
-
-      list.push(schedule);
-      map.set(key, list);
-    }
-
-    for (const list of map.values()) {
-      list.sort(
-        (a, b) =>
-          new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
-      );
-    }
-
-    return map;
-  }, [schedules]);
-
-  const selectedDaySchedules = useMemo(
-    () => schedulesByDay.get(dayKey(selectedDate)) ?? [],
-    [schedulesByDay, selectedDate]
-  );
+  // Séances du jour sélectionné, affichées dans le drawer.
+  const { data: selectedDaySchedules = [] } = useTeacherDaySchedules({
+    teacherId,
+    date: selectedDate,
+  });
 
   const dayDecoration = useCallback(
-    (date: Date): DayDecoration | undefined => {
-      const daySchedules = schedulesByDay.get(dayKey(date));
-
-      if (!daySchedules?.length) return undefined;
-
-      const hasPending = daySchedules.some(
-        (schedule) => schedule.status === "PENDING"
-      );
-
-      return {
-        fillClassName: "bg-primary/10",
-        ringClassName: hasPending ? "ring-2 ring-amber-400" : undefined,
-      };
-    },
-    [schedulesByDay]
+    (date: Date): DayDecoration | undefined =>
+      scheduleDays.has(format(date, "yyyy-MM-dd"))
+        ? HAS_SCHEDULE_DECORATION
+        : undefined,
+    [scheduleDays]
   );
 
   const dayFooter = useCallback(
-    (date: Date) => {
-      const count = schedulesByDay.get(dayKey(date))?.length ?? 0;
-
-      return count || null;
-    },
-    [schedulesByDay]
+    (date: Date) =>
+      scheduleDays.has(format(date, "yyyy-MM-dd")) ? HAS_SCHEDULE_FOOTER : null,
+    [scheduleDays]
   );
 
   const handleSelectDate = (date: Date | undefined) => {
@@ -90,6 +67,8 @@ export function TeacherPlanning({
     <div className="w-full h-full flex-1 flex">
       <Calendar
         mode="single"
+        month={visibleMonth}
+        onMonthChange={setVisibleMonth}
         selected={selectedDate}
         onSelect={handleSelectDate}
         dayDecoration={dayDecoration}
@@ -101,7 +80,7 @@ export function TeacherPlanning({
       />
 
       <TeacherPlanningDrawer
-      className="max-h-[90vh]"
+        className="max-h-[90vh]"
         selectedDate={selectedDate}
         schedules={selectedDaySchedules}
         open={isDrawerOpen}

@@ -98,6 +98,8 @@ export type GetTeacherDaySchedulesInput = {
  * Une entrée cache par (teacherId, jour) — alimente le détail affiché sous
  * le calendrier, séparément de scheduleDaysQuery (liste des jours seulement,
  * pour la grille de points).
+ * Preset RETAINED : l'utilisateur navigue de jour en jour, on garde donc les
+ * jours déjà visités en cache (gcTime long) pour éviter un refetch au retour.
  */
 export function teacherDaySchedulesQuery({ teacherId, dayKey }: GetTeacherDaySchedulesInput) {
   const rangeStart = new Date(`${dayKey}T00:00:00`);
@@ -112,6 +114,6 @@ export function teacherDaySchedulesQuery({ teacherId, dayKey }: GetTeacherDaySch
       }
       return res.data ?? [];
     },
-    ...QUERY_PRESETS.DASHBOARD,
+    ...QUERY_PRESETS.RETAINED,
   };
 }

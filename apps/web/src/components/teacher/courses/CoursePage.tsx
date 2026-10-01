@@ -1,3 +1,4 @@
+// src/components/teacher/courses/CoursePage.tsx
 'use client'
 
 import Link from 'next/link'

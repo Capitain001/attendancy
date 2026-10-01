@@ -1,3 +1,4 @@
+// src/components/teacher/section/TeachersSection.tsx
 "use client"
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

@@ -1,3 +1,4 @@
+// src/components/teacher/ui/RecentSessions.tsx
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

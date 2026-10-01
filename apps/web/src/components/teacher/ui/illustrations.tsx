@@ -1,3 +1,4 @@
+// src/components/teacher/ui/illustrations.tsx
 // Illustrations & état vide de l'espace enseignant.
 //
 // Le registre teacher = 70 % direction + accent serif + illustrations sur les

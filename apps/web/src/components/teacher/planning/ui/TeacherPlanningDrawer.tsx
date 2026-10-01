@@ -1,3 +1,4 @@
+// src/components/teacher/planning/ui/TeacherPlanningDrawer.tsx
 "use client";
 
 import { format } from "date-fns";
@@ -19,44 +20,44 @@ import {
 } from "@/components/ui/drawer";
 import { cn } from "@/lib/utils";
 import type { GetSchedulesDto } from "@/services/schedule";
+import {
+  resolveScheduleUiStatus,
+  SCHEDULE_UI_STATUS_LABEL,
+  type ScheduleUiStatus,
+} from "@/services/schedule/policy";
+import { useScheduleClock } from "@/hooks/data/schedule/useScheduleClock";
 
 type ScheduleItem = GetSchedulesDto[number];
 
+// Clés = ScheduleUiStatus (dérivé via resolveScheduleUiStatus), jamais le status
+// DB brut : un PENDING dans sa fenêtre doit s'afficher ONGOING, et un PENDING
+// dont la fenêtre est passée doit s'afficher MISSED (latence non encore actée).
+// Libellés : source unique = SCHEDULE_UI_STATUS_LABEL.
 const STATUS_STYLES: Record<
-  string,
-  { label: string; className: string; bgClassName: string }
+  ScheduleUiStatus,
+  { className: string; bgClassName: string }
 > = {
   PENDING: {
-    label: "À venir",
     className: "text-amber-600 dark:text-amber-400",
     bgClassName: "bg-amber-500/10 border-amber-500/20",
   },
+  ONGOING: {
+    className: "text-green-600 dark:text-green-400",
+    bgClassName: "bg-green-500/10 border-green-500/20",
+  },
   COMPLETED: {
-    label: "Terminée",
     className: "text-emerald-600 dark:text-emerald-400",
     bgClassName: "bg-emerald-500/10 border-emerald-500/20",
   },
   CANCELED: {
-    label: "Annulée",
     className: "text-red-600 dark:text-red-400",
     bgClassName: "bg-red-500/10 border-red-500/20",
   },
   MISSED: {
-    label: "Manquée",
     className: "text-orange-600 dark:text-orange-400",
     bgClassName: "bg-orange-500/10 border-orange-500/20",
   },
 };
-
-function getStatusStyle(status: string) {
-  return (
-    STATUS_STYLES[status] ?? {
-      label: status,
-      className: "text-muted-foreground",
-      bgClassName: "bg-muted border-border",
-    }
-  );
-}
 
 interface TeacherPlanningDrawerProps {
   selectedDate: Date;
@@ -73,6 +74,10 @@ export function TeacherPlanningDrawer({
   onOpenChange,
   className
 }: TeacherPlanningDrawerProps) {
+  // `now` ne bouge qu'aux frontières de transition (début/fin d'une séance
+  // PENDING) : le statut affiché reste juste sans re-render inutile.
+  const now = useScheduleClock(schedules);
+
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
 
@@ -101,7 +106,8 @@ export function TeacherPlanningDrawer({
               </div>
             ) : (
               schedules.map((schedule) => {
-                const statusStyle = getStatusStyle(schedule.status);
+                const uiStatus = resolveScheduleUiStatus(schedule, now);
+                const statusStyle = STATUS_STYLES[uiStatus];
                 const startTimeStr = format(
                   new Date(schedule.startTime),
                   "HH:mm"
@@ -132,7 +138,7 @@ export function TeacherPlanningDrawer({
                           statusStyle.className
                         )}
                       >
-                        {statusStyle.label}
+                        {SCHEDULE_UI_STATUS_LABEL[uiStatus]}
                       </span>
                     </div>
 

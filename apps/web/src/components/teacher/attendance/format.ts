@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/format.ts
 // `rate` : pourcentage entier 0–100 (convention de policy.ts), null si aucune séance décomptée.
 export function formatRate(rate: number | null) {
   return rate === null ? '—' : `${rate} %`

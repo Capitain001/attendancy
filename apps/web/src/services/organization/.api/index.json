@@ -2,7 +2,7 @@
   "service": "organization",
   "path": "src/services/organization/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "38f2f24",
+  "derived_at": "908bd38",
   "utils_dir": null,
   "fns": {
     "createOrgWithDefaults": {
@@ -27,6 +27,21 @@
     },
     "setMemberStatusWithAudit": {
       "f": ".api/setMemberStatusWithAudit.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "createPersonalOrgWithDefaults": {
+      "f": ".api/createPersonalOrgWithDefaults.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "createPersonalOrgWithProfile": {
+      "f": ".api/createPersonalOrgWithProfile.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "createPersonalProfile": {
+      "f": ".api/createPersonalProfile.json",
       "layer": "db",
       "kind": "mutation"
     },
@@ -65,6 +80,11 @@
       "layer": "db",
       "kind": "query"
     },
+    "findPersonalProfileId": {
+      "f": ".api/findPersonalProfileId.json",
+      "layer": "db",
+      "kind": "query"
+    },
     "createOrgAction": {
       "f": ".api/createOrgAction.json",
       "layer": "action",
@@ -80,6 +100,16 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "setCurrentOrganizationAction": {
+      "f": ".api/setCurrentOrganizationAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "selectOrganizationProfileAction": {
+      "f": ".api/selectOrganizationProfileAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "updateOrgLogoAction": {
       "f": ".api/updateOrgLogoAction.json",
       "layer": "action",
@@ -87,6 +117,16 @@
     },
     "setMemberStatusAction": {
       "f": ".api/setMemberStatusAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "createPersonalProfileAction": {
+      "f": ".api/createPersonalProfileAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "createPersonalOrgAction": {
+      "f": ".api/createPersonalOrgAction.json",
       "layer": "action",
       "kind": "server-action"
     },
@@ -142,6 +182,13 @@
     "setMemberStatusWithAudit": [
       "setMemberStatusAction"
     ],
+    "createPersonalOrgWithDefaults": [],
+    "createPersonalOrgWithProfile": [
+      "createPersonalOrgAction"
+    ],
+    "createPersonalProfile": [
+      "createPersonalProfileAction"
+    ],
     "getOrgIdentity": [
       "getOrgIdentityAction"
     ],
@@ -163,11 +210,21 @@
     "getOrganizationBySlug": [
       "getOrganizationBySlugAction"
     ],
+    "findPersonalProfileId": [
+      "createPersonalOrgWithDefaults",
+      "createPersonalProfile"
+    ],
     "createOrgAction": [],
     "updateOrgIdentityAction": [],
     "setOrgDetailsAction": [],
+    "setCurrentOrganizationAction": [],
+    "selectOrganizationProfileAction": [],
     "updateOrgLogoAction": [],
     "setMemberStatusAction": [],
+    "createPersonalProfileAction": [
+      "createPersonalOrgAction"
+    ],
+    "createPersonalOrgAction": [],
     "getOrgIdentityAction": [],
     "getOrgUsageAction": [],
     "getOrgDetailsAction": [],

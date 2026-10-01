@@ -1,3 +1,4 @@
+// src/components/teacher/ui/TeacherAttendancesSession.tsx
 import { use } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty";

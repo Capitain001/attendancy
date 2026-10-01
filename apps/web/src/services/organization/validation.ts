@@ -35,3 +35,17 @@ export const updateOrgIdentitySchema = v.object({
 
 export type UpdateOrgIdentityInput = v.InferInput<typeof updateOrgIdentitySchema>
 export type UpdateOrgIdentityOutput = v.InferOutput<typeof updateOrgIdentitySchema>
+
+
+import { PERSONAL_SIGNUP_ROLES } from '@/modules/auth/constants'
+import { CreatePersonalOrgParams } from './database'
+
+
+// Seul `role` vient du client. userId, displayName et isFirstOrg sont dérivés
+// côté serveur depuis le token et les metadata.
+export const createPersonalOrgWithDefaultsSchema = v.object({
+  role: v.picklist(PERSONAL_SIGNUP_ROLES, 'Rôle invalide'),
+} satisfies Record<keyof Pick<CreatePersonalOrgParams, 'role'>, unknown>)
+
+export type CreatePersonalOrgWithDefaultsInput = v.InferInput<typeof createPersonalOrgWithDefaultsSchema>
+export type CreatePersonalOrgWithDefaultsOutput = v.InferOutput<typeof createPersonalOrgWithDefaultsSchema>

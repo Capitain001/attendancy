@@ -1,3 +1,4 @@
+// src/components/teacher/unavailabilities/TeacherUnavailabilitiesList.tsx
 "use client";
 
 import { AlertCircle, Calendar, Clock, Edit, Trash2 } from "lucide-react";

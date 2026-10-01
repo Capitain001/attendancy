@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/SessionAttendanceSection.tsx
 import { AttendanceList } from '@/components/session/AttendanceList'
 import React from 'react'
 

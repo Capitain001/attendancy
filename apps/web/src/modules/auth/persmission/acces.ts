@@ -3,7 +3,7 @@
 
 import { getUserInfo } from '@/modules/user';
 import { getAuthorization } from "./autorization";
-import {  Role, Functions, AuthenticatedUser } from "@/types/user";
+import { Role, Functions, AuthenticatedUser } from "@/types/user";
 import { ERRORS } from "@/config";
 import { hasPermission, permissionName } from '@/services/permission'
 import type { Action, Resource } from '@/generated/prisma/client'
@@ -25,6 +25,7 @@ type AuthAccessParams = {
   requiredRole?: Role | Role[]
   requiredFunction?: Functions | Functions[]
   requiredPermission?: { action: Action; resource: Resource; resourceId?: string }
+  allowPersonalOrg?: boolean
 }
 
 
@@ -70,7 +71,9 @@ export async function authAccess(params: AuthAccessParams = {}) {
     const authenticatedUser = user as AuthenticatedUser
 
     if (params.requiredRole || params.requiredFunction) {
-      const auth = getAuthorization(authenticatedUser, params.requiredRole, params.requiredFunction)
+      const auth = getAuthorization(authenticatedUser, params.requiredRole, params.requiredFunction, {
+        allowPersonalOrg: params.allowPersonalOrg,
+      })
       if (auth.error) return { error: auth.error }
     }
 

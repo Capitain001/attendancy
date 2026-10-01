@@ -40,6 +40,16 @@ const where: Prisma.ClassWhereInput = {
   })
 }
 
+export async function getActiveClassesCount(orgId: string) {
+  return prisma.class.count({
+    where: {
+      deletedAt: null,
+      isActive: true,
+      programTrack: { orgId },
+    },
+  })
+}
+
 /**
  * Détail d'une classe.
  */

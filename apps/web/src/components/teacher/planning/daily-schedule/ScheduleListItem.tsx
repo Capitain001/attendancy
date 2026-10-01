@@ -1,3 +1,4 @@
+// src/components/teacher/planning/daily-schedule/ScheduleListItem.tsx
 'use client'
 
 import { STATUS_CONFIG, type ScheduleItem } from './types'

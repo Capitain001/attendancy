@@ -1,18 +1,28 @@
-// src/app/(app)/[slug]/teacher/attendance/page.tsx
-// ⚠ Chemin à adapter à ton arborescence de routes (route group, préfixe rôle…).
-import { TeacherAttendanceOverview } from '@/components/teacher/attendance/TeacherAttendanceOverview'
 import { Card, CardContent } from '@/components/ui/card'
-import { getTeacherAttendanceOverviewAction } from '@/services/attendance'
+import { getTeacherAttendanceFicheAction } from '@/services/attendance'
+import TeacherAttendanceFiche from '@/components/teacher/attendance/teacher-attendance/teacher-attendance-fiche'
 
 export default async function TeacherAttendancePage() {
-  const result = await getTeacherAttendanceOverviewAction()
+  const result = await getTeacherAttendanceFicheAction()
+
+  if ('error' in result) {
+    return <TeacherAttendanceLoadError message={result.error} />
+  }
 
   return (
     <div className="space-y-4">
       <header>
         <h1 className=" text-center mx-auto w-fit px-2 bg-muted  tracking-tight">Présences</h1>
       </header>
-      {result.data ? <TeacherAttendanceOverview overview={result.data} /> : <TeacherAttendanceLoadError message={result.error} />}
+      <TeacherAttendanceFiche
+        period={result.data.period}
+        home={result.data.home}
+        sessions={result.data.sessions}
+        classes={result.data.classes}
+        classDetail={result.data.classDetail}
+        ownAttendance={result.data.ownAttendance}
+        justifications={result.data.justifications}
+      />
     </div>
   )
 }

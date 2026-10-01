@@ -1,3 +1,4 @@
+// src/components/teacher/ui/profile-card.tsx
 import { cn } from "@/lib/utils"
 import { Mail, Phone, Building2 } from "lucide-react"
 import UserIcon from "@/components/users/UserIcon"

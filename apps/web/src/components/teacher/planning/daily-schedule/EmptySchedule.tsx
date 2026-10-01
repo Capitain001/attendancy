@@ -1,3 +1,4 @@
+// src/components/teacher/planning/daily-schedule/EmptySchedule.tsx
 'use client'
 
 interface EmptyScheduleProps {

@@ -16,6 +16,8 @@ export const WELCOME_URL = `${SITE_URL}/auth/welcome`;
 
 // URL de redirection après authentification
 export const LOGIN_URL = "/login";
+export const ORG_INFO_URL = "/auth/org/info";
+export const ORG_PROFILE_URL = "/auth/org/profile";
 export const PROFILE_URL = `${SITE_URL}/auth/profile`;
 export const REDIRECT_URL = `${SITE_URL}/auth/redirect`;
 

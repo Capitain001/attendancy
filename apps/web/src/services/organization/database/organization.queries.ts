@@ -4,6 +4,7 @@ import { cacheTag, cacheLife } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { CACHE } from '@/cache/server/key';;;
 import type { OrgDetails } from '../types'
+import { PersonalSignupRole } from '@/modules/auth/constants';
 
 export async function getOrgIdentity(orgId: string) {
   'use cache'
@@ -30,6 +31,13 @@ export async function getOrgUsage(orgId: string) {
       activeRooms: true,
       updatedAt: true,
     },
+  })
+}
+
+export async function getOrgClassQuota(orgId: string) {
+  return prisma.organizationSettings.findUnique({
+    where: { orgId },
+    select: { maxClasses: true },
   })
 }
 
@@ -135,3 +143,24 @@ export async function getOrganizationBySlug(slug: string) {
 }
 
 
+ 
+// fn légère demandée : lecture pure, aucune écriture. Empêche un doublon
+// (Teacher/Student/Parent ont @@unique([userId, orgId]) — un 2e create sur le
+// même triplet planterait sinon). C'est aussi le SEUL point d'entrée où une
+// vérification de quota/abonnement s'insérera plus tard (billing, hors scope
+// ici) — d'où son isolement dans sa propre fonction plutôt qu'inlinée.
+export async function findPersonalProfileId(
+  userId: string,
+  orgId: string,
+  role: PersonalSignupRole,
+) {
+  switch (role) {
+    case 'TEACHER':
+      return (await prisma.teacher.findFirst({ where: { userId, orgId }, select: { id: true } }))?.id ?? null
+    case 'STUDENT':
+      return (await prisma.student.findFirst({ where: { userId, orgId }, select: { id: true } }))?.id ?? null
+    case 'PARENT':
+      return (await prisma.parent.findFirst({ where: { userId, orgId }, select: { id: true } }))?.id ?? null
+  }
+}
+ 

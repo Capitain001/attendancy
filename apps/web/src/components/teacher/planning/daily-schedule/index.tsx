@@ -1,3 +1,4 @@
+// src/components/teacher/planning/daily-schedule/index.tsx
 'use client'
 
 import { useMemo, useState } from 'react'

@@ -1,3 +1,4 @@
+// src/components/teacher/courses/TeacherCourseList.tsx
 "use client"
 import React from 'react';
 

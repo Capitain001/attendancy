@@ -1,3 +1,4 @@
+// src/components/teacher/planning/TeacherScheduleCalendar.tsx
 // apps/web/src/components/planning/teacher/TeacherScheduleCalendar.tsx
 "use client";
 

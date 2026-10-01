@@ -1,3 +1,4 @@
+// src/components/teacher/planning/daily-schedule/format.ts
 import type { ScheduleItem, ScheduleWithUi } from './types'
 
 const timeFormatter = new Intl.DateTimeFormat('fr-FR', {

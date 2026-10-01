@@ -1,0 +1,8 @@
+{
+  "name": "createPersonalOrgWithProfile",
+  "file": "src/services/organization/database/organization.mutations.ts",
+  "sig": "(params: { userId: string role: PersonalRole displayName?: string | null isFirstOrg: boolean }) => Promise<{ org: { id: string; name: string; slug: string | null; }; profileId: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

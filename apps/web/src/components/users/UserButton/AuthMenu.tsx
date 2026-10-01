@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils"
 import UserIcon from "../UserIcon"
 import { UserInfo } from "@/types/user" 
 import LogOutForm from "@/components/auth/ui/LogOutForm"
+import { ORG_INFO_URL } from "@/config"
 
 // ── Icons
 const BadgeCheckIcon = () => (
@@ -64,7 +65,7 @@ export const AuthMenu: React.FC<AuthMenuProps> = ({ user, className }) => {
     {
       icon: <CommunityIcon />,
       label: "Community",
-      href: "#",
+      href: ORG_INFO_URL,
     },
     {
       icon: <CreditCardIcon />,

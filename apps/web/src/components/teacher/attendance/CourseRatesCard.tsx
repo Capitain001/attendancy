@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/CourseRatesCard.tsx
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import type { GetTeacherAttendanceOverviewDto } from '@/services/attendance'

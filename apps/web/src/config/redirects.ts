@@ -19,20 +19,19 @@ export const ROLE_PATHS: Record<Role, string> = {
 const PERSONAL_ROUTE_SEGMENT = "personal";
 
 /**
- * Base d'URL d'une organisation pour un rôle donné.
+ * Base d'URL d'une organisation pour un rôle donné (SANS le segment de rôle —
+ * c'est l'appelant, redirectUser/orgPath, qui l'ajoute une seule fois).
  *
- * Espace personnel : arbre dédié `/personal/{slug}` pour son propriétaire
- * (TEACHER) uniquement — l'interface diffère (création de classes, quota).
- * Élèves et parents invités n'ont rien de spécifique : ils utilisent l'arbre
- * standard `/{slug}/…`. `type` absent (snapshot antérieur à Organization.type)
- * = institution.
+ * Espace personnel : arbre dédié `/personal/{slug}` pour TEACHER uniquement —
+ * c'est le seul rôle avec une interface personal-specific (création de
+ * classes, quota). STUDENT/PARENT dans une org perso n'ont rien de différent
+ * de leur usage institutionnel (scanner un QR reste scanner un QR) : ils
+ * utilisent l'arbre standard `/{slug}/…`, même quand org.type === PERSONAL.
+ * `type` absent (snapshot antérieur à Organization.type) = institution.
  */
-function orgBasePath(
-  org: { slug: string; type?: Organization["type"] },
-  role: Role,
-): string {
+function orgBasePath(org: { slug: string; type?: Organization["type"] }, role: Role): string {
   return org.type === "PERSONAL" && role === UserRoles.TEACHER
-    ? `/${PERSONAL_ROUTE_SEGMENT}/${org.slug}/${ROLE_PATHS[role]}`
+    ? `/${PERSONAL_ROUTE_SEGMENT}/${org.slug}`
     : `/${org.slug}`;
 }
 

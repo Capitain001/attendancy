@@ -1,3 +1,4 @@
+// src/components/teacher/ui/TeacherCard.tsx
 import { RessourceCard } from "@/components/design"
 import { UserInfoPopover } from "@/components/users/UserInfoPopover"
 import { format } from "date-fns"

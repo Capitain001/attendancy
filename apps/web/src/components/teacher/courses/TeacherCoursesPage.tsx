@@ -1,3 +1,4 @@
+// src/components/teacher/courses/TeacherCoursesPage.tsx
 'use client'
 
 import { useMemo, useState } from 'react'

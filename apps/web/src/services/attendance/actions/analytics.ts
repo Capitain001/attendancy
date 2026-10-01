@@ -49,13 +49,9 @@ export async function getOrgTodayAbsencesAction() {
 }
 
 
-// ⚠ AJOUTS à fusionner dans src/services/attendance/actions/analytics.ts
-// ('use server' déjà présent en tête du fichier ; dédupliquer les imports).
-
 import { getTeacherAttendanceOverview } from '../database'
 import { mockGetTeacherAttendanceOverview } from "@/data/mocks/mock.attendance";
-
-// L'enseignant est déduit du token : jamais d'id enseignant en paramètre.
+// L'enseignant est déduit du token : pas d'id enseignant en paramètre.
 export async function getTeacherAttendanceOverviewAction() {
   const auth = await authAccess({ requiredRole: 'TEACHER' })
   if (!auth.data) return { error: auth.error }
@@ -63,8 +59,9 @@ export async function getTeacherAttendanceOverviewAction() {
  
   try {
     const overview = await getTeacherAttendanceOverview(user.id, orgId)
-        return { data: mockGetTeacherAttendanceOverview() }
-    return { data: overview }
+
+    // return { data: overview }
+    return { data: mockGetTeacherAttendanceOverview()}
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

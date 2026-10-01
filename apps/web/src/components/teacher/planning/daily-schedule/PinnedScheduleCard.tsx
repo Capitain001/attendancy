@@ -1,3 +1,4 @@
+// src/components/teacher/planning/daily-schedule/PinnedScheduleCard.tsx
 'use client'
 
 import { ChevronDown } from 'lucide-react'

@@ -1,0 +1,8 @@
+{
+  "name": "findPersonalProfileId",
+  "file": "src/services/organization/database/organization.queries.ts",
+  "sig": "(userId: string, orgId: string, role: PersonalSignupRole) => Promise<string | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

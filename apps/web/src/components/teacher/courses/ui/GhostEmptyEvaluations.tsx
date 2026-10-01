@@ -1,3 +1,4 @@
+// src/components/teacher/courses/ui/GhostEmptyEvaluations.tsx
 'use client'
 
 interface GhostEmptyEvaluationsProps {

@@ -1,3 +1,4 @@
+// src/components/teacher/planning/daily-schedule/types.ts
 import type { ScheduleStatus } from '@/generated/prisma/browser'
 import type { GetTeacherSchedulesInfoDto } from '@/services/schedule'
 import { SCHEDULE_UI_STATUS_LABEL, ScheduleUiStatus } from '@/services/schedule/policy';

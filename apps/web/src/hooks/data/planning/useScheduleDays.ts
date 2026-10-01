@@ -29,13 +29,17 @@ export function useScheduleDays({ visibleMonth, filters }: UseScheduleDaysOption
 
   const filtersHash = JSON.stringify(filters);
 
+  // `filters` est volontairement absent des deps : les appelants passent un
+  // objet littéral (identité neuve à chaque render), ce qui relancerait l'effet
+  // à chaque render. `filtersHash` couvre le contenu, et la closure capture
+  // déjà la dernière valeur de `filters`.
   useEffect(() => {
     const prev = format(subMonths(visibleMonth, 1), "yyyy-MM");
     const next = format(addMonths(visibleMonth, 1), "yyyy-MM");
 
     queryClient.prefetchQuery(scheduleDaysQuery({ month: prev, filters }));
     queryClient.prefetchQuery(scheduleDaysQuery({ month: next, filters }));
-  }, [monthKey, filtersHash, queryClient, filters]);
+  }, [monthKey, filtersHash, queryClient]);
 
   return useMemo(() => new Set(query.data ?? []), [query.data]);
 }

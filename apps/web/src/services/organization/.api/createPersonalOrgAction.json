@@ -1,0 +1,12 @@
+{
+  "name": "createPersonalOrgAction",
+  "file": "src/services/organization/actions/organization.mutations.ts",
+  "sig": "(role: PersonalRole) => Promise<{ data: { role: \"TEACHER\" | \"STUDENT\" | \"PARENT\"; }; error?: undefined; } | { error: string; data?: undefined; } | { data: { slug: string | null; role: \"TEACHER\" | \"STUDENT\" | \"PARENT\"; }; }>",
+  "calls": [
+    "createPersonalProfileAction",
+    "createPersonalOrgWithProfile"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

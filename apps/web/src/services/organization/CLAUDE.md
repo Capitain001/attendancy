@@ -51,7 +51,7 @@ du setup initial (Settings, Usage, UserOrganization, Direction, Subscription).
 | Fichier | Rôle |
 |---------|------|
 | `actions/index.ts` | Barrel exports des actions |
-| `actions/organization.mutations.ts` | Écritures serveur (Validation + AuthGuard) |
+| `actions/organization.mutations.ts` | Écritures serveur (Validation + AuthGuard), bascule d’organisation et de profil |
 | `actions/organization.queries.ts` | Lectures serveur exposées au frontend |
 | `cache.ts` | <SERVICE>_GRAPH : événement → tags à invalider |
 | `database/index.ts` | Barrel interne (non exporté) |

@@ -5,6 +5,7 @@ import { ERRORS } from '@/config'
 import {
   getOrgIdentity,
   getOrgUsage,
+  getOrgClassQuota,
   getOrgDetails,
   getOrgDailyMetrics,
   getOrgResourcesCounts,
@@ -31,6 +32,19 @@ export async function getOrgUsageAction() {
 
   try {
     return { data: await getOrgUsage(orgId) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+
+export async function getOrgClassQuotaAction() {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+
+  try {
+    const settings = await getOrgClassQuota(auth.data.orgId)
+    if (!settings) return { error: 'Configuration du quota de classes introuvable' }
+    return { data: settings }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }

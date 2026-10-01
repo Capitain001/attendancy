@@ -1,12 +1,15 @@
 // src/services/org/database/org.mutations.ts
 // Écritures Prisma du service org — Prisma pur, AUCUNE auth ici.
 import { prisma } from '@/lib/prisma'
-import { invalidateEvent } from '@/cache/server/graph'
+import { invalidateCache, invalidateEvent } from '@/cache/server/graph'
 import { tryConstraint } from '@/utils/server/prisma'
 import { updateUserMetadata } from '@/modules/user/update'
 import type { OrgDetails } from '../types'
 import type { UpdateOrgIdentityInput } from '../validation'
 import type { UserStatus } from '@/generated/prisma/browser'
+import { PersonalRole } from '@/modules/auth/constants'
+import { createRoleSpecificEntity } from '@/modules/auth/members/utils'
+import { findPersonalProfileId } from './organization.queries'
 
 export type CreateOrgParams = {
   userId: string
@@ -177,87 +180,233 @@ const PERSONAL_MAX_CLASSES = 5
 
 export type CreatePersonalOrgParams = {
   userId: string
+  role: PersonalRole // TEACHER | STUDENT | PARENT, choisi par l'appelant
   displayName?: string | null // alimente uniquement le slug et le nom technique
   isFirstOrg: boolean // true → l'espace perso devient l'org principale (isMainOrg)
 }
 
 export type CreatePersonalOrgData = {
   org: { id: string; name: string; slug: string }
-  teacherId: string
-  created: boolean
+  profileId: string // id du profil du rôle demandé (Teacher, Student ou Parent)
+  role: PersonalRole
+  created: boolean // true si l'org OU le profil a été écrit dans cet appel
 }
 
-// Idempotent : si l'user a déjà un espace personnel actif, on le renvoie
-// (created: false). L'action re-projette alors les metadata Supabase, ce qui
-// répare l'échec partiel « DB écrite, metadata non ».
+// Idempotent, en UNE transaction : org + profil du rôle demandé.
+// - Espace perso absent        → on crée org + Settings + Usage + UserOrganization + profil.
+// - Espace perso présent, profil du rôle absent → on ajoute seulement le profil (et on aligne UserOrganization.role).
+// - Tout existe déjà           → created: false (l'action re-projette les metadata Supabase).
 //
 // Ce que l'espace perso NE reçoit PAS, volontairement :
 //   - pas de Direction ni de UserOrganization DIRECTION (FEATURE §3.1)
 //   - pas de Subscription : gratuit par construction (FEATURE §3.3 / §8)
 //   - pas de structure académique : créée à la demande par le service academic
-//     à la première classe, pas ici (elle lui appartient).
 export async function createPersonalOrgWithDefaults(params: CreatePersonalOrgParams) {
-  const { userId } = params
+  const { userId, role } = params
+  let orgCreated = false
 
   const result = await tryConstraint(
     prisma.$transaction(async (tx): Promise<CreatePersonalOrgData> => {
+      // 1. Org : réutiliser l'espace perso actif ou le créer
       const existing = await tx.userOrganization.findFirst({
         where: { userId, organization: { type: 'PERSONAL', deletedAt: null } },
         select: { organization: { select: { id: true, name: true, slug: true } } },
       })
 
+      let org: { id: string; name: string; slug: string }
+
       if (existing) {
-        const { organization: org } = existing
-        if (!org.slug) throw new Error('Espace personnel invalide : slug manquant')
+        const { organization } = existing
+        if (!organization.slug) throw new Error('Espace personnel invalide : slug manquant')
+        org = { id: organization.id, name: organization.name, slug: organization.slug }
+      } else {
+        const { slug, name } = buildOrgSlug('PERSONAL', params.displayName)
 
-        const teacher = await tx.teacher.findUnique({
-          where: { userId_orgId: { userId, orgId: org.id } },
-          select: { id: true },
+        const created = await tx.organization.create({
+          data: { name, slug, type: 'PERSONAL' },
+          select: { id: true, name: true },
         })
-        if (!teacher) throw new Error('Profil enseignant introuvable pour cet espace personnel')
 
-        return { org: { id: org.id, name: org.name, slug: org.slug }, teacherId: teacher.id, created: false }
+        await tx.organizationSettings.create({
+          data: { orgId: created.id, maxClasses: PERSONAL_MAX_CLASSES },
+        })
+        await tx.organizationUsage.create({ data: { orgId: created.id } })
+
+        org = { id: created.id, name: created.name, slug }
+        orgCreated = true
       }
 
-      const { slug, name } = buildOrgSlug('PERSONAL', params.displayName)
+      // 2. Profil du rôle demandé : anti-doublon (cf. findPersonalProfileId)
+      const existingProfileId = existing
+        ? await findPersonalProfileId(userId, org.id, role)
+        : null
 
+      if (existingProfileId) {
+        // Le rôle actif reflète le dernier profil choisi (même règle que createPersonalProfile)
+        await tx.userOrganization.update({
+          where: { userId_orgId: { userId, orgId: org.id } },
+          data: { role, status: 'ACTIVE' },
+        })
+        return { org, profileId: existingProfileId, role, created: orgCreated }
+      }
+
+      // 3. UserOrganization avec le rôle demandé (plus de 'TEACHER' en dur)
+      await tx.userOrganization.upsert({
+        where: { userId_orgId: { userId, orgId: org.id } },
+        create: {
+          userId,
+          orgId: org.id,
+          role,
+          isMainOrg: params.isFirstOrg,
+          isResponsable: true,
+          status: 'ACTIVE',
+        },
+        update: { role, status: 'ACTIVE' },
+      })
+
+      // 4. Profil spécifique au rôle (Teacher / Student / Parent)
+      const entity = await createRoleSpecificEntity(tx, userId, role, org.id)
+      if (!entity) throw new Error(`Création du profil ${role} impossible`)
+
+      // Signup solo : PENDING → ACTIVE, sans écraser un SUSPENDED/INACTIVE
+      await tx.user.updateMany({ where: { id: userId, status: 'PENDING' }, data: { status: 'ACTIVE' } })
+
+      return { org, profileId: entity.id, role, created: true }
+    })
+  )
+
+  if (orgCreated) await invalidateEvent('ORG_CREATED', result.org.id)
+  return result
+}
+
+// → REMPLACE personal-org-shell.database.ts dans src/services/org/database/org.mutations.ts
+//
+// Bootstrap ATOMIQUE : Organization + Settings + Usage + UserOrganization +
+// premier profil, en une seule transaction. Appelée UNE FOIS — la toute
+// première fois qu'un user crée son espace perso. Aucun état intermédiaire :
+// soit tout existe, soit rien n'existe (pas d'org sans propriétaire possible).
+
+
+export async function createPersonalOrgWithProfile(params: {
+  userId: string
+  role: PersonalRole
+  displayName?: string | null
+  isFirstOrg: boolean
+}) {
+  const { slug, name } = buildOrgSlug('PERSONAL', params.displayName)
+
+  const result = await tryConstraint(
+    prisma.$transaction(async (tx) => {
       const org = await tx.organization.create({
         data: { name, slug, type: 'PERSONAL' },
-        select: { id: true, name: true },
+        select: { id: true, name: true, slug: true },
       })
-
-      await tx.organizationSettings.create({
-        data: { orgId: org.id, maxClasses: PERSONAL_MAX_CLASSES },
-      })
+      await tx.organizationSettings.create({ data: { orgId: org.id, maxClasses: PERSONAL_MAX_CLASSES } })
       await tx.organizationUsage.create({ data: { orgId: org.id } })
 
       await tx.userOrganization.create({
         data: {
-          userId,
+          userId: params.userId,
           orgId: org.id,
-          role: 'TEACHER',
+          role: params.role,
           isMainOrg: params.isFirstOrg,
           isResponsable: true,
           status: 'ACTIVE',
         },
       })
 
-      const teacher = await tx.teacher.create({
-        data: { userId, orgId: org.id },
-        select: { id: true },
-      })
+      const entity = await createRoleSpecificEntity(tx, params.userId, params.role, org.id)
+      if (!entity) throw new Error(`Création du profil ${params.role} impossible`)
 
-      // Compte issu d'un signup solo : PENDING → ACTIVE. updateMany + filtre :
-      // n'écrase jamais un SUSPENDED/INACTIVE d'un enseignant déjà rattaché.
-      await tx.user.updateMany({
-        where: { id: userId, status: 'PENDING' },
-        data: { status: 'ACTIVE' },
-      })
+      await tx.user.updateMany({ where: { id: params.userId, status: 'PENDING' }, data: { status: 'ACTIVE' } })
 
-      return { org: { id: org.id, name: org.name, slug }, teacherId: teacher.id, created: true }
+      return { org, profileId: entity.id }
     })
   )
 
-  if (result.created) await invalidateEvent('ORG_CREATED', result.org.id)
+  await invalidateEvent('ORG_CREATED', result.org.id)
   return result
+}
+
+export async function ensurePersonalAcademicScaffold(orgId: string) {
+  const result = await tryConstraint(prisma.$transaction(async (tx) => {
+    const organization = await tx.organization.findFirst({
+      where: { id: orgId, type: 'PERSONAL', deletedAt: null },
+      select: { id: true },
+    })
+    if (!organization) throw new Error('Espace personnel introuvable')
+
+    const currentYear = await tx.academicYear.findFirst({
+      where: { orgId, isActive: true, isCurrent: true },
+      select: { id: true },
+    })
+    const academicYear = currentYear ?? await tx.academicYear.upsert({
+      where: { name_orgId: { name: 'Espace personnel', orgId } },
+      create: {
+        name: 'Espace personnel',
+        startDate: new Date('2000-01-01T00:00:00.000Z'),
+        endDate: new Date('2100-12-31T00:00:00.000Z'),
+        orgId,
+        isCurrent: true,
+      },
+      update: { isActive: true, isCurrent: true },
+      select: { id: true },
+    })
+
+    const department = await tx.department.upsert({
+      where: { name_orgId: { name: 'Espace personnel', orgId } },
+      create: { name: 'Espace personnel', orgId },
+      update: {},
+      select: { id: true },
+    })
+    const programTrack = await tx.programTrack.upsert({
+      where: { name_departmentId: { name: 'Espace personnel', departmentId: department.id } },
+      create: { name: 'Espace personnel', departmentId: department.id, orgId },
+      update: {},
+      select: { id: true },
+    })
+
+    return { academicYearId: academicYear.id, programTrackId: programTrack.id }
+  }))
+
+  await invalidateEvent('ACADEMIC_YEAR_CREATED', orgId)
+  await invalidateEvent('DEPARTMENT_CREATED', orgId)
+  await invalidateCache('PROGRAM_TRACK', orgId)
+  return result
+}
+
+// → À AJOUTER dans src/services/org/database/org.mutations.ts
+
+//
+// N'est plus jamais appelée pour le TOUT PREMIER profil (c'est désormais le
+// rôle de createPersonalOrgWithProfile, atomique). Sert uniquement le cas
+// "ajouter un second/troisième rôle à un espace perso qui existe déjà" —
+// l'invariant "une org perso a toujours un propriétaire" tient depuis sa
+// création, donc UserOrganization existe à coup sûr ici : update, pas upsert.
+
+
+export async function createPersonalProfile(params: {
+  userId: string
+  orgId: string
+  role: PersonalRole
+}) {
+  return tryConstraint(
+    prisma.$transaction(async (tx) => {
+      // Relue dans la transaction (pas seulement par l'appelant) pour rester
+      // correct sous concurrence — deux clics rapides sur le même rôle.
+      const existing = await findPersonalProfileId(params.userId, params.orgId, params.role)
+
+      // Switch : le rôle ACTIF change même si le profil existait déjà.
+      await tx.userOrganization.update({
+        where: { userId_orgId: { userId: params.userId, orgId: params.orgId } },
+        data: { role: params.role, status: 'ACTIVE' },
+      })
+
+      if (existing) return existing
+
+      const entity = await createRoleSpecificEntity(tx, params.userId, params.role, params.orgId)
+      if (!entity) throw new Error(`Création du profil ${params.role} impossible`)
+      return entity.id
+    })
+  )
 }

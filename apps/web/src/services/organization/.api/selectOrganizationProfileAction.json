@@ -1,0 +1,9 @@
+{
+  "name": "selectOrganizationProfileAction",
+  "file": "src/services/organization/actions/organization.mutations.ts",
+  "sig": "(organizationId: string, role: Role) => Promise<void>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

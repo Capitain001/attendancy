@@ -1,3 +1,4 @@
+// src/components/teacher/pages/TeacherNotificationsPage.tsx
 import { NotificationHistory } from "@/components/notification/notification-history/NotificationHistory";
 
 export function TeacherNotificationsPage() {

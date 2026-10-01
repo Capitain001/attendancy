@@ -62,7 +62,8 @@ import { ERRORS } from "@/config";
 export function getAuthorization(
   user: Partial<UserInfo>,
   requiredRole?: Role | Role[],
-  requiredFunction?: Functions | Functions[]
+  requiredFunction?: Functions | Functions[],
+  options?: {   allowPersonalOrg?: boolean } // ← nouveau, opt-in, défaut false
 ) {
   const userRole = user.role;
   const userFunction = user.function;
@@ -75,6 +76,15 @@ export function getAuthorization(
     return { error: null };
   }
 
+   // Propriétaire d'org perso : équivalence TEACHER ↔ DIRECTION, mais SEULEMENT
+  // si l'appelant l'a explicitement demandé (opt-in par action, jamais global).
+  if (
+    options?.allowPersonalOrg &&
+    user.organization?.type === 'PERSONAL' &&
+    userRole === 'TEACHER'
+  ) {
+    return { error: null } // bypass rôle ET fonction — pas de RBAC fin en solo
+  }
   if (requiredRole) {
     const requiredRoles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
     const isRoleAllowed = requiredRoles.some((role) => ROLE_HIERARCHY[role]?.includes(userRole));

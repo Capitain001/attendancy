@@ -1,4 +1,5 @@
 export * from "./use-planning-date-filter";
+export * from "./use-planning-month";
 export * from "./useAvailability";
 
 export * from "./useClassGroups";

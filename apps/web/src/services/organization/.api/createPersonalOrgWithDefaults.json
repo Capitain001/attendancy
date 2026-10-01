@@ -1,0 +1,10 @@
+{
+  "name": "createPersonalOrgWithDefaults",
+  "file": "src/services/organization/database/organization.mutations.ts",
+  "sig": "(params: CreatePersonalOrgParams) => Promise<CreatePersonalOrgData>",
+  "composes": [
+    "findPersonalProfileId"
+  ],
+  "rules": [],
+  "why_ref": ""
+}

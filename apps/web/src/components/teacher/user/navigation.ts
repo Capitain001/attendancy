@@ -1,3 +1,4 @@
+// src/components/teacher/user/navigation.ts
 import { Route } from "@/components/layout/sidebar/types";
 
 export const teacherRoutes: Route[] = [

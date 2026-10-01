@@ -1,3 +1,4 @@
+// src/components/teacher/planning/TeacherPlanningScreen.tsx
 "use client"
 
 import { useState, type ComponentProps } from "react"

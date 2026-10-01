@@ -1,52 +1,40 @@
 // src/app/(app)/[slug]/teacher/planning/page.tsx
 import { connection } from 'next/server'
-import { CalendarDays, Clock, MapPin } from 'lucide-react'
-import { getCurrentTeacherId, getTeacherSchedulesAction } from '@/services/teacher'
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
+import { format } from 'date-fns/format'
+import { startOfMonth } from 'date-fns/startOfMonth'
+
+import { getQueryClient } from '@/lib/react-query'
+import { getCurrentTeacherId } from '@/services/teacher'
+import { scheduleDaysQuery } from '@/services/planning/queries'
 import { TeacherPlanning } from '@/components/teacher/planning/TeacherPlanning'
-import { getSchedulesAction } from '@/services/schedule'
 
-function getWeekBounds() {
-  const now = new Date()
-  const day = now.getDay() // 0=Sun, 1=Mon…
-  const diffToMonday = (day === 0 ? -6 : 1 - day)
-  const monday = new Date(now)
-  monday.setDate(now.getDate() + diffToMonday)
-  monday.setHours(0, 0, 0, 0)
-  const sunday = new Date(monday)
-  sunday.setDate(monday.getDate() + 6)
-  sunday.setHours(23, 59, 59, 999)
-  return { start: monday, end: sunday }
-}
-
-const DAY_NAMES = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi']
-
-function formatTime(date: Date) {
-  return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
-}
-
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ month?: string }>
+}) {
   await connection()
 
   const teacherId = await getCurrentTeacherId()
   if (!teacherId) return <div />
 
-  const { start, end } = getWeekBounds()
+  // Mois visible piloté par l'URL (`?month=yyyy-MM`) — défaut : mois courant.
+  const { month } = await searchParams
+  const monthKey = month ?? format(startOfMonth(new Date()), 'yyyy-MM')
 
-    const schedulesResponse = await getSchedulesAction({teacherId, rangeStart:start, rangeEnd: end})
-  const schedules = 'data' in schedulesResponse
-   ? (schedulesResponse.data ?? []) : []
+  const queryClient = getQueryClient()
 
-  // getSchedulesAction
+  // Préchargement du mois choisi uniquement. Le jour sélectionné est un état
+  // client (`startOfDay(new Date())`) : sa clé dépend du fuseau du navigateur,
+  // donc sa requête est dérivée côté client (pas de préchargement serveur).
+  await queryClient.prefetchQuery(
+    scheduleDaysQuery({ month: monthKey, filters: { teacherId } })
+  )
 
-  // Grouper par jour
-  const byDay = new Map<string, typeof schedules>()
-  for (const s of schedules) {
-    const key = s.startTime.toDateString()
-    if (!byDay.has(key)) byDay.set(key, [])
-    byDay.get(key)!.push(s)
-  }
-
-  const weekLabel = `${start.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })} — ${end.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}`
-
-  return <TeacherPlanning schedules={schedules} />;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <TeacherPlanning teacherId={teacherId} />
+    </HydrationBoundary>
+  )
 }

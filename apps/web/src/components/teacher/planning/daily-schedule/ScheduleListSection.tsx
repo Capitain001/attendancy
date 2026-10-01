@@ -1,3 +1,4 @@
+// src/components/teacher/planning/daily-schedule/ScheduleListSection.tsx
 'use client'
 
 import { ScrollArea } from '@/components/ui/scroll-area'

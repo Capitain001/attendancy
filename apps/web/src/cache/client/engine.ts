@@ -26,6 +26,16 @@ export const QUERY_PRESETS = {
   STATIC: {
     staleTime: CACHE_TIME.LONG,
   },
+  /**
+   * Fraîcheur dashboard (5 min) + rétention longue (30 min) : la donnée reste
+   * en cache après le démontage de son observer. À utiliser pour les données
+   * que l'utilisateur consulte en naviguant d'une entrée à l'autre (ex. détail
+   * d'un jour), afin d'éviter un refetch au retour sur une entrée déjà visitée.
+   */
+  RETAINED: {
+    staleTime: CACHE_TIME.MEDIUM,
+    gcTime: CACHE_TIME.LONG,
+  },
 } as const;
 
 /**
