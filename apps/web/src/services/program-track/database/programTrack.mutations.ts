@@ -1,5 +1,6 @@
+// src/services/program-track/database/programTrack.mutations.ts
 import { prisma } from "@/lib/prisma";
-import { invalidateCache, invalidateEvent } from '@/cache/server/graph';
+import { invalidateEvent } from '@/cache/server/graph';
 import type { AddProgramTrackData, UpdateProgramTrackData } from "./programTrack.queries";
 
 export async function createProgramTrack({ data, orgId }: { data: AddProgramTrackData; orgId: string }) {
@@ -7,9 +8,10 @@ export async function createProgramTrack({ data, orgId }: { data: AddProgramTrac
     data: { ...data, orgId },
     select: { id: true, name: true, departmentId: true, description: true },
   });
-  await invalidateCache("PROGRAM_TRACK", orgId);
+  await invalidateEvent('PROGRAM_TRACK_CREATED', orgId)
   return programTrack;
 }
+
 
 export async function updateProgramTrack(
   { programTrackId, orgId }: { programTrackId: string; orgId: string },
@@ -20,11 +22,11 @@ export async function updateProgramTrack(
     data,
     select: { id: true, name: true, departmentId: true, description: true },
   });
-  await invalidateCache("PROGRAM_TRACK", orgId);
+  await invalidateEvent('PROGRAM_TRACK_UPDATED', orgId, programTrackId)
   return updated;
 }
 
 export async function deleteProgramTrack({ programTrackId, orgId }: { programTrackId: string; orgId: string }) {
   await prisma.programTrack.delete({ where: { id: programTrackId } });
-  // await invalidateCache("PROGRAM_TRACK", orgId);
+  await invalidateEvent('PROGRAM_TRACK_DELETED', orgId, programTrackId)
 }
