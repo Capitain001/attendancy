@@ -1,3 +1,4 @@
+// src/services/seed/guards/guard.ts
 import { prisma } from "@/lib/prisma";
 
 export class SeedingNotAllowedError extends Error {}

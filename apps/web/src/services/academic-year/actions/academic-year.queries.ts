@@ -1,3 +1,4 @@
+// src/services/academic-year/actions/academic-year.queries.ts
 'use server'
 import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'

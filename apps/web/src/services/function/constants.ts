@@ -1,3 +1,4 @@
+// src/services/function/constants.ts
 export const MAIN_FUNCTIONS = [
   { name: 'PRINCIPAL', description: "Chef d'établissement, responsable de la gestion globale de l'institution et de la supervision du personnel.", icon: 'principal.svg' },
   { name: 'SECRETARY', description: 'Secrétaire administratif, gestion des dossiers, de la correspondance et des tâches administratives courantes.', icon: 'secretary.svg' },

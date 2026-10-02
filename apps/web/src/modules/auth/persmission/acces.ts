@@ -7,6 +7,7 @@ import { Role, Functions, AuthenticatedUser } from "@/types/user";
 import { ERRORS } from "@/config";
 import { hasPermission, permissionName } from '@/services/permission'
 import type { Action, Resource } from '@/generated/prisma/client'
+import type { OrganizationType } from '@/generated/prisma/browser'
 
 
 
@@ -25,6 +26,7 @@ type AuthAccessParams = {
   requiredRole?: Role | Role[]
   requiredFunction?: Functions | Functions[]
   requiredPermission?: { action: Action; resource: Resource; resourceId?: string }
+  requiredOrgType?: OrganizationType
   allowPersonalOrg?: boolean
 }
 
@@ -36,6 +38,7 @@ type AuthAccessParams = {
  * @param params - Paramètres de vérification d'autorisation
  * @param params.requiredRole - Rôle requis (optionnel)
  * @param params.requiredFunction - Fonction requise (optionnel)
+ * @param params.requiredOrgType - Type d'organisation active requis (optionnel)
  *
  * @example
  * ```ts
@@ -67,6 +70,11 @@ export async function authAccess(params: AuthAccessParams = {}) {
 
     const orgId = user.organization?.id
     if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+
+    // Le scope d'organisation s'applique aussi aux SUPER_ADMIN 
+    if (params.requiredOrgType && user.organization?.type !== params.requiredOrgType) {
+      return { error: ERRORS.AUTH.FORBIDDEN }
+    }
 
     const authenticatedUser = user as AuthenticatedUser
 

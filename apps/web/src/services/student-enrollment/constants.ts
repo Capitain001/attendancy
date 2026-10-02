@@ -1,3 +1,4 @@
+// src/services/student-enrollment/constants.ts
 // TODO: enums du domaine StudentEnrollment si nécessaire — aligner sur Prisma :
 // import type { StudentEnrollmentStatus } from "@/generated/prisma/client";
 // export const STUDENT_ENROLLMENT_STATUSES = [] as const satisfies readonly StudentEnrollmentStatus[];

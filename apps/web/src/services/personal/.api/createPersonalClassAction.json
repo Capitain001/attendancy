@@ -1,0 +1,14 @@
+{
+  "name": "createPersonalClassAction",
+  "file": "src/services/personal/actions/teacher.mutations.ts",
+  "sig": "(formData: FormData) => Promise<void>",
+  "calls": [
+    "getActiveClassesCountAction",
+    "getOrgClassQuotaAction",
+    "ensurePersonalRoomAction",
+    "createClassAction"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

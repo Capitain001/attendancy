@@ -1,0 +1,11 @@
+{
+  "name": "ensurePersonalDepartmentAction",
+  "file": "src/services/department/actions/department.mutations.ts",
+  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "calls": [
+    "ensurePersonalDepartment"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,4 +1,3 @@
-// src/config/redirects.ts
 import type { Organization, Role, UserInfo } from "@/types/user";
 import { UserRoles } from "@/types/user";
 
@@ -16,7 +15,9 @@ export const ROLE_PATHS: Record<Role, string> = {
 // Propre au type PERSONAL (ce n'est pas une règle générique par type — ne pas le
 // dériver de `org.type`). Doit rester aligné avec RESERVED_SLUGS (src/lib/slug.ts)
 // et le dossier de route correspondant dans src/app.
-const PERSONAL_ROUTE_SEGMENT = "personal";
+// Exporté : c'est la seule source du segment "personal" — modules/personal/paths.ts
+// le réutilise au lieu de le redupliquer en dur.
+export const PERSONAL_ROUTE_SEGMENT = "personal";
 
 /**
  * Base d'URL d'une organisation pour un rôle donné (SANS le segment de rôle —
@@ -89,5 +90,5 @@ export function getRedirectPath(role: Role, orgSlug?: string) {
     return `/${orgSlug}/${basePath}`;
   }
 
-  return '/auth/org/info';
+  return "/auth/org/info";
 }

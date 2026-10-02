@@ -52,7 +52,7 @@ du setup initial (Settings, Usage, UserOrganization, Direction, Subscription).
 |---------|------|
 | `actions/index.ts` | Barrel exports des actions |
 | `actions/organization.mutations.ts` | Écritures serveur (Validation + AuthGuard), bascule d’organisation et de profil |
-| `actions/organization.queries.ts` | Lectures serveur exposées au frontend |
+| `actions/organization.queries.ts` | Lectures serveur exposées au frontend, dont le quota de classes |
 | `cache.ts` | <SERVICE>_GRAPH : événement → tags à invalider |
 | `database/index.ts` | Barrel interne (non exporté) |
 | `database/organization.mutations.ts` | Requêtes Prisma (tryConstraint + invalidateEvent) |

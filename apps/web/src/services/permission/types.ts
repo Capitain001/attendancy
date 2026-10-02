@@ -1,3 +1,4 @@
+// src/services/permission/types.ts
 //apps\web\src\services\permission\types.ts
 export * from './generated.types'
 

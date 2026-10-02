@@ -1,0 +1,11 @@
+{
+  "name": "removePersonalClassAction",
+  "file": "src/services/personal/actions/teacher.mutations.ts",
+  "sig": "(formData: FormData) => Promise<void>",
+  "calls": [
+    "removeClassAction"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

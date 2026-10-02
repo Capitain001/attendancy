@@ -1,0 +1,19 @@
+{
+  "name": "createPersonalCourseAction",
+  "file": "src/services/personal/actions/teacher.mutations.ts",
+  "sig": "(formData: FormData) => Promise<void>",
+  "calls": [
+    "getCurrentTeacherId",
+    "getUEsAction",
+    "createUEAction",
+    "getUECoursesAction",
+    "createUECourseAction",
+    "getCoursesAction",
+    "createCourseAction",
+    "getCourseTeachersAction",
+    "assignTeacherAction"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

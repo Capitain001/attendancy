@@ -1,3 +1,4 @@
+// src/services/class/constants.ts
 //src/services/class/constants.ts
 import { Level } from '@/generated/prisma/browser'
 
@@ -13,3 +14,14 @@ export const LEVEL_LABEL: Record<Level, string> = {
   [Level.D2]: 'Doctorat 2',
   [Level.D3]: 'Doctorat 3',
 }
+
+export const PERSONAL_LABEL = 'Espace personnel'
+
+export const PERSONAL_ACADEMIC_YEAR = {
+  name: PERSONAL_LABEL,
+  startDate: new Date('2000-01-01T00:00:00.000Z'),
+  endDate: new Date('2100-12-31T00:00:00.000Z'),
+  isCurrent: true,
+} as const
+
+export const DEFAULT_CLASS_NAME = 'Classe par défaut' as const as string

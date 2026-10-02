@@ -2,7 +2,7 @@
   "service": "schedule",
   "path": "src/services/schedule/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "d5d938d",
+  "derived_at": "85ab8de",
   "utils_dir": null,
   "fns": {
     "createSchedule": {
@@ -267,7 +267,9 @@
     "getScheduleDays": [
       "getScheduleDaysAction"
     ],
-    "getTeacherNextSchedule": [],
+    "getTeacherNextSchedule": [
+      "getTeacherNextScheduleAction"
+    ],
     "getTodayClassSchedules": [
       "getTodayClassSchedulesAction"
     ],

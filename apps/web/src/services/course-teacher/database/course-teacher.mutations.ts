@@ -1,3 +1,4 @@
+// src/services/course-teacher/database/course-teacher.mutations.ts
 // database/course-teacher.mutations.ts
 // src/services/course-teacher/database/course-teacher.mutations.ts
 import { prisma } from '@/lib/prisma'

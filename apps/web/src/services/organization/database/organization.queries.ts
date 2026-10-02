@@ -1,3 +1,4 @@
+// src/services/organization/database/organization.queries.ts
 // src/services/org/database/org.queries.ts
 // Lectures Prisma du service org — Prisma pur, AUCUNE auth ici.
 import { cacheTag, cacheLife } from 'next/cache'
@@ -5,6 +6,8 @@ import { prisma } from '@/lib/prisma'
 import { CACHE } from '@/cache/server/key';;;
 import type { OrgDetails } from '../types'
 import { PersonalSignupRole } from '@/modules/auth/constants';
+import { getActiveClassesCount } from '@/services/class/database';
+import { ERRORS } from '@/config';
 
 export async function getOrgIdentity(orgId: string) {
   'use cache'
@@ -161,6 +164,25 @@ export async function findPersonalProfileId(
       return (await prisma.student.findFirst({ where: { userId, orgId }, select: { id: true } }))?.id ?? null
     case 'PARENT':
       return (await prisma.parent.findFirst({ where: { userId, orgId }, select: { id: true } }))?.id ?? null
+  }
+}
+ 
+
+// Où en est l'org par rapport à sa limite de classes actives.
+// maxClasses === null => illimité.
+export async function checkClassQuotaLimit(orgId: string) {
+  const [activeCount, settings] = await Promise.all([
+    getActiveClassesCount(orgId),
+    getOrgClassQuota(orgId),
+  ])
+  // 1-1 avec l'org : une ligne manquante est une anomalie, pas « illimité ».
+  if (!settings) throw new Error(ERRORS.NOT_FOUND)
+ 
+  const { maxClasses } = settings
+  return {
+    activeCount,
+    maxClasses,
+    limitReached: maxClasses !== null && activeCount >= maxClasses,
   }
 }
  

@@ -75,7 +75,7 @@ model User {
 // c'est volontairement exhaustif : la purge RGPD d'une org part d'ici.
 model Organization {
   id                      String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name                    String                  @unique
+  name                    String                  
   email                   String?                 @unique
   slug                    String?                 @unique
   logo                    String?
@@ -123,6 +123,8 @@ model Organization {
   // payments                Payment[]
   // feeWaivers              FeeWaiver[]
 
+  // Un nom peut être réutilisé par les espaces personnels, mais pas par les institutions.
+  @@unique([name], where: { type: "INSTITUTION" }, map: "organization_institution_name_unique")
   @@schema("public")
 }
 

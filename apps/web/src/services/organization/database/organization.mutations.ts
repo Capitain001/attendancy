@@ -1,7 +1,8 @@
+// src/services/organization/database/organization.mutations.ts
 // src/services/org/database/org.mutations.ts
 // Écritures Prisma du service org — Prisma pur, AUCUNE auth ici.
 import { prisma } from '@/lib/prisma'
-import { invalidateCache, invalidateEvent } from '@/cache/server/graph'
+import { invalidateEvent } from '@/cache/server/graph'
 import { tryConstraint } from '@/utils/server/prisma'
 import { updateUserMetadata } from '@/modules/user/update'
 import type { OrgDetails } from '../types'
@@ -325,53 +326,6 @@ export async function createPersonalOrgWithProfile(params: {
   )
 
   await invalidateEvent('ORG_CREATED', result.org.id)
-  return result
-}
-
-export async function ensurePersonalAcademicScaffold(orgId: string) {
-  const result = await tryConstraint(prisma.$transaction(async (tx) => {
-    const organization = await tx.organization.findFirst({
-      where: { id: orgId, type: 'PERSONAL', deletedAt: null },
-      select: { id: true },
-    })
-    if (!organization) throw new Error('Espace personnel introuvable')
-
-    const currentYear = await tx.academicYear.findFirst({
-      where: { orgId, isActive: true, isCurrent: true },
-      select: { id: true },
-    })
-    const academicYear = currentYear ?? await tx.academicYear.upsert({
-      where: { name_orgId: { name: 'Espace personnel', orgId } },
-      create: {
-        name: 'Espace personnel',
-        startDate: new Date('2000-01-01T00:00:00.000Z'),
-        endDate: new Date('2100-12-31T00:00:00.000Z'),
-        orgId,
-        isCurrent: true,
-      },
-      update: { isActive: true, isCurrent: true },
-      select: { id: true },
-    })
-
-    const department = await tx.department.upsert({
-      where: { name_orgId: { name: 'Espace personnel', orgId } },
-      create: { name: 'Espace personnel', orgId },
-      update: {},
-      select: { id: true },
-    })
-    const programTrack = await tx.programTrack.upsert({
-      where: { name_departmentId: { name: 'Espace personnel', departmentId: department.id } },
-      create: { name: 'Espace personnel', departmentId: department.id, orgId },
-      update: {},
-      select: { id: true },
-    })
-
-    return { academicYearId: academicYear.id, programTrackId: programTrack.id }
-  }))
-
-  await invalidateEvent('ACADEMIC_YEAR_CREATED', orgId)
-  await invalidateEvent('DEPARTMENT_CREATED', orgId)
-  await invalidateCache('PROGRAM_TRACK', orgId)
   return result
 }
 

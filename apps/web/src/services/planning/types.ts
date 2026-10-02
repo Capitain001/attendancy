@@ -1,3 +1,4 @@
+// src/services/planning/types.ts
 import { getOrgPlanningResources, getPlanningResources } from './database'
 
 export type OrgPlanningResources = Awaited<ReturnType<typeof getOrgPlanningResources>>

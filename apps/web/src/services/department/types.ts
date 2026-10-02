@@ -1,3 +1,4 @@
+// src/services/department/types.ts
 import type { Prisma } from '@/generated/prisma/client'
 import type { CreateDepartmentInput, UpdateDepartmentInput } from './validation'
 

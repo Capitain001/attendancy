@@ -1,3 +1,4 @@
+// src/services/academic-year/types.ts
 import type { Prisma } from '@/generated/prisma/client'
 import type { CreateAcademicYearInput, SetCurrentYearInput } from './validation'
 import type { getAcademicYears, getCurrentYear } from './database'

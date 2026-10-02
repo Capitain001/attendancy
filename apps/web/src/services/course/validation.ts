@@ -21,6 +21,13 @@ export const updateCourseSchema = validateWithId('courseId', updateCourseDataSch
 export type CreateCourseInput  = InferInput<typeof createCourseSchema>
 export type CreateCourseOutput = InferOutput<typeof createCourseSchema>
 
+export const createPersonalCourseSchema = object({
+  classId: pipe(string(), uuid('Classe invalide')),
+  name: pipe(string(), trim(), minLength(1, 'Nom requis'), maxLength(100)),
+})
+
+export type CreatePersonalCourseInput = InferInput<typeof createPersonalCourseSchema>
+
 export type UpdateCourseDataInput = InferInput<typeof updateCourseDataSchema>
 export type UpdateCourseDataOutput = InferOutput<typeof updateCourseDataSchema>
 

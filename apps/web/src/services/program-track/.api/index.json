@@ -2,11 +2,16 @@
   "service": "program-track",
   "path": "src/services/program-track/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "38f2f24",
+  "derived_at": "85ab8de",
   "utils_dir": null,
   "fns": {
     "createProgramTrack": {
       "f": ".api/createProgramTrack.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "ensurePersonalProgramTrack": {
+      "f": ".api/ensurePersonalProgramTrack.json",
       "layer": "db",
       "kind": "mutation"
     },
@@ -34,6 +39,11 @@
       "f": ".api/getProgramTrack.json",
       "layer": "db",
       "kind": "query"
+    },
+    "ensurePersonalProgramTrackAction": {
+      "f": ".api/ensurePersonalProgramTrackAction.json",
+      "layer": "action",
+      "kind": "server-action"
     },
     "createProgramTrackAction": {
       "f": ".api/createProgramTrackAction.json",
@@ -75,6 +85,9 @@
     "createProgramTrack": [
       "createProgramTrackAction"
     ],
+    "ensurePersonalProgramTrack": [
+      "ensurePersonalProgramTrackAction"
+    ],
     "updateProgramTrack": [
       "updateProgramTrackAction"
     ],
@@ -90,6 +103,7 @@
     "getProgramTrack": [
       "getProgramTrackAction"
     ],
+    "ensurePersonalProgramTrackAction": [],
     "createProgramTrackAction": [],
     "updateProgramTrackAction": [],
     "deleteProgramTrackAction": [],

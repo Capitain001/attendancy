@@ -1,0 +1,11 @@
+{
+  "name": "getActiveClassesCountAction",
+  "file": "src/services/class/actions/class.queries.ts",
+  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: number; error?: undefined; }>",
+  "calls": [
+    "getActiveClassesCount"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

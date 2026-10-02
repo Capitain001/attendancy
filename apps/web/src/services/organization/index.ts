@@ -1,3 +1,4 @@
+// src/services/organization/index.ts
 export * from './actions'
 // database/ est interne au service — jamais exporté
 export * from './types'

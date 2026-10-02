@@ -1,3 +1,4 @@
+// src/services/notification/index.ts
 // ─── Core réutilisable (module) ───────────────────────────────────────────────
 export * from '@/modules/notification'
 

@@ -2,11 +2,16 @@
   "service": "academic-year",
   "path": "src/services/academic-year/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "38f2f24",
+  "derived_at": "85ab8de",
   "utils_dir": null,
   "fns": {
     "createAcademicYear": {
       "f": ".api/createAcademicYear.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "ensurePersonalAcademicYear": {
+      "f": ".api/ensurePersonalAcademicYear.json",
       "layer": "db",
       "kind": "mutation"
     },
@@ -34,6 +39,11 @@
       "f": ".api/getCurrentYear.json",
       "layer": "db",
       "kind": "query"
+    },
+    "ensurePersonalAcademicYearAction": {
+      "f": ".api/ensurePersonalAcademicYearAction.json",
+      "layer": "action",
+      "kind": "server-action"
     },
     "createAcademicYearAction": {
       "f": ".api/createAcademicYearAction.json",
@@ -70,6 +80,9 @@
     "createAcademicYear": [
       "createAcademicYearAction"
     ],
+    "ensurePersonalAcademicYear": [
+      "ensurePersonalAcademicYearAction"
+    ],
     "setCurrentYear": [
       "setCurrentYearAction"
     ],
@@ -85,6 +98,7 @@
     "getCurrentYear": [
       "getCurrentYearAction"
     ],
+    "ensurePersonalAcademicYearAction": [],
     "createAcademicYearAction": [],
     "setCurrentYearAction": [],
     "updateAcademicYearAction": [],

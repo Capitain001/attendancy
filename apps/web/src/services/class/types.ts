@@ -12,4 +12,5 @@ export type GetClassesItem = GetClassesDto[number]
 
 // Source de vérité : le modèle Prisma.
 export type CreateClassData = Pick<Class, 'name' | 'programTrackId' | 'level' | 'academicYearId'>
+export type CreatePersonalClassData = Pick<CreateClassData, 'name'>
 export type UpdateClassData = Partial<CreateClassData>

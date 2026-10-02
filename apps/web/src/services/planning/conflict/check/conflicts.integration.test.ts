@@ -1,3 +1,4 @@
+// src/services/planning/conflict/check/conflicts.integration.test.ts
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { PrismaClient }      from '@/generated/prisma/client'
 import { PrismaPg }          from '@prisma/adapter-pg'

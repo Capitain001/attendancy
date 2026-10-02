@@ -1,3 +1,4 @@
+// src/services/session/database/session.mutations.ts
 import type { Prisma } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 import { markScheduleAbsences } from '@/services/attendance/database/attendance.mutations'

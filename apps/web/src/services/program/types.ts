@@ -1,3 +1,4 @@
+// src/services/program/types.ts
 import type { Prisma } from '@/generated/prisma/client';
 import { getClassProgram, getProgramList, getPrograms } from './database';
 import type { GetProgramsDto, GetProgramListDto } from './generated.types';

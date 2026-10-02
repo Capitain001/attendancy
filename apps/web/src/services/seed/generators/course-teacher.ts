@@ -1,3 +1,4 @@
+// src/services/seed/generators/course-teacher.ts
 import { prisma } from "@/lib/prisma";
 import { pickRandom } from "../utils/random";
 import { ensureSeedingAllowed } from "../guards/guard";

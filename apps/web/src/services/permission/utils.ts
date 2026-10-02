@@ -1,3 +1,4 @@
+// src/services/permission/utils.ts
 //apps\web\src\services\permission\utils.ts
 import type { Action, Resource } from '@/generated/prisma/browser'
 import { ACTION_LABELS, RESOURCE_LABELS } from './constants'

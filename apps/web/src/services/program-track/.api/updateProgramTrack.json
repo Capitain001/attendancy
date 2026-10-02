@@ -1,7 +1,7 @@
 {
   "name": "updateProgramTrack",
   "file": "src/services/program-track/database/programTrack.mutations.ts",
-  "sig": "({ programTrackId, orgId }: { programTrackId: string; orgId: string }, data: UpdateProgramTrackData) => Promise<{ name: string; id: string; description: string | null; departmentId: string; }>",
+  "sig": "({ programTrackId, orgId }: { programTrackId: string; orgId: string }, data: UpdateProgramTrackData) => Promise<{ id: string; name: string; description: string | null; departmentId: string; }>",
   "composes": [],
   "rules": [],
   "why_ref": ""

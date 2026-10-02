@@ -1,3 +1,4 @@
+// src/services/seed/generators/student.ts
 import { prisma } from "@/lib/prisma";
 import { generateFakeIdentity } from "../utils/identity";
 import { buildSeedMark, createSeedBatchId } from "../tag/tag";

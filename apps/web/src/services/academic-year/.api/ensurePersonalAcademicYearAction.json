@@ -1,0 +1,11 @@
+{
+  "name": "ensurePersonalAcademicYearAction",
+  "file": "src/services/academic-year/actions/academic-year.mutations.ts",
+  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "calls": [
+    "ensurePersonalAcademicYear"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,3 +1,4 @@
+// src/services/group/types.ts
 import type { CreateGroupInput, UpdateGroupInput, SetGroupStudentsInput } from './validation'
 import type { GetGroupsByClassDto, GetGroupEligibleStudentsDto } from './generated.types'
 

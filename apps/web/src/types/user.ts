@@ -90,22 +90,33 @@
 
 
   //  Typage spécifique aux métadonnées Supabase (aligné avec UserInfo)
-  export type UserMetadata = Pick<UserInfo,
-    | "role"
-    | "name"
-    | "avatar_url"
-    | "phone"
-    | "email_verified"
-    | "phone_verified"
-    | "function"
-    | "organization"
-    | "organizations"
-    | "invited_by"
-    | "status"
-    | "invitationToken"
-    | "invitationType"
-    | "isConnected"
-  >;
+  // Source unique : la liste des clés stockées dans user_metadata Supabase
+export const USER_METADATA_KEYS = [
+  "role",
+  "name",
+  "avatar_url",
+  "phone",
+  "email_verified",
+  "phone_verified",
+  "function",
+  "organization",
+  "organizations",
+  "invited_by",
+  "status",
+  "invitationToken",
+  "invitationType",
+  "isConnected",
+] as const satisfies readonly (keyof UserInfo)[];
+
+export type UserMetadataKey = (typeof USER_METADATA_KEYS)[number];
+
+// Typage des métadonnées Supabase (aligné avec UserInfo)
+export type UserMetadata = Pick<UserInfo, UserMetadataKey>;
+
+// Patch partiel : `null` supprime la clé côté Supabase (merge superficiel)
+export type UserMetadataPatch = {
+  [K in keyof UserMetadata]?: UserMetadata[K] | null;
+};
 
 
     // src/types/user.ts (ajout)

@@ -1,3 +1,4 @@
+// src/services/function/types.ts
 import type { Prisma } from '@/generated/prisma/client'
 import { GetFunctionByNameDto, GetFunctionsDto } from './generated.types'
 export * from './generated.types'

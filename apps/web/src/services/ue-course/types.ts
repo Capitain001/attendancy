@@ -1,3 +1,4 @@
+// src/services/ue-course/types.ts
 //src/services/ue-course/types.ts
 export * from './generated.types' //generated types
 import type { Prisma } from '@/generated/prisma/client'

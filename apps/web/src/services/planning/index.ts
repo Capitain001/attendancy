@@ -1,3 +1,4 @@
+// src/services/planning/index.ts
 export { getPlanningResourcesAction, getOrgPlanningResourcesAction } from './actions'
 export { getPlanningResources, getOrgPlanningResources } from './database'
 export type { PlanningResources, OrgPlanningResources } from './types'

@@ -1,3 +1,4 @@
+// src/services/event/database/event.queries.ts
 import { cacheTag, cacheLife } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { CACHE } from '@/cache/server/key';;;

@@ -1,0 +1,8 @@
+{
+  "name": "ensurePersonalRoom",
+  "file": "src/services/room/database/room.mutations.ts",
+  "sig": "(orgId: string) => Promise<{ id: string; name: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,3 +1,4 @@
+// src/services/course-teacher/types.ts
 // types.ts
 import type { AssignTeacherInput, SyncCourseTeachersInput } from './validation'
 import type { GetCourseTeachersDto, GetTeacherCoursesDto } from './generated.types'

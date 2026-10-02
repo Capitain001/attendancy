@@ -1,3 +1,4 @@
+// src/services/user/types.ts
 export * from "./generated.types";
 import type { Prisma } from "@/generated/prisma/client";
 

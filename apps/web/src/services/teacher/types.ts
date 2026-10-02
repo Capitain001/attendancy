@@ -1,3 +1,4 @@
+// src/services/teacher/types.ts
 import type { UpdateTeacherDepartmentInput } from './validation'
 
 import { GetTeacherDto, GetTeachersDto } from './generated.types'

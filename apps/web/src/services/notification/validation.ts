@@ -1,3 +1,4 @@
+// src/services/notification/validation.ts
 import * as v from 'valibot'
 
 // Types de notification métier — spécifiques au projet attendancy

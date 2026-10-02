@@ -1,0 +1,8 @@
+{
+  "name": "getActiveClassesCount",
+  "file": "src/services/class/database/class.queries.ts",
+  "sig": "(orgId: string) => Promise<number>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

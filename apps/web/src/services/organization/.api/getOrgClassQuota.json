@@ -1,0 +1,8 @@
+{
+  "name": "getOrgClassQuota",
+  "file": "src/services/organization/database/organization.queries.ts",
+  "sig": "(orgId: string) => Promise<{ maxClasses: number | null; } | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

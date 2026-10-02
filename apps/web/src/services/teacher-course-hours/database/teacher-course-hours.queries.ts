@@ -1,3 +1,4 @@
+// src/services/teacher-course-hours/database/teacher-course-hours.queries.ts
 import { cacheTag, cacheLife } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { CACHE } from "@/cache/server/key";

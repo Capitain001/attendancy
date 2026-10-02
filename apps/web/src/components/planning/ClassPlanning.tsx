@@ -29,6 +29,7 @@ const CoursePlanningDialog = dynamic(
 export type ClassPlanningClientProps = {
   slug: string;
   classId: string;
+  classHref?: string;
   resources: NonNullable<PlanningResources>;
   schedules: GetSchedulesReturn;
 };
@@ -41,6 +42,7 @@ const DEFAULT_MOVE_TOAST = {
 export function ClassPlanning({
   slug,
   classId,
+  classHref,
   resources,
   schedules,
 }: ClassPlanningClientProps) {
@@ -111,10 +113,7 @@ const { events, patchEvent, onEventAdd, onEventUpdate, onEventDelete } = usePlan
     [resources.class?.name]
   );
 
-  const href = useMemo(
-    () => `/${slug}/direction/classes/${classId}`,
-    [slug, classId]
-  );
+  const href = classHref ?? `/${slug}/direction/classes/${classId}`;
 
   return (
     <div className="flex flex-col ">

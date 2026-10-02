@@ -1,3 +1,4 @@
+// src/services/parent/database/index.ts
 // src/services/parent/database/index.ts — barrel
 export * from "./parent.queries";
 export * from "./parent.overview";

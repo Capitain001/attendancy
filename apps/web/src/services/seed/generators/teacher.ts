@@ -1,3 +1,4 @@
+// src/services/seed/generators/teacher.ts
 import { prisma } from "@/lib/prisma";
 import { generateFakeIdentity } from "../utils/identity";
 import { pickRandom } from "../utils/random";

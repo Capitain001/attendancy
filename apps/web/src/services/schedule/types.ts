@@ -1,3 +1,4 @@
+// src/services/schedule/types.ts
 
 //src/services/schedule/types.ts
 export * from './generated.types'

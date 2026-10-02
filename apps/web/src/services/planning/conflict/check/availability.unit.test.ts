@@ -1,3 +1,4 @@
+// src/services/planning/conflict/check/availability.unit.test.ts
 import { describe, it, expect, vi } from 'vitest'
 import type { PrismaClient }       from '@/generated/prisma/client'
 import { checkAvailability, MAX_ITEMS } from './availability'

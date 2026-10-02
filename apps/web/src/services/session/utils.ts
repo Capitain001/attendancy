@@ -1,3 +1,4 @@
+// src/services/session/utils.ts
 // Logique pure — classification des séances du jour par état métier dérivé.
 // Aucune dépendance React. Testable unitairement.
 

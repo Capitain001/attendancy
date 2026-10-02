@@ -1,3 +1,4 @@
+// src/services/student/types.ts
 import type { EnrollStudentInput, AssignStudentGroupInput } from './validation'
 import type { GetEnrolledStudentsDto, GetParentsForDirectionDto } from './generated.types'
 

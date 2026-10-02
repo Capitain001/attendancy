@@ -1,3 +1,4 @@
+// src/services/schedule/actions/schedule.queries.ts
 'use server'
 import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
@@ -25,7 +26,7 @@ export async function getClassSchedulesAction(
   rangeStart: Date,
   rangeEnd: Date,
 ) {
-  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  const auth = await authAccess({ requiredRole: 'DIRECTION', allowPersonalOrg: true })
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
 

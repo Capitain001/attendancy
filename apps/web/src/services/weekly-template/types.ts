@@ -1,3 +1,4 @@
+// src/services/weekly-template/types.ts
 import type { getWeeklyTemplates, getWeeklyTemplate } from './database'
 import { GetWeeklyTemplateDto, GetWeeklyTemplatesDto } from './generated.types'
 

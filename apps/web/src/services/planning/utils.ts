@@ -1,3 +1,4 @@
+// src/services/planning/utils.ts
 import { startOfMonth, endOfMonth } from 'date-fns'
 import type { ScheduleStatus } from '@/generated/prisma/browser'
 import type { EventColor, ScheduleEvent } from '@/components/event-calendar/types'

@@ -1,3 +1,4 @@
+// src/services/organization/actions/organization.queries.ts
 // src/services/org/actions/org.queries.ts
 'use server'
 import { authAccess } from '@/services/auth'
@@ -11,6 +12,7 @@ import {
   getOrgResourcesCounts,
   getOrgBySlug,
   getOrganizationBySlug,
+  checkClassQuotaLimit,
 } from '../database'
 
 export async function getOrgIdentityAction() {
@@ -43,7 +45,6 @@ export async function getOrgClassQuotaAction() {
 
   try {
     const settings = await getOrgClassQuota(auth.data.orgId)
-    if (!settings) return { error: 'Configuration du quota de classes introuvable' }
     return { data: settings }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
@@ -120,3 +121,15 @@ export async function getOrganizationBySlugAction(slug: string) {
     return { error: "ERROR :getOrganizationBySlugAction :Impossible de récupérer l'organisation" };
   }
 }
+
+export async function checkClassQuotaLimitAction() {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+ 
+  try {
+    return { data: await checkClassQuotaLimit(auth.data.orgId) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+ 

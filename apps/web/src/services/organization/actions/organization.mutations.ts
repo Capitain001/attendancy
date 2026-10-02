@@ -1,3 +1,4 @@
+// src/services/organization/actions/organization.mutations.ts
 // src/services/org/actions/org.mutations.ts
 'use server'
 import { redirect } from 'next/navigation'
@@ -22,7 +23,6 @@ import {
   updateOrgLogo,
   createPersonalProfile,
   createPersonalOrgWithProfile,
-  ensurePersonalAcademicScaffold,
 } from '../database'
 
 // Cas spécial : l'utilisateur n'a pas encore d'org — authAccess exige orgId et échouerait.
@@ -68,22 +68,44 @@ console.log('createOrgAction: user authorized for org creation', user.id)
 
 // Édition identité par DIRECTION/PRINCIPAL : name, email, domain, logo uniquement.
 export async function updateOrgIdentityAction(input: UpdateOrgIdentityInput) {
-  const auth = await authAccess({ requiredRole: 'DIRECTION', requiredFunction: 'PRINCIPAL' })
+  const auth = await authAccess({ requiredRole: 'DIRECTION', requiredFunction: 'PRINCIPAL', allowPersonalOrg: true })
   if (!auth.data) return { error: auth.error }
+  
   const { user, orgId } = auth.data
 
   const parsed = v.safeParse(updateOrgIdentitySchema, input)
   if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
 
   try {
+    // 1. Update BDD (retourne { id, slug, name })
     const org = await updateOrganization(orgId, parsed.output)
+
+    // 2. Fusion des nouvelles données du formulaire + données retournées par l'org
+    const updatedOrgSnapshot = user.organization
+      ? {
+          ...user.organization,
+          ...parsed.output, // fusionne les champs modifiés par le formulaire (ex: name)
+          slug: org.slug ?? user.organization.slug,
+        }
+      : undefined
+
+    // 3. Mise à jour de la liste sans aucune requête BDD supplémentaire
+    const updatedOrganizations = user.organizations?.map((o) =>
+      o.id === orgId ? { ...o, ...parsed.output, slug: org.slug ?? o.slug } : o
+    )
+
+    await setUserInfo({
+      organization: updatedOrgSnapshot,
+      organizations: updatedOrganizations,
+    })
+
     logAuditAsync({ userId: user.id, action: 'UPDATE', resource: 'ORGANIZATION', resourceId: orgId, orgId })
+    
     return { data: org }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
-
 // Mise à jour des détails (infos contact, champs personnalisés) par DIRECTION.
 export async function setOrgDetailsAction(details: OrgDetails) {
   const auth = await authAccess({ requiredRole: 'DIRECTION' })
@@ -113,21 +135,6 @@ export async function setCurrentOrganizationAction(organizationId: string): Prom
   }
 
   redirect(redirectUser({ ...user, organization }))
-}
-
-export async function ensurePersonalAcademicScaffoldAction() {
-  const auth = await authAccess({ requiredRole: 'DIRECTION', allowPersonalOrg: true })
-  if (!auth.data) return { error: auth.error }
-  const { user, orgId } = auth.data
-  if (user.organization?.type !== 'PERSONAL' || user.role !== 'TEACHER') {
-    return { error: ERRORS.AUTH.FORBIDDEN }
-  }
-
-  try {
-    return { data: await ensurePersonalAcademicScaffold(orgId) }
-  } catch (e) {
-    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
-  }
 }
 
 export async function selectOrganizationProfileAction(

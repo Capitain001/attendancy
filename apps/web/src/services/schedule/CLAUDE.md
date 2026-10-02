@@ -33,6 +33,7 @@ Noms des contraintes : `no_room_overlap`, `no_teacher_overlap`, `no_class_overla
 | `validation.ts` | `createScheduleSchema`, `updateScheduleSchema` |
 ## Invariants
 
+- Les actions de gestion du planning opt-in `allowPersonalOrg` pour le professeur propriétaire d'une org `PERSONAL`.
 - Séance COMPLETED/CANCELED/MISSED non modifiable sur champs structurants (trigger DB)
 - `status` CANCELED/MISSED libère la ressource (exclus des contraintes GiST)
 - `groupId` NULL = séance pour la CLASSE ENTIÈRE (contrainte `no_class_overlap_global`)

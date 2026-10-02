@@ -1,3 +1,4 @@
+// src/services/course-teacher/index.ts
 // index.ts
 export * from './actions'
 export * from './types'

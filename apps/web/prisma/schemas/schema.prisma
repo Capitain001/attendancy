@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../../../../packages/db/src/generated"
+  provider        = "prisma-client"
+  output          = "../../../../packages/db/src/generated"
+  previewFeatures = ["partialIndexes"]
   //  output   = "../../src/generated/prisma"
 }
 

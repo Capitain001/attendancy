@@ -1,3 +1,4 @@
+// src/services/course-teacher/actions/course-teacher.queries.ts
 // actions/course-teacher.queries.ts
 'use server'
 import { authAccess } from '@/services/auth'

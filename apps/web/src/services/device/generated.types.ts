@@ -1,3 +1,4 @@
+// src/services/device/generated.types.ts
 // ⚠ Fichier généré automatiquement — NE PAS ÉDITER À LA MAIN
 // Régénérer : npx tsx scripts/generate/types/types.ts device
 // Pour surcharger un type, définissez-le dans ./types.ts (jamais écrasé).

@@ -1,3 +1,4 @@
+// src/services/notification/types.ts
 import type { getNotificationsForUser } from './database/notification.queries'
 import type { getPushSubscriptionsByUserId } from './database/push.queries'
 

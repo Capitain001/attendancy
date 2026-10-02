@@ -8,9 +8,11 @@ import {
   ShieldCheck,
   CreditCard,
   Plug,
+  Building2,
   ChevronRight,
 } from "lucide-react";
 import { getUserInfo } from "@/modules/user";
+import { PersonalOrganizationNameRow } from "@/components/users/settings/PersonalOrganizationNameRow";
 
 export default async function SettingsOverviewPage({
   params,
@@ -81,6 +83,15 @@ export default async function SettingsOverviewPage({
     },
   ];
 
+  const workspaceCard = user?.organization?.type === "PERSONAL" ? {
+    id: "workspace",
+    title: "Espace personnel",
+    description: "Consultez et personnalisez votre espace : nom, logo et email.",
+    icon: Building2,
+    href: `/${slug}/settings/workspace`,
+    color: "text-teal-500 bg-teal-500/10",
+  } : null;
+
   return (
     <div className="space-y-6 max-w-5xl">
       {/* Header */}
@@ -93,9 +104,16 @@ export default async function SettingsOverviewPage({
         </p>
       </div>
 
+      {user?.organization?.type === "PERSONAL" && (
+        <section className="max-w-2xl space-y-2">
+          <h2 className="text-sm font-bold text-foreground">Espace personnel</h2>
+          <PersonalOrganizationNameRow initialName={user.organization.name ?? ""} />
+        </section>
+      )}
+
       {/* Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
-        {settingsCards.map((card) => {
+        {settingsCards.concat(workspaceCard ?? []).map((card) => {
           const Icon = card.icon;
 
           return (

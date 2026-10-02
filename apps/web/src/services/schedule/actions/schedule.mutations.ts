@@ -99,7 +99,7 @@ async function notifyScheduleCreation(
 }
 
 export async function createScheduleAction(data: CreateScheduleOutput) {
-  const auth = await authAccess({ requiredRole: PLANNING_ROLES })
+  const auth = await authAccess({ requiredRole: PLANNING_ROLES, allowPersonalOrg: true })
   if (!auth.data) return { error: auth.error }
   const { orgId, user } = auth.data
 
@@ -130,7 +130,11 @@ export async function createScheduleAction(data: CreateScheduleOutput) {
 
 export async function updateScheduleAction(input: UpdateScheduleInput) {
   // const auth = await authAccess({ requiredRole: PLANNING_ROLES })
-    const auth = await authAccess({ requiredRole: "DIRECTION" , requiredFunction:"PRINCIPAL" })
+  const auth = await authAccess({
+    requiredRole: "DIRECTION",
+    requiredFunction: "PRINCIPAL",
+    allowPersonalOrg: true,
+  })
   if (!auth.data) return { error: auth.error }
   const { orgId, user } = auth.data
 
@@ -176,7 +180,7 @@ export async function updateScheduleAction(input: UpdateScheduleInput) {
 }
 
 export async function cancelScheduleAction(scheduleId: string) {
-  const auth = await authAccess({ requiredRole: PLANNING_ROLES })
+  const auth = await authAccess({ requiredRole: PLANNING_ROLES, allowPersonalOrg: true })
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
 
@@ -189,7 +193,7 @@ export async function cancelScheduleAction(scheduleId: string) {
 }
 
 export async function removeScheduleAction(scheduleId: string) {
-  const auth = await authAccess({ requiredRole: PLANNING_ROLES })
+  const auth = await authAccess({ requiredRole: PLANNING_ROLES, allowPersonalOrg: true })
   if (!auth.data) return { error: auth.error }
   const { orgId, user } = auth.data
 
@@ -216,7 +220,7 @@ export async function deleteScheduleAction(scheduleId: string) {
 }
 
 export async function restoreScheduleAction(scheduleId: string) {
-  const auth = await authAccess({ requiredRole: PLANNING_ROLES })
+  const auth = await authAccess({ requiredRole: PLANNING_ROLES, allowPersonalOrg: true })
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
 
@@ -231,7 +235,7 @@ export async function restoreScheduleAction(scheduleId: string) {
  * Envoi MANUEL de la notification de création (feature N) : NEW_COURSE → SENT.
  */
 export async function notifyScheduleCreationAction(scheduleId: string) {
-  const auth = await authAccess({ requiredRole: PLANNING_ROLES })
+  const auth = await authAccess({ requiredRole: PLANNING_ROLES, allowPersonalOrg: true })
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
 
@@ -253,7 +257,7 @@ export async function notifyScheduleCreationAction(scheduleId: string) {
  * Best-effort par séance ; renvoie le décompte succès/échecs.
  */
 export async function notifyScheduleCreationsAction(scheduleIds: string[]) {
-  const auth = await authAccess({ requiredRole: PLANNING_ROLES })
+  const auth = await authAccess({ requiredRole: PLANNING_ROLES, allowPersonalOrg: true })
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
 
@@ -282,7 +286,7 @@ export async function notifyScheduleCreationsAction(scheduleIds: string[]) {
 
 export async function toggleScheduleLockAction(input: ToggleScheduleLockInput) {
   try {
-    const auth = await authAccess({ requiredRole: 'DIRECTION', requiredFunction: ['PRINCIPAL', 'SECRETARY'] })
+    const auth = await authAccess({ requiredRole: 'DIRECTION', requiredFunction: ['PRINCIPAL', 'SECRETARY'], allowPersonalOrg: true })
     if (!auth.data) return { error: auth.error }
     const { user, orgId } = auth.data
 

@@ -1,3 +1,4 @@
+// src/services/ue-course/actions/ue-course.queries.ts
 'use server'
 import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'

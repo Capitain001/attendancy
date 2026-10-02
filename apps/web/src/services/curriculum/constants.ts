@@ -1,3 +1,4 @@
+// src/services/curriculum/constants.ts
 // TODO: enums du domaine Curriculum si nécessaire — aligner sur Prisma :
 // import type { CurriculumStatus } from "@/generated/prisma/client";
 // export const CURRICULUM_STATUSES = [] as const satisfies readonly CurriculumStatus[];

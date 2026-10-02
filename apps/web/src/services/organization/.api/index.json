@@ -2,7 +2,7 @@
   "service": "organization",
   "path": "src/services/organization/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "908bd38",
+  "derived_at": "85ab8de",
   "utils_dir": null,
   "fns": {
     "createOrgWithDefaults": {
@@ -52,6 +52,11 @@
     },
     "getOrgUsage": {
       "f": ".api/getOrgUsage.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrgClassQuota": {
+      "f": ".api/getOrgClassQuota.json",
       "layer": "db",
       "kind": "query"
     },
@@ -140,6 +145,11 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "getOrgClassQuotaAction": {
+      "f": ".api/getOrgClassQuotaAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "getOrgDetailsAction": {
       "f": ".api/getOrgDetailsAction.json",
       "layer": "action",
@@ -195,6 +205,9 @@
     "getOrgUsage": [
       "getOrgUsageAction"
     ],
+    "getOrgClassQuota": [
+      "getOrgClassQuotaAction"
+    ],
     "getOrgDetails": [
       "getOrgDetailsAction"
     ],
@@ -227,6 +240,7 @@
     "createPersonalOrgAction": [],
     "getOrgIdentityAction": [],
     "getOrgUsageAction": [],
+    "getOrgClassQuotaAction": [],
     "getOrgDetailsAction": [],
     "getOrgDailyMetricsAction": [],
     "getOrgResourcesCountsAction": [],

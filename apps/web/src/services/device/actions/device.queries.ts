@@ -1,3 +1,4 @@
+// src/services/device/actions/device.queries.ts
 'use server'
 import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'

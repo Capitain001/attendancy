@@ -1,3 +1,4 @@
+// src/services/function/validation.ts
 //validation
 import { object, pipe, string, trim, minLength, maxLength, optional, boolean } from 'valibot'
 import type { InferInput, InferOutput } from 'valibot'

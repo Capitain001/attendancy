@@ -1,3 +1,4 @@
+// src/services/student-enrollment/types.ts
 import type { Prisma } from '@/generated/prisma/client'
 import { GetStudentsEnrollmentsDto } from './generated.types'
 

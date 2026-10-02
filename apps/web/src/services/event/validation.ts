@@ -1,3 +1,4 @@
+// src/services/event/validation.ts
 import * as v from 'valibot'
 
 const EventTypeEnum = v.picklist(['MEETING', 'EXAM', 'COURSE', 'GENERAL', 'ADMINISTRATIVE'])

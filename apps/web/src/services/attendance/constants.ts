@@ -1,3 +1,4 @@
+// src/services/attendance/constants.ts
 // ⚠ AJOUTS à fusionner dans src/services/attendance/constants.ts
 // (créer le fichier s'il n'existe pas encore).
 // Les règles de taux et le seuil d'absentéisme restent dans policy.ts.

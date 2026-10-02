@@ -8,7 +8,7 @@ import { getUserInfo } from "../user";
 import { generateInvitationToken } from "./token";
 import { generateInvitationMetadata } from "./metadata";
 import { sendSupabaseInvitation } from "./invitation";
-import { createInvitationLink } from "./supabase";
+import { createInvitationLink, generateMagicLink } from "./supabase";
 import { saveInvitationWithAudit } from "./database";
 import { Action } from "@/generated/prisma/browser";
 import { getAuthorization } from "../auth/persmission";
@@ -78,7 +78,9 @@ export async function inviteUser(params: InvitationParams) {
     let invitationLink: string | undefined;
 
     if (deliveryMethod === "link") {
-      const linkResult = await createInvitationLink(params.email, metadata);
+      const linkResult = existingProfile
+        ? await generateMagicLink(params.email, metadata)
+        : await createInvitationLink(params.email, metadata);
       if (!linkResult.success) {
         return { error: linkResult.error || "Erreur Supabase" };
       }

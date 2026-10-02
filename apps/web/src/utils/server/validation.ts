@@ -1,7 +1,6 @@
 // src/utils/server/validation.ts
 import { string, uuid, safeParse, pipe, object } from "valibot";
 import * as v from 'valibot'
-import type { BaseSchema } from 'valibot'
 import { notFound } from "next/navigation";
 
 const uuidSchema = pipe(string(), uuid());

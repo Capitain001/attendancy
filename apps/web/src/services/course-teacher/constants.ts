@@ -1,3 +1,4 @@
+// src/services/course-teacher/constants.ts
 // constants.ts
 // TODO: enums du domaine CourseTeacher si nécessaire — aligner sur Prisma :
 // import type { CourseTeacherStatus } from "@/generated/prisma/client";

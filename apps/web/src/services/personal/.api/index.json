@@ -1,0 +1,107 @@
+{
+  "service": "personal",
+  "path": "src/services/personal/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "d9c4860",
+  "utils_dir": null,
+  "fns": {
+    "createPersonalCourseAction": {
+      "f": ".api/createPersonalCourseAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "startPersonalTeacherAction": {
+      "f": ".api/startPersonalTeacherAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "createPersonalClassAction": {
+      "f": ".api/createPersonalClassAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "renamePersonalClassAction": {
+      "f": ".api/renamePersonalClassAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "removePersonalClassAction": {
+      "f": ".api/removePersonalClassAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createPersonalCourseAction": [],
+    "startPersonalTeacherAction": [],
+    "createPersonalClassAction": [],
+    "renamePersonalClassAction": [],
+    "removePersonalClassAction": [],
+    "getCurrentTeacherId": [
+      "createPersonalCourseAction"
+    ],
+    "getUEsAction": [
+      "createPersonalCourseAction"
+    ],
+    "createUEAction": [
+      "createPersonalCourseAction"
+    ],
+    "getUECoursesAction": [
+      "createPersonalCourseAction"
+    ],
+    "createUECourseAction": [
+      "createPersonalCourseAction"
+    ],
+    "getCoursesAction": [
+      "createPersonalCourseAction"
+    ],
+    "createCourseAction": [
+      "createPersonalCourseAction"
+    ],
+    "getCourseTeachersAction": [
+      "createPersonalCourseAction"
+    ],
+    "assignTeacherAction": [
+      "createPersonalCourseAction"
+    ],
+    "getActiveClassesCountAction": [
+      "startPersonalTeacherAction",
+      "createPersonalClassAction"
+    ],
+    "getOrgClassQuotaAction": [
+      "startPersonalTeacherAction",
+      "createPersonalClassAction"
+    ],
+    "ensurePersonalRoomAction": [
+      "startPersonalTeacherAction",
+      "createPersonalClassAction"
+    ],
+    "createClassAction": [
+      "startPersonalTeacherAction",
+      "createPersonalClassAction"
+    ],
+    "updateClassAction": [
+      "renamePersonalClassAction"
+    ],
+    "removeClassAction": [
+      "removePersonalClassAction"
+    ]
+  },
+  "deps": {
+    "getCurrentTeacherId": "teacher",
+    "getUEsAction": "ue",
+    "createUEAction": "ue",
+    "getUECoursesAction": "ue-course",
+    "createUECourseAction": "ue-course",
+    "getCoursesAction": "course",
+    "createCourseAction": "course",
+    "getCourseTeachersAction": "course-teacher",
+    "assignTeacherAction": "course-teacher",
+    "getActiveClassesCountAction": "class",
+    "getOrgClassQuotaAction": "organization",
+    "ensurePersonalRoomAction": "room",
+    "createClassAction": "class",
+    "updateClassAction": "class",
+    "removeClassAction": "class"
+  }
+}

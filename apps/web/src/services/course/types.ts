@@ -1,3 +1,4 @@
+// src/services/course/types.ts
 //src/services/course/types.ts
 import type { Prisma } from '@/generated/prisma/client'
 import type { CreateCourseInput, LinkCoursesToTermInput } from './validation'

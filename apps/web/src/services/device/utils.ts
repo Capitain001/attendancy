@@ -1,3 +1,4 @@
+// src/services/device/utils.ts
 // Décodage NON-VÉRIFIÉ du JWT Supabase — acceptable ici car le token vient
 // directement de loginWithPassword() dans le même appel serveur (pas d'input
 // utilisateur). Ne jamais réutiliser cet helper pour valider une requête

@@ -3,7 +3,12 @@
 
 import { Role } from "@/generated/prisma/browser";
 
-import type { UserMetadata, UserStatus } from "@/types/user";
+import {
+  USER_METADATA_KEYS,
+  type UserMetadata,
+  type UserMetadataPatch,
+  type UserStatus,
+} from "@/types/user";
 import { createClient } from "@/utils/supabase/server";
 
 import { getUserInfo } from "./userInfo";
@@ -22,11 +27,18 @@ async function refreshCurrentUserCache() {
 ========================= */
 
 /**
- * Remplace intégralement les metadata Supabase de l'utilisateur courant.
- * Contrairement à `setUserInfo`, utilise le client admin  donc pas de merge,
- * les champs non fournis sont supprimés.
+ * Réinitialise les user_metadata de l'utilisateur courant (client admin).
  *
- * À utiliser pour les réinitialisations ou corrections de metadata corrompues.
+ * Le merge Supabase étant superficiel (clés absentes conservées), un simple
+ * appel à `updateUserById` ne supprime rien. Cette fonction met donc à `null`
+ * toutes les clés de `USER_METADATA_KEYS` (types/user.ts) puis écrit les clés fournies, qui
+ * écrasent les `null`. Résultat : `user_metadata` ne contient plus que les
+ * clés fournies (les clés hors `UserMetadata` ne sont pas touchées).
+ *
+ * À utiliser pour les réinitialisations ou la correction de metadata corrompues.
+ * Retourne `{ error }` en cas d'échec (ne throw pas) et rafraîchit le cache
+ * applicatif en cas de succès. Le JWT garde ses anciens claims jusqu'au
+ * prochain refresh de session.
  *
  * @example
  * await cleanUserMetadata({ user_metadata: { role: "TEACHER", status: "ACTIVE" } })
@@ -47,9 +59,13 @@ export async function cleanUserMetadata({
     return { error: "Utilisateur non trouvé" };
   }
 
+  const wipe = Object.fromEntries(
+    USER_METADATA_KEYS.map((key) => [key, null]),
+  );
+
   const { data: updatedUser, error: updateError } =
     await supabase.auth.admin.updateUserById(user.id, {
-      user_metadata,
+      user_metadata: { ...wipe, ...user_metadata },
     });
 
   if (updateError) {
@@ -62,15 +78,23 @@ export async function cleanUserMetadata({
 }
 
 /**
- * Merge partiellement les metadata Supabase de l'utilisateur courant.
- * Seuls les champs fournis sont mis à jour  les autres sont conservés.
+ * Met à jour les user_metadata de l'utilisateur courant (session).
  *
- * C'est la fonction de base pour toutes les mises à jour de session utilisateur.
- * Rafraîchit le cache après l'écriture.
+ * Merge superficiel au 1er niveau : les clés non fournies sont conservées,
+ * les clés fournies sont remplacées en entier (tableaux et objets imbriqués
+ * compris, ex. `organizations`, `organization`). `null` supprime la clé,
+ * `undefined` est ignoré.
+ *
+ * Base de toutes les mises à jour de session utilisateur. Rafraîchit le cache
+ * applicatif, mais pas le JWT : ses claims restent anciens jusqu'au prochain
+ * refresh de session (`getUser()` est fiable, `getSession()` non).
+ * Throw en cas d'erreur.
+ *
  * @example
  * await setUserInfo({ status: "ACTIVE", organization: targetOrg })
+ * await setUserInfo({ invitationToken: null }) // supprime la clé
  */
-export async function setUserInfo(userMetadata: UserMetadata) {
+export async function setUserInfo(userMetadata: UserMetadataPatch) {
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.updateUser({
@@ -91,12 +115,11 @@ export async function setUserInfo(userMetadata: UserMetadata) {
 ========================= */
 
 /**
- * Change l'organisation active de l'utilisateur dans ses metadata Supabase.
- * Recherche l'organisation dans `user.organizations` et la définit comme `organization`.
+ * Définit l'organisation active (`organization`) de l'utilisateur à partir de
+ * son tableau `organizations`. Utilisé lors du switch d'organisation dans
+ * l'interface. Remplace l'objet `organization` en entier.
  *
- * Utilisé lors du switch d'organisation dans l'interface.
- *
- * @throws si l'utilisateur n'est pas authentifié ou si l'orgId est introuvable
+ * @throws si l'utilisateur n'est pas authentifié ou si `orgId` est introuvable
  *
  * @example
  * await setCurrentOrganization("org-uuid")
@@ -106,7 +129,7 @@ export async function setCurrentOrganization(orgId: string) {
   if (!user?.id) throw new Error("Utilisateur non trouvé.");
 
   const targetOrg = user.organizations?.find(
-    (organization) => organization.id === orgId
+    (organization) => organization.id === orgId,
   );
   if (!targetOrg) throw new Error("Organisation introuvable.");
 
@@ -120,16 +143,20 @@ export async function setCurrentOrganization(orgId: string) {
 ========================= */
 
 /**
- * Met à jour les metadata Supabase après la création d'une entité métier
- * (Teacher, Student, Parent, Direction) pour y injecter l'ID du profil.
+ * Injecte l'ID du profil métier (Teacher, Student, Parent, Direction) dans les
+ * metadata après sa création. Écrit en un seul appel :
+ * - `organizations` : tableau complet avec le bon profileId
+ * - `organization`  : organisation courante resynchronisée
+ * - `status`        : optionnel (ex. "ACTIVE" après acceptation d'invitation)
  *
- * Met à jour simultanément :
- * - `organizations` : le tableau complet avec le bon profileId injecté
- * - `organization`  : l'organisation courante synchronisée
- * - `status`        : optionnel, ex: "ACTIVE" après acceptance d'invitation
+ * Opération read-modify-write sur `organizations` : la lecture force un
+ * rafraîchissement du cache, mais deux appels concurrents peuvent quand même
+ * s'écraser (le dernier gagne). Si `orgId` est absent du tableau résultant,
+ * `organization` n'est pas mis à jour.
  *
  * Cas d'usage : completeSignup, création admin, réassignation de rôle,
  * migration de metadata, switch d'organisation avec changement de rôle.
+ *
  * @example
  * await syncUserOrganizationProfile({
  *   orgId: "org-uuid",
@@ -149,13 +176,13 @@ export async function syncUserOrganizationProfile({
   profileId?: string;
   status?: UserStatus;
 }) {
-  const currentUser = await getUserInfo();
+  const currentUser = await getUserInfo({ refresh: true });
 
   const updatedOrgs = updateOrganizationsProfile(
     currentUser?.organizations ?? [],
     orgId,
     role,
-    profileId
+    profileId,
   );
 
   await setUserInfo({
@@ -165,16 +192,26 @@ export async function syncUserOrganizationProfile({
   });
 }
 
-
+/* =========================
+   UTILISATEUR CIBLE (ADMIN)
+========================= */
 
 /**
- * Met à jour partiellement les user_metadata Supabase d'un utilisateur cible
- * via le client admin. Merge partiel natif  les champs non fournis sont préservés.
- * Appelé hors transaction Prisma (best-effort) : échec loggé sans throw.
+ * Met à jour les user_metadata d'un utilisateur cible (client admin).
+ *
+ * Merge superficiel au 1er niveau : clés non fournies conservées, clés
+ * fournies remplacées en entier, `null` supprime la clé.
+ *
+ * Appelé hors transaction Prisma (best-effort) : l'échec est loggé sans throw.
+ * Ne rafraîchit ni le cache ni le JWT de l'utilisateur ciblé : il verra les
+ * changements à sa prochaine session ou à son prochain refresh.
+ *
+ * @example
+ * await updateUserMetadata(invitedUserId, { status: "ACTIVE" })
  */
 export async function updateUserMetadata(
   targetUserId: string,
-  metadata: Partial<UserMetadata>,
+  metadata: UserMetadataPatch,
 ): Promise<void> {
   const supabase = await createClient();
   const { error } = await supabase.auth.admin.updateUserById(targetUserId, {

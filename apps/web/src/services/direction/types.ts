@@ -1,3 +1,4 @@
+// src/services/direction/types.ts
 import type { getDirectionMembers, getDirectionMember } from './database'
 
 export type DirectionMemberDetail  = Awaited<ReturnType<typeof getDirectionMember>>

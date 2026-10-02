@@ -1,3 +1,4 @@
+// src/services/seed/types.ts
 export type { GenerateTeachersOptions, GenerateTeacherResultItem } from "./generators/teacher";
 export type { GenerateStudentsOptions, GenerateStudentResultItem } from "./generators/student";
 export type { GenerateParentsOptions, GenerateParentResultItem } from "./generators/parent";

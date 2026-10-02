@@ -5,6 +5,8 @@
 //   succès → { data: T }   échec → { error: string }
 // Jamais de throw vers le client, jamais de discriminated union { ok: ... }.
 
+import { UI } from "./ui";
+
 export type ApiResponse<T> =
   | { data: T }
   | { error: string }
@@ -25,7 +27,7 @@ export const ERRORS = {
     //MESSAGES
     CONFLICT_MESSAGE: "Conflit détecté (salle ou enseignant déjà réservé) sur ce créneau",
   },
-
+  UI,
 
   UNIQUE: {
     DEFAULT: "Cette valeur est déjà utilisée",

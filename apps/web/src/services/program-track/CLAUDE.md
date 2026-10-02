@@ -13,13 +13,14 @@ Rôle : Gestion du domaine `program-track`.
 - `orgId` extrait du token serveur uniquement
 - Multi-tenant strict : requêtes Prisma scopées par `orgId`
 - Prisma et `database/` internes au service
+- L'ensure de filière accepte uniquement le département personnel de l'organisation courante.
 
 ## Fichiers
 
 | Fichier | Rôle |
 |---------|------|
 | `actions/index.ts` | Barrel exports des actions |
-| `actions/programTrack.mutations.ts` | Écritures serveur (Validation + AuthGuard) |
+| `actions/programTrack.mutations.ts` | Écritures serveur (Validation + AuthGuard) + ensure de filière personnelle |
 | `actions/programTrack.queries.ts` | Lectures serveur exposées au frontend |
 | `cache.ts` | <SERVICE>_GRAPH : événement → tags à invalider |
 | `database/index.ts` | Barrel interne (non exporté) |

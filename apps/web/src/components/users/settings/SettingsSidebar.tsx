@@ -12,6 +12,7 @@ import {
   CircleDollarSign,
   Plug,
   Smartphone,
+  Building2,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -31,6 +32,9 @@ export function SettingsSidebar({
 
   const tabs = [
     { id: "profile", label: fullName, href: `/${slug}/settings/profile`, icon: UserIcon },
+    ...(user.organization?.type === "PERSONAL"
+      ? [{ id: "workspace", label: "Workspace", href: `/${slug}/settings/workspace`, icon: Building2 }]
+      : []),
     { id: "theme", label: "Theme", href: `/${slug}/settings/theme`, icon: Palette },
     { id: "time", label: "Time and language", href: `/${slug}/settings/time`, icon: SunMedium },
     { id: "notifications", label: "Notifications", href: `/${slug}/settings/notifications`, icon: Bell },

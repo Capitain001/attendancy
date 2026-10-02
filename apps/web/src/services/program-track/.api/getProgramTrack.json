@@ -1,7 +1,7 @@
 {
   "name": "getProgramTrack",
   "file": "src/services/program-track/database/programTrack.queries.ts",
-  "sig": "({ programTrackId, orgId }: { programTrackId: string; orgId: string }) => Promise<{ name: string; id: string; _count: { classes: number; }; department: { name: string; id: string; }; description: string | null; } | null>",
+  "sig": "({ programTrackId, orgId }: { programTrackId: string; orgId: string }) => Promise<{ id: string; name: string; description: string | null; department: { id: string; name: string; }; _count: { classes: number; }; } | null>",
   "cache": {
     "strategy": "unstable_cache",
     "keys": [

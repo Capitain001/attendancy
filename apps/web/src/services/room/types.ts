@@ -1,3 +1,4 @@
+// src/services/room/types.ts
 import type { Prisma } from '@/generated/prisma/client'
 import type { getRooms, getRoomById, getLocations } from './database'
 import { GetRoomsDto } from './generated.types'

@@ -1,3 +1,4 @@
+// src/services/ue-template/generated.types.ts
 // ⚠ Fichier généré automatiquement — NE PAS ÉDITER À LA MAIN
 // Régénérer : npx tsx scripts/generate/types/types.ts ue-template
 // Pour surcharger un type, définissez-le dans ./types.ts (jamais écrasé).

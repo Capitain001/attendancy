@@ -1,0 +1,11 @@
+{
+  "name": "renamePersonalClassAction",
+  "file": "src/services/personal/actions/teacher.mutations.ts",
+  "sig": "(formData: FormData) => Promise<void>",
+  "calls": [
+    "updateClassAction"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

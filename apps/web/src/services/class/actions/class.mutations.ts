@@ -1,10 +1,12 @@
+// src/services/class/actions/class.mutations.ts
+//apps\web\src\services\class\actions\class.mutations.ts
 'use server'
 import * as v from 'valibot'
 import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
-import { createClassSchema, updateClassSchema } from '../validation'
-import type { CreateClassInput, UpdateClassInput, UpdateClassOutput } from '../validation'
-import { createClass, removeClass, updateClass } from '../database'
+import { createClassSchema, createPersonalClassSchema, removeClassSchema, updateClassSchema } from '../validation'
+import type { CreateClassInput, CreatePersonalClassInput, RemoveClassInput, UpdateClassInput, UpdateClassOutput } from '../validation'
+import { createClass, createPersonalClass, removeClass, updateClass } from '../database'
 
 export async function createClassAction(input: CreateClassInput) {
   const auth = await authAccess({ requiredRole: 'DIRECTION' })
@@ -20,6 +22,8 @@ export async function createClassAction(input: CreateClassInput) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
+
+
 
 export async function updateClassAction(input: UpdateClassInput) {
   const auth = await authAccess()
@@ -45,14 +49,36 @@ export async function updateClassAction(input: UpdateClassInput) {
 }
  
 
-export async function removeClassAction(classId: string) {
+export async function removeClassAction(input: RemoveClassInput) {
   const auth = await authAccess({ requiredRole: 'DIRECTION' })
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
-
+ 
+  const parsed = v.safeParse(removeClassSchema, input)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+ 
   try {
-    return { data: await removeClass(classId, orgId) }
+    return { data: await removeClass(parsed.output.classId, orgId) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
+ 
+
+
+
+export async function createPersonalClassAction(input: CreatePersonalClassInput = {}) {
+  const auth = await authAccess({ requiredRole: 'TEACHER', requiredOrgType: 'PERSONAL' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+ 
+  const parsed = v.safeParse(createPersonalClassSchema, input)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+ 
+  try {
+    return { data: await createPersonalClass({ ...parsed.output, orgId }) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+ 

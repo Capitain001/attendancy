@@ -1,17 +1,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 export const PERMISSIONS: { value: string; label: string }[] = [
     { value: "CREATE:USER", label: "Création d'utilisateur" },
     { value: "READ:COURSE", label: "Lecture de cours" },

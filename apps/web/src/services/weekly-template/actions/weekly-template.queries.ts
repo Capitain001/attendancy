@@ -1,3 +1,4 @@
+// src/services/weekly-template/actions/weekly-template.queries.ts
 'use server'
 import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'

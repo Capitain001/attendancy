@@ -48,7 +48,7 @@ export async function login(
   redirect(redirectPath); // navigation serveur directe, pas de round-trip client
 }
 
-export async function loginAction(formData: FormData): Promise<void> {
+export async function loginAction(formData: FormData) {
   const result = await login(null, formData);
   if (result?.error) {
     redirect(`/auth/signin?error=${encodeURIComponent(result.error)}`);

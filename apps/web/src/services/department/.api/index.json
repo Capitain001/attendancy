@@ -2,11 +2,16 @@
   "service": "department",
   "path": "src/services/department/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "38f2f24",
+  "derived_at": "85ab8de",
   "utils_dir": null,
   "fns": {
     "createDepartment": {
       "f": ".api/createDepartment.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "ensurePersonalDepartment": {
+      "f": ".api/ensurePersonalDepartment.json",
       "layer": "db",
       "kind": "mutation"
     },
@@ -24,6 +29,11 @@
       "f": ".api/getDepartments.json",
       "layer": "db",
       "kind": "query"
+    },
+    "ensurePersonalDepartmentAction": {
+      "f": ".api/ensurePersonalDepartmentAction.json",
+      "layer": "action",
+      "kind": "server-action"
     },
     "createDepartmentAction": {
       "f": ".api/createDepartmentAction.json",
@@ -50,6 +60,9 @@
     "createDepartment": [
       "createDepartmentAction"
     ],
+    "ensurePersonalDepartment": [
+      "ensurePersonalDepartmentAction"
+    ],
     "updateDepartment": [
       "updateDepartmentAction"
     ],
@@ -59,6 +72,7 @@
     "getDepartments": [
       "getDepartmentsAction"
     ],
+    "ensurePersonalDepartmentAction": [],
     "createDepartmentAction": [],
     "updateDepartmentAction": [],
     "deleteDepartmentAction": [],

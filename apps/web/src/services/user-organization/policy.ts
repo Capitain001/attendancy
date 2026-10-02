@@ -1,3 +1,4 @@
+// src/services/user-organization/policy.ts
 import type { UserStatus } from '@/generated/prisma/browser'
 
 // Sous-ensemble de UserStatus concerné par le toggle ACTIVE <-> SUSPENDED

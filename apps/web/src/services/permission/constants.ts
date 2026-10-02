@@ -1,3 +1,4 @@
+// src/services/permission/constants.ts
 import type { Action, Resource } from '@/generated/prisma/browser'
 
 export const ACTION_LABELS: Record<Action, string> = {
