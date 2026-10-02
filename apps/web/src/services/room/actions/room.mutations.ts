@@ -8,7 +8,7 @@ import type { CreateRoomInput, CreateLocationInput, UpdateRoomInput } from '../v
 import { createRoom, removeRoom, updateRoom, createLocation, toggleLocationActive } from '../database'
 
 export async function createRoomAction(input: CreateRoomInput) {
-  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  const auth = await authAccess({ requiredRole: 'DIRECTION', allowPersonalOrg: true })
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
 

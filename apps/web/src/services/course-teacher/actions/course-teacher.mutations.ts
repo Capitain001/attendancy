@@ -9,7 +9,7 @@ import type { AssignTeacherInput, SyncCourseTeachersInput } from '../validation'
 import { assignTeacher, deleteTeacherFromCourse, syncCourseTeachers } from '../database'
 
 export async function assignTeacherAction(input: AssignTeacherInput) {
-  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  const auth = await authAccess({ requiredRole: 'DIRECTION', allowPersonalOrg: true })
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
 

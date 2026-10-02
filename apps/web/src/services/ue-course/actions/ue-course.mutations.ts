@@ -12,7 +12,7 @@ export async function createUECourseAction(input: CreateUECourseInput) {
   const parsed = v.safeParse(createUECourseSchema, input)
   if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
 
-  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  const auth = await authAccess({ requiredRole: 'DIRECTION', allowPersonalOrg: true })
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
 

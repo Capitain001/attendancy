@@ -7,6 +7,7 @@ import { ERRORS } from '@/config'
 import { createClassSchema, createPersonalClassSchema, removeClassSchema, updateClassSchema } from '../validation'
 import type { CreateClassInput, CreatePersonalClassInput, RemoveClassInput, UpdateClassInput, UpdateClassOutput } from '../validation'
 import { createClass, createPersonalClass, removeClass, updateClass } from '../database'
+import { all } from '../../../components/ui/sidebar/index';
 
 export async function createClassAction(input: CreateClassInput) {
   const auth = await authAccess({ requiredRole: 'DIRECTION' })
@@ -50,7 +51,7 @@ export async function updateClassAction(input: UpdateClassInput) {
  
 
 export async function removeClassAction(input: RemoveClassInput) {
-  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  const auth = await authAccess({ requiredRole: 'DIRECTION' , allowPersonalOrg: true})
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
  

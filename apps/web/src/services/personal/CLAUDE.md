@@ -9,7 +9,7 @@ d'une organisation personnelle. Ce service ne possède aucun modèle Prisma.
 
 | Fichier | Rôle |
 |---|---|
-| `actions/teacher.mutations.ts` | Démarrage de l'espace professeur, ajout, renommage et archivage des classes personnelles |
+| `actions/teacher.mutations.ts` | Démarrage de l'espace professeur, ajout, renommage et archivage des classes personnelles ; `createPersonalCourseAction` — orchestration UE → UECourse → Course → CourseTeacher(self) pour créer un cours dans l'espace perso |
 | `actions/index.ts` | Barrel des actions serveur |
 | `index.ts` | API publique du service |
 
