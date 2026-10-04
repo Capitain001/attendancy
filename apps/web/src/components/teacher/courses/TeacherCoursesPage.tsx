@@ -2,7 +2,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { ArrowLeft, ChevronRight } from 'lucide-react'
+import { ArrowLeft, ChevronRight, Plus } from 'lucide-react'
 import { cn } from 'cn'
 import { GetTeacherCoursesDto } from '@/services/course-teacher'
 import Link from 'next/link'
@@ -11,9 +11,10 @@ type Course = GetTeacherCoursesDto[number]
 
 interface TeacherCoursesProps {
     courses: GetTeacherCoursesDto
+    newCourseHref?: string
 }
 
-export function TeacherCourses({ courses }: TeacherCoursesProps) {
+export function TeacherCourses({ courses, newCourseHref }: TeacherCoursesProps) {
     const [selectedClassId, setSelectedClassId] = useState<string | null>(null)
 
     const classes = useMemo(() => {
@@ -93,9 +94,19 @@ export function TeacherCourses({ courses }: TeacherCoursesProps) {
                 </p>
             </div>
 
-            {classes.length === 0 ? (
+                {classes.length === 0 ? (
                 <EmptyClasses />
             ) : (
+                <>
+                {newCourseHref && (
+                    <Link
+                        href={newCourseHref}
+                        className="inline-flex h-10 w-fit items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                    >
+                        <Plus aria-hidden="true" className="size-4" />
+                        Nouveau cours
+                    </Link>
+                )}
                 <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                     {classes.map((klass) => (
                         <button
@@ -111,6 +122,7 @@ export function TeacherCourses({ courses }: TeacherCoursesProps) {
                         </button>
                     ))}
                 </div>
+                </>
             )}
         </div>
     )

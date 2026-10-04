@@ -11,6 +11,7 @@ export const personal = {
   home: (slug: string) => `/${PERSONAL_ROUTE_SEGMENT}/${encodeURIComponent(slug)}/${ROLE_PATHS[UserRoles.TEACHER]}`,
   start: (slug: string) => `${personal.home(slug)}?start`,
   classes: (slug: string) => `${personal.home(slug)}/classes`,
+  courses: (slug: string) => `${personal.home(slug)}/courses`,
 };
 
 export async function getUserSlug() {

@@ -120,7 +120,7 @@ export const AuthMenu: React.FC<AuthMenuProps> = ({ user, className }) => {
 
       {/* Footer Section */}
       <div className="p-1.5">
-        <LogOutForm userId={user?.id} />
+        <LogOutForm />
       </div>
     </div>
   )

@@ -10,11 +10,19 @@ import {
   deleteScheduleAction,
 } from "@/services/schedule/actions";
 
-import type { CreateScheduleInput as AddScheduleData, GetSchedulesReturn } from "@/services/schedule";
-import type { UpdateScheduleDataInput } from "@/services/schedule/validation";
+import type {
+  ApiOutput,
+  CreateScheduleInput as AddScheduleData,
+  UpdateScheduleDataInput,
+} from "@attendancy/types";
 
 // Types pour les inputs du hook
-export type CreateScheduleInput = Omit<AddScheduleData, "orgId">;
+type GetSchedulesReturn = Extract<
+  ApiOutput<"getSchedulesAction">,
+  { data: unknown }
+>["data"];
+
+export type CreateScheduleInput = AddScheduleData;
 export type UpdateScheduleInput = UpdateScheduleDataInput;
 
 export interface UseSchedulesOptions {

@@ -6,6 +6,7 @@ node_modules
 
 # dist (desktop Vite build)
 apps/desktop/dist
+apps/desktop/artifacts/
 
 # next.js
 .next/
@@ -40,5 +41,7 @@ yarn-error.log*
 # tests
 coverage/
 apps/desktop/src-tauri/*
+!apps/desktop/src-tauri/webview/
+!apps/desktop/src-tauri/webview/tauri.conf.json
 .gitignore
 .gitignore

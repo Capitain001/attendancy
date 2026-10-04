@@ -1,6 +1,7 @@
 -- ============================================================
 -- Storage: bucket "avatars"
 -- Idempotent — rejouable après chaque migrate/reset
+-- TEST_DB_SKIP: dépend des schémas storage/auth gérés par Supabase.
 -- ============================================================
 
 -- Bucket (public en lecture, upload/update/delete restreints au propriétaire)

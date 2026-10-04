@@ -1,7 +1,7 @@
 // src/services/course/types.ts
 //src/services/course/types.ts
 import type { Prisma } from '@/generated/prisma/client'
-import type { CreateCourseInput, LinkCoursesToTermInput } from './validation'
+import type { CreateCourseInput, CreatePersonalCourseInput, LinkCoursesToTermInput } from './validation'
 import type {  GetCoursesDto } from './generated.types'
 
 export * from './generated.types'

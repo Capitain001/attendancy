@@ -1,6 +1,7 @@
 -- ============================================================
 -- Storage: bucket "logos"
 -- Idempotent — rejouable après chaque migrate/reset
+-- TEST_DB_SKIP: dépend des schémas storage/auth gérés par Supabase.
 -- ============================================================
 
 insert into storage.buckets (id, name, public)

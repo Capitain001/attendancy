@@ -43,34 +43,45 @@ export async function signupPrincipalAction(
   redirect(`/auth/check-email?email=${encodeURIComponent(email)}`);
 }
 
-
-//signupPersonalAction inscription a sans org
-export async function signupPersonalAction(_prev: unknown, formData: FormData) {
-  const result = safeParse(signupPersonalSchema, {
-    email: formData.get('email'),
-    password: formData.get('password'),
-  })
-  if (!result.success) {
-    return { error: result.issues[0]?.message ?? 'Validation échouée' }
+// 1. Logique pure, sans redirect. Retourne { data } ou { error }
+export async function signupPersonal(input: unknown) {
+  const parsed = safeParse(signupPersonalSchema, input);
+  if (!parsed.success) {
+    return { error: parsed.issues[0]?.message ?? "Validation échouée" };
   }
 
-  const { email, password } = result.output
-  const { data, error } = await signUpPersonal(email, password)
+  const { email, password } = parsed.output;
+  const { data, error } = await signUpPersonal(email, password);
   if (error || !data.user) {
-    return { error: error?.message ?? 'Inscription échouée' }
+    return { error: error?.message ?? "Inscription échouée" };
   }
 
   try {
-    await createUserRecord({ id: data.user.id, email })
+    await createUserRecord({ id: data.user.id, email });
   } catch (err) {
     return {
       error: err instanceof Error ? err.message : "Erreur lors de la création de l'utilisateur",
-    }
+    };
   }
 
-  redirect(`/auth/check-email?email=${encodeURIComponent(email)}`)
+  return { data: { email } };
 }
 
+
+
+//signupPersonalAction inscription a sans org
+export async function signupPersonalAction(_prev: SignupState, formData: FormData) {
+  const result = await signupPersonal({
+    email: formData.get("email"),
+    password: formData.get("password"),
+  });
+
+  if (!result.data) {
+    return { error: result.error ?? "Inscription échouée" };
+  }
+
+  redirect(`/auth/check-email?email=${encodeURIComponent(result.data.email)}`);
+}
 
 type ResendState = { success: boolean; error?: string } | null;
 

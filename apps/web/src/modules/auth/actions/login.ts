@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { redirectUser } from "@/config/redirects";
 import { getUserInfo, setUserInfo } from "@/modules/user";
-import { captureLoginDevice } from "@/services/device";
+import { captureLoginDevice } from "@/services/device/server/device-session";
 import { loginWithPassword } from "../supabase";
 
 type LoginState = { error: string } | null;
@@ -37,7 +37,12 @@ export async function login(
   const accessToken = authData.session?.access_token
   if (user.id && accessToken) {
     // Capture de l'appareil — best-effort, ne bloque jamais le login.
-    await captureLoginDevice(user.id, accessToken)
+    try {
+      const result = await captureLoginDevice(user.id, accessToken)
+      if ('error' in result) console.warn('[login] appareil non enregistré:', result.error)
+    } catch (error) {
+      console.warn('[login] appareil non enregistré:', error)
+    }
   }
   // met a jour le cache serveur
   await setUserInfo({ isConnected: true });

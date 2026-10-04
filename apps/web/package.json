@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "prisma generate && next build",
+    "dev": "bun --filter @attendancy/rpc gen && next dev",
+    "build": "bun --filter @attendancy/rpc gen && prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
     "ts:check": "tsc --noEmit",

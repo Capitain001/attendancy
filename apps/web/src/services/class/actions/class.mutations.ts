@@ -7,7 +7,6 @@ import { ERRORS } from '@/config'
 import { createClassSchema, createPersonalClassSchema, removeClassSchema, updateClassSchema } from '../validation'
 import type { CreateClassInput, CreatePersonalClassInput, RemoveClassInput, UpdateClassInput, UpdateClassOutput } from '../validation'
 import { createClass, createPersonalClass, removeClass, updateClass } from '../database'
-import { all } from '../../../components/ui/sidebar/index';
 
 export async function createClassAction(input: CreateClassInput) {
   const auth = await authAccess({ requiredRole: 'DIRECTION' })

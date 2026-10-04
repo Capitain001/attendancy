@@ -1,57 +1,8 @@
-// src/app/api/auth/me/route.ts
-import { type NextRequest, NextResponse } from 'next/server'
-import { extractBearerToken, verifyBearerToken } from '@/utils/supabase/api'
-import { prisma } from '@/lib/prisma'
-//NB: il s agit d un test pas d une api final 
+import { NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
-  const token = extractBearerToken(req)
-  if (!token) {
-    return NextResponse.json({ error: 'Token manquant' }, { status: 401 })
-  }
-
-  const user = await verifyBearerToken(token)
-  if (!user) {
-    return NextResponse.json({ error: 'Token invalide' }, { status: 401 })
-  }
-
-  const meta = (user.user_metadata ?? {}) as {
-    name?: string
-    organization?: { id?: string }
-    role?: string
-  }
-
-  const orgId = meta.organization?.id ?? null
-
-  // Récupère le teacher + la première classe associée (si role TEACHER)
-  let classId: string | null = null
-  let teacherId: string | null = null
-  if (orgId && meta.role === 'TEACHER') {
-    const teacher = await prisma.teacher.findFirst({
-      where: { userId: user.id, orgId },
-      select: {
-        id: true,
-        schedules: {
-          where: { deletedAt: null, startTime: { gte: new Date() } },
-          orderBy: { startTime: 'asc' },
-          select: { classId: true },
-          take: 1,
-        },
-      },
-    })
-    teacherId = teacher?.id ?? null
-    classId = teacher?.schedules[0]?.classId ?? null
-  }
-
-  return NextResponse.json({
-    data: {
-      userId: user.id,
-      email:  user.email,
-      name:   meta.name ?? user.email,
-      orgId,
-      role:   meta.role ?? null,
-      teacherId,
-      classId,
-    },
-  })
+export async function GET() {
+  return NextResponse.json(
+    { error: "Cette route est dépréciée. Utilisez le RPC d’authentification." },
+    { status: 410 },
+  );
 }

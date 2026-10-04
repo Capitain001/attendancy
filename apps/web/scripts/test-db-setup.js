@@ -9,6 +9,7 @@ import { execSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { Client } from "pg";
 
 const dirname = fileURLToPath(new URL(".", import.meta.url));
 const rootDir = resolve(dirname, "..");
@@ -46,7 +47,7 @@ process.env.DIRECT_URL = testDirectUrl;
 // Consentement explicite utilisateur pour migrate reset sur test DB (Prisma 7 AI safety gate).
 process.env.PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION = "tu peut reset db si elle te bloque, on est en dev";
 
-execSync("npx prisma migrate reset --force --skip-seed --skip-generate", {
+execSync("npx prisma migrate reset --force", {
   stdio: "inherit",
   env: process.env,
 });
@@ -57,13 +58,21 @@ if (existsSync(postMigrateDir)) {
   const sqlFiles = readdirSync(postMigrateDir, { recursive: true })
     .filter((f) => String(f).endsWith(".sql"))
     .sort();
-  for (const file of sqlFiles) {
-    const path = join(postMigrateDir, String(file));
-    console.log(`→ post-migrate: ${file}`);
-    execSync(
-      `npx prisma db execute --file "${path}"`,
-      { stdio: "inherit", env: process.env }
-    );
+  const client = new Client({ connectionString: testDirectUrl });
+  await client.connect();
+  try {
+    for (const file of sqlFiles) {
+      const path = join(postMigrateDir, String(file));
+      const sql = readFileSync(path, "utf-8");
+      if (/MODULE DIFFÉRÉ|TEST_DB_SKIP/.test(sql.slice(0, 1_000))) {
+        console.log(`→ post-migrate ignoré (non applicable à la DB test): ${file}`);
+        continue;
+      }
+      console.log(`→ post-migrate: ${file}`);
+      await client.query(sql);
+    }
+  } finally {
+    await client.end();
   }
 }
 

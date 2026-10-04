@@ -1,11 +1,16 @@
 // src/services/device/validation.ts
 import * as v from 'valibot'
 
+export const deviceIdInputSchema = v.object({
+  deviceId: v.pipe(v.string(), v.minLength(8, 'deviceId invalide'), v.maxLength(200)),
+})
+export type DeviceIdInput = v.InferInput<typeof deviceIdInputSchema>
+
 export const captureLoginDeviceSchema = v.object({
   userId: v.pipe(v.string(), v.uuid('ID invalide')),
   // Généré côté serveur (cookie posé par le middleware) — pas un UUID
   // Postgres, juste un identifiant opaque (cf. Invitation.token).
-  deviceId: v.pipe(v.string(), v.minLength(8, 'deviceId invalide'), v.maxLength(200)),
+  deviceId: deviceIdInputSchema.entries.deviceId,
   authSessionId: v.optional(v.string()), // claim session_id du JWT, best-effort
 })
 export type CaptureLoginDeviceInput = v.InferInput<typeof captureLoginDeviceSchema>
@@ -13,7 +18,7 @@ export type CaptureLoginDeviceOutput = v.InferOutput<typeof captureLoginDeviceSc
 
 export const endSessionOnLogoutSchema = v.object({
   userId: v.pipe(v.string(), v.uuid('ID invalide')),
-  deviceId: v.pipe(v.string(), v.minLength(8, 'deviceId invalide'), v.maxLength(200)),
+  deviceId: deviceIdInputSchema.entries.deviceId,
 })
 export type EndSessionOnLogoutInput = v.InferInput<typeof endSessionOnLogoutSchema>
 

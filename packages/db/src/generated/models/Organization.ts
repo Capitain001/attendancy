@@ -363,7 +363,7 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   teacherUnavailabilities?: Prisma.TeacherUnavailabilityListRelationFilter
   userSessions?: Prisma.UserSessionListRelationFilter
   teacherCourseHours?: Prisma.TeacherCourseHoursListRelationFilter
-}, "id" | "name" | "email" | "slug" | "domain">
+}, "id" | "email" | "slug" | "domain" | "name">
 
 export type OrganizationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

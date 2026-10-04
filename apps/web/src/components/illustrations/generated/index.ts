@@ -2,6 +2,7 @@
 /* auto-generated — do not edit manually */
 
 export {
+  IllustrationCurvedArrow1,
   IllustrationHeroManagement,
   IllustrationPrincipalSignUp,
   IllustrationSchool,
@@ -10,6 +11,7 @@ export {
 
 import type { FC, SVGProps } from "react";
 import {
+  IllustrationCurvedArrow1,
   IllustrationHeroManagement,
   IllustrationPrincipalSignUp,
   IllustrationSchool,
@@ -19,6 +21,7 @@ import {
 type ComponentProps = SVGProps<SVGSVGElement>;
 
 export const RESOURCE_ILLUSTRATIONS = {
+  "curved-arrow-1": IllustrationCurvedArrow1,
   "hero-management": IllustrationHeroManagement,
   "principal-sign-up": IllustrationPrincipalSignUp,
   "school": IllustrationSchool,

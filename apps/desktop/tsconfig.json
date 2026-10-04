@@ -11,8 +11,18 @@
     "verbatimModuleSyntax": true,
     "paths": {
       "@/generated/prisma/browser": ["../../packages/db/src/generated/browser.ts"],
+      "@/services/*/actions": ["../../packages/rpc/src/generated/*.ts"],
+      "@attendancy/rpc/*": ["../../packages/rpc/src/generated/*.ts"],
+      "@rpc-api": ["./src/lib/api.ts"],
+      "@/*": ["../web/src/*"],
       "@ui/*": ["../../packages/ui/src/*"]
     }
   },
-  "include": ["src", "src-tauri"]
+  "include": ["src", "src-tauri"],
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/*.unit.test.ts",
+    "**/*.integration.test.ts"
+  ]
 }

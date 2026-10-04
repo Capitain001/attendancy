@@ -37,7 +37,7 @@ async function call(action, token) {
     },
     body: BODY,
   })
-  return { status: res.status, text: (await res.text()) }
+  return { status: res.status, text: (await res.text()).slice(7) }
 }
 
 const token = await login()

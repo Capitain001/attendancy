@@ -33,8 +33,8 @@ export default async function PersonalTeacherPage({
     return (
       <PersonalTeacherStart
         data={state.data}
-        homeHref={state.homeHref}
-        startHref={state.startHref}
+        homeHref={state.homeHref ?? "#"}
+        startHref={state.startHref ?? "#"}
         error={query.error}
       />
     )

@@ -54,8 +54,6 @@ export async function updateClass(classId: string, orgId: string, data: UpdateCl
   return updated
 }
  
-
-
 export async function removeClass(classId: string, orgId: string) {
   const result = await tryConstraint(prisma.class.update({
     // deletedAt: null -> une classe déjà archivée n'est pas ré-archivée (date conservée)

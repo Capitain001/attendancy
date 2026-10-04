@@ -5,7 +5,7 @@ Voici le patch complet, dans l'ordre de dépendance.
 La route ne peut pas exporter `ACTIONS` elle-même : Next n'autorise que certains exports dans un `route.ts`. Le registre passe donc dans son propre fichier.
 
 ```typescript
-// apps/web/src/app/api/rpc/[action]/actions.ts
+// apps/web/src/lib/rpc/actions.ts
 import { getSchedulesAction } from '@/services/schedule'
 import { getClassesAction } from '@/services/class'
 
@@ -19,7 +19,7 @@ import { ACTIONS } from './actions'
 ```
 
 ```typescript
-// apps/web/src/app/api/rpc/[action]/contract.ts
+// apps/web/src/lib/rpc/contract.ts
 import type { Jsonify } from 'type-fest'
 import type { ACTIONS } from './actions'
 
@@ -48,7 +48,7 @@ Le build vit dans `packages/types` (ses outputs restent dans son dossier, ce qui
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
-  entry: { contract: '../../apps/web/src/app/api/rpc/[action]/contract.ts' },
+  entry: { contract: '../../apps/web/src/lib/rpc/contract.ts' },
   tsconfig: '../../apps/web/tsconfig.json', // c'est lui qui résout @/*
   dts: { only: true },
   format: ['esm'],

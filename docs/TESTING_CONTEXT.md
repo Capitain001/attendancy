@@ -15,10 +15,14 @@ règle absolue ; le détail vit ici.
 
 ## Flow d'un test d'intégration (obligatoire)
 1. **Préparer la DB test** : `pnpm test:db:setup` (= `node scripts/test-db-setup.js`).
-   Il fait, sur `TEST_DATABASE_URL` : `prisma migrate reset --force --skip-seed
-   --skip-generate` (DB **pure**) → réapplique **toutes** les migrations →
-   ré-exécute les **index post-migrate** (`prisma/post-migrate/indexes/spatial_indexes.sql` :
+   Il fait, sur `TEST_DATABASE_URL` : `prisma migrate reset --force` (DB **pure**,
+   aucun seed n'est configuré dans `prisma.config.ts`) → réapplique **toutes** les migrations →
+   ré-exécute les scripts SQL **post-migrate actifs** (`prisma/post-migrate/` :
    GIST/PostGIS, B-tree custom, index unique partiel `parent_relation_active_unique_idx`).
+   Les fichiers marqués `MODULE DIFFÉRÉ` ou `TEST_DB_SKIP` sont ignorés lorsqu'ils
+   dépendent d'un module non migré ou d'un schéma géré par un service externe.
+   Chaque fichier actif est envoyé entier au client PostgreSQL pour préserver les
+   blocs de fonctions PL/pgSQL et leurs délimiteurs `$...$`.
    → Objectif : **base propre repartant des migrations**, jamais un état accumulé.
 2. **Lancer les tests** : `pnpm test:integration` (ou un fichier ciblé via `vitest run
    --project integration <path>`).

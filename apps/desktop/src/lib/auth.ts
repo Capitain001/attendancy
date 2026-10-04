@@ -1,7 +1,22 @@
 // apps/desktop/src/lib/auth.ts
+import { isAuthRetryableFetchError, type Session } from '@supabase/supabase-js'
 import { supabase } from './supabase'
 
-export async function getToken() {
+export type SessionState =
+  | { status: 'signed-in'; session: Session }
+  // Connecté localement, mais le token est expiré et le refresh a échoué
+  // faute de réseau. L'utilisateur reste connecté : on affiche le cache.
+  | { status: 'offline-stale' }
+  | { status: 'signed-out' }
+
+export async function getSessionState(): Promise<SessionState> {
+  const { data, error } = await supabase.auth.getSession()
+  if (data.session) return { status: 'signed-in', session: data.session }
+  if (error && isAuthRetryableFetchError(error)) return { status: 'offline-stale' }
+  return { status: 'signed-out' }
+}
+
+export async function getToken(): Promise<string | null> {
   const { data } = await supabase.auth.getSession()
   return data.session?.access_token ?? null
 }

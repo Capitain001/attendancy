@@ -1,0 +1,9 @@
+{
+  "name": "signupPersonalDesktopAction",
+  "file": "src/services/auth/actions.ts",
+  "sig": "(input: SignupPersonalInput) => Promise<{ error: string; data?: undefined; } | { data: { email: string; }; error?: undefined; }>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

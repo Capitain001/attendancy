@@ -1,5 +1,11 @@
-// apps/web/src/app/api/rpc/[action]/contract.ts
+// apps/web/src/lib/rpc/contract.ts
 import type { ACTIONS } from './actions'
+import type {
+  CreateScheduleInput,
+  UpdateScheduleDataInput,
+} from '@/services/schedule/validation'
+
+export type { CreateScheduleInput, UpdateScheduleDataInput }
 
 type Actions = typeof ACTIONS
 

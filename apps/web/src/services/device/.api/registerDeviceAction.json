@@ -1,0 +1,9 @@
+{
+  "name": "registerDeviceAction",
+  "file": "src/services/device/actions/device.rpc.ts",
+  "sig": "(input: DeviceIdInput) => Promise<{ data: { device: { id: string; revokedAt: Date | null; }; session: { id: string; deviceId: string; createdAt: Date; }; }; error?: undefined; } | { error: string; }>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

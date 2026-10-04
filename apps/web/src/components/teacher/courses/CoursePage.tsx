@@ -3,9 +3,9 @@
 
 import Link from 'next/link'
 import { ArrowLeft, Award, ChevronRight, Clock, GraduationCap, Users } from 'lucide-react'
-import type { GetCourseDetailDto } from '@/services/course/generated.types'
-import type { GetCourseLastScheduleDto, GetTeacherNextScheduleDto } from '@/services/schedule/generated.types'
-import type { ScheduleStatus } from '@/generated/prisma/client'
+import type { GetCourseDetailDto } from '@/services/course'
+import type { GetCourseLastScheduleDto, GetTeacherNextScheduleDto } from '@/services/schedule'
+import type { ScheduleStatus } from '@/generated/prisma/browser'
 import UserIcon from '@/components/users/UserIcon'
 
 export type CourseDetailDto = NonNullable<GetCourseDetailDto>

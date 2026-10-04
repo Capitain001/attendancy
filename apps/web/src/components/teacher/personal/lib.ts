@@ -1,3 +1,4 @@
+// apps\web\src\components\teacher\personal\lib.ts
 import { checkClassQuotaLimitAction } from '@/services/organization'
 
 // Décide quoi afficher pour (slug, ?start) : lit l'état, ne redirige pas.

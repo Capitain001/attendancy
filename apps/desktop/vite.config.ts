@@ -6,9 +6,15 @@ import path from 'path'
 export default defineConfig({
   plugins: [tailwindcss(), react()],
   resolve: {
-    alias: {
-      '@ui': path.resolve(__dirname, '../../packages/ui/src'),
-    },
+    alias: [
+      {
+        find: /^@\/services\/([^/]+)\/actions$/,
+        replacement: path.resolve(__dirname, '../../packages/rpc/src/generated/$1.ts'),
+      },
+      { find: '@rpc-api', replacement: path.resolve(__dirname, 'src/lib/api.ts') },
+      { find: '@ui', replacement: path.resolve(__dirname, '../../packages/ui/src') },
+      { find: '@', replacement: path.resolve(__dirname, '../web/src') },
+    ],
   },
   // Vite écoute sur 1420 — référencé dans tauri.conf.json devUrl
   server: {

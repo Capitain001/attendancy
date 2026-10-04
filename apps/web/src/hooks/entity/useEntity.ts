@@ -1,7 +1,7 @@
 // @/hooks/entity/useEntity.ts
 "use client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { EntityFetchFn, EntityParams } from "./types";
+import type { EntityFetchFn, EntityParams } from "./types";
 
 // Fonction de transformation par défaut réutilisable
 export const itemsToById = <T extends { id: string }>(items: T[]) => ({

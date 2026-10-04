@@ -2,11 +2,13 @@
 "use server";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import {  removeUser, setUserInfo } from "@/modules/user";
-import { endSessionOnLogoutAction } from "@/services/device";
+import { getUserInfo, removeUser, setUserInfo } from "@/modules/user";
+import { endSessionForUser } from "@/services/device/server/device-session";
 import { logout } from "../supabase";
  
-export async function logoutAction({ userId }: { userId?: string }) {
+export async function logoutAction() {
+  const user = await getUserInfo()
+  const userId = user?.id
   await setUserInfo({ isConnected: false });
   //retire l user du cache serveur
   if (userId) {
@@ -17,15 +19,19 @@ export async function logoutAction({ userId }: { userId?: string }) {
     const cookieStore = await cookies();
     const deviceId = cookieStore.get("device_id")?.value;
     if (deviceId) {
-      await endSessionOnLogoutAction({ userId, deviceId });
+      try {
+        const result = await endSessionForUser({ userId, deviceId });
+        if ('error' in result) console.warn('[logout] session non clôturée:', result.error)
+      } catch (error) {
+        console.warn('[logout] session non clôturée:', error)
+      }
     }
   }
   await logout();
   redirect('/login');
 }
  
-export async function logoutActionForm(formData: FormData) {
-  const userId = formData.get('userId') as string | null;
-  await logoutAction({ userId: userId || undefined });
+export async function logoutActionForm(_formData: FormData) {
+  await logoutAction();
 }
  

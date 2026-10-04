@@ -2,7 +2,7 @@
   "service": "device",
   "path": "src/services/device/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "38f2f24",
+  "derived_at": "5a7e392",
   "utils_dir": null,
   "fns": {
     "upsertDeviceOnLogin": {
@@ -55,21 +55,6 @@
       "layer": "db",
       "kind": "query"
     },
-    "captureLoginDeviceAction": {
-      "f": ".api/captureLoginDeviceAction.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "captureLoginDevice": {
-      "f": ".api/captureLoginDevice.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "endSessionOnLogoutAction": {
-      "f": ".api/endSessionOnLogoutAction.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
     "revokeSessionAction": {
       "f": ".api/revokeSessionAction.json",
       "layer": "action",
@@ -99,15 +84,21 @@
       "f": ".api/getMySessionsAction.json",
       "layer": "action",
       "kind": "server-action"
+    },
+    "registerDeviceAction": {
+      "f": ".api/registerDeviceAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "endSessionAction": {
+      "f": ".api/endSessionAction.json",
+      "layer": "action",
+      "kind": "server-action"
     }
   },
   "edges": {
-    "upsertDeviceOnLogin": [
-      "captureLoginDeviceAction"
-    ],
-    "expireSessionOnLogout": [
-      "endSessionOnLogoutAction"
-    ],
+    "upsertDeviceOnLogin": [],
+    "expireSessionOnLogout": [],
     "revokeSession": [
       "revokeSessionAction"
     ],
@@ -128,17 +119,14 @@
       "getMySessionsAction"
     ],
     "getSession": [],
-    "captureLoginDeviceAction": [
-      "captureLoginDevice"
-    ],
-    "captureLoginDevice": [],
-    "endSessionOnLogoutAction": [],
     "revokeSessionAction": [],
     "revokeDeviceAction": [],
     "updateDeviceLabelAction": [],
     "setDeviceTrustedAction": [],
     "getMyDevicesAction": [],
-    "getMySessionsAction": []
+    "getMySessionsAction": [],
+    "registerDeviceAction": [],
+    "endSessionAction": []
   },
   "deps": {}
 }

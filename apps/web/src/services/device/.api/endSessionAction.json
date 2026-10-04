@@ -1,0 +1,9 @@
+{
+  "name": "endSessionAction",
+  "file": "src/services/device/actions/device.rpc.ts",
+  "sig": "(input: DeviceIdInput) => Promise<{ data: boolean; error?: undefined; } | { error: string; }>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

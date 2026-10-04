@@ -1,15 +1,14 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import './styles.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./lib/query-client";
+import { AuthView } from "./views/AuthView";
+import "./styles.css";
 
-// Base propre — le code métier desktop sera reconstruit sur le contrat
-// @attendancy/types (ApiOutput<'...'>), pas sur les anciens tests.
-function App() {
-  return <div className="min-h-screen bg-background text-foreground" />
-}
-
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <AuthView />
+    </QueryClientProvider>
   </React.StrictMode>,
-)
+);

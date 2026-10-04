@@ -9,19 +9,6 @@ import { hasPermission, permissionName } from '@/services/permission'
 import type { Action, Resource } from '@/generated/prisma/client'
 import type { OrganizationType } from '@/generated/prisma/browser'
 
-
-
-export async function getAuthUser() {
-  const user = await getUserInfo();
-  if (!user) {
-    console.error(ERRORS.AUTH.UNAUTHORIZED);
-    throw new Error(ERRORS.AUTH.UNAUTHORIZED);
-  }
-  return user;
-}
-
-
-
 type AuthAccessParams = {
   requiredRole?: Role | Role[]
   requiredFunction?: Functions | Functions[]
@@ -99,4 +86,14 @@ export async function authAccess(params: AuthAccessParams = {}) {
   } catch (error) {
     return { error: error instanceof Error ? error.message : ERRORS.SERVER }
   }
+}
+
+
+export async function getAuthUser() {
+  const user = await getUserInfo();
+  if (!user) {
+    console.error(ERRORS.AUTH.UNAUTHORIZED);
+    throw new Error(ERRORS.AUTH.UNAUTHORIZED);
+  }
+  return user;
 }

@@ -1,5 +1,5 @@
 //@/hooks/entity/types.ts
-import { UseEntityOptions } from "./useEntity";
+import type { UseEntityOptions } from "./useEntity";
 
 
 /**
@@ -66,6 +66,5 @@ export interface UseEntityCacheOptions<T> extends UseEntityOptions<T> {
         : K & string
     }[keyof T]
   : never;
-
 
 

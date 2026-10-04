@@ -16,15 +16,44 @@ bun run tauri:dev          # fenêtre Tauri + hot reload Vite (port 1420)
 
 ```bash
 cd apps/desktop
-bun run tauri build
+bun run build:desktop
 ```
+
+Sans argument, le build charge `apps/desktop/.env.production` et l'application
+installée appelle l'API Vercel. Pour fabriquer un installeur de test qui appelle
+un serveur local, utilise le mode `dev` :
+
+```powershell
+bun run build:desktop dev
+# API par défaut : http://localhost:3000
+```
+
+L'URL peut être remplacée avec `-api:<url>` :
+
+```powershell
+bun run build:desktop dev -api:http://localhost:3000
+bun run build:desktop dev -api:http://192.168.1.20:3000
+```
+
+Le mode `dev` copie l'installeur dans
+`apps/desktop/artifacts/Attendancy_0.1.0_x64-setup-dev.exe`, distinct de
+l'installeur production `Attendancy_0.1.0_x64-setup.exe`. Pour utiliser une URL
+personnalisée en mode production, passe-la aussi avec `-api:<url>`. Les variables
+Supabase `VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY` doivent être fournies
+par le fichier `.env` local ou par l'environnement CI au build.
 
 Sorties :
 
-| Fichier | Chemin |
-|---|---|
-| Installeur NSIS | `apps/desktop/src-tauri/target/release/bundle/nsis/Attendancy_<version>_x64-setup.exe` |
-| Binaire nu | `apps/desktop/src-tauri/target/release/attendancy-desktop.exe` |
+| Fichier               | Chemin                                                                                 |
+| --------------------- | -------------------------------------------------------------------------------------- |
+| Installeur NSIS       | `apps/desktop/src-tauri/target/release/bundle/nsis/Attendancy_<version>_x64-setup.exe` |
+| Binaire nu            | `apps/desktop/src-tauri/target/release/attendancy-desktop.exe`                         |
+| Copie de l'installeur | `apps/desktop/artifacts/Attendancy_0.1.0_x64-setup.exe`                                |
+
+Les commandes de build Android (application locale et conteneur WebView) sont
+documentées dans [android.md](./android.md). Les APK arm64 signés pour les tests
+locaux et l'installeur Windows sont également conservés dans
+`apps/desktop/artifacts/`.
 
 ## Vérification offline
 

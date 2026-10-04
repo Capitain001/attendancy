@@ -20,8 +20,10 @@ post-migrate/
 
 - **Dev/prod** : `npx prisma db execute --file prisma/post-migrate/<fichier>.sql`
   après chaque `migrate deploy` qui l'exige.
-- **Base de test** : automatique — `scripts/test-db-setup.js` applique tous les
-  `.sql` du dossier (récursif, ordre alphabétique) après le reset.
+- **Base de test** : automatique — `scripts/test-db-setup.js` applique les `.sql`
+  actifs du dossier (récursif, ordre alphabétique) après le reset. Les fichiers
+  portant `MODULE DIFFÉRÉ` ou `TEST_DB_SKIP` en tête sont ignorés s'ils dépendent
+  de modèles non migrés ou d'un schéma géré par un service externe.
 
 ## Règles
 

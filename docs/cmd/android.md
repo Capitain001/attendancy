@@ -27,28 +27,44 @@ cd apps/desktop
 bun run tauri android init
 ```
 
-## Build APK arm64 (recommandé pour tests — ~12,5 MB)
+## Build + signature APK arm64 (recommandé pour tests — ~12,5 MB)
 
 ```bash
 cd apps/desktop
 $env:ANDROID_HOME='D:\ANDROID'; $env:NDK_HOME='D:\ANDROID\ndk\27.3.13750724'; $env:JAVA_HOME='C:\Program Files\Java\jdk-21'
-bun run tauri android build --apk --target aarch64
+bun run build:android
 ```
 
-Sortie : `src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk`
+Cette commande construit l'application avec le frontend local, signe l'APK avec le
+keystore debug local, vérifie sa signature puis copie le fichier dans :
+`apps/desktop/artifacts/Attendancy-Standalone-arm64-debug-signed.apk`.
 
-## Signature (obligatoire — Android refuse un APK unsigned)
+Les builds de production Vite chargent `apps/desktop/.env.production` :
+`VITE_API_URL` pointe donc vers `https://attendancy-web.vercel.app` pour que
+l'APK natif appelle le serveur en ligne. En développement, `apps/desktop/.env`
+peut conserver `http://localhost:3000`. Les variables Supabase
+`VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY` doivent aussi être présentes
+dans l'environnement local ou CI au moment du build.
+
+## APK conteneur WebView
+
+La variante WebView est un conteneur séparé qui charge le site hébergé. Elle
+utilise `src-tauri/webview/tauri.conf.json` :
 
 ```powershell
-& "D:\ANDROID\build-tools\36.0.0\apksigner.bat" sign `
-  --ks "$env:USERPROFILE\.android\debug.keystore" `
-  --ks-pass pass:android `
-  --out "src-tauri\gen\android\app\build\outputs\apk\universal\release\Attendancy-<version>-arm64-signed.apk" `
-  "src-tauri\gen\android\app\build\outputs\apk\universal\release\app-universal-release-unsigned.apk"
+cd apps/desktop
+$env:ANDROID_HOME='D:\ANDROID'; $env:NDK_HOME='D:\ANDROID\ndk\27.3.13750724'; $env:JAVA_HOME='C:\Program Files\Java\jdk-21'
+bun run build:android:webview
 ```
 
-Keystore debug auto-créé par Android (pass par défaut : `android`). Pour une
-distribution Play Store : keystore release dédié + `.aab` avec ABI splits.
+L'APK est signé et vérifié, puis copié dans :
+`apps/desktop/artifacts/Attendancy-WebView-arm64-debug-signed.apk`.
+
+Les deux variantes ont le même `applicationId` (`io.attendancy.app`) :
+installer l'une remplace l'autre. Elles utilisent le keystore debug local
+(`%USERPROFILE%\.android\debug.keystore`, mot de passe Android par défaut
+`android`) et sont destinées aux tests locaux. Pour une distribution, configurer
+un keystore de release dédié et signer avec celui-ci.
 
 ## Build universel (4 ABI — ~38 MB, éviter sauf besoin émulateur x86)
 
@@ -72,23 +88,12 @@ bun run tauri android dev
 ## Notes
 
 - `VITE_API_URL` / clés Supabase sont **build-time** — rebuild après changement
-  de `.env`.
+  de `.env`, `.env.production` ou de l'environnement CI. En mode production,
+  `.env.production` définit l'API Vercel ; une variable définie directement
+  dans l'environnement du build reste prioritaire.
 - Le build compile le Rust pour chaque ABI : premier build ~4–5 min/ABI, puis
   incrémental.
 - Poids : universel = 4× le `.so` Rust ; arm64 seul ≈ 12,5 MB. Optimisations
   futures (`opt-level = "z"`, `lto`, `strip` dans `Cargo.toml`) → ~8 MB.
 - `gen/android` est commité (décision plan offline-local-builds) — les symlinks
   jniLibs pointent vers `src-tauri/target/`, ne pas copier les `.so` à la main.
-
-
-##BUILD & sign
-# 1. Build
-$env:ANDROID_HOME='D:\ANDROID'; $env:NDK_HOME='D:\ANDROID\ndk\27.3.13750724'; $env:JAVA_HOME='C:\Program Files\Java\jdk-21'
-bun run tauri android build --apk --target aarch64
-
-# 2. Signature
-& "D:\ANDROID\build-tools\36.0.0\apksigner.bat" sign `
-  --ks "$env:USERPROFILE\.android\debug.keystore" `
-  --ks-pass pass:android `
-  --out "src-tauri\gen\android\app\build\outputs\apk\universal\release\Attendancy-0.1.0-arm64-signed.apk" `
-  "src-tauri\gen\android\app\build\outputs\apk\universal\release\app-universal-release-unsigned.apk"

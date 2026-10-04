@@ -87,7 +87,7 @@ export function useClasses(options: UseClassesOptions = {}) {
   // référence pour toUpdateFn (cf. actionHelpers.ts).
   const update = toUpdateFn(updateClassAction, "classId");
 
-  const deleteClass = toDeleteFn(removeClassAction);
+  const deleteClass = toDeleteFn(async (classId: string) => removeClassAction({ classId }));
 
   return useCrudEntity<ClassDto, CreateClassInput, UpdateClassDataInput>({
     entityName: "classes",

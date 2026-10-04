@@ -1,3 +1,8 @@
-// src/services/auth/actions.ts
-'use server'
-export { logoutAction, logoutAction as logOutUser, logoutActionForm as logOutUserForm } from '@/modules/auth/actions/logout'
+"use server";
+
+import type { SignupPersonalInput } from "@/modules/auth/validation";
+import { signupPersonal } from "@/modules/auth/actions/signup";
+
+export async function signupPersonalDesktopAction(input: SignupPersonalInput) {
+  return signupPersonal(input);
+}

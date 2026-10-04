@@ -13,7 +13,6 @@
     "windows": [
       {
         "title": "Attendancy",
-        "url": "https://attendancy-web.vercel.app/",
         "width": 1200,
         "height": 800,
         "minWidth": 800,

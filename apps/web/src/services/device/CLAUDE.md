@@ -9,6 +9,8 @@ Gère la sécurité et l'historique des connexions des utilisateurs en identifia
 |---------|------|
 | `actions/device.mutations.ts` | `captureLoginDeviceAction`, `endSessionOnLogoutAction`, `revokeSessionAction`, `revokeDeviceAction` |
 | `actions/device.queries.ts` | `getMyDevicesAction`, `getMySessionsAction` |
+| `actions/device.rpc.ts` | Authenticated RPC actions for device registration and logout |
+| `server/device-session.ts` | Server-only orchestration for session capture/expiration; not a public Server Action |
 | `actions/index.ts` | Barrel exports des actions |
 | `cache.ts` | `DEVICE_GRAPH` — enregistré dans `src/cache/server/key.ts` |
 | `database/device.mutations.ts` | `upsertDeviceOnLogin`, `expireSessionOnLogout`, `revokeSession`, `revokeDevice`, `touchSessionActivity` |
@@ -25,6 +27,7 @@ Gère la sécurité et l'historique des connexions des utilisateurs en identifia
 - Révocation d'un appareil révoque automatiquement toutes ses sessions actives, mais ne supprime pas l'historique.
 - Cycle de vie du device_id : L'ID de l'appareil est généré côté Edge (middleware) et stocké dans un cookie `httpOnly`. N'est jamais généré par Prisma.
 - Best-effort au Login/Logout : L'enregistrement du device ne doit jamais bloquer le flux principal d'authentification Supabase.
+- RPC : `userId` est toujours dérivé de l'identité vérifiée du Bearer ; les helpers internes `server/device-session.ts` ne sont pas exposés comme Server Actions.
 - Absence de suppression dure (Hard Delete) : Le cycle de vie est géré via `revokedAt` et des statuts (ACTIVE/REVOKED/EXPIRED) pour conserver la trace d'audit.
 
 ## Points d'extension (⚠)
@@ -40,4 +43,3 @@ npx tsx scripts/generate/api/api.ts device
 npx tsx scripts/generate/types/types.ts device
 npx tsx scripts/generate/summary/summary.ts device
 ```
-

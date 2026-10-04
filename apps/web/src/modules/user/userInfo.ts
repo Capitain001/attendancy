@@ -2,7 +2,7 @@
 "use server"
 import { cache } from "react"
 import { createClient } from "@/utils/supabase/server"
-import { Functions, UserMetadata, UserRoles, UserStatus, type UserInfo } from "@/types/user"
+import { UserMetadata, type UserInfo } from "@/types/user"
 import { jwtDecode } from "jwt-decode"
 import { getUser, setUser, removeUser } from "./lru-cache"
 import { mapUserInfo } from "./utils"

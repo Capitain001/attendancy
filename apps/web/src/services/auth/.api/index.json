@@ -2,9 +2,17 @@
   "service": "auth",
   "path": "src/services/auth/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "38f2f24",
+  "derived_at": "6b2311d",
   "utils_dir": null,
-  "fns": {},
-  "edges": {},
+  "fns": {
+    "signupPersonalDesktopAction": {
+      "f": ".api/signupPersonalDesktopAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "signupPersonalDesktopAction": []
+  },
   "deps": {}
 }

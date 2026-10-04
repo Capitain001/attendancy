@@ -1,6 +1,7 @@
 -- ============================================================
 -- RPC: auth
 -- Idempotent — rejouable après chaque migrate/reset
+-- TEST_DB_SKIP: dépend du schéma auth géré par Supabase, absent d'une DB Prisma isolée.
 --
 -- Fonctions RPC liées à auth.users, appelables uniquement en service_role
 -- (createAdminClient côté appli).
