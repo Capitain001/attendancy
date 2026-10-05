@@ -13,6 +13,7 @@ export default defineConfig({
       },
       { find: '@rpc-api', replacement: path.resolve(__dirname, 'src/lib/api.ts') },
       { find: '@ui', replacement: path.resolve(__dirname, '../../packages/ui/src') },
+      { find: '@desktop', replacement: path.resolve(__dirname, 'src') },
       { find: '@', replacement: path.resolve(__dirname, '../web/src') },
     ],
   },

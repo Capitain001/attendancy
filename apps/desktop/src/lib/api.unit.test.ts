@@ -5,13 +5,18 @@ const { getToken, refreshSession } = vi.hoisted(() => ({
   refreshSession: vi.fn(),
 }));
 
-vi.mock("./auth", () => ({ getToken }));
+vi.mock("./auth/session", () => ({ getToken }));
 vi.mock("./supabase", () => ({
   supabase: { auth: { refreshSession } },
 }));
 vi.mock("../config/url", () => ({ API_URL: "https://api.test.local" }));
 
 import { api, NetworkError } from "./api";
+
+const scheduleFilter = {
+  rangeStart: new Date("2030-02-03T00:00:00.000Z"),
+  rangeEnd: new Date("2030-02-10T00:00:00.000Z"),
+};
 
 describe("desktop RPC transport", () => {
   beforeEach(() => {
@@ -32,7 +37,7 @@ describe("desktop RPC transport", () => {
     vi.stubGlobal("fetch", fetchMock);
     getToken.mockResolvedValue(null);
 
-    await expect(api.getSchedulesAction()).resolves.toEqual({
+    await expect(api.getSchedulesAction(scheduleFilter)).resolves.toEqual({
       error: "Not authenticated",
     });
     expect(fetchMock).not.toHaveBeenCalled();
@@ -78,7 +83,7 @@ describe("desktop RPC transport", () => {
       );
     vi.stubGlobal("fetch", fetchMock);
 
-    const result = await api.getSchedulesAction({ orgId: "org-1" });
+    const result = await api.getSchedulesAction(scheduleFilter);
 
     expect(fetchMock).toHaveBeenCalledOnce();
     expect(fetchMock).toHaveBeenCalledWith(
@@ -89,7 +94,7 @@ describe("desktop RPC transport", () => {
           "Content-Type": "application/json",
           Authorization: "Bearer access-token",
         },
-        body: JSON.stringify({ orgId: "org-1" }),
+        body: JSON.stringify(scheduleFilter),
       }),
     );
     expect(result).toEqual({
@@ -136,7 +141,9 @@ describe("desktop RPC transport", () => {
 
   it("throws NetworkError on transport failures but preserves application errors as values", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("offline")));
-    await expect(api.getSchedulesAction()).rejects.toBeInstanceOf(NetworkError);
+    await expect(api.getSchedulesAction(scheduleFilter)).rejects.toBeInstanceOf(
+      NetworkError,
+    );
 
     vi.stubGlobal(
       "fetch",
@@ -146,7 +153,7 @@ describe("desktop RPC transport", () => {
         }),
       ),
     );
-    await expect(api.getSchedulesAction()).resolves.toEqual({
+    await expect(api.getSchedulesAction(scheduleFilter)).resolves.toEqual({
       error: "Invalid input",
     });
   });

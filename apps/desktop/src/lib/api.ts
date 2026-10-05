@@ -1,7 +1,7 @@
 // apps/desktop/src/lib/api.ts
 import type { ApiClient } from "@attendancy/types";
 import { API_URL } from "../config/url";
-import { getToken } from "./auth";
+import { getToken } from "./auth/session";
 import { supabase } from "./supabase";
 
 const ISO = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/;

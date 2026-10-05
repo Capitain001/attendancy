@@ -2,8 +2,8 @@
 /**
  * apps/web/scripts/generate/themes/themes.ts
  *
- * Scanne apps/web/src/styles/themes/*.css et génère automatiquement :
- *   - apps/web/src/styles/themes/index.css  (les @import)
+ * Scanne packages/ui/src/styles/themes/*.css et génère automatiquement :
+ *   - packages/ui/src/styles/themes/index.css  (les @import)
  *   - apps/web/src/generated/themes.ts      (le tableau des thèmes)
  *
  * Chaque fichier de thème doit contenir un sélecteur .theme-<name> :
@@ -35,7 +35,10 @@ interface ThemeMeta {
 
 const __dirname: string = dirname(fileURLToPath(import.meta.url));
 // Depuis apps/web/scripts/generate/themes/themes.ts, on remonte jusqu'à apps/web
-const THEMES_DIR: string = join(__dirname, "../../../src/styles/themes");
+const THEMES_DIR: string = join(
+  __dirname,
+  "../../../../../packages/ui/src/styles/themes",
+);
 const GENERATED_DIR: string = join(__dirname, "../../../src/generated");
 const GENERATED_FILE: string = join(GENERATED_DIR, "themes.ts");
 const INDEX_CSS_FILE: string = join(THEMES_DIR, "index.css");

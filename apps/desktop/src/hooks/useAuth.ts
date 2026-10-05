@@ -1,7 +1,11 @@
 // apps/desktop/src/hooks/useAuth.ts
 import { useEffect, useState } from 'react'
+import { claimLocalData } from '@desktop/lib/cache/clear'
 import { supabase } from '../lib/supabase'
-import { getSessionState, type SessionState } from '../lib/auth'
+import {
+  getSessionState,
+  type SessionState,
+} from "../lib/auth/session";
 
 export function useAuth() {
   const [state, setState] = useState<SessionState | null>(null) // null = chargement
@@ -13,6 +17,10 @@ export function useAuth() {
     })
     return () => subscription.unsubscribe()
   }, [])
+
+  useEffect(() => {
+    if (state?.status === 'signed-in') void claimLocalData(state.session.user.id)
+  }, [state])
 
   return state
 }

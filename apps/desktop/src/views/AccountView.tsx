@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { ApiOutput } from '@attendancy/types'
-import { logout } from '../lib/account'
+import { logout } from "../lib/auth/actions";
 
 type CurrentUser = Extract<ApiOutput<'getCurrentUserAction'>, { data: unknown }>['data']
 

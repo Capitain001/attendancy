@@ -8,6 +8,7 @@ const {
   signInWithPassword,
   signOut,
   getDeviceId,
+  claimLocalData,
 } = vi.hoisted(() => ({
   registerDeviceAction: vi.fn(),
   endSessionAction: vi.fn(),
@@ -16,24 +17,29 @@ const {
   signInWithPassword: vi.fn(),
   signOut: vi.fn(),
   getDeviceId: vi.fn(),
+  claimLocalData: vi.fn(),
 }));
 
-vi.mock("./api", () => ({
+vi.mock("@desktop/lib/api", () => ({
   api: { registerDeviceAction, endSessionAction, signupPersonalDesktopAction },
 }));
-vi.mock("./device-id", () => ({ getDeviceId }));
-vi.mock("./query-client", () => ({ queryClient: { removeQueries } }));
-vi.mock("./supabase", () => ({
+vi.mock("@desktop/lib/cache/clear", () => ({ claimLocalData }));
+vi.mock("@desktop/lib/device-id", () => ({ getDeviceId }));
+vi.mock("@desktop/lib/query-client", () => ({ queryClient: { removeQueries } }));
+vi.mock("@desktop/lib/supabase", () => ({
   supabase: { auth: { signInWithPassword, signOut } },
 }));
 
-import { login, logout, signupPersonal } from "./account";
+import { login, logout, signupPersonal } from "./auth/actions";
 
 describe("desktop account adapter", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     getDeviceId.mockReturnValue("persistent-device-id");
-    signInWithPassword.mockResolvedValue({ error: null });
+    signInWithPassword.mockResolvedValue({
+      data: { user: { id: "user-id" } },
+      error: null,
+    });
     signOut.mockResolvedValue({ error: null });
     registerDeviceAction.mockResolvedValue({ data: true });
     endSessionAction.mockResolvedValue({ data: true });
@@ -52,6 +58,7 @@ describe("desktop account adapter", () => {
       email: "user@example.test",
       password: "secret",
     });
+    expect(claimLocalData).toHaveBeenCalledWith("user-id");
     expect(registerDeviceAction).toHaveBeenCalledWith({
       deviceId: "persistent-device-id",
     });
@@ -66,9 +73,10 @@ describe("desktop account adapter", () => {
 
     await expect(
       login({ email: "user@example.test", password: "wrong" }),
-    ).resolves.toBe("Adresse e-mail ou mot de passe incorrect.");
+    ).resolves.toBe("Email ou mot de passe incorrect");
 
     expect(registerDeviceAction).not.toHaveBeenCalled();
+    expect(claimLocalData).not.toHaveBeenCalled();
   });
 
   it("submits a personal signup through the public signup RPC", async () => {

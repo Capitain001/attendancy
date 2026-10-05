@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { LoginCredentials, SignupCredentials } from "@attendancy/ui";
 import { useAuth } from "../hooks/useAuth";
 import { useMe } from "../hooks/useMe";
-import { login, logout, signupPersonal } from "../lib/account";
+import { login, logout, signupPersonal } from "../lib/auth/actions";
 import { AccountView } from "./AccountView";
 import { LoginView } from "./LoginView";
 import { SignupView } from "./SignupView";
