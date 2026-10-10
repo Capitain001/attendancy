@@ -13,12 +13,12 @@ import {
   type DBSession,
 } from "@/hooks/data/sessions/use-session-state";
 import type { UISessionStatus } from "@/services/session/policy";
-import type { TeacherNextSchedule } from "@/services/schedule";
+import type { GetTeacherNextScheduleDto } from "@/services/schedule";
 import { SessionCarousel } from "../SessionCarousel";
 
 
 
-type TeacherSchedule = NonNullable<TeacherNextSchedule>;
+type TeacherSchedule = NonNullable<GetTeacherNextScheduleDto>;
 type SessionPrimaryAction = "start" | "end" | null;
 
 interface SessionActionButtonModel {

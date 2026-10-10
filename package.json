@@ -7,7 +7,7 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "concurrently -n web,tauri -c cyan,magenta \"bun run dev:web\" \"bun --filter @attendancy/desktop run tauri:dev\"",
+    "dev": "concurrently -n web,tauri -c cyan,magenta \"bun run dev:web\" \"bun run --filter @attendancy/desktop tauri:dev\"",
     "dev:web": "turbo dev --filter=@attendancy/web",
     "dev:desktop": "turbo dev --filter=@attendancy/desktop",
     "build": "prisma generate && turbo build",

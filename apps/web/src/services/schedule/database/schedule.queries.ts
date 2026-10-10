@@ -350,6 +350,61 @@ export async function getTodayClassSchedules(classId: string, orgId: string) {
   })
 }
 
+//tache recente :a auditer
+/* =========================
+   DAILY TEACHER SCHEDULES
+========================= */
+export async function getTeacherDailySchedule(
+  teacherId: string,
+  orgId: string,
+  dayKey: string, // 'YYYY-MM-DD'
+) {
+  'use cache'
+
+  cacheTag(CACHE.SCHEDULE(orgId))
+  cacheTag(CACHE.SCHEDULE(orgId, teacherId))
+  cacheLife(CACHE.SCHEDULE.life)
+
+  // Sans suffixe Z : interprété en heure locale du serveur (comme avant)
+  const start = new Date(`${dayKey}T00:00:00`)
+  const end = new Date(start)
+  end.setDate(end.getDate() + 1) // minuit du lendemain, borne exclusive
+
+  return prisma.schedule.findMany({
+    where: {
+      orgId,
+      teacherId,
+      deletedAt: null,
+      startTime: { gte: start, lt: end },
+    },
+    select: {
+      id: true,
+      startTime: true,
+      endTime: true,
+      status: true,
+      confirmed: true,
+      notes: true,
+      course: { select: { name: true } },
+      room: { select: { name: true, locationId: true } },
+      class: {
+        select: {
+          name: true,
+          level: true,
+          _count: { select: { studentEnrollments: true } },
+        },
+      },
+      group: {
+        select: {
+          name: true,
+          _count: { select: { studentGroups: true } },
+        },
+      },
+      session: { select: { id: true, status: true, checkIn: true } },
+    },
+    orderBy: { startTime: 'asc' },
+  })
+}
+
 /* =========================
    GUARD — jamais mis en cache
 ========================= */

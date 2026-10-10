@@ -193,92 +193,7 @@ export type CreatePersonalOrgData = {
   created: boolean // true si l'org OU le profil a été écrit dans cet appel
 }
 
-// Idempotent, en UNE transaction : org + profil du rôle demandé.
-// - Espace perso absent        → on crée org + Settings + Usage + UserOrganization + profil.
-// - Espace perso présent, profil du rôle absent → on ajoute seulement le profil (et on aligne UserOrganization.role).
-// - Tout existe déjà           → created: false (l'action re-projette les metadata Supabase).
-//
-// Ce que l'espace perso NE reçoit PAS, volontairement :
-//   - pas de Direction ni de UserOrganization DIRECTION (FEATURE §3.1)
-//   - pas de Subscription : gratuit par construction (FEATURE §3.3 / §8)
-//   - pas de structure académique : créée à la demande par le service academic
-export async function createPersonalOrgWithDefaults(params: CreatePersonalOrgParams) {
-  const { userId, role } = params
-  let orgCreated = false
 
-  const result = await tryConstraint(
-    prisma.$transaction(async (tx): Promise<CreatePersonalOrgData> => {
-      // 1. Org : réutiliser l'espace perso actif ou le créer
-      const existing = await tx.userOrganization.findFirst({
-        where: { userId, organization: { type: 'PERSONAL', deletedAt: null } },
-        select: { organization: { select: { id: true, name: true, slug: true } } },
-      })
-
-      let org: { id: string; name: string; slug: string }
-
-      if (existing) {
-        const { organization } = existing
-        if (!organization.slug) throw new Error('Espace personnel invalide : slug manquant')
-        org = { id: organization.id, name: organization.name, slug: organization.slug }
-      } else {
-        const { slug, name } = buildOrgSlug('PERSONAL', params.displayName)
-
-        const created = await tx.organization.create({
-          data: { name, slug, type: 'PERSONAL' },
-          select: { id: true, name: true },
-        })
-
-        await tx.organizationSettings.create({
-          data: { orgId: created.id, maxClasses: PERSONAL_MAX_CLASSES },
-        })
-        await tx.organizationUsage.create({ data: { orgId: created.id } })
-
-        org = { id: created.id, name: created.name, slug }
-        orgCreated = true
-      }
-
-      // 2. Profil du rôle demandé : anti-doublon (cf. findPersonalProfileId)
-      const existingProfileId = existing
-        ? await findPersonalProfileId(userId, org.id, role)
-        : null
-
-      if (existingProfileId) {
-        // Le rôle actif reflète le dernier profil choisi (même règle que createPersonalProfile)
-        await tx.userOrganization.update({
-          where: { userId_orgId: { userId, orgId: org.id } },
-          data: { role, status: 'ACTIVE' },
-        })
-        return { org, profileId: existingProfileId, role, created: orgCreated }
-      }
-
-      // 3. UserOrganization avec le rôle demandé (plus de 'TEACHER' en dur)
-      await tx.userOrganization.upsert({
-        where: { userId_orgId: { userId, orgId: org.id } },
-        create: {
-          userId,
-          orgId: org.id,
-          role,
-          isMainOrg: params.isFirstOrg,
-          isResponsable: true,
-          status: 'ACTIVE',
-        },
-        update: { role, status: 'ACTIVE' },
-      })
-
-      // 4. Profil spécifique au rôle (Teacher / Student / Parent)
-      const entity = await createRoleSpecificEntity(tx, userId, role, org.id)
-      if (!entity) throw new Error(`Création du profil ${role} impossible`)
-
-      // Signup solo : PENDING → ACTIVE, sans écraser un SUSPENDED/INACTIVE
-      await tx.user.updateMany({ where: { id: userId, status: 'PENDING' }, data: { status: 'ACTIVE' } })
-
-      return { org, profileId: entity.id, role, created: true }
-    })
-  )
-
-  if (orgCreated) await invalidateEvent('ORG_CREATED', result.org.id)
-  return result
-}
 
 // → REMPLACE personal-org-shell.database.ts dans src/services/org/database/org.mutations.ts
 //
@@ -286,7 +201,6 @@ export async function createPersonalOrgWithDefaults(params: CreatePersonalOrgPar
 // premier profil, en une seule transaction. Appelée UNE FOIS — la toute
 // première fois qu'un user crée son espace perso. Aucun état intermédiaire :
 // soit tout existe, soit rien n'existe (pas d'org sans propriétaire possible).
-
 
 export async function createPersonalOrgWithProfile(params: {
   userId: string

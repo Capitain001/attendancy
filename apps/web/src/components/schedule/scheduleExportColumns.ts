@@ -1,9 +1,9 @@
 import { format } from "date-fns";
 
 import type { ExportColumn } from "@/lib/export";
-import type { GetSchedulesReturn } from "@/services/schedule";
+import type { GetSchedulesDto } from "@/services/schedule";
 
-export type ScheduleExportRow = GetSchedulesReturn[number];
+export type ScheduleExportRow = GetSchedulesDto[number];
 
 const STATUS_LABEL: Record<string, string> = {
   PENDING: "À venir",

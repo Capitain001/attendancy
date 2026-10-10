@@ -118,27 +118,27 @@ export function TeacherScheduleCalendar({
   };
 
   return (
-    <div className="flex h-full w-full flex-col justify-between rounded-md bg-teacher-bg p-6 text-teacher-fg transition-colors sm:p-8">
+    <div className="flex h-full w-full flex-col justify-between rounded-md bg-background p-6 text-foreground transition-colors sm:p-8">
       <div className="grid h-full w-full flex-1 grid-cols-1 gap-6 lg:grid-cols-12 lg:items-start lg:gap-10">
         
         {/* ── SECTION GAUCHE / MOBILE : Calendrier Swipable ── */}
         <div className="my-auto flex w-full flex-col gap-8 overflow-hidden lg:col-span-7">
           <div className="flex flex-col gap-1 select-none">
-            <div className="-mt-2 font-black leading-none tracking-tighter text-teacher-brand text-[6.5rem] sm:text-[7.5rem]">
+            <div className="-mt-2 font-black leading-none tracking-tighter text-primary text-[6.5rem] sm:text-[7.5rem]">
               {format(selectedDate, "d")}
             </div>
 
             <div className="flex items-end justify-between leading-none">
               <div className="flex flex-col gap-1 leading-none">
-                <span className="text-3xl font-black uppercase tracking-tight text-teacher-fg sm:text-4xl">
+                <span className="text-3xl font-black uppercase tracking-tight text-foreground sm:text-4xl">
                   {format(selectedDate, "MMMM", { locale: fr })}
                 </span>
-                <span className="text-xl font-semibold text-teacher-muted">
+                <span className="text-xl font-semibold text-muted-foreground">
                   {format(selectedDate, "yyyy")}
                 </span>
               </div>
 
-              <span className="text-2xl font-extrabold uppercase tracking-tight text-teacher-muted sm:text-3xl">
+              <span className="text-2xl font-extrabold uppercase tracking-tight text-muted-foreground sm:text-3xl">
                 {format(selectedDate, "eee", { locale: fr }).slice(0, 3)}
               </span>
             </div>
@@ -168,7 +168,7 @@ export function TeacherScheduleCalendar({
               >
                 <div className="grid grid-cols-7 gap-1 text-center select-none">
                   {WEEKDAY_LABELS.map((label) => (
-                    <span key={label} className="text-[10px] font-semibold text-teacher-muted">
+                    <span key={label} className="text-[10px] font-semibold text-muted-foreground">
                       {label}
                     </span>
                   ))}
@@ -185,11 +185,11 @@ export function TeacherScheduleCalendar({
                     const isSelected = isSameDay(day, selectedDate);
                     const isCurrentDay = isTodayFn(day);
 
-                    let circleStyle = "bg-teacher-surface-muted";
+                    let circleStyle = "bg-muted";
                     if (isSelected) {
-                      circleStyle = "bg-teacher-brand";
+                      circleStyle = "bg-primary";
                     } else if (hasSession) {
-                      circleStyle = "bg-teacher-inverted";
+                      circleStyle = "bg-muted-foreground";
                     }
 
                     return (
@@ -200,7 +200,9 @@ export function TeacherScheduleCalendar({
                         aria-label={format(day, "d MMMM yyyy", { locale: fr })}
                         aria-pressed={isSelected}
                         className={`aspect-square w-full max-w-[44px] justify-self-center rounded-full transition-all hover:scale-105 active:scale-95 ${circleStyle} ${
-                          isCurrentDay && !isSelected ? "ring-2 ring-teacher-brand ring-offset-2" : ""
+                          isCurrentDay && !isSelected
+                            ? "ring-2 ring-primary ring-offset-2 ring-offset-background"
+                            : ""
                         }`}
                       />
                     );
@@ -212,22 +214,22 @@ export function TeacherScheduleCalendar({
         </div>
 
         {/* ── SECTION DROITE : Vue Liste (Desktop lg:) ── */}
-        <div className="hidden h-full flex-col gap-4 border-l border-teacher-surface-muted pl-8 lg:col-span-5 lg:flex">
+        <div className="hidden h-full flex-col gap-4 border-l border-border pl-8 lg:col-span-5 lg:flex">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-teacher-muted">
+            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
               Séances du jour
             </span>
-            <span className="rounded-full bg-teacher-surface px-2.5 py-0.5 text-xs font-bold text-teacher-fg">
+            <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-bold text-secondary-foreground">
               {daySchedules.length}
             </span>
           </div>
 
           {isLoadingDay ? (
-            <div className="flex flex-1 items-center justify-center rounded-2xl border-2 border-dashed border-teacher-surface-muted p-6 text-center text-xs text-teacher-muted">
+            <div className="flex flex-1 items-center justify-center rounded-2xl border-2 border-dashed border-border p-6 text-center text-xs text-muted-foreground">
               Chargement…
             </div>
           ) : daySchedules.length === 0 ? (
-            <div className="flex flex-1 items-center justify-center rounded-2xl border-2 border-dashed border-teacher-surface-muted p-6 text-center text-xs text-teacher-muted">
+            <div className="flex flex-1 items-center justify-center rounded-2xl border-2 border-dashed border-border p-6 text-center text-xs text-muted-foreground">
               Aucune séance ce jour.
             </div>
           ) : (
@@ -235,13 +237,13 @@ export function TeacherScheduleCalendar({
               {daySchedules.map((s) => (
                 <div
                   key={s.id}
-                  className="flex items-center justify-between gap-3 rounded-2xl bg-teacher-surface p-4"
+                  className="flex items-center justify-between gap-3 rounded-2xl bg-card p-4 text-card-foreground"
                 >
                   <div className="flex flex-col gap-0.5">
-                    <span className="text-sm font-bold text-teacher-fg">
+                    <span className="text-sm font-bold text-foreground">
                       {s.course.name}
                     </span>
-                    <span className="text-xs text-teacher-muted">
+                    <span className="text-xs text-muted-foreground">
                       {format(new Date(s.startTime), "HH:mm")} –{" "}
                       {format(new Date(s.endTime), "HH:mm")} · {s.room.name}
                       {s.group ? ` · ${s.group.name}` : ""}
@@ -250,13 +252,13 @@ export function TeacherScheduleCalendar({
 
                   <div className="flex items-center gap-2">
                     {s.isLocked && (
-                      <Lock className="h-3.5 w-3.5 text-teacher-muted" />
+                      <Lock className="h-3.5 w-3.5 text-muted-foreground" />
                     )}
                     <span
                       className={`rounded-full px-2.5 py-1 text-[10px] font-semibold ${
                         s.status === "CANCELED"
-                          ? "bg-teacher-surface-muted text-teacher-muted"
-                          : "bg-teacher-inverted text-teacher-inverted-fg"
+                          ? "bg-muted text-muted-foreground"
+                          : "bg-primary text-primary-foreground"
                       }`}
                     >
                       {STATUS_LABEL[s.status]}

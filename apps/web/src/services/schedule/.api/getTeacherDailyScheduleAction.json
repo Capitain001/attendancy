@@ -1,0 +1,11 @@
+{
+  "name": "getTeacherDailyScheduleAction",
+  "file": "src/services/schedule/actions/schedule.queries.ts",
+  "sig": "({ teacherId, date }: { teacherId: string date?: Date }) => Promise<{ error: string; data?: undefined; } | { data: { id: string; startTime: Date; endTime: Date; status: ScheduleStatus; confirmed: boolean; notes: string | null; class: { ...; }; course: { ...; }; group: { ...; } | null; room: { ...; }; session: { ...; } | null; }[]; error?: undefined; }>",
+  "calls": [
+    "getTeacherDailySchedule"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -5,9 +5,9 @@ import type { LucideIcon } from "lucide-react";
 import { BookOpen, Clock, MapPin, Users, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-import type { TeacherNextSchedule } from "@/services/schedule";
+import type { GetTeacherNextScheduleDto } from "@/services/schedule";
 
-type Schedule = NonNullable<TeacherNextSchedule>;
+type Schedule = NonNullable<GetTeacherNextScheduleDto>;
 
 type InfoSlideSchedule = Pick<
   Schedule,

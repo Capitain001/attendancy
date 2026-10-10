@@ -6,7 +6,7 @@ import { fr } from "date-fns/locale";
 
 import { SCHEDULE_EXPORT_COLUMNS } from "@/components/schedule/scheduleExportColumns";
 import { getSchedulesAction } from "@/services/schedule";
-import type { GetSchedulesReturn } from "@/services/schedule";
+import type { GetSchedulesDto } from "@/services/schedule";
 import type { PlanningResources } from "@/services/planning";
 import { runExport } from "@/lib/export/exporters";
 import type { ExportFormat } from "@/lib/export/types";
@@ -40,7 +40,7 @@ export function usePlanningExport({ classId, resources }: UsePlanningExportArgs)
   const [custom, setCustom] = useState({ start: "", end: "" });
   const [exportFormat, setExportFormat] = useState<ExportFormat>("xlsx");
 
-  const [rows, setRows] = useState<GetSchedulesReturn>([]);
+  const [rows, setRows] = useState<GetSchedulesDto>([]);
   const [loading, setLoading] = useState(false);
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);

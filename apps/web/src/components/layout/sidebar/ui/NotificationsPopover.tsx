@@ -89,14 +89,14 @@ export function NotificationsPopover() {
           {unreadCount > 0 && (
             <Badge
               variant={badge.variant}
-              className="absolute left-full top-0 size-5 -translate-x-1/2 -translate-y-1/2 shrink-0 rounded-full border-2 px-1 text-auto text-[10px]"
+              className="absolute left-full top-0 size-5 -translate-x-1/2 -translate-y-1/2 shrink-0 p-0 inline-flex items-center justify-center leading-none rounded-full border-2 text-[10px] bg-[var(--destructive)] hover:bg-[var(--destructive)]/80 text-[var(--destructive-foreground)] select-none"
             >
               {badge.label}
             </Badge>
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[400px] md:w-60  min-h-[220px] bg-background/50 border-1 border-border/50 p-2">
+      <PopoverContent align="end" collisionPadding={0} className="w-screen sm:w-[400px] min-h-[220px] bg-background/50 border border-border/50 p-2">
         {isLoading ? (
           <div className="flex flex-col  items-center justify-center py-8">
             <Loader1 />

@@ -29,7 +29,7 @@ export default async function PersonalTeacherPage({
 
   if (state.view === 'REDIRECT') redirect(state.to)
 
-  if (state.view !== 'START') {
+  if (state.view === 'START') {
     return (
       <PersonalTeacherStart
         data={state.data}

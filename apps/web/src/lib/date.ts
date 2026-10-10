@@ -3,6 +3,30 @@
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 
+/** Clé de jour 'YYYY-MM-DD' dans le fuseau local de l'environnement qui l'appelle. */
+export function toDayKey(date: Date): string {
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  return `${y}-${m}-${d}`
+}
+
+// 24 h, sans AM/PM : "22:32"
+export const timeFormatter = new Intl.DateTimeFormat('fr-FR', {
+  hour: '2-digit',
+  minute: '2-digit',
+  hourCycle: 'h23',
+})
+
+/** 120 min → "2h", 90 min → "1h30", 45 min → "45 min". */
+export function formatDuration(start: Date, end: Date): string {
+  const minutes = Math.max(0, Math.round((end.getTime() - start.getTime()) / 60_000))
+  const h = Math.floor(minutes / 60)
+  const m = minutes % 60
+  if (h === 0) return `${m} min`
+  return m === 0 ? `${h}h` : `${h}h${String(m).padStart(2, '0')}`
+}
+
 /** Locale de date centralisée pour toute l'app (formatage, Calendar, etc.). */
 export const DATE_LOCALE = fr;
 

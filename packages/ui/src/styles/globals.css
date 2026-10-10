@@ -1,7 +1,7 @@
 @import "./themes/index.css";
 
-/* Dark mode = class-based */
-@custom-variant dark (&:where(.dark, .dark *));
+/* Dark mode = class-based (supports .dark on ancestor like <html>) */
+@custom-variant dark (:where(.dark, .dark *) &);
 
 /* ════════════════════════════════════════════ */
 /* ─── TOKENS DE BASE (définis par les thèmes) ─── */

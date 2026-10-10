@@ -61,3 +61,27 @@ export const toggleScheduleLockSchema = validateWithId('scheduleId', toggleSched
 
 export type ToggleScheduleLockInput  = InferInput<typeof toggleScheduleLockSchema>
 export type ToggleScheduleLockOutput = InferOutput<typeof toggleScheduleLockSchema>
+
+
+
+// src/services/schedule/validation.ts
+import { toDayKey } from '@/lib/date'
+
+
+/** 'YYYY-MM-DD' correspondant à un vrai jour du calendrier (rejette '2026-02-30'). */
+export const dayKeySchema = v.pipe(
+  v.string(),
+  v.isoDate(),
+  v.check((s) => {
+    const d = new Date(`${s}T00:00:00Z`)
+    return !Number.isNaN(d.getTime()) && d.toISOString().startsWith(s)
+  }, 'Jour invalide'),
+)
+
+export const getTeacherDailyScheduleSchema = v.object({
+  // défaut résolu à chaque parse, donc toujours le jour courant
+  dayKey: v.optional(dayKeySchema, () => toDayKey(new Date())),
+})
+
+export type GetTeacherDailyScheduleInput = v.InferInput<typeof getTeacherDailyScheduleSchema>   // dayKey optionnel
+export type GetTeacherDailyScheduleOutput = v.InferOutput<typeof getTeacherDailyScheduleSchema> // dayKey toujours présent

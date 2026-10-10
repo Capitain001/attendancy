@@ -5,6 +5,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./styles.css": "./src/styles/globals.css",
+    "./styles/*": "./src/styles/*",
     "./*": "./src/components/*.tsx"
   },
   "scripts": {

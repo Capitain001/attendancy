@@ -8,9 +8,9 @@ import { Gauge } from "@/components/ui/gauge";
 import { SessionQRDisplay } from "@/components/session/SessionQRDisplay";
 import { AttendanceSection } from "@/components/attendance/AttendanceSection";
 import { InfoSlide } from "@/components/session/ui/InfoSlide";
-import type { TeacherNextSchedule } from "@/services/schedule";
+import type { GetTeacherNextScheduleDto } from "@/services/schedule";
 
-type Schedule = NonNullable<TeacherNextSchedule>;
+type Schedule = NonNullable<GetTeacherNextScheduleDto>;
 
 type SessionCarouselSchedule = Pick<
   Schedule,

@@ -2,12 +2,7 @@
 
 //src/services/schedule/types.ts
 export * from './generated.types'
-import type { getTeacherNextSchedule } from '@/services/session/database'
-import type { getSchedules } from './database'
 import type { Schedule, ScheduleStatus } from "@/generated/prisma/browser";
-
-export type TeacherNextSchedule = Awaited<ReturnType<typeof getTeacherNextSchedule>>
-export type GetSchedulesReturn = Awaited<ReturnType<typeof getSchedules>>
 
 
 // Source de vérité : le modèle Prisma. Tout drift de schema.prisma casse

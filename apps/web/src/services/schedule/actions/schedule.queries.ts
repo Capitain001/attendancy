@@ -15,11 +15,14 @@ import {
   ScheduleDaysFilterParams,
   getTeacherSchedulesInfo,
   getCourseLastSchedule,
+  getTeacherDailySchedule,
 } from '../database'
 import { getCourses } from '@/services/course/database'
 // import { getGroupsByClass } from '@/services/group/database'
 import { getRooms } from '@/services/room/database'
-import { mockGetTeacherNextSchedule } from '@/data/mocks/mock.schedule'
+import { mockGetTeacherDailySchedule, mockGetTeacherNextSchedule, mockGetTeacherSchedules } from '@/data/mocks/mock.schedule'
+import { GetTeacherDailyScheduleInput, getTeacherDailyScheduleSchema } from '../validation'
+import * as v from 'valibot'
 
 export async function getClassSchedulesAction(
   classId: string,
@@ -134,17 +137,17 @@ export async function getClassScheduleOptionsAction(classId: string) {
     return {
       data: {
         courses: courses.map((c) => ({
-          id:      c.id,
-          name:    c.name,
+          id: c.id,
+          name: c.name,
           teachers: c.teachers
             .filter((ct): ct is typeof ct & { teacher: NonNullable<typeof ct.teacher> } => ct.teacher !== null)
             .map((ct) => ({
-              id:     ct.teacher.id,
-              name:   [ct.teacher.user.firstName, ct.teacher.user.lastName].filter(Boolean).join(' '),
+              id: ct.teacher.id,
+              name: [ct.teacher.user.firstName, ct.teacher.user.lastName].filter(Boolean).join(' '),
               isMain: ct.isMain,
             })),
         })),
-        rooms:  rooms.map((r) => ({ id: r.id, name: r.name })),
+        rooms: rooms.map((r) => ({ id: r.id, name: r.name })),
         groups: groups.map((g) => ({ id: g.id, name: g.name })),
       },
     }
@@ -162,7 +165,9 @@ export async function getTeacherSchedulesAction(
   const { orgId } = auth.data
 
   try {
-    return { data: await getTeacherSchedules({ orgId, ...params }) }
+    return { data: mockGetTeacherSchedules }
+    // return { data: await getTeacherSchedules({ orgId, ...params }) }
+
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
@@ -185,6 +190,7 @@ export async function getTeacherSchedulesInfoAction({
     const { orgId } = auth.data
 
     return { data: await getTeacherSchedulesInfo(teacherId, orgId, rangeStart, rangeEnd) }
+    //    return { data: await getTeacherSchedulesInfo(teacherId, orgId, rangeStart, rangeEnd) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
@@ -198,6 +204,30 @@ export async function getCourseLastScheduleAction(courseId: string) {
   try {
     return { data: await getCourseLastSchedule(courseId, orgId) }
   } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+
+//tache recente :a auditer
+
+export async function getTeacherDailyScheduleAction(input?: GetTeacherDailyScheduleInput) {
+  const auth = await authAccess({ allowPersonalOrg: true, requiredRole: 'TEACHER' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId, user } = auth.data
+
+  const teacherId = user.organization?.teacherId
+  if (!teacherId) return { error: `${ERRORS.AUTH.PROFILE}, profil requis : teacher` }
+
+  const parsed = v.safeParse(getTeacherDailyScheduleSchema, input ?? {})
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+  const { dayKey } = parsed.output
+
+  try {
+
+    return { data:mockGetTeacherDailySchedule}
+    // return { data: await getTeacherDailySchedule(teacherId, orgId, dayKey) }
+  } catch (e) {
+    console.error('[getTeacherDailyScheduleAction]', e)
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }

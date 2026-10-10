@@ -1,7 +1,7 @@
 // src/services/planning/queries.ts
 // Factory pure réutilisable côté serveur (prefetch) ET client (hook).
-import { getSchedulesAction, getScheduleDaysAction, getTeacherSchedulesAction } from '@/services/schedule/actions'
-import type { GetScheduleDaysInput, GetSchedulesReturn } from '@/services/schedule'
+import { getSchedulesAction, getScheduleDaysAction, getTeacherSchedulesAction, getTeacherDailyScheduleAction } from '@/services/schedule/actions'
+import type { GetScheduleDaysInput, GetSchedulesDto } from '@/services/schedule'
 
 import { CACHE_KEYS, QUERY_PRESETS } from '@/cache/client/key'
 import { getPlanningRange } from './utils'
@@ -9,7 +9,6 @@ import { getOrgPlanningResourcesAction } from './actions'
 import type { OrgPlanningResources } from './types'
 import { ScheduleStatus } from '@/generated/prisma/browser'
 import { ScheduleDaysFilterParams } from '../schedule/database'
-
 
 export interface PlanningScheduleFilters {
   date: string | null;
@@ -30,7 +29,7 @@ export function planningSchedulesQuery(
 ) {
   return {
     queryKey: CACHE_KEYS.SCHEDULES.PLANNING(filters),
-    queryFn: async (): Promise<GetSchedulesReturn> => {
+    queryFn: async (): Promise<GetSchedulesDto> => {
       const { rangeStart, rangeEnd } = getPlanningRange(filters.date);
       const res = await getSchedulesAction({
         rangeStart,
@@ -117,3 +116,5 @@ export function teacherDaySchedulesQuery({ teacherId, dayKey }: GetTeacherDaySch
     ...QUERY_PRESETS.RETAINED,
   };
 }
+
+

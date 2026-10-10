@@ -15,7 +15,7 @@ import {
 } from "./utils";
 import { isSlotElapsed } from "@/services/planning/policy";
 import type { PlanningResources } from "@/services/planning";
-import type { GetSchedulesReturn } from "@/services/schedule";
+import type { GetSchedulesDto } from "@/services/schedule";
 import { ActionScheduleToast } from "./ui/ActionScheduleToast";
 import { useActionConfirm } from "./hook/useActionConfirm";
 import { usePlanningEvents } from "./hook/usePlanningEvents";

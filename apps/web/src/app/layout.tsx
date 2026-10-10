@@ -32,7 +32,7 @@ export default function RootLayout({
                 <Suspense fallback={<HeaderSkeleton />}>
                   <AsyncHeader />
                 </Suspense>
-                <main className="flex-1 overflow-y-auto ">
+                <main className="flex flex-1 flex-col overflow-y-auto">
                   <Suspense fallback={null}>
                     {children}
                   </Suspense>

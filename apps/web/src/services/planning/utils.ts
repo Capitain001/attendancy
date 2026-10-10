@@ -2,9 +2,9 @@
 import { startOfMonth, endOfMonth } from 'date-fns'
 import type { ScheduleStatus } from '@/generated/prisma/browser'
 import type { EventColor, ScheduleEvent } from '@/components/event-calendar/types'
-import type { GetSchedulesReturn } from '@/services/schedule'
+import type { GetSchedulesDto } from '@/services/schedule'
 
-export type ScheduleRow = GetSchedulesReturn[number]
+export type ScheduleRow = GetSchedulesDto[number]
 
 const STATUS_COLOR: Record<ScheduleStatus, EventColor> = {
   PENDING:   'sky',

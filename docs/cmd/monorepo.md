@@ -31,7 +31,7 @@ bun run dev:desktop
 ### Desktop Tauri seul (depuis la racine)
 
 ```bash
-bun --filter @attendancy/desktop run tauri:dev
+bun run --filter @attendancy/desktop tauri:dev
 ```
 
 Ou depuis `apps/desktop/` :

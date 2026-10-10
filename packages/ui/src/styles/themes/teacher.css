@@ -1,0 +1,94 @@
+/* Theme: teacher — monochrome strict (chroma 0), nuances de gris uniquement.
+   Dark  : bg #151515 -> oklch(0.196 0 0) | texte #F1F1F1 -> oklch(0.958 0 0)
+   Light : bg blanc   -> oklch(1 0 0)     | texte #151515 -> oklch(0.196 0 0)
+   Seule exception volontaire : --destructive (signal d'erreur).
+
+   Le dark est écrit en sélecteurs CSS classiques (.dark .theme-teacher)
+   et ne dépend donc pas de @variant / @custom-variant de Tailwind. */
+
+/* ════════════════════════════════════════════ */
+/* ─── LIGHT MODE ─── */
+/* ════════════════════════════════════════════ */
+.theme-teacher {
+  /* ─── Couleurs principales ─── */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.196 0 0);
+
+  --card: oklch(0.975 0 0);
+  --card-foreground: oklch(0.196 0 0);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.196 0 0);
+
+  /* ─── Couleurs sémantiques ─── */
+  --primary: oklch(0.196 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --primary-active: oklch(0.32 0 0);
+
+  --secondary: oklch(0.94 0 0);
+  --secondary-foreground: oklch(0.3 0 0);
+
+  --muted: oklch(0.96 0 0);
+  --muted-foreground: oklch(0.5 0 0);
+
+  --accent: oklch(0.93 0 0);
+  --accent-foreground: oklch(0.196 0 0);
+
+  --destructive: oklch(0.58 0.2 25);
+  --destructive-foreground: oklch(1 0 0);
+
+  /* ─── UI & Interactions ─── */
+  --border: oklch(0.9 0 0);
+  --input: oklch(0.82 0 0);
+  --input-surface: oklch(0.985 0 0);
+  --input-focus: oklch(0.55 0 0);
+  --ring: oklch(0.55 0 0);
+
+  /* ─── Sidebar ─── */
+  --sidebar: oklch(0.965 0 0);
+  --sidebar-accent: oklch(0.92 0 0);
+}
+
+/* ════════════════════════════════════════════ */
+/* ─── DARK MODE ─── */
+/* ════════════════════════════════════════════ */
+.dark .theme-teacher,
+.theme-teacher.dark {
+  /* ─── Couleurs principales ─── */
+  --background: oklch(0.196 0 0); /* #151515 */
+  --foreground: oklch(0.958 0 0); /* #F1F1F1 */
+
+  --card: oklch(0.23 0 0);
+  --card-foreground: oklch(0.958 0 0);
+
+  --popover: oklch(0.215 0 0);
+  --popover-foreground: oklch(0.958 0 0);
+
+  /* ─── Couleurs sémantiques ─── */
+  --primary: oklch(0.958 0 0);
+  --primary-foreground: oklch(0.196 0 0);
+  --primary-active: oklch(0.82 0 0);
+
+  --secondary: oklch(0.27 0 0);
+  --secondary-foreground: oklch(0.9 0 0);
+
+  --muted: oklch(0.25 0 0);
+  --muted-foreground: oklch(0.7 0 0);
+
+  --accent: oklch(0.31 0 0);
+  --accent-foreground: oklch(0.958 0 0);
+
+  --destructive: oklch(0.64 0.21 25.33);
+  --destructive-foreground: oklch(1 0 0);
+
+  /* ─── UI & Interactions ─── */
+  --border: oklch(0.3 0 0);
+  --input: oklch(0.38 0 0);
+  --input-surface: oklch(0.23 0 0);
+  --input-focus: oklch(0.55 0 0);
+  --ring: oklch(0.65 0 0);
+
+  /* ─── Sidebar ─── */
+  --sidebar: oklch(0.17 0 0);
+  --sidebar-accent: oklch(0.26 0 0);
+}
