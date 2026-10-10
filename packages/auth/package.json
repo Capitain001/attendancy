@@ -1,0 +1,31 @@
+{
+  "name": "@attendancy/auth",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@attendancy/cache": "workspace:*",
+    "@attendancy/rpc": "workspace:*",
+    "@attendancy/types": "workspace:*",
+    "@supabase/supabase-js": "^2.110.7"
+  },
+  "peerDependencies": {
+    "@tanstack/react-router": "*",
+    "react": "*"
+  },
+  "devDependencies": {
+    "@tanstack/react-router": "^1.170.41",
+    "@types/react": "^19",
+    "react": "^19.0.0",
+    "typescript": "^6",
+    "vite": "^6.0.0"
+  }
+}

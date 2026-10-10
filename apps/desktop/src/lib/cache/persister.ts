@@ -1,4 +1,4 @@
-// apps/desktop/src/lib/query/persister.ts
+// apps\desktop\src\lib\cache\persister.ts
 import type { PersistedClient, Persister } from '@tanstack/react-query-persist-client'
 import { get, set, del } from 'idb-keyval'
 

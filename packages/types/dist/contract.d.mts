@@ -417,7 +417,7 @@ declare const ACTIONS: {
     readonly registerDeviceAction: typeof registerDeviceAction;
     readonly endSessionAction: typeof endSessionAction;
     readonly getCurrentUserAction: typeof getCurrentUserAction;
-    readonly signupPersonalDesktopAction: typeof signupPersonalDesktopAction;
+    readonly ;signupPersonalDesktopAction: typeof signupPersonalDesktopAction;
 };
 
 type Actions = typeof ACTIONS;

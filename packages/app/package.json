@@ -1,0 +1,36 @@
+{
+  "name": "@attendancy/app",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@attendancy/auth": "workspace:*",
+    "@attendancy/cache": "workspace:*",
+    "@attendancy/ui": "workspace:*"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "*",
+    "@tanstack/react-query-persist-client": "*",
+    "@tanstack/react-router": "*",
+    "nuqs": "*",
+    "react": "*"
+  },
+  "devDependencies": {
+    "@tanstack/react-query": "^5.104.1",
+    "@tanstack/react-query-persist-client": "^5.104.1",
+    "@tanstack/react-router": "^1.170.41",
+    "@types/react": "^19",
+    "nuqs": "^2.4.1",
+    "react": "^19.0.0",
+    "typescript": "^6",
+    "vite": "^6.0.0"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "@attendancy/teacher",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "bun x tsc --noEmit && vite build",
+    "check-types": "bun x tsc --noEmit",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@attendancy/app": "workspace:*",
+    "@attendancy/auth": "workspace:*",
+    "@attendancy/ui": "workspace:*",
+    "@tanstack/react-query": "^5.104.1",
+    "@tanstack/react-query-persist-client": "^5.104.1",
+    "@tanstack/react-router": "^1.170.41",
+    "nuqs": "^2.4.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@tanstack/router-plugin": "^1.114.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^4.3.4",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^6",
+    "vite": "^6.0.0"
+  }
+}

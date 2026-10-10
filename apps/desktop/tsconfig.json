@@ -16,7 +16,8 @@
       "@rpc-api": ["./src/lib/api.ts"],
       "@desktop/*": ["./src/*"],
       "@/*": ["../web/src/*"],
-      "@ui/*": ["../../packages/ui/src/*"]
+      "@ui/*": ["../../packages/ui/src/*"],
+      "next/link": ["./src/components/ui/Link.tsx"]
     }
   },
   "include": ["src", "src-tauri"],

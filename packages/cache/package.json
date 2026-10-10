@@ -1,0 +1,21 @@
+{
+  "name": "@attendancy/cache",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@attendancy/rpc": "workspace:*",
+    "@tanstack/react-query": "^5.104.1",
+    "@tanstack/react-query-persist-client": "^5.104.1",
+    "idb-keyval": "^6.3.0"
+  },
+  "devDependencies": {
+    "typescript": "^6"
+  }
+}

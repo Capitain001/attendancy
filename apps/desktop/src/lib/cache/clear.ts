@@ -1,4 +1,4 @@
-// apps/desktop/src/lib/local-data.ts
+//apps\desktop\src\lib\cache\clear.ts
 import { get, set } from 'idb-keyval'
 import { queryClient } from './client'
 import { queryPersister } from './persister'

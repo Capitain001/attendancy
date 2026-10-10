@@ -12,6 +12,9 @@ import {
   signupPersonalDesktopAction,
 } from "@/services/auth";
 
+//les server action sont rexporter coter frontend sous une couche d api , on conserve le meme typage et la meme syntaxe bien que le moteur fasse un appelle reseau ce qui facilite la reutilisation des UI server component 
+
+
 export const ACTIONS = {
   getSchedulesAction,
   createScheduleAction,

@@ -1,4 +1,4 @@
-// apps/desktop/src/lib/query/client.ts
+// apps\desktop\src\lib\cache\client.ts
 import { QueryClient } from '@tanstack/react-query'
 import { NetworkError } from '@desktop/lib/error'
 

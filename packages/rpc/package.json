@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./*": "./src/generated/*.ts"
+    "./*": "./src/generated/*.ts",
+    "./error": "./src/error.ts"
   },
   "scripts": {
     "gen": "node scripts/gen.mjs"

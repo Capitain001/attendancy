@@ -7,8 +7,8 @@ import {
   removeUECourseAction,
   getUECoursesAction
 } from '@/services/ue-course'
-import type { CreateUECourseInput as ServiceCreateInput, UpdateUECourseInput as ServiceUpdateInput } from '@/services/ue-course/validation'
-import type { GetUECoursesByUEDto } from '@/services/ue-course/generated.types'
+import type { CreateUECourseInput as ServiceCreateInput, UpdateUECourseInput as ServiceUpdateInput } from '@/services/ue-course'
+import type { GetUECoursesByUEDto } from '@/services/ue-course'
 
 export type CreateUECourseInput = ServiceCreateInput;
 export type UpdateUECourseInput = ServiceUpdateInput;

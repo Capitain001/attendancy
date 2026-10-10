@@ -1,9 +1,9 @@
-import { Link } from "@ui/link";
 import { ModeToggle } from "@/components/layout/Header/ModeToggle";
 import { AuthButtonPopover } from "@/components/auth/ui/AuthButtonPopover";
 import { NotificationsPopover } from "@/components/layout/sidebar/ui/NotificationsPopover";
-import { UserInfo } from "@/types/user";
+import type { UserInfo } from "@desktop/types/user";
 import { orgPath } from "@/config";
+import Link from "../ui/Link";
 
 interface HeaderProps {
   user?: UserInfo;

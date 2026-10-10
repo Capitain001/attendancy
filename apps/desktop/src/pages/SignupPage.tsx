@@ -1,6 +1,7 @@
+//apps\desktop\src\pages\SignupPage.tsx
 import { useState } from "react";
 import type { SignupCredentials } from "@attendancy/ui";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import { signupPersonal } from "@desktop/lib/auth/actions";
 import { SignupView } from "@desktop/views/SignupView";
 
@@ -42,7 +43,7 @@ export function SignupPage() {
         success={success}
         isPending={isPending}
         onSubmit={handleSubmit}
-        onLogin={() => navigate("/login")}
+        onLogin={() => navigate({ to: "/login" })}
       />
     </main>
   );

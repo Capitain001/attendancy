@@ -3,6 +3,7 @@ import type { ApiClient } from "@attendancy/types";
 import { API_URL } from "../config/url";
 import { getToken } from "./auth/session";
 import { supabase } from "./supabase";
+import { NetworkError } from "./error";
 
 const ISO = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/;
 const reviver = (_: string, v: unknown) =>
@@ -10,7 +11,7 @@ const reviver = (_: string, v: unknown) =>
 // L'inscription est le seul appel RPC desktop accessible sans session.
 const PUBLIC_ACTIONS = new Set(["signupPersonalDesktopAction"]);
 
-export class NetworkError extends Error {}
+
 
 function send(action: string, input: unknown, token?: string) {
   return fetch(`${API_URL}/api/rpc/${action}`, {
