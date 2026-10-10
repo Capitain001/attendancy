@@ -14,4 +14,6 @@ export type {
   SignupCredentials,
   SignupFormProps,
 } from "./components/signup-form";
+export { Link } from "./components/link";
+export type { LinkProps } from "./components/link";
 export { cn } from "./lib/utils";
