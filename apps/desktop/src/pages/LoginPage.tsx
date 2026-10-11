@@ -1,7 +1,7 @@
 //apps\desktop\src\pages\LoginPage.tsx
 
 import { useState } from "react";
-import type { LoginCredentials } from "@attendancy/ui";
+import type { LoginCredentials } from "@attendancy/ui/auth/login/login-form";
 import { useNavigate } from "@tanstack/react-router";
 import { login } from "@desktop/lib/auth/actions";
 import { LoginView } from "@desktop/views/LoginView";

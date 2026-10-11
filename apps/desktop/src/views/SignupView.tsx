@@ -1,4 +1,7 @@
-import { SignupForm, type SignupFormProps } from "@attendancy/ui";
+import {
+  SignupForm,
+  type SignupFormProps,
+} from "@attendancy/ui/auth/signup/signup-form";
 
 export function SignupView({
   error,

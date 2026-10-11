@@ -1,4 +1,7 @@
-import { LoginForm, type LoginFormProps } from "@attendancy/ui";
+import {
+  LoginForm,
+  type LoginFormProps,
+} from "@attendancy/ui/auth/login/login-form";
 
 export function LoginView({
   error,

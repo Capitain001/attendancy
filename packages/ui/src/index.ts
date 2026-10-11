@@ -7,19 +7,14 @@ export {
   CardDescription,
   CardContent,
 } from "./components/ui/card";
-export { LoginForm } from "./components/auth/login/login-form";
-export type { LoginCredentials, LoginFormProps } from "./components/auth/login/login-form";
-export { SignupForm } from "./components/auth/signup/signup-form";
+export type {
+  LoginCredentials,
+  LoginFormProps,
+} from "./components/auth/login/login-form";
 export type {
   SignupCredentials,
   SignupFormProps,
 } from "./components/auth/signup/signup-form";
-export { LoginPage, type LoginPageProps } from "./components/auth/login/login-page";
-export {
-  SignupPage,
-  type SignupPageProps,
-  type SignupResult,
-} from "./components/auth/signup/signup-page";
 export { Link } from "./components/ui/link";
 export type { LinkProps } from "./components/ui/link";
 export { Avatar, AvatarImage, AvatarFallback } from "./components/ui/avatar";

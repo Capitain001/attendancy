@@ -1,6 +1,6 @@
 //apps\desktop\src\pages\SignupPage.tsx
 import { useState } from "react";
-import type { SignupCredentials } from "@attendancy/ui";
+import type { SignupCredentials } from "@attendancy/ui/auth/signup/signup-form";
 import { useNavigate } from "@tanstack/react-router";
 import { signupPersonal } from "@desktop/lib/auth/actions";
 import { SignupView } from "@desktop/views/SignupView";
