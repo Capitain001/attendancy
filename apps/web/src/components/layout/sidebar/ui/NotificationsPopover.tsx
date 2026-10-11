@@ -1,3 +1,4 @@
+//apps\web\src\components\layout\sidebar\ui\NotificationsPopover.tsx
 "use client";
 
 import { BellIcon, AlertCircle, Calendar, BookOpen, Clock, MessageSquare, Bell } from "lucide-react";
@@ -12,22 +13,22 @@ import {
 import { useNotifications } from "@/hooks/notification/useNotification";
 
 import { NotificationCardStack, NotificationCardData, NotificationCategory } from "@/components/notification/cardstack";
-import { NotificationType } from "@/generated/prisma/browser";
+import type { NotificationType } from "@attendancy/types";
 import { Loader1 } from "@/components/loaders/Loader";
 import { getUnreadBadgeInfo } from "@/components/notification/utils";
 
 // Fonction pour obtenir l'icône selon le type de notification
 function getNotificationIcon(type: NotificationType) {
   switch (type) {
-    case NotificationType.ABSENCE:
+    case "ABSENCE":
       return <AlertCircle className="h-5 w-5" />;
-    case NotificationType.COURSE_CHANGE:
+    case "COURSE_CHANGE":
       return <Calendar className="h-5 w-5" />;
-    case NotificationType.NEW_COURSE:
+    case "NEW_COURSE":
       return <BookOpen className="h-5 w-5" />;
-    case NotificationType.SCHEDULE_UPDATE:
+    case "SCHEDULE_UPDATE":
       return <Clock className="h-5 w-5" />;
-    case NotificationType.MESSAGE:
+    case "MESSAGE":
       return <MessageSquare className="h-5 w-5" />;
     default:
       return <Bell className="h-5 w-5" />;
@@ -37,13 +38,13 @@ function getNotificationIcon(type: NotificationType) {
 // Fonction pour ranger le type de notification dans une des 3 catégories de la card stack
 function getNotificationCategory(type: NotificationType): NotificationCategory {
   switch (type) {
-    case NotificationType.ABSENCE:
+    case "ABSENCE":
       return "URGENT";
-    case NotificationType.COURSE_CHANGE:
-    case NotificationType.NEW_COURSE:
-    case NotificationType.SCHEDULE_UPDATE:
+    case "COURSE_CHANGE":
+    case "NEW_COURSE":
+    case "SCHEDULE_UPDATE":
       return "ACADEMIQUE";
-    case NotificationType.MESSAGE:
+    case "MESSAGE":
       return "PERSONNEL";
     default:
       return "PERSONNEL";

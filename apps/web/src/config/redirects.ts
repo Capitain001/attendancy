@@ -1,3 +1,4 @@
+//apps\web\src\config\redirects.ts
 import type { Organization, Role, UserInfo } from "@/types/user";
 import { UserRoles } from "@/types/user";
 

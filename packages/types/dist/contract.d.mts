@@ -2,6 +2,9 @@ import * as __generated_prisma_enums from '@/generated/prisma/enums';
 import { Schedule, Level, OrganizationType } from '@/generated/prisma/browser';
 import * as v from 'valibot';
 import { InferOutput, InferInput } from 'valibot';
+import * as src from 'src';
+import * as _prisma_client_runtime_client from '@prisma/client/runtime/client';
+import { Level as Level$1 } from '@/generated/prisma/client';
 
 type ScheduleFilterParams = Partial<Pick<Schedule, 'classId' | 'groupId' | 'teacherId' | 'roomId' | 'weekRecurrenceId' | 'status' | 'confirmed'>> & {
     orgId: string;
@@ -10,6 +13,56 @@ type ScheduleFilterParams = Partial<Pick<Schedule, 'classId' | 'groupId' | 'teac
     rangeEnd: Date;
     groupIds?: string[];
 };
+declare function getSchedules(params: ScheduleFilterParams): Promise<({
+    group: {
+        name: string;
+        id: string;
+    } | null;
+    teacher: {
+        id: string;
+        user: {
+            firstName: string | null;
+            lastName: string | null;
+            avatar_url: string | null;
+        };
+    };
+    class: {
+        name: string;
+        id: string;
+    };
+    course: {
+        name: string;
+        id: string;
+    };
+    room: {
+        name: string;
+        id: string;
+    };
+} & {
+    id: string;
+    status: __generated_prisma_enums.ScheduleStatus;
+    orgId: string;
+    classId: string;
+    groupId: string | null;
+    courseId: string;
+    teacherId: string;
+    roomId: string;
+    weekRecurrenceId: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date | null;
+    isLocked: boolean;
+    scheduleType: __generated_prisma_enums.ScheduleType;
+    notes: string | null;
+    startTime: Date;
+    endTime: Date;
+    statusChangedAt: Date | null;
+    confirmed: boolean;
+    notifyState: __generated_prisma_enums.ScheduleNotifyState | null;
+    notifiedAt: Date | null;
+})[]>;
+
+type GetSchedulesDto = Awaited<ReturnType<typeof getSchedules>>;
 
 declare const createScheduleSchema: v.ObjectSchema<{
     courseId: v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.UuidAction<string, "Cours invalide">]>;
@@ -255,6 +308,38 @@ declare function getClassesAction({ yearId, programTrackId, name, level }?: {
     error?: undefined;
 }>;
 
+/**
+ * Liste des classes d'une organisation.
+ * Peut être filtrée par année académique et filière.
+ */
+declare function getClasses({ orgId, yearId, programTrackId, name, level }: {
+    orgId: string;
+    yearId?: string;
+    programTrackId?: string;
+    name?: string;
+    level?: Level$1;
+}): Promise<{
+    name: string;
+    id: string;
+    academicYearId: string;
+    programTrackId: string;
+    level: Level$1;
+    academicYear: {
+        name: string;
+        id: string;
+    };
+    programTrack: {
+        name: string;
+        id: string;
+    };
+    _count: {
+        courses: number;
+        studentEnrollments: number;
+    };
+}[]>;
+
+type GetClassesDto = Awaited<ReturnType<typeof getClasses>>;
+
 declare const deviceIdInputSchema: v.ObjectSchema<{
     readonly deviceId: v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.MinLengthAction<string, 8, "deviceId invalide">, v.MaxLengthAction<string, 200, undefined>]>;
 }, undefined>;
@@ -401,12 +486,104 @@ interface UserInfo {
 }
 
 declare function getCurrentUserAction(): Promise<{
-    data: UserInfo;
+    data: src.UserInfo;
     error?: undefined;
 } | {
     error: string;
     data?: undefined;
 }>;
+
+declare function getNotifications(limit?: number): Promise<{
+    error: string;
+    data?: undefined;
+} | {
+    data: {
+        type: __generated_prisma_enums.NotificationType;
+        metadata: _prisma_client_runtime_client.JsonValue;
+        message: string;
+        id: string;
+        scheduleId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+        read: boolean;
+    }[];
+    error?: undefined;
+}>;
+declare function getUnread(limit?: number): Promise<{
+    error: string;
+    data?: undefined;
+} | {
+    data: {
+        type: __generated_prisma_enums.NotificationType;
+        metadata: _prisma_client_runtime_client.JsonValue;
+        message: string;
+        id: string;
+        scheduleId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+        read: boolean;
+    }[];
+    error?: undefined;
+}>;
+declare function getUnreadCount(): Promise<{
+    error: string;
+    data?: undefined;
+} | {
+    data: number;
+    error?: undefined;
+}>;
+
+declare function markNotificationAsRead(notificationId: string): Promise<{
+    error: string;
+    data?: undefined;
+} | {
+    data: true;
+    error?: undefined;
+}>;
+declare function markAllRead(): Promise<{
+    error: string;
+    data?: undefined;
+} | {
+    data: true;
+    error?: undefined;
+}>;
+declare function deleteNotification(notificationId: string): Promise<{
+    error: string;
+    data?: undefined;
+} | {
+    data: true;
+    error?: undefined;
+}>;
+
+declare function getNotificationsForUser(userId: string, limit?: number): Promise<{
+    type: __generated_prisma_enums.NotificationType;
+    metadata: _prisma_client_runtime_client.JsonValue;
+    message: string;
+    id: string;
+    scheduleId: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+    read: boolean;
+}[]>;
+declare function getUnreadNotificationsForUser(userId: string, limit?: number): Promise<{
+    type: __generated_prisma_enums.NotificationType;
+    metadata: _prisma_client_runtime_client.JsonValue;
+    message: string;
+    id: string;
+    scheduleId: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+    read: boolean;
+}[]>;
+declare function getUnreadCountForUser(userId: string): Promise<number>;
+
+declare const notificationTypeSchema: v.PicklistSchema<["ABSENCE", "COURSE_CHANGE", "NEW_COURSE", "SCHEDULE_UPDATE", "GENERAL", "MESSAGE", "INVITATION"], undefined>;
+
+type GetNotificationsForUserDto = Awaited<ReturnType<typeof getNotificationsForUser>>;
+type GetUnreadNotificationsForUserDto = Awaited<ReturnType<typeof getUnreadNotificationsForUser>>;
+type GetUnreadCountForUserDto = Awaited<ReturnType<typeof getUnreadCountForUser>>;
+
+type NotificationItem = Awaited<ReturnType<typeof getNotificationsForUser>>[number];
 
 declare const ACTIONS: {
     readonly getSchedulesAction: typeof getSchedulesAction;
@@ -417,8 +594,16 @@ declare const ACTIONS: {
     readonly registerDeviceAction: typeof registerDeviceAction;
     readonly endSessionAction: typeof endSessionAction;
     readonly getCurrentUserAction: typeof getCurrentUserAction;
-    readonly ;signupPersonalDesktopAction: typeof signupPersonalDesktopAction;
+    readonly signupPersonalDesktopAction: typeof signupPersonalDesktopAction;
+    readonly getNotifications: typeof getNotifications;
+    readonly getUnread: typeof getUnread;
+    readonly getUnreadCount: typeof getUnreadCount;
+    readonly markNotificationAsRead: typeof markNotificationAsRead;
+    readonly markAllRead: typeof markAllRead;
+    readonly deleteNotification: typeof deleteNotification;
 };
+
+type NotificationType = v.InferOutput<typeof notificationTypeSchema>;
 
 type Actions = typeof ACTIONS;
 type ApiClient = {
@@ -428,4 +613,4 @@ type ApiAction = keyof ApiClient;
 type ApiInput<K extends ApiAction> = Parameters<ApiClient[K]>[0];
 type ApiOutput<K extends ApiAction> = Awaited<ReturnType<ApiClient[K]>>;
 
-export type { ApiAction, ApiClient, ApiInput, ApiOutput, CreateScheduleInput, UpdateScheduleDataInput };
+export { type ApiAction, type ApiClient, type ApiInput, type ApiOutput, type CreateScheduleInput, type GetClassesDto, type GetNotificationsForUserDto, type GetSchedulesDto, type GetUnreadCountForUserDto, type GetUnreadNotificationsForUserDto, type NotificationItem, type NotificationType, type UpdateScheduleDataInput, type UserInfo, UserStatus };

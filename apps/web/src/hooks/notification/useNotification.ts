@@ -2,12 +2,12 @@
 "use client"
 
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { NotificationType } from '@/generated/prisma/browser'
+import type { NotificationType } from '@attendancy/types'
 import { 
   getNotifications, 
   markAllRead, 
   markNotificationAsRead 
-} from '@/modules/notification/action'
+} from '@/services/notification/actions'
 import { CACHE_KEYS } from '@/config/client_cache'
 
 interface UseNotificationsOptions {

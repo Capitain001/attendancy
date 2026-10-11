@@ -11,16 +11,10 @@ import {
 } from "@/services/schedule/actions";
 
 import type {
-  ApiOutput,
+  GetSchedulesDto,
   CreateScheduleInput as AddScheduleData,
   UpdateScheduleDataInput,
 } from "@attendancy/types";
-
-// Types pour les inputs du hook
-type GetSchedulesReturn = Extract<
-  ApiOutput<"getSchedulesAction">,
-  { data: unknown }
->["data"];
 
 export type CreateScheduleInput = AddScheduleData;
 export type UpdateScheduleInput = UpdateScheduleDataInput;
@@ -78,7 +72,7 @@ export function useSchedules(options: UseSchedulesOptions = {}) {
   // nécessaire.
   const deleteSchedule = toDeleteFn(deleteScheduleAction);
 
-  return useCrudEntity<GetSchedulesReturn[number], CreateScheduleInput, UpdateScheduleInput>({
+  return useCrudEntity<GetSchedulesDto[number], CreateScheduleInput, UpdateScheduleInput>({
     entityName: "schedules",
     fetchFn,
     staleTime,

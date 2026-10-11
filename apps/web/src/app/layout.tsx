@@ -1,21 +1,18 @@
 // src/app/layout.tsx
-import type { Metadata } from 'next'
-import { Toaster } from 'sonner'
-import { NuqsAdapter } from 'nuqs/adapters/next/app'
-import { ThemeProvider } from '@/providers/theme-provider'
-import { ErudaProvider } from '@/providers/eruda-provider'
-import ReactQueryProvider from '@/providers/react-query-provider'
-import { Suspense } from 'react'
-import { AsyncHeader } from '@/components/layout/Header/AsyncHeader'
-import {HeaderSkeleton} from '@/components/layout/Header/HeaderSkeleton'
-import { NoiseFilterDefs } from "@/components/design/NoiseFilter";
-import  "./globals.css"
-import { ActiveThemeProvider } from '@/components/theme/ActiveTheme'
+import type { Metadata } from "next";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { AppProvider } from "@attendancy/ui";
+import { ErudaProvider } from "@/providers/eruda-provider";
+import ReactQueryProvider from "@/providers/react-query-provider";
+import { Suspense } from "react";
+import { AsyncHeader } from "@/components/layout/Header/AsyncHeader";
+import { HeaderSkeleton } from "@/components/layout/Header/HeaderSkeleton";
+import "./globals.css";
 
 export const metadata: Metadata = {
-  title: 'Attendancy',
-  description: 'Gestion des présences et du planning académique',
-}
+  title: "Attendancy",
+  description: "Gestion des présences et du planning académique",
+};
 
 export default function RootLayout({
   children,
@@ -23,28 +20,22 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <body className="antialiased" suppressHydrationWarning>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <ActiveThemeProvider>
+        <AppProvider>
           <ReactQueryProvider>
             <NuqsAdapter>
               <div className="flex h-screen flex-col">
-                <NoiseFilterDefs baseFrequency={0.65} numOctaves={3} />
                 <Suspense fallback={<HeaderSkeleton />}>
                   <AsyncHeader />
                 </Suspense>
                 <main className="flex flex-1 flex-col overflow-y-auto">
-                  <Suspense fallback={null}>
-                    {children}
-                  </Suspense>
+                  <Suspense fallback={null}>{children}</Suspense>
                 </main>
               </div>
               <ErudaProvider />
-              <Toaster position="top-right" expand duration={4000} />
             </NuqsAdapter>
           </ReactQueryProvider>
-          </ActiveThemeProvider>
-        </ThemeProvider>
+        </AppProvider>
       </body>
     </html>
-  )
+  );
 }

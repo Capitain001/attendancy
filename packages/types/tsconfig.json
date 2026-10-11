@@ -6,12 +6,15 @@
     "strict": true,
     "declaration": true,
     "noEmit": true,
+    "skipLibCheck": true,
     "paths": {
       "@/generated/prisma/*": [
         "../../packages/db/src/generated/*"
       ],
-      
-    },
+      "@/*": [
+        "../../apps/web/src/*"
+      ]
+    }
   },
   "include": [
     "src"

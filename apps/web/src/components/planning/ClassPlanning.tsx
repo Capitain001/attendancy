@@ -31,7 +31,7 @@ export type ClassPlanningClientProps = {
   classId: string;
   classHref?: string;
   resources: NonNullable<PlanningResources>;
-  schedules: GetSchedulesReturn;
+  schedules: GetSchedulesDto;
 };
 
 const DEFAULT_MOVE_TOAST = {

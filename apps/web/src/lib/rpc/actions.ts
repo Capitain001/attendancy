@@ -11,9 +11,16 @@ import {
   getCurrentUserAction,
   signupPersonalDesktopAction,
 } from "@/services/auth";
+import {
+  getNotifications,
+  getUnread,
+  getUnreadCount,
+  markNotificationAsRead,
+  markAllRead,
+  deleteNotification,
+} from "@/services/notification";
 
 //les server action sont rexporter coter frontend sous une couche d api , on conserve le meme typage et la meme syntaxe bien que le moteur fasse un appelle reseau ce qui facilite la reutilisation des UI server component 
-
 
 export const ACTIONS = {
   getSchedulesAction,
@@ -25,4 +32,11 @@ export const ACTIONS = {
   endSessionAction,
   getCurrentUserAction,
   signupPersonalDesktopAction,
+  getNotifications,
+  getUnread,
+  getUnreadCount,
+  markNotificationAsRead,
+  markAllRead,
+  deleteNotification,
 } as const;
+

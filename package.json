@@ -10,6 +10,7 @@
     "dev": "concurrently -n web,tauri -c cyan,magenta \"bun run dev:web\" \"bun run --filter @attendancy/desktop tauri:dev\"",
     "dev:web": "turbo dev --filter=@attendancy/web",
     "dev:desktop": "turbo dev --filter=@attendancy/desktop",
+    "dev:teacher": "turbo dev --filter=@attendancy/teacher",
     "build": "prisma generate && turbo build",
     "lint": "turbo lint",
     "check-types": "turbo check-types",

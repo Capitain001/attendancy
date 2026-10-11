@@ -4,8 +4,33 @@ import type {
   CreateScheduleInput,
   UpdateScheduleDataInput,
 } from '@/services/schedule/validation'
+import type { GetSchedulesDto } from '@/services/schedule/types'
+import type { GetClassesDto } from '@/services/class/types'
+import type {
+  NotificationItem,
+  GetNotificationsForUserDto,
+  GetUnreadNotificationsForUserDto,
+  GetUnreadCountForUserDto,
+} from '@/services/notification/types'
+import type { notificationTypeSchema } from '@/services/notification/validation'
+import type { UserInfo, UserStatus } from '@/types/user'
+import type * as v from 'valibot'
 
-export type { CreateScheduleInput, UpdateScheduleDataInput }
+export type NotificationType = v.InferOutput<typeof notificationTypeSchema>
+
+export type {
+  UserInfo,
+  UserStatus,
+  CreateScheduleInput,
+
+  UpdateScheduleDataInput,
+  GetSchedulesDto,
+  GetClassesDto,
+  NotificationItem,
+  GetNotificationsForUserDto,
+  GetUnreadNotificationsForUserDto,
+  GetUnreadCountForUserDto,
+}
 
 type Actions = typeof ACTIONS
 

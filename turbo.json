@@ -27,6 +27,8 @@
     },
     "@attendancy/desktop#dev": { "dependsOn": ["@attendancy/types#build:types"] },
     "@attendancy/desktop#build": { "dependsOn": ["@attendancy/types#build:types"] },
+    "@attendancy/teacher#dev": { "dependsOn": ["@attendancy/types#build:types"] },
+    "@attendancy/teacher#build": { "dependsOn": ["@attendancy/types#build:types"] },
     "@attendancy/web#build": {
       "dependsOn": ["@attendancy/web#db:generate"],
       "env": [

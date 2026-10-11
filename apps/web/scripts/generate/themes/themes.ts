@@ -42,6 +42,10 @@ const THEMES_DIR: string = join(
 const GENERATED_DIR: string = join(__dirname, "../../../src/generated");
 const GENERATED_FILE: string = join(GENERATED_DIR, "themes.ts");
 const INDEX_CSS_FILE: string = join(THEMES_DIR, "index.css");
+const UI_THEMES_FILE: string = join(
+  THEMES_DIR,
+  "../../components/theme/themes.ts",
+);
 
 // Capture le nom depuis le sélecteur .theme-<name>.
 const THEME_RE = /\.theme-([a-zA-Z0-9_-]+)/;
@@ -102,12 +106,15 @@ function main(): void {
   ].join("\n");
   mkdirSync(GENERATED_DIR, { recursive: true });
   writeFileSync(GENERATED_FILE, themesTs);
+  mkdirSync(dirname(UI_THEMES_FILE), { recursive: true });
+  writeFileSync(UI_THEMES_FILE, themesTs);
 
   console.log(
     `✓ ${themes.length} thème(s) détecté(s) : ${themes.map((t: ThemeMeta): string => t.name).join(", ")}`,
   );
   console.log(`  → ${INDEX_CSS_FILE}`);
   console.log(`  → ${GENERATED_FILE}`);
+  console.log(`  → ${UI_THEMES_FILE}`);
 }
 
 main();
