@@ -1,3 +1,4 @@
+"use client"
 import { useState } from "react";
 import { SignupForm, type SignupCredentials } from "./signup-form";
 
