@@ -93,7 +93,7 @@ const fetchUserFromSupabase = cache(async (userId: string) => {
     return null
   }
 
-  const userMetadata: UserMetadata = user.user_metadata || {}
+  const userMetadata: UserMetadata = user.app_metadata as UserMetadata || {}
   return mapUserInfo({ user, userMetadata })
 })
 

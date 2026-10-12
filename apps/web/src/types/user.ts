@@ -96,8 +96,6 @@ export const USER_METADATA_KEYS = [
   "name",
   "avatar_url",
   "phone",
-  "email_verified",
-  "phone_verified",
   "function",
   "organization",
   "organizations",

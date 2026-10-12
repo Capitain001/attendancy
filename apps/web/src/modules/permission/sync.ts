@@ -61,7 +61,7 @@ export async function syncUserPermissionsMetadata(userId: string, orgId: string)
     return
   }
 
-  const metadata = (user.user_metadata ?? {}) as UserMetadata
+  const metadata = (user.app_metadata ?? {}) as UserMetadata
   const organizations = metadata.organizations ?? []
 
   const targetIndex = organizations.findIndex((org) => org.id === orgId)
@@ -85,7 +85,7 @@ export async function syncUserPermissionsMetadata(userId: string, orgId: string)
   }
 
   const { error: updateError } = await supabase.auth.admin.updateUserById(userId, {
-    user_metadata: { ...metadata, ...patch },
+    app_metadata: patch,
   })
 
   if (updateError) {

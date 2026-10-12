@@ -67,12 +67,10 @@ export async function resendInvitation(
     if (!user.email_confirmed_at) {
       // Utilisateur EXISTANT non confirmé : inviteUserByEmail ignore silencieusement `data`
       // pour un utilisateur déjà créé (data n'est honoré qu'à la création). Il faut donc
-      // écrire nous-mêmes le nouveau user_metadata via updateUserById, en mergeant avec
-      // l'existant puisque updateUserById REMPLACE tout le user_metadata (pas de merge Supabase).
+      // écrire nous-mêmes le nouveau app_metadata via updateUserById.
       if (metadata) {
-        const mergedMetadata = { ...(user.user_metadata ?? {}), ...metadata };
         const { error: updateError } = await supabase.auth.admin.updateUserById(user.id, {
-          user_metadata: mergedMetadata,
+          app_metadata: metadata,
         });
         if (updateError) {
           return { success: false, error: updateError.message };
@@ -81,7 +79,6 @@ export async function resendInvitation(
 
       const { error } = await supabase.auth.admin.inviteUserByEmail(email, {
         redirectTo: INVITE_URL,
-        data: metadata || {},
       });
       
       if (error) {
@@ -137,9 +134,8 @@ export async function generateMagicLink(
       const user = 'error' in findResult ? null : findResult.data.user;
 
       if (user) {
-        const mergedMetadata = { ...(user.user_metadata ?? {}), ...metadata };
         const { error: updateError } = await supabase.auth.admin.updateUserById(user.id, {
-          user_metadata: mergedMetadata,
+          app_metadata: metadata,
         });
         if (updateError) {
           return { success: false, error: updateError.message };
