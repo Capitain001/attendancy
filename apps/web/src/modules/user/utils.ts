@@ -4,25 +4,6 @@ import { User as SupabaseUser } from "@supabase/supabase-js";
 import { Functions, UserInfo, UserMetadata, UserRoles, UserStatus } from "@/types/user";
 
 
-export async function superAdminStatus(user:UserInfo) {
-
-    if (!user) return false;
-  
-    return (
-      user?.email === process.env.SUPER_ADMIN_EMAIL ||
-      user?.function === "SUPER_ADMIN"
-    );
-  }
-  
-
-  export function checkSuperAdminStatus(user: any) {
-    return (
-      user?.email === process.env.SUPER_ADMIN_EMAIL ||
-      user?.user_metadata?.function === "SUPER_ADMIN" ||
-      user?.function === "SUPER_ADMIN"
-    );
-  }
-  
 
 export function mapUserInfo({
   user,
@@ -74,4 +55,23 @@ export const generateUserInfo = <K extends keyof UserInfo>(
 }
 
 
+export async function superAdminStatus(user:UserInfo) {
+
+    if (!user) return false;
+  
+    return (
+      user?.email === process.env.SUPER_ADMIN_EMAIL ||
+      user?.function === "SUPER_ADMIN"
+    );
+  }
+  
+
+  export function checkSuperAdminStatus(user: any) {
+    return (
+      user?.email === process.env.SUPER_ADMIN_EMAIL ||
+      user?.user_metadata?.function === "SUPER_ADMIN" ||
+      user?.function === "SUPER_ADMIN"
+    );
+  }
+  
 

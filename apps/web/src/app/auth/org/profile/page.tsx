@@ -1,3 +1,5 @@
+//apps\web\src\app\auth\org\profile
+
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'

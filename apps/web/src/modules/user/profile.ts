@@ -1,6 +1,6 @@
 // src/services/user/profile.ts
 
-import type { Organization } from "@/types/user";
+import type { Organization ,UserInfo} from "@/types/user";
 import { Role } from "@/generated/prisma/client";
 
 /* =========================
@@ -90,3 +90,34 @@ export function getCurrentProfileId(organization?: Organization): string | null 
 }
 
 
+
+/**
+ * Rôles pour lesquels l'organisation possède un profil (donc switchables).
+ * L'ordre suit celui de `ROLE_PROFILE_KEY`.
+ *
+ * @example
+ * getProfileRoles(org) // ["TEACHER", "STUDENT"]
+ */
+export function getProfileRoles(organization?: Organization): Role[] {
+  return (Object.keys(ROLE_PROFILE_KEY) as Role[]).filter((role) => {
+    const key = ROLE_PROFILE_KEY[role];
+    return key !== undefined && Boolean(organization?.[key]);
+  });
+}
+
+/**
+ * Retrouve une organisation de l'utilisateur par id, y compris l'organisation
+ * courante si elle est absente de `organizations`.
+ */
+export function findUserOrganization({
+  user,
+  organizationId,
+}: {
+  user: UserInfo;
+  organizationId: string;
+}) {
+  return (
+    user.organizations?.find((org) => org.id === organizationId) ??
+    (user.organization?.id === organizationId ? user.organization : undefined)
+  );
+}
