@@ -1,6 +1,7 @@
-// app/(dashboard)/teacher/daily/page.tsx
+import { connection } from 'next/server'
 import { TeacherDailyOverviewScreen } from '@/components/teacher/personal/screen/TeacherDailyOverviewScreen'
 
-export default function TeacherDailyPage() {
+export default async function TeacherDailyPage() {
+  await connection()
   return <TeacherDailyOverviewScreen />
 }
