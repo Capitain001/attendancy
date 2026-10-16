@@ -50,7 +50,7 @@ function InviteRelay() {
       console.log('[invite] session établie :', {
         userId: data.user?.id,
         email:  data.user?.email,
-        role:   data.user?.app_metadata?.role,
+        role:   data.user?.user_metadata?.role,
       })
       console.log('[invite] → redirect /auth/welcome')
       router.replace(`/auth/welcome`)

@@ -28,25 +28,15 @@ export async function sendSupabaseInvitation(
   const adminClient = await createClient();
   const inviteData = createSupabaseInviteData(metadata);
 
-  const { data: inviteResult, error } = await adminClient.auth.admin.inviteUserByEmail(email, {
+  const { error } = await adminClient.auth.admin.inviteUserByEmail(email, {
     redirectTo: INVITE_URL,
     data: inviteData,
   });
 
   if (error) {
+    // ✅ UTILISATION DU GESTIONNAIRE D'ERREURS
+    // return supabaseInvitationError(error);
     return { success: false, error: error.message };
-  }
-
-  // `data` n'est honoré qu'à la création. Pour un utilisateur déjà existant,
-  // on écrit manuellement en app_metadata après l'invite.
-  if (inviteResult?.user?.id) {
-    const { error: metaError } = await adminClient.auth.admin.updateUserById(
-      inviteResult.user.id,
-      { app_metadata: inviteData }
-    );
-    if (metaError) {
-      console.warn('[sendSupabaseInvitation] app_metadata non écrit:', metaError.message);
-    }
   }
 
   return { success: true };

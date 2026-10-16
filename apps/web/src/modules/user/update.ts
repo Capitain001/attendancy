@@ -27,12 +27,12 @@ async function refreshCurrentUserCache() {
 ========================= */
 
 /**
- * Réinitialise les app_metadata de l'utilisateur courant (client admin).
+ * Réinitialise les user_metadata de l'utilisateur courant (client admin).
  *
  * Le merge Supabase étant superficiel (clés absentes conservées), un simple
  * appel à `updateUserById` ne supprime rien. Cette fonction met donc à `null`
  * toutes les clés de `USER_METADATA_KEYS` (types/user.ts) puis écrit les clés fournies, qui
- * écrasent les `null`. Résultat : `app_metadata` ne contient plus que les
+ * écrasent les `null`. Résultat : `user_metadata` ne contient plus que les
  * clés fournies (les clés hors `UserMetadata` ne sont pas touchées).
  *
  * À utiliser pour les réinitialisations ou la correction de metadata corrompues.
@@ -65,7 +65,7 @@ export async function cleanUserMetadata({
 
   const { data: updatedUser, error: updateError } =
     await supabase.auth.admin.updateUserById(user.id, {
-      app_metadata: { ...wipe, ...user_metadata },
+      user_metadata: { ...wipe, ...user_metadata },
     });
 
   if (updateError) {
@@ -78,17 +78,16 @@ export async function cleanUserMetadata({
 }
 
 /**
- * Met à jour les app_metadata de l'utilisateur courant (client admin).
+ * Met à jour les user_metadata de l'utilisateur courant (session).
  *
  * Merge superficiel au 1er niveau : les clés non fournies sont conservées,
  * les clés fournies sont remplacées en entier (tableaux et objets imbriqués
  * compris, ex. `organizations`, `organization`). `null` supprime la clé,
  * `undefined` est ignoré.
  *
- * Sécurisé : le client final ne peut pas modifier `app_metadata` via
- * `supabase.auth.updateUser({ data: … })` (qui n'écrit que dans `user_metadata`).
- * Rafraîchit le cache applicatif, mais pas le JWT : ses claims restent anciens
- * jusqu'au prochain refresh de session.
+ * Base de toutes les mises à jour de session utilisateur. Rafraîchit le cache
+ * applicatif, mais pas le JWT : ses claims restent anciens jusqu'au prochain
+ * refresh de session (`getUser()` est fiable, `getSession()` non).
  * Throw en cas d'erreur.
  *
  * @example
@@ -96,12 +95,10 @@ export async function cleanUserMetadata({
  * await setUserInfo({ invitationToken: null }) // supprime la clé
  */
 export async function setUserInfo(userMetadata: UserMetadataPatch) {
-  const current = await getUserInfo();
-  if (!current?.id) throw new Error("Utilisateur non trouvé");
-
   const supabase = await createClient();
-  const { data, error } = await supabase.auth.admin.updateUserById(current.id, {
-    app_metadata: userMetadata,
+
+  const { data, error } = await supabase.auth.updateUser({
+    data: userMetadata,
   });
 
   if (error) {
@@ -200,7 +197,7 @@ export async function syncUserOrganizationProfile({
 ========================= */
 
 /**
- * Met à jour les app_metadata d'un utilisateur cible (client admin).
+ * Met à jour les user_metadata d'un utilisateur cible (client admin).
  *
  * Merge superficiel au 1er niveau : clés non fournies conservées, clés
  * fournies remplacées en entier, `null` supprime la clé.
@@ -218,7 +215,7 @@ export async function updateUserMetadata(
 ): Promise<void> {
   const supabase = await createClient();
   const { error } = await supabase.auth.admin.updateUserById(targetUserId, {
-    app_metadata: metadata,
+    user_metadata: metadata,
   });
   if (error) {
     console.error("[updateUserMetadata]", targetUserId, error.message);

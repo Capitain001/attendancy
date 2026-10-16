@@ -15,8 +15,6 @@ export function mapUserInfo({
   return {
     id: user.id,
     email: user.email ?? undefined,
-    email_verified: Boolean(user.email_confirmed_at),
-    phone_verified: Boolean(user.phone_confirmed_at),
     role: userMetadata.role || UserRoles.GUEST,
     name: userMetadata.name || user.email?.split("@")[0] || "",
     avatar_url: userMetadata.avatar_url,
@@ -27,7 +25,7 @@ export function mapUserInfo({
     status: userMetadata.status || UserStatus.PENDING,
     invitationToken: userMetadata.invitationToken ?? undefined,
     invitationType: userMetadata.invitationType ?? undefined,
-    isConnected: userMetadata.isConnected ?? true,
+    isConnected: userMetadata.isConnected || true,
     updated_at: user.updated_at,
   }
 }
@@ -71,7 +69,7 @@ export async function superAdminStatus(user:UserInfo) {
   export function checkSuperAdminStatus(user: any) {
     return (
       user?.email === process.env.SUPER_ADMIN_EMAIL ||
-      user?.app_metadata?.function === "SUPER_ADMIN" ||
+      user?.user_metadata?.function === "SUPER_ADMIN" ||
       user?.function === "SUPER_ADMIN"
     );
   }
