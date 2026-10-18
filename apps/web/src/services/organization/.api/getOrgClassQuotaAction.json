@@ -1,7 +1,7 @@
 {
   "name": "getOrgClassQuotaAction",
   "file": "src/services/organization/actions/organization.queries.ts",
-  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { maxClasses: number | null; }; error?: undefined; }>",
+  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { maxClasses: number | null; } | null; error?: undefined; }>",
   "calls": [
     "getOrgClassQuota"
   ],

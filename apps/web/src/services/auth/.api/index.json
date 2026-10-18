@@ -2,7 +2,7 @@
   "service": "auth",
   "path": "src/services/auth/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "6b2311d",
+  "derived_at": "c60f72e",
   "utils_dir": null,
   "fns": {
     "signupPersonalDesktopAction": {

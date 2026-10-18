@@ -2,7 +2,7 @@
   "service": "organization",
   "path": "src/services/organization/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "85ab8de",
+  "derived_at": "c60f72e",
   "utils_dir": null,
   "fns": {
     "createOrgWithDefaults": {
@@ -27,11 +27,6 @@
     },
     "setMemberStatusWithAudit": {
       "f": ".api/setMemberStatusWithAudit.json",
-      "layer": "db",
-      "kind": "mutation"
-    },
-    "createPersonalOrgWithDefaults": {
-      "f": ".api/createPersonalOrgWithDefaults.json",
       "layer": "db",
       "kind": "mutation"
     },
@@ -87,6 +82,11 @@
     },
     "findPersonalProfileId": {
       "f": ".api/findPersonalProfileId.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "checkClassQuotaLimit": {
+      "f": ".api/checkClassQuotaLimit.json",
       "layer": "db",
       "kind": "query"
     },
@@ -174,6 +174,11 @@
       "f": ".api/getOrganizationBySlugAction.json",
       "layer": "action",
       "kind": "server-action"
+    },
+    "checkClassQuotaLimitAction": {
+      "f": ".api/checkClassQuotaLimitAction.json",
+      "layer": "action",
+      "kind": "server-action"
     }
   },
   "edges": {
@@ -192,7 +197,6 @@
     "setMemberStatusWithAudit": [
       "setMemberStatusAction"
     ],
-    "createPersonalOrgWithDefaults": [],
     "createPersonalOrgWithProfile": [
       "createPersonalOrgAction"
     ],
@@ -206,6 +210,7 @@
       "getOrgUsageAction"
     ],
     "getOrgClassQuota": [
+      "checkClassQuotaLimit",
       "getOrgClassQuotaAction"
     ],
     "getOrgDetails": [
@@ -224,8 +229,10 @@
       "getOrganizationBySlugAction"
     ],
     "findPersonalProfileId": [
-      "createPersonalOrgWithDefaults",
       "createPersonalProfile"
+    ],
+    "checkClassQuotaLimit": [
+      "checkClassQuotaLimitAction"
     ],
     "createOrgAction": [],
     "updateOrgIdentityAction": [],
@@ -245,7 +252,13 @@
     "getOrgDailyMetricsAction": [],
     "getOrgResourcesCountsAction": [],
     "getOrgBySlugAction": [],
-    "getOrganizationBySlugAction": []
+    "getOrganizationBySlugAction": [],
+    "checkClassQuotaLimitAction": [],
+    "getActiveClassesCount": [
+      "checkClassQuotaLimit"
+    ]
   },
-  "deps": {}
+  "deps": {
+    "getActiveClassesCount": "class"
+  }
 }

@@ -1,0 +1,14 @@
+{
+  "name": "createPersonalCourseAction",
+  "file": "src/services/personal/actions/teacher.mutations.ts",
+  "sig": "(input: CreatePersonalCourseInput) => Promise<{ error: string | undefined; data?: undefined; } | { data: { id: string; name: string; credits: number; }; error?: undefined; }>",
+  "calls": [
+    "createUEAction",
+    "createUECourseAction",
+    "createCourseAction",
+    "assignTeacherAction"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

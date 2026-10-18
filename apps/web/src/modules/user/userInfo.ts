@@ -86,15 +86,15 @@ const fetchUserFromSupabase = cache(async (userId: string) => {
     ? await createBearerClient().auth.getUser(bearer)
     : await (await createClient()).auth.getUser()
 
-    if (error || !user) return null
-    // Vérification de sécurité: l'userId doit correspondre
+  if (error || !user) return null
+  // Vérification de sécurité: l'userId doit correspondre
   if (user.id !== userId) {
     console.error(`Security: userId mismatch. Expected ${userId}, got ${user.id}`)
     return null
   }
 
-  const userMetadata: UserMetadata = user.user_metadata || {}
-  return mapUserInfo({ user, userMetadata })
+  // mapUserInfo fusionne app_metadata (accès) et user_metadata (profil)
+  return mapUserInfo({ user })
 })
 
 /**

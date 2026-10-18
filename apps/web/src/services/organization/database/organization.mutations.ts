@@ -4,7 +4,7 @@
 import { prisma } from '@/lib/prisma'
 import { invalidateEvent } from '@/cache/server/graph'
 import { tryConstraint } from '@/utils/server/prisma'
-import { updateUserMetadata } from '@/modules/user/update'
+import { updateUserAccess } from '@/modules/user/access'
 import type { OrgDetails } from '../types'
 import type { UpdateOrgIdentityInput } from '../validation'
 import type { UserStatus } from '@/generated/prisma/browser'
@@ -156,7 +156,7 @@ export async function setMemberStatusWithAudit(params: {
 
   // Best-effort : met à jour les métadonnées Supabase pour que l'auth soit cohérente.
   try {
-    await updateUserMetadata(userId, { status })
+    await updateUserAccess(userId, { status })
   } catch (err) {
     console.warn('[setMemberStatusWithAudit] projection Supabase échouée:', err)
   }

@@ -1,7 +1,7 @@
 'use server'
 
 import { getRoleProfileKey, getUserInfo } from '@/modules/user'
-import { setUserInfo } from '@/modules/user/update'
+import { setUserAccess } from '@/modules/user/access'
 
 import { logAuditAsync } from '@/services/audit'
 import { ERRORS } from '@/config'
@@ -40,7 +40,7 @@ export async function createPersonalProfileAction(orgId: string, role: PersonalR
       ...(roleIdKey ? { [roleIdKey]: profileId } : {}),
     }
 
-    await setUserInfo({
+    await setUserAccess({
       role, // rôle ACTIF — c'est lui que redirectUser lit
       organization: orgSnapshot,
       organizations: [...existingOrgs.filter((o) => o.id !== orgId), orgSnapshot],
@@ -90,7 +90,7 @@ export async function createPersonalOrgAction(role: PersonalRole) {
       ...(roleIdKey ? { [roleIdKey]: profileId } : {}),
     }
 
-    await setUserInfo({
+    await setUserAccess({
       ...(user.status === 'NEW' || user.status === 'PENDING' ? { status: 'ACTIVE' as const } : {}),
       role,
       organization: snapshot,

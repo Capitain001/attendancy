@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
   }
 
   const user = await verifyBearerToken(token)
-  const meta = (user?.user_metadata ?? {}) as {
+  const meta = (user?.app_metadata ?? {}) as {
     organization?: { id?: string }
     role?: string
   }

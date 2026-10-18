@@ -1,47 +1,62 @@
 // src/services/auth/supabase.ts
 // Opérations Supabase Auth — seule couche qui parle à supabase.auth.
 // Les actions (actions.ts) orchestrent par-dessus.
+// Module serveur uniquement (pas de "use server") : ses fonctions ne sont pas des endpoints.
 
-"use server";
+import "server-only";
 
 import { createClient, createAdminClient } from '@/utils/supabase/server';
 import { CALL_BACK, SITE_URL } from '@/config/url';
-// import { UserStatus } from '@/types';
-import { Functions, UserStatus, UserInfo } from '@/types/user';
+import { Functions, UserStatus, UserInfo, AppMetadataPatch } from '@/types/user';
 import { Role } from '@/generated/prisma/browser';
+import { updateUserAccess } from '@/modules/user/access';
 
-
-
-interface SignUpParams {
-  email: string;
-  password: string;
-  info?: Partial<Pick<UserInfo, "name" | "phone" | "avatar_url">>;
-}
+type SignUpInfo = Partial<Pick<UserInfo, "name" | "phone" | "avatar_url">>;
 
 // ── Signup ────────────────────────────────────────────────────────────────────
 
 /**
- * Responsable nommé par la plateforme (compte admin global).
- * ⚠ À CONFIGURER PAR PROJET — rôle/fonction selon la nomenclature du projet.
+ * Inscription avec email de confirmation.
+ * - `info` (name, phone, avatar_url) → `user_metadata` via `data` (profil, modifiable par le client).
+ * - `access` (role, function, status...) → `app_metadata`, écrit côté serveur juste après la
+ *   création du compte. `status` vaut NEW par défaut, comme avant.
+ *
+ * Throw si l'écriture d'accès échoue : le compte existe alors sans accès (GUEST),
+ * jamais avec un rôle par défaut.
+ * Rien n'est écrit si l'email existe déjà (`identities` vide), sinon on modifierait le compte existant.
  */
-export async function signUpResponsable(
+export async function signUp(
   email: string,
   password: string,
-  info?: Partial<Pick<UserInfo, "name" | "phone" | "avatar_url">>
+  info?: SignUpInfo,
+  access?: AppMetadataPatch
 ) {
   const supabase = await createClient();
-  return supabase.auth.signUp({
+  const result = await supabase.auth.signUp({
     email,
     password,
     options: {
       emailRedirectTo: CALL_BACK,
-      data: {
-        ...(info || {}),
-        role: Role.ADMIN,
-        function: Functions.SUPER_ADMIN,
-        status: UserStatus.NEW,
-      },
+      data: { ...(info || {}) },
     },
+  });
+
+  const created = result.data.user;
+  if (created?.identities?.length) {
+    await updateUserAccess(created.id, { status: UserStatus.NEW, ...access });
+  }
+  return result;
+}
+
+/**
+ * Responsable nommé par la plateforme (compte admin global).
+ * ⚠ À CONFIGURER PAR PROJET — rôle/fonction selon la nomenclature du projet.
+ * ⚠ Donne le rôle ADMIN : à n'appeler que depuis une action réservée au personnel de la plateforme.
+ */
+export async function signUpResponsable(email: string, password: string, info?: SignUpInfo) {
+  return signUp(email, password, info, {
+    role: Role.ADMIN,
+    function: Functions.SUPER_ADMIN,
   });
 }
 
@@ -49,50 +64,20 @@ export async function signUpResponsable(
  * Compte fondateur (direction qui crée son organisation).
  * ⚠ À CONFIGURER PAR PROJET — aligner role/function sur les rôles du projet.
  */
-export async function signUpPrincipal(
-  email: string,
-  password: string,
-  info?: Partial<Pick<UserInfo, "name" | "phone" | "avatar_url">>
-) {
-  const supabase = await createClient();
-  return supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      emailRedirectTo: CALL_BACK,
-      data: {
-        ...(info || {}),
-        role: Role.DIRECTION,
-        function: Functions.PRINCIPAL,
-        status: UserStatus.NEW,
-      },
-    },
+export async function signUpPrincipal(email: string, password: string, info?: SignUpInfo) {
+  return signUp(email, password, info, {
+    role: Role.DIRECTION,
+    function: Functions.PRINCIPAL,
   });
 }
-
-
 
 /**
  * Compte "personal" (espace hors organisation institution),
  */
-export async function signUpPersonal(
-  email: string,
-  password: string,
-  info?: Partial<Pick<UserInfo, "name" | "phone" | "avatar_url">>
-) {
-  const supabase = await createClient();
-  return supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      emailRedirectTo: CALL_BACK,
-      data: {
-        ...(info || {}),
-        status: UserStatus.NEW,
-      },
-    },
-  });
+export async function signUpPersonal(email: string, password: string, info?: SignUpInfo) {
+  return signUp(email, password, info);
 }
+
 // ── Auth opérations courantes ─────────────────────────────────────────────────
 
 /**
@@ -143,7 +128,6 @@ export async function updateAuthUser(password: string, email?: string) {
 
 // ── OAuth ─────────────────────────────────────────────────────────────────────
 
-
 type OAuthProvider = 'google' | 'github';
 
 async function signInWithOAuthProvider(provider: OAuthProvider, next?: string) {
@@ -174,9 +158,6 @@ export async function signInWithGoogle(next?: string) {
 export async function signInWithGitHub(next?: string) {
   return signInWithOAuthProvider('github', next);
 }
-
-
-
 
 // ── Admin (service-role) ──────────────────────────────────────────────────────
 
@@ -211,37 +192,6 @@ export async function logout() {
   await supabase.auth.signOut();
 }
 
-
-/**
- * Inscription générique avec métadonnées personnalisables
- * Version simplifiée pour la compatibilité
- */
-export async function signUp(
-  email: string,
-  password: string,
-  metadata?: {
-    name?: string;
-    phone?: string;
-    avatar_url?: string;
-    role?: string;
-    function?: string;
-    status?: string;
-  }
-) {
-  const supabase = await createClient();
-  return supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      emailRedirectTo: CALL_BACK,
-      data: {
-        ...(metadata || {}),
-        status: metadata?.status || UserStatus.NEW,
-      },
-    },
-  });
-}
-
 /**
  * Mise à jour du profil utilisateur (Auth uniquement)
  */
@@ -265,8 +215,6 @@ export async function updateProfile(
   if (authError) return { error: authError.message };
   return { data: { userId } };
 }
-
-
 
 // ── TODO / En attente ────────────────────────────────────────────────────────
 

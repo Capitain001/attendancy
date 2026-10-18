@@ -1,0 +1,12 @@
+{
+  "name": "createPersonalProfile",
+  "file": "src/services/personal/database/organization.mutations.ts",
+  "sig": "(params: { userId: string orgId: string role: PersonalRole }) => Promise<{ profileId: string; created: boolean; }>",
+  "composes": [
+    "findPersonalProfileId",
+    "createPersonalClassTx",
+    "invalidatePersonalClassEvents"
+  ],
+  "rules": [],
+  "why_ref": ""
+}

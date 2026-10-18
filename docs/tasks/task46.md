@@ -1,0 +1,324 @@
+Voici la suite : `complete-signup.ts` en fichier complet, avec les trois modifications déjà décrites (vérification de l'email, imports, étape 6). C'est le seul fichier de la liste dont j'ai vu tous les consommateurs, donc je peux le finir sans rien supposer.
+
+```typescript
+//apps\web\src\modules\auth\members\complete-signup.ts
+
+"use server";
+
+import { Action, Resource, Role } from "@/generated/prisma/client";
+
+import { prisma } from "@/lib/prisma";
+
+import { getUserInfo } from '@/modules/user';
+import { setUserAccess } from "@/modules/user/access";
+import { injectRoleProfileId } from "@/modules/user/profile";
+
+
+import {
+  assignFunctionToUser,
+  assignMultipleFunctionsToUser,
+  createRoleSpecificEntity,
+  enrollStudentInClass,
+} from "./utils";
+import { logAuditAsync } from "@/utils/server";
+import { DatabaseInvitationDetails } from "@/types/invitation";
+
+/* =========================
+   TYPES
+========================= */
+
+type TransactionClient = Parameters<Parameters<typeof prisma.$transaction>[0]>[0];
+type InvitationRecord = Awaited<ReturnType<typeof fetchAndValidateInvitation>>;
+
+/* =========================
+   HELPERS
+========================= */
+
+/**
+ * Charge l'invitation par son jeton et vérifie qu'elle est utilisable :
+ * existante, non utilisée, non expirée, ET destinée à l'utilisateur connecté.
+ *
+ * Le jeton vient de `user_metadata` (modifiable par le client) : c'est l'égalité
+ * entre `invitation.email` et l'email du compte connecté qui empêche d'accepter
+ * l'invitation d'un autre.
+ */
+async function fetchAndValidateInvitation(token: string, userEmail: string) {
+  const invitation = await prisma.invitation.findUnique({
+    where: { token },
+    select: {
+      id: true,
+      email: true,
+      details: true,
+      orgId: true,
+      usedAt: true,
+      expiresAt: true,
+    },
+  });
+
+  if (!invitation) throw new Error("Invitation non trouvée");
+  if (invitation.usedAt) throw new Error("Cette invitation a déjà été utilisée");
+  if (invitation.expiresAt && invitation.expiresAt < new Date()) {
+    throw new Error("Cette invitation a expiré");
+  }
+  if (invitation.email.toLowerCase() !== userEmail.toLowerCase()) {
+    throw new Error("Cette invitation ne correspond pas à votre compte");
+  }
+
+  return invitation;
+}
+
+function extractInvitationContext(invitation: InvitationRecord) {
+  const details = invitation.details as DatabaseInvitationDetails;
+
+  return {
+    details,
+    orgId: invitation.orgId,
+    role: (details.role ?? "STUDENT") as Role,
+    firstName: details.name?.split(" ")[0] || invitation.email.split("@")[0],
+    lastName: details.name?.split(" ").slice(1).join(" ") || "",
+    departmentId: details.organization?.departmentId,
+  };
+}
+
+async function createUserInOrganization(
+  tx: TransactionClient,
+  params: {
+    userId: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    orgId: string;
+    role: Role;
+    departmentId?: string;
+  }
+) {
+  // tx.user.upsert
+  const createdUser = await tx.user.upsert({
+    where: { id: params.userId },
+    create: {
+      id: params.userId,
+      email: params.email,
+      firstName: params.firstName,
+      lastName: params.lastName,
+      status: "ACTIVE",
+    },
+    update: {}, // Ne rien mettre à jour si l'utilisateur existe déjà
+  });
+
+  // 2. Rattacher l'utilisateur à l'organisation
+  await tx.userOrganization.create({
+    data: {
+      userId: createdUser.id,
+      orgId: params.orgId,
+      role: params.role,
+      isMainOrg: false,
+      isResponsable: false,
+    },
+  });
+
+  // 3. Créer l'entité métier selon le rôle (Student, Teacher, Parent, etc.)
+  const profile = await createRoleSpecificEntity(
+    tx,
+    createdUser.id,
+    params.role,
+    params.orgId,
+    params.departmentId
+  );
+
+  return { createdUser, profile };
+}
+
+async function assignUserFunctions(
+  tx: TransactionClient,
+  params: {
+    userId: string;
+    orgId: string;
+    details: DatabaseInvitationDetails;
+  }
+) {
+  // 1. Assigner la fonction principale
+  await assignFunctionToUser(
+    tx,
+    params.userId,
+    params.orgId,
+    params.details.function,
+    params.details.invited_by?.id
+  );
+
+  // 2. Assigner les fonctions supplémentaires pour la direction
+  const additionalFunctions = params.details.additionalFunctions;
+  if (
+    params.details.role === "DIRECTION" &&
+    Array.isArray(additionalFunctions) &&
+    additionalFunctions.length > 0
+  ) {
+    await assignMultipleFunctionsToUser(
+      tx,
+      params.userId,
+      params.orgId,
+      additionalFunctions,
+      params.details.invited_by?.id
+    );
+  }
+}
+
+// ✅ CHANGÉ: logAudit → logAuditAsync (asynchrone)
+function logSignupAudit(params: {
+  userId: string;
+  invitationId: string;
+  invitationEmail: string;
+  orgId: string;
+  details: DatabaseInvitationDetails;
+  departmentId?: string;
+}) {
+  logAuditAsync({
+    userId: params.userId,
+    action: Action.CREATE, // ou "CREATE" si le type l'accepte
+    resource: Resource.USER, // ou "USER" si le type l'accepte
+    resourceId: params.invitationId,
+    orgId: params.orgId, // ✅ CHANGÉ: ajout de orgId
+    details: {
+      email: params.invitationEmail,
+      name: params.details.name,
+      role: params.details.role,
+      function: params.details.function,
+      departmentId: params.departmentId,
+      invited_by: params.details.invited_by,
+      invitationId: params.invitationId,
+      action_type: "ACCEPT_INVITATION",
+    },
+  });
+}
+
+/* =========================
+   ACTION
+========================= */
+
+// ✅retour { data: {...} } | { error: string }
+export async function completeSignup(): Promise<
+  { data: { userId: string; profileId: string | undefined } } | { error: string }
+> {
+  try {
+    // 1. Vérifier l'authentification et le token d'invitation
+    const user = await getUserInfo();
+    if (!user?.id || !user.email) throw new Error("Utilisateur non authentifié");
+    if (!user.invitationToken) throw new Error("Token d'invitation non trouvé");
+    const userId = user.id;
+
+    // 2. Valider l'invitation en base (jeton + correspondance avec l'email du compte)
+    const invitation = await fetchAndValidateInvitation(user.invitationToken, user.email);
+    const { details, orgId, role, firstName, lastName, departmentId } =
+      extractInvitationContext(invitation);
+
+    const { profileId, createdUserId } = await prisma.$transaction(async (tx) => {
+      // 3. Créer l'utilisateur et son entité métier
+      const { createdUser, profile } = await createUserInOrganization(tx, {
+        userId,
+        email: invitation.email,
+        firstName,
+        lastName,
+        orgId,
+        role,
+        departmentId,
+      });
+
+      // 4. Assigner les fonctions
+      await assignUserFunctions(tx, {
+        userId: createdUser.id,
+        orgId,
+        details,
+      });
+
+      // 4.bis Parent externe (P-18 B) : matérialiser le lien parent→étudiant.
+      if (role === "PARENT" && details.parentLink?.studentId && profile?.id) {
+        await tx.parentRelation.create({
+          data: {
+            parentId: profile.id,
+            studentId: details.parentLink.studentId,
+            relation: details.parentLink.relation || "Parent",
+            orgId,
+          },
+        });
+      }
+
+      // 4.ter Student enrollment : inscription à la classe pour laquelle il est invité.
+      if (role === "STUDENT" && profile?.id) {
+        await enrollStudentInClass(tx, profile.id, details.enrollment);
+      }
+
+      // 5. Marquer l'invitation comme utilisée
+      await tx.invitation.update({
+        where: { id: invitation.id },
+        data: { usedAt: new Date(), userId: createdUser.id },
+      });
+
+      return {
+        profileId: profile?.id,
+        createdUserId: createdUser.id,
+      };
+    });
+
+    // 6. Poser l'accès (app_metadata) depuis la ligne Invitation : role, function et
+    //    organisation viennent de la base, jamais des metadata de l'invité.
+    //    L'id de l'organisation est forcé à `invitation.orgId` (valeur de la base).
+    const organization = injectRoleProfileId(
+      { ...details.organization, id: orgId },
+      role,
+      profileId,
+    );
+    const current = await getUserInfo({ refresh: true });
+
+    await setUserAccess({
+      role,
+      function: details.function,
+      status: "ACTIVE",
+      organization,
+      organizations: [
+        ...(current?.organizations ?? []).filter((org) => org.id !== orgId),
+        organization,
+      ],
+    });
+
+    // 7. Logger l'audit — maintenant asynchrone
+    logSignupAudit({
+      userId: createdUserId,
+      invitationId: invitation.id,
+      invitationEmail: invitation.email,
+      orgId,
+      details,
+      departmentId,
+    });
+
+    // ✅ retour structuré avec data
+    return { data: { userId: createdUserId, profileId } };
+  } catch (error) {
+    console.error("Erreur lors de la finalisation de l'inscription:", error);
+    // ✅ retour structuré avec error
+    return {
+      error: error instanceof Error ? error.message : "Erreur inconnue",
+    };
+  }
+}
+```
+
+## Ce qui change
+
+1. **`fetchAndValidateInvitation(token, userEmail)`** : refuse une invitation dont l'email ne correspond pas au compte connecté.
+2. **Étape 1** : exige aussi `user.email`.
+3. **Étape 6** : remplace `syncUserOrganizationProfile`. Elle pose `role`, `function`, `status`, `organization` et `organizations` depuis la ligne `Invitation`. Le profil créé (`teacherId`, etc.) est injecté dans l'organisation par `injectRoleProfileId`.
+
+## Un point à connaître dans ce fichier
+
+L'étape 6 s'exécute **après** la transaction. Si `setUserAccess` échoue, l'invitation est déjà consommée en base et l'utilisateur reste `GUEST` : le jeton ne permet plus de rejouer l'acceptation. C'était déjà le cas avec `syncUserOrganizationProfile`, mais l'enjeu est plus grand maintenant, parce que le rôle n'est plus écrit qu'ici. Une façon simple de le limiter : lire `Invitation.usedAt` et `userId` quand la finalisation est relancée, et ne refaire que l'écriture d'accès si l'invitation est déjà utilisée **par cet utilisateur**. Dis-moi si tu veux que je l'ajoute.
+
+## Où tu en es
+
+| | Fichier |
+|---|---|
+| ✔ | `types/user.ts`, `update.ts`, `access.ts`, `utils.ts`, `getUserInfo.ts` |
+| ✔ à coller | `auth/supabase.ts` (version qui garde `role` / `function` à l'inscription), `members/complete-signup.ts` (ci-dessus) |
+| ☐ à coller | `invitation/supabase.ts` et `invitation/invitation.ts` (donnés plus haut), `auth/profile/user.ts` (3 petites modifications données plus haut, je te le redonne en entier si tu préfères) |
+| ☐ à me montrer | **la page `INVITE_URL`** et `auth/callback`, qui lisent peut-être `user.role` ou `user.organization` d'un invité avant l'acceptation. C'est la dernière hypothèse non vérifiée du partage |
+| ☐ à me montrer | l'action de **création d'organisation** : pose-t-elle `role` et `function` du fondateur ? Cela décide si l'appel d'écriture de `signUpPrincipal` peut disparaître |
+
+Envoie d'abord la page `INVITE_URL` et `auth/callback` : c'est là que le risque est le plus élevé. Un invité n'a plus de rôle dans ses metadata avant l'acceptation. Si l'une de ces pages en dépend, il ne verra plus ce qu'il voyait.

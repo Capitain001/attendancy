@@ -6,7 +6,7 @@ import * as v from 'valibot'
 import { authAccess } from '@/services/auth'
 import { getRoleProfileKey, getUserInfo } from '@/modules/user'
 import { getAuthorization } from '@/modules/auth/persmission/autorization'
-import { setUserInfo } from '@/modules/user/update'
+import { setUserAccess } from '@/modules/user/access'
 import { redirectUser } from '@/config/redirects'
 import { ORG_INFO_URL, ORG_PROFILE_URL } from '@/config'
 import type { Role } from '@/types/user'
@@ -36,8 +36,8 @@ export async function createOrgAction(input: OrgSetupInput) {
 
   const authCheck = getAuthorization(user, 'DIRECTION', 'PRINCIPAL')
   if (authCheck.error) return { error: authCheck.error }
-  
-console.log('createOrgAction: user authorized for org creation', user.id)
+
+  console.log('createOrgAction: user authorized for org creation', user.id)
   const parsed = v.safeParse(orgSetupSchema, input)
   if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
 
@@ -57,7 +57,7 @@ console.log('createOrgAction: user authorized for org creation', user.id)
       directionId,
     }
 
-    await setUserInfo({ status: 'ACTIVE', organization: orgSnapshot, organizations: [orgSnapshot] })
+    await setUserAccess({ status: 'ACTIVE', organization: orgSnapshot, organizations: [orgSnapshot] })
     logAuditAsync({ userId: user.id, action: 'CREATE', resource: 'ORGANIZATION', resourceId: org.id, orgId: org.id })
 
     return { data: { slug: org.slug } }
@@ -70,7 +70,7 @@ console.log('createOrgAction: user authorized for org creation', user.id)
 export async function updateOrgIdentityAction(input: UpdateOrgIdentityInput) {
   const auth = await authAccess({ requiredRole: 'DIRECTION', requiredFunction: 'PRINCIPAL', allowPersonalOrg: true })
   if (!auth.data) return { error: auth.error }
-  
+
   const { user, orgId } = auth.data
 
   const parsed = v.safeParse(updateOrgIdentitySchema, input)
@@ -83,10 +83,10 @@ export async function updateOrgIdentityAction(input: UpdateOrgIdentityInput) {
     // 2. Fusion des nouvelles données du formulaire + données retournées par l'org
     const updatedOrgSnapshot = user.organization
       ? {
-          ...user.organization,
-          ...parsed.output, // fusionne les champs modifiés par le formulaire (ex: name)
-          slug: org.slug ?? user.organization.slug,
-        }
+        ...user.organization,
+        ...parsed.output, // fusionne les champs modifiés par le formulaire (ex: name)
+        slug: org.slug ?? user.organization.slug,
+      }
       : undefined
 
     // 3. Mise à jour de la liste sans aucune requête BDD supplémentaire
@@ -94,13 +94,14 @@ export async function updateOrgIdentityAction(input: UpdateOrgIdentityInput) {
       o.id === orgId ? { ...o, ...parsed.output, slug: org.slug ?? o.slug } : o
     )
 
-    await setUserInfo({
+
+    await setUserAccess({
       organization: updatedOrgSnapshot,
       organizations: updatedOrganizations,
     })
 
     logAuditAsync({ userId: user.id, action: 'UPDATE', resource: 'ORGANIZATION', resourceId: orgId, orgId })
-    
+
     return { data: org }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
@@ -129,7 +130,7 @@ export async function setCurrentOrganizationAction(organizationId: string): Prom
   if (!organization.slug) redirect('/auth/org/setup')
 
   try {
-    await setUserInfo({ organization })
+    await setUserAccess({ organization })
   } catch {
     redirect(`${ORG_INFO_URL}?error=switch`)
   }
@@ -169,7 +170,7 @@ export async function selectOrganizationProfileAction(
     : [...organizations, organization]
 
   try {
-    await setUserInfo({
+    await setUserAccess({
       role,
       organization,
       organizations: synchronizedOrganizations,
@@ -258,7 +259,7 @@ export async function createPersonalProfileAction(orgId: string, role: PersonalR
       ...(roleIdKey ? { [roleIdKey]: profileId } : {}),
     }
 
-    await setUserInfo({
+    await setUserAccess({
       role, // rôle ACTIF — c'est lui que redirectUser lit
       organization: orgSnapshot,
       organizations: [...existingOrgs.filter((o) => o.id !== orgId), orgSnapshot],
@@ -309,7 +310,7 @@ export async function createPersonalOrgAction(role: PersonalRole) {
       ...(roleIdKey ? { [roleIdKey]: profileId } : {}),
     }
 
-    await setUserInfo({
+    await setUserAccess({
       ...(user.status === 'NEW' || user.status === 'PENDING' ? { status: 'ACTIVE' as const } : {}),
       role,
       organization: snapshot,

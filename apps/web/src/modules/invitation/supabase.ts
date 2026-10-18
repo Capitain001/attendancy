@@ -1,10 +1,48 @@
 import { INVITE_URL } from "@/config/url";
 import { createClient } from "@/utils/supabase/server";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { InvitationMetadata } from "@/types/invitation";
+import { USER_METADATA_KEYS, type UserMetadataPatch } from "@/types/user";
+import { updateUserMetadata } from "../user/update";
 import { findAuthUserByEmail } from "../auth/supabase";
 
 //supabase documentation url
 export const docUrl = "https://supabase.com/docs/reference/javascript";
+
+type InviteMetadataInput =
+  | InvitationMetadata
+  | { invitationToken?: string; resendLinkBy?: string };
+
+
+
+
+/**
+ * Extrait d'une invitation les seules clés de PROFIL (`USER_METADATA_KEYS`)
+ * destinées à `user_metadata` : name, invited_by, invitationToken, invitationType.
+ *
+ * Les clés d'accès (role, function, status, organization(s)) et le reste
+ * (invitationStatus, details, resendLinkBy) sont volontairement écartés :
+ * l'accès est posé à l'acceptation, depuis la ligne `Invitation` en base.
+ */
+export function pickInviteUserMetadata(metadata?: InviteMetadataInput): UserMetadataPatch {
+  if (!metadata) return {};
+  const source = metadata as Record<string, unknown>;
+
+  return Object.fromEntries(
+    USER_METADATA_KEYS
+      .filter((key) => source[key] !== undefined)
+      .map((key) => [key, source[key]]),
+  ) as UserMetadataPatch;
+}
+
+async function saveInviteMetadata(user: SupabaseUser, metadata: InviteMetadataInput) {
+  const patch = {
+    ...(user.user_metadata ?? {}),
+    ...pickInviteUserMetadata(metadata),
+  };
+
+  return updateUserMetadata(user.id, patch);
+}
 
 /**
  * Renvoie une invitation par email si possible
@@ -24,7 +62,7 @@ export const docUrl = "https://supabase.com/docs/reference/javascript";
  */
 export async function resendInvitation(
   email: string,
-  metadata?: InvitationMetadata | { invitationToken?: string; resendLinkBy?: string }
+  metadata?: InviteMetadataInput
 ): Promise<{ success: true; message: string } | { success: false; error: string }> {
   try {
     const supabase = await createClient();
@@ -38,7 +76,7 @@ export async function resendInvitation(
       // Recherche indisponible → on essaie quand même d'envoyer l'invitation
       const { error } = await supabase.auth.admin.inviteUserByEmail(email, {
         redirectTo: INVITE_URL,
-        data: metadata || {},
+        data: pickInviteUserMetadata(metadata),
       });
       
       if (error) {
@@ -54,7 +92,7 @@ export async function resendInvitation(
       // Nouvel utilisateur → invitation automatique (data honoré : c'est une création)
       const { error } = await supabase.auth.admin.inviteUserByEmail(email, {
         redirectTo: INVITE_URL,
-        data: metadata || {},
+        data: pickInviteUserMetadata(metadata),
       });
       
       if (error) {
@@ -70,18 +108,15 @@ export async function resendInvitation(
       // écrire nous-mêmes le nouveau user_metadata via updateUserById, en mergeant avec
       // l'existant puisque updateUserById REMPLACE tout le user_metadata (pas de merge Supabase).
       if (metadata) {
-        const mergedMetadata = { ...(user.user_metadata ?? {}), ...metadata };
-        const { error: updateError } = await supabase.auth.admin.updateUserById(user.id, {
-          user_metadata: mergedMetadata,
-        });
+        const { error: updateError } = await saveInviteMetadata(user, metadata);
         if (updateError) {
-          return { success: false, error: updateError.message };
+          return { success: false, error: updateError };
         }
       }
 
       const { error } = await supabase.auth.admin.inviteUserByEmail(email, {
         redirectTo: INVITE_URL,
-        data: metadata || {},
+        data: pickInviteUserMetadata(metadata),
       });
       
       if (error) {
@@ -122,7 +157,7 @@ export async function resendInvitation(
  */
 export async function generateMagicLink(
   email: string,
-  metadata?: InvitationMetadata | { invitationToken?: string; resendLinkBy?: string }
+  metadata?: InviteMetadataInput
 ): Promise<{ success: true; link: string } | { success: false; error: string }> {
   try {
     const supabase = await createClient();
@@ -137,12 +172,9 @@ export async function generateMagicLink(
       const user = 'error' in findResult ? null : findResult.data.user;
 
       if (user) {
-        const mergedMetadata = { ...(user.user_metadata ?? {}), ...metadata };
-        const { error: updateError } = await supabase.auth.admin.updateUserById(user.id, {
-          user_metadata: mergedMetadata,
-        });
+        const { error: updateError } = await saveInviteMetadata(user, metadata);
         if (updateError) {
-          return { success: false, error: updateError.message };
+          return { success: false, error: updateError };
         }
       }
     }
@@ -150,9 +182,9 @@ export async function generateMagicLink(
     const { data, error } = await supabase.auth.admin.generateLink({
       type: "magiclink",
       email,
-      options: { 
+      options: {
         redirectTo: INVITE_URL,
-        data: metadata ,
+        data: pickInviteUserMetadata(metadata),
       },
     });
     
@@ -217,7 +249,7 @@ export async function createInvitationLink(
       email,
       options: {
         redirectTo: INVITE_URL,
-        data: metadata,
+        data: pickInviteUserMetadata(metadata),
       },
     });
 

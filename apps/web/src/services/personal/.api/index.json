@@ -1,0 +1,100 @@
+{
+  "service": "personal",
+  "path": "src/services/personal/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "c60f72e",
+  "utils_dir": null,
+  "fns": {
+    "createPersonalClassTx": {
+      "f": ".api/createPersonalClassTx.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "invalidatePersonalClassEvents": {
+      "f": ".api/invalidatePersonalClassEvents.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "createPersonalClass": {
+      "f": ".api/createPersonalClass.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "createPersonalOrgWithProfile": {
+      "f": ".api/createPersonalOrgWithProfile.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "createPersonalProfile": {
+      "f": ".api/createPersonalProfile.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "findPersonalProfileId": {
+      "f": ".api/findPersonalProfileId.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createPersonalProfileAction": {
+      "f": ".api/createPersonalProfileAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "createPersonalOrgAction": {
+      "f": ".api/createPersonalOrgAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "createPersonalCourseAction": {
+      "f": ".api/createPersonalCourseAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createPersonalClassTx": [
+      "createPersonalClass",
+      "createPersonalOrgWithProfile",
+      "createPersonalProfile"
+    ],
+    "invalidatePersonalClassEvents": [
+      "createPersonalClass",
+      "createPersonalOrgWithProfile",
+      "createPersonalProfile"
+    ],
+    "createPersonalClass": [],
+    "createPersonalOrgWithProfile": [
+      "createPersonalOrgAction"
+    ],
+    "createPersonalProfile": [
+      "createPersonalProfileAction"
+    ],
+    "findPersonalProfileId": [
+      "createPersonalProfile"
+    ],
+    "createPersonalProfileAction": [
+      "createPersonalOrgAction"
+    ],
+    "createPersonalOrgAction": [],
+    "createPersonalCourseAction": [],
+    "createUEAction": [
+      "createPersonalCourseAction"
+    ],
+    "createUECourseAction": [
+      "createPersonalCourseAction"
+    ],
+    "createCourseAction": [
+      "createPersonalCourseAction"
+    ],
+    "assignTeacherAction": [
+      "createPersonalCourseAction"
+    ]
+  },
+  "deps": {
+    "findPersonalProfileId": "organization",
+    "createUEAction": "ue",
+    "createUECourseAction": "ue-course",
+    "createCourseAction": "course",
+    "assignTeacherAction": "course-teacher"
+  }
+}

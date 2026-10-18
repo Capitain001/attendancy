@@ -3,7 +3,7 @@
 
 import { redirect } from "next/navigation";
 import { safeParse } from "valibot";
-import { signupPersonalSchema, signupSchema } from "../validation";
+import { ResendSignupEmailInput, resendSignupEmailSchema, signupPersonalSchema, signupSchema } from "../validation";
 import { signUpPrincipal, resendSignupEmail, signUpPersonal } from "../supabase";
 import { createUserRecord } from "../database";
 import { PersonalSignupRole } from "../constants";
@@ -83,16 +83,24 @@ export async function signupPersonalAction(_prev: SignupState, formData: FormDat
   redirect(`/auth/check-email?email=${encodeURIComponent(result.data.email)}`);
 }
 
-type ResendState = { success: boolean; error?: string } | null;
+type ResendState = { success: boolean; error?: string } | null
+// Version "pure" : appelable depuis un hook, un onClick, un composant client…
+export async function resendSignupEmailAction(input: ResendSignupEmailInput) {
+  const parsed = safeParse(resendSignupEmailSchema, input)
+  if (!parsed.success) {
+    return { success: false, error: parsed.issues[0]?.message ?? 'Données invalides' }
+  }
 
-export async function resendSignupEmailAction(
-  _prevState: ResendState,
-  formData: FormData
-): Promise<ResendState> {
-  const email = formData.get("email") as string;
-  if (!email) return { success: false, error: "Email manquant" };
-  const result = await resendSignupEmail(email);
+  const result = await resendSignupEmail(parsed.output.email)
   return result.success
     ? { success: true }
-    : { success: false, error: result.error ?? "Erreur lors de l'envoi" };
+    : { success: false, error: result.error ?? "Erreur lors de l'envoi" }
+}
+
+
+export async function resendSignupEmailFormAction(
+  _prevState: ResendState,
+  formData: FormData,
+) {
+  return resendSignupEmailAction({ email: String(formData.get('email') ?? '') })
 }

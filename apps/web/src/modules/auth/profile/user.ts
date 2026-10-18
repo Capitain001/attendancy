@@ -6,9 +6,9 @@ import { Role } from "@/generated/prisma/client"
 import { ERRORS } from "@/config"
 import { prisma } from "@/lib/prisma"
 import { createClient } from "@/utils/supabase/server"
-import type { UserMetadata } from "@/types/user"
+import type { AppMetadata } from "@/types/user"
 import { getRoleProfileKey } from "@/modules/user"
-import { syncUserOrganizationProfile } from "@/modules/user"
+import { syncUserOrganizationProfile } from "@/modules/user/access"
 import { createRoleSpecificEntity } from "@/modules/auth/members/utils"
 
 /** Id du profil de rôle existant pour (userId, orgId), ou null. Idempotence. */
@@ -29,13 +29,16 @@ async function findRoleProfileId(role: Role, userId: string, orgId: string): Pro
 
 /**
  * Crée (si absent) le profil de rôle pour l'org courante et réinjecte son id
- * dans les metadata (directionId/teacherId/…). Idempotent. Sans org ou rôle
+ * dans les metadata d'accès (directionId/teacherId/…). Idempotent. Sans org ou rôle
  * sans profil (ADMIN/GUEST) : no-op. Indispensable pour sortir de la redirection
  * `!profileId → /auth/user-info` (cf. auth/callback).
+ *
+ * `role` et `organization` viennent de `app_metadata` (écrit par le serveur uniquement) :
+ * ne jamais les lire dans `user_metadata`, modifiable par le client.
  */
-async function ensureRoleProfile(userMetadata: UserMetadata, userId: string) {
-  const role = userMetadata.role as Role | undefined
-  const orgId = userMetadata.organization?.id
+async function ensureRoleProfile(access: AppMetadata, userId: string) {
+  const role = access.role as Role | undefined
+  const orgId = access.organization?.id
   if (!role || !orgId || !getRoleProfileKey(role)) return
 
   const profileId =
@@ -100,7 +103,7 @@ export async function upsertUserProfile(params: {
 
   // Crée le profil de rôle + injecte le profileId dans les metadata (sinon le
   // callback renvoie indéfiniment vers /auth/user-info).
-  await ensureRoleProfile((user.user_metadata ?? {}) as UserMetadata, userId)
+  await ensureRoleProfile((user.app_metadata ?? {}) as AppMetadata, userId)
 
   return profile
 }

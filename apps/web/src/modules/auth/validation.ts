@@ -30,3 +30,16 @@ export const loginSchema = object({
 // InferOutput = ce que le service reçoit après parse (après transformations)
 export type LoginInput = InferInput<typeof loginSchema>;
 export type LoginOutput = InferOutput<typeof loginSchema>;
+
+
+export const resendSignupEmailSchema = object({
+  email: pipe(
+    string("Email manquant"),
+    trim(),
+    minLength(1, "Email manquant"),
+    email("Email invalide")
+  ),
+});
+
+export type ResendSignupEmailInput = InferInput<typeof resendSignupEmailSchema>;
+export type ResendSignupEmailOutput = InferOutput<typeof resendSignupEmailSchema>;

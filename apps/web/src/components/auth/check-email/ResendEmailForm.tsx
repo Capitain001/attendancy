@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react'
 import { useFormStatus } from 'react-dom'
-import { resendSignupEmailAction } from '@/modules/auth'
+import { resendSignupEmailAction, resendSignupEmailFormAction } from '@/modules/auth'
 
 function ResendButton() {
   const { pending } = useFormStatus()
@@ -18,7 +18,7 @@ function ResendButton() {
 }
 
 export function ResendEmailForm({ email }: { email: string }) {
-  const [state, formAction] = useActionState(resendSignupEmailAction, null)
+  const [state, formAction] = useActionState(resendSignupEmailFormAction, null)
 
   if (state?.success) {
     return (

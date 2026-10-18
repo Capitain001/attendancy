@@ -5,7 +5,8 @@ import type { Action, Resource } from "@/generated/prisma/client"
 import { prisma } from "@/lib/prisma"
 import { createAdminClient } from "@/utils/supabase/server"
 
-import type { Organization, UserMetadata } from "@/types/user"
+import type { Organization, AppMetadata, AppMetadataPatch } from "@/types/user"
+import { updateUserAccess } from "../user/access"
 import { removeUser } from "../user"
 import { PermissionName } from "@/services/permission"
 
@@ -61,7 +62,7 @@ export async function syncUserPermissionsMetadata(userId: string, orgId: string)
     return
   }
 
-  const metadata = (user.user_metadata ?? {}) as UserMetadata
+  const metadata = (user.app_metadata ?? {}) as AppMetadata
   const organizations = metadata.organizations ?? []
 
   const targetIndex = organizations.findIndex((org) => org.id === orgId)
@@ -77,19 +78,17 @@ export async function syncUserPermissionsMetadata(userId: string, orgId: string)
     i === targetIndex ? { ...org, permissions } : org
   )
 
-  const patch: Partial<UserMetadata> = { organizations: updatedOrganizations }
+  const patch: AppMetadataPatch = { organizations: updatedOrganizations }
 
   // garder `organization` (org courante) synchronisée si c'est celle qu'on vient de modifier
   if (metadata.organization?.id === orgId) {
     patch.organization = { ...metadata.organization, permissions }
   }
 
-  const { error: updateError } = await supabase.auth.admin.updateUserById(userId, {
-    user_metadata: { ...metadata, ...patch },
-  })
-
-  if (updateError) {
-    console.error("[syncUserPermissionsMetadata]", userId, updateError.message)
+  try {
+    await updateUserAccess(userId, patch)
+  } catch (updateError: any) {
+    console.error("[syncUserPermissionsMetadata]", userId, updateError?.message)
     return
   }
 

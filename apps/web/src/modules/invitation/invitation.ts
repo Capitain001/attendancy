@@ -3,34 +3,31 @@
 // ==========================================
 /**
  * Service d'envoi d'invitations via Supabase Auth
- * 
- * @description Envoie des invitations par email en utilisant l'API admin de Supabase
+ *
+ * @description Envoie des invitations par email en utilisant l'API admin de Supabase.
+ * Seules les clés de PROFIL (name, invited_by, invitationToken, invitationType) sont
+ * transmises dans `user_metadata` ; role, function, status et organisation ne sont jamais
+ * envoyés ici : ils sont posés à l'acceptation, depuis la ligne `Invitation` en base.
  * @example
  * const result = await sendSupabaseInvitation("user@example.com", metadata);
  * if (!result.success) console.error(result.error);
  */
+import "server-only";
 
-import { InvitationMetadata, SupabaseInviteData } from "@/types/invitation";
+import type { InvitationMetadata } from "@/types/invitation";
 import { createClient } from "@/utils/supabase/server";
 import { INVITE_URL } from "@/config/url";
-
-
-function createSupabaseInviteData(metadata: InvitationMetadata): SupabaseInviteData {
-  return {
-    ...metadata,
-  };
-}
+import { pickInviteUserMetadata } from "./supabase";
 
 export async function sendSupabaseInvitation(
   email: string,
   metadata: InvitationMetadata
 ) {
   const adminClient = await createClient();
-  const inviteData = createSupabaseInviteData(metadata);
 
   const { error } = await adminClient.auth.admin.inviteUserByEmail(email, {
     redirectTo: INVITE_URL,
-    data: inviteData,
+    data: pickInviteUserMetadata(metadata),
   });
 
   if (error) {
