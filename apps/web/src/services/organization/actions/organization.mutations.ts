@@ -1,34 +1,32 @@
-// src/services/organization/actions/organization.mutations.ts
-// src/services/org/actions/org.mutations.ts
 'use server'
+
 import { redirect } from 'next/navigation'
 import * as v from 'valibot'
-import { authAccess } from '@/services/auth'
-import { getRoleProfileKey, getUserInfo } from '@/modules/user'
-import { getAuthorization } from '@/modules/auth/persmission/autorization'
-import { setUserAccess } from '@/modules/user/access'
+import { ERRORS, ORG_INFO_URL, ORG_PROFILE_URL } from '@/config'
 import { redirectUser } from '@/config/redirects'
-import { ORG_INFO_URL, ORG_PROFILE_URL } from '@/config'
-import type { Role } from '@/types/user'
+import { PERSONAL_ROLES, type PersonalRole } from '@/modules/auth/constants'
+import { getAuthorization } from '@/modules/auth/persmission/autorization'
+import { getRoleProfileKey, getUserInfo } from '@/modules/user'
+import { setUserAccess } from '@/modules/user/access'
 import { logAuditAsync } from '@/services/audit'
-import { ERRORS } from '@/config'
-import { orgSetupSchema, updateOrgIdentitySchema } from '../validation'
-import type { OrgSetupInput, UpdateOrgIdentityInput } from '../validation'
-import type { OrgDetails } from '../types'
+import { authAccess } from '@/services/auth'
+import type { Role } from '@/types/user'
 import {
   createOrgWithDefaults,
-  updateOrganization,
-  setOrgDetails,
-  setMemberStatusWithAudit,
-  updateOrgLogo,
-  createPersonalProfile,
   createPersonalOrgWithProfile,
+  createPersonalProfile,
+  setMemberStatusWithAudit,
+  setOrgDetails,
+  updateOrganization,
+  updateOrgLogo,
 } from '../database'
+import type { OrgDetails } from '../types'
+import { orgSetupSchema, updateOrgIdentitySchema } from '../validation'
+import type { OrgSetupInput, UpdateOrgIdentityInput } from '../validation'
 
 // Cas spécial : l'utilisateur n'a pas encore d'org — authAccess exige orgId et échouerait.
 // On passe par getUserInfo directement + getAuthorization pour vérifier role/function.
 export async function createOrgAction(input: OrgSetupInput) {
-
   console.log('createOrgAction: user authorized for org creation')
   const user = await getUserInfo()
   console.log('createOrgAction: user info retrieved', user?.id)
@@ -83,17 +81,16 @@ export async function updateOrgIdentityAction(input: UpdateOrgIdentityInput) {
     // 2. Fusion des nouvelles données du formulaire + données retournées par l'org
     const updatedOrgSnapshot = user.organization
       ? {
-        ...user.organization,
-        ...parsed.output, // fusionne les champs modifiés par le formulaire (ex: name)
-        slug: org.slug ?? user.organization.slug,
-      }
+          ...user.organization,
+          ...parsed.output, // fusionne les champs modifiés par le formulaire (ex: name)
+          slug: org.slug ?? user.organization.slug,
+        }
       : undefined
 
     // 3. Mise à jour de la liste sans aucune requête BDD supplémentaire
     const updatedOrganizations = user.organizations?.map((o) =>
       o.id === orgId ? { ...o, ...parsed.output, slug: org.slug ?? o.slug } : o
     )
-
 
     await setUserAccess({
       organization: updatedOrgSnapshot,
@@ -107,6 +104,7 @@ export async function updateOrgIdentityAction(input: UpdateOrgIdentityInput) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
+
 // Mise à jour des détails (infos contact, champs personnalisés) par DIRECTION.
 export async function setOrgDetailsAction(details: OrgDetails) {
   const auth = await authAccess({ requiredRole: 'DIRECTION' })
@@ -221,16 +219,6 @@ export async function setMemberStatusAction(params: {
   }
 }
 
-
-
-
-
-import { PERSONAL_ROLES, PersonalRole } from '@/modules/auth/constants'
-
-
-
-// → À AJOUTER dans src/services/org/actions/org.mutations.ts
-//
 // Ajoute un rôle à un espace perso DÉJÀ EXISTANT. orgId fourni par l'appelant
 // (jamais résolu en interne, SERVICE_CONTEXT.md §4) — createPersonalOrgAction
 // le connaît déjà quand il délègue ici.
@@ -271,9 +259,6 @@ export async function createPersonalProfileAction(orgId: string, role: PersonalR
   }
 }
 
-
-// → À AJOUTER dans src/services/org/actions/org.mutations.ts
-//
 // SEUL point d'entrée appelé par l'UI (un clic sur un rôle). Deux chemins
 // internes, mutuellement exclusifs :
 //   - espace perso inexistant → bootstrap atomique (createPersonalOrgWithProfile)

@@ -242,5 +242,4 @@ export async function signinWhatsapp(){
     }
   } 
 )
-
 }
