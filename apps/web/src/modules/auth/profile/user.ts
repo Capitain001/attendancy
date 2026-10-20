@@ -103,7 +103,7 @@ export async function upsertUserProfile(params: {
 
   // Crée le profil de rôle + injecte le profileId dans les metadata (sinon le
   // callback renvoie indéfiniment vers /auth/user-info).
-  await ensureRoleProfile((user.app_metadata ?? {}) as AppMetadata, userId)
+  await ensureRoleProfile((user.app_metadata) as AppMetadata, userId)
 
   return profile
 }

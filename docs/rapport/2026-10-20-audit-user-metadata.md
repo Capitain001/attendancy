@@ -7,21 +7,22 @@
 
 Les clés de profil sont `name`, `avatar_url`, `phone`, `isConnected`, `invited_by`, `invitationToken` et `invitationType`. Les clés d'accès sont `role`, `function`, `status`, `organization` et `organizations`.
 
-L'audit a trouvé six lectures de clés d'accès dans `user_metadata`, dont `role` et `organization` dans le contrôle d'accès de la route `schedule-days`. Il a aussi recensé 13 appels d'écriture Supabase Auth. La revue des payloads directs et indirects listés ci-dessous n'a pas identifié d'écriture de clé d'accès dans `user_metadata` ni de clé de profil dans `app_metadata`. Aucun backfill ni changement des données d'authentification n'a été effectué.
+L'audit initial avait trouvé six lectures de clés d'accès dans `user_metadata`. Le handler API `schedule-days`, inachevé et non consommé, a depuis été supprimé. Les cinq autres lectures restent à corriger. L'audit a également recensé 13 appels d'écriture Supabase Auth. La revue des payloads directs et indirects listés ci-dessous n'a pas identifié d'écriture de clé d'accès dans `user_metadata` ni de clé de profil dans `app_metadata`. Aucun backfill ni changement des données d'authentification n'a été effectué.
 
 ## Constats
 
 | Sévérité | Fichier                                                                                  | Lecture observée                                                           | Impact                                                                                                                                                                                                          |
 | -------- | ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Haute    | [`route.ts`](../../apps/web/src/app/api/teacher/schedule-days/route.ts) (lignes 34-35)   | `organization` et `role` lus depuis `user.user_metadata`                   | Contrôle d'accès basé sur la mauvaise source modifiable par le client. Le handler renvoie actuellement un objet vide pour les jours; le contrôle devra être corrigé avant de retourner des données de planning. |
 | Moyenne  | [`Header.tsx`](../../packages/ui/src/Header.tsx) (lignes 31, 35)                         | `organization.slug` et `organization.name` lus depuis `user.user_metadata` | Le lien et le libellé d'organisation peuvent retomber sur `/` et « Attendancy » lorsque l'organisation n'est plus dupliquée dans les métadonnées de profil.                                                     |
 | Faible   | [`AuthMenu.tsx`](../../packages/ui/src/components/layout/Header/AuthMenu.tsx) (ligne 94) | `organization.slug` lu depuis `user.user_metadata`                         | Les liens de réglages peuvent utiliser le slug de repli `app` au lieu de l'organisation active.                                                                                                                 |
 | Faible   | [`page.tsx`](../../apps/web/src/app/auth/invite/page.tsx) (ligne 53)                     | `role` lu depuis `data.user.user_metadata` pour le journal de diagnostic   | La valeur journalisée ne suit plus le stockage courant et peut être absente; cette lecture ne détermine pas l'autorisation.                                                                                     |
 
 ## Documentation à aligner
 
-- [`CLAUDE.md`](../../apps/web/src/modules/user/CLAUDE.md) décrit encore `user_metadata` comme source du rôle et de l'organisation, en contradiction avec `mapUserInfo` et les types actuels.
-- [`cache.md`](../../apps/web/src/modules/user/cache.md) montre encore un exemple de `role` dans `user_metadata`.
+Les documents du module User ont été réalignés sur les schémas et clés de [types/user.ts](../../apps/web/src/types/user.ts) :
+
+- [`CLAUDE.md`](../../apps/web/src/modules/user/CLAUDE.md) documente maintenant le classement des clés, les sources de lecture et les helpers d'écriture.
+- [`cache.md`](../../apps/web/src/modules/user/cache.md) utilise maintenant le helper d'accès typé pour l'exemple de changement de rôle.
 
 ## Audit des écritures
 
@@ -45,4 +46,4 @@ Limites : les accès dynamiques par clé calculée, les alias transmis entre fon
 
 ## Suite recommandée
 
-Corriger les lectures listées pour utiliser `app_metadata` pour les clés d'accès, puis mettre à jour les deux documents du module User et relancer le vérificateur. La migration des comptes existants reste hors périmètre de cet audit.
+Corriger les cinq lectures restantes pour utiliser `app_metadata` pour les clés d'accès, puis relancer le vérificateur. La migration des comptes existants reste hors périmètre de cet audit.

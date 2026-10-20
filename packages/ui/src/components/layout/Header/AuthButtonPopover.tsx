@@ -7,30 +7,10 @@ import { UserIcon } from "../../users/UserIcon";
 import { AuthMenu } from "./AuthMenu";
 import { logout } from "@attendancy/auth";
 import { cn } from "../../../lib/utils";
-import type { UserStatus } from "@attendancy/types";
-
-export type HeaderUser = {
-  id?: string | null;
-  name?: string | null;
-  email?: string | null;
-  avatar_url?: string | null;
-  updated_at?: string | number | Date | null;
-  status?: UserStatus;
-  role?: string;
-  organization?: {
-    name?: string | null;
-    slug?: string | null;
-  } | null;
-  user_metadata?: {
-    name?: string;
-    avatar_url?: string;
-    organization?: { name?: string; slug?: string };
-    [key: string]: unknown;
-  };
-};
+import type { PublicUserInfo } from "@attendancy/types";
 
 export interface AuthButtonPopoverProps {
-  user: HeaderUser;
+  user: PublicUserInfo;
   className?: string;
   onSignOut?: () => void | Promise<void>;
   orgInfoUrl?: string;
@@ -59,9 +39,6 @@ export function AuthButtonPopover({
     }
   };
 
-  const displayName = user.name ?? user.user_metadata?.name;
-  const displayAvatar = user.avatar_url ?? (user.user_metadata?.avatar_url as string | undefined);
-
   return (
     <div className={cn("group flex items-center gap-4", className)}>
       <Popover open={open} onOpenChange={setOpen}>
@@ -73,8 +50,8 @@ export function AuthButtonPopover({
           >
             <MirrorHover className="flex items-center rounded-full">
               <UserIcon
-                name={displayName}
-                avatarUrl={displayAvatar}
+                name={user.name}
+                avatarUrl={user.avatar_url}
                 updatedAt={user.updated_at}
                 status={user.status}
                 className="size-9 border border-border/40 bg-muted ring-0"

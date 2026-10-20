@@ -2,6 +2,7 @@
 import * as v from 'valibot'
 import { FUNCTIONS } from '@/config/data'
 import { OrganizationType, Role as DBRole } from '@/generated/prisma/browser'
+import type { User } from '@supabase/supabase-js'
 
 /* =========================
    ÉNUMÉRATIONS
@@ -166,6 +167,73 @@ type Patch<T> = { [K in keyof T]?: T[K] | null }
 export type UserMetadataPatch = Patch<UserMetadata>
 export type AppMetadataPatch = Patch<AppMetadata>
 
+
+/* =========================
+   CLIENT READING
+========================= */
+
+/**
+ * Champs critiques : servent à autoriser ou à rejouer une invitation.
+ * Ne doivent jamais atteindre un composant client.
+ */
+export const SENSITIVE_USER_KEYS = [
+  'organizations',    // chaque entrée porte permissions et ids de profils
+  'invited_by',
+  // 'invitationToken', // token est safe et est utiliser
+  'invitationType',
+] as const satisfies readonly (keyof UserInfo)[]
+
+export const SENSITIVE_ORGANIZATION_KEYS = [
+  'permissions',
+  'responsable',
+  'departmentId',
+  'studentId',
+  'teacherId',
+  'parentId',
+  'directionId',
+] as const satisfies readonly (keyof Organization)[]
+
+export interface PublicOrganization {
+  id?: string
+  name?: string
+  slug?: string
+  logo?: string
+  type?: OrganizationType
+}
+
+/**
+ * UserInfo sans les champs critiques : le type à utiliser dans tous les composants client.
+ * Pour un besoin ponctuel : `PublicUserInfo & { phone_verified: boolean }`.
+ */
+export interface PublicUserInfo {
+  id?: string
+  name?: string
+  email?: string
+  avatar_url?: string
+  role?: Role
+  function?: Functions
+  status?: UserStatus
+  phone?: string
+  phone_verified?: boolean
+  email_verified?: boolean
+  online_at?: string
+  updated_at?: string
+  isConnected?: boolean
+  invitationToken?: string
+  organization?: PublicOrganization
+}
+
+
+/**
+ * `User` Supabase dont les deux metadata sont retypées avec les types du projet
+ * (Supabase les type en `{ [key: string]: any }`, ce qui n'attrape aucune erreur de clé).
+ * Un seul cast à la frontière Supabase : `data.user as SupabaseUser`.
+ * Lire `user_metadata.role` y est une erreur TS2339, `role` n'existant que dans `app_metadata`.
+ */
+export type SupabaseUser = Omit<User, 'app_metadata' | 'user_metadata'> & {
+  app_metadata: AppMetadata
+  user_metadata: UserMetadata
+}
 
 /* ### STRUCTURE JSON ### */
 

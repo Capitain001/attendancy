@@ -1,18 +1,16 @@
 "use client";
 
 import type { ReactNode } from "react";
+import type { PublicUserInfo } from "@attendancy/types";
 import { ModeToggle } from "./components/layout/Header/ModeToggle";
-import {
-  AuthButtonPopover,
-  type HeaderUser,
-} from "./components/layout/Header/AuthButtonPopover";
+import { AuthButtonPopover } from "./components/layout/Header/AuthButtonPopover";
 import { Link } from "./components/ui/link";
 import { cn } from "./lib/utils";
 
-export type { HeaderUser };
+const DEFAULT_BRAND = "Attendancy";
 
 export type HeaderProps = {
-  user?: HeaderUser;
+  user?: PublicUserInfo;
   onSignOut?: () => void | Promise<void>;
   notifications?: ReactNode;
   brandHref?: string;
@@ -26,14 +24,9 @@ export function Header({
   brandHref,
   className,
 }: HeaderProps) {
-  const orgSlug =
-    user?.organization?.slug ??
-    (user?.user_metadata as Record<string, any> | undefined)?.organization?.slug;
-  const orgHref = brandHref ?? (orgSlug ? `/${orgSlug}` : "/");
-  const orgLabel =
-    user?.organization?.name ??
-    (user?.user_metadata as Record<string, any> | undefined)?.organization?.name ??
-    "Attendancy";
+  const org = user?.organization;
+  const orgHref = brandHref ?? (org?.slug ? `/${org.slug}` : "/");
+  const orgLabel = org?.name ?? DEFAULT_BRAND;
 
   return (
     <header

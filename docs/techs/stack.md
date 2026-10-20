@@ -94,3 +94,5 @@ Ce qui **ne se porte pas** directement :
 - Pages RSC / layouts Next.js → remplacer par des composants React classiques sur Expo/Tauri
 - `'use server'` actions → exposer via API routes Next.js appelées depuis mobile/desktop
 - Service worker → web uniquement
+
+Pour le transport des Server Actions vers les applications clientes, voir [`rpc-systeme.md`](./rpc-systeme.md).

@@ -21,7 +21,7 @@ export { Avatar, AvatarImage, AvatarFallback } from "./components/ui/avatar";
 export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor } from "./components/ui/popover";
 export { AppProvider } from "./AppProvider";
 export { MainLayout } from "./MainLayout";
-export { Header, type HeaderProps, type HeaderUser } from "./Header";
+export { Header, type HeaderProps } from "./Header";
 export { ModeToggle } from "./components/layout/Header/ModeToggle";
 export {
   AuthButtonPopover,

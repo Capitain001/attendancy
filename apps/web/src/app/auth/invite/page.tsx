@@ -3,11 +3,12 @@
 import { useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
+import { SupabaseUser } from '@/types'
 
 function InviteRelay() {
-  const router       = useRouter()
+  const router = useRouter()
   const searchParams = useSearchParams()
-  const supabase     = createClient()
+  const supabase = createClient()
 
   useEffect(() => {
     async function relay() {
@@ -15,19 +16,19 @@ function InviteRelay() {
       console.log('search params :', Object.fromEntries(searchParams.entries()))
       console.log('full URL      :', window.location.href)
 
-      const hash       = window.location.hash.substring(1)
+      const hash = window.location.hash.substring(1)
       const hashParams = new URLSearchParams(hash)
 
       console.log('hash raw      :', window.location.hash)
       console.log('hash params   :', {
-        access_token:  hashParams.get('access_token')  ? '✅ présent' : '❌ absent',
+        access_token: hashParams.get('access_token') ? '✅ présent' : '❌ absent',
         refresh_token: hashParams.get('refresh_token') ? '✅ présent' : '❌ absent',
-        type:          hashParams.get('type') ?? '—',
-        error:         hashParams.get('error') ?? '—',
+        type: hashParams.get('type') ?? '—',
+        error: hashParams.get('error') ?? '—',
       })
       console.groupEnd()
 
-      const access_token  = hashParams.get('access_token')
+      const access_token = hashParams.get('access_token')
       const refresh_token = hashParams.get('refresh_token')
 
       if (!access_token || !refresh_token) {
@@ -47,17 +48,20 @@ function InviteRelay() {
         return
       }
 
+      const user = data.user as SupabaseUser | null
+
       console.log('[invite] session établie :', {
-        userId: data.user?.id,
-        email:  data.user?.email,
-        role:   data.user?.user_metadata?.role,
+        userId: user?.id,
+        email: user?.email,
+        role: user?.app_metadata.role, // Role | undefined
+        name: user?.user_metadata.name,
       })
       console.log('[invite] → redirect /auth/welcome')
       router.replace(`/auth/welcome`)
     }
 
     relay()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

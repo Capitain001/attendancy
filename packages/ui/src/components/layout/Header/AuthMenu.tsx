@@ -6,7 +6,7 @@ import { Button } from "../../ui/button";
 import { UserIcon } from "../../users/UserIcon";
 import { cn } from "../../../lib/utils";
 import { LogOut } from "lucide-react";
-import type { HeaderUser } from "./AuthButtonPopover";
+import type { PublicUserInfo } from "@attendancy/types";
 
 // ── Icons (identiques à apps/web/src/components/users/UserButton/AuthMenu.tsx)
 const BadgeCheckIcon = () => (
@@ -73,7 +73,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
 );
 
 export interface AuthMenuProps {
-  user?: HeaderUser;
+  user?: PublicUserInfo;
   className?: string;
   onSignOut?: () => void | Promise<void>;
   isLoggingOut?: boolean;
@@ -89,23 +89,10 @@ export const AuthMenu: React.FC<AuthMenuProps> = ({
   onItemClick,
   orgInfoUrl = "/auth/org/info",
 }) => {
-  const slug =
-    user?.organization?.slug ||
-    (user?.user_metadata as Record<string, any> | undefined)?.organization
-      ?.slug ||
-    "app";
-  const displayName =
-    user?.name ||
-    (user?.user_metadata as Record<string, any> | undefined)?.name ||
-    "Invité";
+  const slug = user?.organization?.slug || "app";
+  const displayName = user?.name || "Invité";
   const displayEmail = user?.email || "Non connecté";
-  const displayAvatar =
-    user?.avatar_url ??
-    ((user?.user_metadata as Record<string, any> | undefined)?.avatar_url as
-      | string
-      | null
-      | undefined) ??
-    null;
+  const displayAvatar = user?.avatar_url ?? null;
 
   const menuItems = [
     {

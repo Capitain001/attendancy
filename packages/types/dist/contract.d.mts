@@ -42,22 +42,22 @@ declare function getSchedules(params: ScheduleFilterParams): Promise<({
     id: string;
     status: __generated_prisma_enums.ScheduleStatus;
     orgId: string;
-    classId: string;
-    groupId: string | null;
-    courseId: string;
-    teacherId: string;
-    roomId: string;
-    weekRecurrenceId: string | null;
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date | null;
     isLocked: boolean;
+    classId: string;
+    teacherId: string;
+    courseId: string;
     scheduleType: __generated_prisma_enums.ScheduleType;
+    groupId: string | null;
     notes: string | null;
+    roomId: string;
     startTime: Date;
     endTime: Date;
     statusChangedAt: Date | null;
     confirmed: boolean;
+    weekRecurrenceId: string | null;
     notifyState: __generated_prisma_enums.ScheduleNotifyState | null;
     notifiedAt: Date | null;
 })[]>;
@@ -139,22 +139,22 @@ declare function getSchedulesAction(params: Omit<ScheduleFilterParams, 'orgId'>)
         id: string;
         status: __generated_prisma_enums.ScheduleStatus;
         orgId: string;
-        classId: string;
-        groupId: string | null;
-        courseId: string;
-        teacherId: string;
-        roomId: string;
-        weekRecurrenceId: string | null;
         createdAt: Date;
         updatedAt: Date;
         deletedAt: Date | null;
         isLocked: boolean;
+        classId: string;
+        teacherId: string;
+        courseId: string;
         scheduleType: __generated_prisma_enums.ScheduleType;
+        groupId: string | null;
         notes: string | null;
+        roomId: string;
         startTime: Date;
         endTime: Date;
         statusChangedAt: Date | null;
         confirmed: boolean;
+        weekRecurrenceId: string | null;
         notifyState: __generated_prisma_enums.ScheduleNotifyState | null;
         notifiedAt: Date | null;
     })[];
@@ -194,22 +194,22 @@ declare function createScheduleAction(data: CreateScheduleOutput): Promise<{
         id: string;
         status: __generated_prisma_enums.ScheduleStatus;
         orgId: string;
-        classId: string;
-        groupId: string | null;
-        courseId: string;
-        teacherId: string;
-        roomId: string;
-        weekRecurrenceId: string | null;
         createdAt: Date;
         updatedAt: Date;
         deletedAt: Date | null;
         isLocked: boolean;
+        classId: string;
+        teacherId: string;
+        courseId: string;
         scheduleType: __generated_prisma_enums.ScheduleType;
+        groupId: string | null;
         notes: string | null;
+        roomId: string;
         startTime: Date;
         endTime: Date;
         statusChangedAt: Date | null;
         confirmed: boolean;
+        weekRecurrenceId: string | null;
         notifyState: __generated_prisma_enums.ScheduleNotifyState | null;
         notifiedAt: Date | null;
     };
@@ -248,22 +248,22 @@ declare function updateScheduleAction(input: UpdateScheduleInput): Promise<{
         id: string;
         status: __generated_prisma_enums.ScheduleStatus;
         orgId: string;
-        classId: string;
-        groupId: string | null;
-        courseId: string;
-        teacherId: string;
-        roomId: string;
-        weekRecurrenceId: string | null;
         createdAt: Date;
         updatedAt: Date;
         deletedAt: Date | null;
         isLocked: boolean;
+        classId: string;
+        teacherId: string;
+        courseId: string;
         scheduleType: __generated_prisma_enums.ScheduleType;
+        groupId: string | null;
         notes: string | null;
+        roomId: string;
         startTime: Date;
         endTime: Date;
         statusChangedAt: Date | null;
         confirmed: boolean;
+        weekRecurrenceId: string | null;
         notifyState: __generated_prisma_enums.ScheduleNotifyState | null;
         notifiedAt: Date | null;
     };
@@ -289,9 +289,13 @@ declare function getClassesAction({ yearId, programTrackId, name, level }?: {
     data: {
         name: string;
         id: string;
-        academicYearId: string;
         programTrackId: string;
         level: Level;
+        academicYearId: string;
+        _count: {
+            courses: number;
+            studentEnrollments: number;
+        };
         academicYear: {
             name: string;
             id: string;
@@ -299,10 +303,6 @@ declare function getClassesAction({ yearId, programTrackId, name, level }?: {
         programTrack: {
             name: string;
             id: string;
-        };
-        _count: {
-            courses: number;
-            studentEnrollments: number;
         };
     }[];
     error?: undefined;
@@ -321,9 +321,13 @@ declare function getClasses({ orgId, yearId, programTrackId, name, level }: {
 }): Promise<{
     name: string;
     id: string;
-    academicYearId: string;
     programTrackId: string;
     level: Level$1;
+    academicYearId: string;
+    _count: {
+        courses: number;
+        studentEnrollments: number;
+    };
     academicYear: {
         name: string;
         id: string;
@@ -331,10 +335,6 @@ declare function getClasses({ orgId, yearId, programTrackId, name, level }: {
     programTrack: {
         name: string;
         id: string;
-    };
-    _count: {
-        courses: number;
-        studentEnrollments: number;
     };
 }[]>;
 
@@ -421,37 +421,27 @@ declare const MAIN_FUNCTIONS: readonly [{
  */
 type FunctionName = (typeof MAIN_FUNCTIONS)[number]["name"] | "SUPER_ADMIN";
 
-interface InvitedBy {
-    id: string;
-    name: string;
-    email: string;
-}
-
-declare const UserRoles: {
+declare const roleSchema: v.EnumSchema<{
     readonly ADMIN: "ADMIN";
     readonly TEACHER: "TEACHER";
     readonly STUDENT: "STUDENT";
     readonly PARENT: "PARENT";
     readonly DIRECTION: "DIRECTION";
     readonly GUEST: "GUEST";
-};
-type Role = typeof UserRoles[keyof typeof UserRoles];
+}, undefined>;
+declare const functionSchema: v.EnumSchema<Record<FunctionName, FunctionName>, undefined>;
+declare const statusSchema: v.EnumSchema<{
+    readonly ACTIVE: "ACTIVE";
+    readonly INACTIVE: "INACTIVE";
+    readonly SUSPENDED: "SUSPENDED";
+    readonly ON_LEAVE: "ON_LEAVE";
+    readonly PENDING: "PENDING";
+    readonly NEW: "NEW";
+    readonly INVITED: "INVITED";
+}, undefined>;
+type Role = v.InferOutput<typeof roleSchema>;
 declare const Functions: Record<FunctionName, FunctionName>;
-type Functions = typeof Functions[keyof typeof Functions];
-interface Organization {
-    id?: string;
-    name?: string;
-    slug?: string;
-    logo?: string;
-    type?: OrganizationType;
-    permissions?: string[];
-    responsable?: boolean;
-    departmentId?: string;
-    studentId?: string;
-    teacherId?: string;
-    parentId?: string;
-    directionId?: string;
-}
+type Functions = v.InferOutput<typeof functionSchema>;
 declare const UserStatus: {
     readonly ACTIVE: "ACTIVE";
     readonly INACTIVE: "INACTIVE";
@@ -461,28 +451,1024 @@ declare const UserStatus: {
     readonly NEW: "NEW";
     readonly INVITED: "INVITED";
 };
-type UserStatus = typeof UserStatus[keyof typeof UserStatus];
-interface UserInfo {
+type UserStatus = v.InferOutput<typeof statusSchema>;
+/**
+ * app_metadata : tout ce qui sert à autoriser.
+ * Écriture réservée au serveur (service role) via `setUserAccess` / `updateUserAccess`.
+ * Lecture : sans repli sur `user_metadata`, une clé absente donne la valeur la plus restrictive.
+ */
+declare const AppMetadataSchema: Omit<v.ObjectSchema<{
+    readonly role: v.EnumSchema<{
+        readonly ADMIN: "ADMIN";
+        readonly TEACHER: "TEACHER";
+        readonly STUDENT: "STUDENT";
+        readonly PARENT: "PARENT";
+        readonly DIRECTION: "DIRECTION";
+        readonly GUEST: "GUEST";
+    }, undefined>;
+    readonly function: v.EnumSchema<Record<FunctionName, FunctionName>, undefined>;
+    readonly status: v.EnumSchema<{
+        readonly ACTIVE: "ACTIVE";
+        readonly INACTIVE: "INACTIVE";
+        readonly SUSPENDED: "SUSPENDED";
+        readonly ON_LEAVE: "ON_LEAVE";
+        readonly PENDING: "PENDING";
+        readonly NEW: "NEW";
+        readonly INVITED: "INVITED";
+    }, undefined>;
+    readonly organization: Omit<v.ObjectSchema<{
+        readonly id: v.StringSchema<undefined>;
+        readonly name: v.StringSchema<undefined>;
+        readonly slug: v.StringSchema<undefined>;
+        readonly logo: v.StringSchema<undefined>;
+        readonly type: v.EnumSchema<{
+            readonly INSTITUTION: "INSTITUTION";
+            readonly PERSONAL: "PERSONAL";
+        }, undefined>;
+        readonly permissions: v.ArraySchema<v.StringSchema<undefined>, undefined>;
+        readonly responsable: v.BooleanSchema<undefined>;
+        readonly departmentId: v.StringSchema<undefined>;
+        readonly studentId: v.StringSchema<undefined>;
+        readonly teacherId: v.StringSchema<undefined>;
+        readonly parentId: v.StringSchema<undefined>;
+        readonly directionId: v.StringSchema<undefined>;
+    }, undefined>, "~standard" | "~run" | "~types" | "entries"> & {
+        readonly entries: {
+            readonly id: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+            readonly name: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+            readonly slug: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+            readonly logo: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+            readonly type: v.OptionalSchema<v.EnumSchema<{
+                readonly INSTITUTION: "INSTITUTION";
+                readonly PERSONAL: "PERSONAL";
+            }, undefined>, undefined>;
+            readonly permissions: v.OptionalSchema<v.ArraySchema<v.StringSchema<undefined>, undefined>, undefined>;
+            readonly responsable: v.OptionalSchema<v.BooleanSchema<undefined>, undefined>;
+            readonly departmentId: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+            readonly studentId: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+            readonly teacherId: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+            readonly parentId: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+            readonly directionId: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+        };
+        readonly "~standard": v.StandardProps<{
+            id?: string | undefined;
+            name?: string | undefined;
+            slug?: string | undefined;
+            logo?: string | undefined;
+            type?: v.EnumValues<{
+                readonly INSTITUTION: "INSTITUTION";
+                readonly PERSONAL: "PERSONAL";
+            }> | undefined;
+            permissions?: string[] | undefined;
+            responsable?: boolean | undefined;
+            departmentId?: string | undefined;
+            studentId?: string | undefined;
+            teacherId?: string | undefined;
+            parentId?: string | undefined;
+            directionId?: string | undefined;
+        }, {
+            id?: string | undefined;
+            name?: string | undefined;
+            slug?: string | undefined;
+            logo?: string | undefined;
+            type?: v.EnumValues<{
+                readonly INSTITUTION: "INSTITUTION";
+                readonly PERSONAL: "PERSONAL";
+            }> | undefined;
+            permissions?: string[] | undefined;
+            responsable?: boolean | undefined;
+            departmentId?: string | undefined;
+            studentId?: string | undefined;
+            teacherId?: string | undefined;
+            parentId?: string | undefined;
+            directionId?: string | undefined;
+        }>;
+        readonly "~run": (dataset: v.UnknownDataset, config: v.Config<v.BaseIssue<unknown>>) => v.OutputDataset<{
+            id?: string | undefined;
+            name?: string | undefined;
+            slug?: string | undefined;
+            logo?: string | undefined;
+            type?: v.EnumValues<{
+                readonly INSTITUTION: "INSTITUTION";
+                readonly PERSONAL: "PERSONAL";
+            }> | undefined;
+            permissions?: string[] | undefined;
+            responsable?: boolean | undefined;
+            departmentId?: string | undefined;
+            studentId?: string | undefined;
+            teacherId?: string | undefined;
+            parentId?: string | undefined;
+            directionId?: string | undefined;
+        }, v.StringIssue | v.ObjectIssue | v.EnumIssue | v.ArrayIssue | v.BooleanIssue>;
+        readonly "~types"?: {
+            readonly input: {
+                id?: string | undefined;
+                name?: string | undefined;
+                slug?: string | undefined;
+                logo?: string | undefined;
+                type?: v.EnumValues<{
+                    readonly INSTITUTION: "INSTITUTION";
+                    readonly PERSONAL: "PERSONAL";
+                }> | undefined;
+                permissions?: string[] | undefined;
+                responsable?: boolean | undefined;
+                departmentId?: string | undefined;
+                studentId?: string | undefined;
+                teacherId?: string | undefined;
+                parentId?: string | undefined;
+                directionId?: string | undefined;
+            };
+            readonly output: {
+                id?: string | undefined;
+                name?: string | undefined;
+                slug?: string | undefined;
+                logo?: string | undefined;
+                type?: v.EnumValues<{
+                    readonly INSTITUTION: "INSTITUTION";
+                    readonly PERSONAL: "PERSONAL";
+                }> | undefined;
+                permissions?: string[] | undefined;
+                responsable?: boolean | undefined;
+                departmentId?: string | undefined;
+                studentId?: string | undefined;
+                teacherId?: string | undefined;
+                parentId?: string | undefined;
+                directionId?: string | undefined;
+            };
+            readonly issue: v.StringIssue | v.ObjectIssue | v.EnumIssue | v.ArrayIssue | v.BooleanIssue;
+        } | undefined;
+    };
+    readonly organizations: v.ArraySchema<Omit<v.ObjectSchema<{
+        readonly id: v.StringSchema<undefined>;
+        readonly name: v.StringSchema<undefined>;
+        readonly slug: v.StringSchema<undefined>;
+        readonly logo: v.StringSchema<undefined>;
+        readonly type: v.EnumSchema<{
+            readonly INSTITUTION: "INSTITUTION";
+            readonly PERSONAL: "PERSONAL";
+        }, undefined>;
+        readonly permissions: v.ArraySchema<v.StringSchema<undefined>, undefined>;
+        readonly responsable: v.BooleanSchema<undefined>;
+        readonly departmentId: v.StringSchema<undefined>;
+        readonly studentId: v.StringSchema<undefined>;
+        readonly teacherId: v.StringSchema<undefined>;
+        readonly parentId: v.StringSchema<undefined>;
+        readonly directionId: v.StringSchema<undefined>;
+    }, undefined>, "~standard" | "~run" | "~types" | "entries"> & {
+        readonly entries: {
+            readonly id: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+            readonly name: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+            readonly slug: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+            readonly logo: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+            readonly type: v.OptionalSchema<v.EnumSchema<{
+                readonly INSTITUTION: "INSTITUTION";
+                readonly PERSONAL: "PERSONAL";
+            }, undefined>, undefined>;
+            readonly permissions: v.OptionalSchema<v.ArraySchema<v.StringSchema<undefined>, undefined>, undefined>;
+            readonly responsable: v.OptionalSchema<v.BooleanSchema<undefined>, undefined>;
+            readonly departmentId: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+            readonly studentId: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+            readonly teacherId: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+            readonly parentId: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+            readonly directionId: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+        };
+        readonly "~standard": v.StandardProps<{
+            id?: string | undefined;
+            name?: string | undefined;
+            slug?: string | undefined;
+            logo?: string | undefined;
+            type?: v.EnumValues<{
+                readonly INSTITUTION: "INSTITUTION";
+                readonly PERSONAL: "PERSONAL";
+            }> | undefined;
+            permissions?: string[] | undefined;
+            responsable?: boolean | undefined;
+            departmentId?: string | undefined;
+            studentId?: string | undefined;
+            teacherId?: string | undefined;
+            parentId?: string | undefined;
+            directionId?: string | undefined;
+        }, {
+            id?: string | undefined;
+            name?: string | undefined;
+            slug?: string | undefined;
+            logo?: string | undefined;
+            type?: v.EnumValues<{
+                readonly INSTITUTION: "INSTITUTION";
+                readonly PERSONAL: "PERSONAL";
+            }> | undefined;
+            permissions?: string[] | undefined;
+            responsable?: boolean | undefined;
+            departmentId?: string | undefined;
+            studentId?: string | undefined;
+            teacherId?: string | undefined;
+            parentId?: string | undefined;
+            directionId?: string | undefined;
+        }>;
+        readonly "~run": (dataset: v.UnknownDataset, config: v.Config<v.BaseIssue<unknown>>) => v.OutputDataset<{
+            id?: string | undefined;
+            name?: string | undefined;
+            slug?: string | undefined;
+            logo?: string | undefined;
+            type?: v.EnumValues<{
+                readonly INSTITUTION: "INSTITUTION";
+                readonly PERSONAL: "PERSONAL";
+            }> | undefined;
+            permissions?: string[] | undefined;
+            responsable?: boolean | undefined;
+            departmentId?: string | undefined;
+            studentId?: string | undefined;
+            teacherId?: string | undefined;
+            parentId?: string | undefined;
+            directionId?: string | undefined;
+        }, v.StringIssue | v.ObjectIssue | v.EnumIssue | v.ArrayIssue | v.BooleanIssue>;
+        readonly "~types"?: {
+            readonly input: {
+                id?: string | undefined;
+                name?: string | undefined;
+                slug?: string | undefined;
+                logo?: string | undefined;
+                type?: v.EnumValues<{
+                    readonly INSTITUTION: "INSTITUTION";
+                    readonly PERSONAL: "PERSONAL";
+                }> | undefined;
+                permissions?: string[] | undefined;
+                responsable?: boolean | undefined;
+                departmentId?: string | undefined;
+                studentId?: string | undefined;
+                teacherId?: string | undefined;
+                parentId?: string | undefined;
+                directionId?: string | undefined;
+            };
+            readonly output: {
+                id?: string | undefined;
+                name?: string | undefined;
+                slug?: string | undefined;
+                logo?: string | undefined;
+                type?: v.EnumValues<{
+                    readonly INSTITUTION: "INSTITUTION";
+                    readonly PERSONAL: "PERSONAL";
+                }> | undefined;
+                permissions?: string[] | undefined;
+                responsable?: boolean | undefined;
+                departmentId?: string | undefined;
+                studentId?: string | undefined;
+                teacherId?: string | undefined;
+                parentId?: string | undefined;
+                directionId?: string | undefined;
+            };
+            readonly issue: v.StringIssue | v.ObjectIssue | v.EnumIssue | v.ArrayIssue | v.BooleanIssue;
+        } | undefined;
+    }, undefined>;
+}, undefined>, "~standard" | "~run" | "~types" | "entries"> & {
+    readonly entries: {
+        readonly role: v.OptionalSchema<v.EnumSchema<{
+            readonly ADMIN: "ADMIN";
+            readonly TEACHER: "TEACHER";
+            readonly STUDENT: "STUDENT";
+            readonly PARENT: "PARENT";
+            readonly DIRECTION: "DIRECTION";
+            readonly GUEST: "GUEST";
+        }, undefined>, undefined>;
+        readonly function: v.OptionalSchema<v.EnumSchema<Record<FunctionName, FunctionName>, undefined>, undefined>;
+        readonly status: v.OptionalSchema<v.EnumSchema<{
+            readonly ACTIVE: "ACTIVE";
+            readonly INACTIVE: "INACTIVE";
+            readonly SUSPENDED: "SUSPENDED";
+            readonly ON_LEAVE: "ON_LEAVE";
+            readonly PENDING: "PENDING";
+            readonly NEW: "NEW";
+            readonly INVITED: "INVITED";
+        }, undefined>, undefined>;
+        readonly organization: v.OptionalSchema<Omit<v.ObjectSchema<{
+            readonly id: v.StringSchema<undefined>;
+            readonly name: v.StringSchema<undefined>;
+            readonly slug: v.StringSchema<undefined>;
+            readonly logo: v.StringSchema<undefined>;
+            readonly type: v.EnumSchema<{
+                readonly INSTITUTION: "INSTITUTION";
+                readonly PERSONAL: "PERSONAL";
+            }, undefined>;
+            readonly permissions: v.ArraySchema<v.StringSchema<undefined>, undefined>;
+            readonly responsable: v.BooleanSchema<undefined>;
+            readonly departmentId: v.StringSchema<undefined>;
+            readonly studentId: v.StringSchema<undefined>;
+            readonly teacherId: v.StringSchema<undefined>;
+            readonly parentId: v.StringSchema<undefined>;
+            readonly directionId: v.StringSchema<undefined>;
+        }, undefined>, "~standard" | "~run" | "~types" | "entries"> & {
+            readonly entries: {
+                readonly id: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+                readonly name: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+                readonly slug: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+                readonly logo: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+                readonly type: v.OptionalSchema<v.EnumSchema<{
+                    readonly INSTITUTION: "INSTITUTION";
+                    readonly PERSONAL: "PERSONAL";
+                }, undefined>, undefined>;
+                readonly permissions: v.OptionalSchema<v.ArraySchema<v.StringSchema<undefined>, undefined>, undefined>;
+                readonly responsable: v.OptionalSchema<v.BooleanSchema<undefined>, undefined>;
+                readonly departmentId: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+                readonly studentId: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+                readonly teacherId: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+                readonly parentId: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+                readonly directionId: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+            };
+            readonly "~standard": v.StandardProps<{
+                id?: string | undefined;
+                name?: string | undefined;
+                slug?: string | undefined;
+                logo?: string | undefined;
+                type?: v.EnumValues<{
+                    readonly INSTITUTION: "INSTITUTION";
+                    readonly PERSONAL: "PERSONAL";
+                }> | undefined;
+                permissions?: string[] | undefined;
+                responsable?: boolean | undefined;
+                departmentId?: string | undefined;
+                studentId?: string | undefined;
+                teacherId?: string | undefined;
+                parentId?: string | undefined;
+                directionId?: string | undefined;
+            }, {
+                id?: string | undefined;
+                name?: string | undefined;
+                slug?: string | undefined;
+                logo?: string | undefined;
+                type?: v.EnumValues<{
+                    readonly INSTITUTION: "INSTITUTION";
+                    readonly PERSONAL: "PERSONAL";
+                }> | undefined;
+                permissions?: string[] | undefined;
+                responsable?: boolean | undefined;
+                departmentId?: string | undefined;
+                studentId?: string | undefined;
+                teacherId?: string | undefined;
+                parentId?: string | undefined;
+                directionId?: string | undefined;
+            }>;
+            readonly "~run": (dataset: v.UnknownDataset, config: v.Config<v.BaseIssue<unknown>>) => v.OutputDataset<{
+                id?: string | undefined;
+                name?: string | undefined;
+                slug?: string | undefined;
+                logo?: string | undefined;
+                type?: v.EnumValues<{
+                    readonly INSTITUTION: "INSTITUTION";
+                    readonly PERSONAL: "PERSONAL";
+                }> | undefined;
+                permissions?: string[] | undefined;
+                responsable?: boolean | undefined;
+                departmentId?: string | undefined;
+                studentId?: string | undefined;
+                teacherId?: string | undefined;
+                parentId?: string | undefined;
+                directionId?: string | undefined;
+            }, v.StringIssue | v.ObjectIssue | v.EnumIssue | v.ArrayIssue | v.BooleanIssue>;
+            readonly "~types"?: {
+                readonly input: {
+                    id?: string | undefined;
+                    name?: string | undefined;
+                    slug?: string | undefined;
+                    logo?: string | undefined;
+                    type?: v.EnumValues<{
+                        readonly INSTITUTION: "INSTITUTION";
+                        readonly PERSONAL: "PERSONAL";
+                    }> | undefined;
+                    permissions?: string[] | undefined;
+                    responsable?: boolean | undefined;
+                    departmentId?: string | undefined;
+                    studentId?: string | undefined;
+                    teacherId?: string | undefined;
+                    parentId?: string | undefined;
+                    directionId?: string | undefined;
+                };
+                readonly output: {
+                    id?: string | undefined;
+                    name?: string | undefined;
+                    slug?: string | undefined;
+                    logo?: string | undefined;
+                    type?: v.EnumValues<{
+                        readonly INSTITUTION: "INSTITUTION";
+                        readonly PERSONAL: "PERSONAL";
+                    }> | undefined;
+                    permissions?: string[] | undefined;
+                    responsable?: boolean | undefined;
+                    departmentId?: string | undefined;
+                    studentId?: string | undefined;
+                    teacherId?: string | undefined;
+                    parentId?: string | undefined;
+                    directionId?: string | undefined;
+                };
+                readonly issue: v.StringIssue | v.ObjectIssue | v.EnumIssue | v.ArrayIssue | v.BooleanIssue;
+            } | undefined;
+        }, undefined>;
+        readonly organizations: v.OptionalSchema<v.ArraySchema<Omit<v.ObjectSchema<{
+            readonly id: v.StringSchema<undefined>;
+            readonly name: v.StringSchema<undefined>;
+            readonly slug: v.StringSchema<undefined>;
+            readonly logo: v.StringSchema<undefined>;
+            readonly type: v.EnumSchema<{
+                readonly INSTITUTION: "INSTITUTION";
+                readonly PERSONAL: "PERSONAL";
+            }, undefined>;
+            readonly permissions: v.ArraySchema<v.StringSchema<undefined>, undefined>;
+            readonly responsable: v.BooleanSchema<undefined>;
+            readonly departmentId: v.StringSchema<undefined>;
+            readonly studentId: v.StringSchema<undefined>;
+            readonly teacherId: v.StringSchema<undefined>;
+            readonly parentId: v.StringSchema<undefined>;
+            readonly directionId: v.StringSchema<undefined>;
+        }, undefined>, "~standard" | "~run" | "~types" | "entries"> & {
+            readonly entries: {
+                readonly id: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+                readonly name: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+                readonly slug: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+                readonly logo: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+                readonly type: v.OptionalSchema<v.EnumSchema<{
+                    readonly INSTITUTION: "INSTITUTION";
+                    readonly PERSONAL: "PERSONAL";
+                }, undefined>, undefined>;
+                readonly permissions: v.OptionalSchema<v.ArraySchema<v.StringSchema<undefined>, undefined>, undefined>;
+                readonly responsable: v.OptionalSchema<v.BooleanSchema<undefined>, undefined>;
+                readonly departmentId: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+                readonly studentId: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+                readonly teacherId: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+                readonly parentId: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+                readonly directionId: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+            };
+            readonly "~standard": v.StandardProps<{
+                id?: string | undefined;
+                name?: string | undefined;
+                slug?: string | undefined;
+                logo?: string | undefined;
+                type?: v.EnumValues<{
+                    readonly INSTITUTION: "INSTITUTION";
+                    readonly PERSONAL: "PERSONAL";
+                }> | undefined;
+                permissions?: string[] | undefined;
+                responsable?: boolean | undefined;
+                departmentId?: string | undefined;
+                studentId?: string | undefined;
+                teacherId?: string | undefined;
+                parentId?: string | undefined;
+                directionId?: string | undefined;
+            }, {
+                id?: string | undefined;
+                name?: string | undefined;
+                slug?: string | undefined;
+                logo?: string | undefined;
+                type?: v.EnumValues<{
+                    readonly INSTITUTION: "INSTITUTION";
+                    readonly PERSONAL: "PERSONAL";
+                }> | undefined;
+                permissions?: string[] | undefined;
+                responsable?: boolean | undefined;
+                departmentId?: string | undefined;
+                studentId?: string | undefined;
+                teacherId?: string | undefined;
+                parentId?: string | undefined;
+                directionId?: string | undefined;
+            }>;
+            readonly "~run": (dataset: v.UnknownDataset, config: v.Config<v.BaseIssue<unknown>>) => v.OutputDataset<{
+                id?: string | undefined;
+                name?: string | undefined;
+                slug?: string | undefined;
+                logo?: string | undefined;
+                type?: v.EnumValues<{
+                    readonly INSTITUTION: "INSTITUTION";
+                    readonly PERSONAL: "PERSONAL";
+                }> | undefined;
+                permissions?: string[] | undefined;
+                responsable?: boolean | undefined;
+                departmentId?: string | undefined;
+                studentId?: string | undefined;
+                teacherId?: string | undefined;
+                parentId?: string | undefined;
+                directionId?: string | undefined;
+            }, v.StringIssue | v.ObjectIssue | v.EnumIssue | v.ArrayIssue | v.BooleanIssue>;
+            readonly "~types"?: {
+                readonly input: {
+                    id?: string | undefined;
+                    name?: string | undefined;
+                    slug?: string | undefined;
+                    logo?: string | undefined;
+                    type?: v.EnumValues<{
+                        readonly INSTITUTION: "INSTITUTION";
+                        readonly PERSONAL: "PERSONAL";
+                    }> | undefined;
+                    permissions?: string[] | undefined;
+                    responsable?: boolean | undefined;
+                    departmentId?: string | undefined;
+                    studentId?: string | undefined;
+                    teacherId?: string | undefined;
+                    parentId?: string | undefined;
+                    directionId?: string | undefined;
+                };
+                readonly output: {
+                    id?: string | undefined;
+                    name?: string | undefined;
+                    slug?: string | undefined;
+                    logo?: string | undefined;
+                    type?: v.EnumValues<{
+                        readonly INSTITUTION: "INSTITUTION";
+                        readonly PERSONAL: "PERSONAL";
+                    }> | undefined;
+                    permissions?: string[] | undefined;
+                    responsable?: boolean | undefined;
+                    departmentId?: string | undefined;
+                    studentId?: string | undefined;
+                    teacherId?: string | undefined;
+                    parentId?: string | undefined;
+                    directionId?: string | undefined;
+                };
+                readonly issue: v.StringIssue | v.ObjectIssue | v.EnumIssue | v.ArrayIssue | v.BooleanIssue;
+            } | undefined;
+        }, undefined>, undefined>;
+    };
+    readonly "~standard": v.StandardProps<{
+        role?: v.EnumValues<{
+            readonly ADMIN: "ADMIN";
+            readonly TEACHER: "TEACHER";
+            readonly STUDENT: "STUDENT";
+            readonly PARENT: "PARENT";
+            readonly DIRECTION: "DIRECTION";
+            readonly GUEST: "GUEST";
+        }> | undefined;
+        function?: v.EnumValues<Record<FunctionName, FunctionName>> | undefined;
+        status?: v.EnumValues<{
+            readonly ACTIVE: "ACTIVE";
+            readonly INACTIVE: "INACTIVE";
+            readonly SUSPENDED: "SUSPENDED";
+            readonly ON_LEAVE: "ON_LEAVE";
+            readonly PENDING: "PENDING";
+            readonly NEW: "NEW";
+            readonly INVITED: "INVITED";
+        }> | undefined;
+        organization?: {
+            id?: string | undefined;
+            name?: string | undefined;
+            slug?: string | undefined;
+            logo?: string | undefined;
+            type?: v.EnumValues<{
+                readonly INSTITUTION: "INSTITUTION";
+                readonly PERSONAL: "PERSONAL";
+            }> | undefined;
+            permissions?: string[] | undefined;
+            responsable?: boolean | undefined;
+            departmentId?: string | undefined;
+            studentId?: string | undefined;
+            teacherId?: string | undefined;
+            parentId?: string | undefined;
+            directionId?: string | undefined;
+        } | undefined;
+        organizations?: {
+            id?: string | undefined;
+            name?: string | undefined;
+            slug?: string | undefined;
+            logo?: string | undefined;
+            type?: v.EnumValues<{
+                readonly INSTITUTION: "INSTITUTION";
+                readonly PERSONAL: "PERSONAL";
+            }> | undefined;
+            permissions?: string[] | undefined;
+            responsable?: boolean | undefined;
+            departmentId?: string | undefined;
+            studentId?: string | undefined;
+            teacherId?: string | undefined;
+            parentId?: string | undefined;
+            directionId?: string | undefined;
+        }[] | undefined;
+    }, {
+        role?: v.EnumValues<{
+            readonly ADMIN: "ADMIN";
+            readonly TEACHER: "TEACHER";
+            readonly STUDENT: "STUDENT";
+            readonly PARENT: "PARENT";
+            readonly DIRECTION: "DIRECTION";
+            readonly GUEST: "GUEST";
+        }> | undefined;
+        function?: v.EnumValues<Record<FunctionName, FunctionName>> | undefined;
+        status?: v.EnumValues<{
+            readonly ACTIVE: "ACTIVE";
+            readonly INACTIVE: "INACTIVE";
+            readonly SUSPENDED: "SUSPENDED";
+            readonly ON_LEAVE: "ON_LEAVE";
+            readonly PENDING: "PENDING";
+            readonly NEW: "NEW";
+            readonly INVITED: "INVITED";
+        }> | undefined;
+        organization?: {
+            id?: string | undefined;
+            name?: string | undefined;
+            slug?: string | undefined;
+            logo?: string | undefined;
+            type?: v.EnumValues<{
+                readonly INSTITUTION: "INSTITUTION";
+                readonly PERSONAL: "PERSONAL";
+            }> | undefined;
+            permissions?: string[] | undefined;
+            responsable?: boolean | undefined;
+            departmentId?: string | undefined;
+            studentId?: string | undefined;
+            teacherId?: string | undefined;
+            parentId?: string | undefined;
+            directionId?: string | undefined;
+        } | undefined;
+        organizations?: {
+            id?: string | undefined;
+            name?: string | undefined;
+            slug?: string | undefined;
+            logo?: string | undefined;
+            type?: v.EnumValues<{
+                readonly INSTITUTION: "INSTITUTION";
+                readonly PERSONAL: "PERSONAL";
+            }> | undefined;
+            permissions?: string[] | undefined;
+            responsable?: boolean | undefined;
+            departmentId?: string | undefined;
+            studentId?: string | undefined;
+            teacherId?: string | undefined;
+            parentId?: string | undefined;
+            directionId?: string | undefined;
+        }[] | undefined;
+    }>;
+    readonly "~run": (dataset: v.UnknownDataset, config: v.Config<v.BaseIssue<unknown>>) => v.OutputDataset<{
+        role?: v.EnumValues<{
+            readonly ADMIN: "ADMIN";
+            readonly TEACHER: "TEACHER";
+            readonly STUDENT: "STUDENT";
+            readonly PARENT: "PARENT";
+            readonly DIRECTION: "DIRECTION";
+            readonly GUEST: "GUEST";
+        }> | undefined;
+        function?: v.EnumValues<Record<FunctionName, FunctionName>> | undefined;
+        status?: v.EnumValues<{
+            readonly ACTIVE: "ACTIVE";
+            readonly INACTIVE: "INACTIVE";
+            readonly SUSPENDED: "SUSPENDED";
+            readonly ON_LEAVE: "ON_LEAVE";
+            readonly PENDING: "PENDING";
+            readonly NEW: "NEW";
+            readonly INVITED: "INVITED";
+        }> | undefined;
+        organization?: {
+            id?: string | undefined;
+            name?: string | undefined;
+            slug?: string | undefined;
+            logo?: string | undefined;
+            type?: v.EnumValues<{
+                readonly INSTITUTION: "INSTITUTION";
+                readonly PERSONAL: "PERSONAL";
+            }> | undefined;
+            permissions?: string[] | undefined;
+            responsable?: boolean | undefined;
+            departmentId?: string | undefined;
+            studentId?: string | undefined;
+            teacherId?: string | undefined;
+            parentId?: string | undefined;
+            directionId?: string | undefined;
+        } | undefined;
+        organizations?: {
+            id?: string | undefined;
+            name?: string | undefined;
+            slug?: string | undefined;
+            logo?: string | undefined;
+            type?: v.EnumValues<{
+                readonly INSTITUTION: "INSTITUTION";
+                readonly PERSONAL: "PERSONAL";
+            }> | undefined;
+            permissions?: string[] | undefined;
+            responsable?: boolean | undefined;
+            departmentId?: string | undefined;
+            studentId?: string | undefined;
+            teacherId?: string | undefined;
+            parentId?: string | undefined;
+            directionId?: string | undefined;
+        }[] | undefined;
+    }, v.StringIssue | v.ObjectIssue | v.EnumIssue | v.ArrayIssue | v.BooleanIssue>;
+    readonly "~types"?: {
+        readonly input: {
+            role?: v.EnumValues<{
+                readonly ADMIN: "ADMIN";
+                readonly TEACHER: "TEACHER";
+                readonly STUDENT: "STUDENT";
+                readonly PARENT: "PARENT";
+                readonly DIRECTION: "DIRECTION";
+                readonly GUEST: "GUEST";
+            }> | undefined;
+            function?: v.EnumValues<Record<FunctionName, FunctionName>> | undefined;
+            status?: v.EnumValues<{
+                readonly ACTIVE: "ACTIVE";
+                readonly INACTIVE: "INACTIVE";
+                readonly SUSPENDED: "SUSPENDED";
+                readonly ON_LEAVE: "ON_LEAVE";
+                readonly PENDING: "PENDING";
+                readonly NEW: "NEW";
+                readonly INVITED: "INVITED";
+            }> | undefined;
+            organization?: {
+                id?: string | undefined;
+                name?: string | undefined;
+                slug?: string | undefined;
+                logo?: string | undefined;
+                type?: v.EnumValues<{
+                    readonly INSTITUTION: "INSTITUTION";
+                    readonly PERSONAL: "PERSONAL";
+                }> | undefined;
+                permissions?: string[] | undefined;
+                responsable?: boolean | undefined;
+                departmentId?: string | undefined;
+                studentId?: string | undefined;
+                teacherId?: string | undefined;
+                parentId?: string | undefined;
+                directionId?: string | undefined;
+            } | undefined;
+            organizations?: {
+                id?: string | undefined;
+                name?: string | undefined;
+                slug?: string | undefined;
+                logo?: string | undefined;
+                type?: v.EnumValues<{
+                    readonly INSTITUTION: "INSTITUTION";
+                    readonly PERSONAL: "PERSONAL";
+                }> | undefined;
+                permissions?: string[] | undefined;
+                responsable?: boolean | undefined;
+                departmentId?: string | undefined;
+                studentId?: string | undefined;
+                teacherId?: string | undefined;
+                parentId?: string | undefined;
+                directionId?: string | undefined;
+            }[] | undefined;
+        };
+        readonly output: {
+            role?: v.EnumValues<{
+                readonly ADMIN: "ADMIN";
+                readonly TEACHER: "TEACHER";
+                readonly STUDENT: "STUDENT";
+                readonly PARENT: "PARENT";
+                readonly DIRECTION: "DIRECTION";
+                readonly GUEST: "GUEST";
+            }> | undefined;
+            function?: v.EnumValues<Record<FunctionName, FunctionName>> | undefined;
+            status?: v.EnumValues<{
+                readonly ACTIVE: "ACTIVE";
+                readonly INACTIVE: "INACTIVE";
+                readonly SUSPENDED: "SUSPENDED";
+                readonly ON_LEAVE: "ON_LEAVE";
+                readonly PENDING: "PENDING";
+                readonly NEW: "NEW";
+                readonly INVITED: "INVITED";
+            }> | undefined;
+            organization?: {
+                id?: string | undefined;
+                name?: string | undefined;
+                slug?: string | undefined;
+                logo?: string | undefined;
+                type?: v.EnumValues<{
+                    readonly INSTITUTION: "INSTITUTION";
+                    readonly PERSONAL: "PERSONAL";
+                }> | undefined;
+                permissions?: string[] | undefined;
+                responsable?: boolean | undefined;
+                departmentId?: string | undefined;
+                studentId?: string | undefined;
+                teacherId?: string | undefined;
+                parentId?: string | undefined;
+                directionId?: string | undefined;
+            } | undefined;
+            organizations?: {
+                id?: string | undefined;
+                name?: string | undefined;
+                slug?: string | undefined;
+                logo?: string | undefined;
+                type?: v.EnumValues<{
+                    readonly INSTITUTION: "INSTITUTION";
+                    readonly PERSONAL: "PERSONAL";
+                }> | undefined;
+                permissions?: string[] | undefined;
+                responsable?: boolean | undefined;
+                departmentId?: string | undefined;
+                studentId?: string | undefined;
+                teacherId?: string | undefined;
+                parentId?: string | undefined;
+                directionId?: string | undefined;
+            }[] | undefined;
+        };
+        readonly issue: v.StringIssue | v.ObjectIssue | v.EnumIssue | v.ArrayIssue | v.BooleanIssue;
+    } | undefined;
+};
+/**
+ * user_metadata : données de profil.
+ * Modifiables par le client (API Auth + clé publique) → ne JAMAIS s'en servir
+ * pour autoriser une action.
+ * Écriture : `setUserInfo` (utilisateur courant) ou `updateUserMetadata` (utilisateur cible).
+ */
+declare const UserMetadataSchema: Omit<v.ObjectSchema<{
+    readonly name: v.StringSchema<undefined>;
+    readonly avatar_url: v.StringSchema<undefined>;
+    readonly phone: v.StringSchema<undefined>;
+    readonly isConnected: v.BooleanSchema<undefined>;
+    readonly invited_by: Omit<v.ObjectSchema<{
+        readonly id: v.StringSchema<undefined>;
+        readonly name: v.StringSchema<undefined>;
+        readonly email: v.StringSchema<undefined>;
+    }, undefined>, "~standard" | "~run" | "~types" | "entries"> & {
+        readonly entries: {
+            readonly id: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+            readonly name: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+            readonly email: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+        };
+        readonly "~standard": v.StandardProps<{
+            id?: string | undefined;
+            name?: string | undefined;
+            email?: string | undefined;
+        }, {
+            id?: string | undefined;
+            name?: string | undefined;
+            email?: string | undefined;
+        }>;
+        readonly "~run": (dataset: v.UnknownDataset, config: v.Config<v.BaseIssue<unknown>>) => v.OutputDataset<{
+            id?: string | undefined;
+            name?: string | undefined;
+            email?: string | undefined;
+        }, v.StringIssue | v.ObjectIssue>;
+        readonly "~types"?: {
+            readonly input: {
+                id?: string | undefined;
+                name?: string | undefined;
+                email?: string | undefined;
+            };
+            readonly output: {
+                id?: string | undefined;
+                name?: string | undefined;
+                email?: string | undefined;
+            };
+            readonly issue: v.StringIssue | v.ObjectIssue;
+        } | undefined;
+    };
+    readonly invitationToken: v.StringSchema<undefined>;
+    readonly invitationType: v.StringSchema<undefined>;
+}, undefined>, "~standard" | "~run" | "~types" | "entries"> & {
+    readonly entries: {
+        readonly name: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+        readonly avatar_url: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+        readonly phone: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+        readonly isConnected: v.OptionalSchema<v.BooleanSchema<undefined>, undefined>;
+        readonly invited_by: v.OptionalSchema<Omit<v.ObjectSchema<{
+            readonly id: v.StringSchema<undefined>;
+            readonly name: v.StringSchema<undefined>;
+            readonly email: v.StringSchema<undefined>;
+        }, undefined>, "~standard" | "~run" | "~types" | "entries"> & {
+            readonly entries: {
+                readonly id: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+                readonly name: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+                readonly email: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+            };
+            readonly "~standard": v.StandardProps<{
+                id?: string | undefined;
+                name?: string | undefined;
+                email?: string | undefined;
+            }, {
+                id?: string | undefined;
+                name?: string | undefined;
+                email?: string | undefined;
+            }>;
+            readonly "~run": (dataset: v.UnknownDataset, config: v.Config<v.BaseIssue<unknown>>) => v.OutputDataset<{
+                id?: string | undefined;
+                name?: string | undefined;
+                email?: string | undefined;
+            }, v.StringIssue | v.ObjectIssue>;
+            readonly "~types"?: {
+                readonly input: {
+                    id?: string | undefined;
+                    name?: string | undefined;
+                    email?: string | undefined;
+                };
+                readonly output: {
+                    id?: string | undefined;
+                    name?: string | undefined;
+                    email?: string | undefined;
+                };
+                readonly issue: v.StringIssue | v.ObjectIssue;
+            } | undefined;
+        }, undefined>;
+        readonly invitationToken: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+        readonly invitationType: v.OptionalSchema<v.StringSchema<undefined>, undefined>;
+    };
+    readonly "~standard": v.StandardProps<{
+        name?: string | undefined;
+        avatar_url?: string | undefined;
+        phone?: string | undefined;
+        isConnected?: boolean | undefined;
+        invited_by?: {
+            id?: string | undefined;
+            name?: string | undefined;
+            email?: string | undefined;
+        } | undefined;
+        invitationToken?: string | undefined;
+        invitationType?: string | undefined;
+    }, {
+        name?: string | undefined;
+        avatar_url?: string | undefined;
+        phone?: string | undefined;
+        isConnected?: boolean | undefined;
+        invited_by?: {
+            id?: string | undefined;
+            name?: string | undefined;
+            email?: string | undefined;
+        } | undefined;
+        invitationToken?: string | undefined;
+        invitationType?: string | undefined;
+    }>;
+    readonly "~run": (dataset: v.UnknownDataset, config: v.Config<v.BaseIssue<unknown>>) => v.OutputDataset<{
+        name?: string | undefined;
+        avatar_url?: string | undefined;
+        phone?: string | undefined;
+        isConnected?: boolean | undefined;
+        invited_by?: {
+            id?: string | undefined;
+            name?: string | undefined;
+            email?: string | undefined;
+        } | undefined;
+        invitationToken?: string | undefined;
+        invitationType?: string | undefined;
+    }, v.StringIssue | v.ObjectIssue | v.BooleanIssue>;
+    readonly "~types"?: {
+        readonly input: {
+            name?: string | undefined;
+            avatar_url?: string | undefined;
+            phone?: string | undefined;
+            isConnected?: boolean | undefined;
+            invited_by?: {
+                id?: string | undefined;
+                name?: string | undefined;
+                email?: string | undefined;
+            } | undefined;
+            invitationToken?: string | undefined;
+            invitationType?: string | undefined;
+        };
+        readonly output: {
+            name?: string | undefined;
+            avatar_url?: string | undefined;
+            phone?: string | undefined;
+            isConnected?: boolean | undefined;
+            invited_by?: {
+                id?: string | undefined;
+                name?: string | undefined;
+                email?: string | undefined;
+            } | undefined;
+            invitationToken?: string | undefined;
+            invitationType?: string | undefined;
+        };
+        readonly issue: v.StringIssue | v.ObjectIssue | v.BooleanIssue;
+    } | undefined;
+};
+type AppMetadata = v.InferOutput<typeof AppMetadataSchema>;
+type UserMetadata = v.InferOutput<typeof UserMetadataSchema>;
+/**
+ * Champs fournis par Supabase Auth ou calculés à l'exécution :
+ * jamais écrits dans les metadata, aucun code ne les parcourt.
+ */
+interface AuthMetadata {
     id?: string;
     email?: string;
-    role?: Role;
-    name?: string;
-    avatar_url?: string;
-    phone?: string;
     email_verified?: boolean;
     phone_verified?: boolean;
-    function?: Functions;
-    organization?: Organization;
-    organizations?: Organization[];
-    invited_by?: Partial<InvitedBy>;
-    status?: UserStatus;
-    invitationToken?: string;
-    invitationType?: string;
-    isConnected?: boolean;
     online_at?: string;
-    /** Fourni nativement par Supabase Auth (user.updated_at), pas par user_metadata.
-   *  Se met à jour automatiquement à chaque updateUser/updateUserById. */
+    /** Fourni par Supabase Auth (user.updated_at), mis à jour à chaque updateUser/updateUserById. */
     updated_at?: string;
+}
+/** Vue unifiée : l'appelant ne sait pas de quel magasin vient un champ. */
+interface UserInfo extends AppMetadata, UserMetadata, AuthMetadata {
+}
+interface PublicOrganization {
+    id?: string;
+    name?: string;
+    slug?: string;
+    logo?: string;
+    type?: OrganizationType;
+}
+/**
+ * UserInfo sans les champs critiques : le type à utiliser dans tous les composants client.
+ * Pour un besoin ponctuel : `PublicUserInfo & { phone_verified: boolean }`.
+ */
+interface PublicUserInfo {
+    id?: string;
+    name?: string;
+    email?: string;
+    avatar_url?: string;
+    role?: Role;
+    function?: Functions;
+    status?: UserStatus;
+    phone?: string;
+    phone_verified?: boolean;
+    email_verified?: boolean;
+    online_at?: string;
+    updated_at?: string;
+    isConnected?: boolean;
+    invitationToken?: string;
+    organization?: PublicOrganization;
 }
 
 declare function getCurrentUserAction(): Promise<{
@@ -502,9 +1488,9 @@ declare function getNotifications(limit?: number): Promise<{
         metadata: _prisma_client_runtime_client.JsonValue;
         message: string;
         id: string;
-        scheduleId: string | null;
         createdAt: Date;
         updatedAt: Date;
+        scheduleId: string | null;
         read: boolean;
     }[];
     error?: undefined;
@@ -518,9 +1504,9 @@ declare function getUnread(limit?: number): Promise<{
         metadata: _prisma_client_runtime_client.JsonValue;
         message: string;
         id: string;
-        scheduleId: string | null;
         createdAt: Date;
         updatedAt: Date;
+        scheduleId: string | null;
         read: boolean;
     }[];
     error?: undefined;
@@ -560,9 +1546,9 @@ declare function getNotificationsForUser(userId: string, limit?: number): Promis
     metadata: _prisma_client_runtime_client.JsonValue;
     message: string;
     id: string;
-    scheduleId: string | null;
     createdAt: Date;
     updatedAt: Date;
+    scheduleId: string | null;
     read: boolean;
 }[]>;
 declare function getUnreadNotificationsForUser(userId: string, limit?: number): Promise<{
@@ -570,9 +1556,9 @@ declare function getUnreadNotificationsForUser(userId: string, limit?: number): 
     metadata: _prisma_client_runtime_client.JsonValue;
     message: string;
     id: string;
-    scheduleId: string | null;
     createdAt: Date;
     updatedAt: Date;
+    scheduleId: string | null;
     read: boolean;
 }[]>;
 declare function getUnreadCountForUser(userId: string): Promise<number>;
@@ -613,4 +1599,4 @@ type ApiAction = keyof ApiClient;
 type ApiInput<K extends ApiAction> = Parameters<ApiClient[K]>[0];
 type ApiOutput<K extends ApiAction> = Awaited<ReturnType<ApiClient[K]>>;
 
-export { type ApiAction, type ApiClient, type ApiInput, type ApiOutput, type CreateScheduleInput, type GetClassesDto, type GetNotificationsForUserDto, type GetSchedulesDto, type GetUnreadCountForUserDto, type GetUnreadNotificationsForUserDto, type NotificationItem, type NotificationType, type UpdateScheduleDataInput, type UserInfo, UserStatus };
+export { type ApiAction, type ApiClient, type ApiInput, type ApiOutput, type CreateScheduleInput, type GetClassesDto, type GetNotificationsForUserDto, type GetSchedulesDto, type GetUnreadCountForUserDto, type GetUnreadNotificationsForUserDto, type NotificationItem, type NotificationType, type PublicOrganization, type PublicUserInfo, type UpdateScheduleDataInput, type UserInfo, UserStatus };
