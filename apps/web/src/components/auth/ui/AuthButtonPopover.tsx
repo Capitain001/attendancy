@@ -1,4 +1,4 @@
-"use client"
+
 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { MirrorHover } from "@/components/design";

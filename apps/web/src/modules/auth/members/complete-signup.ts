@@ -39,7 +39,7 @@ type InvitationRecord = Awaited<ReturnType<typeof fetchAndValidateInvitation>>;
  * entre `invitation.email` et l'email du compte connecté qui empêche d'accepter
  * l'invitation d'un autre.
  */
-async function fetchAndValidateInvitation(token: string, userEmail: string, currentUserId: string) {
+async function fetchAndValidateInvitation(token: string, userEmail: string) {
   const invitation = await prisma.invitation.findUnique({
     where: { token },
     select: {
@@ -47,21 +47,18 @@ async function fetchAndValidateInvitation(token: string, userEmail: string, curr
       email: true,
       details: true,
       orgId: true,
-      userId: true,
       usedAt: true,
       expiresAt: true,
     },
   });
 
   if (!invitation) throw new Error("Invitation non trouvée");
+  if (invitation.usedAt) throw new Error("Cette invitation a déjà été utilisée");
   if (invitation.expiresAt && invitation.expiresAt < new Date()) {
     throw new Error("Cette invitation a expiré");
   }
   if (invitation.email.toLowerCase() !== userEmail.toLowerCase()) {
     throw new Error("Cette invitation ne correspond pas à votre compte");
-  }
-  if (invitation.usedAt && invitation.userId !== currentUserId) {
-    throw new Error("Cette invitation a déjà été utilisée");
   }
 
   return invitation;
@@ -206,82 +203,57 @@ export async function completeSignup(): Promise<
     const userId = user.id;
 
     // 2. Valider l'invitation en base (jeton + correspondance avec l'email du compte)
-    const invitation = await fetchAndValidateInvitation(user.invitationToken, user.email, userId);
+    const invitation = await fetchAndValidateInvitation(user.invitationToken, user.email);
     const { details, orgId, role, firstName, lastName, departmentId } =
       extractInvitationContext(invitation);
 
-    const alreadyUsed = Boolean(invitation.usedAt && invitation.userId === userId);
-
-    let profileId: string | undefined;
-    let createdUserId = userId;
-
-    if (!alreadyUsed) {
-      const txResult = await prisma.$transaction(async (tx) => {
-        // 3. Créer l'utilisateur et son entité métier
-        const { createdUser, profile } = await createUserInOrganization(tx, {
-          userId,
-          email: invitation.email,
-          firstName,
-          lastName,
-          orgId,
-          role,
-          departmentId,
-        });
-
-        // 4. Assigner les fonctions
-        await assignUserFunctions(tx, {
-          userId: createdUser.id,
-          orgId,
-          details,
-        });
-
-        // 4.bis Parent externe (P-18 B) : matérialiser le lien parent→étudiant.
-        if (role === "PARENT" && details.parentLink?.studentId && profile?.id) {
-          await tx.parentRelation.create({
-            data: {
-              parentId: profile.id,
-              studentId: details.parentLink.studentId,
-              relation: details.parentLink.relation || "Parent",
-              orgId,
-            },
-          });
-        }
-
-        // 4.ter Student enrollment : inscription à la classe pour laquelle il est invité.
-        if (role === "STUDENT" && profile?.id) {
-          await enrollStudentInClass(tx, profile.id, details.enrollment);
-        }
-
-        // 5. Marquer l'invitation comme utilisée
-        await tx.invitation.update({
-          where: { id: invitation.id },
-          data: { usedAt: new Date(), userId: createdUser.id },
-        });
-
-        return {
-          profileId: profile?.id,
-          createdUserId: createdUser.id,
-        };
+    const { profileId, createdUserId } = await prisma.$transaction(async (tx) => {
+      // 3. Créer l'utilisateur et son entité métier
+      const { createdUser, profile } = await createUserInOrganization(tx, {
+        userId,
+        email: invitation.email,
+        firstName,
+        lastName,
+        orgId,
+        role,
+        departmentId,
       });
 
-      profileId = txResult.profileId;
-      createdUserId = txResult.createdUserId;
-    } else {
-      switch (role) {
-        case "TEACHER":
-          profileId = (await prisma.teacher.findFirst({ where: { userId, orgId }, select: { id: true } }))?.id;
-          break;
-        case "STUDENT":
-          profileId = (await prisma.student.findFirst({ where: { userId, orgId }, select: { id: true } }))?.id;
-          break;
-        case "PARENT":
-          profileId = (await prisma.parent.findFirst({ where: { userId, orgId }, select: { id: true } }))?.id;
-          break;
-        case "DIRECTION":
-          profileId = (await prisma.direction.findFirst({ where: { userId, orgId }, select: { id: true } }))?.id;
-          break;
+      // 4. Assigner les fonctions
+      await assignUserFunctions(tx, {
+        userId: createdUser.id,
+        orgId,
+        details,
+      });
+
+      // 4.bis Parent externe (P-18 B) : matérialiser le lien parent→étudiant.
+      if (role === "PARENT" && details.parentLink?.studentId && profile?.id) {
+        await tx.parentRelation.create({
+          data: {
+            parentId: profile.id,
+            studentId: details.parentLink.studentId,
+            relation: details.parentLink.relation || "Parent",
+            orgId,
+          },
+        });
       }
-    }
+
+      // 4.ter Student enrollment : inscription à la classe pour laquelle il est invité.
+      if (role === "STUDENT" && profile?.id) {
+        await enrollStudentInClass(tx, profile.id, details.enrollment);
+      }
+
+      // 5. Marquer l'invitation comme utilisée
+      await tx.invitation.update({
+        where: { id: invitation.id },
+        data: { usedAt: new Date(), userId: createdUser.id },
+      });
+
+      return {
+        profileId: profile?.id,
+        createdUserId: createdUser.id,
+      };
+    });
 
     // 6. Poser l'accès (app_metadata) depuis la ligne Invitation : role, function et
     //    organisation viennent de la base, jamais des metadata de l'invité.

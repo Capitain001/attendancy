@@ -1,8 +1,0 @@
-{
-  "name": "createPersonalClassTx",
-  "file": "src/services/personal/database/classe.mutations.ts",
-  "sig": "(tx: Tx, { orgId, name }: { orgId: string; name: string }) => Promise<{ id: string; name: string; }>",
-  "composes": [],
-  "rules": [],
-  "why_ref": ""
-}

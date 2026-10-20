@@ -1,102 +1,106 @@
 // types/invitation.ts
-import { User as SupabaseUser } from "@supabase/supabase-js";
-import { Functions, Organization, Role, UserStatus } from "@/types";
+import type { User as SupabaseUser } from '@supabase/supabase-js'
+import type {
+  AppMetadata,
+  Functions,
+  InvitedBy,
+  Organization,
+  Role,
+  UserMetadata,
+} from '@/types/user'
+import type { Resource } from '@/generated/prisma/client'
+import type { TeacherResources } from '@/modules/invitation/teacher/invite'
 
-import { Resource } from "@/generated/prisma/client";
-import { TeacherResources } from '@/modules/invitation/teacher/invite';
+// Défini dans types/user.ts (déduit de InvitedBySchema) ; réexporté pour les imports existants
+export type { InvitedBy }
 
-// export type AdminFunction = Functions
-export type InvitationStatus = "PENDING" | "ACCEPTED" | "REVOKED";
+export type InvitationStatus = 'PENDING' | 'ACCEPTED' | 'REVOKED'
 
 export interface EnrollmentDetails {
-  classId?: string;
-  groupIds?: string[];
-  parentEmail?: string;
+  classId?: string
+  groupIds?: string[]
+  parentEmail?: string
 }
 
 /** Lien parent→étudiant à matérialiser à l'acceptation (invitation PARENT externe, P-18 B). */
 export interface ParentLinkDetails {
-  studentId: string;
-  relation: string;
+  studentId: string
+  relation: string
 }
 
-export interface InvitedBy {
-  id: string;
-  name: string;
-  email: string;
+export interface InvitationDetails {
+  enrollment?: EnrollmentDetails
+  parentLink?: ParentLinkDetails
 }
 
-export interface InvitationMetadata {
-  role: Role;
-  name?: string;
-  function?: Functions;
-  organization: Organization;
-  organizations: Organization[];
-  invited_by: InvitedBy;
-  invitationStatus: InvitationStatus;
-  status: UserStatus;
-  invitationToken: string;
-  invitationType: "INVITE_ONLY";
-  details?: {
-    enrollment?: EnrollmentDetails;
-    parentLink?: ParentLinkDetails;
-  };
-}
+/**
+ * Dérivé des types centraux : si `role`, `status` ou `organization` changent dans les schémas,
+ * ce type suit. `invited_by` et `invitationType` sont volontairement plus stricts que dans
+ * le profil (complet et littéral, là où user_metadata les stocke en Partial / string).
+ */
+export type InvitationMetadata =
+  Required<Pick<AppMetadata, 'role' | 'status' | 'organization' | 'organizations'>> &
+  Required<Pick<UserMetadata, 'invitationToken'>> & {
+    name?: string
+    function?: Functions
+    invited_by: InvitedBy
+    invitationStatus: InvitationStatus
+    invitationType: 'INVITE_ONLY'
+    details?: InvitationDetails
+  }
 
+/** Forme lue depuis la base (JSON non typé). */
 export interface DatabaseInvitationDetails {
-  role: Role;
-  name?: string;
-  function?: Functions;
-  additionalFunctions?: string[];
-  organization: Organization;
-  invited_by: InvitedBy;
-  status: string;
-  invitationType: string;
-  enrollment?: EnrollmentDetails;
-  parentLink?: ParentLinkDetails;
-  [key: string]: unknown;
-}
-export interface InvitationParams {
-  email: string;
-  name?: string;
-  role: Role;
-  adminFunction?: Functions;
-  permissions?: string[];
-  departmentId?: string;
-  resources?: TeacherResources;
-  resourceId?: string;        // ID de la ressource liée (classe, événement, etc.)
-  resourceType?: Resource;      // Type de ressource (CLASS, EVENT, etc.)
-  /** Durée de validité du token en jours (1, 3, 7, 14 ou 30). Défaut : 7 */
-  expiresInDays?: number;
-  deliveryMethod?: "email" | "link"; // défaut "email"
-  details?: {
-    enrollment?: EnrollmentDetails;
-    parentLink?: ParentLinkDetails;
-  };
+  role: Role
+  name?: string
+  function?: Functions
+  additionalFunctions?: string[]
+  organization: Organization
+  invited_by: InvitedBy
+  status: string
+  invitationType: string
+  enrollment?: EnrollmentDetails
+  parentLink?: ParentLinkDetails
+  [key: string]: unknown
 }
 
+export interface InvitationParams {
+  email: string
+  name?: string
+  role: Role
+  adminFunction?: Functions
+  permissions?: string[]
+  departmentId?: string
+  resources?: TeacherResources
+  resourceId?: string      // ID de la ressource liée (classe, événement, etc.)
+  resourceType?: Resource  // Type de ressource (CLASS, EVENT, etc.)
+  /** Durée de validité du token en jours (1, 3, 7, 14 ou 30). Défaut : 7 */
+  expiresInDays?: number
+  deliveryMethod?: 'email' | 'link' // défaut "email"
+  details?: InvitationDetails
+}
 
 export interface InvitationResult {
-  success: boolean;
-  error?: string;
-  message?: string;
-  metadata?: InvitationMetadata;
-  link?: string;
+  success: boolean
+  error?: string
+  message?: string
+  metadata?: InvitationMetadata
+  link?: string
 }
 
 export type User = SupabaseUser
 
 // Types pour les différents contextes d'utilisation
-export interface SupabaseInviteData extends InvitationMetadata { }
+export type SupabaseInviteData = InvitationMetadata
 
 export interface AuditLogDetails {
-  email: string;
-  name?: string;
-  orgId: string;
-  departmentId?: string;
-  role: string;
-  function?: Functions;
-  [key: string]: any; // Signature d'index pour compatibilité Prisma
+  email: string
+  name?: string
+  orgId: string
+  departmentId?: string
+  role: string
+  function?: Functions
+  [key: string]: any // Signature d'index pour compatibilité Prisma
 }
 
 

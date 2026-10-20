@@ -38,6 +38,7 @@
     "check:naming:svc": "tsx scripts/generate/naming/check.ts",
     "check:types": "tsx scripts/generate/types/check.ts",
     "check:types:svc": "tsx scripts/generate/types/check.ts",
+    "check:user-metadata": "tsx scripts/check-user-metadata.ts",
     "api:check": "tsx scripts/generate/api/api.ts --check",
     "api:all": "tsx scripts/generate/api/sync.ts && tsx scripts/generate/api/summary.ts",
     "generate:all": "tsx scripts/generate/api/sync.ts && tsx scripts/generate/api/summary.ts && tsx scripts/generate/types/types.ts --all && tsx scripts/generate/naming/check.ts && tsx scripts/generate/types/check.ts && tsx scripts/generate/context/context.ts && node scripts/generate/svg/index.js",
