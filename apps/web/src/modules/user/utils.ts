@@ -49,7 +49,7 @@ export function mapUserInfo({ user }: { user: SupabaseUser }): UserInfo {
  */
 export const generateUserInfo = <K extends keyof UserInfo>(
   user: UserInfo,
-  keys: K[],
+  keys: readonly K[],
   overrides?: Partial<UserInfo> // ← Nouveau: permet de surcharger des valeurs
 ): Pick<UserInfo, K> => {
   const result = {} as Pick<UserInfo, K>

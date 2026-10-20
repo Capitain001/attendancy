@@ -1,5 +1,4 @@
 //src/types/user.ts
-import * as v from 'valibot'
 import { FUNCTIONS } from '@/config/data'
 import { OrganizationType, Role as DBRole } from '@/generated/prisma/browser'
 import type { User } from '@supabase/supabase-js'
@@ -31,55 +30,47 @@ export const UserStatus = {
   INVITED: 'INVITED',
 } as const
 
-const roleSchema = v.enum_(UserRoles)
-const functionSchema = v.enum_(Functions)
-const statusSchema = v.enum_(UserStatus)
-
-export type Role = v.InferOutput<typeof roleSchema>
-export type Functions = v.InferOutput<typeof functionSchema>
-export type UserStatus = v.InferOutput<typeof statusSchema>
+export type Role = (typeof UserRoles)[keyof typeof UserRoles]
+export type Functions = (typeof Functions)[keyof typeof Functions]
+export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
 
 /* =========================
-   SCHÉMAS (source unique : types ET clés en sont déduits)
+   INTERFACES MÉTIER (Source unique de vérité)
 ========================= */
 
-export const InvitedBySchema = v.object({
-  id: v.string(),
-  name: v.string(),
-  email: v.string(),
-})
+export interface InvitedBy {
+  id?: string
+  name?: string
+  email?: string
+}
 
-export const OrganizationSchema = v.partial(
-  v.object({
-    id: v.string(),
-    name: v.string(),
-    slug: v.string(),
-    logo: v.string(),
-    type: v.enum_(OrganizationType), // 'INSTITUTION' | 'PERSONAL'
-    permissions: v.array(v.string()),
-    responsable: v.boolean(),
-    departmentId: v.string(),
-    studentId: v.string(),   // id du profil étudiant
-    teacherId: v.string(),   // id du profil enseignant
-    parentId: v.string(),    // id du profil parent
-    directionId: v.string(), // id du profil direction
-  }),
-)
+export interface Organization {
+  id?: string
+  name?: string
+  slug?: string
+  logo?: string
+  type?: OrganizationType
+  permissions?: string[]
+  responsable?: boolean
+  departmentId?: string
+  studentId?: string
+  teacherId?: string
+  parentId?: string
+  directionId?: string
+}
 
 /**
  * app_metadata : tout ce qui sert à autoriser.
  * Écriture réservée au serveur (service role) via `setUserAccess` / `updateUserAccess`.
  * Lecture : sans repli sur `user_metadata`, une clé absente donne la valeur la plus restrictive.
  */
-export const AppMetadataSchema = v.partial(
-  v.object({
-    role: roleSchema,
-    function: functionSchema,
-    status: statusSchema,
-    organization: OrganizationSchema,
-    organizations: v.array(OrganizationSchema),
-  }),
-)
+export interface AppMetadata {
+  role?: Role
+  function?: Functions
+  status?: UserStatus
+  organization?: Organization
+  organizations?: Organization[]
+}
 
 /**
  * user_metadata : données de profil.
@@ -87,32 +78,37 @@ export const AppMetadataSchema = v.partial(
  * pour autoriser une action.
  * Écriture : `setUserInfo` (utilisateur courant) ou `updateUserMetadata` (utilisateur cible).
  */
-export const UserMetadataSchema = v.partial(
-  v.object({
-    name: v.string(),
-    avatar_url: v.string(),
-    phone: v.string(),
-    isConnected: v.boolean(),
-    invited_by: v.partial(InvitedBySchema),
-    invitationToken: v.string(),
-    invitationType: v.string(),
-  }),
-)
+export interface UserMetadata {
+  name?: string
+  avatar_url?: string
+  phone?: string
+  isConnected?: boolean
+  invited_by?: InvitedBy
+  invitationToken?: string
+  invitationType?: string
+}
 
-/* =========================
-   TYPES DÉDUITS
-========================= */
-
-export type InvitedBy = v.InferOutput<typeof InvitedBySchema>
-export type Organization = v.InferOutput<typeof OrganizationSchema>
-export type AppMetadata = v.InferOutput<typeof AppMetadataSchema>
-export type UserMetadata = v.InferOutput<typeof UserMetadataSchema>
 export type AppMetadataKey = keyof AppMetadata
 export type UserMetadataKey = keyof UserMetadata
 
 /** Clés parcourues à l'exécution (réinitialisation, filtre d'invitation). */
-export const APP_METADATA_KEYS = Object.keys(AppMetadataSchema.entries) as AppMetadataKey[]
-export const USER_METADATA_KEYS = Object.keys(UserMetadataSchema.entries) as UserMetadataKey[]
+export const APP_METADATA_KEYS = [
+  'role',
+  'function',
+  'status',
+  'organization',
+  'organizations',
+] as const satisfies readonly AppMetadataKey[]
+
+export const USER_METADATA_KEYS = [
+  'name',
+  'avatar_url',
+  'phone',
+  'isConnected',
+  'invited_by',
+  'invitationToken',
+  'invitationType',
+] as const satisfies readonly UserMetadataKey[]
 
 /**
  * Champs fournis par Supabase Auth ou calculés à l'exécution :
@@ -193,36 +189,16 @@ export const SENSITIVE_ORGANIZATION_KEYS = [
   'directionId',
 ] as const satisfies readonly (keyof Organization)[]
 
-export interface PublicOrganization {
-  id?: string
-  name?: string
-  slug?: string
-  logo?: string
-  type?: OrganizationType
-}
+export type PublicOrganization = Omit<Organization, (typeof SENSITIVE_ORGANIZATION_KEYS)[number]>
 
 /**
  * UserInfo sans les champs critiques : le type à utiliser dans tous les composants client.
  * Pour un besoin ponctuel : `PublicUserInfo & { phone_verified: boolean }`.
  */
-export interface PublicUserInfo {
-  id?: string
-  name?: string
-  email?: string
-  avatar_url?: string
-  role?: Role
-  function?: Functions
-  status?: UserStatus
-  phone?: string
-  phone_verified?: boolean
-  email_verified?: boolean
-  online_at?: string
-  updated_at?: string
-  isConnected?: boolean
-  invitationToken?: string
-  organization?: PublicOrganization
-}
-
+export type PublicUserInfo =
+  Omit<UserInfo, (typeof SENSITIVE_USER_KEYS)[number] | 'organization'> & {
+    organization?: PublicOrganization
+  }
 
 /**
  * `User` Supabase dont les deux metadata sont retypées avec les types du projet

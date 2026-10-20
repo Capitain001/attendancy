@@ -97,7 +97,7 @@ function ScheduleCard({
         <ScheduleStatusIcon variant={schedule.iconVariant} className="size-5 shrink-0" />
       )} */}
 
-      <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-foreground p-[2px]">
+      <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-foreground p-1">
         <ScheduleStatusIcon variant="warning" className="text-background" />
       </div>
 

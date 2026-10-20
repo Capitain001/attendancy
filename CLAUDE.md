@@ -48,7 +48,6 @@
   Vite 6 · React 19 · Tauri v2 · @attendancy/planning · @attendancy/types.
 
   ### packages
-  TypeScript strict · pas de framework UI · pas de Prisma · pas de Valibot.
 
   ## Invariants (toujours enforced)
 
