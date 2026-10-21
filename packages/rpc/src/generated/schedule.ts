@@ -5,3 +5,5 @@ export const getSchedulesAction = api.getSchedulesAction
 export const createScheduleAction = api.createScheduleAction
 export const updateScheduleAction = api.updateScheduleAction
 export const deleteScheduleAction = api.deleteScheduleAction
+export const getTeacherDailyScheduleAction = api.getTeacherDailyScheduleAction
+export const getTeacherNextScheduleAction = api.getTeacherNextScheduleAction

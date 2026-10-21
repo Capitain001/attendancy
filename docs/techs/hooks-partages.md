@@ -16,18 +16,18 @@ Aucune duplication de code métier ou de hooks React Query n'est tolérée entre
                                 Hook Partagé
                      (`apps/web/src/hooks/data/...`)
                                     │
-               import { getXAction } from "@/services/X"
+               import { getXAction } from "@/services/X/actions"
+               import type { XDto } from "@attendancy/types"
                                     │
          ┌──────────────────────────┴──────────────────────────┐
          ▼                                                     ▼
    Environnement Web (Next.js)                         Environnement Client (Vite)
    Alias `@` -> `apps/web/src`                         Alias Regex Vite prioritaire :
-         │                                             `^@/services/([^/]+)(\/actions)?$`
+         │                                             `^@/services/([^/]+)/actions$`
          ▼                                                     │
 Server Action réelle (`'use server'`)                          ▼
-Prisma, validation, DB                                 Stub généré (`packages/rpc/src/generated/X.ts`)
+Prisma, validation, DB                                 Stub RPC (`packages/rpc/src/generated/X.ts`)
                                                        `export const getXAction = api.getXAction`
-                                                       `export type * from '.../services/X/types'`
                                                                │
                                                                ▼
                                                        Client RPC (`@rpc-api`)
@@ -51,12 +51,14 @@ Prisma, validation, DB                                 Stub généré (`packages
 
 Pour qu'un hook reste consommable côté client sans faire échouer le build Vite ni injecter du code serveur dans le bundle :
 
-### Règle 1 : Imports de service et Barrel RPC (sans `/actions` obligatoire)
-- Dans les hooks, les développeurs peuvent écrire naturellement :
-  `import { getTeacherNextScheduleAction, type GetTeacherNextScheduleDto } from "@/services/schedule"`
-- Côté client, l'alias regex `^@/services/([^/]+)(\/actions)?$` intercepte indifféremment `@/services/<service>` et `@/services/<service>/actions`.
-- Le stub généré par `gen.mjs` réexporte à la fois les stubs RPC (`api.<action>`) et les types purs (`types.ts`).
-- **Attention :** Ne jamais importer de valeurs serveur internes (`database/`, Prisma, helpers serveur non-RPC).
+### Règle 1 : Séparation stricte Actions RPC vs Types partagés
+- **Actions RPC :** Les actions sont importées depuis `@/services/<service>/actions`. L'alias Vite `^@/services/([^/]+)/actions$` les redirige vers `packages/rpc/src/generated/$1.ts`.
+- **Types DTOs :** Les types de données partagés proviennent de `@attendancy/types`.
+  ```typescript
+  import { getTeacherDailyScheduleAction } from "@/services/schedule/actions"
+  import type { GetTeacherDailyScheduleDto } from "@attendancy/types"
+  ```
+- `@attendancy/rpc` reste strictement dédié aux stubs d'actions, et `@attendancy/types` aux types partagés. Aucun type n'est artificiellement réexporté par le RPC.
 
 ### Règle 2 : Importer uniquement des TYPES depuis le reste du service
 - ✅ `import type { CreateScheduleInput } from "@/services/schedule"`

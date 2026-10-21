@@ -36,18 +36,19 @@ Elle consomme le backend Next.js (`apps/web`) à travers :
 | `confirmAttendanceAction` | `attendance` | Écran Session (Présences) | `{ attendanceId: string }` |
 | `confirmAllAttendancesAction` | `attendance` | Écran Session (Présences) | `{ scheduleId: string }` |
 
-### B. Prise en charge des imports sans `/actions` (Barrel RPC - Proposition A Validée & Implémentée)
-- **Proposition A validée :** Le générateur RPC (`packages/rpc/scripts/gen.mjs`) produit désormais un barrel hybride qui :
-  1. Exporte les stubs d'actions RPC (`export const fn = api.fn`).
-  2. Réexporte automatiquement les types purs du service (`export type * from '.../types'`).
+### B. Séparation stricte Actions RPC (`@attendancy/rpc`) et Types (`@attendancy/types`)
+- **Stubs RPC purs :** `packages/rpc` ne contient et ne génère **strictement que les stubs d'actions** (`export const fn = api.fn`). Aucun type n'y est réexporté, garantissant l'absence de dépendance superflue.
+- **Types DTOs partagés :** Tous les DTOs consommés par les hooks et composants proviennent de `@attendancy/types`.
+- **Imports dans les hooks :**
+  - Les actions sont importées depuis `@/services/<service>/actions`.
+  - Les types sont importés depuis `@attendancy/types`.
 - L'alias Vite dans les clients (`apps/desktop`, `apps/teacher`) cible :
   ```ts
   {
-    find: /^@\/services\/([^/]+)(\/actions)?$/,
+    find: /^@\/services\/([^/]+)\/actions$/,
     replacement: path.resolve(__dirname, '../../packages/rpc/src/generated/$1.ts'),
   }
   ```
-- Les hooks peuvent donc importer naturellement `import { fn, type DTO } from "@/services/<service>"` sans `/actions` et sans risque d'embarquer du code serveur.
 
 ### C. Découplage de `next/navigation`
 - `TeacherDailyOverviewScreen` utilise actuellement `useParams()` de `next/navigation` pour calculer l'URL de redirection.

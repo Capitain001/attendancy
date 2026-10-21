@@ -5,10 +5,12 @@ import { authAccess } from '@/services/auth'
 import { invalidateEvent } from '@/cache/server/graph'
 import { startSession, finalizeSession } from '../database'
 
-export async function startSessionAction(
-  scheduleId: string,
-  coords: { lat: number; lng: number } | null,
-) {
+type StartSessionInput = {
+  scheduleId: string
+  coords: { lat: number; lng: number } | null
+}
+
+export async function startSessionAction({ scheduleId, coords }: StartSessionInput) {
   const auth = await authAccess({ requiredRole: 'TEACHER' })
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data

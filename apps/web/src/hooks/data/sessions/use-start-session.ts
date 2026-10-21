@@ -56,7 +56,7 @@ export function useStartSession({
   const startMutation = useMutation({
     mutationFn: async () => {
       const coords = await tryGetCoords();
-      return startSessionAction(scheduleId, coords);
+      return startSessionAction({ scheduleId, coords });
     },
     onSuccess: (result) => {
       const { data, error } = result;

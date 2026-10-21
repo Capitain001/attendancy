@@ -1,24 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 https://claude.ai/share/09c5c1b2-593c-4430-b0b4-1396f375a7f3
 
 contexte: app web (source api (rpc) on veux cree les interface desktop (frontend))
