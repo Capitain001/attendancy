@@ -62,7 +62,7 @@ export function SwipeNavigator({
   return (
     <div
       ref={containerRef}
-      className={cn("relative h-svh w-full overflow-hidden", className)}
+      className={cn("relative h-svh w-full overflow-hidden bg-background", className)}
     >
       <motion.div
         drag="y"

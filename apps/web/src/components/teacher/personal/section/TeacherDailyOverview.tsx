@@ -12,6 +12,8 @@ type Props<S extends ScheduleCardSchedule> = {
   countdown?: ReactNode
   /** Icône dans le cercle de la carte, résolue par le parent. Absent = cercle plein. */
   icon?: ScheduleIcon
+  /** Slot sous la carte : action fournie par le parent (ex. démarrer la séance). */
+  action?: ReactNode
   onScheduleClick?: (schedule: S) => void
 }
 
@@ -20,6 +22,7 @@ export function TeacherDailyOverview<S extends ScheduleCardSchedule>({
   schedule,
   countdown,
   icon,
+  action,
   onScheduleClick,
 }: Props<S>) {
   return (
@@ -27,13 +30,14 @@ export function TeacherDailyOverview<S extends ScheduleCardSchedule>({
       <RemainingCircle count={remaining} />
 
       {schedule ? (
-        <div className="flex w-full max-w-sm flex-col items-center gap-3">
+        <div className="flex w-full max-w-sm flex-col items-center gap-5">
           {countdown}
           <ScheduleCard
             schedule={schedule}
             icon={icon}
             onClick={() => onScheduleClick?.(schedule)}
           />
+          {action}
         </div>
       ) : (
         <p className="text-sm text-muted-foreground">Plus de cours aujourd&apos;hui</p>

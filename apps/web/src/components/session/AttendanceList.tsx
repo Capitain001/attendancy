@@ -72,7 +72,7 @@ export function AttendanceList({ scheduleId, className }: AttendanceListProps) {
   return (
     <div
       className={cn(
-        "flex flex-col overflow-hidden rounded-lg border border-border bg-card",
+        "flex flex-col overflow-hidden rounded-lg border border-border ",
         className
       )}
     >

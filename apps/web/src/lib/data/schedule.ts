@@ -10,6 +10,10 @@ export const scheduleListMessages = {
   empty: "Aucun cours aujourd'hui",
 } as const
 
+export const scheduleStartMessages = {
+  start: 'Démarrer la séance',
+} as const
+
 /** Décompte prêt à afficher : le message, et le temps restant s'il y en a un. */
 export type ScheduleCountdown = {
   message: string

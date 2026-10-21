@@ -261,7 +261,7 @@ export const mockGetTeacherDailySchedule: GetTeacherDailyScheduleDto = [
   {
     id: 'sched-daily-03',
     status: ScheduleStatus.PENDING,
-    startTime: new Date(now.getTime() - 15 * 60 * 1000), // A débuté il y a 15 min
+    startTime: new Date(now.getTime() - 10 * 60 * 1000), // A débuté il y a 10 min
     endTime: new Date(now.getTime() + 105 * 60 * 1000),  // Finit dans 1h45 (pour un cours de 2h)
     confirmed: true,
     notes: 'Prévoir les polycopiés de TD.',

@@ -2,14 +2,19 @@
 'use client'
 
 import { useState } from 'react'
+import { useParams } from 'next/navigation'
 import { TeacherDailyOverview } from '@/components/teacher/personal/section/TeacherDailyOverview'
 import { ScheduleCountdownLabel } from '@/components/teacher/personal/ui/ScheduleCountdownLabel'
+import { StartSessionButton } from '@/components/teacher/personal/ui/StartSessionButton'
 import { resolveScheduleIcon } from '@/components/teacher/personal/ui/ScheduleStatusIcon'
 import { TeacherScheduleDetailSheet } from '@/components/teacher/personal/section/TeacherScheduleDetailSheet'
 import { useTeacherDailySchedule } from '@/hooks/data/schedule/useTeacherDailySchedule'
 import { useTeacherDailyScheduleStats } from '@/hooks/data/schedule/useTeacherDailyScheduleStats'
 
 export function TeacherDailyOverviewScreen() {
+    const { slug } = useParams<{ slug: string }>()
+    const sessionsHref = `/${slug}/teacher/sessions`
+
     const { schedules } = useTeacherDailySchedule()
     const { ongoing, upcoming, count } = useTeacherDailyScheduleStats(schedules)
 
@@ -42,6 +47,9 @@ export function TeacherDailyOverviewScreen() {
                     <ScheduleCountdownLabel schedule={schedule} isOngoing={ongoing !== null} />
                 }
                 icon={icon}
+                action={
+                    schedule ? <StartSessionButton schedule={schedule} href={sessionsHref} /> : null
+                }
                 onScheduleClick={handleScheduleClick}
             />
 
