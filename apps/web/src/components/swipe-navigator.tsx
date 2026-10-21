@@ -30,6 +30,13 @@ export function SwipeNavigator({
     (_: unknown, info: PanInfo) => {
       const { offset, velocity } = info
 
+      // Ne déclencher le swipe que si le geste est principalement vertical
+      const isVertical = Math.abs(offset.y) > Math.abs(offset.x)
+      if (!isVertical) {
+        onValueChange(value)
+        return
+      }
+
       const isSwipeUp =
         offset.y < -SWIPE_THRESHOLD || velocity.y < -VELOCITY_THRESHOLD
       const isSwipeDown =
@@ -59,6 +66,7 @@ export function SwipeNavigator({
     >
       <motion.div
         drag="y"
+        dragDirectionLock
         dragElastic={0.15}
         dragConstraints={containerRef}
         animate={{ y: `${translateYPercent}%` }}

@@ -206,28 +206,23 @@ export const mockGetTeacherSchedulesInfo: GetTeacherSchedulesInfoDto = [
 
 
 export const mockGetTeacherDailySchedule: GetTeacherDailyScheduleDto = [
+  // 1. Séance PASSÉE et TERMINÉE (Il y a 4 heures)
   {
     id: 'sched-daily-01',
-    status: ScheduleStatus.PENDING,
-    startTime: new Date(now.getTime() + 1 * 60 * 60 * 1000), // Dans 1h
-    endTime: new Date(now.getTime() + 3 * 60 * 60 * 1000),   // Dans 3h
+    status: ScheduleStatus.COMPLETED,
+    startTime: new Date(now.getTime() - 4 * 60 * 60 * 1000), // Il y a 4h
+    endTime: new Date(now.getTime() - 2 * 60 * 60 * 1000),   // Il y a 2h
     confirmed: true,
-    notes: 'Prévoir les polycopiés de TD.',
+    notes: 'Cours terminé. Bonne participation.',
     class: {
       name: 'Master 1 Informatique',
       level: Level.M1,
-      _count: {
-        studentEnrollments: 32,
-      },
+      _count: { studentEnrollments: 32 },
     },
-    course: {
-      name: 'Algorithmique Avancée',
-    },
+    course: { name: 'Algorithmique Avancée' },
     group: {
       name: 'Groupe A',
-      _count: {
-        studentGroups: 16,
-      },
+      _count: { studentGroups: 16 },
     },
     room: {
       name: 'Amphi B',
@@ -235,32 +230,102 @@ export const mockGetTeacherDailySchedule: GetTeacherDailyScheduleDto = [
     },
     session: {
       id: 'sess-301',
-      status: SessionStatus.ACTIVE,
-      checkIn: new Date(now.getTime() - 10 * 60 * 1000), // Check-in il y a 10 min
+      status: SessionStatus.COMPLETED, // ou CLOSED selon ton enum
+      checkIn: new Date(now.getTime() - 4 * 60 * 60 * 1000), 
     },
   },
+
+  // 2. Séance PASSÉE mais MANQUÉE/ANNULÉE (Il y a 2 heures)
   {
     id: 'sched-daily-02',
-    status: ScheduleStatus.COMPLETED,
+    status: ScheduleStatus.MISSED, // ou CANCELED
+    startTime: new Date(now.getTime() - 1.5 * 60 * 60 * 1000), // Il y a 1h30
+    endTime: new Date(now.getTime() - 0.5 * 60 * 60 * 1000),   // Il y a 30 min
+    confirmed: false,
+    notes: 'Enseignant absent (retard transport).',
+    class: {
+      name: 'Licence 2 Mathématiques',
+      level: Level.L2,
+      _count: { studentEnrollments: 45 },
+    },
+    course: { name: 'Probabilités et Statistiques' },
+    group: null, // Classe entière
+    room: {
+      name: 'Salle TD 4',
+      locationId: 'loc-batiment-b',
+    },
+    session: null, // Aucune session ouverte car le cours n'a pas eu lieu
+  },
+
+// 3. Séance EN RETARD (Débutée il y a 15 min, pas de check-in)
+  {
+    id: 'sched-daily-03',
+    status: ScheduleStatus.PENDING,
+    startTime: new Date(now.getTime() - 15 * 60 * 1000), // A débuté il y a 15 min
+    endTime: new Date(now.getTime() + 105 * 60 * 1000),  // Finit dans 1h45 (pour un cours de 2h)
+    confirmed: true,
+    notes: 'Prévoir les polycopiés de TD.',
+    class: {
+      name: 'Licence 3 Informatique',
+      level: Level.L3,
+      _count: { studentEnrollments: 45 },
+    },
+    course: { name: 'Bases de Données Avancées' },
+    group: {
+      name: 'Groupe B',
+      _count: { studentGroups: 20 },
+    },
+    room: {
+      name: 'Salle TP 12',
+      locationId: 'loc-batiment-a',
+    },
+    session: null, // Pas de session ouverte / aucun check-in
+  },
+
+  // 4. Séance À VENIR (Dans 4 heures)
+  {
+    id: 'sched-daily-04',
+    status: ScheduleStatus.PENDING,
     startTime: new Date(now.getTime() + 4 * 60 * 60 * 1000), // Dans 4h
     endTime: new Date(now.getTime() + 6 * 60 * 60 * 1000),   // Dans 6h
     confirmed: true,
     notes: null,
     class: {
-      name: 'Licence 3 Informatique',
-      level: Level.L3,
-      _count: {
-        studentEnrollments: 45,
-      },
+      name: 'Master 2 IA',
+      level: Level.M2,
+      _count: { studentEnrollments: 25 },
     },
-    course: {
-      name: 'Bases de Données Avancées',
-    },
-    group: null, // Classe entière
+    course: { name: 'Machine Learning' },
+    group: null,
     room: {
-      name: 'Salle TP 12',
-      locationId: 'loc-batiment-a',
+      name: 'Amphi A',
+      locationId: 'loc-batiment-c',
     },
-    session: null, // Session non démarrée / absente
+    session: null,
+  },
+
+  // 5. Séance À VENIR (Dans 6h30 - Fin de journée)
+  {
+    id: 'sched-daily-05',
+    status: ScheduleStatus.PENDING,
+    startTime: new Date(now.getTime() + 6.5 * 60 * 60 * 1000), // Dans 6h30
+    endTime: new Date(now.getTime() + 8 * 60 * 60 * 1000),     // Dans 8h
+    confirmed: true,
+    notes: 'Soutenance de projets, préparer le projecteur.',
+    class: {
+      name: 'Licence 1 Physique',
+      level: Level.L1,
+      _count: { studentEnrollments: 120 },
+    },
+    course: { name: 'Mécanique du point' },
+    group: {
+      name: 'Groupe 3',
+      _count: { studentGroups: 30 },
+    },
+    room: {
+      name: 'Amphi C',
+      locationId: 'loc-batiment-d',
+    },
+    session: null,
   },
 ];

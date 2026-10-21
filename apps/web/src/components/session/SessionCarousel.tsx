@@ -108,7 +108,10 @@ export function SessionCarousel({
   const [activeIndex, setActiveIndex] = useState(1);
 
   return (
-    <div className={cn("w-full", className)}>
+    <div
+      className={cn("w-full touch-pan-x", className)}
+      onPointerDown={(e) => e.stopPropagation()}
+    >
       <Carousel index={activeIndex} onIndexChange={setActiveIndex} className="w-full">
         <CarouselContent>
           {/* Index 0: Infos du cours (avec le drawer de Note) */}
@@ -129,9 +132,9 @@ export function SessionCarousel({
           </CarouselItem>
 
           {/* Index 3: Présences */}
-          <CarouselItem className="px-1">
+          {/* <CarouselItem className="px-1">
             <AttendanceSlide scheduleId={schedule.id} studentCount={studentCount} />
-          </CarouselItem>
+          </CarouselItem> */}
         </CarouselContent>
       </Carousel>
     </div>

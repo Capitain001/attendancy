@@ -1,32 +1,25 @@
 // components/teacher/personal/section/TeacherDailyOverview.tsx
 import type { ReactNode } from 'react'
-import { cn, formatDuration, formatTime } from '@/lib/utils'
-import { ScheduleStatusIcon, type ScheduleIconVariant } from '@/components/teacher/personal/ui/ScheduleStatusIcon'
+import { ScheduleCard, type ScheduleCardSchedule } from '@/components/teacher/personal/ui/ScheduleCard'
+import type { ScheduleIcon } from '@/components/teacher/personal/ui/ScheduleStatusIcon'
 
-/** Ce dont la carte a besoin ; le callback reçoit l'objet complet (S). */
-type OverviewSchedule = {
-  id?: string
-  startTime: Date
-  endTime: Date
-  course: { name: string }
-  /** Variant d'icône résolu par le parent. Absent = pas d'icône. */
-  iconVariant?: ScheduleIconVariant
-}
-
-type Props<S extends OverviewSchedule> = {
+type Props<S extends ScheduleCardSchedule> = {
   /** `count.remaining` : séances ONGOING + PENDING (en cours incluse). */
   remaining: number
   /** Séance à afficher (en cours, sinon la prochaine), ou null s'il n'en reste plus. */
   schedule: S | null
   /** Slot au-dessus de la carte : décompte fourni par le parent. */
   countdown?: ReactNode
+  /** Icône dans le cercle de la carte, résolue par le parent. Absent = cercle plein. */
+  icon?: ScheduleIcon
   onScheduleClick?: (schedule: S) => void
 }
 
-export function TeacherDailyOverview<S extends OverviewSchedule>({
+export function TeacherDailyOverview<S extends ScheduleCardSchedule>({
   remaining,
   schedule,
   countdown,
+  icon,
   onScheduleClick,
 }: Props<S>) {
   return (
@@ -36,7 +29,11 @@ export function TeacherDailyOverview<S extends OverviewSchedule>({
       {schedule ? (
         <div className="flex w-full max-w-sm flex-col items-center gap-3">
           {countdown}
-          <ScheduleCard schedule={schedule} onClick={() => onScheduleClick?.(schedule)} />
+          <ScheduleCard
+            schedule={schedule}
+            icon={icon}
+            onClick={() => onScheduleClick?.(schedule)}
+          />
         </div>
       ) : (
         <p className="text-sm text-muted-foreground">Plus de cours aujourd&apos;hui</p>
@@ -66,49 +63,6 @@ function RemainingCircle({ count }: { count: number }) {
       <p className="text-6xl font-light tabular-nums text-foreground">
         {String(count).padStart(2, '0')}
         <span className="sr-only"> cours restants</span>
-      </p>
-    </div>
-  )
-}
-
-function ScheduleCard({
-  schedule,
-  onClick,
-}: {
-  schedule: OverviewSchedule
-  onClick?: () => void
-}) {
-  return (
-    <div
-      role="button"
-      tabIndex={0}
-      onClick={onClick}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          onClick?.()
-        }
-      }}
-      className={cn(
-        'flex w-full cursor-pointer items-center gap-4 rounded-md border border-foreground/60 bg-foreground/[0.01] p-4 transition-colors hover:bg-foreground/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-      )}
-    >
-      {/* {schedule.iconVariant && (
-        <ScheduleStatusIcon variant={schedule.iconVariant} className="size-5 shrink-0" />
-      )} */}
-
-      <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-foreground p-1">
-        <ScheduleStatusIcon variant="warning" className="text-background" />
-      </div>
-
-
-      <div className="min-w-0 flex-1">
-        <p className="truncate font-medium text-foreground">{schedule.course.name}</p>
-        <p className="text-sm text-muted-foreground">{formatTime(schedule.startTime)}</p>
-      </div>
-
-      <p className="shrink-0 text-lg text-foreground">
-        {formatDuration(schedule.startTime, schedule.endTime)}
       </p>
     </div>
   )

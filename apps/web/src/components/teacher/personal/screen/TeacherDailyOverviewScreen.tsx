@@ -4,6 +4,7 @@
 import { useState } from 'react'
 import { TeacherDailyOverview } from '@/components/teacher/personal/section/TeacherDailyOverview'
 import { ScheduleCountdownLabel } from '@/components/teacher/personal/ui/ScheduleCountdownLabel'
+import { resolveScheduleIcon } from '@/components/teacher/personal/ui/ScheduleStatusIcon'
 import { TeacherScheduleDetailSheet } from '@/components/teacher/personal/section/TeacherScheduleDetailSheet'
 import { useTeacherDailySchedule } from '@/hooks/data/schedule/useTeacherDailySchedule'
 import { useTeacherDailyScheduleStats } from '@/hooks/data/schedule/useTeacherDailyScheduleStats'
@@ -14,6 +15,11 @@ export function TeacherDailyOverviewScreen() {
 
     // Cours actuel s'il existe, sinon le prochain
     const schedule = ongoing ?? upcoming
+
+    // Fonction pure et peu coûteuse : pas besoin de useMemo
+    const icon = schedule
+        ? resolveScheduleIcon(ongoing ? 'ONGOING' : 'PENDING', schedule.session !== null)
+        : undefined
 
     const [selectedId, setSelectedId] = useState<string | null>(null)
     const [isOpen, setIsOpen] = useState(false)
@@ -35,6 +41,7 @@ export function TeacherDailyOverviewScreen() {
                 countdown={
                     <ScheduleCountdownLabel schedule={schedule} isOngoing={ongoing !== null} />
                 }
+                icon={icon}
                 onScheduleClick={handleScheduleClick}
             />
 
