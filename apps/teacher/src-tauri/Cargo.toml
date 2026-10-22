@@ -1,0 +1,16 @@
+[package]
+name = "attendancy-teacher"
+version.workspace = true
+description = "Attendancy Teacher app"
+authors = []
+edition.workspace = true
+
+[lib]
+name = "attendancy_teacher_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { workspace = true }
+
+[dependencies]
+tauri = { workspace = true }

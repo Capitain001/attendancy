@@ -22,4 +22,4 @@ Artifacts are copied to `artifacts/` so a later Vite build does not remove them:
 - `Attendancy_0.1.0_x64-setup.exe`
 - `Attendancy_0.1.0_x64-setup-dev.exe`
 
-The two Android variants use the same Android application ID, so installing one replaces the other. The debug signature is for local testing only; use a dedicated release keystore to distribute the APKs.
+The desktop and WebView APKs use distinct Android application IDs (`io.attendancy.app` and `io.attendancy.webview`). The teacher APK is built from `apps/teacher` and uses `io.attendancy.teacher`; all three can be installed side by side. The debug signature is for local testing only; use a dedicated release keystore to distribute the APKs.

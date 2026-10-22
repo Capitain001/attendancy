@@ -7,24 +7,36 @@
     "dev": "vite",
     "build": "bun x tsc --noEmit && vite build",
     "check-types": "bun x tsc --noEmit",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:icons": "tauri icon ../desktop/src-tauri/icons/128x128@2x.png --output src-tauri/icons",
+    "tauri:android:init": "tauri android init",
+    "build:desktop": "node scripts/build-desktop.mjs",
+    "build:android": "tauri android build --apk --target aarch64 && node ../../tools/tauri/sign-android-apk.mjs --input src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk --output artifacts/Attendancy-Teacher-arm64-debug-signed.apk --application-id io.attendancy.teacher"
   },
   "dependencies": {
     "@attendancy/app": "workspace:*",
     "@attendancy/auth": "workspace:*",
+    "@attendancy/rpc": "workspace:*",
+    "@attendancy/types": "workspace:*",
     "@attendancy/ui": "workspace:*",
     "@tanstack/react-query": "^5.104.1",
     "@tanstack/react-query-persist-client": "^5.104.1",
     "@tanstack/react-router": "^1.170.41",
+    "date-fns": "^4.4.0",
+    "framer-motion": "^13.4.4",
+    "lucide-react": "^1.48.0",
     "nuqs": "^2.4.1",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "sonner": "^2.0.8"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/router-plugin": "^1.114.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@tauri-apps/cli": "^2",
     "@vitejs/plugin-react": "^4.3.4",
     "tailwindcss": "^4.3.3",
     "typescript": "^6",

@@ -3,7 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { InvitationMetadata } from "@/types/invitation";
 import { USER_METADATA_KEYS, type UserMetadataPatch } from "@/types/user";
-import { updateUserMetadata } from "../user/update";
+import { updateUserMetadata } from "../user/server";
 import { findAuthUserByEmail } from "../auth/supabase";
 
 //supabase documentation url

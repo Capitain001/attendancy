@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/sheet'
 import { Separator } from '@/components/ui/separator'
 import { formatDuration, formatTime, timeFormatter } from '@/lib/utils'
-import { GetTeacherDailyScheduleDto } from '@/services/schedule'
+import type { GetTeacherDailyScheduleDto } from '@attendancy/types'
 
 type Props = {
     schedule: GetTeacherDailyScheduleDto[number] | null

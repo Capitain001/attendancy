@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Check, Loader2, MailWarning } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { button, card, input, layout, typography } from '@/styles'
-import { resendSignupEmailAction } from '@/services/auth'
+import { resendSignupEmailAction } from '@/modules/auth'
 
 export function LinkExpired() {
   const emailId = useId()

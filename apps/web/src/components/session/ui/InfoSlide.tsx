@@ -5,7 +5,7 @@ import type { LucideIcon } from "lucide-react";
 import { BookOpen, Clock, MapPin, Users, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-import type { GetTeacherNextScheduleDto } from "@/services/schedule";
+import type { GetTeacherNextScheduleDto } from "@attendancy/types";
 
 type Schedule = NonNullable<GetTeacherNextScheduleDto>;
 

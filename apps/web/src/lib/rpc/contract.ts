@@ -4,7 +4,12 @@ import type {
   CreateScheduleInput,
   UpdateScheduleDataInput,
 } from '@/services/schedule/validation'
-import type { GetSchedulesDto } from '@/services/schedule/types'
+import type {
+  GetSchedulesDto,
+  GetTeacherDailyScheduleDto,
+  GetTeacherNextScheduleDto,
+} from '@/services/schedule/types'
+import type { GetScheduleAttendancesDto } from '@/services/attendance/types'
 import type { GetClassesDto } from '@/services/class/types'
 import type {
   NotificationItem,
@@ -24,9 +29,11 @@ export type {
   PublicUserInfo,
   PublicOrganization,
   CreateScheduleInput,
-
   UpdateScheduleDataInput,
   GetSchedulesDto,
+  GetTeacherDailyScheduleDto,
+  GetTeacherNextScheduleDto,
+  GetScheduleAttendancesDto,
   GetClassesDto,
   NotificationItem,
   GetNotificationsForUserDto,
@@ -45,3 +52,5 @@ export type ApiClient = {
 export type ApiAction = keyof ApiClient
 export type ApiInput<K extends ApiAction> = Parameters<ApiClient[K]>[0]
 export type ApiOutput<K extends ApiAction> = Awaited<ReturnType<ApiClient[K]>>
+
+export type StartSessionInput = ApiInput<'startSessionAction'>

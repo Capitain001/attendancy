@@ -24,6 +24,7 @@ import {
 import {
   startSessionAction,
   completeSessionAction,
+  generateTokenAction,
 } from "@/services/session";
 import {
   getScheduleAttendancesAction,
@@ -55,6 +56,7 @@ export const ACTIONS = {
   deleteNotification,
   startSessionAction,
   completeSessionAction,
+  generateTokenAction,
   getScheduleAttendancesAction,
   confirmAttendanceAction,
   confirmAllAttendancesAction,

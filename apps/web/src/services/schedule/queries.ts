@@ -1,11 +1,8 @@
 
 // Factory pure réutilisable côté serveur (prefetch) ET client (hook).
-import { getSchedulesAction, getScheduleDaysAction, getTeacherSchedulesAction, getTeacherDailyScheduleAction } from '@/services/schedule/actions'
-import type { GetScheduleDaysInput, GetSchedulesDto } from '@/services/schedule'
+import { getTeacherDailyScheduleAction } from '@/services/schedule/actions'
 
 import { CACHE_KEYS, QUERY_PRESETS } from '@/cache/client/key'
-
-import { GetTeacherDailyScheduleOutput } from './validation'
 
 
 export interface GetTeacherDailyScheduleParams {

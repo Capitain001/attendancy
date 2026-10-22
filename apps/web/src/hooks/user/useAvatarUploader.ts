@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { toast } from "sonner";
-import { updateAvatar } from "@/services/user";
+import { updateAvatar } from "@/modules/user";
 import { AVATAR_BUCKET, getAvatarPath, getAvatarPublicUrl } from "@/lib/storage/avatar";
 
 const supabase = createClient();

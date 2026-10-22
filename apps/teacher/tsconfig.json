@@ -8,7 +8,23 @@
     "strict": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    "paths": {
+      "server-only": ["./src/lib/server-only-stub.ts"],
+      "@/generated/prisma/browser": ["../../packages/db/src/generated/browser.ts"],
+      "@/services/schedule/policy": ["../web/src/services/schedule/policy.ts"],
+      "@/services/schedule/queries": ["../web/src/services/schedule/queries.ts"],
+      "@/services/session/policy": ["../web/src/services/session/policy.ts"],
+      "@/services/*/actions": ["../../packages/rpc/src/generated/*.ts"],
+      "@/services/*": ["../../packages/rpc/src/generated/*.ts"],
+      "@attendancy/rpc/*": ["../../packages/rpc/src/generated/*.ts"],
+      "@rpc-api": ["./src/lib/api.ts"],
+      "@teacher/*": ["./src/*"],
+      "@/*": ["../web/src/*"],
+      "@ui/*": ["../../packages/ui/src/*"],
+      "next/link": ["./src/components/ui/Link.tsx"],
+      "next/navigation": ["./src/lib/next-navigation.ts"]
+    }
   },
   "include": ["src"]
 }

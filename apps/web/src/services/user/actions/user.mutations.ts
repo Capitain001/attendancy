@@ -8,7 +8,7 @@ import { updateUserSchema, updateUserDataSchema } from "../validation";
 import type { UpdateUserInput, UpdateCurrentUserInput } from "../validation";
 import { updateUser, updateUserProfile } from "../database";
 import { logAuditAsync } from "@/services/audit";
-import { setUserInfo } from "@/modules/user/update";
+import { setUserInfo } from "@/modules/user/server";
 import { tryCatch } from "@/utils/server";
 import { getFullName } from "@/lib/utils";
 import { UserMetadata } from "@/types";

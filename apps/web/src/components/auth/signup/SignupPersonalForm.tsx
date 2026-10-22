@@ -4,7 +4,7 @@ import { useActionState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { SignupState } from '@/modules/auth'
+import type { SignupState } from '@/modules/auth/actions/signup'
 
 
 const initialState: SignupState = null

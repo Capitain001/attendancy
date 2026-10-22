@@ -7,7 +7,7 @@ import { createAdminClient } from "@/utils/supabase/server"
 
 import type { Organization, AppMetadata, AppMetadataPatch } from "@/types/user"
 import { updateUserAccess } from "../user/access"
-import { removeUser } from "../user"
+import { removeUser } from "../user/server"
 import { PermissionName } from "@/services/permission"
 
 

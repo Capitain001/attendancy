@@ -2,7 +2,8 @@
 "use server";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { getUserInfo, removeUser, setUserInfo } from "@/modules/user";
+import { getUserInfo } from "@/modules/user";
+import { removeUser, setUserInfo } from "@/modules/user/server";
 import { endSessionForUser } from "@/services/device/server/device-session";
 import { logout } from "../supabase";
  

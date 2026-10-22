@@ -15,7 +15,7 @@ import {
   getScheduleAttendancesAction,
 } from "@/services/attendance";
 
-import { type GetScheduleAttendancesDto as ScheduleAttendanceDTO } from "@/services/attendance/types";
+import type { GetScheduleAttendancesDto as ScheduleAttendanceDTO } from "@attendancy/types";
 import type { $Enums } from "@/generated/prisma/client";
 
 import {

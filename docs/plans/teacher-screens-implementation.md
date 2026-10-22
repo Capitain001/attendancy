@@ -104,6 +104,7 @@ Ajouter les `paths` TypeScript correspondants pour le typecheck strict (`check-t
 - Navigation : Clic sur "Démarrer la séance" redirige vers `/sessions` via TanStack Router `navigate({ to: '/sessions' })`.
 
 ### Route 2 : Vue Session & Pointage (`routes/_app/sessions.tsx`)
+- Récupération du profil enseignant : `useCurrentUser()` (`@attendancy/auth`) consommant `getCurrentUserAction()` pour obtenir le `teacherId` typé.
 - Composant racine : `TeacherSessionPage`.
 - Panneau 1 : `SessionPageInner` (titre, carrousel 3 slides : infos UE/salle/note, jauge durée restante, QR Code, bouton principal Démarrer/Clôturer).
 - Panneau 2 : `AttendanceList` (liste des étudiants, sélection multiple, confirmation présent/absent).

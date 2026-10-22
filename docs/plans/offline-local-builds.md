@@ -96,10 +96,12 @@ depuis le monorepo.
 1. **Init mobile** :
    ```bash
    cd apps/desktop
-   bun run tauri android init    # → génère src-tauri/gen/android (commit ?)
+   bun run tauri android init    # → génère src-tauri/gen/android
    ```
-   Décision : commit `gen/android` (recommandé — permet de customiser le
-   manifest/gradle de façon reproductible).
+   `src-tauri/gen/android` est régénérable et reste ignoré par Git. Les
+   personnalisations nécessaires doivent être portées par les sources/configs
+   Tauri ou par une étape de setup reproductible, pas par des modifications
+   manuelles uniquement présentes dans le projet généré.
 2. **Identité app** : `identifier` actuel `io.attendancy.app` — vérifier qu'il
    est valide comme `applicationId` Android (pas de tiret, segments valides).
 3. **Manifest Android** :
@@ -231,4 +233,5 @@ comportement défini et documenté.
 - Distribution `.exe` : auto-update Tauri (`updater` plugin) à prévoir dès la
   phase 1 ou plus tard ?
 - Fenêtre offline produit : 7 jours suffit-elle, ou illimité en lecture ?
-- `gen/android` commité dans git (recommandé) ou régénéré ?
+- `gen/android` est régénéré par `tauri android init` et n'est pas commité ;
+  porter les personnalisations dans les sources/configs ou un script de setup.

@@ -3,3 +3,4 @@ import { api } from '@rpc-api'
 
 export const startSessionAction = api.startSessionAction
 export const completeSessionAction = api.completeSessionAction
+export const generateTokenAction = api.generateTokenAction

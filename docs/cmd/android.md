@@ -1,8 +1,13 @@
-# APK — builds Tauri Android
+# APK Android — applications Tauri
 
-App : `apps/desktop` — même codebase que le desktop, cible `aarch64` (la
-plupart des téléphones modernes). Projet Android généré dans
-`apps/desktop/src-tauri/gen/android/`.
+Les apps Teacher et Desktop embarquent chacune leur frontend et ont un shell
+Tauri distinct. `apps/desktop` sert aussi de client de test. La variante
+WebView, elle, charge le site hébergé et n'est pas l'app Teacher.
+
+Chaque shell possède sa configuration sous `apps/<app>/src-tauri`. Les projets
+Android sous `src-tauri/gen/android/` sont générés localement par Tauri et ne
+sont pas versionnés. Le workspace Cargo et son `target/` partagé sont à la
+racine du monorepo.
 
 ---
 
@@ -16,18 +21,43 @@ $env:JAVA_HOME    = 'C:\Program Files\Java\jdk-21'
 
 - Targets Rust : `rustup target add aarch64-linux-android` (+ autres ABI si
   build universel)
-- **Mode développeur Windows activé** (Paramètres > Système > Pour les
-  développeurs) — sinon le symlink jniLibs échoue
-- Vérifier la chaîne : `bun run tauri info`
+- Vérifier la chaîne Tauri : `bun run tauri info` depuis le dossier de l'app
+- Le mode développeur Windows peut être requis par la génération Tauri des
+  symlinks Android : Paramètres > Système > Pour les développeurs
 
-## Init (déjà fait — ne ré-exécuter que si `gen/android` est supprimé)
+## Build + signature APK Teacher arm64
 
-```bash
-cd apps/desktop
-bun run tauri android init
+Le premier lancement ou la suppression de `gen/android` nécessite une nouvelle
+initialisation. La configuration Android Teacher est régénérable depuis
+`apps/teacher/src-tauri` :
+
+```powershell
+cd apps/teacher
+$env:ANDROID_HOME='D:\ANDROID'; $env:NDK_HOME='D:\ANDROID\ndk\27.3.13750724'; $env:JAVA_HOME='C:\Program Files\Java\jdk-21'
+bun run tauri:icons
+bun run tauri:android:init
 ```
 
-## Build + signature APK arm64 (recommandé pour tests — ~12,5 MB)
+Puis construire l'APK natif qui embarque le frontend Vite Teacher et le signer
+avec le keystore debug local :
+
+```powershell
+cd apps/teacher
+$env:ANDROID_HOME='D:\ANDROID'; $env:NDK_HOME='D:\ANDROID\ndk\27.3.13750724'; $env:JAVA_HOME='C:\Program Files\Java\jdk-21'
+bun run build:android
+```
+
+L'identifiant Android est `io.attendancy.teacher`. L'APK signé et vérifié est
+copié dans `apps/teacher/artifacts/Attendancy-Teacher-arm64-debug-signed.apk`.
+Il peut être installé en parallèle des variantes Desktop et WebView.
+Le build utilise les variables `VITE_API_URL`, `VITE_SUPABASE_URL` et
+`VITE_SUPABASE_ANON_KEY` définies dans l'environnement local ou CI ; ne pas
+commiter les fichiers `.env`.
+
+## Build + signature APK Desktop arm64
+
+Cette commande construit le frontend local de `apps/desktop` (client de test),
+pas le frontend Teacher :
 
 ```bash
 cd apps/desktop
@@ -46,7 +76,7 @@ peut conserver `http://localhost:3000`. Les variables Supabase
 `VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY` doivent aussi être présentes
 dans l'environnement local ou CI au moment du build.
 
-## APK conteneur WebView
+## APK conteneur WebView (site hébergé)
 
 La variante WebView est un conteneur séparé qui charge le site hébergé. Elle
 utilise `src-tauri/webview/tauri.conf.json` :
@@ -60,10 +90,11 @@ bun run build:android:webview
 L'APK est signé et vérifié, puis copié dans :
 `apps/desktop/artifacts/Attendancy-WebView-arm64-debug-signed.apk`.
 
-Les deux variantes ont le même `applicationId` (`io.attendancy.app`) :
-installer l'une remplace l'autre. Elles utilisent le keystore debug local
+Les APK Teacher, Desktop et WebView ont des identifiants distincts
+(`io.attendancy.teacher`, `io.attendancy.app`, `io.attendancy.webview`). Ils
+utilisent le keystore debug local
 (`%USERPROFILE%\.android\debug.keystore`, mot de passe Android par défaut
-`android`) et sont destinées aux tests locaux. Pour une distribution, configurer
+`android`) et sont destinés aux tests locaux. Pour une distribution, configurer
 un keystore de release dédié et signer avec celui-ci.
 
 ## Build universel (4 ABI — ~38 MB, éviter sauf besoin émulateur x86)
@@ -95,5 +126,7 @@ bun run tauri android dev
   incrémental.
 - Poids : universel = 4× le `.so` Rust ; arm64 seul ≈ 12,5 MB. Optimisations
   futures (`opt-level = "z"`, `lto`, `strip` dans `Cargo.toml`) → ~8 MB.
-- `gen/android` est commité (décision plan offline-local-builds) — les symlinks
-  jniLibs pointent vers `src-tauri/target/`, ne pas copier les `.so` à la main.
+- `gen/android` n'est pas commité : recréer le projet avec `tauri android init`
+  après un clone ou sa suppression. Les icônes Tauri teacher sont également
+  régénérables avec `bun run tauri:icons`. Les `.so` natifs sont produits par
+  Cargo ; ne pas les copier manuellement.

@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as AppHomeRouteImport } from './routes/_app/home'
+import { Route as AppSessionsRouteImport } from './routes/_app/sessions'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthSignupPersonalRouteImport } from './routes/auth/signup/personal'
 
@@ -35,6 +36,11 @@ const AppHomeRoute = AppHomeRouteImport.update({
   path: '/home',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppSessionsRoute = AppSessionsRouteImport.update({
+  id: '/sessions',
+  path: '/sessions',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -50,6 +56,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
   '/home': typeof AppHomeRoute
+  '/sessions': typeof AppSessionsRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup/personal': typeof AuthSignupPersonalRoute
 }
@@ -57,6 +64,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
   '/home': typeof AppHomeRoute
+  '/sessions': typeof AppSessionsRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup/personal': typeof AuthSignupPersonalRoute
 }
@@ -66,20 +74,34 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
   '/_app/home': typeof AppHomeRoute
+  '/_app/sessions': typeof AppSessionsRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup/personal': typeof AuthSignupPersonalRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/home' | '/auth/login' | '/auth/signup/personal'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/home'
+    | '/sessions'
+    | '/auth/login'
+    | '/auth/signup/personal'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/home' | '/auth/login' | '/auth/signup/personal'
+  to:
+    | '/'
+    | '/auth'
+    | '/home'
+    | '/sessions'
+    | '/auth/login'
+    | '/auth/signup/personal'
   id:
     | '__root__'
     | '/'
     | '/_app'
     | '/auth'
     | '/_app/home'
+    | '/_app/sessions'
     | '/auth/login'
     | '/auth/signup/personal'
   fileRoutesById: FileRoutesById
@@ -120,6 +142,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHomeRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/_app/sessions': {
+      id: '/_app/sessions'
+      path: '/sessions'
+      fullPath: '/sessions'
+      preLoaderRoute: typeof AppSessionsRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/auth/login': {
       id: '/auth/login'
       path: '/login'
@@ -139,10 +168,12 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteRouteChildren {
   AppHomeRoute: typeof AppHomeRoute
+  AppSessionsRoute: typeof AppSessionsRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppHomeRoute: AppHomeRoute,
+  AppSessionsRoute: AppSessionsRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(

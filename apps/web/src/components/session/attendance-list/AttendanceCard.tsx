@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { formatDate } from "@/lib/date";
 import { cn, getNameColor } from "@/lib/utils";
-import { type GetScheduleAttendancesDto } from "@/services/attendance";
+import type { GetScheduleAttendancesDto } from "@attendancy/types";
 type AttendanceItem = GetScheduleAttendancesDto[number];
 
 interface AttendanceCardProps {

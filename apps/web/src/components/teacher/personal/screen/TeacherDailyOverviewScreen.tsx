@@ -11,9 +11,13 @@ import { TeacherScheduleDetailSheet } from '@/components/teacher/personal/sectio
 import { useTeacherDailySchedule } from '@/hooks/data/schedule/useTeacherDailySchedule'
 import { useTeacherDailyScheduleStats } from '@/hooks/data/schedule/useTeacherDailyScheduleStats'
 
-export function TeacherDailyOverviewScreen() {
-    const { slug } = useParams<{ slug: string }>()
-    const sessionsHref = `/${slug}/teacher/sessions`
+interface TeacherDailyOverviewScreenProps {
+  sessionsHref?: string;
+}
+
+export function TeacherDailyOverviewScreen({ sessionsHref: externalSessionsHref }: TeacherDailyOverviewScreenProps = {}) {
+    const { slug } = useParams<{ slug?: string }>()
+    const sessionsHref = externalSessionsHref ?? (slug ? `/${slug}/teacher/sessions` : '/sessions')
 
     const { schedules } = useTeacherDailySchedule()
     const { ongoing, upcoming, count } = useTeacherDailyScheduleStats(schedules)

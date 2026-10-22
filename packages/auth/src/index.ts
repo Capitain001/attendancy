@@ -1,4 +1,5 @@
 export { AuthProvider, useAuth } from "./AuthProvider";
+export { useCurrentUser } from "./useCurrentUser";
 export {
   getSessionState,
   getToken,

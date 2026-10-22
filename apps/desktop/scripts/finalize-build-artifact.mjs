@@ -1,21 +1,25 @@
-import { copyFile, mkdir, readdir } from "node:fs/promises";
+import { copyFile, mkdir } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
-import { existsSync } from "node:fs";
-import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
+const scriptDir = dirname(fileURLToPath(import.meta.url));
+const sharedAndroidSigner = resolve(
+  scriptDir,
+  "../../../tools/tauri/sign-android-apk.mjs",
+);
 const artifacts = {
   android: {
     source:
       "src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk",
     destination: "artifacts/Attendancy-Standalone-arm64-debug-signed.apk",
-    sign: true,
+    applicationId: "io.attendancy.app",
   },
   webview: {
     source:
       "src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk",
     destination: "artifacts/Attendancy-WebView-arm64-debug-signed.apk",
-    sign: true,
+    applicationId: "io.attendancy.webview",
   },
   desktop: {
     source:
@@ -41,65 +45,19 @@ const destinationPath = resolve(artifact.destination);
 
 await mkdir(dirname(destinationPath), { recursive: true });
 
-if (artifact.sign) {
-  const androidHome = process.env.ANDROID_HOME ?? process.env.ANDROID_SDK_ROOT;
-  if (!androidHome) {
-    throw new Error(
-      "Set ANDROID_HOME or ANDROID_SDK_ROOT before signing Android APKs.",
-    );
-  }
-
-  const buildTools = await readdir(join(androidHome, "build-tools"), {
-    withFileTypes: true,
-  });
-  const versions = buildTools
-    .filter((entry) => entry.isDirectory() && /^\d+(\.\d+)*$/.test(entry.name))
-    .map((entry) => entry.name)
-    .sort((left, right) =>
-      right.localeCompare(left, undefined, {
-        numeric: true,
-        sensitivity: "base",
-      }),
-    );
-  const signerJar = versions
-    .map((version) =>
-      join(androidHome, "build-tools", version, "lib", "apksigner.jar"),
-    )
-    .find((candidate) => existsSync(candidate));
-
-  if (!signerJar) {
-    throw new Error(
-      `Could not find apksigner.jar under ${join(androidHome, "build-tools")}.`,
-    );
-  }
-
-  const keystorePath = join(
-    process.env.USERPROFILE ?? homedir(),
-    ".android",
-    "debug.keystore",
-  );
+if (artifact.applicationId) {
   execFileSync(
-    "java",
+    process.execPath,
     [
-      "-jar",
-      signerJar,
-      "sign",
-      "--ks",
-      keystorePath,
-      "--ks-pass",
-      "pass:android",
-      "--out",
-      destinationPath,
+      sharedAndroidSigner,
+      "--input",
       sourcePath,
+      "--output",
+      destinationPath,
+      "--application-id",
+      artifact.applicationId,
     ],
     { stdio: "inherit" },
-  );
-  execFileSync(
-    "java",
-    ["-jar", signerJar, "verify", "--verbose", destinationPath],
-    {
-      stdio: "inherit",
-    },
   );
 } else {
   await copyFile(sourcePath, destinationPath);

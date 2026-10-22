@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { RouterProvider, type AnyRouter } from "@tanstack/react-router";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { AuthProvider, useAuth, isAuthenticated } from "@attendancy/auth";
@@ -25,10 +25,19 @@ export function AppRouter({ router }: { router: AnyRouter }) {
 function RouterWithAuth({ router }: { router: AnyRouter }) {
   const auth = useAuth();
   const authenticated = isAuthenticated(auth);
+  const previousAuthState = useRef<boolean | null>(null);
 
   useEffect(() => {
-    router.invalidate(); // rejoue les beforeLoad quand la session change
-  }, [router, authenticated]);
+    if (!auth) return;
+    if (previousAuthState.current === null) {
+      previousAuthState.current = authenticated;
+      return;
+    }
+    if (previousAuthState.current !== authenticated) {
+      router.invalidate(); // rejoue les beforeLoad quand la session change
+      previousAuthState.current = authenticated;
+    }
+  }, [router, authenticated, auth]);
 
   if (!auth) return <AuthLoading />;
 

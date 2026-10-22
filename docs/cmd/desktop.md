@@ -55,6 +55,66 @@ documentées dans [android.md](./android.md). Les APK arm64 signés pour les tes
 locaux et l'installeur Windows sont également conservés dans
 `apps/desktop/artifacts/`.
 
+## Application Teacher — exécutable Windows
+
+L'application Teacher possède son propre shell Tauri dans `apps/teacher`.
+Depuis PowerShell, lancer la fenêtre de développement avec Vite :
+
+```powershell
+cd apps/teacher
+bun run tauri:dev
+```
+
+Pour construire l'exécutable Windows :
+
+```powershell
+cd apps/teacher
+bun run build:desktop
+```
+
+Sans argument, le build utilise `apps/teacher/.env` et son URL API de
+production (`https://attendancy-web.vercel.app`). `VITE_API_URL` est intégrée
+au frontend lors du build ; une variable définie dans l'environnement du
+terminal prend priorité sur le fichier `.env`.
+
+Pour créer un exécutable de test qui appelle un serveur local :
+
+```powershell
+cd apps/teacher
+bun run build:desktop dev
+```
+
+Le mode `dev` utilise `http://localhost:3000` par défaut. L'URL peut être
+remplacée dans les deux modes avec `-api:<url>` :
+
+```powershell
+bun run build:desktop dev -api:http://192.168.1.20:3000
+bun run build:desktop production -api:https://attendancy-web.vercel.app
+```
+
+Le build compile sans installeur et copie l'exécutable depuis le `target/`
+partagé à la racine du monorepo vers `apps/teacher/artifacts/` :
+
+| Mode | Fichier |
+| --- | --- |
+| Production | `Attendancy-Teacher.exe` |
+| Test (`dev`) | `Attendancy-Teacher-dev.exe` |
+
+Pour générer aussi un installeur Windows NSIS (installation par utilisateur) :
+
+```powershell
+bun run build:desktop --installer
+bun run build:desktop dev --installer
+```
+
+L'option peut être combinée avec `-api:<url>`. Elle conserve aussi le binaire
+standalone, et ajoute à `apps/teacher/artifacts/` :
+
+| Mode | Installeur |
+| --- | --- |
+| Production | `Attendancy-Teacher-setup.exe` |
+| Test (`dev`) | `Attendancy-Teacher-dev-setup.exe` |
+
 ## Vérification offline
 
 1. Installer le `.exe`, se connecter une fois en ligne.

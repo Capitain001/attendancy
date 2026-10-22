@@ -3,7 +3,7 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { prisma } from "@/lib/prisma";
-import { setUserInfo } from "./update";
+import { setUserInfo } from "./server";
 import { getUserInfo } from "./userInfo";
 import { ERRORS } from "@/config";
 

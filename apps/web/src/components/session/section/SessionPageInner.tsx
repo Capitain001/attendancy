@@ -13,7 +13,7 @@ import {
   type DBSession,
 } from "@/hooks/data/sessions/use-session-state";
 import type { UISessionStatus } from "@/services/session/policy";
-import type { GetTeacherNextScheduleDto } from "@/services/schedule";
+import type { GetTeacherNextScheduleDto } from "@attendancy/types";
 import { SessionCarousel } from "../SessionCarousel";
 
 

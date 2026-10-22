@@ -7,7 +7,7 @@ import { SwipeNavigator } from "@/components/swipe-navigator";
 import { TeacherDailyOverviewScreen } from "@/components/teacher/personal/screen/TeacherDailyOverviewScreen";
 import TeacherDailyScheduleListScreen from "@/components/teacher/personal/screen/TeacherDailyScheduleListScreen";
 
-export default function TeacherDailyScreen() {
+export default function TeacherDailyScreen({ sessionsHref }: { sessionsHref?: string } = {}) {
   const [screen, setScreen] = useState(0);
 
   return (
@@ -15,7 +15,7 @@ export default function TeacherDailyScreen() {
       value={screen}
       onValueChange={setScreen}
       panels={[
-        <TeacherDailyOverviewScreen key="overview" />,
+        <TeacherDailyOverviewScreen key="overview" sessionsHref={sessionsHref} />,
           <TeacherDailyScheduleListScreen key="list" />,
       ]}
       hint={

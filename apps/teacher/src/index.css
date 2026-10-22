@@ -1,7 +1,10 @@
 @import "tailwindcss";
 @import "@attendancy/ui/styles.css";
+@import "@attendancy/ui/styles/themes/teacher.css";
+@import "../../../apps/web/src/styles/utilities.css";
 
 @source "./";
+@source "../../../apps/web/src";
 @source "../../../packages/ui";
 @source "../../../packages/app";
 @source "../../../packages/auth";

@@ -7,6 +7,8 @@ node_modules
 # dist (desktop Vite build)
 apps/desktop/dist
 apps/desktop/artifacts/
+apps/teacher/artifacts/
+apps/teacher/src-tauri/icons/
 
 # next.js
 .next/
@@ -27,6 +29,8 @@ next-env.d.ts
 
 # rust build artifacts
 src-tauri/target/
+/target/
+apps/*/src-tauri/gen/
 
 # misc
 .DS_Store
