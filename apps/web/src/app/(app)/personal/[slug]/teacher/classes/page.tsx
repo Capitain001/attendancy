@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowLeft, Plus, Users } from "lucide-react";
+import { Users } from "lucide-react";
 import { personal } from "@/modules/personal/paths";
 import { getFeedback } from "@/utils/server/form/action";
 import { resolveClassesData } from "@/services/personal/actions/classe.mutations";
 import { resolveSlugPaths } from "@/lib/paths";
 import { PersonalClassCard } from "@/components/teacher/personal/class/PersonalClassCard";
-import { CreateClassModal } from "@/components/teacher/personal/class/CreateClassModal";
+import {
+  CreateClassModal,
+  CREATE_CLASS_MODAL_ID,
+} from "@/components/teacher/personal/class/CreateClassModal";
 import { FeedbackToast } from "@/components/tools/toast/FeedbackToast";
+import { PersonalClassPlaceholder } from "@/components/teacher/personal/class/PersonalClassPlaceholder";
 
 export const metadata: Metadata = {
   title: "Mes classes | Attendancy",
@@ -33,10 +36,6 @@ export default async function PersonalTeacherClassesPage({
     <main className="min-h-screen bg-background px-4 py-8 sm:px-6">
       <div className="mx-auto w-full max-w-5xl space-y-6">
         <header className="space-y-2">
-          {/* <Link href={hrefs.home} className="inline-flex items-center gap-1 text-xs text-foreground/40 transition-colors hover:text-foreground/70">
-            <ArrowLeft aria-hidden="true" className="size-3" />
-            Espace professeur
-          </Link> */}
           <h1 className="text-2xl font-bold tracking-tight">Mes classes</h1>
           <p className="text-sm text-foreground/45">
             {activeCount} classe{activeCount === 1 ? "" : "s"} active{activeCount === 1 ? "" : "s"}
@@ -45,11 +44,16 @@ export default async function PersonalTeacherClassesPage({
         </header>
 
         {loadError && (
-          <p role="alert" className="rounded-md border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+          <p
+            role="alert"
+            className="rounded-md border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm text-destructive"
+          >
             Impossible de charger vos classes ou votre quota. Actualisez la page pour réessayer.
           </p>
         )}
+
         <FeedbackToast error={feedback.error} status={feedback.status} />
+
         {canAddClass ? (
           <CreateClassModal />
         ) : !loadError ? (
@@ -65,7 +69,9 @@ export default async function PersonalTeacherClassesPage({
             </div>
             <div className="grid gap-1">
               <p className="text-sm font-medium text-foreground/70">Aucune classe pour le moment</p>
-              <p className="text-xs text-foreground/40">Ajoutez une classe pour commencer à organiser votre activité.</p>
+              <p className="text-xs text-foreground/40">
+                Ajoutez une classe pour commencer à organiser votre activité.
+              </p>
             </div>
           </div>
         ) : (
@@ -77,6 +83,11 @@ export default async function PersonalTeacherClassesPage({
                 href={`${hrefs.classes}/${encodeURIComponent(class_.id)}`}
               />
             ))}
+            <PersonalClassPlaceholder
+              label="Ajouter une classe"
+              disabled={!canAddClass}
+              popoverTarget={CREATE_CLASS_MODAL_ID}
+            />
           </div>
         )}
       </div>
