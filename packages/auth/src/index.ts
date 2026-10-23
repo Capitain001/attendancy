@@ -10,3 +10,5 @@ export { requireAuth, requireGuest, type AuthRouterContext } from "./guards";
 export { supabase } from "./supabase";
 export { api } from "./api";
 export { login, logout, signupPersonal } from "./actions";
+
+export { useIsOffline } from "./hooks";

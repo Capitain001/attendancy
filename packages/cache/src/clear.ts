@@ -16,3 +16,7 @@ export async function claimLocalData(userId: string) {
   if (owner && owner !== userId) await clearLocalData();
   await set(OWNER_KEY, userId);
 }
+
+export async function getCacheOwner() {
+  return get<string>(OWNER_KEY);
+}

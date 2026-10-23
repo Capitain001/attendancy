@@ -14,7 +14,8 @@
   "dependencies": {
     "@attendancy/auth": "workspace:*",
     "@attendancy/cache": "workspace:*",
-    "@attendancy/ui": "workspace:*"
+    "@attendancy/ui": "workspace:*",
+    "@tanstack/react-query-devtools": "^5.104.5"
   },
   "peerDependencies": {
     "@tanstack/react-query": "*",

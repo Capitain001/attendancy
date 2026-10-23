@@ -24,6 +24,12 @@ export { MainLayout } from "./MainLayout";
 export { Header, type HeaderProps } from "./Header";
 export { ModeToggle } from "./components/layout/Header/ModeToggle";
 export {
+  MobileNavMenu,
+  type MobileNavItem,
+  type MobileNavLinkProps,
+  type MobileNavMenuProps,
+} from "./components/navigation/MobileNavMenu";
+export {
   AuthButtonPopover,
   type AuthButtonPopoverProps,
 } from "./components/layout/Header/AuthButtonPopover";

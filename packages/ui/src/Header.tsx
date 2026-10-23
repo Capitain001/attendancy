@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import type { PublicUserInfo } from "@attendancy/types";
+import { WifiOff } from "lucide-react";
 import { ModeToggle } from "./components/layout/Header/ModeToggle";
 import { AuthButtonPopover } from "./components/layout/Header/AuthButtonPopover";
 import { Link } from "./components/ui/link";
@@ -15,6 +16,7 @@ export type HeaderProps = {
   notifications?: ReactNode;
   brandHref?: string;
   className?: string;
+  isOffline?: boolean;
 };
 
 export function Header({
@@ -23,6 +25,7 @@ export function Header({
   notifications,
   brandHref,
   className,
+  isOffline = false,
 }: HeaderProps) {
   const org = user?.organization;
   const orgHref = brandHref ?? (org?.slug ? `/${org.slug}` : "/");
@@ -49,6 +52,16 @@ export function Header({
 
         {/* Actions à droite */}
         <div className="flex items-center gap-1">
+          {isOffline && (
+            <span
+              role="status"
+              aria-label="Session hors ligne"
+              title="Session hors ligne"
+              className="grid size-9 place-items-center text-muted-foreground"
+            >
+              <WifiOff className="size-4" aria-hidden="true" />
+            </span>
+          )}
           <ModeToggle />
           {notifications}
           {user && <AuthButtonPopover user={user} onSignOut={onSignOut} />}

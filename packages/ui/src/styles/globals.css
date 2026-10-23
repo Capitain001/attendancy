@@ -125,7 +125,10 @@
 /* ─── TOKENS DÉRIVÉS (calculés automatiquement) ─── */
 /* ════════════════════════════════════════════ */
 
-:root {
+/* Recalcule les tokens dérivés avec la palette du thème qui les porte. */
+:root,
+[class^="theme-"],
+[class*=" theme-"] {
   /* Hiérarchie de texte */
   --text-primary: var(--foreground);
   --text-secondary: color-mix(in oklab, var(--foreground) 72%, transparent);
@@ -142,7 +145,9 @@
   --shadow-card: 0 2px 12px -4px rgb(0 0 0 / 0.10);
 }
 
-.dark {
+.dark,
+.dark [class^="theme-"],
+.dark [class*=" theme-"] {
   /* Surfaces & Fills (dark) */
   --fill-faint: color-mix(in oklab, var(--foreground) 6%, transparent);
   --fill-hover: color-mix(in oklab, var(--foreground) 10%, transparent);

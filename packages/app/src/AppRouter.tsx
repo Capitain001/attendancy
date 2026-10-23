@@ -1,9 +1,11 @@
+//packages\app\src\AppRouter.tsx
 import { useEffect, useRef } from "react";
 import { RouterProvider, type AnyRouter } from "@tanstack/react-router";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { AuthProvider, useAuth, isAuthenticated } from "@attendancy/auth";
 import { queryClient, queryPersister, CACHE_SCHEMA_VERSION } from "@attendancy/cache";
 import { AuthLoading } from "./AuthLoading";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 export function AppRouter({ router }: { router: AnyRouter }) {
   return (
@@ -17,6 +19,7 @@ export function AppRouter({ router }: { router: AnyRouter }) {
         }}
       >
         <RouterWithAuth router={router} />
+        {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
       </PersistQueryClientProvider>
     </AuthProvider>
   );

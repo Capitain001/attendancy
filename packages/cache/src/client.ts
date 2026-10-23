@@ -1,5 +1,10 @@
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient, onlineManager } from "@tanstack/react-query";
 import { NetworkError } from "@attendancy/rpc/error";
+
+// Selon la version, onlineManager se croit en ligne tant qu'il ne reçoit pas d'événement
+// "offline". Si l'app est lancée sans réseau, aucun événement n'arrive : il se tromperait.
+// On l'aligne donc sur l'état réel du navigateur au démarrage.
+onlineManager.setOnline(navigator.onLine);
 
 export const queryClient = new QueryClient({
   defaultOptions: {

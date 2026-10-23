@@ -92,3 +92,79 @@
   --sidebar: oklch(0.17 0 0);
   --sidebar-accent: oklch(0.26 0 0);
 }
+
+/* Repli pour les WebView Android qui ne prennent pas encore en charge oklch(). */
+@supports not (color: oklch(0 0 0)) {
+  .theme-teacher {
+    --background: #fff;
+    --foreground: #151515;
+
+    --card: #f7f7f7;
+    --card-foreground: #151515;
+
+    --popover: #fff;
+    --popover-foreground: #151515;
+
+    --primary: #151515;
+    --primary-foreground: #fafafa;
+    --primary-active: #333;
+
+    --secondary: #ebebeb;
+    --secondary-foreground: #2e2e2e;
+
+    --muted: #f2f2f2;
+    --muted-foreground: #636363;
+
+    --accent: #e8e8e8;
+    --accent-foreground: #151515;
+
+    --destructive: #dc2626;
+    --destructive-foreground: #fff;
+
+    --border: #dedede;
+    --input: #c4c4c4;
+    --input-surface: #fafafa;
+    --input-focus: #717171;
+    --ring: #717171;
+
+    --sidebar: #e4e4e4;
+    --sidebar-accent: #e2e2e2;
+  }
+
+  .dark .theme-teacher,
+  .theme-teacher.dark {
+    --background: #151515;
+    --foreground: #f1f1f1;
+
+    --card: #1d1d1d;
+    --card-foreground: #f1f1f1;
+
+    --popover: #191919;
+    --popover-foreground: #f1f1f1;
+
+    --primary: #f1f1f1;
+    --primary-foreground: #151515;
+    --primary-active: #c4c4c4;
+
+    --secondary: #262626;
+    --secondary-foreground: #dedede;
+
+    --muted: #222;
+    --muted-foreground: #9e9e9e;
+
+    --accent: #303030;
+    --accent-foreground: #f1f1f1;
+
+    --destructive: #ef4444;
+    --destructive-foreground: #fff;
+
+    --border: #2e2e2e;
+    --input: #424242;
+    --input-surface: #1d1d1d;
+    --input-focus: #717171;
+    --ring: #8f8f8f;
+
+    --sidebar: #0f0f0f;
+    --sidebar-accent: #242424;
+  }
+}
