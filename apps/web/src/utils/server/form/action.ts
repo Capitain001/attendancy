@@ -11,9 +11,20 @@ export function withParams(path: string, params: Record<string, string>) {
 }
 
 // Message affichable pour un code d'URL ; undefined si le code est inconnu.
-export function getFeedbackMessage(kind: "error" | "status", code?: string) {
-  const messages: Record<string, string> = ERRORS.UI.FEEDBACK[kind];
+type FeedbackKind = keyof typeof ERRORS.UI.FEEDBACK;
+
+function getMessage(messages: Record<string, string>, code?: string) {
   return code && Object.hasOwn(messages, code) ? messages[code] : undefined;
+}
+
+// searchParams -> { error, status } : messages affichables, undefined si code inconnu.
+export function getFeedback(query: Partial<Record<FeedbackKind, string>>) {
+  return Object.fromEntries(
+    Object.entries(ERRORS.UI.FEEDBACK).map(([kind, messages]) => [
+      kind,
+      getMessage(messages, query[kind as FeedbackKind]),
+    ]),
+  ) as Record<FeedbackKind, string | undefined>;
 }
 
 // Erreur de limite (quota), produite par la contrainte DB (via tryConstraint).

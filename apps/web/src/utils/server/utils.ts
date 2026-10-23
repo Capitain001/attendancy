@@ -66,10 +66,16 @@ export async function tryCatch<T>(promise: Promise<T>, tag?: string): Promise<Ap
   }
 }
 
-export async function actionData<T>(action: Promise<ApiResponse<T>>): Promise<T> {
+// Déplie un ApiResponse. Lève l'erreur par défaut ; avec { fallback },
+// retourne la valeur de repli à la place. Accepte aussi un résultat déjà résolu.
+export async function actionData<T>(
+  action: ApiResponse<T> | Promise<ApiResponse<T>>,
+  options?: { fallback: T },
+) {
   const result = await action;
 
-  if ("error" in result) {
+  if (isError(result)) {
+    if (options) return options.fallback;
     throw new Error(result.error);
   }
 
