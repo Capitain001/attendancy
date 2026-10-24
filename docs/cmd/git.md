@@ -63,6 +63,36 @@ git commit -m "feat(planning): ajouter CoursePlanningDialog"
 git diff --staged
 ```
 
+## Exporter les changements en Markdown
+
+Le script rassemble les changements dans un seul fichier Markdown. Les fichiers
+sont regroupés par statut Git, leur chemin est un lien cliquable et leur contenu
+complet après modification est affiché (pas un diff) :
+
+- **PREPARE** : changements ajoutés à l'index Git, prêts à être commités.
+- **NON PREPARE** : changements locaux pas encore ajoutés à l'index.
+- **MIXTE** : changements à la fois indexés et non indexés.
+- **NOUVEAU FICHIER** : fichier non suivi par Git.
+- **SUPPRIME** : fichier supprimé, dont le contenu n'est plus disponible.
+
+Les fichiers générés comme `.api/`, `generated/`, `generated.types.ts` et
+`*.tsbuildinfo` sont exclus du rapport.
+
+```powershell
+# Depuis la racine du dépôt
+powershell -ExecutionPolicy Bypass -File tools/export-pending-changes.ps1
+```
+
+Par défaut, le rapport est écrit dans `git-changes.md` à la racine du dépôt.
+Pour choisir un autre chemin :
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/export-pending-changes.ps1 -OutputPath docs/rapport-changements.md
+```
+
+Le rapport montre le contenu complet des fichiers modifiés : vérifie-le avant
+de le partager.
+
 ---
 
 ## Synchronisation
