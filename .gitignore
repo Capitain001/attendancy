@@ -25,6 +25,7 @@ next-env.d.ts
 # prisma — client généré (recréé par `prisma generate`)
 #reference type service
 /apps/web/src/generated/
+/packages/db/src/generated/
 
 
 # rust build artifacts
@@ -49,3 +50,7 @@ apps/desktop/src-tauri/*
 !apps/desktop/src-tauri/webview/tauri.conf.json
 .gitignore
 .gitignore
+
+
+# perso
+docs/notes/perso.md
