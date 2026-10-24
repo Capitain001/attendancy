@@ -9,16 +9,16 @@
 // ProgramUE.semester (Int structurel) → Term (période datée par classe).
 
 model AcademicYear {
-  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name          String
-  startDate     DateTime
-  endDate       DateTime
-  orgId         String         @db.Uuid
-  isActive      Boolean        @default(true)
-  isCurrent     Boolean        @default(false)
-  organization  Organization   @relation(fields: [orgId], references: [id])
-  classes       Class[]
-  optionalUEs   OptionalUE[]
+  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name         String
+  startDate    DateTime
+  endDate      DateTime
+  orgId        String       @db.Uuid
+  isActive     Boolean      @default(true)
+  isCurrent    Boolean      @default(false)
+  organization Organization @relation(fields: [orgId], references: [id])
+  classes      Class[]
+  optionalUEs  OptionalUE[]
   // feeStructures FeeStructure[]
 
   @@unique([name, orgId])
@@ -188,6 +188,7 @@ model Class {
   programId          String?             @db.Uuid
   academicYearId     String              @db.Uuid
   isActive           Boolean             @default(true)
+  type               ClassType           @default(COHORT)
   channels           Channel[]
   academicYear       AcademicYear        @relation(fields: [academicYearId], references: [id])
   program            Program?            @relation(fields: [programId], references: [id], onDelete: SetNull)
@@ -423,6 +424,13 @@ enum UEType {
   SPECIALITE
   TRANSVERSALE
   LIBRE
+
+  @@schema("public")
+}
+
+enum ClassType {
+  COHORT // Cohorte institutionnelle (ex: Terminale S1)
+  THEMATIC // Groupe thématique / Matière (ex: Masterclass React)
 
   @@schema("public")
 }

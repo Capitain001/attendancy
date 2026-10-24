@@ -1,7 +1,8 @@
 import { Plus } from "lucide-react";
 import { createClassFormAction } from "@/services/class/form";
 
-const MODAL_ID = "create-class";
+export const CREATE_CLASS_MODAL_ID = "create-class";
+const MODAL_ID = CREATE_CLASS_MODAL_ID;
 
 // Pas de `display` ici : il rendrait le popover toujours visible.
 const modal =
@@ -14,11 +15,11 @@ export function CreateClassModal() {
   return (
     <>
       {/* Seul le bouton est visible, centré sur la page */}
-      <div className="flex justify-center ">
+      <div className="flex justify-center">
         <button
           type="button"
           popoverTarget={MODAL_ID}
-          className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 w-full"
+          className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
         >
           <Plus aria-hidden="true" className="size-4" />
           Ajouter une classe
@@ -40,10 +41,18 @@ export function CreateClassModal() {
             />
           </label>
           <div className="flex justify-end gap-2">
-            <button type="button" popoverTarget={MODAL_ID} popoverTargetAction="hide" className={cancelButton}>
+            <button
+              type="button"
+              popoverTarget={MODAL_ID}
+              popoverTargetAction="hide"
+              className={cancelButton}
+            >
               Annuler
             </button>
-            <button type="submit" className="h-9 rounded-md bg-primary px-4 text-xs font-medium text-primary-foreground hover:bg-primary/90">
+            <button
+              type="submit"
+              className="h-9 rounded-md bg-primary px-4 text-xs font-medium text-primary-foreground hover:bg-primary/90"
+            >
               Ajouter
             </button>
           </div>
