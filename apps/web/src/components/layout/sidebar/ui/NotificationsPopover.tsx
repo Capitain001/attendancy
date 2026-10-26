@@ -97,7 +97,11 @@ export function NotificationsPopover() {
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" collisionPadding={0} className="w-screen sm:w-[400px] min-h-[220px] bg-background/50 border border-border/50 p-2">
+      <PopoverContent
+        align="end"
+        collisionPadding={0}
+        className="w-screen sm:w-[400px] min-h-[220px] bg-background/50 backdrop-blur-md border border-border/50 p-2"
+      >
         {isLoading ? (
           <div className="flex flex-col  items-center justify-center py-8">
             <Loader1 />

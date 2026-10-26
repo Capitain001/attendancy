@@ -4,13 +4,13 @@ import { personal } from "@/modules/personal/paths";
 import { getFeedback } from "@/utils/server/form/action";
 import { resolveClassesData } from "@/services/personal/actions/classe.mutations";
 import { resolveSlugPaths } from "@/lib/paths";
-import { PersonalClassCard } from "@/components/teacher/personal/class/PersonalClassCard";
+import { PersonalClassCard } from "@/components/personal/teacher/class/PersonalClassCard";
 import {
   CreateClassModal,
   CREATE_CLASS_MODAL_ID,
-} from "@/components/teacher/personal/class/CreateClassModal";
+} from "@/components/personal/teacher/class/CreateClassModal";
 import { FeedbackToast } from "@/components/tools/toast/FeedbackToast";
-import { PersonalClassPlaceholder } from "@/components/teacher/personal/class/PersonalClassPlaceholder";
+import { PersonalClassPlaceholder } from "@/components/personal/teacher/class/PersonalClassPlaceholder";
 
 export const metadata: Metadata = {
   title: "Mes classes | Attendancy",

@@ -1,3 +1,6 @@
+//apps\web\src\services\personal\actions\classe.mutations.ts
+
+// ## ce fichier servira de helper ex: Helper.ts a coter de la page ou ui qui l utilisera 
 import { getClassesAction } from "@/services/class";
 import { checkClassQuotaLimitAction } from "@/services/organization";
 import { actionData, isError } from "@/utils/server/utils";

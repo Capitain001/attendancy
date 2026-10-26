@@ -1,7 +1,7 @@
 // src/services/planning/database.ts
 import { prisma } from '@/lib/prisma'
 import { cacheTag, cacheLife } from 'next/cache'
-import { CACHE } from '@/cache/server/key';;;
+import { CACHE } from '@/cache/server/key'
 
 /* =========================
    RESSOURCES CLASSE (vue planning par classe)

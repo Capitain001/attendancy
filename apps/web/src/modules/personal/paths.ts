@@ -1,3 +1,5 @@
+//apps\web\src\modules\personal\paths.ts
+
 import { getUserInfo } from "@/modules/user/userInfo";
 import { PERSONAL_ROUTE_SEGMENT, ROLE_PATHS } from "@/config/redirects";
 import { UserRoles } from "@/types/user";
@@ -9,7 +11,7 @@ import { UserRoles } from "@/types/user";
 // Un seul endroit à changer si l'un des deux évolue.
 export const personal = {
   home: (slug: string) => `/${PERSONAL_ROUTE_SEGMENT}/${encodeURIComponent(slug)}/${ROLE_PATHS[UserRoles.TEACHER]}`,
-  start: (slug: string) => `${personal.home(slug)}?start`,
+  start: (slug: string) => `${personal.home(slug)}/start`,
   classes: (slug: string) => `${personal.home(slug)}/classes`,
   courses: (slug: string) => `${personal.home(slug)}/courses`,
 };

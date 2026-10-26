@@ -1,4 +1,5 @@
 // src/services/class/types.ts
-import { Class } from '@/generated/prisma/client'
+import { Class, Prisma } from '@/generated/prisma/client'
 export type CreatePersonalClassData = Pick<Class, 'name'>
+export type UpdatePersonalClassData = Partial<Pick<Prisma.ClassUncheckedCreateInput, 'name' | 'type'>>
 

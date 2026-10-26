@@ -104,13 +104,7 @@ export default async function PersonalTeacherClassPage({ params }: PageProps) {
                   Il faut au moins un cours et une salle pour créer des séances.
                 </p>
               )}
-              <ClassPlanning
-                slug={slug}
-                classId={classData.id}
-                classHref={`${personal.classes(slug)}/${encodeURIComponent(classData.id)}`}
-                resources={resourcesResult.data}
-                schedules={schedulesResult.data}
-              />
+           
             </>
           )}
         </section>

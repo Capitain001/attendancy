@@ -1,5 +1,5 @@
 import { connection } from 'next/server'
-import TeacherDailyScreen from '@/components/teacher/personal/screen/TeacherDailyScreen'
+import TeacherDailyScreen from '@/components/personal/teacher/screen/TeacherDailyScreen'
 
 export default async function TeacherDailyPage() {
   await connection()

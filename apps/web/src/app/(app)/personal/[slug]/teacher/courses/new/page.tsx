@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { personal } from "@/modules/personal/paths";
 import { getClassesAction, createPersonalClassAction } from "@/services/class";
-import { NewPersonalCourseForm } from "@/components/teacher/personal/courses/NewPersonalCourseForm";
+import { NewPersonalCourseForm } from "@/components/personal/teacher/courses/NewPersonalCourseForm";
 
 export const metadata: Metadata = {
   title: "Nouveau cours | Attendancy",

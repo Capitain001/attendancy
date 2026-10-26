@@ -21,3 +21,22 @@ export const mockUser: UserInfo = {
     email: 'moussa.kone@example.com',
   },
 }
+
+
+// ## temp
+export const MOCK_PARTICIPANTS= [
+  { id: 'u1', name: 'Jennifer' },
+  { id: 'u2', name: 'Cameron' },
+  { id: 'u3', name: 'Diana' },
+  { id: 'u4', name: 'Ronald' },
+  { id: 'u5', name: 'Anne-Marie' },
+  { id: 'u6', name: 'Leslie' },
+  { id: 'u7', name: 'Leslie' },
+]
+
+export const MOCK_ORG_USERS = [
+  { id: 'o1', name: 'Kofi Mensah', email: 'kofi.mensah@ecole.com' },
+  { id: 'o2', name: 'Akouvi Dossou', email: 'akouvi.dossou@ecole.com' },
+  { id: 'o3', name: 'Yao Agbodjan', email: 'yao.agbodjan@ecole.com' },
+  { id: 'o4', name: 'Sika Lawson', email: 'sika.lawson@ecole.com' },
+]

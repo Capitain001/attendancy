@@ -3,8 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
 import { invalidateEvent } from '@/cache/server/graph'
 import type { Prisma } from '@/generated/prisma/client'
-import { PERSONAL } from '../constants'
-import type { CreatePersonalClassOutput } from '../validation'
+import { PERSONAL } from '../../../features/personal/constants'
+import type { CreatePersonalClassOutput, UpdatePersonalClassDataOutput } from '../validation'
 
 type Tx = Prisma.TransactionClient
 
@@ -71,5 +71,23 @@ export async function createPersonalClass(params: CreatePersonalClassOutput & { 
     )
 
     await invalidatePersonalClassEvents(orgId)
+    return result
+}
+
+
+export async function updatePersonalClass(
+    classId: string,
+    orgId: string,
+    data: UpdatePersonalClassDataOutput,
+) {
+    const result = await tryConstraint(
+        prisma.class.update({
+            where: { id: classId, programTrack: { orgId } },
+            data,
+            select: { id: true, name: true, type: true },
+        }),
+    )
+
+    await invalidateEvent('CLASS_UPDATED', orgId, classId)
     return result
 }

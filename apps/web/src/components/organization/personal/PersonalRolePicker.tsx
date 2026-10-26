@@ -1,7 +1,7 @@
 'use client'
 import { useTransition } from 'react'
 import { useRouter } from 'next/navigation'
-import { createPersonalOrgAction } from '@/services/organization'
+import { createPersonalOrgAction } from '@/features/personal'
 import { PERSONAL_ROLES, type PersonalRole } from '@/modules/auth/constants'
 import { REDIRECT_URL } from '@/config'
 

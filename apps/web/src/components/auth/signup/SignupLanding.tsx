@@ -7,7 +7,7 @@ export function SignupLanding() {
   return (
     <main className={cn(layout.page, 'flex min-h-screen flex-col items-center justify-center gap-10 py-16')}>
       <div className="space-y-3 text-center">
-        <h1 className={typography.h3}>Créez votre espace Attendancy</h1>
+        <h1 className={typography.h3}>Gérez votre établissement</h1>
         <p className={cn(typography.large, 'max-w-lg')}>
           Organisez votre établissement en quelques minutes.
         </p>
@@ -43,12 +43,22 @@ export function SignupLanding() {
         </div>
       </div>
 
-      <p className={typography.body}>
-        Vous avez déjà un compte ?{' '}
-        <Link href="/login" className="font-medium text-foreground hover:underline">
-          Se connecter
+      <div className="flex flex-col items-center gap-3">
+        <p className={typography.body}>
+          Vous avez déjà un compte ?{' '}
+          <Link href="/login" className="font-medium text-foreground hover:underline">
+            Se connecter
+          </Link>
+        </p>
+
+        {/* Lien discret de debug */}
+        <Link
+          href="/auth/signup/personal"
+          className="text-xs text-muted-foreground/60 transition-colors hover:text-muted-foreground"
+        >
+          [Debug] Espace personnel
         </Link>
-      </p>
+      </div>
     </main>
   )
 }

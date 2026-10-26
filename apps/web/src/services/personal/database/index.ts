@@ -1,3 +1,2 @@
-// src/services/organization/actions/index.ts
-export * from './organization.mutations'
-export * from './organization.queries'
+// src/services/personal/database/index.ts
+export * from './classe.mutations'

@@ -23,3 +23,27 @@ export function getRefreshUrl(
   urlObj.searchParams.set("v", String(ts));
   return urlObj.toString();
 }
+
+
+type QueryValue = string | number | boolean | null | undefined
+
+/**
+ * Ajoute des paramètres de requête à une URL (relative ou absolue).
+ * - `undefined`, `null` et `''` sont ignorés ; `false` et `0` sont conservés.
+ * - Utilise `&` si l'URL contient déjà une query string, sinon `?`.
+ * - Les valeurs sont encodées par URLSearchParams.
+ * Limite : une URL contenant un fragment (#…) n'est pas gérée.
+ */
+export function buildQueryUrl(baseUrl: string, params: Record<string, QueryValue>): string {
+  const query = new URLSearchParams()
+
+  for (const [key, value] of Object.entries(params)) {
+    if (value === undefined || value === null || value === '') continue
+    query.set(key, String(value))
+  }
+
+  const queryString = query.toString()
+  if (!queryString) return baseUrl
+
+  return `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}${queryString}`
+}

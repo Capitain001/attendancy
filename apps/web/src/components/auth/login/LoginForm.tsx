@@ -80,7 +80,7 @@ export function LoginForm({ next }: { next?: string }) {
                     href="/auth/signup"
                     className="font-medium text-foreground underline-offset-2 hover:underline"
                   >
-                    Créez votre établissement
+                   Gérez votre établissement
                   </a>
                 </p>
                 <p className="text-center text-xs text-muted-foreground">

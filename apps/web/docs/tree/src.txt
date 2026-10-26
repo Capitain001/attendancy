@@ -1,0 +1,1100 @@
+src
+├───app
+│   ├───(app)
+│   │   ├───[slug]
+│   │   │   ├───admin
+│   │   │   │   └───functions
+│   │   │   │
+│   │   │   ├───direction
+│   │   │   │   ├───academic
+│   │   │   │   │   ├───courses
+│   │   │   │   │   │   └───[courseId]
+│   │   │   │   │   │
+│   │   │   │   │   ├───departments
+│   │   │   │   │   │
+│   │   │   │   │   ├───program-tracks
+│   │   │   │   │   │
+│   │   │   │   │   ├───programs
+│   │   │   │   │   │   └───[programId]
+│   │   │   │   │   │
+│   │   │   │   │   ├───promotions
+│   │   │   │   │   │   └───[classId]
+│   │   │   │   │   │       ├───courses
+│   │   │   │   │   │       │
+│   │   │   │   │   │       ├───enrollment
+│   │   │   │   │   │       │
+│   │   │   │   │   │       ├───groups
+│   │   │   │   │   │       │
+│   │   │   │   │   │       ├───invitations
+│   │   │   │   │   │       │
+│   │   │   │   │   │       └───program
+│   │   │   │   │   │           ├───@modal
+│   │   │   │   │   │           │
+│   │   │   │   │   │           └───@program_modal
+│   │   │   │   │   │
+│   │   │   │   │   ├───ues
+│   │   │   │   │   │   ├───[ueId]
+│   │   │   │   │   │   │
+│   │   │   │   │   │   └───templates
+│   │   │   │   │   │       └───[id]
+│   │   │   │   │   │
+│   │   │   │   │   └───years
+│   │   │   │   │
+│   │   │   │   ├───administration
+│   │   │   │   │   ├───audit
+│   │   │   │   │   │
+│   │   │   │   │   └───settings
+│   │   │   │   │
+│   │   │   │   ├───attendance
+│   │   │   │   │   ├───reports
+│   │   │   │   │   │
+│   │   │   │   │   └───sessions
+│   │   │   │   │
+│   │   │   │   ├───evaluation
+│   │   │   │   │
+│   │   │   │   ├───functions
+│   │   │   │   │   └───[id]
+│   │   │   │   │
+│   │   │   │   ├───invitations
+│   │   │   │   │   └───teachers
+│   │   │   │   │
+│   │   │   │   ├───notifications
+│   │   │   │   │   └───schedules
+│   │   │   │   │
+│   │   │   │   ├───people
+│   │   │   │   │   ├───parents
+│   │   │   │   │   │
+│   │   │   │   │   ├───students
+│   │   │   │   │   │   └───[studentId]
+│   │   │   │   │   │
+│   │   │   │   │   └───teachers
+│   │   │   │   │       └───[teacherId]
+│   │   │   │   │
+│   │   │   │   ├───planning
+│   │   │   │   │   ├───classe
+│   │   │   │   │   │   └───[classId]
+│   │   │   │   │   │
+│   │   │   │   │   └───promotion
+│   │   │   │   │       └───[classId]
+│   │   │   │   │
+│   │   │   │   ├───reports
+│   │   │   │   │
+│   │   │   │   ├───schedule
+│   │   │   │   │   ├───calendar
+│   │   │   │   │   │
+│   │   │   │   │   ├───events
+│   │   │   │   │   │
+│   │   │   │   │   └───rooms
+│   │   │   │   │
+│   │   │   │   └───sessions
+│   │   │   │
+│   │   │   ├───profile
+│   │   │   │
+│   │   │   ├───settings
+│   │   │   │   ├───devices
+│   │   │   │   │
+│   │   │   │   ├───notifications
+│   │   │   │   │
+│   │   │   │   ├───payment
+│   │   │   │   │
+│   │   │   │   ├───plugins
+│   │   │   │   │
+│   │   │   │   ├───privacy
+│   │   │   │   │
+│   │   │   │   ├───profile
+│   │   │   │   │
+│   │   │   │   ├───theme
+│   │   │   │   │
+│   │   │   │   ├───time
+│   │   │   │   │
+│   │   │   │   └───workspace
+│   │   │   │
+│   │   │   ├───student
+│   │   │   │   ├───attendance
+│   │   │   │   │
+│   │   │   │   ├───grades
+│   │   │   │   │
+│   │   │   │   ├───notifications
+│   │   │   │   │
+│   │   │   │   ├───planning
+│   │   │   │   │
+│   │   │   │   └───session
+│   │   │   │
+│   │   │   └───teacher
+│   │   │       ├───attendance
+│   │   │       │
+│   │   │       ├───courses
+│   │   │       │   └───[id]
+│   │   │       │       └───evaluations
+│   │   │       │
+│   │   │       ├───evaluations
+│   │   │       │
+│   │   │       ├───notifications
+│   │   │       │
+│   │   │       ├───planning
+│   │   │       │
+│   │   │       ├───sessions
+│   │   │       │
+│   │   │       ├───students
+│   │   │       │
+│   │   │       ├───test
+│   │   │       │
+│   │   │       └───unavailabilities
+│   │   │
+│   │   ├───personal
+│   │   │   └───[slug]
+│   │   │       └───teacher
+│   │   │           ├───attendance
+│   │   │           │
+│   │   │           ├───classes
+│   │   │           │   └───[id]
+│   │   │           │       └───students
+│   │   │           │
+│   │   │           ├───courses
+│   │   │           │   └───new
+│   │   │           │
+│   │   │           ├───notifications
+│   │   │           │
+│   │   │           ├───planning
+│   │   │           │
+│   │   │           ├───sessions
+│   │   │           │
+│   │   │           ├───start
+│   │   │           │
+│   │   │           ├───students
+│   │   │           │
+│   │   │           └───unavailabilities
+│   │   │
+│   │   ├───session
+│   │   │   └───attendance
+│   │   │
+│   │   └───subscription
+│   │       ├───cancel
+│   │       │
+│   │       └───success
+│   │
+│   ├───admin
+│   │   └───seed
+│   │
+│   ├───api
+│   │   ├───auth
+│   │   │   └───me
+│   │   │
+│   │   ├───classes
+│   │   │   └───dev
+│   │   │
+│   │   ├───rpc
+│   │   │   └───[action]
+│   │   │
+│   │   └───teacher
+│   │       └───schedule-days
+│   │
+│   ├───auth
+│   │   ├───callback
+│   │   │
+│   │   ├───check-email
+│   │   │
+│   │   ├───error
+│   │   │
+│   │   ├───forgot-password
+│   │   │
+│   │   ├───invite
+│   │   │
+│   │   ├───link-expired
+│   │   │
+│   │   ├───org
+│   │   │   ├───info
+│   │   │   │
+│   │   │   ├───profile
+│   │   │   │
+│   │   │   └───setup
+│   │   │
+│   │   ├───profile
+│   │   │
+│   │   ├───redirect
+│   │   │
+│   │   ├───signup
+│   │   │   ├───personal
+│   │   │   │
+│   │   │   └───principal
+│   │   │
+│   │   └───welcome
+│   │
+│   ├───login
+│   │
+│   ├───playground
+│   │
+│   └───test
+│       ├───chat
+│       │
+│       ├───dnd
+│       │
+│       ├───invitation
+│       │
+│       ├───modal
+│       │   └───@modal
+│       │
+│       ├───notif
+│       │
+│       ├───promotion-courses
+│       │
+│       ├───students
+│       │   └───table
+│       │
+│       ├───ux
+│       │
+│       └───welcome
+│
+├───cache
+│   ├───client
+│   │
+│   └───server
+│
+├───components
+│   ├───agent-dock
+│   │
+│   ├───animate-ui
+│   │   ├───components
+│   │   │   ├───animate
+│   │   │   │
+│   │   │   └───community
+│   │   │
+│   │   ├───icons
+│   │   │
+│   │   ├───primitives
+│   │   │   └───animate
+│   │   │
+│   │   └───radix
+│   │
+│   ├───attendance
+│   │
+│   ├───auth
+│   │   ├───check-email
+│   │   │
+│   │   ├───form
+│   │   │
+│   │   ├───login
+│   │   │
+│   │   ├───operations
+│   │   │
+│   │   ├───org
+│   │   │
+│   │   ├───page
+│   │   │
+│   │   ├───password
+│   │   │
+│   │   ├───signup
+│   │   │   └───flow
+│   │   │       ├───invited
+│   │   │       │
+│   │   │       └───profile
+│   │   │           └───StepCards
+│   │   │
+│   │   └───ui
+│   │
+│   ├───classes
+│   │   └───direction
+│   │       ├───enrollment
+│   │       │
+│   │       ├───groups
+│   │       │
+│   │       └───section
+│   │           └───ui
+│   │
+│   ├───courses
+│   │   ├───direction
+│   │   │   ├───components
+│   │   │   │
+│   │   │   ├───hooks
+│   │   │   │
+│   │   │   ├───sections
+│   │   │   │
+│   │   │   └───ui
+│   │   │
+│   │   └───dnd
+│   │
+│   ├───curriculum
+│   │
+│   ├───design
+│   │   ├───card
+│   │   │
+│   │   ├───phone
+│   │   │
+│   │   ├───prim
+│   │   │
+│   │   ├───svg
+│   │   │
+│   │   ├───ui
+│   │   │
+│   │   └───ux
+│   │       └───family-drawer
+│   │
+│   ├───direction
+│   │   ├───academic
+│   │   │   ├───promotion
+│   │   │   │
+│   │   │   ├───ue
+│   │   │   │   └───detail
+│   │   │   │
+│   │   │   └───year
+│   │   │
+│   │   ├───attendance
+│   │   │
+│   │   ├───dashboard
+│   │   │
+│   │   ├───functions
+│   │   │   └───ui
+│   │   │
+│   │   ├───notifications
+│   │   │
+│   │   ├───people
+│   │   │   ├───student
+│   │   │   │   ├───hooks
+│   │   │   │   │
+│   │   │   │   ├───section
+│   │   │   │   │
+│   │   │   │   └───ui
+│   │   │   │
+│   │   │   └───teacher
+│   │   │       ├───sections
+│   │   │       │
+│   │   │       └───ui
+│   │   │
+│   │   ├───rooms
+│   │   │
+│   │   ├───schedule
+│   │   │
+│   │   ├───students
+│   │   │   ├───table
+│   │   │   │   └───ui
+│   │   │   │
+│   │   │   └───ui
+│   │   │
+│   │   └───user
+│   │
+│   ├───event-calendar
+│   │   ├───components
+│   │   │
+│   │   ├───context
+│   │   │
+│   │   ├───hooks
+│   │   │
+│   │   └───views
+│   │       ├───DayView
+│   │       │
+│   │       ├───MonthView
+│   │       │   ├───components
+│   │       │   │
+│   │       │   ├───hooks
+│   │       │   │
+│   │       │   ├───types
+│   │       │   │
+│   │       │   └───utils
+│   │       │
+│   │       ├───Recurring-event
+│   │       │
+│   │       └───WeekView
+│   │           ├───components
+│   │           │
+│   │           └───utils
+│   │
+│   ├───forms
+│   │
+│   ├───helpers
+│   │
+│   ├───icons
+│   │   └───generated
+│   │
+│   ├───illustrations
+│   │   └───generated
+│   │
+│   ├───invitation
+│   │   └───hooks
+│   │
+│   ├───layout
+│   │   ├───Header
+│   │   │
+│   │   ├───sidebar
+│   │   │   ├───hooks
+│   │   │   │
+│   │   │   ├───ui
+│   │   │   │
+│   │   │   ├───user-sidebar
+│   │   │   │
+│   │   │   └───views
+│   │   │
+│   │   └───to-implemente
+│   │
+│   ├───loaders
+│   │
+│   ├───notification
+│   │   ├───admin
+│   │   │
+│   │   ├───cardstack
+│   │   │
+│   │   ├───notification-history
+│   │   │
+│   │   ├───toast
+│   │   │
+│   │   └───ui
+│   │
+│   ├───organization
+│   │   ├───personal
+│   │   │
+│   │   └───settings
+│   │
+│   ├───planning
+│   │   ├───card
+│   │   │
+│   │   ├───coursePlanning
+│   │   │
+│   │   ├───export
+│   │   │   └───ui
+│   │   │
+│   │   ├───filters
+│   │   │
+│   │   ├───hook
+│   │   │
+│   │   └───ui
+│   │
+│   ├───program-tracks
+│   │   ├───dialog
+│   │   │
+│   │   ├───form
+│   │   │
+│   │   ├───pages
+│   │   │
+│   │   └───ui
+│   │
+│   ├───programs
+│   │   ├───form
+│   │   │
+│   │   ├───modal
+│   │   │
+│   │   ├───pages
+│   │   │
+│   │   ├───program
+│   │   │   ├───sections
+│   │   │   │
+│   │   │   └───ui
+│   │   │
+│   │   └───ui
+│   │       └───org-details-editor
+│   │
+│   ├───RealTime
+│   │
+│   ├───schedule
+│   │
+│   ├───seed
+│   │   └───cards
+│   │
+│   ├───server
+│   │
+│   ├───session
+│   │   ├───attendance-list
+│   │   │
+│   │   ├───next-session
+│   │   │
+│   │   ├───section
+│   │   │
+│   │   └───ui
+│   │
+│   ├───stats
+│   │   └───ui
+│   │
+│   ├───stripe
+│   │
+│   ├───student
+│   │   ├───attendance
+│   │   │
+│   │   ├───notifications
+│   │   │
+│   │   ├───planning
+│   │   │
+│   │   ├───sections
+│   │   │
+│   │   ├───session
+│   │   │
+│   │   ├───ui
+│   │   │
+│   │   ├───user
+│   │   │
+│   │   └───ux
+│   │
+│   ├───teacher
+│   │   ├───attendance
+│   │   │   └───teacher-attendance
+│   │   │       ├───components
+│   │   │       │
+│   │   │       ├───hooks
+│   │   │       │
+│   │   │       ├───mocks
+│   │   │       │
+│   │   │       └───views
+│   │   │
+│   │   ├───courses
+│   │   │   └───ui
+│   │   │
+│   │   ├───pages
+│   │   │
+│   │   ├───personal
+│   │   │   ├───class
+│   │   │   │
+│   │   │   ├───courses
+│   │   │   │
+│   │   │   ├───screen
+│   │   │   │
+│   │   │   ├───section
+│   │   │   │
+│   │   │   ├───student
+│   │   │   │
+│   │   │   ├───ui
+│   │   │   │
+│   │   │   └───ux
+│   │   │
+│   │   ├───planning
+│   │   │   ├───daily-schedule
+│   │   │   │
+│   │   │   └───ui
+│   │   │
+│   │   ├───section
+│   │   │
+│   │   ├───ui
+│   │   │
+│   │   ├───unavailabilities
+│   │   │
+│   │   └───user
+│   │
+│   ├───team-switcher
+│   │
+│   ├───term
+│   │
+│   ├───theme
+│   │
+│   ├───toast
+│   │
+│   ├───tools
+│   │   └───toast
+│   │
+│   ├───ui
+│   │   ├───custom
+│   │   │
+│   │   ├───sidebar
+│   │   │
+│   │   ├───skiper-ui
+│   │   │
+│   │   └───smoothui
+│   │       └───gooey-popover
+│   │
+│   ├───users
+│   │   ├───avatars
+│   │   │
+│   │   ├───invite
+│   │   │
+│   │   ├───profile
+│   │   │
+│   │   ├───settings
+│   │   │
+│   │   └───UserButton
+│   │
+│   └───ux
+│       └───analytic-ring
+│
+├───config
+│
+├───contexts
+│
+├───data
+│   └───mocks
+│
+├───generated
+│   └───prisma
+│       ├───internal
+│       │
+│       └───models
+│
+├───hooks
+│   ├───auth
+│   │
+│   ├───chat
+│   │
+│   ├───data
+│   │   ├───academic-year
+│   │   │
+│   │   ├───accademicYears
+│   │   │
+│   │   ├───attendances
+│   │   │
+│   │   ├───chat
+│   │   │
+│   │   ├───classes
+│   │   │
+│   │   ├───courses
+│   │   │
+│   │   ├───departments
+│   │   │
+│   │   ├───functions
+│   │   │
+│   │   ├───groups
+│   │   │
+│   │   ├───invitation
+│   │   │
+│   │   ├───organization
+│   │   │
+│   │   ├───planning
+│   │   │
+│   │   ├───program
+│   │   │
+│   │   ├───program-track
+│   │   │
+│   │   ├───programs
+│   │   │
+│   │   ├───rooms
+│   │   │
+│   │   ├───schedule
+│   │   │
+│   │   ├───seed
+│   │   │
+│   │   ├───sessions
+│   │   │
+│   │   ├───teacher-unavailability
+│   │   │
+│   │   ├───teachers
+│   │   │
+│   │   ├───term
+│   │   │
+│   │   ├───ue
+│   │   │
+│   │   ├───ue-course
+│   │   │
+│   │   ├───ue-template
+│   │   │
+│   │   ├───userFunctions
+│   │   │
+│   │   └───years
+│   │
+│   ├───entity
+│   │   ├───_exemples
+│   │   │
+│   │   └───_test
+│   │
+│   ├───entityCrud
+│   │
+│   ├───forms
+│   │
+│   ├───notification
+│   │
+│   ├───optimiste
+│   │
+│   ├───pratical
+│   │
+│   ├───realtime
+│   │
+│   ├───stripe
+│   │
+│   ├───user
+│   │
+│   ├───utils
+│   │
+│   └───webhook
+│
+├───lib
+│   ├───data
+│   │
+│   ├───export
+│   │   ├───programs
+│   │   │   ├───pdf
+│   │   │   │
+│   │   │   └───xlsx
+│   │   │
+│   │   └───ues
+│   │
+│   ├───invitation
+│   │
+│   ├───rpc
+│   │
+│   ├───storage
+│   │
+│   └───toast
+│
+├───modules
+│   ├───audit
+│   │
+│   ├───auth
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   ├───database
+│   │   │
+│   │   ├───members
+│   │   │
+│   │   ├───persmission
+│   │   │
+│   │   ├───profile
+│   │   │
+│   │   ├───responsable
+│   │   │
+│   │   └───rpc
+│   │
+│   ├───invitation
+│   │   ├───direction
+│   │   │
+│   │   ├───student
+│   │   │
+│   │   └───teacher
+│   │
+│   ├───notification
+│   │   └───subscriptions
+│   │
+│   ├───permission
+│   │
+│   ├───personal
+│   │
+│   ├───presence
+│   │
+│   └───user
+│       ├───actions
+│       │
+│       ├───cache
+│       │
+│       ├───permissions.early.test
+│       │
+│       └───usage
+│
+├───providers
+│
+├───services
+│   ├───academic-year
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───attendance
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───audit
+│   │   └───.api
+│   │
+│   ├───auth
+│   │   └───.api
+│   │
+│   ├───chat
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───class
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   ├───database
+│   │   │
+│   │   └───personal
+│   │       ├───actions
+│   │       │
+│   │       └───database
+│   │
+│   ├───course
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───course-teacher
+│   │   ├───__tests__
+│   │   │
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───curriculum
+│   │   ├───__tests__
+│   │   │
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───department
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───device
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   ├───database
+│   │   │
+│   │   └───server
+│   │
+│   ├───direction
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───entity
+│   │   ├───__tests__
+│   │   │
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───evaluation
+│   │   ├───__tests__
+│   │   │
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───event
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───function
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───group
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───notification
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───organization
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───parent
+│   │   ├───__tests__
+│   │   │
+│   │   ├───.api
+│   │   │
+│   │   └───database
+│   │
+│   ├───permission
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───personal
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───planning
+│   │   ├───.api
+│   │   │
+│   │   └───conflict
+│   │       ├───.api
+│   │       │
+│   │       └───check
+│   │
+│   ├───program
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───program-track
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───program-ue
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───room
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───schedule
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───seed
+│   │   ├───.api
+│   │   │
+│   │   ├───generators
+│   │   │
+│   │   ├───guards
+│   │   │
+│   │   ├───purge
+│   │   │
+│   │   ├───tag
+│   │   │
+│   │   └───utils
+│   │
+│   ├───session
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───student
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───student-enrollment
+│   │   ├───__tests__
+│   │   │
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───subscription
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───teacher
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───teacher-course-hours
+│   │   ├───__tests__
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───teacher-unavailability
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───term
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───ue
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───ue-course
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───ue-template
+│   │   ├───__tests__
+│   │   │
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───user
+│   │   ├───__tests__
+│   │   │
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   ├───user-organization
+│   │   ├───__tests__
+│   │   │
+│   │   ├───.api
+│   │   │
+│   │   ├───actions
+│   │   │
+│   │   └───database
+│   │
+│   └───weekly-template
+│       ├───.api
+│       │
+│       ├───actions
+│       │
+│       └───database
+│
+├───store
+│
+├───styles
+│   └───interfaces
+│
+├───types
+│
+└───utils
+    ├───server
+    │   └───form
+    │
+    └───supabase
