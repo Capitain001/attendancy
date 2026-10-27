@@ -29,3 +29,13 @@ export const setGroupStudentsSchema = object({
 
 export type SetGroupStudentsInput  = InferInput<typeof setGroupStudentsSchema>
 export type SetGroupStudentsOutput = InferOutput<typeof setGroupStudentsSchema>
+
+export const addStudentsToGroupSchema = object({
+  groupId:    pipe(string(), uuid('ID groupe invalide')),
+  classId:    pipe(string(), uuid('ID classe invalide')),
+  studentIds: array(pipe(string(), uuid('ID étudiant invalide'))),
+})
+
+export type AddStudentsToGroupInput  = InferInput<typeof addStudentsToGroupSchema>
+export type AddStudentsToGroupOutput = InferOutput<typeof addStudentsToGroupSchema>
+

@@ -17,7 +17,6 @@ export default async function ClassInvitationPage({
       <h1 className="text-center text-[22px] font-semibold leading-tight">
         Ajouter de nouveaux participants
       </h1>
-
       <section className="space-y-3">
         <div className="flex items-baseline justify-between">
           <h2 className="text-[16px] font-medium">Participants</h2>

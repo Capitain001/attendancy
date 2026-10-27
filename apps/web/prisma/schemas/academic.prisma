@@ -265,7 +265,8 @@ model Course {
   schedules     Schedule[]
   weeklySlots   WeeklySlot[]
   teacherHours  TeacherCourseHours[]
-
+  // sert a la relation course - groupe pr l espace perso
+  group Group?
   // Unicité (classId, ueCourseId) gérée par index UNIQUE PARTIEL
   // WHERE "deletedAt" IS NULL — non exprimable en Prisma, défini en
   // post-migrate (course_active_unique_idx) : recréer un cours après
@@ -383,6 +384,11 @@ model Group {
   class         Class          @relation(fields: [classId], references: [id])
   schedules     Schedule[]
   studentGroups StudentGroup[]
+
+//perso Lien cours ↔ groupe
+//SetNull unlink le groupe sans réécrire l’historique des séances (Schedule.groupId reste protégé par son Restrict).
+ courseId String? @unique @db.Uuid
+  course   Course? @relation(fields: [courseId], references: [id], onDelete: SetNull)
 
   @@index([classId])
   @@schema("public")

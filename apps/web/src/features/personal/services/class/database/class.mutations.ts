@@ -1,3 +1,4 @@
+// apps\web\src\features\personal\services\class\database\class.mutations.ts
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
 import { invalidateEvent } from '@/cache/server/graph'

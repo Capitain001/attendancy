@@ -143,7 +143,7 @@ export function TeacherClassInviteDialog({
                 setPicked(u)
                 setEmail(u.email ?? '')
               }}
-             contentClassName="w-[calc(100vw)] rounded-md sm:w-[336px] mt-2"
+              contentClassName="w-[calc(100vw)] rounded-md sm:w-[336px] mt-2"
             />
           </div>
           {pickedUser?.name && (
@@ -152,26 +152,29 @@ export function TeacherClassInviteDialog({
           {error && <p className="text-[12px] text-destructive">{error}</p>}
         </div>
 
-        <div className="mt-10 flex items-center justify-between">
+
+        <div className="mt-10 flex items-center justify-between gap-3">
           <button
             type="button"
             onClick={handleShare}
             disabled={!canSubmit}
-            className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-foreground transition-opacity hover:opacity-70 disabled:opacity-40"
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-border px-3.5 text-[13px] font-medium text-foreground transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-40"
           >
-            <Share2 className="size-3.5" />
+            <Share2 className="size-4" />
             Partager le lien
           </button>
+
           <button
             type="button"
             onClick={handleSendEmail}
             disabled={!canSubmit}
-            className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-foreground transition-opacity hover:opacity-70 disabled:opacity-40"
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-border px-3.5 text-[13px] font-medium text-foreground transition-colors hover:bg-muted bg-foreground/10 disabled:pointer-events-none disabled:opacity-40 border-dashed"
           >
-            {pending ? 'Envoi…' : 'Envoyer par email'}
-            {!pending && <Send className="size-3.5" />}
+            {!pending && <Send className="size-4" />}
+            {pending ? 'Envoi…' : 'Email'}
           </button>
         </div>
+
       </DialogContent>
     </Dialog>
   )
