@@ -47,9 +47,15 @@ export const CACHE_KEYS = {
     BY_CLASS: (classId: string) => ["groups", "by-class", classId] as const,
     ELIGIBLE: (classId: string, groupId: string) => ["groups", "eligible", classId, groupId] as const,
   },
+
   TEACHER_UNAVAILABILITY: {
     BY_TEACHER: ({ teacherId, orgId }: { teacherId: string; orgId: string }) =>
       ["teacher-unavailability", "by-teacher", teacherId, orgId] as const,
+  },
+
+  STUDENTS: entityKeys("students"), // ALL → ["students"], byId(id) → ["students", id]
+  STUDENT_ENROLLMENTS: {
+    BY_CLASS: subKey("student-enrollments", "by-class"), // (classId) → ["student-enrollments", "by-class", classId]
   },
 
 } as const;

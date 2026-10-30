@@ -16,23 +16,24 @@ import {
 } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { LiveUserIcon } from '@/components/RealTime/UserIcon'
-import type { UserInfo } from '@/components/users/AvatarSelect'
+import type { UserType } from '@/components/users/AvatarSelect'
 
-interface UserComboboxProps {
-  users: UserInfo[]
-  onSelect: (user: UserInfo) => void
+interface UserComboboxProps<T extends UserType> {
+  users: T[]
+  onSelect: (user: T) => void
   disabled?: boolean
   triggerClassName?: string
   contentClassName?: string
 }
 
-export function UserCombobox({ 
-  users, 
-  onSelect, 
-  disabled, 
-  triggerClassName, 
-  contentClassName 
-}: UserComboboxProps) {
+
+export function UserCombobox<T extends UserType>({
+  users,
+  onSelect,
+  disabled,
+  triggerClassName,
+  contentClassName,
+}: UserComboboxProps<T>) {
   const [open, setOpen] = useState(false)
   // Une invitation est liée à un email : on n'affiche que les users qui en ont un.
   const selectable = users.filter((u) => u.email)

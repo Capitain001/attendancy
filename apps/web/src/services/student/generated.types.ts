@@ -1,9 +1,8 @@
-// src/services/student/generated.types.ts
 // ⚠ Fichier généré automatiquement — NE PAS ÉDITER À LA MAIN
 // Régénérer : npx tsx scripts/generate/types/types.ts student
 // Pour surcharger un type, définissez-le dans ./types.ts (jamais écrasé).
 
-import { getStudentsStats, enrollStudent, removeEnrollment, assignStudentGroup, deleteStudentGroup, getStudentProfile, getStudentSchedules, getStudentStats, getStudentActiveSession, getStudentSessionDetail, getStudentByIdForDirection, getParentsForDirection, getEnrolledStudents, getDirectionStudents } from './database'
+import { getStudentsStats, enrollStudent, removeEnrollment, assignStudentGroup, deleteStudentGroup, getStudentProfile, getStudentSchedules, getStudentStats, getStudentActiveSession, getStudentSessionDetail, getStudentByIdForDirection, getParentsForDirection, getEnrolledStudents, getDirectionStudents, getStudents } from './database'
 
 export type GetStudentsStatsDto = Awaited<ReturnType<typeof getStudentsStats>>
 export type EnrollStudentDto = Awaited<ReturnType<typeof enrollStudent>>
@@ -19,3 +18,4 @@ export type GetStudentByIdForDirectionDto = Awaited<ReturnType<typeof getStudent
 export type GetParentsForDirectionDto = Awaited<ReturnType<typeof getParentsForDirection>>
 export type GetEnrolledStudentsDto = Awaited<ReturnType<typeof getEnrolledStudents>>
 export type GetDirectionStudentsDto = Awaited<ReturnType<typeof getDirectionStudents>>
+export type GetStudentsDto = Awaited<ReturnType<typeof getStudents>>

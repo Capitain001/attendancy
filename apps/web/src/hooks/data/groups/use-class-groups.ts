@@ -1,3 +1,4 @@
+//apps\web\src\hooks\data\groups\use-class-groups.ts
 "use client";
 
 // Cache TanStack des groupes d'une classe — partagé entre la liste (GroupsManager)

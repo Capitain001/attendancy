@@ -8,13 +8,6 @@ import { toast } from 'sonner'
 import { CACHE_KEYS } from '@/cache/client/key'
 import { useInvitationMutations, invalidateInvitationQueries, copyLinkOrToast } from './useInvitationMutations'
 
-interface InviteStudentResult {
-  success: boolean
-  message?: string
-  error?: string
-  link?: string
-}
-
 export function useClassInvitations(classId: string) {
   const qc = useQueryClient()
   const classKey = CACHE_KEYS.INVITATIONS.BY_CLASS(classId)
@@ -35,7 +28,7 @@ export function useClassInvitations(classId: string) {
 
   const inviteStudentMut = useMutation({
     mutationFn: inviteStudent,
-    onSuccess: (r: InviteStudentResult) => {
+    onSuccess: (r) => {
       if (!r.success) {
         toast.error(r.error ?? "Envoi de l'invitation impossible.")
         return
@@ -50,5 +43,20 @@ export function useClassInvitations(classId: string) {
     onError: () => toast.error("Envoi de l'invitation impossible."),
   })
 
-  return { invitations, isLoading, inviteStudent: inviteStudentMut, resend, revoke }
+  // AJOUT : variante silencieuse pour le dialog (il gère lui-même toast et partage du lien).
+  const inviteStudentSilentMut = useMutation({
+    mutationFn: inviteStudent,
+    onSuccess: (r) => {
+      if (r.success) invalidateInvitationQueries(qc, [classKey])
+    },
+  })
+
+  return {
+    invitations,
+    isLoading,
+    inviteStudent: inviteStudentMut,
+    inviteStudentSilent: inviteStudentSilentMut, // AJOUT
+    resend,
+    revoke,
+  }
 }

@@ -1,6 +1,6 @@
-import { UserInfo } from "./AvatarSelect";
+import { UserType } from "./AvatarSelect";
 
-  export const mockUsers: UserInfo[] = [
+  export const mockUsers: UserType[] = [
     {
       id: "u1",
       name: "Alice Dupont",

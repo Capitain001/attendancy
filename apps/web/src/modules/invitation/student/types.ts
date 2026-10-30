@@ -18,3 +18,8 @@ export interface InviteStudentParams {
   expiresInDays?: number;
   deliveryMethod?: "email" | "link"
 }
+
+
+import type { inviteStudent } from './actions'
+
+export type InviteStudentResult = Awaited<ReturnType<typeof inviteStudent>>

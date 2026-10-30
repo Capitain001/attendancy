@@ -228,3 +228,17 @@ export async function getDirectionStudentsAction(classId?: string) {
   }
 }
 
+
+import { getStudents } from '../database'
+
+export async function getStudentsAction() {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
+  try {
+    return { data: await getStudents(orgId) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}

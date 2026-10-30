@@ -4,13 +4,12 @@
 
 import { LiveUserIcon } from '@/components/RealTime/UserIcon'
 import { cn } from '@/lib/utils'
+import type { GetStudentsDto } from '@/services/student'
 
-export type Participant = { id: string; name: string; avatarUrl?: string }
-
-interface ParticipantListProps {
-  participants: Participant[]
-  className?: string
-}
+  interface ParticipantListProps {
+    participants: GetStudentsDto 
+    className?: string
+  }
 
 export function ParticipantList({ participants, className }: ParticipantListProps) {
   return (
@@ -20,12 +19,12 @@ export function ParticipantList({ participants, className }: ParticipantListProp
         className,
       )}
     >
-      {participants.map((p) => (
-        <li key={p.id}>
+      {participants.map(({ id, user }) => (
+        <li key={id}>
           <LiveUserIcon
-            userId={p.id}
-            avatarUrl={p.avatarUrl}
-            name={p.name}
+            userId={user.id}
+            avatarUrl={user.avatar_url ?? undefined}
+            name={user.firstName ?? user.email}
             showName
             className="w-[72px]"
             avatarClassName="size-14"

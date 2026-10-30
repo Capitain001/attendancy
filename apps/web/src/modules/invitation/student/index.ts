@@ -10,7 +10,7 @@
  */
 
 export { inviteStudent, getClassInvitationsAction } from "./actions";
-export type { InviteStudentParams } from "./types";
+export type * from "./types";
 export { inviteStudentSchema } from "./validation";
 export type { InviteStudentInput } from "./validation";
 export { checkInvitationResources, getClassInvitations } from "./database";

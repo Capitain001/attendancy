@@ -38,6 +38,7 @@ export async function getStudentsEnrollments(orgId: string, filters: GetStudents
           id: true,
           user: {
             select: {
+              id:true,
               firstName: true,
               lastName: true,
               email: true,

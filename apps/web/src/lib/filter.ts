@@ -1,3 +1,4 @@
+// apps\web\src\lib\filter.ts
 export type Relation = {
   id: string;
   name: string;
@@ -45,3 +46,34 @@ export function groupByRelation<T>(
   return Array.from(map.values());
 }
 
+type StringKey<T> = {
+  [K in keyof T]: T[K] extends string ? K : never
+}[keyof T]
+
+type IdSelector<T> = StringKey<T> | ((item: T) => string)
+
+/**
+ * Retire de `items` ceux dont l'id figure dans `excludedIds`.
+ * - par défaut, l'id est lu sur `item.id`
+ * - sinon : nom d'une clé string (`'studentId'`) ou accesseur (`(e) => e.student.id`)
+ */
+export function excludeByIds<T extends { id: string }>(
+  items: readonly T[],
+  excludedIds: readonly string[],
+): T[]
+export function excludeByIds<T>(
+  items: readonly T[],
+  excludedIds: readonly string[],
+  selector: IdSelector<T>,
+): T[]
+export function excludeByIds<T>(
+  items: readonly T[],
+  excludedIds: readonly string[],
+  selector: IdSelector<T> = 'id' as IdSelector<T>,
+) {
+  const excluded = new Set(excludedIds)
+  const getId =
+    typeof selector === 'function' ? selector : (item: T) => String(item[selector])
+
+  return items.filter((item) => !excluded.has(getId(item)))
+}

@@ -463,3 +463,26 @@ export async function getDirectionStudents(orgId: string, classId?: string) {
   })
 }
 
+
+export async function getStudents(orgId: string) {
+  'use cache'
+  cacheTag(CACHE.STUDENT(orgId))
+  cacheLife('hours')
+
+  return prisma.student.findMany({
+    where: { orgId, deletedAt: null },
+    select: {
+      id: true,
+      user: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          avatar_url: true,
+        },
+      },
+    },
+    orderBy: [{ user: { lastName: 'asc' } }, { user: { firstName: 'asc' } }],
+  })
+}

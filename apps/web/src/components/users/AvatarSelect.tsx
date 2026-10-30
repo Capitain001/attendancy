@@ -16,9 +16,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "@/components/ui/button"
 import { LiveUserIcon } from "../RealTime/UserIcon"
 
-
-
-export type UserInfo = {
+export type UserType = {
   id: string
   name: string | null
   email?: string
@@ -26,8 +24,11 @@ export type UserInfo = {
   department?: string
 }
 
+/** @deprecated Utiliser UserType */
+export type UserInfo = UserType
+
 interface AvatarUserSelectProps {
-  users: UserInfo[]
+  users: UserType[]
   value?: string
   onChange?: (value: string) => void
   placeholder?: string
@@ -56,7 +57,7 @@ export default function AvatarUserSelect({
 
   const selectedUser = users.find((user) => user.id === selectedValue)
 
-  const usersByDepartment = users.reduce<Record<string, UserInfo[]>>((acc, user) => {
+  const usersByDepartment = users.reduce<Record<string, UserType[]>>((acc, user) => {
     const department = user.department || "Autres"
     acc[department] = acc[department] || []
     acc[department].push(user)

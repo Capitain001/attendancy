@@ -1,50 +1,56 @@
 'use client'
-// Dialog épuré d'invitation à la classe : email libre ou user existant, envoi par email ou partage du lien.
+// Dialog épuré d'invitation à la classe : email libre ou étudiant existant, envoi par email ou partage du lien.
 
-import { useState, useTransition, type ReactNode } from 'react'
+import { useState, useTransition, useMemo, type ReactNode } from 'react'
 import { Send, Share2 } from 'lucide-react'
 import { toast } from 'sonner'
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
-import type { UserInfo } from '@/components/users/AvatarSelect'
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { share } from '@/lib/invitation/share'
 import { isValidEmail } from '@/modules/invitation/validation'
+import type { GetStudentsDto } from '@/services/student/types'
 import { UserCombobox } from '@/components/users/select/UserCombobox'
+import { InviteStudentInput, InviteStudentResult } from '@/modules/invitation/student'
+import { withName } from '@/lib/map' // <-- Import de notre utilitaire de mapping
 
-type InviteInput = { email: string; firstName?: string; lastName?: string }
-type InviteResult = { success: boolean; error?: string; message?: string; link?: string }
+type StudentUser = GetStudentsDto[number]['user']
+type MappedUser = ReturnType<typeof withName<StudentUser>>
+
+// Le dialog ne fournit que l'identité de l'invité ; classId et deliveryMethod viennent du parent.
+type InviteInput = Pick<InviteStudentInput, 'email' | 'firstName' | 'lastName'>
 
 interface TeacherClassInviteDialogProps {
   trigger: ReactNode
   classLabel: string
-  orgUsers: UserInfo[]
-  onSendEmail: (input: InviteInput) => Promise<InviteResult>
-  onCreateLink: (input: InviteInput) => Promise<InviteResult>
+  students: GetStudentsDto
+  onSendEmail: (input: InviteInput) => Promise<InviteStudentResult>
+  onCreateLink: (input: InviteInput) => Promise<InviteStudentResult>
 }
 
 export function TeacherClassInviteDialog({
   trigger,
   classLabel,
-  orgUsers,
+  students,
   onSendEmail,
   onCreateLink,
 }: TeacherClassInviteDialogProps) {
   const [open, setOpen] = useState(false)
   const [email, setEmail] = useState('')
-  const [picked, setPicked] = useState<UserInfo | null>(null)
+  const [picked, setPicked] = useState<MappedUser | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
 
+  // Mapping direct des étudiants vers le format attendu par le UserCombobox (avec `name`)
+  const mappedUsers = useMemo(
+    () => students.map((s) => withName(s.user)),
+    [students]
+  )
+
   const trimmed = email.trim()
   const canSubmit = !pending && isValidEmail(trimmed)
-  // Le user choisi n'est pris en compte que si l'email n'a pas été retouché à la main.
+  // L'étudiant choisi n'est pris en compte que si l'email n'a pas été retouché à la main.
   const pickedUser = picked && picked.email === trimmed ? picked : null
+  const pickedName = pickedUser?.name ?? ''
 
   function reset() {
     setEmail('')
@@ -53,11 +59,10 @@ export function TeacherClassInviteDialog({
   }
 
   function buildInput(): InviteInput {
-    const [firstName, ...rest] = pickedUser?.name?.trim().split(' ') ?? []
     return {
       email: trimmed,
-      firstName: firstName || undefined,
-      lastName: rest.join(' ') || undefined,
+      firstName: pickedUser?.firstName ?? undefined,
+      lastName: pickedUser?.lastName ?? undefined,
     }
   }
 
@@ -98,7 +103,7 @@ export function TeacherClassInviteDialog({
       if (outcome === 'shared') return toast.success('Lien partagé')
       if (outcome === 'cancelled') return toast.message('Invitation créée, lien non partagé')
     } catch {
-      // permission refusée / activation utilisateur expirée → on retombe sur le presse-papiers
+      // permission refusée / activation utilisateur expirée → presse-papiers
     }
     const { copied } = await share.clipboard(link)
     if (copied) toast.success("Lien d'invitation copié")
@@ -115,14 +120,10 @@ export function TeacherClassInviteDialog({
     >
       <DialogTrigger asChild>{trigger}</DialogTrigger>
 
-      <DialogContent className="gap-4 rounded-sm border-0  p-6 shadow-lg sm:max-w-sm">
+      <DialogContent className="gap-4 rounded-sm border-0 p-6 shadow-lg sm:max-w-sm">
         <DialogTitle className="sr-only">Inviter dans la classe</DialogTitle>
-        {/* <DialogDescription className="sr-only">
-          Saisissez un email ou choisissez un utilisateur existant, puis envoyez l'invitation ou
-          partagez le lien.
-        </DialogDescription> */}
 
-        <div className="space-y-2 mt-6">
+        <div className="mt-6 space-y-2">
           <label htmlFor="invite-email" className="text-[13px] font-semibold text-foreground">
             Email
           </label>
@@ -137,21 +138,18 @@ export function TeacherClassInviteDialog({
               className="h-10 min-w-0 flex-1 rounded-lg bg-muted px-3 text-[13px] outline-none placeholder:text-muted-foreground/60 focus-visible:ring-2 focus-visible:ring-foreground/20"
             />
             <UserCombobox
-              users={orgUsers}
+              users={mappedUsers}
               disabled={pending}
-              onSelect={(u) => {
-                setPicked(u)
-                setEmail(u.email ?? '')
+              onSelect={(s) => {
+                setPicked(s)
+                setEmail(s.email)
               }}
-              contentClassName="w-[calc(100vw)] rounded-md sm:w-[336px] mt-2"
+              contentClassName="mt-2 w-[calc(100vw)] rounded-md sm:w-[336px]"
             />
           </div>
-          {pickedUser?.name && (
-            <p className="text-[11px] text-muted-foreground">{pickedUser.name}</p>
-          )}
+          {pickedName && <p className="text-[11px] text-muted-foreground">{pickedName}</p>}
           {error && <p className="text-[12px] text-destructive">{error}</p>}
         </div>
-
 
         <div className="mt-10 flex items-center justify-between gap-3">
           <button
@@ -168,13 +166,12 @@ export function TeacherClassInviteDialog({
             type="button"
             onClick={handleSendEmail}
             disabled={!canSubmit}
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-border px-3.5 text-[13px] font-medium text-foreground transition-colors hover:bg-muted bg-foreground/10 disabled:pointer-events-none disabled:opacity-40 border-dashed"
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-dashed border-border bg-foreground/10 px-3.5 text-[13px] font-medium text-foreground transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-40"
           >
             {!pending && <Send className="size-4" />}
             {pending ? 'Envoi…' : 'Email'}
           </button>
         </div>
-
       </DialogContent>
     </Dialog>
   )

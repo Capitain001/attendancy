@@ -16,7 +16,7 @@ import {
   type SearchStudentsForEnrollmentInput,
 } from "../validation";
 
-export async function getStudentEnrollmentsAction(filters?: GetStudentsEnrollmentsFilters) {
+export async function getStudentsEnrollmentsAction(filters?: GetStudentsEnrollmentsFilters) {
   const auth = await authAccess();
   if (!auth.data) return { error: auth.error };
   const { orgId } = auth.data;
