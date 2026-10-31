@@ -86,9 +86,13 @@ export async function inviteUser(params: InvitationParams) {
       }
       invitationLink = linkResult.link;
     } else {
-      const invitationResult = await sendSupabaseInvitation(params.email, metadata);
-      if (!invitationResult.success) {
-        return { error: invitationResult.error || "Erreur Supabase" };
+      // Pour les utilisateurs actifs déjà inscrits, on ne passe PAS par Supabase Auth inviteUserByEmail (qui échoue sur compte existant).
+      // L'invitation est transmise directement dans leur messagerie interne (Notification).
+      if (!existingProfile) {
+        const invitationResult = await sendSupabaseInvitation(params.email, metadata);
+        if (!invitationResult.success) {
+          return { error: invitationResult.error || "Erreur Supabase" };
+        }
       }
     }
 
@@ -96,7 +100,8 @@ export async function inviteUser(params: InvitationParams) {
     // 6. Persistance et Traçabilité (MISE À JOUR MAJEURE)
     // ---------------------------------------------------------
     // Enregistrement de l'invitation dans la base de données (Prisma)
-    // et création d'une entrée dans l'Audit Log (Action.CREATE).
+    // et création d'une entrée dans l'Audit Log (Action.CREATE) ainsi qu'une
+    // Notification in-app si l'utilisateur est déjà actif.
     const result = await saveInvitationWithAudit(
       params.email,
       token,
@@ -106,12 +111,14 @@ export async function inviteUser(params: InvitationParams) {
       Action.CREATE,
       params.resourceId,   // <-- Ajout : ID de la ressource cible
       params.resourceType, // <-- Ajout : Type de la ressource (ex: 'DEPARTMENT', 'CLASS')
+      existingProfile?.id, // <-- Cible utilisateur existant
     );
 
     // Logging serveur pour le monitoring (sans exposer de données sensibles en prod)
     console.log(deliveryMethod === "link" ? "✅ Lien d'invitation généré:" : "✅ Invitation envoyée avec succès:", {
       email: result.invitation.email,
       token: result.invitation.token,
+      isExistingUser: !!existingProfile,
     });
 
     // ---------------------------------------------------------

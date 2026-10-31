@@ -162,12 +162,12 @@ L'utilisateur consulte ses messages
 
 ## 6. Lots d'Implémentation & Suivi d'Avancement
 
-### [ ] LOT 1 : Émission & Notification Interne (Backend Invitation)
-- [ ] Analyser `apps/web/src/modules/invitation/user.ts` et `database.ts`.
-- [ ] Adapter `inviteUser` : lorsque `userStatus === 'ACTIVE'`, bifurquer du mode Supabase email standard pour émettre une notification interne au `userId`.
-- [ ] Enregistrer l'invitation avec `Invitation.userId = existingProfile.id`.
-- [ ] Créer l'entrée `Notification` (`type: "INVITATION"`, payload `metadata` enrichi).
-- [ ] Vérifier la rétrocompatibilité : les utilisateurs non inscrits (`NEW`) continuent sur le flow Supabase.
+### [x] LOT 1 : Émission & Notification Interne (Backend Invitation)
+- [x] Analyser `apps/web/src/modules/invitation/user.ts` et `database.ts`.
+- [x] Adapter `inviteUser` : lorsque `userStatus === 'ACTIVE'`, bifurquer du mode Supabase email standard pour émettre une notification interne au `userId`.
+- [x] Enregistrer l'invitation avec `Invitation.userId = existingProfile.id`.
+- [x] Créer l'entrée `Notification` (`type: "INVITATION"`, payload `metadata` enrichi).
+- [x] Vérifier la rétrocompatibilité : les utilisateurs non inscrits (`NEW`) continuent sur le flow Supabase.
 
 ### [ ] LOT 2 : Service & Actions Métier Inbox (Backend Inbox)
 - [ ] Consulter l'index API du service `notification` et identifier les besoins manquants.
