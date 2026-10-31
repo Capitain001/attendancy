@@ -1,0 +1,24 @@
+{
+  "service": "src/features/personal/services/course",
+  "path": "src/features/personal/services/course/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "5920a2a",
+  "utils_dir": null,
+  "fns": {
+    "createPersonalCourse": {
+      "f": ".api/createPersonalCourse.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "createPersonalCourseAction": {
+      "f": ".api/createPersonalCourseAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "createPersonalCourse": [],
+    "createPersonalCourseAction": []
+  },
+  "deps": {}
+}

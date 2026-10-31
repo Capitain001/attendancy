@@ -17,6 +17,7 @@ import * as path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import { execSync } from "child_process";
 import { ORG_ID_CHECK, PROJECT_LAYOUT } from "./config.js";
+import { resolveServiceDir, toServiceId, findServiceApis } from "../utils/services.js";
 
 // ── Chemins ───────────────────────────────────────────────────────────────────
 
@@ -525,7 +526,7 @@ interface ServiceFiles {
 
 /** Collecte les fichiers db/actions d'un service (sans créer de programme TS). */
 function collectServiceFiles(servicePath: string): ServiceFiles | null {
-  const serviceAbs = path.join(ROOT, SERVICES_ROOT, servicePath);
+  const serviceAbs = resolveServiceDir(servicePath);
   const apiDir = path.join(serviceAbs, ".api");
 
   if (!fs.existsSync(serviceAbs)) {
@@ -642,7 +643,7 @@ function generateServiceFromProgram(
 
   writeJson(path.join(apiDir, "index.json"), {
     service: servicePath,
-    path: `${SERVICES_ROOT}/${servicePath}/`,
+    path: `${relPath(files.serviceAbs)}/`,
     claude_md: "./CLAUDE.md",
     derived_at: sha,
     utils_dir: null,
@@ -705,40 +706,12 @@ interface FicheJson {
   calls?: string[];
 }
 
-/** Trouve récursivement tous les index.json sous src/services/ */
-function findAllIndexFiles(
-  servicesDir: string
-): Array<{ servicePath: string; indexPath: string; index: IndexJson }> {
-  const results: Array<{ servicePath: string; indexPath: string; index: IndexJson }> = [];
-
-  function walk(dir: string): void {
-    let names: string[];
-    try { names = fs.readdirSync(dir); }
-    catch { return; }
-
-    for (const name of names) {
-      const fullPath = path.join(dir, name);
-      let isDir: boolean;
-      try { isDir = fs.statSync(fullPath).isDirectory(); } catch { continue; }
-      if (!isDir) continue;
-      if (name === "node_modules") continue;
-
-      if (name === ".api") {
-        const indexPath = path.join(fullPath, "index.json");
-        const index = readJsonIfExists<IndexJson>(indexPath);
-        if (index) {
-          const servicePath = path.relative(servicesDir, dir).replace(/\\/g, "/");
-          results.push({ servicePath, indexPath, index });
-        }
-        // ne pas descendre dans .api/
-      } else {
-        walk(fullPath);
-      }
-    }
-  }
-
-  walk(servicesDir);
-  return results;
+/** Trouve tous les index.json des services indexés (src/services/ ou ailleurs sous src/). */
+function findAllIndexFiles(): Array<{ servicePath: string; indexPath: string; index: IndexJson }> {
+  return findServiceApis().flatMap(({ servicePath, indexPath }) => {
+    const index = readJsonIfExists<IndexJson>(indexPath);
+    return index ? [{ servicePath, indexPath, index }] : [];
+  });
 }
 
 type EdgeState =
@@ -747,8 +720,7 @@ type EdgeState =
   | { status: "dead_reference"; service: string; context: string; fn: string; ownerService: string };
 
 export async function checkCrossService(): Promise<boolean> {
-  const servicesDir = path.join(ROOT, SERVICES_ROOT);
-  const all = findAllIndexFiles(servicesDir);
+  const all = findAllIndexFiles();
 
   if (!all.length) {
     console.log("  Aucun index .api/ trouvé.");
@@ -854,7 +826,8 @@ async function main(): Promise<void> {
   const planned: Array<{ svc: string; files: ServiceFiles }> = [];
   const allRootFiles = new Set<string>();
 
-  for (const svc of args) {
+  for (const arg of args) {
+    const svc = toServiceId(resolveServiceDir(arg)); // id canonique, quelle que soit la saisie
     const files = collectServiceFiles(svc);
     if (!files) process.exit(1);
     if (!files.rootFiles.length) {

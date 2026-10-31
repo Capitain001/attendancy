@@ -27,6 +27,7 @@ import * as path from "path";
 import { fileURLToPath } from "url";
 import { PROJECT_LAYOUT } from "./config.js";
 import { checkCrossService } from "./api.js";
+import { resolveServiceDir, toServiceId, findServiceApis, toSummaryRelPath } from "../utils/services.js";
 
 // ── Chemins ───────────────────────────────────────────────────────────────────
 
@@ -35,7 +36,6 @@ const __dirname = path.dirname(__filename);
 // summary.ts vit sous scripts/generate/api/ (3 niveaux sous la racine).
 const ROOT = path.resolve(__dirname, "../../..");
 const SERVICES_ROOT = PROJECT_LAYOUT.servicesRoot;
-const SERVICES_DIR = path.join(ROOT, SERVICES_ROOT);
 const SUMMARY_DIR = path.join(ROOT, "summary");
 
 // ── Pré-check cross-service ───────────────────────────────────────────────────
@@ -90,37 +90,9 @@ function toFileName(servicePath: string): string {
   return servicePath.replace(/\//g, "-");
 }
 
-/** Recherche récursive de tous les .api/index.json sous src/services/. */
+/** Tous les services indexés (src/services/ ou ailleurs sous src/). */
 function findAllServices(): Array<{ servicePath: string; apiDir: string }> {
-  const results: Array<{ servicePath: string; apiDir: string }> = [];
-
-  function walk(dir: string): void {
-    let names: string[];
-    try { names = fs.readdirSync(dir); }
-    catch { return; }
-
-    for (const name of names) {
-      const fullPath = path.join(dir, name);
-      let isDir: boolean;
-      try { isDir = fs.statSync(fullPath).isDirectory(); }
-      catch { continue; }
-      if (!isDir) continue;
-      if (name === "node_modules") continue;
-
-      if (name === ".api") {
-        if (fs.existsSync(path.join(fullPath, "index.json"))) {
-          const servicePath = path.relative(SERVICES_DIR, dir).replace(/\\/g, "/");
-          results.push({ servicePath, apiDir: fullPath });
-        }
-        // ne pas descendre dans .api/
-      } else {
-        walk(fullPath);
-      }
-    }
-  }
-
-  walk(SERVICES_DIR);
-  return results;
+  return findServiceApis().map(({ servicePath, apiDir }) => ({ servicePath, apiDir }));
 }
 
 // ── Consolidation d'un service ────────────────────────────────────────────────
@@ -164,7 +136,9 @@ async function main(): Promise<void> {
   const args = process.argv.slice(2);
   const wantAll = args.includes("--all");
   const skipCheck = args.includes("--skip-check");
-  const requested = args.filter((a) => a !== "--all" && a !== "--skip-check");
+  const requested = args
+    .filter((a) => a !== "--all" && a !== "--skip-check")
+    .map((a) => toServiceId(resolveServiceDir(a)));
 
   if (!skipCheck) {
     const ok = await runCrossServiceCheck();
@@ -211,15 +185,15 @@ async function main(): Promise<void> {
     const consolidated = consolidateService(servicePath, apiDir);
     if (!consolidated) continue;
 
-    const fileName = `${toFileName(servicePath)}.json`;
-    writeJson(path.join(SUMMARY_DIR, fileName), consolidated);
+    const relFile = toSummaryRelPath(servicePath);
+    writeJson(path.join(SUMMARY_DIR, relFile), consolidated);
 
     const fnCount = Object.keys(consolidated.fns).length;
-    console.log(`  ✓ ${fileName}  (${fnCount} fns)`);
+    console.log(`  ✓ ${relFile}  (${fnCount} fns)`);
 
     serviceSummaries.push({
       service: consolidated.service,
-      file: `summary/${fileName}`,
+      file: `summary/${relFile}`,
       fnCount,
       derived_at: consolidated.derived_at,
     });

@@ -10,17 +10,22 @@ export function withParams(path: string, params: Record<string, string>) {
   return `${path}${path.includes("?") ? "&" : "?"}${new URLSearchParams(params)}`;
 }
 
-// Message affichable pour un code d'URL ; undefined si le code est inconnu.
-type FeedbackKind = keyof typeof ERRORS.UI.FEEDBACK;
+// Messages rangés par entité (class, course, ...), puis par genre (error, status).
+type FeedbackEntity = keyof typeof ERRORS.UI.FEEDBACK;
+type FeedbackKind = keyof (typeof ERRORS.UI.FEEDBACK)[FeedbackEntity];
 
 function getMessage(messages: Record<string, string>, code?: string) {
   return code && Object.hasOwn(messages, code) ? messages[code] : undefined;
 }
 
-// searchParams -> { error, status } : messages affichables, undefined si code inconnu.
-export function getFeedback(query: Partial<Record<FeedbackKind, string>>) {
+// (entité, searchParams) -> { error, status } : messages affichables de cette
+// entité, undefined si le code est inconnu pour elle.
+export function getFeedback(
+  entity: FeedbackEntity,
+  query: Partial<Record<FeedbackKind, string>>,
+) {
   return Object.fromEntries(
-    Object.entries(ERRORS.UI.FEEDBACK).map(([kind, messages]) => [
+    Object.entries(ERRORS.UI.FEEDBACK[entity]).map(([kind, messages]) => [
       kind,
       getMessage(messages, query[kind as FeedbackKind]),
     ]),
@@ -74,7 +79,9 @@ export function withRedirect(
     const res = await formAction(formData);
     const target = await resolvePath(path);
 
-    if (!target) return; // aucune destination : la page reste telle quelle
+    // null/undefined : aucune destination, la page reste telle quelle.
+    // "" : redirection relative vers la page courante (?status=... ou ?error=...).
+    if (target == null) return;
 
     redirectWithResult(target, res, verb);
   };

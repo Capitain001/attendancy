@@ -8,12 +8,12 @@ import { getStudentsAction } from "@/services/student";
 export default async function ClassInvitationPage({
   params,
 }: {
-  params: Promise<{ slug: string; id: string }>
+  params: Promise<{ slug: string; classId: string }>
 }) {
-  const { id } = await params
+  const { classId } = await params
 
   // const res = await getStudentsAction() 
   // const students = 'error' in res ? [] : res.data
   
-  return <TClassInvitationScreen classId={id} classLabel="Ma classe"  />
+  return <TClassInvitationScreen classId={classId} classLabel="Ma classe"  />
 }

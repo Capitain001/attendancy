@@ -4,7 +4,7 @@ import { tryConstraint } from '@/utils/server/prisma'
 import { invalidateEvent } from '@/cache/server/graph'
 import type { Prisma } from '@/generated/prisma/client'
 import { PERSONAL } from '@/features/personal/constants'
-import type { CreatePersonalCourseOutput } from '../validation'
+import type { CreatePersonalCourseData } from '../types'
 
 type Tx = Prisma.TransactionClient
 
@@ -98,7 +98,7 @@ function createPersonalGroupTx(
 //
 // Atomique : si une étape échoue, rien n'est écrit.
 export async function createPersonalCourse(
-  params: CreatePersonalCourseOutput & { orgId: string },
+  params: CreatePersonalCourseData & { orgId: string },
 ) {
   const { orgId, classId, name, teacherId, withGroup = false } = params
 

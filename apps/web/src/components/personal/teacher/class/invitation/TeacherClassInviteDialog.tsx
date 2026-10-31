@@ -1,17 +1,16 @@
 'use client'
 // Dialog épuré d'invitation à la classe : email libre ou étudiant existant, envoi par email ou partage du lien.
+// Les retours utilisateur (toasts, partage du lien) sont gérés par le hook d'invitation.
 
 import { useState, useTransition, useMemo, type ReactNode } from 'react'
 import { Send, Share2 } from 'lucide-react'
-import { toast } from 'sonner'
 
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { share } from '@/lib/invitation/share'
 import { isValidEmail } from '@/modules/invitation/validation'
 import type { GetStudentsDto } from '@/services/student/types'
 import { UserCombobox } from '@/components/users/select/UserCombobox'
-import { InviteStudentInput, InviteStudentResult } from '@/modules/invitation/student'
-import { withName } from '@/lib/map' // <-- Import de notre utilitaire de mapping
+import type { InviteStudentInput, InviteStudentResult } from '@/modules/invitation/student'
+import { withName } from '@/lib/map'
 
 type StudentUser = GetStudentsDto[number]['user']
 type MappedUser = ReturnType<typeof withName<StudentUser>>
@@ -21,7 +20,6 @@ type InviteInput = Pick<InviteStudentInput, 'email' | 'firstName' | 'lastName'>
 
 interface TeacherClassInviteDialogProps {
   trigger: ReactNode
-  classLabel: string
   students: GetStudentsDto
   onSendEmail: (input: InviteInput) => Promise<InviteStudentResult>
   onCreateLink: (input: InviteInput) => Promise<InviteStudentResult>
@@ -29,7 +27,6 @@ interface TeacherClassInviteDialogProps {
 
 export function TeacherClassInviteDialog({
   trigger,
-  classLabel,
   students,
   onSendEmail,
   onCreateLink,
@@ -40,11 +37,7 @@ export function TeacherClassInviteDialog({
   const [error, setError] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
 
-  // Mapping direct des étudiants vers le format attendu par le UserCombobox (avec `name`)
-  const mappedUsers = useMemo(
-    () => students.map((s) => withName(s.user)),
-    [students]
-  )
+  const mappedUsers = useMemo(() => students.map((s) => withName(s.user)), [students])
 
   const trimmed = email.trim()
   const canSubmit = !pending && isValidEmail(trimmed)
@@ -66,49 +59,25 @@ export function TeacherClassInviteDialog({
     }
   }
 
-  function handleSendEmail() {
+  function submit(send: (input: InviteInput) => Promise<InviteStudentResult>, fallbackError: string) {
     setError(null)
     startTransition(async () => {
-      const res = await onSendEmail(buildInput())
-      if (!res.success) {
-        setError(res.error ?? "Envoi de l'invitation impossible.")
-        return
+      try {
+        const res = await send(buildInput())
+        if (!res.success) {
+          setError(res.error ?? fallbackError)
+          return
+        }
+        reset()
+        setOpen(false)
+      } catch {
+        setError(fallbackError)
       }
-      toast.success(res.message ?? 'Invitation envoyée')
-      reset()
-      setOpen(false)
     })
   }
 
-  function handleShare() {
-    setError(null)
-    startTransition(async () => {
-      const res = await onCreateLink(buildInput())
-      if (!res.success || !res.link) {
-        setError(res.error ?? 'Création du lien impossible.')
-        return
-      }
-      await shareLink(res.link)
-      reset()
-      setOpen(false)
-    })
-  }
-
-  async function shareLink(link: string) {
-    try {
-      const outcome = await share.native(link, {
-        title: 'Invitation',
-        text: `Rejoins ${classLabel}`,
-      })
-      if (outcome === 'shared') return toast.success('Lien partagé')
-      if (outcome === 'cancelled') return toast.message('Invitation créée, lien non partagé')
-    } catch {
-      // permission refusée / activation utilisateur expirée → presse-papiers
-    }
-    const { copied } = await share.clipboard(link)
-    if (copied) toast.success("Lien d'invitation copié")
-    else toast.message("Lien d'invitation", { description: link })
-  }
+  const handleSendEmail = () => submit(onSendEmail, "Envoi de l'invitation impossible.")
+  const handleShare = () => submit(onCreateLink, 'Création du lien impossible.')
 
   return (
     <Dialog

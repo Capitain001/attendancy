@@ -35,7 +35,7 @@ export const button = {
 
   // Bouton rond en pointillés : action d'ajout discrète (ex. "+" à côté d'une carte)
 addRound: cn(
-  'inline-flex size-[5em] shrink-0 items-center justify-center rounded-full',
+  'inline-flex size-14 shrink-0 items-center justify-center rounded-full',
   'border border-dashed border-foreground text-foreground',
   'transition-colors hover:bg-muted',
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',

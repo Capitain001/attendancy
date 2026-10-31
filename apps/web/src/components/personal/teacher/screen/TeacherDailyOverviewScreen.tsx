@@ -17,7 +17,7 @@ interface TeacherDailyOverviewScreenProps {
 
 export function TeacherDailyOverviewScreen({ sessionsHref: externalSessionsHref }: TeacherDailyOverviewScreenProps = {}) {
     const { slug } = useParams<{ slug?: string }>()
-    const sessionsHref = externalSessionsHref ?? (slug ? `/${slug}/teacher/sessions` : '/sessions')
+    const sessionsHref = externalSessionsHref ?? (slug ? `/personal/${slug}/teacher/sessions` : '/sessions')
 
     const { schedules } = useTeacherDailySchedule()
     const { ongoing, upcoming, count } = useTeacherDailyScheduleStats(schedules)

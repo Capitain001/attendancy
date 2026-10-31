@@ -1,8 +1,9 @@
-export const UI= {
-    PERSONAL_STATUS_UNAVAILABLE: 'Impossible de charger l’état de votre espace. Réessayez dans un instant.',
-    CLASS_LIMIT_NONE_ALLOWED: 'Vous avez atteint la limite de votre quota actuel.',
-    PERSONAL_START_FAILED: 'Le démarrage a échoué. Réessayez.',
-     FEEDBACK: {
+export const UI = {
+  PERSONAL_STATUS_UNAVAILABLE: 'Impossible de charger l’état de votre espace. Réessayez dans un instant.',
+  CLASS_LIMIT_NONE_ALLOWED: 'Vous avez atteint la limite de votre quota actuel.',
+  PERSONAL_START_FAILED: 'Le démarrage a échoué. Réessayez.',
+  FEEDBACK: {
+    class: {
       error: {
         failed: 'Le démarrage a échoué. Réessayez.',
         create: 'La classe n’a pas pu être créée. Vérifiez le nom et réessayez.',
@@ -16,5 +17,15 @@ export const UI= {
         remove: 'Classe archivée.',
       },
     },
-  
-  }
+    course: {
+      error: {
+        failed: 'L’opération a échoué. Réessayez.',
+        create: 'Le cours n’a pas pu être créé. Vérifiez le nom et réessayez.',
+        quota: 'La limite de cours de votre espace est atteinte.',
+      },
+      status: {
+        create: 'Cours créé.',
+      },
+    },
+  },
+}

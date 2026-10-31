@@ -1,0 +1,9 @@
+{
+  "name": "createPersonalCourseAction",
+  "file": "src/features/personal/services/course/actions/course.mutations.ts",
+  "sig": "(input: CreatePersonalCourseInput) => Promise<{ error: string; data?: undefined; } | { data: { course: { id: string; name: string; credits: number; }; group: { id: string; createdAt: Date; updatedAt: Date; deletedAt: Date | null; name: string; description: string | null; classId: string; } | null; }; error?: undefined; }>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

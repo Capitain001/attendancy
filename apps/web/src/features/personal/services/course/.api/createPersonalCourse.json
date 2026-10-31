@@ -1,0 +1,8 @@
+{
+  "name": "createPersonalCourse",
+  "file": "src/features/personal/services/course/database/course.mutations.ts",
+  "sig": "(params: CreatePersonalCourseData & { orgId: string }) => Promise<{ course: { id: string; name: string; credits: number; }; group: { id: string; createdAt: Date; updatedAt: Date; deletedAt: Date | null; name: string; description: string | null; classId: string; } | null; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

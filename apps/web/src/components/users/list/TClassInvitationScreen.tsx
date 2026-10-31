@@ -2,13 +2,13 @@
 // Écran client d'invitation : liste des participants + bouton "Ajouter", dialog d'invitation et inscription d'étudiants existants.
 
 import { useMemo } from 'react'
-import { UserPlus } from 'lucide-react'
+import { PlusCircleIcon, UserPlus } from 'lucide-react'
 
 import { useClassInvitations } from '@/hooks/data/invitation/use-class-invitations'
 import { useAvailableStudents } from '@/hooks/data/student-enrollments/useAvailableStudents'
 import { TeacherClassInviteDialog } from '@/components/personal/teacher/class/invitation/TeacherClassInviteDialog'
-import { EnrollStudentsPanel } from '@/components/personal/student-enrollment/enroll-students-panel'
 import { useClassEnrollments } from '@/hooks/data/student-enrollments'
+import { shareInviteLink } from '@/lib/invitation/toast'
 import { ParticipantList } from './ParticipantList'
 import { EnrollStudentsModal } from '../../personal/student-enrollment/enroll-students-modal'
 
@@ -18,7 +18,10 @@ interface TClassInvitationScreenProps {
 }
 
 export function TClassInvitationScreen({ classId, classLabel }: TClassInvitationScreenProps) {
-  const { inviteStudentSilent } = useClassInvitations(classId)
+  const { inviteStudent } = useClassInvitations(classId, {
+    deliverLink: (link) => shareInviteLink(link, `Rejoins ${classLabel}`),
+    toastError: false, // l'erreur est affichée inline dans le dialog
+  })
   const { enrollments } = useClassEnrollments(classId)
   const { available } = useAvailableStudents(classId)
 
@@ -34,19 +37,17 @@ export function TClassInvitationScreen({ classId, classLabel }: TClassInvitation
       {/* participants */}
       <section className="space-y-3">
         <div className="flex items-baseline justify-between">
-          {/* <h2 className="text-[16px] font-medium">Participants</h2> */}
-          {/* <span className="text-[13px] text-muted-foreground">voir plus…</span> */}
+     
         </div>
 
         <div className="flex items-start gap-3 py-1">
           <TeacherClassInviteDialog
-            classLabel={classLabel}
             students={available}
             onSendEmail={(input) =>
-              inviteStudentSilent.mutateAsync({ ...input, classId, deliveryMethod: 'email' })
+              inviteStudent.mutateAsync({ ...input, classId, deliveryMethod: 'email' })
             }
             onCreateLink={(input) =>
-              inviteStudentSilent.mutateAsync({ ...input, classId, deliveryMethod: 'link' })
+              inviteStudent.mutateAsync({ ...input, classId, deliveryMethod: 'link' })
             }
             trigger={
               <button
@@ -68,7 +69,7 @@ export function TClassInvitationScreen({ classId, classLabel }: TClassInvitation
       {/* inscription d'étudiants existants */}
       <section className="space-y-3">
         <h2 className="text-[16px] font-medium">Inscrire des étudiants existants</h2>
-        <EnrollStudentsModal className='' classId={classId} />
+        <EnrollStudentsModal className="" classId={classId} />
       </section>
     </div>
   )

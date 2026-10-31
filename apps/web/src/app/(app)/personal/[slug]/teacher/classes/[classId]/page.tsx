@@ -22,14 +22,14 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  params: Promise<{ slug: string; id: string }>;
+  params: Promise<{ slug: string; classId: string }>;
 }
 
 export default async function PersonalTeacherClassPage({ params }: PageProps) {
   await connection();
-  const { slug, id } = await params;
+  const { slug, classId } = await params;
 
-  const classResult = await getClassAction({ classId: id });
+  const classResult = await getClassAction({ classId });
   const classData = "data" in classResult ? classResult.data : null;
   if (!classData) notFound();
 
@@ -41,7 +41,7 @@ export default async function PersonalTeacherClassPage({ params }: PageProps) {
     {
       title: "Étudiants & Invitations",
       description: "Inviter des étudiants par lien ou QR code, gérer les inscriptions et les participants.",
-      href: `${personal.classes(slug)}/${id}/invitation`,
+      href: `${personal.classes(slug)}/${classId}/invitation`,
       icon: UserPlus,
       badge: `${studentCount} étudiant${studentCount > 1 ? "s" : ""}`,
       actionLabel: "Gérer les invitations",
@@ -49,7 +49,7 @@ export default async function PersonalTeacherClassPage({ params }: PageProps) {
     {
       title: "Cours & Matières",
       description: "Consulter les cours associés à cette classe et le suivi pédagogique.",
-      href: `${personal.courses(slug)}?classId=${id}`,
+      href: `${personal.classes(slug)}/${classId}/courses`,
       icon: BookOpen,
       badge: `${courseCount} cours`,
       actionLabel: "Voir les cours",

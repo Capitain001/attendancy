@@ -8,7 +8,21 @@ import { toast } from 'sonner'
 import { CACHE_KEYS } from '@/cache/client/key'
 import { useInvitationMutations, invalidateInvitationQueries, copyLinkOrToast } from './useInvitationMutations'
 
-export function useClassInvitations(classId: string) {
+type InviteStudentVars = Parameters<typeof inviteStudent>[0]
+
+type UseClassInvitationsOptions = {
+  /** Livraison du lien créé. Défaut : copie dans le presse-papiers + toast. */
+  deliverLink?: (link: string, message?: string) => void | Promise<void>
+  /** Toast d'erreur sur échec. Défaut : true. Mettre false si l'appelant affiche l'erreur lui-même. */
+  toastError?: boolean
+}
+
+export function useClassInvitations(classId: string, opts: UseClassInvitationsOptions = {}) {
+  const { toastError = true } = opts
+  const deliverLink =
+    opts.deliverLink ??
+    ((link: string, message?: string) => copyLinkOrToast(link, message ?? "Lien d'invitation copié"))
+
   const qc = useQueryClient()
   const classKey = CACHE_KEYS.INVITATIONS.BY_CLASS(classId)
 
@@ -27,36 +41,20 @@ export function useClassInvitations(classId: string) {
   })
 
   const inviteStudentMut = useMutation({
-    mutationFn: inviteStudent,
-    onSuccess: (r) => {
+    mutationFn: (vars: InviteStudentVars) => inviteStudent(vars),
+    onSuccess: async (r) => {
       if (!r.success) {
-        toast.error(r.error ?? "Envoi de l'invitation impossible.")
+        if (toastError) toast.error(r.error ?? "Envoi de l'invitation impossible.")
         return
       }
       invalidateInvitationQueries(qc, [classKey])
-      if (r.link) {
-        void copyLinkOrToast(r.link, r.message ?? "Lien d'invitation copié")
-      } else {
-        toast.success(r.message ?? 'Invitation envoyée')
-      }
+      if (r.link) await deliverLink(r.link, r.message)
+      else toast.success(r.message ?? 'Invitation envoyée')
     },
-    onError: () => toast.error("Envoi de l'invitation impossible."),
-  })
-
-  // AJOUT : variante silencieuse pour le dialog (il gère lui-même toast et partage du lien).
-  const inviteStudentSilentMut = useMutation({
-    mutationFn: inviteStudent,
-    onSuccess: (r) => {
-      if (r.success) invalidateInvitationQueries(qc, [classKey])
+    onError: () => {
+      if (toastError) toast.error("Envoi de l'invitation impossible.")
     },
   })
 
-  return {
-    invitations,
-    isLoading,
-    inviteStudent: inviteStudentMut,
-    inviteStudentSilent: inviteStudentSilentMut, // AJOUT
-    resend,
-    revoke,
-  }
+  return { invitations, isLoading, inviteStudent: inviteStudentMut, resend, revoke }
 }

@@ -28,7 +28,7 @@ export default async function PersonalTeacherClassesPage({
 
   const { classes, quota, loadError, canAddClass } = await resolveClassesData();
   const hrefs = resolveSlugPaths(slug, personal);
-  const feedback = getFeedback(query);
+  const feedback = getFeedback("class", query);
 
   const activeCount = quota?.activeCount ?? 0;
 

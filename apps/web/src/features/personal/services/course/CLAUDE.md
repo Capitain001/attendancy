@@ -28,7 +28,7 @@ Un groupe lié au cours (`Group.courseId`) n'est créé que si l'appelant passe
 - Invalidation APRÈS commit : `UE_CREATED`, `UE_COURSE_CREATED`, `COURSE_CREATED`, `GROUP_CREATED` (si groupe).
 
 ## Points d'extension / à surveiller
-- ⚠ `teacherId` arrive en paramètre (id métier) : l'action ne vérifie pas qu'il appartient à l'utilisateur authentifié.
+- `teacherId` est extrait de la session serveur (`authAccess`), jamais accepté depuis le client.
 - ⚠ Événements `UE_CREATED` / `UE_COURSE_CREATED` : doivent exister dans les graphes des services `ue` / `ueCourse`.
 - ⚠ Peuplement du groupe (inscrits) : volontairement hors de ce service.
 - Pas de `cache.ts` : aucun nouvel événement, les existants sont réutilisés.

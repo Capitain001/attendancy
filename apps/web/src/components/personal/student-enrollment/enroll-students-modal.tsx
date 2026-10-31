@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, PlusCircleIcon } from "lucide-react";
 import { button } from "@/styles";
 import {
   Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger,
@@ -15,8 +15,15 @@ export function EnrollStudentsModal({ classId, className }: { classId: string; c
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <button type="button" className={button.addRound} aria-label={`Ajouter des étudiants à ${className}`}>
-          <Plus className="size-[1.75em]" />
+          <Plus className="size-10" />
         </button>
+
+              {/* <button className='focus-visible:ring-ring/50  inline-flex cursor-pointer items-center justify-center rounded-full focus-visible:ring-[3px] focus-visible:outline-none'
+              aria-label={`Ajouter des étudiants à ${className}`}
+              >
+                <PlusCircleIcon className='size-5 fill-slate-400' />
+                <span className='sr-only'>Add</span>
+              </button> */}
       </DialogTrigger>
 
       <DialogContent>

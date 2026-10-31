@@ -7,16 +7,19 @@ import type { CreatePersonalCourseInput } from '../validation'
 import { createPersonalCourse } from '../database'
 
 export async function createPersonalCourseAction(input: CreatePersonalCourseInput) {
-  const auth = await authAccess()
+  const auth = await authAccess({ requiredRole: 'TEACHER', requiredOrgType: 'PERSONAL' })
   if (!auth.data) return { error: auth.error }
-  const { orgId } = auth.data
+  const { orgId, user } = auth.data
+
+  const teacherId = user.organization?.teacherId
+  if (!teacherId) return { error: ERRORS.AUTH.FORBIDDEN }
 
   const parsed = v.safeParse(createPersonalCourseSchema, input)
   if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
 
   // Les erreurs de contrainte (doublon de cours…) remontent déjà mappées par tryConstraint.
   try {
-    return { data: await createPersonalCourse({ ...parsed.output, orgId }) }
+    return { data: await createPersonalCourse({ ...parsed.output, orgId, teacherId }) }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
