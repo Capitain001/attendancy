@@ -13,23 +13,23 @@
  *   cd apps/web && tsx --env-file=.env scripts/test-inbox-backend.ts
  */
 
-import { prisma } from '../src/lib/prisma'
-import { Action } from '../src/generated/prisma/browser'
-import { saveInvitationWithAudit } from '../src/modules/invitation/database'
+import { prisma } from '@/lib/prisma'
+import { Action } from '@/generated/prisma/browser'
+import { saveInvitationWithAudit } from '@/modules/invitation/database'
 import {
   getInboxNotificationsForUser,
   getUnreadCountForUser,
-} from '../src/services/notification/database/notification.queries'
+} from '@/services/notification/database/notification.queries'
 import {
   markNotificationRead,
   setInvitationNotificationStatus,
   createInvitationResponseNotification,
-} from '../src/services/notification/database/notification.mutations'
-import { generateInvitationMetadata } from '../src/modules/invitation/metadata'
-import { invitationMetadataSchema } from '../src/services/notification/validation'
-import { getOrgsIdentities } from '../src/services/organization/server'
+} from '@/services/notification/database/notification.mutations'
+import { generateInvitationMetadata } from '@/modules/invitation/metadata'
+import { invitationMetadataSchema } from '@/services/notification/validation'
+import { getOrgsIdentities } from '@/services/organization/server'
 import * as v from 'valibot'
-import type { UserInfo } from '../src/types/user'
+import type { UserInfo } from '@/types/user'
 
 const C = {
   green: '\x1b[32m',
