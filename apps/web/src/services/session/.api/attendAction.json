@@ -1,0 +1,13 @@
+{
+  "name": "attendAction",
+  "file": "src/services/session/actions/token.actions.ts",
+  "sig": "(token: string, coords?: { lat: number; lng: number }) => Promise<{ error: string; data?: undefined; } | { data: { id: string; status: AttendanceStatus; } | { id: string; status: AttendanceStatus; alreadyRecorded: boolean; }; error?: undefined; }>",
+  "calls": [
+    "getCurrentStudentId",
+    "validateSessionToken",
+    "recordStudentAttendance"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

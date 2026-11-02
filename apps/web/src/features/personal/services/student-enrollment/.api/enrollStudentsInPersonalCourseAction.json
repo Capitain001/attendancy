@@ -1,0 +1,9 @@
+{
+  "name": "enrollStudentsInPersonalCourseAction",
+  "file": "src/features/personal/services/student-enrollment/actions/student-enrollment.mutations.ts",
+  "sig": "(input: EnrollStudentsInPersonalCourseInput) => Promise<{ error: string; data?: undefined; } | { data: { notAddedStudentIds: string[]; }; error?: undefined; }>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

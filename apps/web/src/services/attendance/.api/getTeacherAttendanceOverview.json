@@ -1,0 +1,8 @@
+{
+  "name": "getTeacherAttendanceOverview",
+  "file": "src/services/attendance/database/analytics.ts",
+  "sig": "(userId: string, orgId: string) => Promise<{ totals: { present: number; late: number; absent: number; excused: number; denominator: number; rate: number | null; sessions: number; }; byCourse: { present: number; late: number; absent: number; ... 7 more ...; className: string; }[]; absentees: { ...; }[]; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

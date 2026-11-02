@@ -30,6 +30,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
+import { resolveServiceDir, toServiceId } from "../utils/services.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -129,8 +130,9 @@ function ensureGeneratedReExport(serviceDir: string, generatedTypeNames: string[
 
 // ── Génération d'un service ───────────────────────────────────────────────────
 
-function generateForService(servicePath: string): boolean {
-  const serviceDir = path.join(SERVICES_DIR, servicePath);
+function generateForService(serviceArg: string): boolean {
+  const serviceDir = resolveServiceDir(serviceArg);
+  const servicePath = toServiceId(serviceDir);
 
   if (!fs.existsSync(serviceDir)) {
     console.error(`  ✗ Service introuvable : ${serviceDir}`);

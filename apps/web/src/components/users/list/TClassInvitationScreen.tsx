@@ -10,7 +10,6 @@ import { TeacherClassInviteDialog } from '@/components/personal/teacher/class/in
 import { useClassEnrollments } from '@/hooks/data/student-enrollments'
 import { shareInviteLink } from '@/lib/invitation/toast'
 import { ParticipantList } from './ParticipantList'
-import { EnrollStudentsModal } from '../../personal/student-enrollment/enroll-students-modal'
 
 interface TClassInvitationScreenProps {
   classId: string
@@ -29,7 +28,7 @@ export function TClassInvitationScreen({ classId, classLabel }: TClassInvitation
   const participants = useMemo(() => enrollments.map((e) => e.student), [enrollments])
 
   return (
-    <div className="space-y-6 p-4">
+    <div className="space-y-6 p-4 ">
       <h1 className="text-center text-[22px] font-semibold leading-tight">
         Ajouter de nouveaux participants
       </h1>
@@ -41,6 +40,7 @@ export function TClassInvitationScreen({ classId, classLabel }: TClassInvitation
         </div>
 
         <div className="flex items-start gap-3 py-1">
+
           <TeacherClassInviteDialog
             students={available}
             onSendEmail={(input) =>
@@ -68,8 +68,7 @@ export function TClassInvitationScreen({ classId, classLabel }: TClassInvitation
 
       {/* inscription d'étudiants existants */}
       <section className="space-y-3">
-        <h2 className="text-[16px] font-medium">Inscrire des étudiants existants</h2>
-        <EnrollStudentsModal className="" classId={classId} />
+
       </section>
     </div>
   )

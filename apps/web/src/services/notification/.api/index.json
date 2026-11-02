@@ -2,7 +2,7 @@
   "service": "notification",
   "path": "src/services/notification/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "38f2f24",
+  "derived_at": "3b4d4d0",
   "utils_dir": null,
   "fns": {
     "createUserNotification": {
@@ -34,6 +34,31 @@
       "f": ".api/createNotificationForOrgUser.json",
       "layer": "db",
       "kind": "mutation"
+    },
+    "buildInvitationNotification": {
+      "f": ".api/buildInvitationNotification.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "createInvitationNotification": {
+      "f": ".api/createInvitationNotification.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "setInvitationNotificationStatus": {
+      "f": ".api/setInvitationNotificationStatus.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "createInvitationResponseNotification": {
+      "f": ".api/createInvitationResponseNotification.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getInboxNotificationsForUser": {
+      "f": ".api/getInboxNotificationsForUser.json",
+      "layer": "db",
+      "kind": "query"
     },
     "getNotificationsForUser": {
       "f": ".api/getNotificationsForUser.json",
@@ -130,6 +155,16 @@
       "layer": "db",
       "kind": "query"
     },
+    "markInboxNotificationAsReadAction": {
+      "f": ".api/markInboxNotificationAsReadAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "markAllInboxNotificationsAsReadAction": {
+      "f": ".api/markAllInboxNotificationsAsReadAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "markNotificationAsRead": {
       "f": ".api/markNotificationAsRead.json",
       "layer": "action",
@@ -152,6 +187,16 @@
     },
     "sendAdminPushNotification": {
       "f": ".api/sendAdminPushNotification.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getInboxNotificationsAction": {
+      "f": ".api/getInboxNotificationsAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getInboxUnreadCountAction": {
+      "f": ".api/getInboxUnreadCountAction.json",
       "layer": "action",
       "kind": "server-action"
     },
@@ -199,9 +244,11 @@
   "edges": {
     "createUserNotification": [],
     "markNotificationRead": [
+      "markInboxNotificationAsReadAction",
       "markNotificationAsRead"
     ],
     "markAllNotificationsRead": [
+      "markAllInboxNotificationsAsReadAction",
       "markAllRead"
     ],
     "removeNotification": [
@@ -213,6 +260,15 @@
     "createNotificationForOrgUser": [
       "createAdminNotification"
     ],
+    "buildInvitationNotification": [
+      "createInvitationNotification"
+    ],
+    "createInvitationNotification": [],
+    "setInvitationNotificationStatus": [],
+    "createInvitationResponseNotification": [],
+    "getInboxNotificationsForUser": [
+      "getInboxNotificationsAction"
+    ],
     "getNotificationsForUser": [
       "getNotifications"
     ],
@@ -220,6 +276,7 @@
       "getUnread"
     ],
     "getUnreadCountForUser": [
+      "getInboxUnreadCountAction",
       "getUnreadCount"
     ],
     "getOrganizationNotifications": [
@@ -250,11 +307,15 @@
     ],
     "hasActiveSubscriptions": [],
     "getPushSubscriptionStats": [],
+    "markInboxNotificationAsReadAction": [],
+    "markAllInboxNotificationsAsReadAction": [],
     "markNotificationAsRead": [],
     "markAllRead": [],
     "deleteNotification": [],
     "createAdminNotification": [],
     "sendAdminPushNotification": [],
+    "getInboxNotificationsAction": [],
+    "getInboxUnreadCountAction": [],
     "getNotifications": [],
     "getUnread": [],
     "getUnreadCount": [],
@@ -262,7 +323,12 @@
     "getAdminUnreadNotifications": [],
     "getAdminUserNotifications": [],
     "getAdminUnreadCount": [],
-    "getAdminNotificationStats": []
+    "getAdminNotificationStats": [],
+    "getOrgsIdentities": [
+      "getInboxNotificationsAction"
+    ]
   },
-  "deps": {}
+  "deps": {
+    "getOrgsIdentities": "organization"
+  }
 }

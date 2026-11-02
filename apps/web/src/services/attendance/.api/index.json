@@ -2,7 +2,7 @@
   "service": "attendance",
   "path": "src/services/attendance/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "38f2f24",
+  "derived_at": "3b4d4d0",
   "utils_dir": null,
   "fns": {
     "getOrgTodayAbsences": {
@@ -17,6 +17,11 @@
     },
     "getAttendanceReport": {
       "f": ".api/getAttendanceReport.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getTeacherAttendanceOverview": {
+      "f": ".api/getTeacherAttendanceOverview.json",
       "layer": "db",
       "kind": "query"
     },
@@ -90,6 +95,11 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "getTeacherAttendanceOverviewAction": {
+      "f": ".api/getTeacherAttendanceOverviewAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "createAttendanceAction": {
       "f": ".api/createAttendanceAction.json",
       "layer": "action",
@@ -134,6 +144,11 @@
       "f": ".api/getScheduleAttendancesAction.json",
       "layer": "action",
       "kind": "server-action"
+    },
+    "getTeacherAttendanceFicheAction": {
+      "f": ".api/getTeacherAttendanceFicheAction.json",
+      "layer": "action",
+      "kind": "server-action"
     }
   },
   "edges": {
@@ -145,6 +160,9 @@
     ],
     "getAttendanceReport": [
       "getAttendanceReportAction"
+    ],
+    "getTeacherAttendanceOverview": [
+      "getTeacherAttendanceOverviewAction"
     ],
     "recordAttendance": [
       "recordAttendanceAction"
@@ -181,6 +199,7 @@
     ],
     "getClassAttendanceRatesAction": [],
     "getOrgTodayAbsencesAction": [],
+    "getTeacherAttendanceOverviewAction": [],
     "createAttendanceAction": [],
     "confirmAttendanceAction": [],
     "confirmAllAttendancesAction": [],
@@ -190,6 +209,7 @@
     "getOrgStudentAttendanceRatesAction": [],
     "getAttendanceReportAction": [],
     "getScheduleAttendancesAction": [],
+    "getTeacherAttendanceFicheAction": [],
     "validateSessionToken": [
       "recordAttendanceAction"
     ]

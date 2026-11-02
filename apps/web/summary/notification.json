@@ -2,13 +2,13 @@
   "service": "notification",
   "path": "src/services/notification/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "38f2f24",
-  "generated_at": "2026-09-17T08:14:17.710Z",
+  "derived_at": "3b4d4d0",
+  "generated_at": "2026-10-31T20:02:01.410Z",
   "fns": {
     "createUserNotification": {
       "name": "createUserNotification",
       "file": "src/services/notification/database/notification.mutations.ts",
-      "sig": "(params: { userId: string data: CreateNotificationOutput }) => Promise<{ id: string; type: NotificationType; metadata: JsonValue; message: string; scheduleId: string | null; createdAt: Date; updatedAt: Date; read: boolean; }>",
+      "sig": "(params: { userId: string data: CreateNotificationOutput }) => Promise<{ id: string; message: string; type: NotificationType; read: boolean; metadata: JsonValue; createdAt: Date; updatedAt: Date; scheduleId: string | null; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -58,17 +58,69 @@
     "createNotificationForOrgUser": {
       "name": "createNotificationForOrgUser",
       "file": "src/services/notification/database/notification.mutations.ts",
-      "sig": "(params: { orgId: string userId: string data: CreateNotificationOutput }) => Promise<{ id: string; type: NotificationType; metadata: JsonValue; message: string; scheduleId: string | null; createdAt: Date; updatedAt: Date; read: boolean; }>",
+      "sig": "(params: { orgId: string userId: string data: CreateNotificationOutput }) => Promise<{ id: string; message: string; type: NotificationType; read: boolean; metadata: JsonValue; createdAt: Date; updatedAt: Date; scheduleId: string | null; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
       "layer": "db",
       "kind": "mutation"
     },
+    "buildInvitationNotification": {
+      "name": "buildInvitationNotification",
+      "file": "src/services/notification/database/notification.mutations.ts",
+      "sig": "(source: InvitationNotificationSource) => { type: \"INVITATION\"; message: string; metadata: { kind: \"INVITATION_RECEIVED\"; invitationId: string; orgId: string; orgName: string; orgSlug: string | null; role: Role; resourceType: Resource | null; resourceId: string | null; senderName: string; expiresAt: string; status: string; }; }",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "createInvitationNotification": {
+      "name": "createInvitationNotification",
+      "file": "src/services/notification/database/notification.mutations.ts",
+      "sig": "(tx: Tx, params: { userId: string; source: InvitationNotificationSource }) => Promise<{ id: string; message: string; type: NotificationType; metadata: JsonValue; createdAt: Date; }>",
+      "composes": [
+        "buildInvitationNotification"
+      ],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "setInvitationNotificationStatus": {
+      "name": "setInvitationNotificationStatus",
+      "file": "src/services/notification/database/notification.mutations.ts",
+      "sig": "(tx: Tx, params: { userId: string; invitationId: string; status: 'ACCEPTED' | 'DECLINED' }) => Promise<{ id: string; } | null>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "createInvitationResponseNotification": {
+      "name": "createInvitationResponseNotification",
+      "file": "src/services/notification/database/notification.mutations.ts",
+      "sig": "(tx: Tx, params: { userId: string; source: InvitationResponseSource }) => Promise<{ id: string; }>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getInboxNotificationsForUser": {
+      "name": "getInboxNotificationsForUser",
+      "file": "src/services/notification/database/notification.queries.ts",
+      "sig": "(userId: string, filter: InboxFilter = 'all', limit = 30) => Promise<{ id: string; message: string; type: NotificationType; read: boolean; metadata: JsonValue; createdAt: Date; updatedAt: Date; scheduleId: string | null; }[]>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
     "getNotificationsForUser": {
       "name": "getNotificationsForUser",
       "file": "src/services/notification/database/notification.queries.ts",
-      "sig": "(userId: string, limit = 20) => Promise<{ id: string; type: NotificationType; metadata: JsonValue; message: string; scheduleId: string | null; createdAt: Date; updatedAt: Date; read: boolean; }[]>",
+      "sig": "(userId: string, limit = 20) => Promise<{ id: string; message: string; type: NotificationType; read: boolean; metadata: JsonValue; createdAt: Date; updatedAt: Date; scheduleId: string | null; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -78,7 +130,7 @@
     "getUnreadNotificationsForUser": {
       "name": "getUnreadNotificationsForUser",
       "file": "src/services/notification/database/notification.queries.ts",
-      "sig": "(userId: string, limit = 10) => Promise<{ id: string; type: NotificationType; metadata: JsonValue; message: string; scheduleId: string | null; createdAt: Date; updatedAt: Date; read: boolean; }[]>",
+      "sig": "(userId: string, limit = 10) => Promise<{ id: string; message: string; type: NotificationType; read: boolean; metadata: JsonValue; createdAt: Date; updatedAt: Date; scheduleId: string | null; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -98,7 +150,7 @@
     "getOrganizationNotifications": {
       "name": "getOrganizationNotifications",
       "file": "src/services/notification/database/notification.queries.ts",
-      "sig": "(orgId: string, limit = 50) => Promise<({ user: { id: string; email: string; firstName: string | null; lastName: string | null; }; } & { id: string; type: NotificationType; metadata: JsonValue; message: string; ... 4 more ...; read: boolean; })[]>",
+      "sig": "(orgId: string, limit = 50) => Promise<({ user: { id: string; email: string; firstName: string | null; lastName: string | null; }; } & { id: string; message: string; type: NotificationType; read: boolean; metadata: JsonValue; createdAt: Date; updatedAt: Date; userId: string; scheduleId: string | null; })[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -108,7 +160,7 @@
     "getOrganizationUnreadNotifications": {
       "name": "getOrganizationUnreadNotifications",
       "file": "src/services/notification/database/notification.queries.ts",
-      "sig": "(orgId: string, limit = 50) => Promise<({ user: { id: string; email: string; firstName: string | null; lastName: string | null; }; } & { id: string; type: NotificationType; metadata: JsonValue; message: string; ... 4 more ...; read: boolean; })[]>",
+      "sig": "(orgId: string, limit = 50) => Promise<({ user: { id: string; email: string; firstName: string | null; lastName: string | null; }; } & { id: string; message: string; type: NotificationType; read: boolean; metadata: JsonValue; createdAt: Date; updatedAt: Date; userId: string; scheduleId: string | null; })[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -118,7 +170,7 @@
     "getOrganizationUserNotifications": {
       "name": "getOrganizationUserNotifications",
       "file": "src/services/notification/database/notification.queries.ts",
-      "sig": "(orgId: string, userId: string, limit = 20) => Promise<({ user: { id: string; email: string; firstName: string | null; lastName: string | null; }; } & { id: string; type: NotificationType; metadata: JsonValue; message: string; ... 4 more ...; read: boolean; })[]>",
+      "sig": "(orgId: string, userId: string, limit = 20) => Promise<({ user: { id: string; email: string; firstName: string | null; lastName: string | null; }; } & { id: string; message: string; type: NotificationType; read: boolean; metadata: JsonValue; createdAt: Date; updatedAt: Date; userId: string; scheduleId: string | null; })[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -158,7 +210,7 @@
     "unsubscribeDevice": {
       "name": "unsubscribeDevice",
       "file": "src/services/notification/database/push.mutations.ts",
-      "sig": "(params: { userId: string; endpoint: string }) => Promise<{ id: string; createdAt: Date; updatedAt: Date; userId: string; userAgent: string | null; deviceId: string | null; expiresAt: Date | null; endpoint: string; p256dh: string; auth: string; }>",
+      "sig": "(params: { userId: string; endpoint: string }) => Promise<{ id: string; createdAt: Date; updatedAt: Date; userId: string; expiresAt: Date | null; endpoint: string; p256dh: string; auth: string; userAgent: string | null; deviceId: string | null; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -178,7 +230,7 @@
     "markSubscriptionExpired": {
       "name": "markSubscriptionExpired",
       "file": "src/services/notification/database/push.mutations.ts",
-      "sig": "(endpoint: string) => Promise<{ id: string; createdAt: Date; updatedAt: Date; userId: string; userAgent: string | null; deviceId: string | null; expiresAt: Date | null; endpoint: string; p256dh: string; auth: string; }>",
+      "sig": "(endpoint: string) => Promise<{ id: string; createdAt: Date; updatedAt: Date; userId: string; expiresAt: Date | null; endpoint: string; p256dh: string; auth: string; userAgent: string | null; deviceId: string | null; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -198,7 +250,7 @@
     "getPushSubscriptionsByUserId": {
       "name": "getPushSubscriptionsByUserId",
       "file": "src/services/notification/database/push.queries.ts",
-      "sig": "(userId: string) => Promise<{ id: string; createdAt: Date; userAgent: string | null; deviceId: string | null; expiresAt: Date | null; endpoint: string; p256dh: string; auth: string; }[]>",
+      "sig": "(userId: string) => Promise<{ id: string; createdAt: Date; expiresAt: Date | null; endpoint: string; p256dh: string; auth: string; userAgent: string | null; deviceId: string | null; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -208,7 +260,7 @@
     "getActivePushSubscriptionsByUserId": {
       "name": "getActivePushSubscriptionsByUserId",
       "file": "src/services/notification/database/push.queries.ts",
-      "sig": "(userId: string) => Promise<{ id: string; userAgent: string | null; endpoint: string; p256dh: string; auth: string; }[]>",
+      "sig": "(userId: string) => Promise<{ id: string; endpoint: string; p256dh: string; auth: string; userAgent: string | null; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -257,6 +309,19 @@
       "layer": "db",
       "kind": "query"
     },
+    "markInboxNotificationAsReadAction": {
+      "name": "markInboxNotificationAsReadAction",
+      "file": "src/services/notification/actions/notification.mutations.ts",
+      "sig": "(input: { notificationId: string }) => Promise<{ error: string; data?: undefined; } | { data: true; error?: undefined; }>",
+      "calls": [
+        "markNotificationRead"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "markNotificationAsRead": {
       "name": "markNotificationAsRead",
       "file": "src/services/notification/actions/notification.mutations.ts",
@@ -299,7 +364,7 @@
     "createAdminNotification": {
       "name": "createAdminNotification",
       "file": "src/services/notification/actions/notification.mutations.ts",
-      "sig": "(userId: string, input: { message: string; type?: string; scheduleId?: string; metadata?: Record<string, unknown> }) => Promise<{ error: string; data?: undefined; } | { data: { id: string; type: NotificationType; metadata: JsonValue; message: string; scheduleId: string | null; createdAt: Date; updatedAt: Date; read: boolean; }; error?: undefined; }>",
+      "sig": "(userId: string, input: { message: string; type?: string; scheduleId?: string; metadata?: Record<string, unknown> }) => Promise<{ error: string; data?: undefined; } | { data: { id: string; message: string; type: NotificationType; read: boolean; metadata: JsonValue; createdAt: Date; updatedAt: Date; scheduleId: string | null; }; error?: undefined; }>",
       "calls": [
         "createNotificationForOrgUser"
       ],
@@ -322,10 +387,37 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "getInboxNotificationsAction": {
+      "name": "getInboxNotificationsAction",
+      "file": "src/services/notification/actions/notification.queries.ts",
+      "sig": "(input?: GetInboxNotificationsInput) => Promise<{ error: string; data?: undefined; } | { data: ({ id: string; message: string; type: NotificationType; read: boolean; metadata: JsonValue; createdAt: Date; updatedAt: Date; scheduleId: string | null; } | { ...; })[]; error?: undefined; }>",
+      "calls": [
+        "getInboxNotificationsForUser",
+        "getOrgsIdentities"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getInboxUnreadCountAction": {
+      "name": "getInboxUnreadCountAction",
+      "file": "src/services/notification/actions/notification.queries.ts",
+      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: number; error?: undefined; }>",
+      "calls": [
+        "getUnreadCountForUser"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "getNotifications": {
       "name": "getNotifications",
       "file": "src/services/notification/actions/notification.queries.ts",
-      "sig": "(limit?: number) => Promise<{ error: string; data?: undefined; } | { data: { id: string; type: NotificationType; metadata: JsonValue; message: string; scheduleId: string | null; createdAt: Date; updatedAt: Date; read: boolean; }[]; error?: undefined; }>",
+      "sig": "(limit?: number) => Promise<{ error: string; data?: undefined; } | { data: { id: string; message: string; type: NotificationType; read: boolean; metadata: JsonValue; createdAt: Date; updatedAt: Date; scheduleId: string | null; }[]; error?: undefined; }>",
       "calls": [
         "getNotificationsForUser"
       ],
@@ -338,7 +430,7 @@
     "getUnread": {
       "name": "getUnread",
       "file": "src/services/notification/actions/notification.queries.ts",
-      "sig": "(limit?: number) => Promise<{ error: string; data?: undefined; } | { data: { id: string; type: NotificationType; metadata: JsonValue; message: string; scheduleId: string | null; createdAt: Date; updatedAt: Date; read: boolean; }[]; error?: undefined; }>",
+      "sig": "(limit?: number) => Promise<{ error: string; data?: undefined; } | { data: { id: string; message: string; type: NotificationType; read: boolean; metadata: JsonValue; createdAt: Date; updatedAt: Date; scheduleId: string | null; }[]; error?: undefined; }>",
       "calls": [
         "getUnreadNotificationsForUser"
       ],
@@ -364,7 +456,7 @@
     "getAdminNotifications": {
       "name": "getAdminNotifications",
       "file": "src/services/notification/actions/notification.queries.ts",
-      "sig": "(limit?: number) => Promise<{ error: string; data?: undefined; } | { data: ({ user: { id: string; email: string; firstName: string | null; lastName: string | null; }; } & { id: string; type: NotificationType; ... 6 more ...; read: boolean; })[]; error?: undefined; }>",
+      "sig": "(limit?: number) => Promise<{ error: string; data?: undefined; } | { data: ({ user: { id: string; email: string; firstName: string | null; lastName: string | null; }; } & { id: string; message: string; type: NotificationType; ... 5 more ...; scheduleId: string | null; })[]; error?: undefined; }>",
       "calls": [
         "getOrganizationNotifications"
       ],
@@ -377,7 +469,7 @@
     "getAdminUnreadNotifications": {
       "name": "getAdminUnreadNotifications",
       "file": "src/services/notification/actions/notification.queries.ts",
-      "sig": "(limit?: number) => Promise<{ error: string; data?: undefined; } | { data: ({ user: { id: string; email: string; firstName: string | null; lastName: string | null; }; } & { id: string; type: NotificationType; ... 6 more ...; read: boolean; })[]; error?: undefined; }>",
+      "sig": "(limit?: number) => Promise<{ error: string; data?: undefined; } | { data: ({ user: { id: string; email: string; firstName: string | null; lastName: string | null; }; } & { id: string; message: string; type: NotificationType; ... 5 more ...; scheduleId: string | null; })[]; error?: undefined; }>",
       "calls": [
         "getOrganizationUnreadNotifications"
       ],
@@ -390,7 +482,7 @@
     "getAdminUserNotifications": {
       "name": "getAdminUserNotifications",
       "file": "src/services/notification/actions/notification.queries.ts",
-      "sig": "(userId: string, limit?: number) => Promise<{ error: string; data?: undefined; } | { data: ({ user: { id: string; email: string; firstName: string | null; lastName: string | null; }; } & { id: string; type: NotificationType; ... 6 more ...; read: boolean; })[]; error?: undefined; }>",
+      "sig": "(userId: string, limit?: number) => Promise<{ error: string; data?: undefined; } | { data: ({ user: { id: string; email: string; firstName: string | null; lastName: string | null; }; } & { id: string; message: string; type: NotificationType; ... 5 more ...; scheduleId: string | null; })[]; error?: undefined; }>",
       "calls": [
         "getOrganizationUserNotifications"
       ],
@@ -430,6 +522,7 @@
   "edges": {
     "createUserNotification": [],
     "markNotificationRead": [
+      "markInboxNotificationAsReadAction",
       "markNotificationAsRead"
     ],
     "markAllNotificationsRead": [
@@ -444,6 +537,15 @@
     "createNotificationForOrgUser": [
       "createAdminNotification"
     ],
+    "buildInvitationNotification": [
+      "createInvitationNotification"
+    ],
+    "createInvitationNotification": [],
+    "setInvitationNotificationStatus": [],
+    "createInvitationResponseNotification": [],
+    "getInboxNotificationsForUser": [
+      "getInboxNotificationsAction"
+    ],
     "getNotificationsForUser": [
       "getNotifications"
     ],
@@ -451,6 +553,7 @@
       "getUnread"
     ],
     "getUnreadCountForUser": [
+      "getInboxUnreadCountAction",
       "getUnreadCount"
     ],
     "getOrganizationNotifications": [
@@ -481,11 +584,14 @@
     ],
     "hasActiveSubscriptions": [],
     "getPushSubscriptionStats": [],
+    "markInboxNotificationAsReadAction": [],
     "markNotificationAsRead": [],
     "markAllRead": [],
     "deleteNotification": [],
     "createAdminNotification": [],
     "sendAdminPushNotification": [],
+    "getInboxNotificationsAction": [],
+    "getInboxUnreadCountAction": [],
     "getNotifications": [],
     "getUnread": [],
     "getUnreadCount": [],
@@ -493,7 +599,12 @@
     "getAdminUnreadNotifications": [],
     "getAdminUserNotifications": [],
     "getAdminUnreadCount": [],
-    "getAdminNotificationStats": []
+    "getAdminNotificationStats": [],
+    "getOrgsIdentities": [
+      "getInboxNotificationsAction"
+    ]
   },
-  "deps": {}
+  "deps": {
+    "getOrgsIdentities": "organization"
+  }
 }

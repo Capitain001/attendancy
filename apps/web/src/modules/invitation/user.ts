@@ -46,12 +46,13 @@ export async function inviteUser(params: InvitationParams) {
     const { token, expiresAt } = await generateInvitationToken(params.expiresInDays);
 
     // ---------------------------------------------------------
-    // 4. Vérification du statut (Profil existant ou Nouveau)
+    // 4. Vérification du statut (Utilisateur existant ou Nouveau)
     // ---------------------------------------------------------
-    const existingProfile = await prisma.user.findUnique({
-      where: { email: params.email }
+    const existingUser = await prisma.user.findUnique({
+      where: { email: params.email },
+      select: { id: true },
     });
-    const userStatus: UserStatus = existingProfile ? "ACTIVE" : "NEW";
+    const userStatus: UserStatus = existingUser ? "ACTIVE" : "NEW";
 
     // ---------------------------------------------------------
     // 5. Construction du Payload (Métadonnées)
@@ -62,30 +63,28 @@ export async function inviteUser(params: InvitationParams) {
       { ...params, function: params.adminFunction },
       user,
       token,
-      userStatus
+      userStatus,
     );
 
     // ---------------------------------------------------------
-    // 5. Interface avec le fournisseur d'identité (Supabase)
+    // 6. Interface avec le fournisseur d'identité (Supabase)
     // ---------------------------------------------------------
     // Deux modes de remise, choisis par l'appelant (défaut = "email", comportement inchangé) :
-    // - "email" : Supabase envoie lui-même l'email d'invitation (sendSupabaseInvitation).
-    // - "link"  : on crée l'utilisateur (état invited) et on récupère le lien nous-mêmes,
-    //             sans email Supabase — à charge de l'appelant de le transmettre
-    //             (copier/coller dans l'UI, SMS, notre propre provider d'email, etc.)
-    // Si cette étape échoue (ex: email invalide, déjà confirmé, erreur réseau), on annule le flux.
+    // - "link"  : lien magique si utilisateur existant, lien d'invitation sinon.
+    // - "email" : si nouvel utilisateur, envoi par Supabase (sendSupabaseInvitation).
+    //             si utilisateur existant, aucun appel Supabase : la remise est la notification in-app (étape 7).
     const deliveryMethod = params.deliveryMethod ?? "email";
     let invitationLink: string | undefined;
 
     if (deliveryMethod === "link") {
-      const linkResult = existingProfile
+      const linkResult = existingUser
         ? await generateMagicLink(params.email, metadata)
         : await createInvitationLink(params.email, metadata);
       if (!linkResult.success) {
         return { error: linkResult.error || "Erreur Supabase" };
       }
       invitationLink = linkResult.link;
-    } else {
+    } else if (!existingUser) {
       const invitationResult = await sendSupabaseInvitation(params.email, metadata);
       if (!invitationResult.success) {
         return { error: invitationResult.error || "Erreur Supabase" };
@@ -93,40 +92,41 @@ export async function inviteUser(params: InvitationParams) {
     }
 
     // ---------------------------------------------------------
-    // 6. Persistance et Traçabilité (MISE À JOUR MAJEURE)
+    // 7. Persistance atomique (Invitation + AuditLog + Notification si existant)
     // ---------------------------------------------------------
-    // Enregistrement de l'invitation dans la base de données (Prisma)
-    // et création d'une entrée dans l'Audit Log (Action.CREATE).
-    const result = await saveInvitationWithAudit(
-      params.email,
+    const result = await saveInvitationWithAudit({
+      email: params.email,
       token,
       expiresAt,
       metadata,
-      user.id!,
-      Action.CREATE,
-      params.resourceId,   // <-- Ajout : ID de la ressource cible
-      params.resourceType, // <-- Ajout : Type de la ressource (ex: 'DEPARTMENT', 'CLASS')
-    );
+      inviterUserId: user.id!,
+      action: Action.CREATE,
+      resourceId: params.resourceId,
+      resourceType: params.resourceType,
+      targetUserId: existingUser?.id,
+    });
 
-    // Logging serveur pour le monitoring (sans exposer de données sensibles en prod)
-    console.log(deliveryMethod === "link" ? "✅ Lien d'invitation généré:" : "✅ Invitation envoyée avec succès:", {
+    console.log(deliveryMethod === "link" ? "✅ Lien d'invitation généré:" : "✅ Invitation enregistrée:", {
       email: result.invitation.email,
-      token: result.invitation.token,
+      invitationId: result.invitation.id,
     });
 
     // ---------------------------------------------------------
-    // 7. Retour d'état au client
+    // 8. Retour d'état au client
     // ---------------------------------------------------------
+    const inboxOnly = !!existingUser && deliveryMethod === "email";
     return {
       data: {
         success: true,
         message:
           deliveryMethod === "link"
             ? `Lien d'invitation généré pour ${params.email}`
-            : `Invitation envoyée à ${params.email}`,
+            : inboxOnly
+              ? `Invitation déposée dans la boîte de réception de ${params.email}`
+              : `Invitation envoyée à ${params.email}`,
         metadata,
         ...(invitationLink ? { link: invitationLink } : {}),
-      }
+      },
     };
 
   } catch (error) {

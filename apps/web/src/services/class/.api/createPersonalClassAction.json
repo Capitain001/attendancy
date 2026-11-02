@@ -1,7 +1,7 @@
 {
   "name": "createPersonalClassAction",
   "file": "src/services/class/actions/class.mutations.ts",
-  "sig": "(input: CreatePersonalClassInput = {}) => Promise<{ error: string; data?: undefined; } | { data: { id: string; name: string; }; error?: undefined; }>",
+  "sig": "(input: CreatePersonalClassInput = {}) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; }; error?: undefined; }>",
   "calls": [
     "createPersonalClass"
   ],

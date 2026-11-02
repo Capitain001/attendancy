@@ -160,33 +160,33 @@ L'utilisateur consulte ses messages
 
 ---
 
-## 6. Lots d'Implémentation & Suivi d'Avancement
+## 6. Lots d'Implémentation & Suivi d'Avancement proproser
 
 ### [x] LOT 1 : Émission & Notification Interne (Backend Invitation)
 - [x] Analyser `apps/web/src/modules/invitation/user.ts` et `database.ts`.
 - [x] Adapter `inviteUser` : lorsque `userStatus === 'ACTIVE'`, bifurquer du mode Supabase email standard pour émettre une notification interne au `userId`.
-- [x] Enregistrer l'invitation avec `Invitation.userId = existingProfile.id`.
+- [x] Enregistrer l'invitation avec `Invitation.userId = existingUser.id`.
 - [x] Créer l'entrée `Notification` (`type: "INVITATION"`, payload `metadata` enrichi).
 - [x] Vérifier la rétrocompatibilité : les utilisateurs non inscrits (`NEW`) continuent sur le flow Supabase.
 
-### [ ] LOT 2 : Service & Actions Métier Inbox (Backend Inbox)
-- [ ] Consulter l'index API du service `notification` et identifier les besoins manquants.
-- [ ] Créer l'action `getInboxNotificationsAction({ filter, page, limit })`.
-- [ ] Créer l'action `markNotificationReadAction({ notificationId })`.
-- [ ] Créer l'action transactionnelle `respondToInvitationAction({ notificationId, invitationToken, accept: boolean })` :
-  - Si accept : appel à la logique d'onboarding `completeInvite` ou insertion `UserOrganization` + mise à jour `Invitation.usedAt` + notification `metadata.status = "ACCEPTED"`.
-  - Si refuse : mise à jour `Invitation` (invalide) + notification `metadata.status = "DECLINED"`.
-- [ ] Créer les hooks TanStack Query correspondants (`useInbox`, `useRespondInvitation`).
+### [x] LOT 2 : Service & Actions Métier Inbox (Backend Inbox)
+- [x] Consulter l'index API du service `notification` et identifier les besoins manquants.
+- [x] Créer l'action `getInboxNotifications({ filter, limit })`.
+- [x] Créer l'action `markNotificationAsRead(notificationId)`.
+- [x] Créer l'action transactionnelle d'adhésion / refus dans `src/modules/auth/members/actions.ts` :
+  - Si accept : appel à l'onboarding + mise à jour `Invitation.usedAt` + notification `metadata.status = "ACCEPTED"`.
+  - Si refuse : mise à jour `Invitation.expiresAt` + notification `metadata.status = "DECLINED"`.
+- [x] Créer les hooks TanStack Query correspondants (`useInboxNotifications`, etc.).
 
-### [ ] LOT 3 : Interface Inbox Gmail-like (Frontend `/inbox`)
-- [ ] Créer la route `apps/web/src/app/(app)/inbox/page.tsx` (espace utilisateur, hors slug).
-- [ ] Implémenter le layout split-screen (InboxLayout) responsive avec tokens du design system.
-- [ ] Implémenter la sidebar de dossiers/filtres (`InboxSidebar`).
-- [ ] Implémenter la liste des messages (`InboxList`) avec pastilles non-lu et avatars.
-- [ ] Implémenter la vue détail (`InboxMessageView`) et la carte interactive (`InvitationActionCard`).
+### [x] LOT 3 : Interface Inbox Gmail-like (Frontend `/inbox`)
+- [x] Créer la route `apps/web/src/app/(app)/inbox/page.tsx` (espace utilisateur, hors slug).
+- [x] Implémenter le layout split-screen (InboxLayout) responsive avec tokens du design system.
+- [x] Implémenter la sidebar de dossiers/filtres (`InboxSidebar`).
+- [x] Implémenter la liste des messages (`InboxList`) avec pastilles non-lu et avatars.
+- [x] Implémenter la vue détail (`InboxMessageView`) et la carte interactive (`InvitationActionCard`).
 
-### [ ] LOT 4 : Validation & Tests E2E
-- [ ] Tester l'invitation d'un utilisateur existant depuis l'espace teacher/direction.
-- [ ] Vérifier l'apparition de la notification dans `/inbox`.
-- [ ] Tester l'acceptation de l'invitation et le rattachement de l'utilisateur à l'organisation.
-- [ ] Tester le refus de l'invitation.
+### [x] LOT 4 : Validation & Tests E2E
+- [x] Tester l'invitation d'un utilisateur existant depuis l'espace teacher/direction.
+- [x] Vérifier l'apparition de la notification dans `/inbox`.
+- [x] Tester l'acceptation de l'invitation et le rattachement de l'utilisateur à l'organisation.
+- [x] Tester le refus de l'invitation.

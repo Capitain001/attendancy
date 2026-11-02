@@ -1,0 +1,11 @@
+{
+  "name": "getTeacherAttendanceOverviewAction",
+  "file": "src/services/attendance/actions/analytics.ts",
+  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { totals: { present: number; late: number; absent: number; excused: number; denominator: number; rate: number | null; sessions: number; }; byCourse: { ...; }[]; absentees: { ...; }[]; }; error?: undefined; }>",
+  "calls": [
+    "getTeacherAttendanceOverview"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

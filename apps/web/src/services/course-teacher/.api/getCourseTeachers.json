@@ -1,7 +1,7 @@
 {
   "name": "getCourseTeachers",
   "file": "src/services/course-teacher/database/course-teacher.queries.ts",
-  "sig": "(courseId: string, orgId: string) => Promise<{ id: string; isMain: boolean; hours: number | null; teacher: { id: string; user: { id: string; firstName: string | null; lastName: string | null; email: string; }; } | null; }[]>",
+  "sig": "(courseId: string, orgId: string) => Promise<{ id: string; teacher: { id: string; user: { id: string; email: string; firstName: string | null; lastName: string | null; }; } | null; hours: number | null; isMain: boolean; }[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

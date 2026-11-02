@@ -3,6 +3,8 @@
 // ==========================================
 
 import { prisma } from "@/lib/prisma";
+import { invalidateEvent } from "@/cache/server/graph";
+import { createInvitationNotification } from "@/services/notification/server";
 import {
   InvitationMetadata,
   DatabaseInvitationDetails,
@@ -81,49 +83,82 @@ export async function logAuditAction(
   });
 }
 
-export async function saveInvitationWithAudit(
-  email:         string,
-  token:         string,
-  expiresAt:     Date,
-  metadata:      InvitationMetadata,
-  userId:        string,
-  action:        Action,
-  resourceId?:   string,
-  resourceType?: Resource,
-): Promise<{ invitation: any; auditLog: any }> {
-  const invitationDetails = createDatabaseDetails(metadata);
-  const auditDetails      = createAuditDetails(email, metadata);
+export interface SaveInvitationParams {
+  email: string;
+  token: string;
+  expiresAt: Date;
+  metadata: InvitationMetadata;
+  inviterUserId: string;
+  action: Action;
+  resourceId?: string;
+  resourceType?: Resource;
+  targetUserId?: string;
+}
 
-  return await prisma.$transaction(async (tx) => {
-    const invitation = await tx.invitation.create({
-      data: {
-        email,
-        token,
-        expiresAt,
-        orgId:          metadata?.organization?.id!,
-        invitationType: "INVITE_ONLY",
-        role:           metadata?.role,
-        details:        invitationDetails,
-        ...(resourceId   ? { resourceId }   : {}),
-        ...(resourceType ? { resourceType } : {}),
-      },
-    });
+export async function saveInvitationWithAudit(params: SaveInvitationParams) {
+  const invitationDetails = createDatabaseDetails(params.metadata);
+  const auditDetails = createAuditDetails(params.email, params.metadata);
+  const orgId = params.metadata.organization?.id;
+  if (!orgId) throw new Error("Organisation manquante dans les métadonnées d'invitation");
 
-    const auditLog = await tx.auditLog.create({
-      data: {
-        userId,
-        action,
-        resourceId: invitation.id || undefined,
-        resource:   "USER",
-        details:    auditDetails,
-      },
-    });
+  const result = await prisma.$transaction(
+    async (tx) => {
+      const invitation = await tx.invitation.create({
+        data: {
+          email: params.email,
+          token: params.token,
+          expiresAt: params.expiresAt,
+          orgId,
+          invitationType: "INVITE_ONLY",
+          role: params.metadata.role,
+          details: invitationDetails,
+          ...(params.targetUserId ? { userId: params.targetUserId } : {}),
+          ...(params.resourceId ? { resourceId: params.resourceId } : {}),
+          ...(params.resourceType ? { resourceType: params.resourceType } : {}),
+        },
+      });
 
-    return { invitation, auditLog };
-  }, {
-    maxWait: 10000,
-    timeout: 20000,
-  });
+      const auditLog = await tx.auditLog.create({
+        data: {
+          userId: params.inviterUserId,
+          action: params.action,
+          resourceId: invitation.id || undefined,
+          resource: "USER",
+          details: auditDetails,
+        },
+      });
+
+      const notification = params.targetUserId
+        ? await createInvitationNotification(tx, {
+            userId: params.targetUserId,
+            source: {
+              invitationId: invitation.id,
+              expiresAt: params.expiresAt,
+              role: params.metadata.role,
+              organization: { ...params.metadata.organization, id: orgId },
+              senderName: params.metadata.invited_by?.name,
+              resourceId: params.resourceId,
+              resourceType: params.resourceType,
+            },
+          })
+        : null;
+
+      return { invitation, auditLog, notification };
+    },
+    { maxWait: 10000, timeout: 20000 },
+  );
+
+  // Après commit uniquement : invalidé dans la tx, le cache pourrait se re-remplir avec l'ancien état.
+  // Un échec d'invalidation ne doit pas faire échouer une invitation déjà persistée.
+  if (result.notification && params.targetUserId) {
+    try {
+      await invalidateEvent("NOTIFICATION_CREATED", params.targetUserId);
+    } catch (error) {
+      console.error("[saveInvitationWithAudit] invalidation cache notification échouée", error);
+    }
+  }
+
+  return result;
 }
 
 export interface InvitationListItem {

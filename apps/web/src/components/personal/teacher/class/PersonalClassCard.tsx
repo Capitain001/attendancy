@@ -2,13 +2,10 @@
 import Link from "next/link";
 import { Archive, ChevronDown, Pencil } from "lucide-react";
 import { updateClassFormAction, removeClassFormAction } from "@/services/class/form";
+import type { GetPersonalClassesDto } from "@/features/personal/services/class";
 
 type PersonalClassCardProps = {
-  class_: {
-    id: string;
-    name: string;
-    _count: { courses: number; studentEnrollments: number };
-  };
+  class_: Pick<GetPersonalClassesDto[number], "id" | "name" | "_count">;
   href: string;
 };
 

@@ -1,0 +1,26 @@
+{
+  "service": "teacher-course-hours",
+  "path": "src/services/teacher-course-hours/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "3b4d4d0",
+  "utils_dir": null,
+  "fns": {
+    "getTeacherCourseHourss": {
+      "f": ".api/getTeacherCourseHourss.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getTeacherCourseHourssAction": {
+      "f": ".api/getTeacherCourseHourssAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "getTeacherCourseHourss": [
+      "getTeacherCourseHourssAction"
+    ],
+    "getTeacherCourseHourssAction": []
+  },
+  "deps": {}
+}

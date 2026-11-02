@@ -24,3 +24,8 @@ export type {
   PushSubscriptionItem,
   PushSubscriptionStats,
 } from './types'
+
+export type {
+  InboxFilter,
+  GetInboxNotificationsInput,
+} from './validation'

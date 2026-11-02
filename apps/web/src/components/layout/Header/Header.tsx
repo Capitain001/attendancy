@@ -4,6 +4,7 @@ import { UserInfo } from '@/types/user'
 import { orgPath } from '@/config'
 import AuthButton from '@/components/auth/ui/AuthButton'
 import { NotificationsPopover } from '../sidebar/ui/NotificationsPopover'
+import { InboxHeaderButton } from './InboxHeaderButton'
 
 
 interface HeaderProps {
@@ -28,7 +29,12 @@ export default function Header({ user }: HeaderProps) {
         </Link>
         <div className="flex items-center gap-1">
           <ModeToggle />
-          {user && <NotificationsPopover />}
+          {user && (
+            <>
+              <InboxHeaderButton />
+              <NotificationsPopover />
+            </>
+          )}
           <AuthButton user={user} />
         </div>
       </div>

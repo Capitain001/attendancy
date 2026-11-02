@@ -1,0 +1,8 @@
+{
+  "name": "buildInvitationNotification",
+  "file": "src/services/notification/database/notification.mutations.ts",
+  "sig": "(source: InvitationNotificationSource) => { type: \"INVITATION\"; message: string; metadata: { kind: \"INVITATION_RECEIVED\"; invitationId: string; orgId: string; orgName: string; orgSlug: string | null; role: Role; resourceType: Resource | null; resourceId: string | null; senderName: string; expiresAt: string; status: string; }; }",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

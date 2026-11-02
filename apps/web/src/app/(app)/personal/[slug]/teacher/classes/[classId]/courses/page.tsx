@@ -6,8 +6,9 @@ import { ArrowLeft, BookOpen, Clock } from "lucide-react";
 
 import { personal } from "@/modules/personal/paths";
 import { getFeedback } from "@/utils/server/form/action";
-import { getClassAction } from "@/services/class";
-import { getCoursesAction } from "@/services/course";
+import { validateUUID } from "@/utils/server/validation";
+import { getPersonalClassesAction } from "@/features/personal/services/class";
+import { getPersonalCoursesAction } from "@/features/personal/services/course";
 import { FeedbackToast } from "@/components/tools/toast/FeedbackToast";
 import { CreatePCourseModal } from "@/components/personal/teacher/courses/CreatePCourseModal";
 
@@ -23,14 +24,19 @@ interface ClassCoursesPageProps {
 
 export default async function ClassCoursesPage({ params, searchParams }: ClassCoursesPageProps) {
   await connection();
-  const [{ slug, classId }, query] = await Promise.all([params, searchParams]);
+  const [{ slug, classId: rawClassId }, query] = await Promise.all([params, searchParams]);
+
+  // Validé en amont : un id malformé donne un 404 avant toute requête.
+  const classId = validateUUID(rawClassId);
 
   const [classResult, coursesResult] = await Promise.all([
-    getClassAction({ classId }),
-    getCoursesAction({ classId }),
+    getPersonalClassesAction({ classId }),
+    getPersonalCoursesAction({ classId }),
   ]);
 
-  const classData = "data" in classResult ? classResult.data : null;
+  // Filtrée sur classId : une seule entrée si la classe appartient à
+  // l'utilisateur, aucune sinon (id valide mais étranger à son espace).
+  const classData = "data" in classResult ? classResult.data?.[0] : undefined;
   if (!classData) notFound();
 
   const courses = "data" in coursesResult && coursesResult.data ? coursesResult.data : [];
@@ -57,7 +63,7 @@ export default async function ClassCoursesPage({ params, searchParams }: ClassCo
                 : `${courses.length} cours associé${courses.length > 1 ? "s" : ""}.`}
             </p>
           </div>
-          <CreatePCourseModal classId={classId} />
+          <CreatePCourseModal classId={classId} withGroup={classData.type === "THEMATIC"} />
         </header>
 
         <FeedbackToast error={feedback.error} status={feedback.status} />
@@ -91,12 +97,10 @@ export default async function ClassCoursesPage({ params, searchParams }: ClassCo
                     {course.name}
                   </span>
                   <span className="h-px flex-1 bg-foreground/10" />
-                  {course.durationTotal !== null && course.durationTotal !== undefined && (
-                    <span className="inline-flex shrink-0 items-center gap-1 font-mono text-xs tabular-nums text-foreground/30">
-                      <Clock aria-hidden="true" className="size-3" />
-                      {course.durationTotal}h
-                    </span>
-                  )}
+                  <span className="inline-flex shrink-0 items-center gap-1 font-mono text-xs tabular-nums text-foreground/30">
+                    <Clock aria-hidden="true" className="size-3" />
+                    {course.durationTotal}h
+                  </span>
                 </Link>
               ))}
             </div>

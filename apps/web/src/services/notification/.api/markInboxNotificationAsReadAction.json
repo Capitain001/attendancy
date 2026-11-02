@@ -1,0 +1,11 @@
+{
+  "name": "markInboxNotificationAsReadAction",
+  "file": "src/services/notification/actions/notification.mutations.ts",
+  "sig": "(input: { notificationId: string }) => Promise<{ error: string; data?: undefined; } | { data: true; error?: undefined; }>",
+  "calls": [
+    "markNotificationRead"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

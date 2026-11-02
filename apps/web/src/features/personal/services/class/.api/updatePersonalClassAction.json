@@ -1,0 +1,9 @@
+{
+  "name": "updatePersonalClassAction",
+  "file": "src/features/personal/services/class/actions/class.mutations.ts",
+  "sig": "(input: UpdatePersonalClassInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; }; error?: undefined; }>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

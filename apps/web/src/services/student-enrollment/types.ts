@@ -17,3 +17,5 @@ export type UpdateStudentEnrollmentData = Pick<CreateStudentEnrollmentData, 'end
 export * from './generated.types'
 
 export type StudentEnrollmentsItem = GetStudentsEnrollmentsDto[number]
+
+export type UserType = StudentEnrollmentsItem["student"]["user"];

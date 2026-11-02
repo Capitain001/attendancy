@@ -1,7 +1,7 @@
 {
   "name": "getTeacherDailySchedule",
   "file": "src/services/schedule/database/schedule.queries.ts",
-  "sig": "(teacherId: string, orgId: string, date: Date = new Date()) => Promise<{ id: string; startTime: Date; endTime: Date; status: ScheduleStatus; confirmed: boolean; notes: string | null; class: { level: Level; name: string; _count: { ...; }; }; course: { ...; }; group: { ...; } | null; room: { ...; }; session: { ...; } | null; }[]>",
+  "sig": "(teacherId: string, orgId: string, dayKey: string) => Promise<{ id: string; class: { level: Level; name: string; _count: { studentEnrollments: number; }; }; course: { name: string; }; group: { name: string; _count: { studentGroups: number; }; } | null; session: { ...; } | null; ... 5 more ...; confirmed: boolean; }[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

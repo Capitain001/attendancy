@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Users } from "lucide-react";
+import type { ClassType } from "@/generated/prisma/client";
 import { personal } from "@/modules/personal/paths";
 import { getFeedback } from "@/utils/server/form/action";
 import { resolveClassesData } from "@/services/personal/actions/classe.mutations";
@@ -7,15 +7,26 @@ import { resolveSlugPaths } from "@/lib/paths";
 import { PersonalClassCard } from "@/components/personal/teacher/class/PersonalClassCard";
 import {
   CreateClassModal,
-  CREATE_CLASS_MODAL_ID,
+  CreateClassTrigger,
+  createClassModalId,
 } from "@/components/personal/teacher/class/CreateClassModal";
 import { FeedbackToast } from "@/components/tools/toast/FeedbackToast";
 import { PersonalClassPlaceholder } from "@/components/personal/teacher/class/PersonalClassPlaceholder";
+import { PersonalInvitationCard } from "@/components/personal/teacher/class/invitation/PersonalInvitationCard";
 
 export const metadata: Metadata = {
   title: "Mes classes | Attendancy",
   robots: { index: false, follow: false },
 };
+
+// Ordre d'affichage des sections. `satisfies` garantit que chaque entrée
+// est un ClassType valide : une faute de frappe ici ne compile pas.
+const CLASS_SECTIONS = [
+  { type: "COHORT", title: "Cohortes", addLabel: "Ajouter une cohorte" },
+  { type: "THEMATIC", title: "Thématiques", addLabel: "Ajouter une classe thématique" },
+] as const satisfies readonly { type: ClassType; title: string; addLabel: string }[];
+
+const grid = "grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-3";
 
 export default async function PersonalTeacherClassesPage({
   params,
@@ -55,40 +66,51 @@ export default async function PersonalTeacherClassesPage({
         <FeedbackToast error={feedback.error} status={feedback.status} />
 
         {canAddClass ? (
-          <CreateClassModal />
+          <CreateClassTrigger />
         ) : !loadError ? (
           <p className="rounded-md border border-foreground/10 px-4 py-3 text-sm text-foreground/50">
             Vous avez atteint la limite de classes actives de votre espace.
           </p>
         ) : null}
 
-        {!classes?.length ? (
-          <div className="flex flex-col items-center justify-center gap-3 rounded-md border border-dashed border-foreground/15 px-6 py-14 text-center">
-            <div className="flex size-11 items-center justify-center rounded-md bg-foreground/5 text-foreground/45">
-              <Users aria-hidden="true" className="size-5" />
-            </div>
-            <div className="grid gap-1">
-              <p className="text-sm font-medium text-foreground/70">Aucune classe pour le moment</p>
-              <p className="text-xs text-foreground/40">
-                Ajoutez une classe pour commencer à organiser votre activité.
-              </p>
-            </div>
-          </div>
-        ) : (
-          <div className="grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {classes.map((class_) => (
-              <PersonalClassCard
-                key={class_.id}
-                class_={class_}
-                href={`${hrefs.classes}/${encodeURIComponent(class_.id)}`}
-              />
+        {CLASS_SECTIONS.map(({ type, title, addLabel }) => {
+          const group = (classes ?? []).filter((class_) => class_.type === type);
+
+          return (
+            <section key={type} className="space-y-3">
+              <h2 className="flex items-baseline gap-2 text-sm font-bold text-foreground/70">
+                {title}
+                <span className="font-mono text-xs font-normal tabular-nums text-foreground/30">
+                  {group.length}
+                </span>
+              </h2>
+              <div className={grid}>
+                <PersonalClassPlaceholder
+                  label={addLabel}
+                  disabled={!canAddClass}
+                  popoverTarget={createClassModalId(type)}
+                />
+                {group.map((class_) => (
+                  <PersonalClassCard
+                    key={class_.id}
+                    class_={class_}
+                    href={`${hrefs.classes}/${encodeURIComponent(class_.id)}`}
+                  />
+                ))}
+              </div>
+            </section>
+          );
+        })}
+
+        <PersonalInvitationCard href={`${hrefs.classes}/invitation`} />
+
+        {canAddClass && (
+          <>
+            <CreateClassModal />
+            {CLASS_SECTIONS.map(({ type }) => (
+              <CreateClassModal key={type} type={type} />
             ))}
-            <PersonalClassPlaceholder
-              label="Ajouter une classe"
-              disabled={!canAddClass}
-              popoverTarget={CREATE_CLASS_MODAL_ID}
-            />
-          </div>
+          </>
         )}
       </div>
     </main>

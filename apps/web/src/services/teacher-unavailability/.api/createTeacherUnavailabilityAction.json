@@ -1,0 +1,11 @@
+{
+  "name": "createTeacherUnavailabilityAction",
+  "file": "src/services/teacher-unavailability/actions/teacher-unavailability.mutations.ts",
+  "sig": "(input: CreateUnavailabilityInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; teacherId: string; startTime: Date | null; endTime: Date | null; }; error?: undefined; }>",
+  "calls": [
+    "createTeacherUnavailability"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

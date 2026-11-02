@@ -1,0 +1,8 @@
+{
+  "name": "getTeacherCourseHourss",
+  "file": "src/services/teacher-course-hours/database/teacher-course-hours.queries.ts",
+  "sig": "(orgId: string) => Promise<{ id: string; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

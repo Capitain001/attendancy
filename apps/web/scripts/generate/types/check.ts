@@ -17,6 +17,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
+import { resolveServiceDir, toServiceId } from "../utils/services.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -95,7 +96,7 @@ function walkFiles(dir: string): string[] {
 }
 
 function collectServiceViolations(serviceAbs: string): Violation[] {
-  const service = path.relative(SERVICES_ROOT, serviceAbs).replace(/\\/g, "/");
+  const service = toServiceId(serviceAbs);
   const violations: Violation[] = [];
 
   for (const f of walkFiles(serviceAbs)) {
@@ -156,7 +157,8 @@ function print(all: Violation[]) {
     for (const v of vs) {
       console.log(`  ${yellow("⚠")}  type ${bold(v.type)}`);
       console.log(`     ${dim(v.file + ":" + v.line)}`);
-      console.log(`     Déplacer vers src/services/${v.service}/generated.types.ts`);
+      const targetDir = v.service.startsWith("src/") ? v.service : `src/services/${v.service}`;
+      console.log(`     Déplacer vers ${targetDir}/generated.types.ts`);
     }
     console.log();
   }
@@ -171,7 +173,7 @@ function main() {
   if (!args.length) {
     serviceDirs = walkServices(SERVICES_ROOT);
   } else {
-    serviceDirs = args.map((a) => path.join(SERVICES_ROOT, a));
+    serviceDirs = args.map((a) => resolveServiceDir(a));
     serviceDirs = serviceDirs.filter((d) => {
       if (!fs.existsSync(d)) { console.warn(`⚠  Service introuvable : ${d}`); return false; }
       return true;

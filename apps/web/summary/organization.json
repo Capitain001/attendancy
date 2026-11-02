@@ -2,8 +2,8 @@
   "service": "organization",
   "path": "src/services/organization/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "38f2f24",
-  "generated_at": "2026-09-17T08:14:17.792Z",
+  "derived_at": "3b4d4d0",
+  "generated_at": "2026-10-31T20:02:09.793Z",
   "fns": {
     "createOrgWithDefaults": {
       "name": "createOrgWithDefaults",
@@ -18,7 +18,7 @@
     "updateOrganization": {
       "name": "updateOrganization",
       "file": "src/services/organization/database/organization.mutations.ts",
-      "sig": "(orgId: string, data: UpdateOrgIdentityInput) => Promise<{ name: string; id: string; slug: string | null; }>",
+      "sig": "(orgId: string, data: UpdateOrgIdentityInput) => Promise<{ id: string; name: string; slug: string | null; }>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -58,7 +58,17 @@
     "getOrgIdentity": {
       "name": "getOrgIdentity",
       "file": "src/services/organization/database/organization.queries.ts",
-      "sig": "(orgId: string) => Promise<{ name: string; id: string; email: string | null; slug: string | null; logo: string | null; domain: string | null; } | null>",
+      "sig": "(orgId: string) => Promise<{ id: string; name: string; email: string | null; slug: string | null; logo: string | null; domain: string | null; } | null>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrgsIdentities": {
+      "name": "getOrgsIdentities",
+      "file": "src/services/organization/database/organization.queries.ts",
+      "sig": "(orgIds: string[]) => Promise<{ id: string; name: string; slug: string | null; logo: string | null; }[]>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -69,6 +79,16 @@
       "name": "getOrgUsage",
       "file": "src/services/organization/database/organization.queries.ts",
       "sig": "(orgId: string) => Promise<{ updatedAt: Date; currentUsers: number; usedStorage: bigint; activeCourses: number; activeRooms: number; } | null>",
+      "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrgClassQuota": {
+      "name": "getOrgClassQuota",
+      "file": "src/services/organization/database/organization.queries.ts",
+      "sig": "(orgId: string) => Promise<{ maxClasses: number | null; } | null>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -98,7 +118,7 @@
     "getOrgBySlug": {
       "name": "getOrgBySlug",
       "file": "src/services/organization/database/organization.queries.ts",
-      "sig": "(slug: string) => Promise<{ name: string; id: string; email: string | null; slug: string | null; logo: string | null; domain: string | null; } | null>",
+      "sig": "(slug: string) => Promise<{ id: string; name: string; email: string | null; slug: string | null; logo: string | null; domain: string | null; } | null>",
       "composes": [],
       "rules": [],
       "why_ref": "",
@@ -118,8 +138,21 @@
     "getOrganizationBySlug": {
       "name": "getOrganizationBySlug",
       "file": "src/services/organization/database/organization.queries.ts",
-      "sig": "(slug: string) => Promise<({ settings: { id: string; orgId: string; updatedAt: Date; settings: JsonValue; maxUsers: number; storageLimit: bigint; maxCourses: number | null; maxRooms: number | null; ... 7 more ...; breakDuration: number; } | null; usage: { ...; } | null; } & { ...; }) | null>",
+      "sig": "(slug: string) => Promise<({ settings: { id: string; updatedAt: Date; settings: JsonValue; orgId: string; maxUsers: number; storageLimit: bigint; maxCourses: number | null; maxRooms: number | null; ... 7 more ...; breakDuration: number; } | null; usage: { ...; } | null; } & { ...; }) | null>",
       "composes": [],
+      "rules": [],
+      "why_ref": "",
+      "layer": "db",
+      "kind": "query"
+    },
+    "checkClassQuotaLimit": {
+      "name": "checkClassQuotaLimit",
+      "file": "src/services/organization/database/organization.queries.ts",
+      "sig": "(orgId: string) => Promise<{ activeCount: number; maxClasses: number | null; limitReached: boolean; }>",
+      "composes": [
+        "getActiveClassesCount",
+        "getOrgClassQuota"
+      ],
       "rules": [],
       "why_ref": "",
       "layer": "db",
@@ -141,7 +174,7 @@
     "updateOrgIdentityAction": {
       "name": "updateOrgIdentityAction",
       "file": "src/services/organization/actions/organization.mutations.ts",
-      "sig": "(input: UpdateOrgIdentityInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; slug: string | null; }; error?: undefined; }>",
+      "sig": "(input: UpdateOrgIdentityInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; name: string; slug: string | null; }; error?: undefined; }>",
       "calls": [
         "updateOrganization"
       ],
@@ -154,10 +187,32 @@
     "setOrgDetailsAction": {
       "name": "setOrgDetailsAction",
       "file": "src/services/organization/actions/organization.mutations.ts",
-      "sig": "(details: OrgDetails) => Promise<{ error: string; data?: undefined; } | { data: { details: OrgDetails; id?: string | undefined; name?: string | undefined; slug?: string | undefined; logo?: string | undefined; ... 6 more ...; directionId?: string | undefined; }; error?: undefined; }>",
+      "sig": "(details: OrgDetails) => Promise<{ error: string; data?: undefined; } | { data: { details: OrgDetails; id?: string | undefined; name?: string | undefined; slug?: string | undefined; logo?: string | undefined; ... 7 more ...; directionId?: string | undefined; }; error?: undefined; }>",
       "calls": [
         "setOrgDetails"
       ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "setCurrentOrganizationAction": {
+      "name": "setCurrentOrganizationAction",
+      "file": "src/services/organization/actions/organization.mutations.ts",
+      "sig": "(organizationId: string) => Promise<void>",
+      "calls": [],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "selectOrganizationProfileAction": {
+      "name": "selectOrganizationProfileAction",
+      "file": "src/services/organization/actions/organization.mutations.ts",
+      "sig": "(organizationId: string, role: Role) => Promise<void>",
+      "calls": [],
       "auth": {},
       "rules": [],
       "why_ref": "",
@@ -193,7 +248,7 @@
     "getOrgIdentityAction": {
       "name": "getOrgIdentityAction",
       "file": "src/services/organization/actions/organization.queries.ts",
-      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; email: string | null; slug: string | null; logo: string | null; domain: string | null; } | null; error?: undefined; }>",
+      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { id: string; name: string; email: string | null; slug: string | null; logo: string | null; domain: string | null; } | null; error?: undefined; }>",
       "calls": [
         "getOrgIdentity"
       ],
@@ -216,10 +271,23 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "getOrgClassQuotaAction": {
+      "name": "getOrgClassQuotaAction",
+      "file": "src/services/organization/actions/organization.queries.ts",
+      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { maxClasses: number | null; } | null; error?: undefined; }>",
+      "calls": [
+        "getOrgClassQuota"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "getOrgDetailsAction": {
       "name": "getOrgDetailsAction",
       "file": "src/services/organization/actions/organization.queries.ts",
-      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { details: OrgDetails; id?: string | undefined; name?: string | undefined; slug?: string | undefined; logo?: string | undefined; ... 6 more ...; directionId?: string | undefined; }; error?: undefined; }>",
+      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { details: OrgDetails; id?: string | undefined; name?: string | undefined; slug?: string | undefined; logo?: string | undefined; ... 7 more ...; directionId?: string | undefined; }; error?: undefined; }>",
       "calls": [
         "getOrgDetails"
       ],
@@ -258,7 +326,7 @@
     "getOrgBySlugAction": {
       "name": "getOrgBySlugAction",
       "file": "src/services/organization/actions/organization.queries.ts",
-      "sig": "(slug: string) => Promise<{ data: { name: string; id: string; email: string | null; slug: string | null; logo: string | null; domain: string | null; } | null; error?: undefined; } | { error: string; data?: undefined; }>",
+      "sig": "(slug: string) => Promise<{ data: { id: string; name: string; email: string | null; slug: string | null; logo: string | null; domain: string | null; } | null; error?: undefined; } | { error: string; data?: undefined; }>",
       "calls": [
         "getOrgBySlug"
       ],
@@ -271,9 +339,22 @@
     "getOrganizationBySlugAction": {
       "name": "getOrganizationBySlugAction",
       "file": "src/services/organization/actions/organization.queries.ts",
-      "sig": "(slug: string) => Promise<{ error: string; data?: undefined; } | { data: { settings: { id: string; orgId: string; updatedAt: Date; settings: JsonValue; maxUsers: number; storageLimit: bigint; maxCourses: number | null; ... 8 more ...; breakDuration: number; } | null; usage: { ...; } | null; } & { ...; }; error?: undefined; }>",
+      "sig": "(slug: string) => Promise<{ error: string; data?: undefined; } | { data: { settings: { id: string; updatedAt: Date; settings: JsonValue; orgId: string; maxUsers: number; storageLimit: bigint; maxCourses: number | null; ... 8 more ...; breakDuration: number; } | null; usage: { ...; } | null; } & { ...; }; error?: undefined; }>",
       "calls": [
         "getOrganizationBySlug"
+      ],
+      "auth": {},
+      "rules": [],
+      "why_ref": "",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "checkClassQuotaLimitAction": {
+      "name": "checkClassQuotaLimitAction",
+      "file": "src/services/organization/actions/organization.queries.ts",
+      "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { activeCount: number; maxClasses: number | null; limitReached: boolean; }; error?: undefined; }>",
+      "calls": [
+        "checkClassQuotaLimit"
       ],
       "auth": {},
       "rules": [],
@@ -301,8 +382,13 @@
     "getOrgIdentity": [
       "getOrgIdentityAction"
     ],
+    "getOrgsIdentities": [],
     "getOrgUsage": [
       "getOrgUsageAction"
+    ],
+    "getOrgClassQuota": [
+      "checkClassQuotaLimit",
+      "getOrgClassQuotaAction"
     ],
     "getOrgDetails": [
       "getOrgDetailsAction"
@@ -319,18 +405,30 @@
     "getOrganizationBySlug": [
       "getOrganizationBySlugAction"
     ],
+    "checkClassQuotaLimit": [
+      "checkClassQuotaLimitAction"
+    ],
     "createOrgAction": [],
     "updateOrgIdentityAction": [],
     "setOrgDetailsAction": [],
+    "setCurrentOrganizationAction": [],
+    "selectOrganizationProfileAction": [],
     "updateOrgLogoAction": [],
     "setMemberStatusAction": [],
     "getOrgIdentityAction": [],
     "getOrgUsageAction": [],
+    "getOrgClassQuotaAction": [],
     "getOrgDetailsAction": [],
     "getOrgDailyMetricsAction": [],
     "getOrgResourcesCountsAction": [],
     "getOrgBySlugAction": [],
-    "getOrganizationBySlugAction": []
+    "getOrganizationBySlugAction": [],
+    "checkClassQuotaLimitAction": [],
+    "getActiveClassesCount": [
+      "checkClassQuotaLimit"
+    ]
   },
-  "deps": {}
+  "deps": {
+    "getActiveClassesCount": "class"
+  }
 }

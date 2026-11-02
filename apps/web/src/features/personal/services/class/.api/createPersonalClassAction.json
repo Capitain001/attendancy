@@ -1,0 +1,9 @@
+{
+  "name": "createPersonalClassAction",
+  "file": "src/features/personal/services/class/actions/class.mutations.ts",
+  "sig": "(input: CreatePersonalClassInput) => Promise<{ error: string; data?: undefined; } | { data: { name: string; id: string; createdAt: Date; updatedAt: Date; deletedAt: Date | null; level: Level; isActive: boolean; programTrackId: string; programId: string | null; academicYearId: string; }; error?: undefined; }>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

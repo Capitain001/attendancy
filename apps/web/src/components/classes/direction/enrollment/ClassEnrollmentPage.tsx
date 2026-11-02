@@ -1,4 +1,4 @@
-import { getStudentEnrollmentsAction } from "@/services/student-enrollment";
+import { getStudentsEnrollmentsAction } from "@/services/student-enrollment";
 import type { GetClassDto } from "@/services/class/types";
 import { EnrollmentWorkspace } from "./EnrollmentWorkspace";
 import { CollapseSection } from "../section/ui";
@@ -9,7 +9,7 @@ type ClassEnrollmentPageProps = {
 };
 
 export async function ClassEnrollmentPage({ classData, classId }: ClassEnrollmentPageProps) {
-  const enrollmentsRes = await getStudentEnrollmentsAction({ classId });
+  const enrollmentsRes = await getStudentsEnrollmentsAction({ classId });
   const enrollmentRows = enrollmentsRes.data ?? [];
   const enrollmentError = enrollmentsRes.error ?? null;
 

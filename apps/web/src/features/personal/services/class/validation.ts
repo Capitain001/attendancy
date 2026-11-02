@@ -32,3 +32,10 @@ export const updatePersonalClassSchema = validateWithId('classId', updatePersona
 
 export type UpdatePersonalClassInput = v.InferInput<typeof updatePersonalClassSchema>
 export type UpdatePersonalClassOutput = v.InferOutput<typeof updatePersonalClassSchema>
+
+export const getPersonalClassesSchema = v.object({
+  classId: v.optional(v.pipe(v.string(), v.uuid("ID de classe invalide"))),
+});
+
+export type GetPersonalClassesInput = v.InferInput<typeof getPersonalClassesSchema>;
+export type GetPersonalClassesOutput = v.InferOutput<typeof getPersonalClassesSchema>;

@@ -1,0 +1,8 @@
+{
+  "name": "addStudentsToGroup",
+  "file": "src/services/group/database/group.mutations.ts",
+  "sig": "(data: AddStudentsToGroupOutput & { orgId: string }) => Promise<{ groupId: string; addedToGroup: number; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

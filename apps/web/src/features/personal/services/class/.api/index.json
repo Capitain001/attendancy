@@ -1,0 +1,66 @@
+{
+  "service": "src/features/personal/services/class",
+  "path": "src/features/personal/services/class/",
+  "claude_md": "./CLAUDE.md",
+  "derived_at": "3b4d4d0",
+  "utils_dir": null,
+  "fns": {
+    "invalidatePersonalClassEvents": {
+      "f": ".api/invalidatePersonalClassEvents.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "createPersonalClass": {
+      "f": ".api/createPersonalClass.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "updatePersonalClass": {
+      "f": ".api/updatePersonalClass.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getDefaultPersonalClass": {
+      "f": ".api/getDefaultPersonalClass.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getPersonalClasses": {
+      "f": ".api/getPersonalClasses.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "createPersonalClassAction": {
+      "f": ".api/createPersonalClassAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "updatePersonalClassAction": {
+      "f": ".api/updatePersonalClassAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getDefaultPersonalClassAction": {
+      "f": ".api/getDefaultPersonalClassAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getPersonalClassesAction": {
+      "f": ".api/getPersonalClassesAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    }
+  },
+  "edges": {
+    "invalidatePersonalClassEvents": [],
+    "createPersonalClass": [],
+    "updatePersonalClass": [],
+    "getDefaultPersonalClass": [],
+    "getPersonalClasses": [],
+    "createPersonalClassAction": [],
+    "updatePersonalClassAction": [],
+    "getDefaultPersonalClassAction": [],
+    "getPersonalClassesAction": []
+  },
+  "deps": {}
+}

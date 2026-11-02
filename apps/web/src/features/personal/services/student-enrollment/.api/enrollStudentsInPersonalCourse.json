@@ -1,0 +1,8 @@
+{
+  "name": "enrollStudentsInPersonalCourse",
+  "file": "src/features/personal/services/student-enrollment/database/student-enrollment.mutations.ts",
+  "sig": "(params: EnrollStudentsInPersonalCourseOutput & { orgId: string }) => Promise<{ notAddedStudentIds: string[]; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

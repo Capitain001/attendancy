@@ -1,0 +1,11 @@
+{
+  "name": "checkClassQuotaLimit",
+  "file": "src/services/organization/database/organization.queries.ts",
+  "sig": "(orgId: string) => Promise<{ activeCount: number; maxClasses: number | null; limitReached: boolean; }>",
+  "composes": [
+    "getActiveClassesCount",
+    "getOrgClassQuota"
+  ],
+  "rules": [],
+  "why_ref": ""
+}

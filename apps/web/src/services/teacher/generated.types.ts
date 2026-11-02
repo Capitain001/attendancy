@@ -1,4 +1,3 @@
-// src/services/teacher/generated.types.ts
 // ⚠ Fichier généré automatiquement — NE PAS ÉDITER À LA MAIN
 // Régénérer : npx tsx scripts/generate/types/types.ts teacher
 // Pour surcharger un type, définissez-le dans ./types.ts (jamais écrasé).

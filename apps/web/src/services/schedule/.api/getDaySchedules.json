@@ -1,7 +1,7 @@
 {
   "name": "getDaySchedules",
   "file": "src/services/schedule/database/schedule.queries.ts",
-  "sig": "(params: ScheduleFilterParams) => Promise<{ id: string; startTime: Date; endTime: Date; status: ScheduleStatus; confirmed: boolean; classId: string; groupId: string | null; course: { name: string; id: string; }; room: { ...; }; _count: { ...; }; }[]>",
+  "sig": "(params: ScheduleFilterParams) => Promise<{ id: string; _count: { attendances: number; }; course: { name: string; id: string; }; room: { name: string; id: string; }; status: ScheduleStatus; startTime: Date; endTime: Date; confirmed: boolean; classId: string; groupId: string | null; }[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

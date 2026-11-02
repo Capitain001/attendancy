@@ -19,6 +19,14 @@ export async function getOrgIdentity(orgId: string) {
   })
 }
 
+export async function getOrgsIdentities(orgIds: string[]) {
+  if (orgIds.length === 0) return []
+  return prisma.organization.findMany({
+    where: { id: { in: orgIds } },
+    select: { id: true, name: true, slug: true, logo: true },
+  })
+}
+
 export async function getOrgUsage(orgId: string) {
   'use cache'
   cacheTag(CACHE.ORG(orgId))

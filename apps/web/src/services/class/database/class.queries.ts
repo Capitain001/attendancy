@@ -30,6 +30,7 @@ const where: Prisma.ClassWhereInput = {
       id: true,
       name: true,
       level: true,
+      // type:true,
       academicYearId: true,
       programTrackId: true,
       academicYear: { select: { id: true, name: true } },

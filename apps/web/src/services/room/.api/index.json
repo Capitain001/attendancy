@@ -2,16 +2,11 @@
   "service": "room",
   "path": "src/services/room/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "d9c4860",
+  "derived_at": "3b4d4d0",
   "utils_dir": null,
   "fns": {
     "createRoom": {
       "f": ".api/createRoom.json",
-      "layer": "db",
-      "kind": "mutation"
-    },
-    "ensurePersonalRoom": {
-      "f": ".api/ensurePersonalRoom.json",
       "layer": "db",
       "kind": "mutation"
     },
@@ -49,11 +44,6 @@
       "f": ".api/getLocations.json",
       "layer": "db",
       "kind": "query"
-    },
-    "ensurePersonalRoomAction": {
-      "f": ".api/ensurePersonalRoomAction.json",
-      "layer": "action",
-      "kind": "server-action"
     },
     "createRoomAction": {
       "f": ".api/createRoomAction.json",
@@ -100,9 +90,6 @@
     "createRoom": [
       "createRoomAction"
     ],
-    "ensurePersonalRoom": [
-      "ensurePersonalRoomAction"
-    ],
     "removeRoom": [
       "removeRoomAction"
     ],
@@ -124,7 +111,6 @@
     "getLocations": [
       "getLocationsAction"
     ],
-    "ensurePersonalRoomAction": [],
     "createRoomAction": [],
     "removeRoomAction": [],
     "updateRoomAction": [],

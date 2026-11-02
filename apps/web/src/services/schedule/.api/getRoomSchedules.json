@@ -1,7 +1,7 @@
 {
   "name": "getRoomSchedules",
   "file": "src/services/schedule/database/schedule.queries.ts",
-  "sig": "(params: Omit<ScheduleFilterParams, 'classId' | 'teacherId'>) => Promise<({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { id: string; user: { firstName: string | null; lastName: string | null; avatar_url: string | null; }; }; } & { ...; })[]>",
+  "sig": "(params: Omit<ScheduleFilterParams, 'classId' | 'teacherId'>) => Promise<({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; teacher: { id: string; user: { avatar_url: string | null; firstName: string | null; lastName: string | null; }; }; room: { ...; }; } & { ...; })[]>",
   "composes": [
     "getSchedules"
   ],

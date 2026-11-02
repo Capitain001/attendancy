@@ -1,7 +1,46 @@
 // src/services/notification/database/notification.queries.ts
 import { cacheTag, cacheLife } from 'next/cache'
 import { prisma } from '@/lib/prisma'
+import type { Prisma } from '@/generated/prisma/client'
 import { CACHE } from '@/cache/server/key';;;
+import type { InboxFilter } from '../validation'
+
+// ─── Boîte de réception (Inbox) ───────────────────────────────────────────────
+
+export async function getInboxNotificationsForUser(
+  userId: string,
+  filter: InboxFilter = 'all',
+  limit = 20,
+  cursor?: string,
+) {
+  const whereClause: Prisma.NotificationWhereInput = { userId }
+
+  if (filter === 'unread') {
+    whereClause.read = false
+  } else if (filter === 'invitations') {
+    whereClause.type = 'INVITATION'
+  } else if (filter === 'system') {
+    whereClause.type = { not: 'INVITATION' }
+  }
+
+  return prisma.notification.findMany({
+    where: whereClause,
+    orderBy: { createdAt: 'desc' },
+    take: limit,
+    ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
+    select: {
+      id: true,
+      message: true,
+      type: true,
+      read: true,
+      scheduleId: true,
+      metadata: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  })
+}
+
 
 // ─── Notifications utilisateur ────────────────────────────────────────────────
 
@@ -49,8 +88,12 @@ export async function getUnreadNotificationsForUser(userId: string, limit = 10) 
 
 export async function getUnreadCountForUser(userId: string) {
   'use cache'
-  cacheTag(CACHE.NOTIFICATION(userId))
-  cacheLife(CACHE.NOTIFICATION.life)
+  try {
+    cacheTag(CACHE.NOTIFICATION(userId))
+    cacheLife(CACHE.NOTIFICATION.life)
+  } catch {
+    // Non bloquant hors environnement Next.js runtime
+  }
   return prisma.notification.count({ where: { userId, read: false } })
 }
 

@@ -1,7 +1,7 @@
 {
   "name": "getEvaluationDetailAction",
   "file": "src/services/evaluation/actions/evaluation.queries.ts",
-  "sig": "(evaluationId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; courseId: string; type: EvaluationType; title: string; coefficient: number; maxScore: number; datedAt: Date; course: { ...; }; grades: { ...; }[]; } | null; error?: undefined; }>",
+  "sig": "(evaluationId: string) => Promise<{ error: string; data?: undefined; } | { data: { id: string; type: EvaluationType; course: { name: string; id: string; class: { name: string; id: string; studentEnrollments: { id: string; student: { ...; }; }[]; }; }; ... 5 more ...; datedAt: Date; } | null; error?: undefined; }>",
   "calls": [
     "getEvaluationDetail"
   ],

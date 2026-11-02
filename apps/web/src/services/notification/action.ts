@@ -2,6 +2,8 @@
 'use server'
 // Ré-export centralisé des server actions — point d'entrée pour les hooks et composants.
 export {
+  getInboxNotificationsAction,
+  getInboxUnreadCountAction,
   getNotifications,
   getUnread,
   getUnreadCount,
@@ -13,6 +15,8 @@ export {
 } from './actions/notification.queries'
 
 export {
+  markInboxNotificationAsReadAction,
+  markAllInboxNotificationsAsReadAction,
   markNotificationAsRead,
   markAllRead,
   deleteNotification,

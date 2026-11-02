@@ -14,14 +14,15 @@
 
 import { toFormAction, withRedirect } from "@/utils/server/form/action";
 import { personal, getUserSlug } from "@/modules/personal/paths";
-import { createPersonalClassAction, removeClassAction, updateClassAction } from "./actions";
+import { removeClassAction, updateClassAction } from "./actions";
+import { createPersonalClassAction } from "@/features/personal/services/class";
 
 async function resolveClassesPath() {
   const slug = await getUserSlug();
   return slug ? personal.classes(slug) : null;
 }
 
-// Champs : name
+// Champs : name, type (COHORT | THEMATIC)
 export const createClassFormAction = withRedirect(toFormAction(createPersonalClassAction), "create", resolveClassesPath);
 
 // Champs : classId, data.name

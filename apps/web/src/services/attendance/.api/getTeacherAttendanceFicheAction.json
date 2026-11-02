@@ -1,0 +1,9 @@
+{
+  "name": "getTeacherAttendanceFicheAction",
+  "file": "src/services/attendance/actions/fiche.ts",
+  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: TeacherAttendanceFicheProps; error?: undefined; }>",
+  "calls": [],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

@@ -18,6 +18,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
+import { resolveServiceDir, toServiceId } from "../utils/services.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -182,7 +183,7 @@ function checkFunctions(
 // ── Parcours des fichiers d'un service ───────────────────────────────────────
 
 function collectServiceWarnings(serviceAbs: string): Warning[] {
-  const service = path.relative(SERVICES_ROOT, serviceAbs).replace(/\\/g, "/");
+  const service = toServiceId(serviceAbs);
   const warnings: Warning[] = [];
 
   function processFile(absPath: string) {
@@ -306,7 +307,7 @@ function main() {
   if (!args.length) {
     serviceDirs = walkServices(SERVICES_ROOT);
   } else {
-    serviceDirs = args.map((a) => path.join(SERVICES_ROOT, a));
+    serviceDirs = args.map((a) => resolveServiceDir(a));
     for (const d of serviceDirs) {
       if (!fs.existsSync(d)) {
         console.warn(`⚠  Service introuvable : ${relPath(d)}`);

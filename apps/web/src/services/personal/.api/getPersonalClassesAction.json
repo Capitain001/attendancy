@@ -1,0 +1,11 @@
+{
+  "name": "getPersonalClassesAction",
+  "file": "src/services/personal/actions/class.queries.ts",
+  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { level: Level; name: string; id: string; isActive: boolean; academicYearId: string; createdAt: Date; updatedAt: Date; deletedAt: Date | null; programTrackId: string; programId: string | null; }[]; error?: undefined; }>",
+  "calls": [
+    "getPersonalClasses"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

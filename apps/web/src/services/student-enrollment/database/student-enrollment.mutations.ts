@@ -153,7 +153,7 @@ export async function transferStudentEnrollment(
 export async function enrollStudentsInClass(
   data: EnrollStudentsInClassOutput,
   orgId: string,
-): Promise<EnrollmentMutationResult[]> {
+) {
   const studentIds = Array.from(new Set(data.studentIds));
   const results: EnrollmentMutationResult[] = [];
 

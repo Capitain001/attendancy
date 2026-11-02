@@ -90,7 +90,6 @@ export function getFullName(firstName?: string | null, lastName?: string | null)
   return parts.length > 0 ? parts.join(" ") : undefined;
 }
 
-export * from "./date"
 
 
 
@@ -113,3 +112,5 @@ export function diff<T extends object>(current: T, initial?: Partial<T>): Partia
     })
   ) as Partial<T>;
 }
+
+export * from "./date"

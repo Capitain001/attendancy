@@ -9,3 +9,10 @@ export const createPersonalCourseSchema = v.object({
 
 export type CreatePersonalCourseInput = v.InferInput<typeof createPersonalCourseSchema>
 export type CreatePersonalCourseOutput = v.InferOutput<typeof createPersonalCourseSchema>
+
+export const getPersonalCoursesSchema = v.object({
+  classId: v.optional(v.pipe(v.string(), v.uuid("ID de classe invalide"))),
+});
+
+export type GetPersonalCoursesInput = v.InferInput<typeof getPersonalCoursesSchema>;
+export type GetPersonalCoursesOutput = v.InferOutput<typeof getPersonalCoursesSchema>;

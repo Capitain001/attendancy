@@ -25,7 +25,7 @@ import { ... } from '@/services/notification'   // server actions, types Prisma,
 | `actions/notification.queries.ts` | Server actions lecture avec auth |
 | `cache.ts` | `NOTIFICATION_GRAPH` |
 | `database/index.ts` | Barrel interne (non exporté) |
-| `database/notification.mutations.ts` | Créer, lire, supprimer + invalidation cache |
+| `database/notification.mutations.ts` | Créer, lire, supprimer + invalidation cache + création transactionnelle |
 | `database/notification.queries.ts` | Lectures avec `'use cache'` + cache tags |
 | `database/push.mutations.ts` | Upsert, unsubscribe, markExpired, cleanup |
 | `database/push.queries.ts` | Actifs, stats, findByEndpoint, countDevices |
@@ -33,6 +33,7 @@ import { ... } from '@/services/notification'   // server actions, types Prisma,
 | `index.ts` | Barrel : re-exporte module + service |
 | `permission.ts` | Fichier interne |
 | `push.ts` | Fichier interne |
+| `server.ts` | Point d'entrée serveur pour mutations transactionnelles (`createInvitationNotification`, `setInvitationNotificationStatus`, `createInvitationResponseNotification`) |
 | `service-worker.ts` | Fichier interne |
 | `types.ts` | Types dérivés Prisma : `NotificationItem`, `PushSubscriptionItem`, `NotificationStats`, `PushSubscriptionStats` |
 | `user.ts` | Server actions push — subscribe/send (importe depuis `@/modules/notification`) |
@@ -67,6 +68,8 @@ NOTIFICATION: key("notification"),   // dans CACHE
 ...NOTIFICATION_GRAPH,               // dans CACHE_GRAPH
 ```
 
-## Cross-service
+## Cross-service & cross-module
 
-- Autres services → `sendPushNotificationToUserById(userId, { message })` (fire-and-forget)
+- Autres services (push) → `sendPushNotificationToUserById(userId, { message })` (fire-and-forget)
+- Appels transactionnels externes (ex: `modules/invitation`) → importer depuis `@/services/notification/server`.
+  Les fonctions reçoivent `tx: Tx` (`Prisma.TransactionClient`) et n'invalident PAS le cache (invalidation à la charge de l'appelant après commit via `invalidateEvent('NOTIFICATION_CREATED', userId)`).

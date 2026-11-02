@@ -1,7 +1,7 @@
 {
   "name": "getSession",
   "file": "src/services/device/database/device.queries.ts",
-  "sig": "(sessionId: string) => Promise<{ id: string; userId: string; orgId: string | null; status: UserSessionStatus; authSessionId: string | null; } | null>",
+  "sig": "(sessionId: string) => Promise<{ id: string; orgId: string | null; status: UserSessionStatus; userId: string; authSessionId: string | null; } | null>",
   "composes": [],
   "rules": [],
   "why_ref": ""

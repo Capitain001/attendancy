@@ -55,10 +55,13 @@ Analyse statiquement les couches `database/` et `actions/` via l'AST TypeScript.
 # Tous les services (auto-découverte)
 npm run generate:api
 
-# Un service spécifique
+# Un service spécifique (résolu dans src/services/ par défaut)
 npm run generate:api:svc -- <service>
 npm run generate:api:svc -- course
 npm run generate:api:svc -- users/profile
+
+# Cibler un feature service (ou dossier hors src/services/ via chemin commençant par src/)
+npm run generate:api:svc -- src/features/personal/services/class
 
 # Plusieurs services (1 seul programme TS partagé)
 npm run generate:api:svc -- course room schedule
@@ -89,9 +92,12 @@ tout moment, jamais éditée à la main, jamais committée comme source de véri
 # Tous les services (check cross-service inclus avant consolidation)
 npm run generate:summary
 
-# Un ou plusieurs services
+# Un ou plusieurs services (src/services/ par défaut)
 npm run generate:summary:svc -- <service>
 npm run generate:summary:svc -- group student
+
+# Cibler un feature service (génère summary/<feature>/<service>.json)
+npm run generate:summary:svc -- src/features/personal/services/class
 
 # + summary/all.json (vue globale, coûteuse — analyses transverses uniquement)
 npm run generate:summary:svc -- --all
@@ -116,28 +122,38 @@ Si une référence cross-service est cassée, `summary/` n'est **pas** régéné
 
 ---
 
-## `types` — DTOs depuis les queries
+## `types` — DTOs depuis database
 
-Génère `src/services/<service>/types.ts` avec un type `FnNameDto` par fonction exportée
-des fichiers `database/*.queries.ts`.
+Génère `generated.types.ts` avec un type `FnNameDto` par fonction exportée
+de `database/` (`queries.ts`, `mutations.ts`, etc.) et s'assure que `types.ts` le ré-exporte (`export * from './generated.types'`).
 
 Pattern : `export type GetEnrolledStudentsDto = Awaited<ReturnType<typeof getEnrolledStudents>>`
 
 ```bash
-# Tous les services éligibles
+# Tous les services éligibles (scanne src/services/)
 npm run generate:types
 
-# Un service spécifique
+# Un service spécifique dans src/services/
 npm run generate:types:svc -- <service>
 npm run generate:types:svc -- class
+
+# Cibler un feature service (ou dossier hors src/services/ via chemin commençant par src/)
+npm run generate:types:svc -- src/features/personal/services/class
 
 # Plusieurs services
 npm run generate:types:svc -- class student schedule
 ```
 
-**Quand lancer** : après avoir ajouté ou modifié des fonctions dans `database/*.queries.ts`.
+**Résolution des chemins** :
+- Par défaut, un identifiant simple (`class`, `users/profile`) est résolu dans `src/services/`.
+- Un chemin commençant par `src/` (ex. `src/features/personal/services/class`) cible directement ce dossier.
 
-**Effet de bord** : ajoute `export * from './types'` dans `index.ts` si absent.
+**Quand lancer** : après avoir ajouté ou modifié des fonctions dans `database/`.
+
+**Effets de bord** :
+- Écrit/écrase `<service>/generated.types.ts`.
+- Ajoute `export * from './generated.types'` dans `<service>/types.ts` si absent (sans toucher aux types manuels existants).
+- Ajoute `export * from './types'` dans `<service>/index.ts` si absent.
 
 ---
 
@@ -152,6 +168,9 @@ npm run check:naming
 # Un ou plusieurs services
 npm run check:naming:svc -- <service>
 npm run check:naming:svc -- course room event
+
+# Cibler un feature service
+npm run check:naming:svc -- src/features/personal/services/class
 ```
 
 **Règles vérifiées** :
@@ -179,6 +198,9 @@ npm run check:types
 # Un ou plusieurs services
 npm run check:types:svc -- <service>
 npm run check:types:svc -- session attendance
+
+# Cibler un feature service
+npm run check:types:svc -- src/features/personal/services/class
 ```
 
 **Règle** : tout `export type X = Awaited<ReturnType<typeof fn>>` doit être dans `types.ts`.

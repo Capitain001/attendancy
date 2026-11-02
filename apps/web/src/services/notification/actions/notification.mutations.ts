@@ -2,8 +2,9 @@
 'use server'
 import * as v from 'valibot'
 import { authAccess } from '@/modules/auth'
+import { getUserInfo } from '@/modules/user'
 import { ERRORS } from '@/config'
-import { createNotificationSchema } from '../validation'
+import { createNotificationSchema, markNotificationAsReadSchema } from '../validation'
 import {
   markNotificationRead,
   markAllNotificationsRead,
@@ -12,6 +13,38 @@ import {
   checkOrgMembership,
 } from '../database/notification.mutations'
 import { sendPushNotificationToUserById } from '../user'
+
+// ─── Boîte de réception (Inbox) ───────────────────────────────────────────────
+
+export async function markInboxNotificationAsReadAction(input: { notificationId: string }) {
+  const user = await getUserInfo()
+  if (!user?.id) return { error: 'Non authentifié' }
+
+  const parsed = v.safeParse(markNotificationAsReadSchema, input)
+  if (!parsed.success) {
+    return { error: parsed.issues[0]?.message ?? 'ID invalide' }
+  }
+
+  try {
+    await markNotificationRead({ notificationId: parsed.output.notificationId, userId: user.id })
+    return { data: true as const }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : 'Erreur serveur' }
+  }
+}
+
+export async function markAllInboxNotificationsAsReadAction() {
+  const user = await getUserInfo()
+  if (!user?.id) return { error: 'Non authentifié' }
+
+  try {
+    await markAllNotificationsRead(user.id)
+    return { data: true as const }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : 'Erreur serveur' }
+  }
+}
+
 
 // ─── Utilisateur (actions scope personnel) ──────────────────────────────────
 

@@ -1,0 +1,11 @@
+{
+  "name": "getTeacherCourseHourssAction",
+  "file": "src/services/teacher-course-hours/actions/teacher-course-hours.queries.ts",
+  "sig": "() => Promise<{ error: string; data?: undefined; } | { data: { id: string; }[]; error?: undefined; }>",
+  "calls": [
+    "getTeacherCourseHourss"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

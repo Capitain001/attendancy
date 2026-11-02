@@ -1,3 +1,4 @@
+//apps\web\src\hooks\data\student-enrollments\useClassEnrollments.ts
 "use client";
 
 import { useMemo } from "react";

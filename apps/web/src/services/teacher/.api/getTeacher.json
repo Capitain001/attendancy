@@ -1,7 +1,7 @@
 {
   "name": "getTeacher",
   "file": "src/services/teacher/database/teacher.queries.ts",
-  "sig": "(teacherId: string, orgId: string) => Promise<{ id: string; _count: { courses: number; }; department: { name: string; id: string; } | null; user: { id: string; email: string; avatar_url: string | null; phone: string | null; status: UserStatus; firstName: string | null; lastName: string | null; }; departmentId: string | null; } | null>",
+  "sig": "(teacherId: string, orgId: string) => Promise<{ id: string; _count: { courses: number; }; department: { name: string; id: string; } | null; user: { id: string; status: UserStatus; avatar_url: string | null; phone: string | null; email: string; firstName: string | null; lastName: string | null; }; departmentId: string | null; } | null>",
   "composes": [],
   "rules": [],
   "why_ref": ""

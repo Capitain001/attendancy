@@ -1,7 +1,7 @@
 {
   "name": "getEnrolledStudents",
   "file": "src/services/student/database/student.queries.ts",
-  "sig": "(classId: string, orgId: string) => Promise<{ id: string; student: { id: string; user: { email: string; avatar_url: string | null; phone: string | null; status: UserStatus; firstName: string | null; lastName: string | null; sex: Sex; dateOfBirth: Date | null; }; }; studentId: string; createdAt: Date; studentGroups: { ...; }[]; }[]>",
+  "sig": "(classId: string, orgId: string) => Promise<{ id: string; student: { id: string; user: { status: UserStatus; avatar_url: string | null; phone: string | null; email: string; firstName: string | null; lastName: string | null; sex: Sex; dateOfBirth: Date | null; }; }; studentId: string; createdAt: Date; studentGroups: { ...; }[]; }[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

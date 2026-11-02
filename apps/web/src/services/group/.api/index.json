@@ -2,7 +2,7 @@
   "service": "group",
   "path": "src/services/group/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "38f2f24",
+  "derived_at": "3b4d4d0",
   "utils_dir": null,
   "fns": {
     "createGroup": {
@@ -22,6 +22,11 @@
     },
     "removeGroup": {
       "f": ".api/removeGroup.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "addStudentsToGroup": {
+      "f": ".api/addStudentsToGroup.json",
       "layer": "db",
       "kind": "mutation"
     },
@@ -84,6 +89,7 @@
     "removeGroup": [
       "removeGroupAction"
     ],
+    "addStudentsToGroup": [],
     "getGroupsByClass": [
       "getGroupsByClassAction",
       "getClassGroupsAction"

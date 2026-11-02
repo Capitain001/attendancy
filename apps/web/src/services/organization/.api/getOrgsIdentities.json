@@ -1,0 +1,8 @@
+{
+  "name": "getOrgsIdentities",
+  "file": "src/services/organization/database/organization.queries.ts",
+  "sig": "(orgIds: string[]) => Promise<{ name: string; id: string; slug: string | null; logo: string | null; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

@@ -1,7 +1,7 @@
 {
   "name": "deleteTeacherUnavailability",
   "file": "src/services/teacher-unavailability/database/teacher-unavailability.mutations.ts",
-  "sig": "(id: string, orgId: string) => Promise<void>",
+  "sig": "(id: string, orgId: string, teacherId: string) => Promise<{ teacherId: string; }>",
   "composes": [],
   "rules": [],
   "why_ref": ""

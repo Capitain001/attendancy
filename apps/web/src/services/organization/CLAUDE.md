@@ -14,6 +14,7 @@ du setup initial (Settings, Usage, UserOrganization, Direction, Subscription).
 | `actions/org.mutations.ts` | `getOrgIdentityAction`, `getOrgUsageAction`, `getOrgDetailsAction`, `getOrgDailyMetricsAction`, `getOrgResourcesCountsAction` — queries |
 | `database/org.mutations.ts` | Prisma pur — `createOrgWithDefaults` (transaction), `updateOrganization`, `setOrgDetails`, `setMemberStatusWithAudit` |
 | `database/org.queries.ts` | Prisma pur — `getOrganizationById`, `getOrgIdentity`, `getOrgUsage`, `getOrgDetails`, `getOrgDailyMetrics`, `getOrgResourcesCounts` |
+| `server.ts` | Point d'entrée serveur cross-service — `getOrgsIdentities` |
 | `cache.ts` | `ORG_GRAPH` — enregistré dans `src/cache/server/key.ts` (spread dans CACHE_GRAPH) |
 | `validation.ts` | Schémas Valibot — `orgSetupSchema`, `updateOrgIdentitySchema` + types InferInput/Output |
 | `types.ts` | `OrgDetails`, `OrgContactSite`, DTOs `Awaited<ReturnType<…>>` |

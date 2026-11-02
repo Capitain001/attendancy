@@ -1,0 +1,11 @@
+{
+  "name": "getStudentsEnrollmentsAction",
+  "file": "src/services/student-enrollment/actions/student-enrollment.queries.ts",
+  "sig": "(filters?: GetStudentsEnrollmentsFilters) => Promise<{ error: string; data?: undefined; } | { data: { id: string; student: { id: string; user: { id: string; avatar_url: string | null; email: string; firstName: string | null; lastName: string | null; }; }; ... 4 more ...; endedAt: Date | null; }[]; error?: undefined; }>",
+  "calls": [
+    "getStudentsEnrollments"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

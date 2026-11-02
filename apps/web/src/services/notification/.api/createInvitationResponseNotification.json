@@ -1,0 +1,8 @@
+{
+  "name": "createInvitationResponseNotification",
+  "file": "src/services/notification/database/notification.mutations.ts",
+  "sig": "(tx: Tx, params: { userId: string; source: InvitationResponseSource }) => Promise<{ id: string; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

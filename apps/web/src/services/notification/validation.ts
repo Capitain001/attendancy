@@ -13,11 +13,41 @@ export const notificationTypeSchema = v.picklist([
 ] as const)
 
 export const createNotificationSchema = v.object({
-  message:    v.pipe(v.string(), v.minLength(1), v.maxLength(500)),
-  type:       v.optional(notificationTypeSchema),
+  message: v.pipe(v.string(), v.minLength(1), v.maxLength(500)),
+  type: v.optional(notificationTypeSchema),
   scheduleId: v.optional(v.string()),
-  metadata:   v.optional(v.record(v.string(), v.unknown())),
+  metadata: v.optional(v.record(v.string(), v.unknown())),
 })
 
-export type CreateNotificationInput  = v.InferInput<typeof createNotificationSchema>
+export type CreateNotificationInput = v.InferInput<typeof createNotificationSchema>
 export type CreateNotificationOutput = v.InferOutput<typeof createNotificationSchema>
+
+// ─── Boîte de réception (Inbox) ───────────────────────────────────────────────
+
+export const inboxFilterSchema = v.picklist(['all', 'invitations', 'unread', 'system'] as const)
+export type InboxFilter = v.InferOutput<typeof inboxFilterSchema>
+
+export const getInboxNotificationsSchema = v.object({
+  filter: v.optional(inboxFilterSchema, 'all'),
+  limit: v.optional(v.pipe(v.number(), v.minValue(1), v.maxValue(100)), 20),
+  cursor: v.optional(v.string()),
+})
+export type GetInboxNotificationsInput = v.InferInput<typeof getInboxNotificationsSchema>
+
+export const markNotificationAsReadSchema = v.object({
+  notificationId: v.pipe(v.string(), v.uuid('ID de notification invalide')),
+})
+
+// Schéma tolérant pour extraire metadata d'une invitation
+export const invitationMetadataSchema = v.object({
+  kind: v.optional(v.string()),
+  invitationId: v.optional(v.string()),
+  orgId: v.optional(v.string()),
+  orgName: v.optional(v.string()),
+  orgSlug: v.optional(v.nullable(v.string())),
+  role: v.optional(v.string()),
+  senderName: v.optional(v.string()),
+  expiresAt: v.optional(v.string()),
+  status: v.optional(v.string()),
+})
+export type InvitationMetadataOutput = v.InferOutput<typeof invitationMetadataSchema>

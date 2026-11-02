@@ -1,0 +1,8 @@
+{
+  "name": "getPersonalClasses",
+  "file": "src/features/personal/services/class/database/class.queries.ts",
+  "sig": "(orgId: string, classId?: string) => Promise<{ name: string; id: string; createdAt: Date; updatedAt: Date; deletedAt: Date | null; level: Level; isActive: boolean; programTrackId: string; programId: string | null; academicYearId: string; }[]>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

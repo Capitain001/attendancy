@@ -1,0 +1,8 @@
+{
+  "name": "updateTeacherUnavailability",
+  "file": "src/services/teacher-unavailability/database/teacher-unavailability.mutations.ts",
+  "sig": "(teacherUnavailabilityId: string, orgId: string, teacherId: string, data: UpdateUnavailabilityDataOutput) => Promise<{ id: string; teacherId: string; startTime: Date | null; endTime: Date | null; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

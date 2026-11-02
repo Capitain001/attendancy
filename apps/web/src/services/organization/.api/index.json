@@ -2,7 +2,7 @@
   "service": "organization",
   "path": "src/services/organization/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "85ab8de",
+  "derived_at": "3b4d4d0",
   "utils_dir": null,
   "fns": {
     "createOrgWithDefaults": {
@@ -30,23 +30,13 @@
       "layer": "db",
       "kind": "mutation"
     },
-    "createPersonalOrgWithDefaults": {
-      "f": ".api/createPersonalOrgWithDefaults.json",
-      "layer": "db",
-      "kind": "mutation"
-    },
-    "createPersonalOrgWithProfile": {
-      "f": ".api/createPersonalOrgWithProfile.json",
-      "layer": "db",
-      "kind": "mutation"
-    },
-    "createPersonalProfile": {
-      "f": ".api/createPersonalProfile.json",
-      "layer": "db",
-      "kind": "mutation"
-    },
     "getOrgIdentity": {
       "f": ".api/getOrgIdentity.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrgsIdentities": {
+      "f": ".api/getOrgsIdentities.json",
       "layer": "db",
       "kind": "query"
     },
@@ -85,8 +75,8 @@
       "layer": "db",
       "kind": "query"
     },
-    "findPersonalProfileId": {
-      "f": ".api/findPersonalProfileId.json",
+    "checkClassQuotaLimit": {
+      "f": ".api/checkClassQuotaLimit.json",
       "layer": "db",
       "kind": "query"
     },
@@ -122,16 +112,6 @@
     },
     "setMemberStatusAction": {
       "f": ".api/setMemberStatusAction.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "createPersonalProfileAction": {
-      "f": ".api/createPersonalProfileAction.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "createPersonalOrgAction": {
-      "f": ".api/createPersonalOrgAction.json",
       "layer": "action",
       "kind": "server-action"
     },
@@ -174,6 +154,11 @@
       "f": ".api/getOrganizationBySlugAction.json",
       "layer": "action",
       "kind": "server-action"
+    },
+    "checkClassQuotaLimitAction": {
+      "f": ".api/checkClassQuotaLimitAction.json",
+      "layer": "action",
+      "kind": "server-action"
     }
   },
   "edges": {
@@ -192,20 +177,15 @@
     "setMemberStatusWithAudit": [
       "setMemberStatusAction"
     ],
-    "createPersonalOrgWithDefaults": [],
-    "createPersonalOrgWithProfile": [
-      "createPersonalOrgAction"
-    ],
-    "createPersonalProfile": [
-      "createPersonalProfileAction"
-    ],
     "getOrgIdentity": [
       "getOrgIdentityAction"
     ],
+    "getOrgsIdentities": [],
     "getOrgUsage": [
       "getOrgUsageAction"
     ],
     "getOrgClassQuota": [
+      "checkClassQuotaLimit",
       "getOrgClassQuotaAction"
     ],
     "getOrgDetails": [
@@ -223,9 +203,8 @@
     "getOrganizationBySlug": [
       "getOrganizationBySlugAction"
     ],
-    "findPersonalProfileId": [
-      "createPersonalOrgWithDefaults",
-      "createPersonalProfile"
+    "checkClassQuotaLimit": [
+      "checkClassQuotaLimitAction"
     ],
     "createOrgAction": [],
     "updateOrgIdentityAction": [],
@@ -234,10 +213,6 @@
     "selectOrganizationProfileAction": [],
     "updateOrgLogoAction": [],
     "setMemberStatusAction": [],
-    "createPersonalProfileAction": [
-      "createPersonalOrgAction"
-    ],
-    "createPersonalOrgAction": [],
     "getOrgIdentityAction": [],
     "getOrgUsageAction": [],
     "getOrgClassQuotaAction": [],
@@ -245,7 +220,13 @@
     "getOrgDailyMetricsAction": [],
     "getOrgResourcesCountsAction": [],
     "getOrgBySlugAction": [],
-    "getOrganizationBySlugAction": []
+    "getOrganizationBySlugAction": [],
+    "checkClassQuotaLimitAction": [],
+    "getActiveClassesCount": [
+      "checkClassQuotaLimit"
+    ]
   },
-  "deps": {}
+  "deps": {
+    "getActiveClassesCount": "class"
+  }
 }

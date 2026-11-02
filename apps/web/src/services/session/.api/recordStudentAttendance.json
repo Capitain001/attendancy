@@ -1,0 +1,8 @@
+{
+  "name": "recordStudentAttendance",
+  "file": "src/services/session/database/token.mutations.ts",
+  "sig": "(scheduleId: string, studentId: string, orgId:string, coords?: { lat: number; lng: number }) => Promise<{ id: string; status: AttendanceStatus; } | { id: string; status: AttendanceStatus; alreadyRecorded: boolean; }>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

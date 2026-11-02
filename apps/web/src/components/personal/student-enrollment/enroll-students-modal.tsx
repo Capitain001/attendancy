@@ -18,12 +18,6 @@ export function EnrollStudentsModal({ classId, className }: { classId: string; c
           <Plus className="size-10" />
         </button>
 
-              {/* <button className='focus-visible:ring-ring/50  inline-flex cursor-pointer items-center justify-center rounded-full focus-visible:ring-[3px] focus-visible:outline-none'
-              aria-label={`Ajouter des étudiants à ${className}`}
-              >
-                <PlusCircleIcon className='size-5 fill-slate-400' />
-                <span className='sr-only'>Add</span>
-              </button> */}
       </DialogTrigger>
 
       <DialogContent>

@@ -1,7 +1,7 @@
 //apps\web\src\services\personal\actions\classe.mutations.ts
 
-// ## ce fichier servira de helper ex: Helper.ts a coter de la page ou ui qui l utilisera 
-import { getClassesAction } from "@/services/class";
+// ## ce fichier servira de helper ex: Helper.ts a coter de la page ou ui qui l utilisera
+import { getPersonalClassesAction } from "@/features/personal/services/class";
 import { checkClassQuotaLimitAction } from "@/services/organization";
 import { actionData, isError } from "@/utils/server/utils";
 
@@ -9,7 +9,7 @@ const EMPTY_QUOTA = { activeCount: 0, maxClasses: null, limitReached: false };
 
 export async function resolveClassesData() {
   const [classesRes, quotaRes] = await Promise.all([
-    getClassesAction(),
+    getPersonalClassesAction(),
     checkClassQuotaLimitAction(),
   ]);
 

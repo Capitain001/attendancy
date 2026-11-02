@@ -9,83 +9,83 @@
 // ProgramUE.semester (Int structurel) → Term (période datée par classe).
 
 model AcademicYear {
-  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name         String
-  startDate    DateTime
-  endDate      DateTime
-  orgId        String       @db.Uuid
-  isActive     Boolean      @default(true)
-  isCurrent    Boolean      @default(false)
-  organization Organization @relation(fields: [orgId], references: [id])
-  classes      Class[]
-  optionalUEs  OptionalUE[]
-  // feeStructures FeeStructure[]
+id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+name         String
+startDate    DateTime
+endDate      DateTime
+orgId        String       @db.Uuid
+isActive     Boolean      @default(true)
+isCurrent    Boolean      @default(false)
+organization Organization @relation(fields: [orgId], references: [id])
+classes      Class[]
+optionalUEs  OptionalUE[]
+// feeStructures FeeStructure[]
 
-  @@unique([name, orgId])
-  @@index([orgId, isCurrent])
-  @@index([orgId, isActive])
-  @@schema("public")
+@@unique([name, orgId])
+@@index([orgId, isCurrent])
+@@index([orgId, isActive])
+@@schema("public")
 }
 
 model Department {
-  id                String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name              String
-  orgId             String             @db.Uuid
-  organization      Organization       @relation(fields: [orgId], references: [id])
-  programTracks     ProgramTrack[]
-  teachers          Teacher[]
-  ues               UE[]
-  userOrganizations UserOrganization[]
+id                String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+name              String
+orgId             String             @db.Uuid
+organization      Organization       @relation(fields: [orgId], references: [id])
+programTracks     ProgramTrack[]
+teachers          Teacher[]
+ues               UE[]
+userOrganizations UserOrganization[]
 
-  @@unique([name, orgId])
-  @@index([orgId])
-  @@schema("public")
+@@unique([name, orgId])
+@@index([orgId])
+@@schema("public")
 }
 
 // Filière (ex. "Informatique", "Génie civil") — regroupe les maquettes
 // (Program) et les classes qui en découlent.
 model ProgramTrack {
-  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name         String
-  description  String?
-  orgId        String       @db.Uuid
-  departmentId String       @db.Uuid
-  classes      Class[]
-  programs     Program[]
-  department   Department   @relation(fields: [departmentId], references: [id])
-  organization Organization @relation(fields: [orgId], references: [id])
+id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+name         String
+description  String?
+orgId        String       @db.Uuid
+departmentId String       @db.Uuid
+classes      Class[]
+programs     Program[]
+department   Department   @relation(fields: [departmentId], references: [id])
+organization Organization @relation(fields: [orgId], references: [id])
 
-  @@unique([name, departmentId])
-  @@index([orgId])
-  @@schema("public")
+@@unique([name, departmentId])
+@@index([orgId])
+@@schema("public")
 }
 
 // Maquette pédagogique — structurelle, indépendante du temps : un Program
 // s'applique à n classes sur n années.
 model Program {
-  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name        String
-  description String?
-  orgId       String    @db.Uuid
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime?
+id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+name        String
+description String?
+orgId       String    @db.Uuid
+createdAt   DateTime  @default(now())
+updatedAt   DateTime  @updatedAt
+deletedAt   DateTime?
 
-  // Disponible pour l'application à de nouvelles classes.
-  isActive Boolean @default(true)
+// Disponible pour l'application à de nouvelles classes.
+isActive Boolean @default(true)
 
-  // Maquette figée : les ProgramUE ne peuvent plus être modifiés.
-  isLocked       Boolean      @default(false)
-  programTrackId String       @db.Uuid
-  classes        Class[]
-  organization   Organization @relation(fields: [orgId], references: [id])
-  programTrack   ProgramTrack @relation(fields: [programTrackId], references: [id])
-  programUEs     ProgramUE[]
+// Maquette figée : les ProgramUE ne peuvent plus être modifiés.
+isLocked       Boolean      @default(false)
+programTrackId String       @db.Uuid
+classes        Class[]
+organization   Organization @relation(fields: [orgId], references: [id])
+programTrack   ProgramTrack @relation(fields: [programTrackId], references: [id])
+programUEs     ProgramUE[]
 
-  @@unique([name, programTrackId])
-  @@index([orgId])
-  @@index([programTrackId])
-  @@schema("public")
+@@unique([name, programTrackId])
+@@index([orgId])
+@@index([programTrackId])
+@@schema("public")
 }
 
 // Position d'une UE dans une maquette. semester est STRUCTUREL ("Algo est au
@@ -93,22 +93,22 @@ model Program {
 // Restrict sur ue : on n'attache pas l'historique d'une maquette à la
 // disparition d'une UE (l'archivage UE passe par UE.deletedAt).
 model ProgramUE {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  programId   String   @db.Uuid
-  ueId        String   @db.Uuid
-  isCompleted Boolean  @default(false)
-  isOptional  Boolean  @default(false)
-  semester    Int      @default(1)
-  createdAt   DateTime @default(now())
-  order       Int?
-  updatedAt   DateTime @updatedAt
-  program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
-  ue          UE       @relation(fields: [ueId], references: [id], onDelete: Restrict)
+id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+programId   String   @db.Uuid
+ueId        String   @db.Uuid
+isCompleted Boolean  @default(false)
+isOptional  Boolean  @default(false)
+semester    Int      @default(1)
+createdAt   DateTime @default(now())
+order       Int?
+updatedAt   DateTime @updatedAt
+program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+ue          UE       @relation(fields: [ueId], references: [id], onDelete: Restrict)
 
-  @@unique([programId, ueId])
-  @@unique([programId, semester, order])
-  @@index([ueId])
-  @@schema("public")
+@@unique([programId, ueId])
+@@unique([programId, semester, order])
+@@index([ueId])
+@@schema("public")
 }
 
 // Unité d'enseignement — entité de référence métier.
@@ -117,96 +117,96 @@ model ProgramUE {
 // n'est plus proposée pour de nouvelles affectations (garde applicative dans
 // attachUEToProgram). Le hard delete ne passe que si l'UE n'a jamais servi.
 model UE {
-  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name         String
-  code         String?
-  description  String?
-  imageUrl     String?
-  departmentId String?   @db.Uuid
-  orgId        String    @db.Uuid
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  deletedAt    DateTime?
-  isOptional   Boolean   @default(false) // consever pr ne pas casser l'existant sera progressivement retirer puis suprimer , l,info de l optionel est gerer dans program UE
-  //une UE peut etre optionel dans un program et pas dans un autre
+id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+name         String
+code         String?
+description  String?
+imageUrl     String?
+departmentId String?   @db.Uuid
+orgId        String    @db.Uuid
+createdAt    DateTime  @default(now())
+updatedAt    DateTime  @updatedAt
+deletedAt    DateTime?
+isOptional   Boolean   @default(false) // consever pr ne pas casser l'existant sera progressivement retirer puis suprimer , l,info de l optionel est gerer dans program UE
+//une UE peut etre optionel dans un program et pas dans un autre
 
-  type         UEType       @default(FONDAMENTALE)
-  optionalUEs  OptionalUE[]
-  programUEs   ProgramUE[]
-  department   Department?  @relation(fields: [departmentId], references: [id], onDelete: SetNull)
-  organization Organization @relation(fields: [orgId], references: [id])
-  ueCourses    UECourse[]
+type         UEType       @default(FONDAMENTALE)
+optionalUEs  OptionalUE[]
+programUEs   ProgramUE[]
+department   Department?  @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+organization Organization @relation(fields: [orgId], references: [id])
+ueCourses    UECourse[]
 
-  // Unicité du code PAR org (multi-tenant) — pas d'@unique global sur code :
-  // deux universités peuvent avoir chacune leur "MATH101".
-  @@unique([code, orgId])
-  @@unique([name, departmentId])
-  @@index([orgId])
-  @@index([departmentId])
-  @@schema("public")
+// Unicité du code PAR org (multi-tenant) — pas d'@unique global sur code :
+// deux universités peuvent avoir chacune leur "MATH101".
+@@unique([code, orgId])
+@@unique([name, departmentId])
+@@index([orgId])
+@@index([departmentId])
+@@schema("public")
 }
 
 // Matière au sein d'une UE — encore structurel (réutilisé par toutes les
 // classes). duration = volume horaire PRÉVU par la maquette ; le réalisé se
 // suit sur Course (durationDone/durationTotal), côté instance.
 model UECourse {
-  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name         String
-  description  String?
-  credits      Float        @default(2)
-  imageUrl     String?
-  duration     Int          @default(24)
-  settings     Json? //Détails  { hours: { CM: 10, TD: 15, TP: 5 } }
-  orgId        String       @db.Uuid
-  ueId         String       @db.Uuid
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  deletedAt    DateTime?
-  code         String?
-  order        Int?
-  courses      Course[]
-  organization Organization @relation(fields: [orgId], references: [id])
-  ue           UE           @relation(fields: [ueId], references: [id], onDelete: Restrict)
+id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+name         String
+description  String?
+credits      Float        @default(2)
+imageUrl     String?
+duration     Int          @default(24)
+settings     Json? //Détails  { hours: { CM: 10, TD: 15, TP: 5 } }
+orgId        String       @db.Uuid
+ueId         String       @db.Uuid
+createdAt    DateTime     @default(now())
+updatedAt    DateTime     @updatedAt
+deletedAt    DateTime?
+code         String?
+order        Int?
+courses      Course[]
+organization Organization @relation(fields: [orgId], references: [id])
+ue           UE           @relation(fields: [ueId], references: [id], onDelete: Restrict)
 
-  @@unique([name, ueId])
-  // Sert aussi les lookups par ueId (préfixe) — pas d'index simple redondant.
-  @@unique([ueId, order])
-  @@index([orgId])
-  @@schema("public")
+@@unique([name, ueId])
+// Sert aussi les lookups par ueId (préfixe) — pas d'index simple redondant.
+@@unique([ueId, order])
+@@index([orgId])
+@@schema("public")
 }
 
 // Promotion réelle d'une année. Le calendrier (Terms) et les cours (Course)
 // sont instanciés par classe — chaque classe a ses propres dates.
 model Class {
-  id                 String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name               String
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
-  deletedAt          DateTime?
-  programTrackId     String              @db.Uuid
-  level              Level               @default(L1)
-  programId          String?             @db.Uuid
-  academicYearId     String              @db.Uuid
-  isActive           Boolean             @default(true)
-  type               ClassType           @default(COHORT)
-  channels           Channel[]
-  academicYear       AcademicYear        @relation(fields: [academicYearId], references: [id])
-  program            Program?            @relation(fields: [programId], references: [id], onDelete: SetNull)
-  programTrack       ProgramTrack        @relation(fields: [programTrackId], references: [id])
-  courses            Course[]
-  groups             Group[]
-  schedules          Schedule[]
-  studentEnrollments StudentEnrollment[]
-  terms              Term[]
-  // feeStructure       FeeStructure?       @relation(fields: [feeStructureId], references: [id])
-  // feeStructureId     String?             @db.Uuid
+id                 String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+name               String
+createdAt          DateTime            @default(now())
+updatedAt          DateTime            @updatedAt
+deletedAt          DateTime?
+programTrackId     String              @db.Uuid
+level              Level               @default(L1)
+programId          String?             @db.Uuid
+academicYearId     String              @db.Uuid
+isActive           Boolean             @default(true)
+type               ClassType           @default(COHORT)
+channels           Channel[]
+academicYear       AcademicYear        @relation(fields: [academicYearId], references: [id])
+program            Program?            @relation(fields: [programId], references: [id], onDelete: SetNull)
+programTrack       ProgramTrack        @relation(fields: [programTrackId], references: [id])
+courses            Course[]
+groups             Group[]
+schedules          Schedule[]
+studentEnrollments StudentEnrollment[]
+terms              Term[]
+// feeStructure       FeeStructure?       @relation(fields: [feeStructureId], references: [id])
+// feeStructureId     String?             @db.Uuid
 
-  // Unicité réelle : un nom de classe par filière et par année. (Pas d'unique
-  // incluant programId : nullable → NULLs distincts, contrainte inopérante.)
-  @@unique([programTrackId, name, academicYearId])
-  @@index([programId])
-  @@index([academicYearId])
-  @@schema("public")
+// Unicité réelle : un nom de classe par filière et par année. (Pas d'unique
+// incluant programId : nullable → NULLs distincts, contrainte inopérante.)
+@@unique([programTrackId, name, academicYearId])
+@@index([programId])
+@@index([academicYearId])
+@@schema("public")
 }
 
 // Période datée d'UNE classe (semestre/trimestre réel). order = pont vers
@@ -216,23 +216,23 @@ model Class {
 // clôture (lockedAt) suit le rythme réel des jurys, classe par classe.
 // Cascade : le semestre meurt avec sa classe.
 model Term {
-  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  classId   String    @db.Uuid
-  order     Int // correspond à ProgramUE.semester à l'instanciation
-  name      String // "Semestre 1" — généré, éditable
-  startDate DateTime? @db.Date
-  endDate   DateTime? @db.Date
-  // Clôture après délibération : fige les évaluations des cours du terme
-  // (garde applicative dans le service d'évaluation).
-  lockedAt  DateTime?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+classId   String    @db.Uuid
+order     Int // correspond à ProgramUE.semester à l'instanciation
+name      String // "Semestre 1" — généré, éditable
+startDate DateTime? @db.Date
+endDate   DateTime? @db.Date
+// Clôture après délibération : fige les évaluations des cours du terme
+// (garde applicative dans le service d'évaluation).
+lockedAt  DateTime?
+createdAt DateTime  @default(now())
+updatedAt DateTime  @updatedAt
 
-  class   Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
-  courses Course[]
+class   Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+courses Course[]
 
-  @@unique([classId, order])
-  @@schema("public")
+@@unique([classId, order])
+@@schema("public")
 }
 
 // Instance d'un UECourse pour UNE classe — porte le déroulé réel :
@@ -240,61 +240,61 @@ model Term {
 // termId nullable : un cours hors maquette (rattrapage, module exceptionnel)
 // peut exister sans période.
 model Course {
-  id            String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  settings      Json?
-  createdAt     DateTime             @default(now())
-  updatedAt     DateTime             @updatedAt
-  deletedAt     DateTime?
-  classId       String               @db.Uuid
-  // Progression : réalisé / total planifié. Pas de CHECK done <= total :
-  // un cours peut légitimement dépasser le prévu (réalité > plan).
-  durationDone  Int                  @default(0)
-  durationTotal Int                  @default(0)
-  orgId         String               @db.Uuid
-  name          String
-  credits       Float                @default(2)
-  description   String?
-  ueCourseId    String               @db.Uuid
-  termId        String?              @db.Uuid
-  class         Class                @relation(fields: [classId], references: [id], onDelete: Cascade)
-  organization  Organization         @relation(fields: [orgId], references: [id])
-  term          Term?                @relation(fields: [termId], references: [id], onDelete: SetNull)
-  ueCourse      UECourse             @relation(fields: [ueCourseId], references: [id])
-  teachers      CourseTeacher[]
-  evaluations   Evaluation[]
-  schedules     Schedule[]
-  weeklySlots   WeeklySlot[]
-  teacherHours  TeacherCourseHours[]
-  // sert a la relation course - groupe pr l espace perso
-  group Group?
-  // Unicité (classId, ueCourseId) gérée par index UNIQUE PARTIEL
-  // WHERE "deletedAt" IS NULL — non exprimable en Prisma, défini en
-  // post-migrate (course_active_unique_idx) : recréer un cours après
-  // soft delete reste possible.
-  @@index([ueCourseId])
-  @@index([orgId])
-  @@index([classId])
-  @@index([termId])
-  @@schema("public")
+id            String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+settings      Json?
+createdAt     DateTime             @default(now())
+updatedAt     DateTime             @updatedAt
+deletedAt     DateTime?
+classId       String               @db.Uuid
+// Progression : réalisé / total planifié. Pas de CHECK done <= total :
+// un cours peut légitimement dépasser le prévu (réalité > plan).
+durationDone  Int                  @default(0)
+durationTotal Int                  @default(0)
+orgId         String               @db.Uuid
+name          String
+credits       Float                @default(2)
+description   String?
+ueCourseId    String               @db.Uuid
+termId        String?              @db.Uuid
+class         Class                @relation(fields: [classId], references: [id], onDelete: Cascade)
+organization  Organization         @relation(fields: [orgId], references: [id])
+term          Term?                @relation(fields: [termId], references: [id], onDelete: SetNull)
+ueCourse      UECourse             @relation(fields: [ueCourseId], references: [id])
+teachers      CourseTeacher[]
+evaluations   Evaluation[]
+schedules     Schedule[]
+weeklySlots   WeeklySlot[]
+teacherHours  TeacherCourseHours[]
+// sert a la relation course - groupe pr l espace perso
+group Group?
+// Unicité (classId, ueCourseId) gérée par index UNIQUE PARTIEL
+// WHERE "deletedAt" IS NULL — non exprimable en Prisma, défini en
+// post-migrate (course_active_unique_idx) : recréer un cours après
+// soft delete reste possible.
+@@index([ueCourseId])
+@@index([orgId])
+@@index([classId])
+@@index([termId])
+@@schema("public")
 }
 
 // Affectation enseignant ↔ cours. hours = volume confié à CE prof
 // (co-enseignement) ; isMain désigne le responsable.
 model CourseTeacher {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  teacherId String?  @db.Uuid
-  isMain    Boolean  @default(false)
-  courseId  String   @db.Uuid
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  hours     Int?
-  course    Course   @relation(fields: [courseId], references: [id])
-  teacher   Teacher? @relation(fields: [teacherId], references: [id], onDelete: SetNull)
+id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+teacherId String?  @db.Uuid
+isMain    Boolean  @default(false)
+courseId  String   @db.Uuid
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+hours     Int?
+course    Course   @relation(fields: [courseId], references: [id])
+teacher   Teacher? @relation(fields: [teacherId], references: [id], onDelete: SetNull)
 
-  @@unique([teacherId, courseId])
-  @@index([courseId])
-  @@index([teacherId])
-  @@schema("public")
+@@unique([teacherId, courseId])
+@@index([courseId])
+@@index([teacherId])
+@@schema("public")
 }
 
 // Compteur incrémental heures effectuées par (prof, cours, type de séance).
@@ -303,40 +303,40 @@ model CourseTeacher {
 // PENDING (trigger_prevent_locked_schedule_update) : pas de transfert de
 // clé à gérer ici.
 model TeacherCourseHours {
-  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  orgId          String       @db.Uuid
-  teacherId      String       @db.Uuid
-  courseId       String       @db.Uuid
-  scheduleType   ScheduleType
-  completedHours Float        @default(0)
-  updatedAt      DateTime     @updatedAt
+id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+orgId          String       @db.Uuid
+teacherId      String       @db.Uuid
+courseId       String       @db.Uuid
+scheduleType   ScheduleType
+completedHours Float        @default(0)
+updatedAt      DateTime     @updatedAt
 
-  teacher      Teacher      @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-  course       Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+teacher      Teacher      @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+course       Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
-  @@unique([teacherId, courseId, scheduleType])
-  @@index([orgId])
-  @@schema("public")
+@@unique([teacherId, courseId, scheduleType])
+@@index([orgId])
+@@schema("public")
 }
 
 // Choix d'UE optionnelle par étudiant et par année (l'option se rechoisit
 // chaque année, d'où le scope AcademicYear et non Class).
 model OptionalUE {
-  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  studentId    String       @db.Uuid
-  yearId       String       @db.Uuid
-  isActive     Boolean      @default(true)
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  ueId         String       @db.Uuid
-  student      Student      @relation(fields: [studentId], references: [id])
-  ue           UE           @relation(fields: [ueId], references: [id])
-  academicYear AcademicYear @relation(fields: [yearId], references: [id])
+id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+studentId    String       @db.Uuid
+yearId       String       @db.Uuid
+isActive     Boolean      @default(true)
+createdAt    DateTime     @default(now())
+updatedAt    DateTime     @updatedAt
+ueId         String       @db.Uuid
+student      Student      @relation(fields: [studentId], references: [id])
+ue           UE           @relation(fields: [ueId], references: [id])
+academicYear AcademicYear @relation(fields: [yearId], references: [id])
 
-  @@unique([studentId, ueId, yearId])
-  @@index([ueId])
-  @@schema("public")
+@@unique([studentId, ueId, yearId])
+@@index([ueId])
+@@schema("public")
 }
 
 // Inscription d'un étudiant dans une classe. endedAt = départ en cours
@@ -344,28 +344,28 @@ model OptionalUE {
 // bloqué par Restrict (Attendance) dès la première présence enregistrée :
 // il ne reste possible que pour une inscription créée par erreur.
 model StudentEnrollment {
-  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  studentId     String         @db.Uuid
-  classId       String         @db.Uuid
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  endedAt       DateTime?
-  class         Class          @relation(fields: [classId], references: [id])
-  student       Student        @relation(fields: [studentId], references: [id])
-  studentGroups StudentGroup[]
-  attendances   Attendance[]
-  grades        Grade[]
-  // invoice       Invoice?
+id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+studentId     String         @db.Uuid
+classId       String         @db.Uuid
+createdAt     DateTime       @default(now())
+updatedAt     DateTime       @updatedAt
+endedAt       DateTime?
+class         Class          @relation(fields: [classId], references: [id])
+student       Student        @relation(fields: [studentId], references: [id])
+studentGroups StudentGroup[]
+attendances   Attendance[]
+grades        Grade[]
+// invoice       Invoice?
 
-  // Un étudiant a au plus UNE inscription par classe (mais peut en avoir
-  // plusieurs, dans des classes différentes).
-  @@unique([studentId, classId])
-  // Cible de la FK composite Attendance(enrollmentId, studentId). `id` étant
-  // déjà PK, cet unique ne restreint RIEN : il existe uniquement parce que
-  // Postgres exige une contrainte d'unicité pour cibler une FK composite.
-  @@unique([id, studentId])
-  @@index([classId])
-  @@schema("public")
+// Un étudiant a au plus UNE inscription par classe (mais peut en avoir
+// plusieurs, dans des classes différentes).
+@@unique([studentId, classId])
+// Cible de la FK composite Attendance(enrollmentId, studentId). `id` étant
+// déjà PK, cet unique ne restreint RIEN : il existe uniquement parce que
+// Postgres exige une contrainte d'unicité pour cibler une FK composite.
+@@unique([id, studentId])
+@@index([classId])
+@@schema("public")
 }
 
 // Sous-ensemble d'une classe (TD/TP). Soft delete conservé : un Schedule à
@@ -373,70 +373,70 @@ model StudentEnrollment {
 // réécrirait l'historique des séances de groupe en séances de classe.
 // Restrict sur Schedule.group verrouille ce risque côté DB.
 model Group {
-  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name          String
-  description   String?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  deletedAt     DateTime?
-  classId       String         @db.Uuid
-  channels      Channel[]
-  class         Class          @relation(fields: [classId], references: [id])
-  schedules     Schedule[]
-  studentGroups StudentGroup[]
+id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+name          String
+description   String?
+createdAt     DateTime       @default(now())
+updatedAt     DateTime       @updatedAt
+deletedAt     DateTime?
+classId       String         @db.Uuid
+channels      Channel[]
+class         Class          @relation(fields: [classId], references: [id])
+schedules     Schedule[]
+studentGroups StudentGroup[]
 
 //perso Lien cours ↔ groupe
 //SetNull unlink le groupe sans réécrire l’historique des séances (Schedule.groupId reste protégé par son Restrict).
- courseId String? @unique @db.Uuid
-  course   Course? @relation(fields: [courseId], references: [id], onDelete: SetNull)
+courseId String? @unique @db.Uuid
+course   Course? @relation(fields: [courseId], references: [id], onDelete: SetNull)
 
-  @@index([classId])
-  @@schema("public")
+@@index([classId])
+@@schema("public")
 }
 
 // Affectation d'une INSCRIPTION (pas d'un étudiant) à un groupe : garantit
 // par construction que l'étudiant est bien inscrit dans la classe du groupe
 // (invariant renforcé par le trigger validate_student_class_group).
 model StudentGroup {
-  id           String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  enrollmentId String            @db.Uuid
-  groupId      String            @db.Uuid
-  createdAt    DateTime          @default(now())
-  enrollment   StudentEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
-  group        Group             @relation(fields: [groupId], references: [id], onDelete: Cascade)
+id           String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+enrollmentId String            @db.Uuid
+groupId      String            @db.Uuid
+createdAt    DateTime          @default(now())
+enrollment   StudentEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+group        Group             @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
-  @@unique([enrollmentId, groupId])
-  @@index([groupId])
-  @@schema("public")
+@@unique([enrollmentId, groupId])
+@@index([groupId])
+@@schema("public")
 }
 
 enum Level {
-  L1
-  L2
-  L3
-  M1
-  M2
-  D1
-  D2
-  D3
+L1
+L2
+L3
+M1
+M2
+D1
+D2
+D3
 
-  @@schema("public")
+@@schema("public")
 }
 
 enum UEType {
-  FONDAMENTALE
-  COMPLEMENTAIRE
-  APPROFONDISSEMENT
-  SPECIALITE
-  TRANSVERSALE
-  LIBRE
+FONDAMENTALE
+COMPLEMENTAIRE
+APPROFONDISSEMENT
+SPECIALITE
+TRANSVERSALE
+LIBRE
 
-  @@schema("public")
+@@schema("public")
 }
 
 enum ClassType {
-  COHORT // Cohorte institutionnelle (ex: Terminale S1)
-  THEMATIC // Groupe thématique / Matière (ex: Masterclass React)
+COHORT // Cohorte institutionnelle (ex: Terminale S1)
+THEMATIC // Groupe thématique / Matière (ex: Masterclass React)
 
-  @@schema("public")
+@@schema("public")
 }

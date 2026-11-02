@@ -14,7 +14,13 @@ import type { TeacherResources } from '@/modules/invitation/teacher/invite'
 // Défini dans types/user.ts (déduit de InvitedBySchema) ; réexporté pour les imports existants
 export type { InvitedBy }
 
-export type InvitationStatus = 'PENDING' | 'ACCEPTED' | 'REVOKED'
+export type InvitationStatus = 'PENDING' | 'ACCEPTED' | 'REVOKED' | 'DECLINED'
+
+export interface NotificationSender {
+  id: string
+  name?: string
+  email?: string
+}
 
 export interface EnrollmentDetails {
   classId?: string

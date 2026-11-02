@@ -1,7 +1,7 @@
 {
   "name": "getEvaluation",
   "file": "src/services/evaluation/database/evaluation.queries.ts",
-  "sig": "(evaluationId: string, orgId: string) => Promise<{ id: string; courseId: string; type: EvaluationType; title: string; coefficient: number; maxScore: number; datedAt: Date; createdAt: Date; updatedAt: Date; } | null>",
+  "sig": "(evaluationId: string, orgId: string) => Promise<{ id: string; type: EvaluationType; courseId: string; createdAt: Date; updatedAt: Date; title: string; coefficient: number; maxScore: number; datedAt: Date; } | null>",
   "composes": [],
   "rules": [],
   "why_ref": ""

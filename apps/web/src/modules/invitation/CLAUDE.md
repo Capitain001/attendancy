@@ -40,12 +40,9 @@ sendSupabaseInvitation(email: string, metadata: InvitationMetadata)
 
 ### database.ts
 ```ts
-saveInvitationWithAudit(
-  email, token, expiresAt, metadata,
-  userId, action: Action,
-  resourceId?, resourceType?: Resource
-): Promise<{ invitation, auditLog }>
-// ATOMIQUE — prisma.$transaction. Ne jamais séparer les 2 writes.
+saveInvitationWithAudit(params: SaveInvitationParams)
+// params: { email, token, expiresAt, metadata, inviterUserId, action, resourceId?, resourceType?, targetUserId? }
+// ATOMIQUE — prisma.$transaction (invitation + auditLog + notification si targetUserId). Ne jamais séparer les writes.
 
 getOrganizationInvitations(orgId: string, limit = 25)
 getInvitationStats(orgId: string): { total, pending, expired, accepted }

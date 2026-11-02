@@ -33,6 +33,11 @@ export const CACHE_KEYS = {
   NOTIFICATIONS: {
     ALL: ["notifications"] as const,
   },
+  INBOX: {
+    ALL: ["inbox"] as const,
+    FILTER: (filter: string) => ["inbox", "list", filter] as const,
+    UNREAD_COUNT: ["inbox", "unread-count"] as const,
+  },
   INVITATIONS: {
     ALL: ["invitations", "all"] as const,
     BY_CLASS: (classId: string) => ["invitations", "by-class", classId] as const,

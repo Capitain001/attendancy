@@ -15,6 +15,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
+import { resolveServiceDir, toServiceId } from "../utils/services.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -76,8 +77,9 @@ function ensureGeneratedExport(content: string): string {
 
 // ── Traitement d'un service ──────────────────────────────────────────────────
 
-function cleanService(servicePath: string): void {
-  const serviceDir = path.join(SERVICES_DIR, servicePath);
+function cleanService(serviceArg: string): void {
+  const serviceDir = resolveServiceDir(serviceArg);
+  const servicePath = toServiceId(serviceDir);
   const typesPath = path.join(serviceDir, "types.ts");
 
   if (!fs.existsSync(typesPath)) {

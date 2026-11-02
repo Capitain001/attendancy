@@ -2,7 +2,7 @@
   "service": "session",
   "path": "src/services/session/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "38f2f24",
+  "derived_at": "3b4d4d0",
   "utils_dir": null,
   "fns": {
     "startSession": {
@@ -45,6 +45,11 @@
       "layer": "db",
       "kind": "mutation"
     },
+    "recordStudentAttendance": {
+      "f": ".api/recordStudentAttendance.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
     "startSessionAction": {
       "f": ".api/startSessionAction.json",
       "layer": "action",
@@ -79,6 +84,11 @@
       "f": ".api/generateTokenAction.json",
       "layer": "action",
       "kind": "server-action"
+    },
+    "attendAction": {
+      "f": ".api/attendAction.json",
+      "layer": "action",
+      "kind": "server-action"
     }
   },
   "edges": {
@@ -104,7 +114,12 @@
     "createSessionToken": [
       "generateTokenAction"
     ],
-    "validateSessionToken": [],
+    "validateSessionToken": [
+      "attendAction"
+    ],
+    "recordStudentAttendance": [
+      "attendAction"
+    ],
     "startSessionAction": [],
     "completeSessionAction": [],
     "getActiveSessionsAction": [],
@@ -112,11 +127,16 @@
     "getDirectionSessionsByDateAction": [],
     "getTeacherNextScheduleAction": [],
     "generateTokenAction": [],
+    "attendAction": [],
     "markScheduleAbsences": [
       "finalizeSession"
+    ],
+    "getCurrentStudentId": [
+      "attendAction"
     ]
   },
   "deps": {
-    "markScheduleAbsences": "attendance"
+    "markScheduleAbsences": "attendance",
+    "getCurrentStudentId": "student"
   }
 }

@@ -1,12 +1,13 @@
-// src/services/class/generated.types.ts
 // ⚠ Fichier généré automatiquement — NE PAS ÉDITER À LA MAIN
 // Régénérer : npx tsx scripts/generate/types/types.ts class
 // Pour surcharger un type, définissez-le dans ./types.ts (jamais écrasé).
 
-import { createClass, updateClass, removeClass, getClasses, getClass } from './database'
+import { createClass, updateClass, removeClass, createPersonalClass, getClasses, getActiveClassesCount, getClass } from './database'
 
 export type CreateClassDto = Awaited<ReturnType<typeof createClass>>
 export type UpdateClassDto = Awaited<ReturnType<typeof updateClass>>
 export type RemoveClassDto = Awaited<ReturnType<typeof removeClass>>
+export type CreatePersonalClassDto = Awaited<ReturnType<typeof createPersonalClass>>
 export type GetClassesDto = Awaited<ReturnType<typeof getClasses>>
+export type GetActiveClassesCountDto = Awaited<ReturnType<typeof getActiveClassesCount>>
 export type GetClassDto = Awaited<ReturnType<typeof getClass>>

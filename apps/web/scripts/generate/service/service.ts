@@ -88,7 +88,6 @@ if (!rawName) printUsageAndExit("Nom du service manquant (positionnel ou --name=
 const force = flags.force === true;
 const softDelete = flags["soft-delete"] === true;
 const minimal = flags.minimal === true;
-const skipCacheRegistry = flags["skip-cache-registry"] === true;
 const prefixFlag = typeof flags.prefix === "string" ? flags.prefix : undefined;
 const rawModel = typeof flags.model === "string" ? flags.model : undefined;
 const keyRegistryPathFlag =
@@ -98,9 +97,22 @@ const graphRegistryPathFlag =
 
 // ─── Résolution des paramètres ───────────────────────────────────────────────
 
-const kebabName = toKebabCase(rawName);
+const isExplicitPath = rawName.startsWith("src/") || rawName.includes("/");
+const baseName = isExplicitPath
+  ? rawName.replace(/\/+$/, "").split("/").pop()!
+  : rawName;
+
+const kebabName = toKebabCase(baseName);
 const camelName = toCamelCase(kebabName);
 const modelName = rawModel ?? toPascalCase(kebabName);
+
+const serviceDir = isExplicitPath
+  ? join(process.cwd(), rawName)
+  : join(SERVICES_ROOT, kebabName);
+
+const isFeature = serviceDir.replace(/\\/g, "/").includes("/features/");
+const skipCacheRegistry =
+  flags["skip-cache-registry"] === true || isFeature;
 
 // Slug complet (avec préfixe de domaine éventuel) — sert à la fois de nom de
 // clé CACHE et de racine des noms d'événements. ue + course-teacher → ue-course-teacher.
@@ -108,8 +120,6 @@ const cacheKeySlug = prefixFlag ? `${toKebabCase(prefixFlag)}-${kebabName}` : ke
 const eventPrefix = toScreamingSnake(cacheKeySlug);
 const removeVerb = softDelete ? "remove" : "delete";
 const removeEvent = softDelete ? "REMOVED" : "DELETED";
-
-const serviceDir = join(SERVICES_ROOT, kebabName);
 
 // Chemins des deux registres cache — défauts dans ./config.ts, surchargeables
 // via --key-registry / --graph-registry.
@@ -149,16 +159,17 @@ function file(commented: () => string, activeCode: () => string): string {
 // ─── Génération ──────────────────────────────────────────────────────────────
 
 function main(): void {
+  const displayPath = isExplicitPath ? rawName : `src/services/${kebabName}`;
   if (existsSync(serviceDir) && !force) {
     console.error(
-      `✖ src/services/${kebabName}/ existe déjà. Utilise --force pour écraser.`,
+      `✖ ${displayPath} existe déjà. Utilise --force pour écraser.`,
     );
     process.exit(1);
   }
 
   console.log(
     `Génération du service "${kebabName}" (modèle: ${modelName}, préfixe: ${eventPrefix}, ` +
-      `${softDelete ? "soft delete" : "hard delete"}, mode: ${minimal ? "actif (--minimal)" : "commenté (référence)"})\n`,
+    `${softDelete ? "soft delete" : "hard delete"}, mode: ${minimal ? "actif (--minimal)" : "commenté (référence)"})\n`,
   );
 
   writeFile("index.ts", file(t.fileIndexRootCommented, t.fileIndexRootMinimal));
@@ -197,7 +208,7 @@ function main(): void {
   // écrit par `generate:api` (étape 5 ci-dessous). Un fichier racine serait un
   // orphelin qu'aucun outil ne lit (api/summary ne scannent que `.api/`).
 
-  console.log(`\n✔ Service "${kebabName}" créé dans src/services/${kebabName}/`);
+  console.log(`\n✔ Service "${kebabName}" créé dans ${displayPath}/`);
 
   // ── Registres cache (key.ts + graph.ts) ─────────────────────────────────────
   if (skipCacheRegistry) {
