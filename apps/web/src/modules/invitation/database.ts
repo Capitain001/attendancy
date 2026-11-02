@@ -90,8 +90,7 @@ export async function saveInvitationWithAudit(
   action:        Action,
   resourceId?:   string,
   resourceType?: Resource,
-  targetUserId?: string,
-): Promise<{ invitation: any; auditLog: any; notification?: any }> {
+): Promise<{ invitation: any; auditLog: any }> {
   const invitationDetails = createDatabaseDetails(metadata);
   const auditDetails      = createAuditDetails(email, metadata);
 
@@ -105,7 +104,6 @@ export async function saveInvitationWithAudit(
         invitationType: "INVITE_ONLY",
         role:           metadata?.role,
         details:        invitationDetails,
-        ...(targetUserId ? { userId: targetUserId } : {}),
         ...(resourceId   ? { resourceId }   : {}),
         ...(resourceType ? { resourceType } : {}),
       },
@@ -121,33 +119,7 @@ export async function saveInvitationWithAudit(
       },
     });
 
-    let notification;
-    if (targetUserId) {
-      const orgName = metadata?.organization?.name || "une organisation";
-      const roleLabel = metadata?.role || "membre";
-      notification = await tx.notification.create({
-        data: {
-          userId: targetUserId,
-          type: "INVITATION",
-          message: `Vous avez été invité à rejoindre ${orgName} en tant que ${roleLabel}.`,
-          metadata: {
-            invitationId: invitation.id,
-            invitationToken: token,
-            orgId: metadata?.organization?.id,
-            orgName,
-            orgSlug: metadata?.organization?.slug,
-            role: metadata?.role,
-            resourceType: metadata?.resourceType,
-            resourceId: metadata?.resourceId,
-            senderName: metadata?.invited_by?.name || "Un administrateur",
-            expiresAt: expiresAt.toISOString(),
-            status: "PENDING",
-          },
-        },
-      });
-    }
-
-    return { invitation, auditLog, notification };
+    return { invitation, auditLog };
   }, {
     maxWait: 10000,
     timeout: 20000,
