@@ -9,9 +9,9 @@
  * l'inscription (StudentEnrollment) et éventuellement lier un parent.
  */
 
-export { inviteStudent, getClassInvitationsAction } from "./actions";
+export { inviteStudent, inviteStudentsAction, getClassInvitationsAction } from "./actions";
 export type * from "./types";
-export { inviteStudentSchema } from "./validation";
-export type { InviteStudentInput } from "./validation";
+export { inviteStudentSchema, inviteStudentsBulkSchema } from "./validation";
+export type { InviteStudentInput, InviteStudentsBulkInput } from "./validation";
 export { checkInvitationResources, getClassInvitations } from "./database";
 

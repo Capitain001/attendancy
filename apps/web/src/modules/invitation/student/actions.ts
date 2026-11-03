@@ -1,15 +1,18 @@
 // src/modules/invitation/student/actions.ts
 "use server";
 
+import { after } from "next/server";
 import { inviteUser }                          from "../user";
-import { InviteStudentParams }                 from "./types";
+import { InviteStudentParams, type InviteStudentsBulkResult, type BulkInviteItemSuccess, type BulkInviteItemFailure } from "./types";
 import { checkInvitationResources }            from "./database";
-import { inviteStudentSchema }                 from "./validation";
+import { inviteStudentSchema, inviteStudentsBulkSchema, type InviteStudentsBulkInput } from "./validation";
 import { safeParse }                           from "valibot";
 import { notifyInvitationStakeholders }        from "../notifications";
 import { getAuthorization } from "@/modules/auth";
 import { ERRORS } from "@/config";
 import { getClassInvitations } from "./database";
+import { getUserInfo } from "@/services/user";
+import { prisma } from "@/lib/prisma";
 
 /**
  * Invite un étudiant dans l'organisation.
@@ -140,6 +143,178 @@ export async function inviteStudent(params: InviteStudentParams) {
     };
   }
 }
+
+
+
+const CONCURRENCY = 5;
+
+export async function inviteStudentsAction(
+  params: InviteStudentsBulkInput
+): Promise<InviteStudentsBulkResult> {
+  try {
+    // ── 1. Validation Valibot ──────────────────────────────────────────
+    const parsed = safeParse(inviteStudentsBulkSchema, params);
+    if (!parsed.success) {
+      return { error: parsed.issues[0]?.message ?? "Paramètres d'invitation invalides" };
+    }
+    const { classId, students, groupIds, expiresInDays, deliveryMethod } = parsed.output;
+
+    // ── 2. Authentification & Organisation (1 appel) ──────────────────
+    const currentUser = await getUserInfo();
+    const orgId = currentUser?.organization?.id;
+    if (!currentUser?.id || !orgId) {
+      return { error: "Organisation introuvable ou session expirée" };
+    }
+
+    // ── 3. Vérification des ressources de classe (1 appel) ─────────────
+    const check = await checkInvitationResources({ classId, orgId, groupIds });
+    if (!check.valid) {
+      return { error: check.error ?? "Ressources invalides" };
+    }
+
+    // ── 4. Dédoublonnage mémoire dans le lot ──────────────────────────
+    const unique = [...new Map(students.map((s) => [s.email, s])).values()];
+    const uniqueEmails = unique.map((s) => s.email);
+
+    // ── 5. Pré-filtrage DB groupé (Inscrits + Invitations en attente) ──
+    const [pendingInvitations, existingEnrollments] = await Promise.all([
+      prisma.invitation.findMany({
+        where: {
+          orgId,
+          resourceId: classId,
+          usedAt: null,
+          email: { in: uniqueEmails, mode: "insensitive" },
+          OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+        },
+        select: { email: true },
+      }),
+      prisma.studentEnrollment.findMany({
+        where: {
+          classId,
+          endedAt: null,
+          student: {
+            user: { email: { in: uniqueEmails, mode: "insensitive" } },
+          },
+        },
+        select: {
+          student: {
+            select: { user: { select: { email: true } } },
+          },
+        },
+      }),
+    ]);
+
+    const pendingSet = new Set(pendingInvitations.map((p) => p.email.toLowerCase()));
+    const enrolledSet = new Set(
+      existingEnrollments.map((e) => e.student.user.email.toLowerCase())
+    );
+
+    const succeeded: BulkInviteItemSuccess[] = [];
+    const failed: BulkInviteItemFailure[] = [];
+
+    const toSend = unique.filter((s) => {
+      const emailLower = s.email.toLowerCase();
+      if (enrolledSet.has(emailLower)) {
+        failed.push({ email: s.email, error: "Étudiant déjà inscrit dans cette classe" });
+        return false;
+      }
+      if (pendingSet.has(emailLower)) {
+        failed.push({ email: s.email, error: "Invitation déjà en attente pour cette classe" });
+        return false;
+      }
+      return true;
+    });
+
+    // ── 6. Traitement par Chunks (Pool safe) ───────────────────────────
+    for (let i = 0; i < toSend.length; i += CONCURRENCY) {
+      const chunk = toSend.slice(i, i + CONCURRENCY);
+
+      const settled = await Promise.allSettled(
+        chunk.map((s) =>
+          inviteUser({
+            email: s.email,
+            name: [s.firstName, s.lastName].filter(Boolean).join(" ") || undefined,
+            role: "STUDENT",
+            expiresInDays: expiresInDays ?? 7,
+            resourceId: classId,
+            resourceType: "CLASS",
+            deliveryMethod,
+            ...(groupIds?.length || s.parentEmail
+              ? {
+                  details: {
+                    enrollment: {
+                      classId,
+                      ...(groupIds?.length ? { groupIds } : {}),
+                      ...(s.parentEmail ? { parentEmail: s.parentEmail } : {}),
+                    },
+                  },
+                }
+              : {}),
+          })
+        )
+      );
+
+      settled.forEach((r, idx) => {
+        const student = chunk[idx];
+        if (r.status === "fulfilled" && !r.value.error && r.value.data) {
+          succeeded.push({
+            email: student.email,
+            invitationId: r.value.data.invitationId,
+            link: r.value.data.link,
+          });
+        } else {
+          if (r.status === "rejected") {
+            console.error("[bulk invite] rejet", { email: student.email, reason: r.reason });
+          }
+          failed.push({
+            email: student.email,
+            error:
+              r.status === "fulfilled"
+                ? r.value.error ?? "Échec de l'envoi"
+                : "Erreur serveur inattendue",
+          });
+        }
+      });
+    }
+
+    // ── 7. Tâche d'arrière-plan (Notifications non bloquantes) ──────────
+    const actorId = currentUser.id;
+    if (succeeded.length > 0) {
+      after(async () => {
+        await Promise.allSettled(
+          succeeded
+            .filter((s) => s.invitationId)
+            .map((s) =>
+              notifyInvitationStakeholders({
+                invitationId: s.invitationId!,
+                orgId,
+                actorId,
+                event: "CREATED",
+                invitedEmail: s.email,
+                classId,
+              })
+            )
+        );
+      });
+    }
+
+    // ── 8. Réponse normalisée (ActionResponse) ─────────────────────────
+    return {
+      data: {
+        status: failed.length === 0 ? "ok" : succeeded.length === 0 ? "failed" : "partial",
+        total: unique.length,
+        succeeded,
+        failed,
+      },
+    };
+  } catch (error) {
+    console.error("inviteStudentsAction error:", error);
+    return { error: "Une erreur inattendue s'est produite lors du traitement du lot" };
+  }
+}
+
+
+
 
 export async function getClassInvitationsAction({ classId }: { classId: string }) {
   try {

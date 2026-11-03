@@ -118,6 +118,7 @@ export async function inviteUser(params: InvitationParams) {
     return {
       data: {
         success: true,
+        invitationId: result.invitation.id,
         message:
           deliveryMethod === "link"
             ? `Lien d'invitation généré pour ${params.email}`

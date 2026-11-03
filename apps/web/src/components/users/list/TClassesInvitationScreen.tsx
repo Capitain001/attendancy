@@ -1,16 +1,23 @@
 'use client'
-// Écran client d'invitation : liste des participants + bouton "Ajouter", dialog d'invitation et inscription d'étudiants existants.
 
 import { useMemo } from 'react'
-import { PlusCircleIcon, UserPlus } from 'lucide-react'
 
+// ── 1. Hook d'invitations de la classe ──────────────────────────────────────────
+// - invitations        : liste des invitations émises pour cette classe (avec email, usedAt, expiresAt, etc.).
+// - isLoadingInvitations: statut de chargement initial.
+// - inviteStudentsBulk : mutation d'envoi en masse consommée par le modal (inviteStudentsBulk.mutateAsync).
+// - resend             : relance d'une invitation en attente (resend.mutate(invitation)).
+// - revoke             : annulation d'une invitation en attente (revoke.mutate(invitation)).
 import { useClassInvitations } from '@/hooks/data/invitation/use-class-invitations'
+
+// ── 2. Hook des étudiants disponibles ──────────────────────────────────────────
+// - available          : liste des étudiants de l'établissement non encore inscrits dans cette classe.
+//   Ce vivier alimente directement la sélection de l'Étape 1 du futur modal.
 import { useAvailableStudents } from '@/hooks/data/student-enrollments/useAvailableStudents'
-import { TeacherClassInviteDialog } from '@/components/personal/teacher/class/invitation/TeacherClassInviteDialog'
+
+// ── 3. Hook des inscriptions confirmées ─────────────────────────────────────────
+// - enrollments        : inscriptions actives (StudentEnrollment) de la classe.
 import { useClassEnrollments } from '@/hooks/data/student-enrollments'
-import { shareInviteLink } from '@/lib/invitation/toast'
-import { ParticipantList } from './ParticipantList'
-import { EnrollStudentsModal } from '../../personal/student-enrollment/enroll-students-modal'
 
 interface TClassesInvitationScreenProps {
   classId: string
@@ -18,60 +25,84 @@ interface TClassesInvitationScreenProps {
 }
 
 export function TClassesInvitationScreen({ classId, classLabel }: TClassesInvitationScreenProps) {
-  const { inviteStudent } = useClassInvitations(classId, {
-    deliverLink: (link) => shareInviteLink(link, `Rejoins ${classLabel}`),
-    toastError: false, // l'erreur est affichée inline dans le dialog
-  })
-  const { enrollments } = useClassEnrollments(classId)
-  const { available } = useAvailableStudents(classId)
+  // ── HOOK 1 : Invitations & actions associées ─────────────────────────────────
+  const {
+    invitations,
+    isLoading: isLoadingInvitations,
+    inviteStudentsBulk,
+    resend,
+    revoke,
+  } = useClassInvitations(classId)
 
-  // `enrollment.student` a déjà la forme attendue : aucun mapping.
-  const participants = useMemo(() => enrollments.map((e) => e.student), [enrollments])
+  // ── HOOK 2 : Étudiants inscrits dans la classe ───────────────────────────────
+  const {
+    enrollments,
+    isLoading: isLoadingEnrollments,
+  } = useClassEnrollments(classId)
+
+  // ── HOOK 3 : Étudiants disponibles dans l'école (hors classe) ────────────────
+  const {
+    available,
+    isLoading: isLoadingAvailable,
+  } = useAvailableStudents(classId)
+
+  // ── FILTRES & ÉTATS DÉRIVÉS ───────────────────────────────────────────────────
+
+  // Liste des étudiants actuellement inscrits (format Student pour l'affichage)
+  const participants = useMemo(
+    () => enrollments.map((e) => e.student),
+    [enrollments],
+  )
+
+  // Invitations en cours : ni utilisées, ni révoquées
+  const pendingInvitations = useMemo(
+    () => invitations.filter((inv) => !inv.usedAt),
+    [invitations],
+  )
+
+  // Invitations acceptées (historique d'intégration)
+  const acceptedInvitations = useMemo(
+    () => invitations.filter((inv) => Boolean(inv.usedAt)),
+    [invitations],
+  )
+
+  // État global de chargement
+  const isLoading = isLoadingInvitations || isLoadingEnrollments || isLoadingAvailable
 
   return (
-    <div className="space-y-6 p-4 ">
-      <h1 className="text-center text-[22px] font-semibold leading-tight">
-        Ajouter de nouveaux participants
-      </h1>
+    <div className="space-y-8 p-6">
+      {/* ── ZONE 1 : En-tête de classe (classLabel, compteurs effectifs & invitations) */}
+      <header>
+        {/* Titre et métriques dérivées : participants.length, pendingInvitations.length */}
+      </header>
 
-      {/* participants */}
-      <section className="space-y-3">
-        <div className="flex items-baseline justify-between">
-      
-        </div>
+      {/* ── ZONE 2 : Membres actifs & Trigger du modal plein écran */}
+      <section>
+        {/*
+          Emplacement du futur TeacherClassInviteModal :
+          Props qui lui seront passées :
+            - classId={classId}
+            - classLabel={classLabel}
+            - availableStudents={available}
+            - trigger={<button>...</button>}
+          Le modal exploitera directement la mutation `inviteStudentsBulk`
+        */}
 
-        <div className="flex items-start gap-3 py-1">
-
-          {/* on veux afficher des card de course et a droite de chque card l icon plus (trigger) parcontre on ne veux pas repeter le dialoque il prend facilement*/}
-          <TeacherClassInviteDialog
-            students={available}
-            onSendEmail={(input) =>
-              inviteStudent.mutateAsync({ ...input, classId, deliveryMethod: 'email' })
-            }
-            onCreateLink={(input) =>
-              inviteStudent.mutateAsync({ ...input, classId, deliveryMethod: 'link' })
-            }
-            trigger={
-              <button
-                type="button"
-                className="flex w-16 shrink-0 flex-col items-center gap-1.5 text-[12px] text-foreground"
-              >
-                <span className="flex size-14 border border-dashed items-center justify-center rounded-full bg-muted transition-colors hover:bg-muted/70">
-                  <UserPlus className="size-6" />
-                </span>
-                Ajouter
-              </button>
-            }
-          />
-
-          <ParticipantList participants={participants} />
-        </div>
+        {/* Affichage des participants existants (participants) */}
       </section>
 
-      {/* inscription d'étudiants existants */}
-      <section className="space-y-3">
-        <h2 className="text-[16px] font-medium">Inscrire des étudiants existants</h2>
-        <EnrollStudentsModal className="" classId={classId} />
+      {/* ── ZONE 3 : Suivi des invitations en attente */}
+      <section>
+        {/*
+          Affichage des invitations en cours (pendingInvitations) :
+          - email, expiresAt
+          - actions unitaires : resend.mutate(inv), revoke.mutate(inv)
+        */}
+      </section>
+
+      {/* ── ZONE 4 : Inscription directe alternative (sans invitation) */}
+      <section>
+        {/* Inscription directe d'étudiants de l'école (ex: EnrollStudentsModal) */}
       </section>
     </div>
   )

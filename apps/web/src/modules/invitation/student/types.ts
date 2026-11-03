@@ -23,3 +23,25 @@ export interface InviteStudentParams {
 import type { inviteStudent } from './actions'
 
 export type InviteStudentResult = Awaited<ReturnType<typeof inviteStudent>>
+
+export type BulkInviteItemSuccess = {
+  email: string;
+  invitationId?: string;
+  link?: string;
+};
+
+export type BulkInviteItemFailure = {
+  email: string;
+  error: string;
+};
+
+export type BulkInviteData = {
+  status: "ok" | "partial" | "failed";
+  total: number;
+  succeeded: BulkInviteItemSuccess[];
+  failed: BulkInviteItemFailure[];
+};
+
+export type InviteStudentsBulkResult =
+  | { data: BulkInviteData }
+  | { error: string };

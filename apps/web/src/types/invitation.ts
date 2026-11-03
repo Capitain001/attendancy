@@ -92,6 +92,7 @@ export interface InvitationResult {
   message?: string
   metadata?: InvitationMetadata
   link?: string
+  invitationId?: string
 }
 
 export type User = SupabaseUser

@@ -13,7 +13,7 @@ export type { InvitationActionResult } from "./actions";
 
 // Invitations par rôle
 export { inviteDirection } from "./direction/actions";
-export { inviteStudent, getClassInvitationsAction } from "./student/actions";
+export { inviteStudent, inviteStudentsAction, getClassInvitationsAction } from "./student/actions";
 export { inviteTeacher } from "./teacher/invite";
 
 // Types partagés

@@ -1,14 +1,20 @@
 // src/hooks/data/invitation/use-class-invitations.ts
 'use client'
-// Invitations d'une classe (écran Direction/classe) + mutation inviteStudent.
+// Invitations d'une classe (écran Direction/classe) + mutations inviteStudent / inviteStudentsBulk.
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { getClassInvitationsAction, inviteStudent } from '@/modules/invitation'
+import {
+  getClassInvitationsAction,
+  inviteStudent,
+  inviteStudentsAction,
+} from '@/modules/invitation'
+import type { InviteStudentsBulkInput } from '@/modules/invitation/student'
 import { toast } from 'sonner'
 import { CACHE_KEYS } from '@/cache/client/key'
 import { useInvitationMutations, invalidateInvitationQueries, copyLinkOrToast } from './useInvitationMutations'
 
 type InviteStudentVars = Parameters<typeof inviteStudent>[0]
+type InviteStudentsBulkVars = Omit<InviteStudentsBulkInput, 'classId'>
 
 type UseClassInvitationsOptions = {
   /** Livraison du lien créé. Défaut : copie dans le presse-papiers + toast. */
@@ -56,5 +62,36 @@ export function useClassInvitations(classId: string, opts: UseClassInvitationsOp
     },
   })
 
-  return { invitations, isLoading, inviteStudent: inviteStudentMut, resend, revoke }
-}
+  const inviteStudentsBulkMut = useMutation({
+    mutationFn: (vars: InviteStudentsBulkVars) =>
+      inviteStudentsAction({ ...vars, classId }),
+    onSuccess: async (r) => {
+      if ('error' in r) {
+        if (toastError) toast.error(r.error)
+        return
+      }
+      invalidateInvitationQueries(qc, [classKey])
+      if (r.data.status === 'ok') {
+        toast.success(`${r.data.succeeded.length} invitation(s) envoyée(s)`)
+      } else if (r.data.status === 'partial') {
+        toast.warning(
+          `${r.data.succeeded.length} invitation(s) envoyée(s), ${r.data.failed.length} échouée(s)`
+        )
+      } else if (toastError) {
+        toast.error("Toutes les invitations du lot ont échoué")
+      }
+    },
+    onError: (err) => {
+      if (toastError) toast.error(err instanceof Error ? err.message : "Erreur lors de l'envoi du lot")
+    },
+  })
+
+  return {
+    invitations,
+    isLoading,
+    inviteStudent: inviteStudentMut,
+    inviteStudentsBulk: inviteStudentsBulkMut,
+    resend,
+    revoke,
+  }
+}

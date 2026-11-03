@@ -43,3 +43,36 @@ export const inviteStudentSchema = v.object({
 });
 
 export type InviteStudentInput = v.InferInput<typeof inviteStudentSchema>;
+
+export const bulkStudentItemSchema = v.object({
+  email: v.pipe(
+    v.string(),
+    v.trim(),
+    v.toLowerCase(),
+    v.email("Format d'email invalide")
+  ),
+  firstName: v.optional(v.pipe(v.string(), v.trim())),
+  lastName: v.optional(v.pipe(v.string(), v.trim())),
+  parentEmail: v.optional(
+    v.pipe(
+      v.string(),
+      v.trim(),
+      v.toLowerCase(),
+      v.email("Format d'email invalide pour le parent")
+    )
+  ),
+});
+
+export const inviteStudentsBulkSchema = v.object({
+  classId: inviteStudentSchema.entries.classId,
+  expiresInDays: inviteStudentSchema.entries.expiresInDays,
+  groupIds: inviteStudentSchema.entries.groupIds,
+  deliveryMethod: inviteStudentSchema.entries.deliveryMethod,
+  students: v.pipe(
+    v.array(bulkStudentItemSchema),
+    v.minLength(1, "Sélectionnez au moins un étudiant"),
+    v.maxLength(50, "Maximum 50 invitations par envoi")
+  ),
+});
+
+export type InviteStudentsBulkInput = v.InferInput<typeof inviteStudentsBulkSchema>;
