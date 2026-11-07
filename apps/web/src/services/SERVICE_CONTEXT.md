@@ -1,4 +1,5 @@
 <!-- /src/services/ -->
+
 # SERVICE_CONTEXT.md
 
 Règle de **réflexion** avant d'écrire une query, une mutation ou une fonction de
@@ -12,22 +13,23 @@ service dans `src/services/*`.
 
 ## 1. Chaque modèle a un seul domaine propriétaire
 
-| Modèle Prisma | Service propriétaire |
-|---------------|----------------------|
-| `Organization` | `org` |
-| `User` (record applicatif) | `auth` |
-| `Course` | `course` |
-| `CourseTeacher` | `course-teacher` |
-| `UserOrganization` | `user-organization` |
-| `UserDevice` & `UserSession` | `device` |
-| `Evaluation` | `evaluation` |
-| `Grade` | `evaluation` |
-| ⚠ À ÉTENDRE PAR PROJET — une ligne par modèle | |
+| Modèle Prisma                                 | Service propriétaire |
+| --------------------------------------------- | -------------------- |
+| `Organization`                                | `org`                |
+| `User` (record applicatif)                    | `auth`               |
+| `Course`                                      | `course`             |
+| `CourseTeacher`                               | `course-teacher`     |
+| `UserOrganization`                            | `user-organization`  |
+| `ParentRelation`                              | `parent-relation`    |
+| `UserDevice` & `UserSession`                  | `device`             |
+| `Evaluation`                                  | `evaluation`         |
+| `Grade`                                       | `evaluation`         |
+| ⚠ À ÉTENDRE PAR PROJET — une ligne par modèle |                      |
 
 La couche Prisma d'un modèle vit dans son domaine propriétaire — **une seule
 source de vérité, un seul cache, un seul point d'évolution**.
 
-Un service qui *consomme* une donnée ne devient pas propriétaire : il ne refait
+Un service qui _consomme_ une donnée ne devient pas propriétaire : il ne refait
 pas un `prisma.x.findMany()` sur un modèle d'un autre domaine. Il appelle la
 query déjà exposée par l'owner.
 
@@ -85,12 +87,13 @@ changer au retour** — elle n'existe pas. L'appelant appelle l'owner directemen
 
 ```ts
 // ❌ wrapper sans valeur
-export const getParentResources = (parentId, orgId) => getResources(parentId, orgId);
+export const getParentResources = (parentId, orgId) =>
+  getResources(parentId, orgId);
 
 // ✅ la page RSC compose directement
 const [items, resources] = await Promise.all([
-  getItemsAction({ parentId }),      // owner: item
-  getResourcesAction({ parentId }),  // owner: resource
+  getItemsAction({ parentId }), // owner: item
+  getResourcesAction({ parentId }), // owner: resource
 ]);
 ```
 
@@ -101,8 +104,8 @@ const [items, resources] = await Promise.all([
 ## 5. Fonctions pures : le parent fournit les props
 
 Une fonction ne résout pas ce dont elle a besoin tant qu'elle peut le **recevoir**.
-Avant d'ajouter un fetch interne, demander : *l'appelant peut-il fournir cette
-donnée ?* — généralement oui (page, action, loader l'ont déjà résolue).
+Avant d'ajouter un fetch interne, demander : _l'appelant peut-il fournir cette
+donnée ?_ — généralement oui (page, action, loader l'ont déjà résolue).
 
 Conséquences :
 
@@ -159,7 +162,7 @@ export const RESOURCE_GRAPH = {
     CACHE.RESOURCE(orgId, entityId),
     CACHE.ENTITY(orgId, entityId), // cross-service
   ],
-} as const
+} as const;
 ```
 
 ---
@@ -215,9 +218,9 @@ touchés (régime généré) + check cross-service bloquant sur référence mort
 - Toutes les opérations de lecture utilisent le préfixe `get`.
 - Le préfixe `list` est interdit.
 
-| Opération | Convention |
-|-----------|------------|
-| Récupération d'un élément | `getRoom` |
+| Opération                     | Convention |
+| ----------------------------- | ---------- |
+| Récupération d'un élément     | `getRoom`  |
 | Récupération d'une collection | `getRooms` |
 
 **Exemples :**

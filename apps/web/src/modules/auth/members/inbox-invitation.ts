@@ -17,6 +17,7 @@ import {
   createInvitationResponseNotification,
 } from '@/services/notification/server'
 import { ensureUserOrganization } from '@/services/user-organization/server'
+import { ensureParentRelation } from '@/services/parent-relation/server'
 import { revokePendingInvitationsForResource } from '@/modules/invitation/server'
 import {
   createRoleSpecificEntity,
@@ -26,7 +27,7 @@ import {
 } from './utils'
 
 const invitationActionSchema = v.object({
-  invitationId: v.pipe(v.string(), v.uuid('ID d\'invitation invalide')),
+  invitationId: v.pipe(v.string(), v.uuid("ID d'invitation invalide")),
 })
 
 // ─── 1. ACCEPTER L'INVITATION ─────────────────────────────────────────────────
@@ -48,7 +49,7 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
     where: {
       id: invitationId,
       userId,
-      status: "PENDING",
+      status: 'PENDING',
       OR: [{ expiresAt: null }, { expiresAt: { gt: now } }],
     },
     select: {
@@ -59,7 +60,9 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
       details: true,
       resourceId: true,
       resourceType: true,
-      organization: { select: { id: true, name: true, slug: true, type: true } },
+      organization: {
+        select: { id: true, name: true, slug: true, type: true },
+      },
     },
   })
 
@@ -77,12 +80,10 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
   const departmentId = details.organization?.departmentId
   const senderId = details.invited_by?.id
   const enrollment = {
-    ...details.enrollment,
-    ...(!details.enrollment?.classId &&
-    invitation.resourceType === 'CLASS' &&
-    invitation.resourceId
-      ? { classId: invitation.resourceId }
-      : {}),
+    classId:
+      invitation.resourceType === Resource.CLASS ? (invitation.resourceId ?? undefined) : undefined,
+    groupIds: details.enrollment?.groupIds,
+    parentEmail: details.enrollment?.parentEmail,
   }
   const enrolledClassId = role === 'STUDENT' ? enrollment.classId : undefined
 
@@ -96,19 +97,13 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
             where: {
               id: invitation.id,
               userId,
-              status: "PENDING",
-              OR: [
-                { expiresAt: null },
-                { expiresAt: { gt: acceptedAt } },
-              ],
+              status: 'PENDING',
+              OR: [{ expiresAt: null }, { expiresAt: { gt: acceptedAt } }],
             },
-            data: { status: "ACCEPTED", usedAt: acceptedAt },
+            data: { status: 'ACCEPTED', usedAt: acceptedAt },
           })
         } catch (error) {
-          if (
-            error instanceof Prisma.PrismaClientKnownRequestError &&
-            error.code === "P2025"
-          ) {
+          if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
             throw new Error('Invitation déjà traitée ou expirée')
           }
           throw error
@@ -130,22 +125,10 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
         await ensureUserOrganization(tx, { userId, orgId, role })
 
         // C. Créer l'entité métier selon le rôle (Teacher, Student, Parent, etc.)
-        const profile = await createRoleSpecificEntity(
-          tx,
-          userId,
-          role,
-          orgId,
-          departmentId,
-        )
+        const profile = await createRoleSpecificEntity(tx, userId, role, orgId, departmentId)
 
         // D. Assigner les fonctions
-        await assignFunctionToUser(
-          tx,
-          userId,
-          orgId,
-          details.function,
-          details.invited_by?.id,
-        )
+        await assignFunctionToUser(tx, userId, orgId, details.function, details.invited_by?.id)
 
         if (role === 'DIRECTION' && Array.isArray(details.additionalFunctions)) {
           await assignMultipleFunctionsToUser(
@@ -159,13 +142,11 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
 
         // E. Liens spécifiques (Parent / Student)
         if (role === 'PARENT' && details.parentLink?.studentId && profile?.id) {
-          await tx.parentRelation.create({
-            data: {
-              parentId: profile.id,
-              studentId: details.parentLink.studentId,
-              relation: details.parentLink.relation || 'Parent',
-              orgId,
-            },
+          await ensureParentRelation(tx, {
+            parentId: profile.id,
+            studentId: details.parentLink.studentId,
+            relation: details.parentLink.relation || 'Parent',
+            orgId,
           })
         }
 
@@ -232,11 +213,13 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
       await setUserAccess({
         status: 'ACTIVE',
         organizations: updatedOrgs,
-        ...(hasActiveOrg ? {} : {
-          role,
-          function: details.function,
-          organization: orgData,
-        }),
+        ...(hasActiveOrg
+          ? {}
+          : {
+              role,
+              function: details.function,
+              organization: orgData,
+            }),
       })
     } catch (sessionErr) {
       console.error('[acceptInboxInvitationAction] Erreur setUserAccess non bloquante:', sessionErr)
@@ -280,7 +263,10 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
 
     const redirectPath = invitation.organization.slug
       ? getOrganizationRolePath(
-          { slug: invitation.organization.slug, type: invitation.organization.type },
+          {
+            slug: invitation.organization.slug,
+            type: invitation.organization.type,
+          },
           role,
         )
       : '/'
@@ -296,7 +282,9 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
     }
   } catch (error) {
     console.error('[acceptInboxInvitationAction] erreur:', error)
-    return { error: error instanceof Error ? error.message : 'Erreur lors de l’acceptation' }
+    return {
+      error: error instanceof Error ? error.message : 'Erreur lors de l’acceptation',
+    }
   }
 }
 
@@ -320,10 +308,10 @@ export async function declineInboxInvitationAction(input: { invitationId: string
       where: {
         id: invitationId,
         userId,
-        status: "PENDING",
+        status: 'PENDING',
         OR: [{ expiresAt: null }, { expiresAt: { gt: now } }],
       },
-      data: { status: "DECLINED", usedAt: now },
+      data: { status: 'DECLINED', usedAt: now },
       select: {
         id: true,
         orgId: true,
@@ -332,10 +320,7 @@ export async function declineInboxInvitationAction(input: { invitationId: string
       },
     })
   } catch (error) {
-    if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === "P2025"
-    ) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
       return { error: 'Invitation introuvable, déjà traitée ou expirée' }
     }
     throw error
@@ -368,7 +353,10 @@ export async function declineInboxInvitationAction(input: { invitationId: string
         }
       })
     } catch (notificationError) {
-      console.error('[declineInboxInvitationAction] notification non mise à jour:', notificationError)
+      console.error(
+        '[declineInboxInvitationAction] notification non mise à jour:',
+        notificationError,
+      )
     }
 
     // Invalidation après commit
@@ -384,6 +372,8 @@ export async function declineInboxInvitationAction(input: { invitationId: string
     return { data: { success: true } }
   } catch (error) {
     console.error('[declineInboxInvitationAction] erreur:', error)
-    return { error: error instanceof Error ? error.message : 'Erreur lors du refus' }
+    return {
+      error: error instanceof Error ? error.message : 'Erreur lors du refus',
+    }
   }
 }

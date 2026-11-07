@@ -6,10 +6,9 @@ import { Action, Prisma, Resource, Role } from "@/generated/prisma/client";
 
 import { prisma } from "@/lib/prisma";
 
-import { getUserInfo } from '@/modules/user';
+import { getUserInfo } from "@/modules/user";
 import { setUserAccess } from "@/modules/user/access";
 import { injectRoleProfileId } from "@/modules/user/profile";
-
 
 import {
   assignFunctionToUser,
@@ -20,6 +19,7 @@ import {
 import { logAuditAsync } from "@/utils/server";
 import { DatabaseInvitationDetails } from "@/types/invitation";
 import { ensureUserOrganization } from "@/services/user-organization/database";
+import { ensureParentRelation } from "@/services/parent-relation/server";
 
 /* =========================
    TYPES
@@ -48,6 +48,8 @@ async function fetchAndValidateInvitation(token: string, userEmail: string) {
       email: true,
       details: true,
       orgId: true,
+      resourceId: true,
+      resourceType: true,
       expiresAt: true,
     },
   });
@@ -69,6 +71,11 @@ function extractInvitationContext(invitation: InvitationRecord) {
   return {
     details,
     orgId: invitation.orgId,
+    enrollment: {
+      classId: invitation.resourceType === Resource.CLASS ? (invitation.resourceId ?? undefined) : undefined,
+      groupIds: details.enrollment?.groupIds,
+      parentEmail: details.enrollment?.parentEmail,
+    },
     role: (details.role ?? "STUDENT") as Role,
     firstName: details.name?.split(" ")[0] || invitation.email.split("@")[0],
     lastName: details.name?.split(" ").slice(1).join(" ") || "",
@@ -86,7 +93,7 @@ async function createUserInOrganization(
     orgId: string;
     role: Role;
     departmentId?: string;
-  }
+  },
 ) {
   // tx.user.upsert
   const createdUser = await tx.user.upsert({
@@ -109,13 +116,7 @@ async function createUserInOrganization(
   });
 
   // 3. Créer l'entité métier selon le rôle (Student, Teacher, Parent, etc.)
-  const profile = await createRoleSpecificEntity(
-    tx,
-    createdUser.id,
-    params.role,
-    params.orgId,
-    params.departmentId
-  );
+  const profile = await createRoleSpecificEntity(tx, createdUser.id, params.role, params.orgId, params.departmentId);
 
   return { createdUser, profile };
 }
@@ -126,30 +127,20 @@ async function assignUserFunctions(
     userId: string;
     orgId: string;
     details: DatabaseInvitationDetails;
-  }
+  },
 ) {
   // 1. Assigner la fonction principale
-  await assignFunctionToUser(
-    tx,
-    params.userId,
-    params.orgId,
-    params.details.function,
-    params.details.invited_by?.id
-  );
+  await assignFunctionToUser(tx, params.userId, params.orgId, params.details.function, params.details.invited_by?.id);
 
   // 2. Assigner les fonctions supplémentaires pour la direction
   const additionalFunctions = params.details.additionalFunctions;
-  if (
-    params.details.role === "DIRECTION" &&
-    Array.isArray(additionalFunctions) &&
-    additionalFunctions.length > 0
-  ) {
+  if (params.details.role === "DIRECTION" && Array.isArray(additionalFunctions) && additionalFunctions.length > 0) {
     await assignMultipleFunctionsToUser(
       tx,
       params.userId,
       params.orgId,
       additionalFunctions,
-      params.details.invited_by?.id
+      params.details.invited_by?.id,
     );
   }
 }
@@ -199,7 +190,7 @@ export async function completeSignup(): Promise<
 
     // 2. Valider l'invitation en base (jeton + correspondance avec l'email du compte)
     const invitation = await fetchAndValidateInvitation(user.invitationToken, user.email);
-    const { details, orgId, role, firstName, lastName, departmentId } =
+    const { details, enrollment, orgId, role, firstName, lastName, departmentId } =
       extractInvitationContext(invitation);
 
     const { profileId, createdUserId } = await prisma.$transaction(async (tx) => {
@@ -223,19 +214,17 @@ export async function completeSignup(): Promise<
 
       // 4.bis Parent externe (P-18 B) : matérialiser le lien parent→étudiant.
       if (role === "PARENT" && details.parentLink?.studentId && profile?.id) {
-        await tx.parentRelation.create({
-          data: {
-            parentId: profile.id,
-            studentId: details.parentLink.studentId,
-            relation: details.parentLink.relation || "Parent",
-            orgId,
-          },
+        await ensureParentRelation(tx, {
+          parentId: profile.id,
+          studentId: details.parentLink.studentId,
+          relation: details.parentLink.relation || "Parent",
+          orgId,
         });
       }
 
       // 4.ter Student enrollment : inscription à la classe pour laquelle il est invité.
       if (role === "STUDENT" && profile?.id) {
-        await enrollStudentInClass(tx, profile.id, details.enrollment);
+        await enrollStudentInClass(tx, profile.id, enrollment);
       }
 
       // 5. Marquer l'invitation comme utilisée
@@ -254,10 +243,7 @@ export async function completeSignup(): Promise<
           },
         });
       } catch (error) {
-        if (
-          error instanceof Prisma.PrismaClientKnownRequestError &&
-          error.code === "P2025"
-        ) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
           throw new Error("Invitation déjà traitée ou expirée");
         }
         throw error;
@@ -272,11 +258,7 @@ export async function completeSignup(): Promise<
     // 6. Poser l'accès (app_metadata) depuis la ligne Invitation : role, function et
     //    organisation viennent de la base, jamais des metadata de l'invité.
     //    L'id de l'organisation est forcé à `invitation.orgId` (valeur de la base).
-    const organization = injectRoleProfileId(
-      { ...details.organization, id: orgId },
-      role,
-      profileId,
-    );
+    const organization = injectRoleProfileId({ ...details.organization, id: orgId }, role, profileId);
     const current = await getUserInfo({ refresh: true });
 
     await setUserAccess({
@@ -284,10 +266,7 @@ export async function completeSignup(): Promise<
       function: details.function,
       status: "ACTIVE",
       organization,
-      organizations: [
-        ...(current?.organizations ?? []).filter((org) => org.id !== orgId),
-        organization,
-      ],
+      organizations: [...(current?.organizations ?? []).filter((org) => org.id !== orgId), organization],
     });
 
     // 7. Logger l'audit — maintenant asynchrone
