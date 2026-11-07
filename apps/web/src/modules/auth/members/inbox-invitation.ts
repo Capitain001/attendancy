@@ -16,6 +16,7 @@ import {
   setInvitationNotificationStatus,
   createInvitationResponseNotification,
 } from '@/services/notification/server'
+import { ensureUserOrganization } from '@/services/user-organization/server'
 import { revokePendingInvitationsForResource } from '@/modules/invitation/server'
 import {
   createRoleSpecificEntity,
@@ -125,24 +126,8 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
               })
             : []
 
-        // B. Créer l'adhésion UserOrganization si non existante
-        const existingMembership = await tx.userOrganization.findFirst({
-          where: { userId, orgId },
-          select: { id: true },
-        })
-
-        if (!existingMembership) {
-          const totalUserOrgs = await tx.userOrganization.count({ where: { userId } })
-          await tx.userOrganization.create({
-            data: {
-              userId,
-              orgId,
-              role,
-              isMainOrg: totalUserOrgs === 0,
-              isResponsable: false,
-            },
-          })
-        }
+        // B. Adhésion à l'org (idempotente ; isMainOrg posé par la DB)
+        await ensureUserOrganization(tx, { userId, orgId, role })
 
         // C. Créer l'entité métier selon le rôle (Teacher, Student, Parent, etc.)
         const profile = await createRoleSpecificEntity(

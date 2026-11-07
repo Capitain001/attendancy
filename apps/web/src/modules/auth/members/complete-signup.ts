@@ -19,6 +19,7 @@ import {
 } from "./utils";
 import { logAuditAsync } from "@/utils/server";
 import { DatabaseInvitationDetails } from "@/types/invitation";
+import { ensureUserOrganization } from "@/services/user-organization/database";
 
 /* =========================
    TYPES
@@ -100,15 +101,11 @@ async function createUserInOrganization(
     update: {}, // Ne rien mettre à jour si l'utilisateur existe déjà
   });
 
-  // 2. Rattacher l'utilisateur à l'organisation
-  await tx.userOrganization.create({
-    data: {
-      userId: createdUser.id,
-      orgId: params.orgId,
-      role: params.role,
-      isMainOrg: false,
-      isResponsable: false,
-    },
+  // 2. Rattacher l'utilisateur à l'organisation (idempotent)
+  await ensureUserOrganization(tx, {
+    userId: createdUser.id,
+    orgId: params.orgId,
+    role: params.role,
   });
 
   // 3. Créer l'entité métier selon le rôle (Student, Teacher, Parent, etc.)

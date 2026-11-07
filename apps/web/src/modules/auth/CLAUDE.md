@@ -22,6 +22,8 @@ Auth **web SSR uniquement** (cookies Supabase). Ne gère PAS le mode Bearer/Taur
 - `orgId` toujours depuis `auth.data.orgId` — jamais body/query/headers
 - `"use server"` sur toutes les fonctions de `actions/`
 - `createClient()` = client SSR (cookies). Ne jamais importer le client browser ici.
+- Les helpers DB dans `members/utils.ts` ne sont pas des Server Actions : ils utilisent `import 'server-only'` et reçoivent le client Prisma ou transactionnel fourni par leur appelant.
+- `enrollStudentInClass` délègue à `createStudentEnrollmentRaw` du service `student-enrollment`; vérifier et préserver le scope classe/organisation avant l'appel. Les groupes ajoutés sont idempotents.
 
 ## Permissions / rôles
 

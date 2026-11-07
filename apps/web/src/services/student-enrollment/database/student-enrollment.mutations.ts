@@ -52,10 +52,21 @@ async function assertEnrollmentEligible(
   if (!classRow) throw new Error("Classe introuvable ou année académique clôturée");
 }
 
-function createStudentEnrollmentRaw(client: PrismaOrTx, data: CreateStudentEnrollmentData) {
+// Idempotente : absente → créée ; clôturée (endedAt) → rouverte sur la MÊME
+// ligne (même enrollmentId, l'historique Attendance reste rattaché) ; déjà
+// active → renvoyée telle quelle.
+// Ne dépend que du délégué studentEnrollment : accepte donc aussi bien un
+// PrismaOrTx qu'un client transactionnel d'un autre module (ex. `Tx` des
+// membres). L'éligibilité reste vérifiée par l'appelant via assertEnrollmentEligible.
+export function createStudentEnrollmentRaw(
+  client: Pick<PrismaOrTx, "studentEnrollment">,
+  data: CreateStudentEnrollmentData,
+) {
   return tryConstraint(
-    client.studentEnrollment.create({
-      data,
+    client.studentEnrollment.upsert({
+      where: { studentId_classId: { studentId: data.studentId, classId: data.classId } },
+      create: data,
+      update: { endedAt: data.endedAt ?? null },
       select: { id: true, studentId: true, classId: true },
     }),
   );

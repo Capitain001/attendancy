@@ -1,26 +1,24 @@
 // src/services/auth/members/utils.ts
-"use server";
+import 'server-only'
 
 import { PrismaClient, Role } from "@/generated/prisma/client";
 import { Functions } from "@/types/user";
+import { createStudentEnrollmentRaw } from '@/services/student-enrollment/database';
 // import { ensureMainFunctions } from "@/services/fonctions/main/database";
 // import { Functions } from "@/types/user";
 
 type Tx = Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'>
 
 /**
- * Crée l'entité spécifique selon le rôle de l'utilisateur
- * 
- * @param tx - Transaction Prisma
- * @param userId - ID de l'utilisateur
- * @param role - Rôle de l'utilisateur
- * @param departmentId - ID du département (optionnel, pour les enseignants)
- * @returns L'entité créée ou null
- * 
- * @example
- * ```typescript
- * await createRoleSpecificEntity(tx, userId, "TEACHER", departmentId);
- * ```
+ * Garantit l'existence du profil métier du rôle pour (userId, orgId).
+ *
+ * Idempotente : rejouable sans erreur.
+ * - profil absent → créé
+ * - profil présent → renvoyé tel quel
+ * - profil désactivé (`deletedAt`) → réactivé (pattern RESTORE, même id,
+ *   l'historique reste rattaché)
+ *
+ * Le nom dit « create » par héritage : la fonction ne plante plus si le profil existe.
  */
 export async function createRoleSpecificEntity(
   tx: Omit<PrismaClient, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">,
@@ -31,44 +29,39 @@ export async function createRoleSpecificEntity(
 ) {
   switch (role) {
     case "TEACHER":
-      return await tx.teacher.create({
-        data: {
-          userId,
-          orgId,
-          departmentId: departmentId || undefined,
-        },
+      return await tx.teacher.upsert({
+        where: { userId_orgId: { userId, orgId } },
+        create: { userId, orgId, departmentId: departmentId || undefined },
+        update: { deletedAt: null, ...(departmentId ? { departmentId } : {}) },
       });
 
     case "STUDENT":
-      return await tx.student.create({
-        data: {
-          userId,
-          orgId,
-        },
+      return await tx.student.upsert({
+        where: { userId_orgId: { userId, orgId } },
+        create: { userId, orgId },
+        update: { deletedAt: null },
       });
 
     case "PARENT":
-      return await tx.parent.create({
-        data: {
-          userId,
-          orgId,
-        },
+      return await tx.parent.upsert({
+        where: { userId_orgId: { userId, orgId } },
+        create: { userId, orgId },
+        update: { deletedAt: null },
       });
 
     case "ADMIN":
       // Admin reste global (pas de scope org).
-      return await tx.admin.create({
-        data: {
-          userId,
-        },
+      return await tx.admin.upsert({
+        where: { userId },
+        create: { userId },
+        update: { deletedAt: null },
       });
 
     case "DIRECTION":
-      return await tx.direction.create({
-        data: {
-          userId,
-          orgId,
-        },
+      return await tx.direction.upsert({
+        where: { userId_orgId: { userId, orgId } },
+        create: { userId, orgId },
+        update: { deletedAt: null },
       });
 
     default:
@@ -201,20 +194,25 @@ export async function assignFunctionToUser(
 }
 
 /**
- * Inscription d'un étudiant à sa classe et ses groupes (si spécifiés)
+ * Garantit l'inscription d'un étudiant à sa classe (et à ses groupes si précisés).
+ *
+ * Idempotente : rejouable sans erreur.
+ * - inscription absente → créée
+ * - inscription clôturée (`endedAt`) → rouverte, même ligne donc même
+ *   enrollmentId (l'historique d'assiduité reste rattaché)
+ * - inscription active → inchangée
+ * Les groupes sont additifs : une réouverture n'efface pas les groupes existants.
  */
 export async function enrollStudentInClass(
   tx: Tx,
   studentId: string,
   enrollment?: import("@/types/invitation").EnrollmentDetails
-): Promise<void> {
+) {
   if (!enrollment?.classId) return;
 
-  const studentEnrollment = await tx.studentEnrollment.create({
-    data: {
-      studentId,
-      classId: enrollment.classId,
-    },
+  const studentEnrollment = await createStudentEnrollmentRaw(tx, {
+    studentId,
+    classId: enrollment.classId,
   });
 
   if (Array.isArray(enrollment.groupIds) && enrollment.groupIds.length > 0) {
@@ -223,7 +221,7 @@ export async function enrollStudentInClass(
         enrollmentId: studentEnrollment.id,
         groupId,
       })),
+      skipDuplicates: true,
     });
   }
 }
-

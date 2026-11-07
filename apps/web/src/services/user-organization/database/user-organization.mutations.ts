@@ -1,6 +1,7 @@
 // src/services/user-organization/database/user-organization.mutations.ts
 import { prisma } from "@/lib/prisma";
-import type { UserStatus } from "@/generated/prisma/client";
+import type { Prisma } from "@/generated/prisma/client";
+import type { UserStatus, Role, } from "@/generated/prisma/browser";
 import { tryConstraint } from "@/utils/server/prisma";
 import { invalidateEvent } from '@/cache/server/graph';
 
@@ -63,4 +64,22 @@ export async function reintegrateUserOrganization(userId: string, orgId: string)
 
   await invalidateEvent("USER_ORGANIZATION_STATUS_CHANGED", orgId, userId);
   return result;
+}
+
+
+
+// Garantit l'adhésion (userId, orgId) — idempotente : absente → créée ;
+// présente → renvoyée telle quelle (rôle et statut jamais modifiés : une
+// réintégration passe par reintegrateUserOrganization).
+// isMainOrg et isResponsable ne sont pas gérés ici (autre flux / défaut DB).
+export function ensureUserOrganization(
+  client: Pick<typeof prisma | Prisma.TransactionClient, "userOrganization">,
+  { userId, orgId, role }: { userId: string; orgId: string; role: Role },
+) {
+  return client.userOrganization.upsert({
+    where: { userId_orgId: { userId, orgId } },
+    create: { userId, orgId, role },
+    update: {},
+    select: { id: true },
+  });
 }
