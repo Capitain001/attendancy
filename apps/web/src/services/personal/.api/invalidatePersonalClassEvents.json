@@ -1,8 +1,0 @@
-{
-  "name": "invalidatePersonalClassEvents",
-  "file": "src/services/personal/database/classe.mutations.ts",
-  "sig": "(orgId: string) => Promise<[void, void, void, void]>",
-  "composes": [],
-  "rules": [],
-  "why_ref": ""
-}

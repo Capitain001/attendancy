@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import type { ClassType } from "@/generated/prisma/client";
 import { personal } from "@/modules/personal/paths";
 import { getFeedback } from "@/utils/server/form/action";
-import { resolveClassesData } from "@/services/personal/actions/classe.mutations";
+import { resolveClassesData } from "./helper";
 import { resolveSlugPaths } from "@/lib/paths";
 import { PersonalClassCard } from "@/components/personal/teacher/class/PersonalClassCard";
 import {

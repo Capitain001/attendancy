@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { rippleButtonClasses } from "@/components/ui/ripple-button";
-import { personal } from "@/services/personal/paths";
+import { personal } from "@/modules/personal/paths";
 
 type Props = {
   slug: string;

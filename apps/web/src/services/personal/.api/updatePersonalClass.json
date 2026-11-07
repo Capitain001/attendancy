@@ -1,8 +1,0 @@
-{
-  "name": "updatePersonalClass",
-  "file": "src/services/personal/database/classe.mutations.ts",
-  "sig": "(classId: string, orgId: string, data: UpdatePersonalClassDataOutput) => Promise<{ level: Level; name: string; id: string; isActive: boolean; academicYearId: string; createdAt: Date; updatedAt: Date; deletedAt: Date | null; programTrackId: string; programId: string | null; }>",
-  "composes": [],
-  "rules": [],
-  "why_ref": ""
-}

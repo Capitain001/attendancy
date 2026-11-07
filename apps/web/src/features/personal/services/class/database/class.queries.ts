@@ -1,7 +1,9 @@
 //apps\web\src\services\class\personal\database\class.queries.ts
 import { CACHE } from "@/cache/server/key"
+import { PERSONAL } from "@/features/personal/constants"
 import { prisma } from "@/lib/prisma"
-import { PERSONAL } from "@/services/personal"
+
+
 import { cacheLife , cacheTag} from "next/cache"
 
 export async function getDefaultPersonalClass(orgId: string) {
