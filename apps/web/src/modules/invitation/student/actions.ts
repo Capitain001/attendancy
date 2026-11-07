@@ -84,17 +84,13 @@ export async function inviteStudent(params: InviteStudentParams) {
       resourceId:    classId,
       resourceType:  "CLASS",
       deliveryMethod: params.deliveryMethod,
-      ...(groupIds?.length || parentEmail
-        ? {
-            details: {
-              enrollment: {
-                classId,
-                ...(groupIds?.length ? { groupIds }    : {}),
-                ...(parentEmail      ? { parentEmail } : {}),
-              },
-            },
-          }
-        : {}),
+      details: {
+        enrollment: {
+          classId,
+          ...(groupIds?.length ? { groupIds }    : {}),
+          ...(parentEmail      ? { parentEmail } : {}),
+        },
+      },
     });
 
     if (result.error) {
@@ -109,7 +105,7 @@ export async function inviteStudent(params: InviteStudentParams) {
       // Retrouve l'invitation créée pour la notification
       const { prisma } = await import("@/lib/prisma");
       const invitation = await prisma.invitation.findFirst({
-        where:   { email, orgId, resourceId: classId, usedAt: null },
+        where:   { email, orgId, resourceId: classId, status: "PENDING" },
         select:  { id: true },
         orderBy: { createdAt: "desc" },
       });
@@ -182,7 +178,7 @@ export async function inviteStudentsAction(
         where: {
           orgId,
           resourceId: classId,
-          usedAt: null,
+          status: "PENDING",
           email: { in: uniqueEmails, mode: "insensitive" },
           OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
         },
@@ -239,17 +235,13 @@ export async function inviteStudentsAction(
             resourceId: classId,
             resourceType: "CLASS",
             deliveryMethod,
-            ...(groupIds?.length || s.parentEmail
-              ? {
-                  details: {
-                    enrollment: {
-                      classId,
-                      ...(groupIds?.length ? { groupIds } : {}),
-                      ...(s.parentEmail ? { parentEmail: s.parentEmail } : {}),
-                    },
-                  },
-                }
-              : {}),
+            details: {
+              enrollment: {
+                classId,
+                ...(groupIds?.length ? { groupIds } : {}),
+                ...(s.parentEmail ? { parentEmail: s.parentEmail } : {}),
+              },
+            },
           })
         )
       );
@@ -325,7 +317,9 @@ export async function getClassInvitationsAction({ classId }: { classId: string }
     const orgId = user?.organization?.id;
     if (!orgId) throw new Error(ERRORS.ORG.NOT_FOUND);
 
-    const auth = await getAuthorization(user, "DIRECTION", "PRINCIPAL");
+    const auth = user.role === "TEACHER" && user.organization?.type === "PERSONAL"
+      ? getAuthorization(user, "TEACHER", undefined, { allowPersonalOrg: true })
+      : getAuthorization(user, "DIRECTION", "PRINCIPAL");
     if (auth.error) throw new Error(auth.error);
 
 

@@ -35,7 +35,8 @@ export function pickInviteUserMetadata(metadata?: InviteMetadataInput): UserMeta
   ) as UserMetadataPatch;
 }
 
-async function saveInviteMetadata(user: SupabaseUser, metadata: InviteMetadataInput) {
+async function saveInviteMetadata(user: Pick<SupabaseUser, "id" | "user_metadata">,
+  metadata: InviteMetadataInput) {
   const patch = {
     ...(user.user_metadata ?? {}),
     ...pickInviteUserMetadata(metadata),
@@ -78,15 +79,15 @@ export async function resendInvitation(
         redirectTo: INVITE_URL,
         data: pickInviteUserMetadata(metadata),
       });
-      
+
       if (error) {
         return { success: false, error: error.message };
       }
-      
+
       return { success: true, message: "Invitation envoyée automatiquement" };
     }
 
-    const user = findResult.data.user;
+    const user = findResult.data.user as SupabaseUser | null;
 
     if (!user) {
       // Nouvel utilisateur → invitation automatique (data honoré : c'est une création)
@@ -94,11 +95,11 @@ export async function resendInvitation(
         redirectTo: INVITE_URL,
         data: pickInviteUserMetadata(metadata),
       });
-      
+
       if (error) {
         return { success: false, error: error.message };
       }
-      
+
       return { success: true, message: "Invitation envoyée automatiquement" };
     }
 
@@ -118,23 +119,23 @@ export async function resendInvitation(
         redirectTo: INVITE_URL,
         data: pickInviteUserMetadata(metadata),
       });
-      
+
       if (error) {
         return { success: false, error: error.message };
       }
-      
+
       return { success: true, message: "Invitation renvoyée (non confirmé)" };
     }
 
     // Utilisateur déjà actif → on ne peut pas renvoyer d'invitation
-    return { 
-      success: false, 
-      error: "L'utilisateur a déjà confirmé son email. Utilisez la génération de lien magique à la place." 
+    return {
+      success: false,
+      error: "L'utilisateur a déjà confirmé son email. Utilisez la génération de lien magique à la place."
     };
   } catch (error) {
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : "Erreur inconnue lors du renvoi de l'invitation" 
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erreur inconnue lors du renvoi de l'invitation"
     };
   }
 }
@@ -169,7 +170,9 @@ export async function generateMagicLink(
     // ignoré et le lien renvoyé reste basé sur l'ancien user_metadata.
     if (metadata) {
       const findResult = await findAuthUserByEmail(email);
-      const user = 'error' in findResult ? null : findResult.data.user;
+      const user = 'error' in findResult
+        ? null
+        : (findResult.data.user as SupabaseUser | null);
 
       if (user) {
         const { error: updateError } = await saveInviteMetadata(user, metadata);
@@ -187,22 +190,22 @@ export async function generateMagicLink(
         data: pickInviteUserMetadata(metadata),
       },
     });
-    
+
     if (error) {
       return { success: false, error: error.message };
     }
 
     const link = data?.properties?.action_link;
-    
+
     if (!link) {
       return { success: false, error: "Le lien magique n'a pas pu être généré" };
     }
 
     return { success: true, link };
   } catch (error) {
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : "Erreur inconnue lors de la génération du lien" 
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erreur inconnue lors de la génération du lien"
     };
   }
 }
@@ -280,12 +283,12 @@ export async function createInvitationLink(
 
 /* get invitations by token */
 
-  export async function getInvitationsByToken(token: string) {
-    const supabase = await createClient();
-    const { data, error } = await supabase.from('Invitation').select('*').eq('token', token);
-    if (error) throw error;
-    return data;
-  }
+export async function getInvitationsByToken(token: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from('Invitation').select('*').eq('token', token);
+  if (error) throw error;
+  return data;
+}
 
 /* get invitations by user */
 export async function getInvitationsByUser(userId: string) {
@@ -310,10 +313,10 @@ export async function getInvitationsByOrganization(organizationId: string) {
 
 
 
-  /* get invitations by email */
-  export async function getInvitationsByEmail(email: string) {
-    const supabase = await createClient();
-    const { data, error } = await supabase.from('Invitation').select('*').eq('email', email);
-    if (error) throw error;
-    return data;
-  }
+/* get invitations by email */
+export async function getInvitationsByEmail(email: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from('Invitation').select('*').eq('email', email);
+  if (error) throw error;
+  return data;
+}

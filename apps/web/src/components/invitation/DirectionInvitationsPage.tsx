@@ -53,11 +53,12 @@ export function DirectionInvitationsPage({ functions }: DirectionInvitationsPage
         </div>
       </header>
 
-      <section className="grid grid-cols-2 gap-3 md:grid-cols-4">
+      <section className="grid grid-cols-2 gap-3 md:grid-cols-5">
         <MetricCard label="Total" value={String(stats?.total ?? 0)} sub="invitations" />
         <MetricCard label="En attente" value={String(stats?.pending ?? 0)} sub="à confirmer" />
         <MetricCard label="Acceptées" value={String(stats?.accepted ?? 0)} sub="comptes activés" />
         <MetricCard label="Expirées" value={String(stats?.expired ?? 0)} sub="à relancer" />
+        <MetricCard label="Révoquées / refusées" value={String(stats?.revoked ?? 0)} sub="clôturées" />
       </section>
 
       <CollapseSection label="Toutes les invitations" count={filteredInvitations.length} defaultOpen>

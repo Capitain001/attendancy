@@ -1,5 +1,6 @@
 // src/services/notification/validation.ts
 import * as v from 'valibot'
+import { ORGANIZATION_TYPES } from './constants'
 
 // Types de notification métier — spécifiques au projet attendancy
 export const notificationTypeSchema = v.picklist([
@@ -45,7 +46,9 @@ export const invitationMetadataSchema = v.object({
   orgId: v.optional(v.string()),
   orgName: v.optional(v.string()),
   orgSlug: v.optional(v.nullable(v.string())),
+  orgType: v.optional(v.picklist(ORGANIZATION_TYPES)),
   role: v.optional(v.string()),
+  resourceType: v.optional(v.string()),
   senderName: v.optional(v.string()),
   expiresAt: v.optional(v.string()),
   status: v.optional(v.string()),

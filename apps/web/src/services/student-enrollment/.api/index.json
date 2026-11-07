@@ -2,7 +2,7 @@
   "service": "student-enrollment",
   "path": "src/services/student-enrollment/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "3b4d4d0",
+  "derived_at": "4da135c",
   "utils_dir": null,
   "fns": {
     "createStudentEnrollment": {

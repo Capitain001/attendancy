@@ -37,6 +37,13 @@ function orgBasePath(org: { slug: string; type?: Organization["type"] }, role: R
     : `/${org.slug}`;
 }
 
+export function getOrganizationRolePath(
+  org: { slug: string; type?: Organization["type"] },
+  role: Role,
+): string {
+  return `${orgBasePath(org, role)}/${ROLE_PATHS[role]}`;
+}
+
 /**
  * Résout la destination post-login selon le profil utilisateur.
  *
@@ -59,7 +66,7 @@ export function redirectUser(user: Partial<UserInfo>): string {
     return "/login";
   }
 
-  return `${orgBasePath({ slug: org.slug, type: org.type }, role)}/${rolePath}`;
+  return getOrganizationRolePath({ slug: org.slug, type: org.type }, role);
 }
 
 /**
@@ -74,7 +81,7 @@ export function orgPath(user?: UserInfo): string {
   const org = user.organization;
 
   return org?.slug
-    ? `${orgBasePath({ slug: org.slug, type: org.type }, user.role)}/${roleBase}`
+    ? getOrganizationRolePath({ slug: org.slug, type: org.type }, user.role)
     : `/${roleBase}`;
 }
 

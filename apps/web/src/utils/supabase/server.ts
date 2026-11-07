@@ -1,9 +1,8 @@
 // src/utils/supabase/server.ts
 // Clients Supabase côté serveur (Server Components / Server Actions).
-// L'accès aux cookies rend tout appelant dynamique au sens Next.js — c'est ce
-// qui permet à getUserInfo() d'opter automatiquement hors du prerendering PPR.
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import type { Database } from '@/types/database'
 
 async function cookieStore() {
   return cookies()
@@ -13,10 +12,10 @@ async function cookieStore() {
 export async function createClient() {
   const store = await cookieStore()
 
-  return createServerClient(
+  return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    //process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!, // fix volontaire , USAGE DE AMON KEY apres reconfiguration des RLS prevus 02-09-2026
+    // process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!, // fix volontaire, USAGE DE ANON KEY après reconfiguration des RLS prévus 02-09-2026
     {
       cookies: {
         getAll() {
@@ -32,7 +31,6 @@ export async function createClient() {
       },
     }
   )
-
 }
 
 // Client Service Role — opérations admin UNIQUEMENT, jamais exposé au client :
@@ -40,7 +38,7 @@ export async function createClient() {
 export async function createAdminClient() {
   const store = await cookieStore()
 
-  return createServerClient(
+  return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {

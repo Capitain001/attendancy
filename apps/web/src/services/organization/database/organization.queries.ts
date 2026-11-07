@@ -23,7 +23,7 @@ export async function getOrgsIdentities(orgIds: string[]) {
   if (orgIds.length === 0) return []
   return prisma.organization.findMany({
     where: { id: { in: orgIds } },
-    select: { id: true, name: true, slug: true, logo: true },
+    select: { id: true, name: true, slug: true, logo: true, type: true },
   })
 }
 

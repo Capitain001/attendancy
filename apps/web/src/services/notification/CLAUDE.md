@@ -24,6 +24,7 @@ import { ... } from '@/services/notification'   // server actions, types Prisma,
 | `actions/notification.mutations.ts` | Server actions écriture avec auth |
 | `actions/notification.queries.ts` | Server actions lecture avec auth |
 | `cache.ts` | `NOTIFICATION_GRAPH` |
+| `constants.ts` | Constantes dérivées des enums Prisma (`ORGANIZATION_TYPES`) |
 | `database/index.ts` | Barrel interne (non exporté) |
 | `database/notification.mutations.ts` | Créer, lire, supprimer + invalidation cache + création transactionnelle |
 | `database/notification.queries.ts` | Lectures avec `'use cache'` + cache tags |
@@ -73,3 +74,4 @@ NOTIFICATION: key("notification"),   // dans CACHE
 - Autres services (push) → `sendPushNotificationToUserById(userId, { message })` (fire-and-forget)
 - Appels transactionnels externes (ex: `modules/invitation`) → importer depuis `@/services/notification/server`.
   Les fonctions reçoivent `tx: Tx` (`Prisma.TransactionClient`) et n'invalident PAS le cache (invalidation à la charge de l'appelant après commit via `invalidateEvent('NOTIFICATION_CREATED', userId)`).
+  `setInvitationNotificationStatus` accepte les états `ACCEPTED`, `DECLINED` et `REVOKED`.

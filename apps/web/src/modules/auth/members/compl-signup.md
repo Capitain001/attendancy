@@ -43,20 +43,18 @@ type InvitationRecord = Awaited<ReturnType<typeof fetchAndValidateInvitation>>;
  */
 async function fetchAndValidateInvitation(token: string, userEmail: string) {
   const invitation = await prisma.invitation.findUnique({
-    where: { token },
+    where: { token, status: "PENDING" },
     select: {
       id: true,
       email: true,
       details: true,
       orgId: true,
-      usedAt: true,
       expiresAt: true,
     },
   });
 
   if (!invitation) throw new Error("Invitation non trouvée");
-  if (invitation.usedAt) throw new Error("Cette invitation a déjà été utilisée");
-  if (invitation.expiresAt && invitation.expiresAt < new Date()) {
+  if (invitation.expiresAt && invitation.expiresAt <= new Date()) {
     throw new Error("Cette invitation a expiré");
   }
   if (invitation.email.toLowerCase() !== userEmail.toLowerCase()) {
@@ -248,7 +246,7 @@ export async function completeSignup(): Promise<
       // 5. Marquer l'invitation comme utilisée
       await tx.invitation.update({
         where: { id: invitation.id },
-        data: { usedAt: new Date(), userId: createdUser.id },
+        data: { status: "ACCEPTED", usedAt: new Date(), userId: createdUser.id },
       });
 
       return {
@@ -345,20 +343,18 @@ type InvitationRecord = Awaited<ReturnType<typeof fetchAndValidateInvitation>>;
  */
 async function fetchAndValidateInvitation(token: string, userEmail: string) {
   const invitation = await prisma.invitation.findUnique({
-    where: { token },
+    where: { token, status: "PENDING" },
     select: {
       id: true,
       email: true,
       details: true,
       orgId: true,
-      usedAt: true,
       expiresAt: true,
     },
   });
 
   if (!invitation) throw new Error("Invitation non trouvée");
-  if (invitation.usedAt) throw new Error("Cette invitation a déjà été utilisée");
-  if (invitation.expiresAt && invitation.expiresAt < new Date()) {
+  if (invitation.expiresAt && invitation.expiresAt <= new Date()) {
     throw new Error("Cette invitation a expiré");
   }
   if (invitation.email.toLowerCase() !== userEmail.toLowerCase()) {
@@ -550,7 +546,7 @@ export async function completeSignup(): Promise<
       // 5. Marquer l'invitation comme utilisée
       await tx.invitation.update({
         where: { id: invitation.id },
-        data: { usedAt: new Date(), userId: createdUser.id },
+        data: { status: "ACCEPTED", usedAt: new Date(), userId: createdUser.id },
       });
 
       return {

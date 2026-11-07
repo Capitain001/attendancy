@@ -1,3 +1,4 @@
+//apps\web\src\modules\invitation\user.ts
 // ==========================================
 // actions/invite-user.ts
 // ==========================================
@@ -48,8 +49,8 @@ export async function inviteUser(params: InvitationParams) {
     // ---------------------------------------------------------
     // 4. Vérification du statut (Utilisateur existant ou Nouveau)
     // ---------------------------------------------------------
-    const existingUser = await prisma.user.findUnique({
-      where: { email: params.email },
+    const existingUser = await prisma.user.findFirst({
+      where: { email: { equals: params.email, mode: "insensitive" } },
       select: { id: true },
     });
     const userStatus: UserStatus = existingUser ? "ACTIVE" : "NEW";

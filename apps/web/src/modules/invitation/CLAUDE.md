@@ -44,10 +44,20 @@ saveInvitationWithAudit(params: SaveInvitationParams)
 // params: { email, token, expiresAt, metadata, inviterUserId, action, resourceId?, resourceType?, targetUserId? }
 // ATOMIQUE — prisma.$transaction (invitation + auditLog + notification si targetUserId). Ne jamais séparer les writes.
 
+revokePendingInvitationsForResource(tx, params)
+// Révoque dans la transaction d'acceptation les autres invitations PENDING
+// encore valides pour le même email, orgId et couple (resourceType, resourceId).
+
 getOrganizationInvitations(orgId: string, limit = 25)
-getInvitationStats(orgId: string): { total, pending, expired, accepted }
+getInvitationStats(orgId: string): { total, pending, expired, accepted, revoked }
 updateInvitationToken(invitationId, token, expiresAt, resendLinkBy?)
 ```
+
+### server.ts
+Point d'entrée serveur pour exposer les mutations transactionnelles du module
+sans les ajouter au barrel client. L'acceptation inbox conserve l'invitation
+choisie en `ACCEPTED` et passe ses doublons actifs de même ressource à `REVOKED`
+dans la même transaction; leurs notifications inbox sont mises à jour en conséquence.
 
 ### supabase.ts (resend / magic link)
 ```ts
@@ -65,14 +75,21 @@ getInvitationStatsAction()
 ```
 Renvoient `InvitationActionResult`. Pour étudiants: déclenchent `notifyInvitationStakeholders` (fire-and-forget).
 
-### status.ts
+### policy.ts / status.ts
 ```ts
-resolveInvitationStatus(invitation): "pending" | "accepted" | "expired"
+resolveInvitationUiStatus(invitation, now): "pending" | "accepted" | "expired" | "declined" | "revoked"
+resolveInvitationStatus(invitation) // adaptateur UI
 filterInvitationsByStatus(list, status)
 calculateInvitationStats(list)
 getStatusBadgeInfo(status)
 ```
-Règles: `usedAt` → accepted ; `expiresAt < now` → expired ; sinon pending.
+`Invitation.status` est la source de vérité : `ACCEPTED`, `DECLINED`, `REVOKED` sont
+des états terminaux ; `PENDING` + `expiresAt < now` est affiché comme `expired`
+sans persister un état d'expiration. `details` ne porte pas l'état du cycle de vie.
+`usedAt` est écrit à chaque transition terminale. `userId` peut être associé
+dès la création de l'invitation destinée à un compte existant, pour sa notification inbox.
+Les listes UI excluent `REVOKED`.
+Une révocation utilisateur est persistée avant le nettoyage Auth et ne dépend pas de son succès.
 
 ### notifications.ts
 ```ts

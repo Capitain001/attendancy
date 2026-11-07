@@ -23,3 +23,4 @@ Gère les inscriptions des étudiants aux classes (relation entre `Student` et `
 ## Invariants
 - `orgId` n'est pas stocké directement sur `StudentEnrollment` mais hérité de `Class` / `Student`. Les requêtes vérifient `class.orgId`.
 - **Soft delete alternatif** : L'inscription est "désactivée" via `endedAt = new Date()` (au lieu du classique `deletedAt`). C'est géré par `removeStudentEnrollment`.
+- Le retrait est autorisé à `DIRECTION` et à `TEACHER` dans une organisation `PERSONAL` (`allowPersonalOrg`).

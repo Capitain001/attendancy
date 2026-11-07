@@ -1,0 +1,1 @@
+export { revokePendingInvitationsForResource } from "./database";

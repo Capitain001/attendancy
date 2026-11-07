@@ -5,12 +5,13 @@
 import { prisma } from "@/lib/prisma";
 import { invalidateEvent } from "@/cache/server/graph";
 import { createInvitationNotification } from "@/services/notification/server";
+import { Prisma } from "@/generated/prisma/client";
 import {
   InvitationMetadata,
   DatabaseInvitationDetails,
   AuditLogDetails,
 } from "@/types/invitation";
-import { Action, Prisma, Resource, Role } from "@/generated/prisma/client";
+import type { Action, InvitationStatus, Resource, Role } from "@/generated/prisma/client";
 
 function createDatabaseDetails(
   metadata: InvitationMetadata
@@ -21,7 +22,6 @@ function createDatabaseDetails(
     function:       metadata.function,
     organization:   metadata.organization,
     invited_by:     metadata.invited_by,
-    status:         metadata.invitationStatus,
     invitationType: metadata.invitationType,
     ...(metadata.details || {}),
   } as unknown as Prisma.InputJsonValue;
@@ -161,12 +161,54 @@ export async function saveInvitationWithAudit(params: SaveInvitationParams) {
   return result;
 }
 
+export async function revokePendingInvitationsForResource(
+  tx: Prisma.TransactionClient,
+  params: {
+    orgId: string;
+    email: string;
+    resourceId: string;
+    resourceType: Resource;
+    acceptedInvitationId: string;
+    revokedAt: Date;
+  },
+) {
+  const where: Prisma.InvitationWhereInput = {
+    orgId: params.orgId,
+    email: { equals: params.email, mode: "insensitive" },
+    resourceId: params.resourceId,
+    resourceType: params.resourceType,
+    status: "PENDING",
+    id: { not: params.acceptedInvitationId },
+    OR: [
+      { expiresAt: null },
+      { expiresAt: { gt: params.revokedAt } },
+    ],
+  };
+  const pendingInvitations = await tx.invitation.findMany({
+    where,
+    select: { id: true, userId: true },
+  });
+
+  const revokedInvitations: typeof pendingInvitations = [];
+  for (const invitation of pendingInvitations) {
+    const result = await tx.invitation.updateMany({
+      where: { ...where, id: invitation.id },
+      data: { status: "REVOKED", usedAt: params.revokedAt },
+    });
+
+    if (result.count > 0) revokedInvitations.push(invitation);
+  }
+
+  return revokedInvitations;
+}
+
 export interface InvitationListItem {
   id:        string;
   email:     string;
   createdAt: Date;
   expiresAt: Date | null;
-  usedAt:    Date | null;
+  status:    InvitationStatus;
+  usedAt: Date | null;
   details:   DatabaseInvitationDetails | null;
   role:      string | null;
 }
@@ -176,6 +218,7 @@ export interface InvitationStats {
   pending:  number;
   expired:  number;
   accepted: number;
+  revoked:  number;
 }
 
 export async function getOrganizationInvitations({
@@ -188,7 +231,7 @@ export async function getOrganizationInvitations({
   role?: Role;
 }) {
   const invitations = await prisma.invitation.findMany({
-    where:   { orgId, ...(role ? { role } : {}) },
+    where:   { orgId, status: { not: "REVOKED" }, ...(role ? { role } : {}) },
     orderBy: { createdAt: "desc" },
     take:    limit,
   });
@@ -198,7 +241,8 @@ export async function getOrganizationInvitations({
     email:     inv.email,
     createdAt: inv.createdAt,
     expiresAt: inv.expiresAt,
-    usedAt:    inv.usedAt,
+    status:    inv.status,
+    usedAt: inv.usedAt,
     role:      inv.role,
     details:   inv.details ? (inv.details as DatabaseInvitationDetails) : null,
     token: inv.token,
@@ -208,24 +252,27 @@ export async function getOrganizationInvitations({
 export async function getInvitationStats(orgId: string): Promise<InvitationStats> {
   const now = new Date();
 
-  const [total, pending, expired, accepted] = await prisma.$transaction([
+  const [total, pending, expired, accepted, revoked] = await prisma.$transaction([
     prisma.invitation.count({ where: { orgId } }),
     prisma.invitation.count({
       where: {
         orgId,
-        usedAt: null,
+        status: "PENDING",
         OR: [{ expiresAt: null }, { expiresAt: { gte: now } }],
       },
     }),
     prisma.invitation.count({
-      where: { orgId, usedAt: null, expiresAt: { lt: now } },
+      where: { orgId, status: "PENDING", expiresAt: { lt: now } },
     }),
     prisma.invitation.count({
-      where: { orgId, usedAt: { not: null } },
+      where: { orgId, status: "ACCEPTED" },
+    }),
+    prisma.invitation.count({
+      where: { orgId, status: { in: ["DECLINED", "REVOKED"] } },
     }),
   ]);
 
-  return { total, pending, expired, accepted };
+  return { total, pending, expired, accepted, revoked };
 }
 
 export async function updateInvitationToken(
@@ -234,12 +281,22 @@ export async function updateInvitationToken(
   expiresAt:     Date,
   resendLinkBy?: string
 ): Promise<void> {
-  await prisma.invitation.update({
-    where: { id: invitationId },
-    data: {
-      token,
-      expiresAt,
-      details: { resendLinkBy: resendLinkBy || null },
-    },
-  });
+  try {
+    await prisma.invitation.update({
+      where: { id: invitationId, status: "PENDING" },
+      data: {
+        token,
+        expiresAt,
+        details: { resendLinkBy: resendLinkBy || null },
+      },
+    });
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      throw new Error("Invitation introuvable, révoquée ou déjà traitée");
+    }
+    throw error;
+  }
 }

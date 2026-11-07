@@ -25,7 +25,7 @@ async function tempEnrollStudentIfNeeded(studentId: string, userId: string, orgI
       where: {
         userId,
         orgId,
-        usedAt: { not: null },
+        status: "ACCEPTED",
       },
     })
 

@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ROLE_LABELS } from '@/modules/user'
+import { getOrganizationRolePath } from '@/config/redirects'
+import { selectOrganizationProfileAction } from '@/services/organization'
 import { useAcceptInvitation, useDeclineInvitation } from '@/hooks/inbox'
 import type { EnrichedInboxNotification } from './types'
 
@@ -22,8 +24,21 @@ export function InvitationActionCard({ notification }: InvitationActionCardProps
   const invitationId = metadata?.invitationId
   const kind = metadata?.kind ?? 'INVITATION_RECEIVED'
   const rawStatus = metadata?.status ?? 'PENDING'
-  const roleKey = metadata?.role as keyof typeof ROLE_LABELS | undefined
-  const roleLabel = (roleKey && ROLE_LABELS[roleKey]) ? ROLE_LABELS[roleKey] : (metadata?.role ?? 'Membre')
+  const role = metadata?.role ?? (metadata?.resourceType === 'CLASS' ? 'STUDENT' : undefined)
+  const roleKey = role as keyof typeof ROLE_LABELS | undefined
+  const roleLabel = (roleKey && ROLE_LABELS[roleKey]) ? ROLE_LABELS[roleKey] : (role ?? 'Membre')
+  const acceptedInvitationPath = typeof metadata?.orgSlug === 'string'
+    ? roleKey
+      ? getOrganizationRolePath(
+          { slug: metadata.orgSlug, type: metadata.orgType },
+          roleKey,
+        )
+      : `/${metadata.orgSlug}`
+    : null
+  const selectInvitedProfileAction =
+    typeof metadata?.orgId === 'string' && roleKey
+      ? selectOrganizationProfileAction.bind(null, metadata.orgId, roleKey)
+      : null
 
   const expiresAt = metadata?.expiresAt ? new Date(metadata.expiresAt) : null
   const isExpired = expiresAt ? expiresAt.getTime() < Date.now() : false
@@ -33,17 +48,17 @@ export function InvitationActionCard({ notification }: InvitationActionCardProps
   const declineMutation = useDeclineInvitation()
   const isPendingMutation = acceptMutation.isPending || declineMutation.isPending
 
-  const [localAcceptedSlug, setLocalAcceptedSlug] = useState<string | null>(null)
+  const [localAcceptedPath, setLocalAcceptedPath] = useState<string | null>(null)
 
   const handleAccept = async () => {
     if (!invitationId) return
     try {
       const res = await acceptMutation.mutateAsync(invitationId)
       toast.success('Invitation acceptée avec succès ! Bienvenue dans l’organisation.')
-      if (res?.orgSlug) {
-        setLocalAcceptedSlug(res.orgSlug)
-      } else if (metadata?.orgSlug) {
-        setLocalAcceptedSlug(metadata.orgSlug)
+      if (res?.redirectPath) {
+        setLocalAcceptedPath(res.redirectPath)
+      } else if (typeof metadata?.orgSlug === 'string') {
+        setLocalAcceptedPath(acceptedInvitationPath)
       }
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Erreur lors de l'acceptation de l'invitation")
@@ -155,35 +170,58 @@ export function InvitationActionCard({ notification }: InvitationActionCardProps
         </div>
 
         {/* Message de confirmation ou lien direct vers l'organisation */}
-        {localAcceptedSlug ? (
+        {localAcceptedPath ? (
           <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-3.5 text-sm text-emerald-700 dark:text-emerald-300 flex items-center justify-between gap-3">
             <span>Vous faites désormais partie de cette organisation !</span>
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-emerald-500/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/20"
-              onClick={() => router.push(`/${localAcceptedSlug}`)}
-            >
-              Accéder à l'espace
-              <ArrowRight className="ml-1 size-3.5" />
-            </Button>
+            {selectInvitedProfileAction ? (
+              <form action={selectInvitedProfileAction}>
+                <Button
+                  type="submit"
+                  size="sm"
+                  variant="outline"
+                  className="border-emerald-500/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/20"
+                >
+                  Accéder à l'espace
+                  <ArrowRight className="ml-1 size-3.5" />
+                </Button>
+              </form>
+            ) : (
+              <Button
+                size="sm"
+                variant="outline"
+                className="border-emerald-500/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/20"
+                onClick={() => router.push(localAcceptedPath)}
+              >
+                Accéder à l'espace
+                <ArrowRight className="ml-1 size-3.5" />
+              </Button>
+            )}
           </div>
-        ) : effectiveStatus === 'ACCEPTED' && metadata?.orgSlug ? (
+        ) : effectiveStatus === 'ACCEPTED' && acceptedInvitationPath ? (
           <div className="flex justify-end pt-1">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => router.push(`/${metadata.orgSlug}`)}
-            >
-              Accéder à l'espace
-              <ArrowRight className="ml-1 size-3.5" />
-            </Button>
+            {selectInvitedProfileAction ? (
+              <form action={selectInvitedProfileAction}>
+                <Button type="submit" size="sm" variant="outline">
+                  Accéder à l'espace
+                  <ArrowRight className="ml-1 size-3.5" />
+                </Button>
+              </form>
+            ) : (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => router.push(acceptedInvitationPath)}
+              >
+                Accéder à l'espace
+                <ArrowRight className="ml-1 size-3.5" />
+              </Button>
+            )}
           </div>
         ) : null}
       </CardContent>
 
       {/* Boutons d'action conditionnels */}
-      {kind === 'INVITATION_RECEIVED' && effectiveStatus === 'PENDING' && !localAcceptedSlug && (
+      {kind === 'INVITATION_RECEIVED' && effectiveStatus === 'PENDING' && !localAcceptedPath && (
         <CardFooter className="flex items-center justify-end gap-2.5 border-t border-border/20 bg-muted/10 p-4">
           <Button
             variant="outline"

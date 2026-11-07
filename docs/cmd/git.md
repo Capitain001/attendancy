@@ -80,14 +80,14 @@ Les fichiers générés comme `.api/`, `generated/`, `generated.types.ts` et
 
 ```powershell
 # Depuis la racine du dépôt
-powershell -ExecutionPolicy Bypass -File tools/export-pending-changes.ps1
+powershell -ExecutionPolicy Bypass -File scripts/export-pending-changes.ps1
 ```
 
 Par défaut, le rapport est écrit dans `git-changes.md` à la racine du dépôt.
 Pour choisir un autre chemin :
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools/export-pending-changes.ps1 -OutputPath docs/rapport-changements.md
+powershell -ExecutionPolicy Bypass -File scripts/export-pending-changes.ps1 -OutputPath docs/rapport-changements.md
 ```
 
 Le rapport montre le contenu complet des fichiers modifiés : vérifie-le avant

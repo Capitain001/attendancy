@@ -41,7 +41,10 @@ export async function createStudentEnrollmentAction(input: CreateStudentEnrollme
 }
 
 export async function removeStudentEnrollmentAction(studentEnrollmentId: string) {
-  const auth = await authAccess({ requiredRole: "DIRECTION" });
+  const auth = await authAccess({
+    requiredRole: "DIRECTION",
+    allowPersonalOrg: true,
+  });
   if (!auth.data) return { error: auth.error };
   const { user, orgId } = auth.data;
 

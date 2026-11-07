@@ -1,6 +1,10 @@
 import { excludeByIds } from "@/lib/filter";
 import { getFullName } from "@/lib/utils";
 import type { StudentEnrollmentsItem, UserType } from "@/services/student-enrollment";
+import {
+  resolveInvitationUiStatus,
+  type DBInvitation,
+} from "@/modules/invitation/policy";
 
 /** studentIds déjà dans le groupe du cours. */
 export function getEnrolledStudentIds(
@@ -25,6 +29,27 @@ export function getAvailableEnrollments(
   );
 }
 
-export function getStudentName(user: UserType): string {
+
+export type AvatarUser = Pick<UserType, "firstName" | "lastName" | "email" | "avatar_url">;
+
+export function getStudentName(user: Pick<UserType, "firstName" | "lastName" | "email">): string {
   return getFullName(user.firstName, user.lastName) ?? user.email;
+}
+
+export const normalizeEmail = (email: string) => email.trim().toLowerCase();
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export const isValidEmail = (email: string) => EMAIL_RE.test(email);
+
+/** Découpe un texte collé (espaces, virgules, points-virgules, retours ligne). */
+export function parseEmails(raw: string): string[] {
+  return raw.split(/[\s,;]+/).map(normalizeEmail).filter(Boolean);
+}
+
+/** Même policy que le serveur : statut PENDING non expiré. */
+export function isInvitationPending(
+  inv: DBInvitation,
+  now: Date = new Date(),
+): boolean {
+  return resolveInvitationUiStatus(inv, now) === "PENDING";
 }

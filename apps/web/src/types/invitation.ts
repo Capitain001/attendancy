@@ -121,14 +121,12 @@ export interface AuditLogDetails {
   "organizationId": "11e4397e-4a1a-4c99-9be9-f8213799cc62",
   "createdAt": "2025-12-04T11:06:22.264Z",
   "expiresAt": "2025-12-11T11:06:20.142Z",
-  "usedAt": null,
+  "status": "PENDING",
+  "resolvedAt": null,
   "userId": null,
   "details": {
     "name": "invited teacher",
     "role": "TEACHER",
-    status: "PENDING",
-    status,
-    invitationStatus: "PENDING",
     invitationToken: token,{
       "id": "57a001c5-1a27-4733-9310-51f54e4c3253",
       "name": "responsable philip",
@@ -161,12 +159,12 @@ export interface AuditLogDetails {
     "organizationId": "11e4397e-4a1a-4c99-9be9-f8213799cc62",
     "createdAt": "2025-12-02T09:06:32.903Z",
     "expiresAt": "2025-12-09T09:06:31.501Z",
-    "usedAt": "2025-12-02T09:09:29.555Z",
+    "status": "ACCEPTED",
+    "resolvedAt": "2025-12-02T09:09:29.555Z",
     "userId": "657534b4-594c-4969-9460-c88550547501",
     "details": {
       "name": "LOhom soleil",
       "role": "TEACHER",
-      "status": "PENDING",
       "invited_by": {
         "id": "57a001c5-1a27-4733-9310-51f54e4c3253",
         "name": "responsable philip",

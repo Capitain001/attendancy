@@ -123,7 +123,7 @@ export async function inviteDirection(
           where: {
             email,
             orgId,
-            usedAt: null,
+            status: "PENDING",
           },
           orderBy: {
             createdAt: "desc",

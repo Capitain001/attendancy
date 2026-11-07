@@ -155,7 +155,7 @@ export async function createInvitationNotification(
 
 export async function setInvitationNotificationStatus(
   tx: Tx,
-  params: { userId: string; invitationId: string; status: 'ACCEPTED' | 'DECLINED' },
+  params: { userId: string; invitationId: string; status: 'ACCEPTED' | 'DECLINED' | 'REVOKED' },
 ) {
   const notif = await tx.notification.findFirst({
     where: {

@@ -8,9 +8,11 @@ import { useRealtimeDraggableItem } from "@/hooks/use-realtime-draggable-item";
 
 export const DraggableCard = ({
   roomName,
+  channelId,
   cardId,
 }: {
   roomName: string;
+  channelId: string;
   cardId: string;
 }) => {
   const [isDragging, setIsDragging] = useState(false);
@@ -19,6 +21,7 @@ export const DraggableCard = ({
   // Utilisation du hook générique pour les items
   const { position, broadcastPosition } = useRealtimeDraggableItem({
     roomName,
+    channelId,
     itemId: cardId,
     throttleMs: 20, // optionnel, par défaut 50ms
     isDragging,

@@ -42,11 +42,13 @@ const useThrottleCallback = <Params extends unknown[], Return>(
 
 export const useRealtimeDraggableItem = ({
   roomName,
+  channelId,
   itemId,
   throttleMs = 50,
   isDragging = false,
 }: {
   roomName: string
+  channelId: string
   itemId: string
   throttleMs?: number
   isDragging?: boolean
@@ -72,14 +74,13 @@ export const useRealtimeDraggableItem = ({
         .from('RealtimeItem')
         .upsert(
           {
-            id: crypto.randomUUID(),
             itemId,
-            roomName,
+            channelId,
             x: pos.x,
             y: pos.y,
             updatedAt: new Date().toISOString(),
           },
-          { onConflict: 'itemId,roomName' }
+          { onConflict: 'itemId,channelId' }
         )
       if (error) console.error('Error upserting RealtimeItem:', error)
     },
@@ -102,7 +103,7 @@ export const useRealtimeDraggableItem = ({
         .from('RealtimeItem')
         .select('x,y')
         .eq('itemId', itemId)
-        .eq('roomName', roomName)
+        .eq('channelId', channelId)
         .single()
 
       if (data) setPosition({ x: data.x, y: data.y })
@@ -137,7 +138,7 @@ export const useRealtimeDraggableItem = ({
       supabase.removeChannel(channel)
       channelRef.current = null
     }
-  }, [itemId, roomName])
+  }, [itemId, roomName, channelId])
 
   return { position, broadcastPosition }
 }

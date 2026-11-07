@@ -25,6 +25,7 @@ const FILTERS: { value: 'all' | InvitationStatus; label: string }[] = [
   { value: 'pending', label: 'En attente' },
   { value: 'accepted', label: 'Acceptées' },
   { value: 'expired', label: 'Expirées' },
+  { value: 'declined', label: 'Refusées' },
 ]
 
 function formatDate(d: Date | string | null) {
@@ -106,7 +107,7 @@ export function InvitationTable({ invitations, onResend, onRevoke, onShare, pend
                   </p>
                 </div>
 
-                {status !== 'accepted' ? (
+                {status === 'pending' || status === 'expired' ? (
                   <button
                     type="button"
                     onClick={() => toggleActions(inv.id)}
@@ -141,7 +142,7 @@ export function InvitationTable({ invitations, onResend, onRevoke, onShare, pend
                 )}
 
                 <div className="flex shrink-0 items-center gap-1">
-                  {status !== 'accepted' && actionsVisible && (
+                  {(status === 'pending' || status === 'expired') && actionsVisible && (
                     <button
                       type="button"
                       onClick={() => onResend(inv)}
@@ -153,7 +154,7 @@ export function InvitationTable({ invitations, onResend, onRevoke, onShare, pend
                     </button>
                   )}
 
-                  {status !== 'accepted' && actionsVisible && onShare && (
+                  {(status === 'pending' || status === 'expired') && actionsVisible && onShare && (
                     <button
                       type="button"
                       onClick={() => onShare(inv)}
@@ -165,7 +166,7 @@ export function InvitationTable({ invitations, onResend, onRevoke, onShare, pend
                     </button>
                   )}
 
-                  {confirming ? (
+                  {confirming && (status === 'pending' || status === 'expired') ? (
                     <div className="flex items-center gap-1">
                       <button
                         type="button"
@@ -186,7 +187,7 @@ export function InvitationTable({ invitations, onResend, onRevoke, onShare, pend
                         Non
                       </button>
                     </div>
-                  ) : (
+                  ) : (status === 'pending' || status === 'expired') ? (
                     <button
                       type="button"
                       onClick={() => setConfirmId(inv.id)}
@@ -195,7 +196,7 @@ export function InvitationTable({ invitations, onResend, onRevoke, onShare, pend
                     >
                       <Trash2 className="size-3.5" />
                     </button>
-                  )}
+                  ) : null}
                 </div>
               </li>
             )

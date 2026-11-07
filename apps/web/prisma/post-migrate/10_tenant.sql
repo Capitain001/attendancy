@@ -22,3 +22,18 @@ CREATE UNIQUE INDEX IF NOT EXISTS "permission_user_scope_unique_idx"
 CREATE UNIQUE INDEX IF NOT EXISTS "permission_function_scope_unique_idx"
   ON "public"."Permission" ("functionId", "action", "resource", "resourceId", "orgId")
   NULLS NOT DISTINCT;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint
+    WHERE conname = 'invitation_resolved_consistency'
+      AND conrelid = 'public."Invitation"'::regclass
+  ) THEN
+    ALTER TABLE public."Invitation"
+    ADD CONSTRAINT invitation_resolved_consistency
+    CHECK ((status = 'PENDING') = ("usedAt" IS NULL));
+  END IF;
+END
+$$;

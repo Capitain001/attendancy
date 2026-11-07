@@ -1,3 +1,5 @@
+//apps\web\src\modules\auth\members\inbox-invitation.ts
+//action sur une invitation via inbox (notification intern)
 'use server'
 
 import * as v from 'valibot'
@@ -5,14 +7,16 @@ import { prisma } from '@/lib/prisma'
 import { getUserInfo } from '@/modules/user'
 import { setUserAccess } from '@/modules/user/access'
 import { injectRoleProfileId } from '@/modules/user/profile'
+import { getOrganizationRolePath } from '@/config/redirects'
 import { invalidateEvent } from '@/cache/server/graph'
-import { Action, Resource, Role } from '@/generated/prisma/client'
+import { Action, Prisma, Resource, Role } from '@/generated/prisma/client'
 import { logAuditAsync } from '@/utils/server'
 import type { DatabaseInvitationDetails } from '@/types/invitation'
 import {
   setInvitationNotificationStatus,
   createInvitationResponseNotification,
 } from '@/services/notification/server'
+import { revokePendingInvitationsForResource } from '@/modules/invitation/server'
 import {
   createRoleSpecificEntity,
   assignFunctionToUser,
@@ -38,12 +42,13 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
   const { invitationId } = parsed.output
 
   // 1. Lecture préalable & validation d'identité
+  const now = new Date()
   const invitation = await prisma.invitation.findFirst({
     where: {
       id: invitationId,
       userId,
-      usedAt: null,
-      expiresAt: { gt: new Date() },
+      status: "PENDING",
+      OR: [{ expiresAt: null }, { expiresAt: { gt: now } }],
     },
     select: {
       id: true,
@@ -51,7 +56,9 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
       orgId: true,
       role: true,
       details: true,
-      organization: { select: { id: true, name: true, slug: true } },
+      resourceId: true,
+      resourceType: true,
+      organization: { select: { id: true, name: true, slug: true, type: true } },
     },
   })
 
@@ -68,18 +75,55 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
   const orgId = invitation.orgId
   const departmentId = details.organization?.departmentId
   const senderId = details.invited_by?.id
+  const enrollment = {
+    ...details.enrollment,
+    ...(!details.enrollment?.classId &&
+    invitation.resourceType === 'CLASS' &&
+    invitation.resourceId
+      ? { classId: invitation.resourceId }
+      : {}),
+  }
+  const enrolledClassId = role === 'STUDENT' ? enrollment.classId : undefined
 
   try {
-    const { profileId } = await prisma.$transaction(
+    const { profileId, revokedInvitations } = await prisma.$transaction(
       async (tx) => {
         // A. Claim atomique : verrouille immédiatement l'invitation contre les doubles clics
-        const claimed = await tx.invitation.updateMany({
-          where: { id: invitation.id, userId, usedAt: null, expiresAt: { gt: new Date() } },
-          data: { usedAt: new Date() },
-        })
-        if (claimed.count !== 1) {
-          throw new Error('Invitation déjà traitée ou expirée')
+        const acceptedAt = new Date()
+        try {
+          await tx.invitation.update({
+            where: {
+              id: invitation.id,
+              userId,
+              status: "PENDING",
+              OR: [
+                { expiresAt: null },
+                { expiresAt: { gt: acceptedAt } },
+              ],
+            },
+            data: { status: "ACCEPTED", usedAt: acceptedAt },
+          })
+        } catch (error) {
+          if (
+            error instanceof Prisma.PrismaClientKnownRequestError &&
+            error.code === "P2025"
+          ) {
+            throw new Error('Invitation déjà traitée ou expirée')
+          }
+          throw error
         }
+
+        const revokedInvitations =
+          invitation.resourceId && invitation.resourceType
+            ? await revokePendingInvitationsForResource(tx, {
+                orgId,
+                email: invitation.email,
+                resourceId: invitation.resourceId,
+                resourceType: invitation.resourceType,
+                acceptedInvitationId: invitation.id,
+                revokedAt: acceptedAt,
+              })
+            : []
 
         // B. Créer l'adhésion UserOrganization si non existante
         const existingMembership = await tx.userOrganization.findFirst({
@@ -140,8 +184,8 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
           })
         }
 
-        if (role === 'STUDENT' && profile?.id && details.enrollment) {
-          await enrollStudentInClass(tx, profile.id, details.enrollment)
+        if (role === 'STUDENT' && profile?.id && enrollment.classId) {
+          await enrollStudentInClass(tx, profile.id, enrollment)
         }
 
         // F. Mettre à jour la notification via le service notification
@@ -150,6 +194,15 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
           invitationId: invitation.id,
           status: 'ACCEPTED',
         })
+        for (const revokedInvitation of revokedInvitations) {
+          if (revokedInvitation.userId) {
+            await setInvitationNotificationStatus(tx, {
+              userId: revokedInvitation.userId,
+              invitationId: revokedInvitation.id,
+              status: 'REVOKED',
+            })
+          }
+        }
 
         // G. Notifier l'émetteur de l'acceptation via le service notification
         if (senderId) {
@@ -165,7 +218,7 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
           })
         }
 
-        return { profileId: profile?.id }
+        return { profileId: profile?.id, revokedInvitations }
       },
       { maxWait: 10000, timeout: 20000 },
     )
@@ -207,10 +260,21 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
 
     // 3. Post-commit : invalidations de cache
     try {
-      await invalidateEvent('NOTIFICATION_READ', userId)
-      if (senderId) {
-        await invalidateEvent('NOTIFICATION_CREATED', senderId)
-      }
+      await Promise.all([
+        ...Array.from(
+          new Set([
+            userId,
+            ...revokedInvitations.flatMap((invitation) =>
+              invitation.userId ? [invitation.userId] : [],
+            ),
+          ]),
+          (notificationUserId) => invalidateEvent('NOTIFICATION_READ', notificationUserId),
+        ),
+        ...(senderId ? [invalidateEvent('NOTIFICATION_CREATED', senderId)] : []),
+        ...(enrolledClassId
+          ? [invalidateEvent('STUDENT_ENROLLMENT_CREATED', orgId, enrolledClassId)]
+          : []),
+      ])
     } catch (cacheErr) {
       console.error('[acceptInboxInvitationAction] Erreur invalidation cache:', cacheErr)
     }
@@ -229,11 +293,19 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
       },
     })
 
+    const redirectPath = invitation.organization.slug
+      ? getOrganizationRolePath(
+          { slug: invitation.organization.slug, type: invitation.organization.type },
+          role,
+        )
+      : '/'
+
     return {
       data: {
         success: true,
         orgSlug: invitation.organization.slug,
         orgName: invitation.organization.name,
+        redirectPath,
         ...(sessionWarning ? { warning: sessionWarning } : {}),
       },
     }
@@ -256,56 +328,47 @@ export async function declineInboxInvitationAction(input: { invitationId: string
   }
   const { invitationId } = parsed.output
 
-  // Lecture préalable indispensable pour récupérer details et senderId
-  const invitation = await prisma.invitation.findFirst({
-    where: {
-      id: invitationId,
-      userId,
-      usedAt: null,
-      expiresAt: { gt: new Date() },
-    },
-    select: {
-      id: true,
-      orgId: true,
-      role: true,
-      details: true,
-      organization: { select: { id: true, name: true } },
-    },
-  })
-
-  if (!invitation) {
-    return { error: 'Invitation introuvable ou déjà traitée' }
+  const now = new Date()
+  let invitation
+  try {
+    invitation = await prisma.invitation.update({
+      where: {
+        id: invitationId,
+        userId,
+        status: "PENDING",
+        OR: [{ expiresAt: null }, { expiresAt: { gt: now } }],
+      },
+      data: { status: "DECLINED", usedAt: now },
+      select: {
+        id: true,
+        orgId: true,
+        details: true,
+        organization: { select: { name: true } },
+      },
+    })
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      return { error: 'Invitation introuvable, déjà traitée ou expirée' }
+    }
+    throw error
   }
 
   const existingDetails = (invitation.details as DatabaseInvitationDetails) ?? {}
   const senderId = existingDetails.invited_by?.id
 
   try {
-    await prisma.$transaction(
-      async (tx) => {
-        // A. Claim atomique & refus : expire l'invitation et met status = 'DECLINED'
-        const claimed = await tx.invitation.updateMany({
-          where: { id: invitation.id, userId, usedAt: null, expiresAt: { gt: new Date() } },
-          data: {
-            expiresAt: new Date(),
-            details: {
-              ...(existingDetails as object),
-              status: 'DECLINED',
-            },
-          },
-        })
-        if (claimed.count !== 1) {
-          throw new Error('Invitation déjà traitée ou expirée')
-        }
-
-        // B. Mettre à jour la notification du destinataire
+    // Les écritures de notification sont secondaires : un échec ne doit pas annuler le refus.
+    try {
+      await prisma.$transaction(async (tx) => {
         await setInvitationNotificationStatus(tx, {
           userId,
           invitationId: invitation.id,
           status: 'DECLINED',
         })
 
-        // C. Notifier l'émetteur de l'invitation
         if (senderId) {
           await createInvitationResponseNotification(tx, {
             userId: senderId,
@@ -318,9 +381,10 @@ export async function declineInboxInvitationAction(input: { invitationId: string
             },
           })
         }
-      },
-      { maxWait: 10000, timeout: 20000 },
-    )
+      })
+    } catch (notificationError) {
+      console.error('[declineInboxInvitationAction] notification non mise à jour:', notificationError)
+    }
 
     // Invalidation après commit
     try {

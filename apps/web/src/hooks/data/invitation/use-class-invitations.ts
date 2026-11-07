@@ -36,7 +36,12 @@ export function useClassInvitations(classId: string, opts: UseClassInvitationsOp
   // en plus de ALL/STATS déjà gérés par le hook partagé.
   const { resend, revoke } = useInvitationMutations({ extraInvalidateKeys: [classKey] })
 
-  const { data: invitations = [], isLoading } = useQuery({
+  const {
+    data: invitations = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: classKey,
     queryFn: async () => {
       const r = await getClassInvitationsAction({ classId })
@@ -89,6 +94,8 @@ export function useClassInvitations(classId: string, opts: UseClassInvitationsOp
   return {
     invitations,
     isLoading,
+    isError,
+    error,
     inviteStudent: inviteStudentMut,
     inviteStudentsBulk: inviteStudentsBulkMut,
     resend,

@@ -75,7 +75,7 @@ model User {
 // c'est volontairement exhaustif : la purge RGPD d'une org part d'ici.
 model Organization {
   id                      String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name                    String                  
+  name                    String
   email                   String?                 @unique
   slug                    String?                 @unique
   logo                    String?
@@ -263,21 +263,25 @@ model Permission {
 // details Json = payload par type (ex. STUDENT : classe cible, liens à créer
 // à l'acceptation).
 model Invitation {
-  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  token          String         @unique
+  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  token          String           @unique
   email          String
-  createdAt      DateTime       @default(now())
+  createdAt      DateTime         @default(now())
   expiresAt      DateTime?
-  usedAt         DateTime?
-  userId         String?        @db.Uuid
+  status         InvitationStatus @default(PENDING)
+  
+/// Date de sortie de PENDING : acceptation, refus ou révocation.
+/// null ⇔ status = PENDING (CHECK en post-migrate)
+  usedAt        DateTime?
+  userId         String?          @db.Uuid
   details        Json?
-  invitationType InvitationType @default(INVITE_ONLY)
+  invitationType InvitationType   @default(INVITE_ONLY)
   role           String?
-  orgId          String         @db.Uuid
-  resourceId     String?        @db.Uuid
+  orgId          String           @db.Uuid
+  resourceId     String?          @db.Uuid
   resourceType   Resource?
-  organization   Organization   @relation(fields: [orgId], references: [id])
-  user           User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  organization   Organization     @relation(fields: [orgId], references: [id])
+  user           User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([orgId])
   @@index([resourceId])
@@ -465,6 +469,15 @@ enum DocumentType {
   JUSTIFICATION // pièce justificative d'absence — le cas clé pour Attendancy
   MEDICAL
   DISCIPLINE
+
+  @@schema("public")
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  REVOKED
 
   @@schema("public")
 }

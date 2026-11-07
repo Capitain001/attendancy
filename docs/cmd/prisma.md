@@ -62,7 +62,7 @@ Créer une nouvelle migration :
 ```bash
 bunx prisma migrate dev --create-only --name update-teacher-unavailabilities-fields-types
 ```
-
+bunx prisma migrate dev --create-only --name add_Invitation_status 
 
 Créer une nouvelle migration :
 
@@ -207,4 +207,4 @@ Après avoir appliqué ou mis à jour du SQL hors Prisma (`post-migrate`) :
 # Appliquer les scripts SQL et vérifier la conformité
 bun run db:post-migrate
 bun run db:verify
-```
+```

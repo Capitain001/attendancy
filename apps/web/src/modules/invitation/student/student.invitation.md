@@ -88,7 +88,8 @@ inviteStudent(params)
 | organizationId | UUID      | Organisation       |
 | createdAt      | DateTime  | Création           |
 | expiresAt      | DateTime  | Expiration         |
-| usedAt         | DateTime? | Acceptation        |
+| status         | Enum      | État du cycle de vie |
+| usedAt         | DateTime? | Sortie de PENDING  |
 | userId         | UUID?     | User créé          |
 | invitationType | Enum      | Type invitation    |
 

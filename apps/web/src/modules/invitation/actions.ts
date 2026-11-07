@@ -1,6 +1,7 @@
 //src/modules/invitation/actions.ts
 "use server";
 
+import { after } from "next/server";
 import { resendInvitation, generateMagicLink } from "./supabase";
 import { getInvitationStats, getOrganizationInvitations, InvitationListItem, updateInvitationToken } from "./database";
 import { getUserInfo } from "../user";
@@ -11,6 +12,9 @@ import { ERRORS } from "@/config";
 import { notifyInvitationStakeholders } from "./notifications";
 import type { DatabaseInvitationDetails } from "@/types/invitation";
 import { Role } from "@/generated/prisma/browser";
+import { Prisma } from "@/generated/prisma/client";
+import { setInvitationNotificationStatus } from "@/services/notification/server";
+import { invalidateEvent } from "@/cache/server/graph";
 
 function getStudentInvitationNotifyContext(invitation: InvitationListItem, orgId: string) {
   const details = invitation.details as DatabaseInvitationDetails | null;
@@ -143,10 +147,7 @@ export async function generateMagicLinkAction(
 
 
 /**
- * Supprime un utilisateur Supabase et son invitation s'il n'existe pas dans Prisma
- * 
- * @param invitation - L'invitation contenant l'email de l'utilisateur à supprimer
- * @returns Résultat de l'opération
+ * Révoque l'invitation et tente de nettoyer un compte Auth non utilisé.
  */
 export async function deleteInvitationUserAction(
   invitation: InvitationListItem
@@ -157,48 +158,98 @@ export async function deleteInvitationUserAction(
       return { success: false, error: "Non authentifié" };
     }
 
-    // Trouver l'utilisateur Supabase par email
-    const findResult = await findAuthUserByEmail(invitation.email);
-    if ('error' in findResult) {
-      return { success: false, error: findResult.error ?? 'Erreur inconnue' };
+    const orgId = currentUser.organization?.id;
+    if (!orgId) {
+      return { success: false, error: ERRORS.ORG.NOT_FOUND };
     }
-    const authUser = findResult.data.user;
 
-    // Si l'utilisateur n'existe pas dans Supabase, on supprime juste l'invitation
-    if (!authUser) {
-      await prisma.invitation.delete({
-        where: { id: invitation.id }
+    const usedAt = new Date();
+    let updated;
+    try {
+      updated = await prisma.invitation.update({
+        where: {
+          id: invitation.id,
+          orgId,
+          status: "PENDING",
+        },
+        data: { status: "REVOKED", usedAt },
+        select: { id: true, email: true, userId: true },
       });
-      return { success: true, message: "Invitation supprimée (utilisateur Supabase non trouvé)" };
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === "P2025"
+      ) {
+        return {
+          success: false,
+          error: "Invitation introuvable, déjà acceptée ou déjà révoquée",
+        };
+      }
+      throw error;
     }
 
-    // Vérifier si l'utilisateur existe dans la table User (Prisma)
-    const existingUser = await prisma.user.findFirst({
-      where: { email: invitation.email }
+    const updatedUserId = updated.userId;
+    if (updatedUserId) {
+      try {
+        await prisma.$transaction((tx) =>
+          setInvitationNotificationStatus(tx, {
+            userId: updatedUserId,
+            invitationId: updated.id,
+            status: "REVOKED",
+          }),
+        );
+        await invalidateEvent("NOTIFICATION_READ", updatedUserId);
+      } catch (error) {
+        console.error("[deleteInvitationUserAction] mise à jour notification échouée", error);
+      }
+    }
+
+    after(async () => {
+      try {
+        const findResult = await findAuthUserByEmail(updated.email);
+        if ('error' in findResult) {
+          console.error("[deleteInvitationUserAction] recherche Auth impossible après révocation", findResult.error);
+          return;
+        }
+
+        const authUser = findResult.data.user;
+        if (!authUser || authUser.email_confirmed_at) return;
+
+        const [existingUser, otherActiveInvitation] = await Promise.all([
+          prisma.user.findFirst({
+            where: {
+              OR: [
+                { id: authUser.id },
+                { email: { equals: updated.email, mode: "insensitive" } },
+              ],
+            },
+            select: { id: true },
+          }),
+          prisma.invitation.findFirst({
+            where: {
+              id: { not: updated.id },
+              email: { equals: updated.email, mode: "insensitive" },
+              status: "PENDING",
+              OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+            },
+            select: { id: true },
+          }),
+        ]);
+
+        if (existingUser || otherActiveInvitation) return;
+
+        const deleteResult = await deleteAuthUser(authUser.id);
+        if ('error' in deleteResult) {
+          console.error("[deleteInvitationUserAction] nettoyage Auth échoué après révocation", deleteResult.error);
+        }
+      } catch (error) {
+        console.error("[deleteInvitationUserAction] nettoyage Auth échoué après révocation", error);
+      }
     });
 
-    // Si l'utilisateur n'existe pas dans Prisma, on peut le supprimer de Supabase
-    if (!existingUser) {
-      // Supprimer l'utilisateur de Supabase
-      const deleteResult = await deleteAuthUser(authUser.id);
-      if ('error' in deleteResult) {
-        return { success: false, error: deleteResult.error ?? 'Erreur inconnue' };
-      }
-
-      // Supprimer l'invitation
-      await prisma.invitation.delete({
-        where: { id: invitation.id }
-      });
-
-      return { success: true, message: "Utilisateur et invitation supprimés avec succès" };
-    }
-
-    // Si l'utilisateur existe dans Prisma, on ne peut pas le supprimer
-    return { 
-      success: false, 
-      error: "Impossible de supprimer : l'utilisateur existe déjà dans la base de données" 
-    };
+    return { success: true, message: "Invitation révoquée" };
   } catch (error) {
+    console.error("[deleteInvitationUserAction] révocation impossible", error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Erreur inconnue lors de la suppression",

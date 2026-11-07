@@ -1,7 +1,7 @@
 {
   "name": "getStudentsEnrollments",
   "file": "src/services/student-enrollment/database/student-enrollment.queries.ts",
-  "sig": "(orgId: string, filters: GetStudentsEnrollmentsFilters = {}) => Promise<{ id: string; student: { id: string; user: { id: string; avatar_url: string | null; email: string; firstName: string | null; lastName: string | null; }; }; studentId: string; createdAt: Date; classId: string; studentGroups: { ...; }[]; endedAt: Date | null; }[]>",
+  "sig": "(orgId: string, filters: GetStudentsEnrollmentsFilters = {}) => Promise<{ student: { user: { id: string; firstName: string | null; lastName: string | null; email: string; avatar_url: string | null; }; id: string; }; id: string; studentId: string; classId: string; createdAt: Date; endedAt: Date | null; studentGroups: { ...; }[]; }[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

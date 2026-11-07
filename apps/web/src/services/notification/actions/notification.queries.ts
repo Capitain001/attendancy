@@ -83,6 +83,7 @@ export async function getInboxNotificationsAction(input?: GetInboxNotificationsI
                 orgLogo: org.logo ?? null,
                 orgName: org.name,
                 orgSlug: org.slug,
+                orgType: org.type,
               },
             }
           }

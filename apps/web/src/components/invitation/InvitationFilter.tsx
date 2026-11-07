@@ -9,6 +9,7 @@ const FILTERS: { value: 'all' | InvitationStatus; label: string }[] = [
   { value: 'pending', label: 'En attente' },
   { value: 'accepted', label: 'Acceptées' },
   { value: 'expired', label: 'Expirées' },
+  { value: 'declined', label: 'Refusées' },
 ];
 
 const ROLES: { value: Role; label: string }[] = [

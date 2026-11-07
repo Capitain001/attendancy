@@ -1,7 +1,7 @@
 {
   "name": "getStudentsEnrollmentsAction",
   "file": "src/services/student-enrollment/actions/student-enrollment.queries.ts",
-  "sig": "(filters?: GetStudentsEnrollmentsFilters) => Promise<{ error: string; data?: undefined; } | { data: { id: string; student: { id: string; user: { id: string; avatar_url: string | null; email: string; firstName: string | null; lastName: string | null; }; }; ... 4 more ...; endedAt: Date | null; }[]; error?: undefined; }>",
+  "sig": "(filters?: GetStudentsEnrollmentsFilters) => Promise<{ error: string; data?: undefined; } | { data: { student: { user: { id: string; firstName: string | null; lastName: string | null; email: string; avatar_url: string | null; }; id: string; }; id: string; ... 4 more ...; studentGroups: { ...; }[]; }[]; error?: undefined; }>",
   "calls": [
     "getStudentsEnrollments"
   ],

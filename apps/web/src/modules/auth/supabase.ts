@@ -176,12 +176,12 @@ export async function deleteAuthUser(userId: string) {
  */
 export async function findAuthUserByEmail(email: string) {
   const supabase = await createAdminClient();
-  const { data, error } = await supabase.auth.admin.listUsers();
+  const { data, error } = await supabase
+    .rpc("get_auth_user_by_email", { user_email: email.trim().toLowerCase() })
+    .maybeSingle();
   if (error) return { error: error.message };
-  const user = data.users.find((u) => u.email === email) ?? null;
-  return { data: { user } };
+  return { data: { user: data } };
 }
-
 // ── Déconnexion ───────────────────────────────────────────────────────────────
 
 /**

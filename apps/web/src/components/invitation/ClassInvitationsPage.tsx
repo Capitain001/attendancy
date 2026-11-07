@@ -17,7 +17,7 @@ interface ClassInvitationsPageProps {
 export function ClassInvitationsPage({ classId, className, groups, title= true }: ClassInvitationsPageProps) {
   const { invitations, inviteStudent, resend, revoke } = useClassInvitations(classId)
 
-  const accepted = invitations.filter((i) => i.usedAt).length
+  const accepted = invitations.filter((invitation) => invitation.status === "ACCEPTED").length
 
   return (
     <div className="space-y-5">
