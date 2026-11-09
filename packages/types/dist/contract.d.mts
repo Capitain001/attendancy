@@ -15,70 +15,73 @@ type ScheduleFilterParams = Partial<Pick<Schedule, 'classId' | 'groupId' | 'teac
 };
 declare function getSchedules(params: ScheduleFilterParams): Promise<({
     group: {
-        name: string;
         id: string;
+        name: string;
     } | null;
     teacher: {
         id: string;
         user: {
+            avatar_url: string | null;
             firstName: string | null;
             lastName: string | null;
-            avatar_url: string | null;
         };
     };
-    class: {
-        name: string;
+    room: {
         id: string;
+        name: string;
+    };
+    class: {
+        id: string;
+        name: string;
     };
     course: {
-        name: string;
         id: string;
-    };
-    room: {
         name: string;
-        id: string;
     };
 } & {
     id: string;
-    status: __generated_prisma_enums.ScheduleStatus;
-    orgId: string;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date | null;
-    isLocked: boolean;
     classId: string;
-    teacherId: string;
-    courseId: string;
-    scheduleType: __generated_prisma_enums.ScheduleType;
     groupId: string | null;
-    notes: string | null;
+    courseId: string;
+    teacherId: string;
     roomId: string;
-    startTime: Date;
-    endTime: Date;
-    statusChangedAt: Date | null;
-    confirmed: boolean;
     weekRecurrenceId: string | null;
-    notifyState: __generated_prisma_enums.ScheduleNotifyState | null;
+    createdAt: Date;
+    deletedAt: Date | null;
+    updatedAt: Date;
+    status: __generated_prisma_enums.ScheduleStatus;
+    notes: string | null;
+    endTime: Date;
+    startTime: Date;
+    isLocked: boolean;
+    confirmed: boolean;
     notifiedAt: Date | null;
+    notifyState: __generated_prisma_enums.ScheduleNotifyState | null;
+    scheduleType: __generated_prisma_enums.ScheduleType;
+    statusChangedAt: Date | null;
 })[]>;
 declare function getTeacherNextSchedule(teacherId: string, orgId: string): Promise<{
     id: string;
+    status: __generated_prisma_enums.ScheduleStatus;
+    notes: string | null;
+    endTime: Date;
+    startTime: Date;
+    confirmed: boolean;
     group: {
         name: string;
         _count: {
             studentGroups: number;
         };
     } | null;
-    status: __generated_prisma_enums.ScheduleStatus;
-    notes: string | null;
-    startTime: Date;
-    endTime: Date;
-    confirmed: boolean;
     session: {
         id: string;
         status: __generated_prisma_enums.SessionStatus;
         checkIn: Date | null;
     } | null;
+    room: {
+        locationId: string | null;
+        name: string;
+    };
     class: {
         name: string;
         level: __generated_prisma_enums.Level;
@@ -92,29 +95,29 @@ declare function getTeacherNextSchedule(teacherId: string, orgId: string): Promi
             code: string | null;
         };
     };
-    room: {
-        name: string;
-        locationId: string | null;
-    };
 } | null>;
 declare function getTeacherDailySchedule(teacherId: string, orgId: string, dayKey: string): Promise<{
     id: string;
+    status: __generated_prisma_enums.ScheduleStatus;
+    notes: string | null;
+    endTime: Date;
+    startTime: Date;
+    confirmed: boolean;
     group: {
         name: string;
         _count: {
             studentGroups: number;
         };
     } | null;
-    status: __generated_prisma_enums.ScheduleStatus;
-    notes: string | null;
-    startTime: Date;
-    endTime: Date;
-    confirmed: boolean;
     session: {
         id: string;
         status: __generated_prisma_enums.SessionStatus;
         checkIn: Date | null;
     } | null;
+    room: {
+        locationId: string | null;
+        name: string;
+    };
     class: {
         name: string;
         level: __generated_prisma_enums.Level;
@@ -124,10 +127,6 @@ declare function getTeacherDailySchedule(teacherId: string, orgId: string, dayKe
     };
     course: {
         name: string;
-    };
-    room: {
-        name: string;
-        locationId: string | null;
     };
 }[]>;
 
@@ -187,51 +186,50 @@ declare function getSchedulesAction(params: Omit<ScheduleFilterParams, 'orgId'>)
 } | {
     data: ({
         group: {
-            name: string;
             id: string;
+            name: string;
         } | null;
         teacher: {
             id: string;
             user: {
+                avatar_url: string | null;
                 firstName: string | null;
                 lastName: string | null;
-                avatar_url: string | null;
             };
         };
-        class: {
-            name: string;
+        room: {
             id: string;
+            name: string;
+        };
+        class: {
+            id: string;
+            name: string;
         };
         course: {
-            name: string;
             id: string;
-        };
-        room: {
             name: string;
-            id: string;
         };
     } & {
         id: string;
-        status: __generated_prisma_enums.ScheduleStatus;
-        orgId: string;
-        createdAt: Date;
-        updatedAt: Date;
-        deletedAt: Date | null;
-        isLocked: boolean;
         classId: string;
-        teacherId: string;
-        courseId: string;
-        scheduleType: __generated_prisma_enums.ScheduleType;
         groupId: string | null;
-        notes: string | null;
+        courseId: string;
+        teacherId: string;
         roomId: string;
-        startTime: Date;
-        endTime: Date;
-        statusChangedAt: Date | null;
-        confirmed: boolean;
         weekRecurrenceId: string | null;
-        notifyState: __generated_prisma_enums.ScheduleNotifyState | null;
+        createdAt: Date;
+        deletedAt: Date | null;
+        updatedAt: Date;
+        status: __generated_prisma_enums.ScheduleStatus;
+        notes: string | null;
+        endTime: Date;
+        startTime: Date;
+        isLocked: boolean;
+        confirmed: boolean;
         notifiedAt: Date | null;
+        notifyState: __generated_prisma_enums.ScheduleNotifyState | null;
+        scheduleType: __generated_prisma_enums.ScheduleType;
+        statusChangedAt: Date | null;
     })[];
     error?: undefined;
 }>;
@@ -243,22 +241,26 @@ declare function getTeacherNextScheduleAction({ teacherId }: {
 } | {
     data: {
         id: string;
+        status: __generated_prisma_enums.ScheduleStatus;
+        notes: string | null;
+        endTime: Date;
+        startTime: Date;
+        confirmed: boolean;
         group: {
             name: string;
             _count: {
                 studentGroups: number;
             };
         } | null;
-        status: __generated_prisma_enums.ScheduleStatus;
-        notes: string | null;
-        startTime: Date;
-        endTime: Date;
-        confirmed: boolean;
         session: {
             id: string;
             status: __generated_prisma_enums.SessionStatus;
             checkIn: Date | null;
         } | null;
+        room: {
+            locationId: string | null;
+            name: string;
+        };
         class: {
             name: string;
             level: __generated_prisma_enums.Level;
@@ -272,10 +274,6 @@ declare function getTeacherNextScheduleAction({ teacherId }: {
                 code: string | null;
             };
         };
-        room: {
-            name: string;
-            locationId: string | null;
-        };
     } | null;
     error?: undefined;
 }>;
@@ -285,22 +283,26 @@ declare function getTeacherDailyScheduleAction(input?: GetTeacherDailyScheduleIn
 } | {
     data: {
         id: string;
+        status: __generated_prisma_enums.ScheduleStatus;
+        notes: string | null;
+        endTime: Date;
+        startTime: Date;
+        confirmed: boolean;
         group: {
             name: string;
             _count: {
                 studentGroups: number;
             };
         } | null;
-        status: __generated_prisma_enums.ScheduleStatus;
-        notes: string | null;
-        startTime: Date;
-        endTime: Date;
-        confirmed: boolean;
         session: {
             id: string;
             status: __generated_prisma_enums.SessionStatus;
             checkIn: Date | null;
         } | null;
+        room: {
+            locationId: string | null;
+            name: string;
+        };
         class: {
             name: string;
             level: __generated_prisma_enums.Level;
@@ -310,10 +312,6 @@ declare function getTeacherDailyScheduleAction(input?: GetTeacherDailyScheduleIn
         };
         course: {
             name: string;
-        };
-        room: {
-            name: string;
-            locationId: string | null;
         };
     }[];
     error?: undefined;
@@ -325,51 +323,51 @@ declare function createScheduleAction(data: CreateScheduleOutput): Promise<{
 } | {
     data: {
         group: {
-            name: string;
             id: string;
+            name: string;
         } | null;
         teacher: {
             id: string;
             user: {
+                avatar_url: string | null;
                 firstName: string | null;
                 lastName: string | null;
-                avatar_url: string | null;
             };
         };
-        class: {
-            name: string;
+        room: {
             id: string;
+            name: string;
+        };
+        class: {
+            id: string;
+            name: string;
         };
         course: {
-            name: string;
             id: string;
-        };
-        room: {
             name: string;
-            id: string;
         };
     } & {
-        id: string;
-        status: __generated_prisma_enums.ScheduleStatus;
         orgId: string;
-        createdAt: Date;
-        updatedAt: Date;
-        deletedAt: Date | null;
-        isLocked: boolean;
+        id: string;
         classId: string;
-        teacherId: string;
-        courseId: string;
-        scheduleType: __generated_prisma_enums.ScheduleType;
         groupId: string | null;
-        notes: string | null;
+        courseId: string;
+        teacherId: string;
         roomId: string;
-        startTime: Date;
-        endTime: Date;
-        statusChangedAt: Date | null;
-        confirmed: boolean;
         weekRecurrenceId: string | null;
-        notifyState: __generated_prisma_enums.ScheduleNotifyState | null;
+        createdAt: Date;
+        deletedAt: Date | null;
+        updatedAt: Date;
+        status: __generated_prisma_enums.ScheduleStatus;
+        notes: string | null;
+        endTime: Date;
+        startTime: Date;
+        isLocked: boolean;
+        confirmed: boolean;
         notifiedAt: Date | null;
+        notifyState: __generated_prisma_enums.ScheduleNotifyState | null;
+        scheduleType: __generated_prisma_enums.ScheduleType;
+        statusChangedAt: Date | null;
     };
     error?: undefined;
 }>;
@@ -379,51 +377,51 @@ declare function updateScheduleAction(input: UpdateScheduleInput): Promise<{
 } | {
     data: {
         group: {
-            name: string;
             id: string;
+            name: string;
         } | null;
         teacher: {
             id: string;
             user: {
+                avatar_url: string | null;
                 firstName: string | null;
                 lastName: string | null;
-                avatar_url: string | null;
             };
         };
-        class: {
-            name: string;
+        room: {
             id: string;
+            name: string;
+        };
+        class: {
+            id: string;
+            name: string;
         };
         course: {
-            name: string;
             id: string;
-        };
-        room: {
             name: string;
-            id: string;
         };
     } & {
-        id: string;
-        status: __generated_prisma_enums.ScheduleStatus;
         orgId: string;
-        createdAt: Date;
-        updatedAt: Date;
-        deletedAt: Date | null;
-        isLocked: boolean;
+        id: string;
         classId: string;
-        teacherId: string;
-        courseId: string;
-        scheduleType: __generated_prisma_enums.ScheduleType;
         groupId: string | null;
-        notes: string | null;
+        courseId: string;
+        teacherId: string;
         roomId: string;
-        startTime: Date;
-        endTime: Date;
-        statusChangedAt: Date | null;
-        confirmed: boolean;
         weekRecurrenceId: string | null;
-        notifyState: __generated_prisma_enums.ScheduleNotifyState | null;
+        createdAt: Date;
+        deletedAt: Date | null;
+        updatedAt: Date;
+        status: __generated_prisma_enums.ScheduleStatus;
+        notes: string | null;
+        endTime: Date;
+        startTime: Date;
+        isLocked: boolean;
+        confirmed: boolean;
         notifiedAt: Date | null;
+        notifyState: __generated_prisma_enums.ScheduleNotifyState | null;
+        scheduleType: __generated_prisma_enums.ScheduleType;
+        statusChangedAt: Date | null;
     };
     error?: undefined;
 }>;
@@ -445,22 +443,22 @@ declare function getClassesAction({ yearId, programTrackId, name, level }?: {
     data?: undefined;
 } | {
     data: {
-        name: string;
         id: string;
-        programTrackId: string;
-        level: Level;
         academicYearId: string;
+        programTrackId: string;
+        name: string;
+        level: Level;
         _count: {
             courses: number;
             studentEnrollments: number;
         };
         academicYear: {
-            name: string;
             id: string;
+            name: string;
         };
         programTrack: {
-            name: string;
             id: string;
+            name: string;
         };
     }[];
     error?: undefined;
@@ -477,22 +475,22 @@ declare function getClasses({ orgId, yearId, programTrackId, name, level }: {
     name?: string;
     level?: Level$1;
 }): Promise<{
-    name: string;
     id: string;
-    programTrackId: string;
-    level: Level$1;
     academicYearId: string;
+    programTrackId: string;
+    name: string;
+    level: Level$1;
     _count: {
         courses: number;
         studentEnrollments: number;
     };
     academicYear: {
-        name: string;
         id: string;
+        name: string;
     };
     programTrack: {
-        name: string;
         id: string;
+        name: string;
     };
 }[]>;
 
@@ -514,8 +512,8 @@ declare function registerDeviceAction(input: DeviceIdInput): Promise<{
         };
         session: {
             id: string;
-            createdAt: Date;
             deviceId: string;
+            createdAt: Date;
         };
     };
     error?: undefined;
@@ -686,6 +684,8 @@ declare function getCurrentUserAction(): Promise<{
     data?: undefined;
 }>;
 
+declare const notificationTypeSchema: v.PicklistSchema<["ABSENCE", "COURSE_CHANGE", "NEW_COURSE", "SCHEDULE_UPDATE", "GENERAL", "MESSAGE", "INVITATION"], undefined>;
+
 declare function getNotifications(limit?: number): Promise<{
     error: string;
     data?: undefined;
@@ -695,9 +695,9 @@ declare function getNotifications(limit?: number): Promise<{
         metadata: _prisma_client_runtime_client.JsonValue;
         message: string;
         id: string;
+        scheduleId: string | null;
         createdAt: Date;
         updatedAt: Date;
-        scheduleId: string | null;
         read: boolean;
     }[];
     error?: undefined;
@@ -711,9 +711,9 @@ declare function getUnread(limit?: number): Promise<{
         metadata: _prisma_client_runtime_client.JsonValue;
         message: string;
         id: string;
+        scheduleId: string | null;
         createdAt: Date;
         updatedAt: Date;
-        scheduleId: string | null;
         read: boolean;
     }[];
     error?: undefined;
@@ -753,9 +753,9 @@ declare function getNotificationsForUser(userId: string, limit?: number): Promis
     metadata: _prisma_client_runtime_client.JsonValue;
     message: string;
     id: string;
+    scheduleId: string | null;
     createdAt: Date;
     updatedAt: Date;
-    scheduleId: string | null;
     read: boolean;
 }[]>;
 declare function getUnreadNotificationsForUser(userId: string, limit?: number): Promise<{
@@ -763,14 +763,12 @@ declare function getUnreadNotificationsForUser(userId: string, limit?: number): 
     metadata: _prisma_client_runtime_client.JsonValue;
     message: string;
     id: string;
+    scheduleId: string | null;
     createdAt: Date;
     updatedAt: Date;
-    scheduleId: string | null;
     read: boolean;
 }[]>;
 declare function getUnreadCountForUser(userId: string): Promise<number>;
-
-declare const notificationTypeSchema: v.PicklistSchema<["ABSENCE", "COURSE_CHANGE", "NEW_COURSE", "SCHEDULE_UPDATE", "GENERAL", "MESSAGE", "INVITATION"], undefined>;
 
 type GetNotificationsForUserDto = Awaited<ReturnType<typeof getNotificationsForUser>>;
 type GetUnreadNotificationsForUserDto = Awaited<ReturnType<typeof getUnreadNotificationsForUser>>;
@@ -834,15 +832,15 @@ declare function getScheduleAttendancesAction({ scheduleId }: {
     data: {
         id: string;
         status: __generated_prisma_enums.AttendanceStatus;
+        recordedAt: Date;
         student: {
             user: {
                 id: string;
+                avatar_url: string | null;
                 firstName: string | null;
                 lastName: string | null;
-                avatar_url: string | null;
             };
         };
-        recordedAt: Date;
     }[];
     error?: undefined;
 }>;
@@ -877,15 +875,15 @@ declare function confirmAllAttendancesAction({ scheduleId }: {
 declare function getScheduleAttendances(scheduleId: string): Promise<{
     id: string;
     status: AttendanceStatus;
+    recordedAt: Date;
     student: {
         user: {
             id: string;
+            avatar_url: string | null;
             firstName: string | null;
             lastName: string | null;
-            avatar_url: string | null;
         };
     };
-    recordedAt: Date;
 }[]>;
 
 type GetScheduleAttendancesDto = Awaited<ReturnType<typeof getScheduleAttendances>>;

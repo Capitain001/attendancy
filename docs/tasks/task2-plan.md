@@ -1,248 +1,231 @@
-# Tasks: Direction Dashboard V2 — Reproduction structure V1
+// ─── Domaine académique ──────────────────────────────────────────────────────
+// Deux plans distincts, à ne jamais confondre :
+//   STRUCTURE (hors du temps)  : Department → ProgramTrack → Program →
+//                                ProgramUE → UE → UECourse. La maquette
+//                                pédagogique, réutilisée chaque année.
+//   INSTANCE (une année réelle): AcademicYear → Class → Term / Course /
+//                                StudentEnrollment. Ce qui se déroule.
+// L'application d'un Program à une Class instancie : UECourse → Course,
+// ProgramUE.semester (Int structurel) → Term (période datée par classe).
 
-**Spec**: `docs/tasks/task2.md`
-**Status**: Not Started ⏳
 
----
 
-## Contexte
+// Unité d'enseignement — entité de référence métier.
+// deletedAt = ARCHIVAGE (convention projet), pas suppression : 
+// Promotion réelle d'une année. Le calendrier (Terms) et les cours (Course)
+// sont instanciés par classe — chaque classe a ses propres dates.
+model Class {
+id                 String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+name               String
+createdAt          DateTime            @default(now())
+updatedAt          DateTime            @updatedAt
+deletedAt          DateTime?
+programTrackId     String              @db.Uuid
+level              Level               @default(L1)
+programId          String?             @db.Uuid
+academicYearId     String              @db.Uuid
+isActive           Boolean             @default(true)
+type               ClassType           @default(COHORT)
+channels           Channel[]
+academicYear       AcademicYear        @relation(fields: [academicYearId], references: [id])
+program            Program?            @relation(fields: [programId], references: [id], onDelete: SetNull)
+programTrack       ProgramTrack        @relation(fields: [programTrackId], references: [id])
+courses            Course[]
+groups             Group[]
+schedules          Schedule[]
+studentEnrollments StudentEnrollment[]
+terms              Term[]
+// feeStructure       FeeStructure?       @relation(fields: [feeStructureId], references: [id])
+// feeStructureId     String?             @db.Uuid
 
-La page V2 `src/app/(app)/[slug]/direction/page.tsx` existe déjà avec une structure partielle.
-Objectif : la restructurer pour reproduire fidèlement la hiérarchie V1, en remplaçant les
-sections complexes (anomalies, ActiveSessionsGrid) par des placeholders.
+// Unicité réelle : un nom de classe par filière et par année. (Pas d'unique
+// incluant programId : nullable → NULLs distincts, contrainte inopérante.)
+@@unique([programTrackId, name, academicYearId])
+@@index([programId])
+@@index([academicYearId])
+@@schema("public")
+}
 
-### Ce qui existe déjà en V2
+// Période datée d'UNE classe (semestre/trimestre réel). order = pont vers
+// ProgramUE.semester à l'instanciation. Dates nullable : Terms générés sans
+// dates à l'application du programme, bornés ensuite par la direction.
+// Granularité classe (pas année) : chaque classe a son calendrier, et la
+// clôture (lockedAt) suit le rythme réel des jurys, classe par classe.
+// Cascade : le semestre meurt avec sa classe.
+model Term {
+id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+classId   String    @db.Uuid
+order     Int // correspond à ProgramUE.semester à l'instanciation
+name      String // "Semestre 1" — généré, éditable
+startDate DateTime? @db.Date
+endDate   DateTime? @db.Date
+// Clôture après délibération : fige les évaluations des cours du terme
+// (garde applicative dans le service d'évaluation).
+lockedAt  DateTime?
+createdAt DateTime  @default(now())
+updatedAt DateTime  @updatedAt
 
-| Composant | Chemin | Réutilisé ? |
-|---|---|---|
-| `MetricCard` | `src/components/stats/ui/MetricCard.tsx` | ✅ direct |
-| `OrgMetricsCard` | `src/components/direction/dashboard/OrgMetricsCard.tsx` | ❌ remplacé par MetricCard × 4 dans CollapseSection |
-| `DailyMetricsCard` | `src/components/direction/dashboard/DailyMetricsCard.tsx` | ❌ remplacé par MetricCard × 4 dans grid |
-| `AcademicYearBanner` | `src/components/direction/dashboard/AcademicYearBanner.tsx` | ✅ gardé |
-| `TodaySessionsWidget` | `src/components/direction/dashboard/TodaySessionsWidget.tsx` | ✅ placeholder "Séances en cours" |
+class   Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+courses Course[]
 
-### Actions V2 disponibles
+@@unique([classId, order])
+@@schema("public")
+}
 
-| Action | Retour clé | Usage dans la page |
-|---|---|---|
-| `getOrgIdentityAction()` | `{ name, slug }` | nom org dans le header |
-| `getOrgDailyMetricsAction()` | `{ activeSessions, todaySchedules, completedSchedules, todayAbsences }` | 4 MetricCards du jour |
-| `getOrgResourcesCountsAction()` | `{ courses, classes, rooms, teachers, students }` | CollapseSection Ressources |
-| `getOrgTodayAbsencesAction()` | tableau absences `{ id, student, schedule }` | CollapseSection Absences |
-| `getCurrentYearAction()` | année courante | AcademicYearBanner |
+// Instance d'un UECourse pour UNE classe — porte le déroulé réel :
+// progression horaire, enseignants, planification, évaluations.
+// termId nullable : un cours hors maquette (rattrapage, module exceptionnel)
+// peut exister sans période.
+model Course {
+id            String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+settings      Json?
+createdAt     DateTime             @default(now())
+updatedAt     DateTime             @updatedAt
+deletedAt     DateTime?
+classId       String               @db.Uuid
+// Progression : réalisé / total planifié. Pas de CHECK done <= total :
+// un cours peut légitimement dépasser le prévu (réalité > plan).
+durationDone  Int                  @default(0)
+durationTotal Int                  @default(0)
+orgId         String               @db.Uuid
+name          String
+credits       Float                @default(2)
+description   String?
+ueCourseId    String               @db.Uuid
+termId        String?              @db.Uuid
+class         Class                @relation(fields: [classId], references: [id], onDelete: Cascade)
+organization  Organization         @relation(fields: [orgId], references: [id])
+term          Term?                @relation(fields: [termId], references: [id], onDelete: SetNull)
+ueCourse      UECourse             @relation(fields: [ueCourseId], references: [id])
+teachers      CourseTeacher[]
+evaluations   Evaluation[]
+schedules     Schedule[]
+weeklySlots   WeeklySlot[]
+teacherHours  TeacherCourseHours[]
+// sert a la relation course - groupe pr l espace perso
+group Group?
+// Unicité (classId, ueCourseId) gérée par index UNIQUE PARTIEL
+// WHERE "deletedAt" IS NULL — non exprimable en Prisma, défini en
+// post-migrate (course_active_unique_idx) : recréer un cours après
+// soft delete reste possible.
+@@index([ueCourseId])
+@@index([orgId])
+@@index([classId])
+@@index([termId])
+@@schema("public")
+}
 
-### Ce qui manque en V2
 
-- `CollapseSection` — à créer (port V1, `framer-motion` installé)
-- `AlertCategoryCards` — à créer (port V1 direct)
+// Compteur incrémental heures effectuées par (prof, cours, type de séance).
+// Maintenu par trigger DB (sync_teacher_course_hours_stats) sur Schedule —
+// jamais écrit par l'applicatif. ScheduleType figé dès qu'un Schedule quitte
+// PENDING (trigger_prevent_locked_schedule_update) : pas de transfert de
+// clé à gérer ici.
+model TeacherCourseHours {
+id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+orgId          String       @db.Uuid
+teacherId      String       @db.Uuid
+courseId       String       @db.Uuid
+scheduleType   ScheduleType
+completedHours Float        @default(0)
+updatedAt      DateTime     @updatedAt
 
----
+teacher      Teacher      @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+course       Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
-## Phase 1: Composants partagés ⏳ (~30min)
+@@unique([teacherId, courseId, scheduleType])
+@@index([orgId])
+@@schema("public")
+}
 
-**But**: Créer les deux composants manquants utilisés dans la page.
 
-- [ ] T001 [P] Créer `src/components/layout/CollapseSection.tsx`
-  - Port direct de V1 (`src/components/courses/pages/DirectionCoursePage/components/CollapseSection.tsx`)
-  - Props : `label: string`, `children: ReactNode`, `defaultOpen?: boolean`, `count?: number`
-  - `"use client"` + `useState` + `AnimatePresence` / `motion.div` de `framer-motion`
-  - Exporter depuis `src/components/layout/index.ts` (créer si absent)
+// Inscription d'un étudiant dans une classe. endedAt = départ en cours
+// d'année (abandon, transfert) SANS casser l'historique — le hard delete est
+// bloqué par Restrict (Attendance) dès la première présence enregistrée :
+// il ne reste possible que pour une inscription créée par erreur.
+model StudentEnrollment {
+id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+studentId     String         @db.Uuid
+classId       String         @db.Uuid
+createdAt     DateTime       @default(now())
+updatedAt     DateTime       @updatedAt
+endedAt       DateTime?
+class         Class          @relation(fields: [classId], references: [id])
+student       Student        @relation(fields: [studentId], references: [id])
+studentGroups StudentGroup[]
+attendances   Attendance[]
+grades        Grade[]
+// invoice       Invoice?
 
-- [ ] T002 [P] Créer `src/components/direction/dashboard/AlertCategoryCards.tsx`
-  - Port direct de V1 (`src/components/direction/alerts/AlertCategoryCards.tsx`)
-  - Props : `missed: number`, `notStarted: number`, `incomplete: number`
-  - Icônes : `AlertTriangle`, `Clock`, `AlertCircle` de `lucide-react`
-  - Pas de `"use client"` (pur affichage)
+// Un étudiant a au plus UNE inscription par classe (mais peut en avoir
+// plusieurs, dans des classes différentes).
+@@unique([studentId, classId])
+// Cible de la FK composite Attendance(enrollmentId, studentId). `id` étant
+// déjà PK, cet unique ne restreint RIEN : il existe uniquement parce que
+// Postgres exige une contrainte d'unicité pour cibler une FK composite.
+@@unique([id, studentId])
+@@index([classId])
+@@schema("public")
+}
 
-**Checkpoint**: ✋ Deux composants compilent sans erreur TS
+// Sous-ensemble d'une classe (TD/TP). Soft delete conservé : un Schedule à
+// groupId NULL signifie "classe entière" — une suppression physique (SetNull)
+// réécrirait l'historique des séances de groupe en séances de classe.
+// Restrict sur Schedule.group verrouille ce risque côté DB.
+model Group {
+id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+name          String
+description   String?
+createdAt     DateTime       @default(now())
+updatedAt     DateTime       @updatedAt
+deletedAt     DateTime?
+classId       String         @db.Uuid
+channels      Channel[]
+class         Class          @relation(fields: [classId], references: [id])
+schedules     Schedule[]
+studentGroups StudentGroup[]
 
-**Notes:**
+//perso Lien cours ↔ groupe
+//SetNull unlink le groupe sans réécrire l’historique des séances (Schedule.groupId reste protégé par son Restrict).
+courseId String? @unique @db.Uuid
+course   Course? @relation(fields: [courseId], references: [id], onDelete: SetNull)
 
----
+@@index([classId])
+@@schema("public")
+}
 
-## Phase 2: Page direction restructurée ⏳ (~45min)
+// Affectation d'une INSCRIPTION (pas d'un étudiant) à un groupe : garantit
+// par construction que l'étudiant est bien inscrit dans la classe du groupe
+// (invariant renforcé par le trigger validate_student_class_group).
+model StudentGroup {
+id           String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+enrollmentId String            @db.Uuid
+groupId      String            @db.Uuid
+createdAt    DateTime          @default(now())
+enrollment   StudentEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+group        Group             @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
-**But**: Remplacer le contenu de `src/app/(app)/[slug]/direction/page.tsx` pour
-reproduire la structure V1.
+@@unique([enrollmentId, groupId])
+@@index([groupId])
+@@schema("public")
+}
 
-- [ ] T003 Restructurer `src/app/(app)/[slug]/direction/page.tsx`
 
-  **Imports à ajouter / modifier :**
-  ```ts
-  import { format } from 'date-fns'
-  import { connection } from 'next/server'
-  import { Suspense } from 'react'
-  import { getOrgIdentityAction, getOrgDailyMetricsAction, getOrgResourcesCountsAction } from '@/services/organization'
-  import { getCurrentYearAction } from '@/services/academic-year'
-  import { getOrgTodayAbsencesAction } from '@/services/attendance'
-  import { MetricCard } from '@/components/stats/ui/MetricCard'
-  import { AcademicYearBanner } from '@/components/direction/dashboard/AcademicYearBanner'
-  import { AlertCategoryCards } from '@/components/direction/dashboard/AlertCategoryCards'
-  import { TodaySessionsWidget } from '@/components/direction/dashboard/TodaySessionsWidget'
-  import { CollapseSection } from '@/components/layout/CollapseSection'
-  import { Loader } from '@/components/loaders/AppLoaders'
-  ```
+enum UEType {
+FONDAMENTALE
+COMPLEMENTAIRE
+APPROFONDISSEMENT
+SPECIALITE
+TRANSVERSALE
+LIBRE
 
-  **Params route :**
-  ```ts
-  export default async function DirectionDashboard({
-    params,
-  }: {
-    params: Promise<{ slug: string }>
-  }) {
-    await connection()
-    const { slug } = await params
-    const base = `/${slug}/direction`
-    // ...
-  ```
+@@schema("public")
+}
 
-  **Fetches parallèles :**
-  ```ts
-  const [identityRes, countsRes, metricsRes, yearRes, absencesRes] = await Promise.all([
-    getOrgIdentityAction(),
-    getOrgResourcesCountsAction(),
-    getOrgDailyMetricsAction(),
-    getCurrentYearAction(),
-    getOrgTodayAbsencesAction(),
-  ])
-  const orgName  = 'data' in identityRes  ? identityRes.data?.name  ?? slug : slug
-  const counts   = 'data' in countsRes    ? countsRes.data           : null
-  const metrics  = 'data' in metricsRes   ? metricsRes.data          : null
-  const year     = 'data' in yearRes      ? yearRes.data             : null
-  const absences = 'data' in absencesRes  ? absencesRes.data ?? []   : []
-  ```
+enum ClassType {
+COHORT // Cohorte institutionnelle (ex: Terminale S1)
+THEMATIC // Groupe thématique / Matière (ex: Masterclass React)
 
-  **Calculs :**
-  ```ts
-  const schedulesCount = (metrics?.todaySchedules ?? 0) === 0
-    ? '0'
-    : `${metrics?.completedSchedules ?? 0}/${metrics?.todaySchedules ?? 0}`
-  ```
-
-  **Structure JSX (reproduction V1) :**
-
-  ```tsx
-  <div className="scroll-smooth flex flex-col gap-y-4 pb-10">
-    {year && <AcademicYearBanner year={year} />}
-
-    {/* Header */}
-    <header className="space-y-1">
-      <p className="text-[11px] font-medium uppercase tracking-widest text-muted-foreground">
-        Tableau de bord
-      </p>
-      <h1 className="text-2xl font-semibold tracking-tight">{orgName}</h1>
-    </header>
-
-    {/* Métriques du jour — 4 cards */}
-    <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-      <MetricCard label="Anomalies" value="0" sub="retards + séances manquées"
-        href={`${base}/sessions`} />
-      <MetricCard label="Absences aujourd'hui"
-        value={String(metrics?.todayAbsences ?? 0)} sub="présences marquées absentes" />
-      <MetricCard label="Séances du jour" value={schedulesCount}
-        sub="complétées aujourd'hui" href={`${base}/schedule`} />
-      <MetricCard label="Sessions en cours"
-        value={String(metrics?.activeSessions ?? 0)} sub="actuellement actives"
-        href={`${base}/sessions`} />
-    </section>
-
-    {/* Anomalies — toujours masqué (placeholder 0) */}
-
-    {/* Absences du jour */}
-    <CollapseSection label="Absences du jour" count={absences.length}
-      defaultOpen={absences.length > 0}>
-      {absences.length === 0 ? (
-        <p className="px-1 text-sm text-muted-foreground">
-          Aucune absence enregistrée aujourd'hui.
-        </p>
-      ) : (
-        <ul className="divide-y divide-border/60">
-          {absences.map((a) => {
-            const name =
-              [a.student.user.firstName, a.student.user.lastName]
-                .filter(Boolean).join(' ') || 'Étudiant'
-            return (
-              <li key={a.id} className="flex items-center gap-3 py-2.5">
-                <span className="size-2 shrink-0 rounded-full bg-red-500/70" />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">{name}</p>
-                  <p className="truncate text-xs text-muted-foreground">
-                    {a.schedule.course.name}
-                    {' · '}
-                    {a.schedule.group?.name ?? a.schedule.class.name}
-                  </p>
-                </div>
-                <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
-                  {format(a.schedule.startTime, 'HH:mm')}
-                </span>
-              </li>
-            )
-          })}
-        </ul>
-      )}
-    </CollapseSection>
-
-    {/* Séances en cours — placeholder TodaySessionsWidget */}
-    <CollapseSection label="Séances en cours"
-      count={metrics?.activeSessions ?? 0} defaultOpen>
-      <Suspense fallback={<Loader />}>
-        <TodaySessionsWidget />
-      </Suspense>
-    </CollapseSection>
-
-    {/* Ressources */}
-    <CollapseSection label="Ressources">
-      <div className="grid grid-cols-4 gap-3">
-        <MetricCard label="Cours" value={String(counts?.courses ?? 0)}
-          sub="cours actifs" href={`${base}/courses`} />
-        <MetricCard label="Classes" value={String(counts?.classes ?? 0)}
-          sub="classes ouvertes" href={`${base}/classes`} />
-        <MetricCard label="Salles" value={String(counts?.rooms ?? 0)}
-          sub="salles disponibles" href={`${base}/rooms`} />
-        <MetricCard label="Étudiants" value={String(counts?.students ?? 0)}
-          sub={`${counts?.teachers ?? 0} enseignants`} href={`${base}/students`} />
-      </div>
-    </CollapseSection>
-  </div>
-  ```
-
-**Checkpoint**: ✋ Page compile + structure V1 visible dans le navigateur
-
-**Notes:**
-
----
-
-## Phase 3: Vérification ⏳ (~15min)
-
-**But**: Zéro erreur TS, export correct.
-
-- [ ] T004 Vérifier TypeScript
-  ```
-  npx tsc --noEmit 2>&1 | grep -i "direction\|CollapseSection\|AlertCategory"
-  ```
-- [ ] T005 Vérifier barrel `src/components/layout/index.ts` exporte bien `CollapseSection`
-- [ ] T006 Vérifier que `DailyMetricsCard` et `OrgMetricsCard` ne sont plus importés dans la page
-
-**Checkpoint**: ✋ 0 erreur TS sur les fichiers modifiés
-
-**Notes:**
-
----
-
-## Résumé
-
-| Phase | Fichiers touchés | Durée est. |
-|---|---|---|
-| 1 — Composants | `CollapseSection.tsx` (new), `AlertCategoryCards.tsx` (new) | ~30 min |
-| 2 — Page | `direction/page.tsx` (refactor) | ~45 min |
-| 3 — Vérif | TS check | ~15 min |
-
-**Total : ~1h30**
-
-### Placeholders intentionnels (hors périmètre task2)
-
-| Section | Placeholder | Logique absente |
-|---|---|---|
-| Anomalies MetricCard | valeur fixe `"0"` | `bucketize` + `getDirectionSessionsAction` |
-| AlertCategoryCards | non rendu (`anomalies.length === 0`) | `bucketize` retourne toujours 0 |
-| "Séances en cours" | `TodaySessionsWidget` (séances du jour, pas sessions actives) | `ActiveSessionsGrid` non porté |
+@@schema("public")
+}

@@ -13,6 +13,19 @@ export const input = {
     "focus-visible:outline-none"
   ),
 
+  underline: cn(
+    "w-full",
+    "rounded-none",
+    "border-0 border-b border-border",
+    "text-text-primary",
+    "px-1 py-2 text-base",
+    "placeholder:text-text-disabled",
+    "shadow-none",
+    "transition-colors duration-150",
+    "focus-visible:border-text-primary focus-visible:ring-0 focus-visible:ring-offset-0",
+    "focus-visible:outline-none"
+  ),
+
   textarea: cn("min-h-[8rem] pt-3"),
   label: cn("mb-1.5 block text-sm font-medium"),
   // label: cn("mb-1.5 block text-xs text-text-subtle"),

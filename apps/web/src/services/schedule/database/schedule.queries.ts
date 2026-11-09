@@ -10,10 +10,10 @@ import { CACHE } from '@/cache/server/key'
 ========================= */
 
 const scheduleInclude = {
-  course:  { select: { id: true, name: true } },
-  room:    { select: { id: true, name: true } },
-  class:   { select: { id: true, name: true } },
-  group:   { select: { id: true, name: true } },
+  course: { select: { id: true, name: true } },
+  room: { select: { id: true, name: true } },
+  class: { select: { id: true, name: true } },
+  group: { select: { id: true, name: true } },
   teacher: {
     select: {
       id: true,
@@ -71,11 +71,11 @@ function buildScheduleWhere(params: ScheduleFilterParams) {
 
   const groupCondition = groupIds
     ? {
-        OR: [
-          { groupId: null },
-          ...(groupIds.length > 0 ? [{ groupId: { in: groupIds } }] : []),
-        ],
-      }
+      OR: [
+        { groupId: null },
+        ...(groupIds.length > 0 ? [{ groupId: { in: groupIds } }] : []),
+      ],
+    }
     : {}
 
   return {
@@ -103,6 +103,7 @@ export async function getSchedules(params: ScheduleFilterParams) {
     where: buildScheduleWhere(params),
     orderBy: { startTime: 'asc' },
     include: scheduleInclude,
+    omit: { orgId: true },
   })
 }
 
@@ -469,7 +470,7 @@ export async function getCourseLastSchedule(courseId: string, orgId: string) {
       startTime: { lte: new Date() },
     },
     orderBy: { startTime: 'desc' },
-      select: {
+    select: {
       id: true,
       startTime: true,
       endTime: true,
@@ -481,4 +482,3 @@ export async function getCourseLastSchedule(courseId: string, orgId: string) {
     },
   })
 }
- 

@@ -46,10 +46,13 @@ export async function updateUserAccess(
 
 /**
  * Écrit des clés d'accès pour l'utilisateur courant (identité issue de la session,
- * jamais d'un paramètre) puis rafraîchit le cache applicatif.
+ * jamais d'un paramètre) puis invalide son cache applicatif.
  *
  * Utilisé après une décision serveur : switch de profil, changement d'organisation,
  * création d'organisation, acceptation d'invitation.
+ * La nouvelle valeur sera relue à la prochaine requête. Ne pas rappeler
+ * `getUserInfo({ refresh: true })` ici : `React.cache` peut réutiliser la lecture
+ * faite avant l'écriture et remettre l'ancienne valeur dans le cache LRU.
  * Le JWT garde ses anciens claims jusqu'au prochain refresh de session.
  *
  * @throws si l'utilisateur n'est pas authentifié ou si l'écriture échoue
@@ -62,7 +65,6 @@ export async function setUserAccess(patch: AppMetadataPatch) {
   if (!current?.id) throw new Error("Utilisateur non trouvé");
 
   await updateUserAccess(current.id, patch);
-  await getUserInfo({ refresh: true });
 }
 
 /* =========================

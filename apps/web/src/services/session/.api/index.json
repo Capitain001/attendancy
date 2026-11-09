@@ -2,7 +2,7 @@
   "service": "session",
   "path": "src/services/session/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "3b4d4d0",
+  "derived_at": "1d1dee3",
   "utils_dir": null,
   "fns": {
     "startSession": {
@@ -32,6 +32,11 @@
     },
     "getTeacherNextSchedule": {
       "f": ".api/getTeacherNextSchedule.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getSessionReport": {
+      "f": ".api/getSessionReport.json",
       "layer": "db",
       "kind": "query"
     },
@@ -80,6 +85,11 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "getSessionReportAction": {
+      "f": ".api/getSessionReportAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "generateTokenAction": {
       "f": ".api/generateTokenAction.json",
       "layer": "action",
@@ -111,6 +121,9 @@
     "getTeacherNextSchedule": [
       "getTeacherNextScheduleAction"
     ],
+    "getSessionReport": [
+      "getSessionReportAction"
+    ],
     "createSessionToken": [
       "generateTokenAction"
     ],
@@ -126,6 +139,7 @@
     "getDirectionSessionsAction": [],
     "getDirectionSessionsByDateAction": [],
     "getTeacherNextScheduleAction": [],
+    "getSessionReportAction": [],
     "generateTokenAction": [],
     "attendAction": [],
     "markScheduleAbsences": [

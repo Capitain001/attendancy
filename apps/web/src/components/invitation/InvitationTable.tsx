@@ -4,11 +4,9 @@ import { Loader2, RotateCw, Trash2, Share2, ChevronRight, CircleAlert } from 'lu
 
 import { Badge } from '@/components/ui/badge'
 import {
-  resolveInvitationStatus,
   getStatusBadgeInfo,
-  filterInvitationsByStatus,
-  type InvitationStatus,
 } from '@/modules/invitation/status'
+import { resolveInvitationUiStatus, type InvitationUiStatus } from '@/modules/invitation/policy'
 import type { InvitationListItem } from '@/modules/invitation'
 import { cn } from '@/lib/utils'
 
@@ -20,12 +18,12 @@ interface InvitationTableProps {
   pending?: boolean
 }
 
-const FILTERS: { value: 'all' | InvitationStatus; label: string }[] = [
+const FILTERS: { value: 'all' | InvitationUiStatus; label: string }[] = [
   { value: 'all', label: 'Toutes' },
-  { value: 'pending', label: 'En attente' },
-  { value: 'accepted', label: 'Acceptées' },
-  { value: 'expired', label: 'Expirées' },
-  { value: 'declined', label: 'Refusées' },
+  { value: 'PENDING', label: 'En attente' },
+  { value: 'ACCEPTED', label: 'Acceptées' },
+  { value: 'EXPIRED', label: 'Expirées' },
+  { value: 'DECLINED', label: 'Refusées' },
 ]
 
 function formatDate(d: Date | string | null) {
@@ -34,12 +32,15 @@ function formatDate(d: Date | string | null) {
 }
 
 export function InvitationTable({ invitations, onResend, onRevoke, onShare, pending }: InvitationTableProps) {
-  const [filter, setFilter] = useState<'all' | InvitationStatus>('all')
+  const [filter, setFilter] = useState<'all' | InvitationUiStatus>('all')
   const [confirmId, setConfirmId] = useState<string | null>(null)
   const [showExpiry, setShowExpiry] = useState(false)
   const [visibleActions, setVisibleActions] = useState<Set<string>>(new Set())
 
-  const rows = filterInvitationsByStatus(invitations, filter)
+  const now = new Date()
+  const rows = filter === 'all'
+    ? invitations
+    : invitations.filter((invitation) => resolveInvitationUiStatus(invitation, now) === filter)
 
   function toggleActions(id: string) {
     setVisibleActions((prev) => {
@@ -93,7 +94,7 @@ export function InvitationTable({ invitations, onResend, onRevoke, onShare, pend
       ) : (
         <ul className="divide-y divide-foreground/10">
           {rows.map((inv) => {
-            const status = resolveInvitationStatus(inv)
+            const status = resolveInvitationUiStatus(inv, now)
             const badge = getStatusBadgeInfo(status)
             const role = inv.details?.role ?? '—'
             const confirming = confirmId === inv.id
@@ -107,7 +108,7 @@ export function InvitationTable({ invitations, onResend, onRevoke, onShare, pend
                   </p>
                 </div>
 
-                {status === 'pending' || status === 'expired' ? (
+                {status === 'PENDING' || status === 'EXPIRED' ? (
                   <button
                     type="button"
                     onClick={() => toggleActions(inv.id)}
@@ -142,7 +143,7 @@ export function InvitationTable({ invitations, onResend, onRevoke, onShare, pend
                 )}
 
                 <div className="flex shrink-0 items-center gap-1">
-                  {(status === 'pending' || status === 'expired') && actionsVisible && (
+                  {(status === 'PENDING' || status === 'EXPIRED') && actionsVisible && (
                     <button
                       type="button"
                       onClick={() => onResend(inv)}
@@ -154,7 +155,7 @@ export function InvitationTable({ invitations, onResend, onRevoke, onShare, pend
                     </button>
                   )}
 
-                  {(status === 'pending' || status === 'expired') && actionsVisible && onShare && (
+                  {(status === 'PENDING' || status === 'EXPIRED') && actionsVisible && onShare && (
                     <button
                       type="button"
                       onClick={() => onShare(inv)}
@@ -166,7 +167,7 @@ export function InvitationTable({ invitations, onResend, onRevoke, onShare, pend
                     </button>
                   )}
 
-                  {confirming && (status === 'pending' || status === 'expired') ? (
+                  {confirming && (status === 'PENDING' || status === 'EXPIRED') ? (
                     <div className="flex items-center gap-1">
                       <button
                         type="button"
@@ -187,7 +188,7 @@ export function InvitationTable({ invitations, onResend, onRevoke, onShare, pend
                         Non
                       </button>
                     </div>
-                  ) : (status === 'pending' || status === 'expired') ? (
+                  ) : (status === 'PENDING' || status === 'EXPIRED') ? (
                     <button
                       type="button"
                       onClick={() => setConfirmId(inv.id)}

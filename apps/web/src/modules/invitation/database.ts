@@ -11,17 +11,22 @@ import {
   DatabaseInvitationDetails,
   AuditLogDetails,
 } from "@/types/invitation";
-import type { Action, InvitationStatus, Resource, Role } from "@/generated/prisma/client";
+import type {
+  Action,
+  InvitationStatus,
+  Resource,
+  Role,
+} from "@/generated/prisma/client";
 
 function createDatabaseDetails(
-  metadata: InvitationMetadata
+  metadata: InvitationMetadata,
 ): Prisma.InputJsonValue {
   return {
-    role:           metadata.role,
-    name:           metadata.name,
-    function:       metadata.function,
-    organization:   metadata.organization,
-    invited_by:     metadata.invited_by,
+    role: metadata.role,
+    name: metadata.name,
+    function: metadata.function,
+    organization: metadata.organization,
+    invited_by: metadata.invited_by,
     invitationType: metadata.invitationType,
     ...(metadata.details || {}),
   } as unknown as Prisma.InputJsonValue;
@@ -29,24 +34,24 @@ function createDatabaseDetails(
 
 function createAuditDetails(
   email: string,
-  metadata: InvitationMetadata
+  metadata: InvitationMetadata,
 ): AuditLogDetails {
   return {
     email,
-    name:         metadata.name || email.split("@")[0],
-    orgId:        metadata.organization?.id!,
-    role:         metadata.role,
-    function:     metadata.function || undefined,
+    name: metadata.name || email.split("@")[0],
+    orgId: metadata.organization?.id!,
+    role: metadata.role,
+    function: metadata.function || undefined,
     departmentId: metadata.organization?.departmentId || undefined,
   };
 }
 
 export async function saveInvitationToDatabase(
-  email:      string,
-  token:      string,
-  expiresAt:  Date,
-  metadata:   InvitationMetadata,
-  resourceId?:   string,
+  email: string,
+  token: string,
+  expiresAt: Date,
+  metadata: InvitationMetadata,
+  resourceId?: string,
   resourceType?: Resource,
 ): Promise<void> {
   const details = createDatabaseDetails(metadata);
@@ -56,20 +61,20 @@ export async function saveInvitationToDatabase(
       email,
       token,
       expiresAt,
-      orgId:          metadata?.organization?.id!,
+      orgId: metadata?.organization?.id!,
       invitationType: "INVITE_ONLY",
       details,
-      ...(resourceId   ? { resourceId }   : {}),
+      ...(resourceId ? { resourceId } : {}),
       ...(resourceType ? { resourceType } : {}),
     },
   });
 }
 
 export async function logAuditAction(
-  userId:   string,
-  action:   Action,
-  email:    string,
-  metadata: InvitationMetadata
+  userId: string,
+  action: Action,
+  email: string,
+  metadata: InvitationMetadata,
 ): Promise<void> {
   const details = createAuditDetails(email, metadata);
 
@@ -99,7 +104,8 @@ export async function saveInvitationWithAudit(params: SaveInvitationParams) {
   const invitationDetails = createDatabaseDetails(params.metadata);
   const auditDetails = createAuditDetails(params.email, params.metadata);
   const orgId = params.metadata.organization?.id;
-  if (!orgId) throw new Error("Organisation manquante dans les métadonnées d'invitation");
+  if (!orgId)
+    throw new Error("Organisation manquante dans les métadonnées d'invitation");
 
   const result = await prisma.$transaction(
     async (tx) => {
@@ -154,7 +160,10 @@ export async function saveInvitationWithAudit(params: SaveInvitationParams) {
     try {
       await invalidateEvent("NOTIFICATION_CREATED", params.targetUserId);
     } catch (error) {
-      console.error("[saveInvitationWithAudit] invalidation cache notification échouée", error);
+      console.error(
+        "[saveInvitationWithAudit] invalidation cache notification échouée",
+        error,
+      );
     }
   }
 
@@ -179,10 +188,7 @@ export async function revokePendingInvitationsForResource(
     resourceType: params.resourceType,
     status: "PENDING",
     id: { not: params.acceptedInvitationId },
-    OR: [
-      { expiresAt: null },
-      { expiresAt: { gt: params.revokedAt } },
-    ],
+    OR: [{ expiresAt: null }, { expiresAt: { gt: params.revokedAt } }],
   };
   const pendingInvitations = await tx.invitation.findMany({
     where,
@@ -203,22 +209,22 @@ export async function revokePendingInvitationsForResource(
 }
 
 export interface InvitationListItem {
-  id:        string;
-  email:     string;
+  id: string;
+  email: string;
   createdAt: Date;
   expiresAt: Date | null;
-  status:    InvitationStatus;
+  status: InvitationStatus;
   usedAt: Date | null;
-  details:   DatabaseInvitationDetails | null;
-  role:      string | null;
+  details: DatabaseInvitationDetails | null;
+  role: string | null;
 }
 
 export interface InvitationStats {
-  total:    number;
-  pending:  number;
-  expired:  number;
+  total: number;
+  pending: number;
+  expired: number;
   accepted: number;
-  revoked:  number;
+  revoked: number;
 }
 
 export async function getOrganizationInvitations({
@@ -231,64 +237,63 @@ export async function getOrganizationInvitations({
   role?: Role;
 }) {
   const invitations = await prisma.invitation.findMany({
-    where:   { orgId, status: { not: "REVOKED" }, ...(role ? { role } : {}) },
+    where: { orgId, status: { not: "REVOKED" }, ...(role ? { role } : {}) },
     orderBy: { createdAt: "desc" },
-    take:    limit,
+    take: limit,
   });
 
   return invitations.map((inv) => ({
-    id:        inv.id,
-    email:     inv.email,
+    id: inv.id,
+    email: inv.email,
     createdAt: inv.createdAt,
     expiresAt: inv.expiresAt,
-    status:    inv.status,
+    status: inv.status,
     usedAt: inv.usedAt,
-    role:      inv.role,
-    details:   inv.details ? (inv.details as DatabaseInvitationDetails) : null,
+    role: inv.role,
+    details: inv.details ? (inv.details as DatabaseInvitationDetails) : null,
     token: inv.token,
   }));
 }
 
-export async function getInvitationStats(orgId: string): Promise<InvitationStats> {
+export async function getInvitationStats(
+  orgId: string,
+): Promise<InvitationStats> {
   const now = new Date();
 
-  const [total, pending, expired, accepted, revoked] = await prisma.$transaction([
-    prisma.invitation.count({ where: { orgId } }),
-    prisma.invitation.count({
-      where: {
-        orgId,
-        status: "PENDING",
-        OR: [{ expiresAt: null }, { expiresAt: { gte: now } }],
-      },
-    }),
-    prisma.invitation.count({
-      where: { orgId, status: "PENDING", expiresAt: { lt: now } },
-    }),
-    prisma.invitation.count({
-      where: { orgId, status: "ACCEPTED" },
-    }),
-    prisma.invitation.count({
-      where: { orgId, status: { in: ["DECLINED", "REVOKED"] } },
-    }),
-  ]);
+  const [total, pending, expired, accepted, revoked] =
+    await prisma.$transaction([
+      prisma.invitation.count({ where: { orgId } }),
+      prisma.invitation.count({
+        where: {
+          orgId,
+          status: "PENDING",
+          OR: [{ expiresAt: null }, { expiresAt: { gte: now } }],
+        },
+      }),
+      prisma.invitation.count({
+        where: { orgId, status: "PENDING", expiresAt: { lt: now } },
+      }),
+      prisma.invitation.count({
+        where: { orgId, status: "ACCEPTED" },
+      }),
+      prisma.invitation.count({
+        where: { orgId, status: { in: ["DECLINED", "REVOKED"] } },
+      }),
+    ]);
 
   return { total, pending, expired, accepted, revoked };
 }
 
 export async function updateInvitationToken(
   invitationId: string,
-  token:         string,
-  expiresAt:     Date,
-  resendLinkBy?: string
+  token: string,
+  expiresAt: Date,
+  orgId: string,
 ): Promise<void> {
   try {
     await prisma.invitation.update({
-      where: { id: invitationId, status: "PENDING" },
-      data: {
-        token,
-        expiresAt,
-        details: { resendLinkBy: resendLinkBy || null },
-      },
+      where: { id: invitationId, orgId, status: "PENDING" },
+      data: { token, expiresAt },
     });
   } catch (error) {
     if (

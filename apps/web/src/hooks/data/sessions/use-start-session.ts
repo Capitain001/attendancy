@@ -33,7 +33,7 @@ interface UseStartSessionOptions {
   scheduleId: string;
   teacherId:  string;
   onStarted?: (payload: StartedPayload) => void;
-  onEnded?:   (durationMinutes: number) => void;
+  onEnded?:   (durationMinutes: number, sessionId: string) => void;
 }
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
@@ -80,7 +80,7 @@ export function useStartSession({
       const { data, error } = result;
       if (error) { toast.error(error); return; }
       if (data) {
-        onEnded?.(data.durationMinutes);
+        onEnded?.(data.durationMinutes, data.sessionId);
         toast.success(`Session terminée — ${data.durationMinutes} min effectuées.`);
       }
       invalidateScheduleQueries();

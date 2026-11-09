@@ -22,6 +22,7 @@ Rôle : Gestion du domaine `attendance`.
 | `actions/attendance.mutations.ts` | Écritures serveur (Validation + AuthGuard) |
 | `actions/attendance.queries.ts` | Lectures serveur exposées au frontend |
 | `actions/index.ts` | Barrel exports des actions |
+| `server.ts` | Point d'entrée serveur cross-service pour les calculs et lectures autorisés |
 | `cache.ts` | <SERVICE>_GRAPH : événement → tags à invalider |
 | `database/analytics.ts` | Fichier interne |
 | `database/attendance.mutations.ts` | Requêtes Prisma (tryConstraint + invalidateEvent) |
@@ -30,7 +31,10 @@ Rôle : Gestion du domaine `attendance`.
 | `database/index.ts` | Barrel interne (non exporté) |
 | `generated.types.ts` | Types générés automatiquement (DTOs de lecture) |
 | `index.ts` | Point d'entrée du service (export actions + types) |
-| `policy.ts` | Règles d'autorisation métier |
+| `policy.ts` | Statuts et calculs partagés du taux de présence |
 | `types.ts` | DTOs et types du domaine |
 | `utils.ts` | Utilitaires internes |
 | `validation.ts` | Schémas Valibot |
+
+Les calculs de taux ne comptent que les schedules non supprimés dont la session est clôturée.
+Les consommateurs serveur externes passent par `server.ts`, jamais par `database/`.

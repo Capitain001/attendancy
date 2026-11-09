@@ -18,28 +18,29 @@ import { ... } from '@/services/notification'   // server actions, types Prisma,
 
 ## Structure du service
 
-| Fichier | Rôle |
-|---------|------|
-| `action.ts` | Ré-export `'use server'` centralisé |
-| `actions/notification.mutations.ts` | Server actions écriture avec auth |
-| `actions/notification.queries.ts` | Server actions lecture avec auth |
-| `cache.ts` | `NOTIFICATION_GRAPH` |
-| `constants.ts` | Constantes dérivées des enums Prisma (`ORGANIZATION_TYPES`) |
-| `database/index.ts` | Barrel interne (non exporté) |
-| `database/notification.mutations.ts` | Créer, lire, supprimer + invalidation cache + création transactionnelle |
-| `database/notification.queries.ts` | Lectures avec `'use cache'` + cache tags |
-| `database/push.mutations.ts` | Upsert, unsubscribe, markExpired, cleanup |
-| `database/push.queries.ts` | Actifs, stats, findByEndpoint, countDevices |
-| `generated.types.ts` | Types générés automatiquement (DTOs de lecture) |
-| `index.ts` | Barrel : re-exporte module + service |
-| `permission.ts` | Fichier interne |
-| `push.ts` | Fichier interne |
-| `server.ts` | Point d'entrée serveur pour mutations transactionnelles (`createInvitationNotification`, `setInvitationNotificationStatus`, `createInvitationResponseNotification`) |
-| `service-worker.ts` | Fichier interne |
-| `types.ts` | Types dérivés Prisma : `NotificationItem`, `PushSubscriptionItem`, `NotificationStats`, `PushSubscriptionStats` |
-| `user.ts` | Server actions push — subscribe/send (importe depuis `@/modules/notification`) |
-| `utils.ts` | Utilitaires internes |
-| `validation.ts` | `createNotificationSchema` avec types métier (`ABSENCE`, `COURSE_CHANGE`…) |
+| Fichier                              | Rôle                                                                                                                                                                                                |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `action.ts`                          | Ré-export `'use server'` centralisé                                                                                                                                                                 |
+| `actions/notification.mutations.ts`  | Server actions écriture avec auth                                                                                                                                                                   |
+| `actions/notification.queries.ts`    | Server actions lecture avec auth                                                                                                                                                                    |
+| `cache.ts`                           | `NOTIFICATION_GRAPH`                                                                                                                                                                                |
+| `constants.ts`                       | Constantes dérivées des enums Prisma (`ORGANIZATION_TYPES`)                                                                                                                                         |
+| `database/index.ts`                  | Barrel interne (non exporté)                                                                                                                                                                        |
+| `database/notification.mutations.ts` | Créer, lire, supprimer + invalidation cache + création transactionnelle                                                                                                                             |
+| `database/notification.queries.ts`   | Lectures avec `'use cache'` + cache tags                                                                                                                                                            |
+| `database/push.mutations.ts`         | Upsert, unsubscribe, markExpired, cleanup                                                                                                                                                           |
+| `database/push.queries.ts`           | Actifs, stats, findByEndpoint, countDevices                                                                                                                                                         |
+| `generated.types.ts`                 | Types générés automatiquement (DTOs de lecture)                                                                                                                                                     |
+| `index.ts`                           | Barrel : re-exporte module + service                                                                                                                                                                |
+| `permission.ts`                      | Fichier interne                                                                                                                                                                                     |
+| `push.ts`                            | Fichier interne                                                                                                                                                                                     |
+| `server.ts`                          | Point d'entrée serveur pour mutations transactionnelles (`createInvitationNotification`, `upsertInvitationNotification`, `setInvitationNotificationStatus`, `createInvitationResponseNotification`) |
+| `service-worker.ts`                  | Fichier interne                                                                                                                                                                                     |
+| `types.ts`                           | Types dérivés Prisma : `NotificationItem`, `PushSubscriptionItem`, `NotificationStats`, `PushSubscriptionStats`                                                                                     |
+| `user.ts`                            | Server actions push — subscribe/send (importe depuis `@/modules/notification`)                                                                                                                      |
+| `utils.ts`                           | Utilitaires internes                                                                                                                                                                                |
+| `validation.ts`                      | `createNotificationSchema` avec types métier (`ABSENCE`, `COURSE_CHANGE`…)                                                                                                                          |
+
 ## Modèles Prisma propriétaires
 
 - `Notification` — cycle de vie par `read` (pas de soft delete)
@@ -74,4 +75,5 @@ NOTIFICATION: key("notification"),   // dans CACHE
 - Autres services (push) → `sendPushNotificationToUserById(userId, { message })` (fire-and-forget)
 - Appels transactionnels externes (ex: `modules/invitation`) → importer depuis `@/services/notification/server`.
   Les fonctions reçoivent `tx: Tx` (`Prisma.TransactionClient`) et n'invalident PAS le cache (invalidation à la charge de l'appelant après commit via `invalidateEvent('NOTIFICATION_CREATED', userId)`).
+  `upsertInvitationNotification` crée ou réactive la notification d'une invitation précise, en rafraîchissant son message et ses métadonnées.
   `setInvitationNotificationStatus` accepte les états `ACCEPTED`, `DECLINED` et `REVOKED`.

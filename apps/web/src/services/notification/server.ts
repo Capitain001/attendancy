@@ -4,6 +4,7 @@
 
 export {
   createInvitationNotification,
+  upsertInvitationNotification,
   buildInvitationNotification,
   setInvitationNotificationStatus,
   createInvitationResponseNotification,

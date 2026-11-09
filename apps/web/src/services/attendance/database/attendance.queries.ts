@@ -1,10 +1,8 @@
 // src/services/attendance/database/attendance.queries.ts
 import { prisma } from "@/lib/prisma";
 import { AttendanceStatus } from "@/generated/prisma/client";
-import {
-  ATTENDANCE_NUMERATOR_STATUSES,
-  ATTENDANCE_DENOMINATOR_STATUSES,
-} from "../policy";
+import { computeAttendanceRate, type AttendanceCounts } from "../policy";
+import { completedScheduleWhere } from "./filter";
 
 export async function getScheduleAttendances(
     scheduleId: string
@@ -43,9 +41,19 @@ export async function getScheduleAttendances(
  * Historique de présence d'un étudiant (lecture espace étudiant).
  * Attendance n'a pas d'orgId ? scope relationnel via `schedule.orgId`.
  */
-export async function getStudentAttendances(studentId: string, orgId: string) {
+export async function getStudentAttendances(
+  studentId: string,
+  orgId: string,
+  options: { completedOnly?: boolean } = {},
+) {
   return prisma.attendance.findMany({
-    where: { studentId, schedule: { orgId } },
+    where: {
+      studentId,
+      schedule: {
+        orgId,
+        ...(options.completedOnly ? completedScheduleWhere : {}),
+      },
+    },
     select: {
       id: true,
       status: true,
@@ -91,17 +99,36 @@ export async function getUserAttendance(
  * Le calcul du taux (numérateur/dénominateur) reste chez le consommateur via `policy.ts`.
  * `range` (optionnel) borne sur `schedule.startTime`  ex. comptes du jour.
  */
+type AttendanceCountsFilter = {
+  classId?: string;
+  courseId?: string;
+  groupIds?: string[];
+  range?: { start: Date; end: Date };
+};
+
 export async function getStudentAttendanceStatusCounts(
   studentId: string,
   orgId: string,
-  range?: { start: Date; end: Date },
+  filter: AttendanceCountsFilter = {},
 ): Promise<Record<AttendanceStatus, number>> {
+  const { classId, courseId, groupIds, range } = filter;
   const rows = await prisma.attendance.groupBy({
     by: ["status"],
     where: {
       studentId,
       schedule: {
         orgId,
+        ...completedScheduleWhere,
+        ...(classId ? { classId } : {}),
+        ...(courseId ? { courseId } : {}),
+        ...(groupIds
+          ? {
+              OR: [
+                { groupId: null },
+                ...(groupIds.length > 0 ? [{ groupId: { in: groupIds } }] : []),
+              ],
+            }
+          : {}),
         ...(range && { startTime: { gte: range.start, lte: range.end } }),
       },
     },
@@ -128,31 +155,25 @@ export async function getStudentAttendanceStatusCounts(
  */
 export async function getOrgStudentAttendanceRates(
   orgId: string,
-): Promise<Record<string, { rate: number | null; absences: number; denominator: number }>> {
+): Promise<Record<string, { rate: number | null; absent: number; denominator: number }>> {
   const rows = await prisma.attendance.groupBy({
     by: ["studentId", "status"],
-    where: { schedule: { orgId } },
+    where: { schedule: { orgId, ...completedScheduleWhere } },
     _count: { _all: true },
   });
 
-  const num = new Set<AttendanceStatus>(ATTENDANCE_NUMERATOR_STATUSES);
-  const den = new Set<AttendanceStatus>(ATTENDANCE_DENOMINATOR_STATUSES);
-
-  const acc: Record<string, { numerator: number; denominator: number; absences: number }> = {};
+  const byStudent: Record<string, AttendanceCounts> = {};
   for (const r of rows) {
-    const e = (acc[r.studentId] ??= { numerator: 0, denominator: 0, absences: 0 });
-    const n = r._count._all;
-    if (num.has(r.status)) e.numerator += n;
-    if (den.has(r.status)) e.denominator += n;
-    if (r.status === "ABSENT") e.absences += n;
+    (byStudent[r.studentId] ??= {})[r.status] = r._count._all;
   }
 
-  const result: Record<string, { rate: number | null; absences: number; denominator: number }> = {};
-  for (const [studentId, e] of Object.entries(acc)) {
+  const result: Record<string, { rate: number | null; absent: number; denominator: number }> = {};
+  for (const [studentId, counts] of Object.entries(byStudent)) {
+    const { rate, total, absent } = computeAttendanceRate(counts);
     result[studentId] = {
-      rate: e.denominator > 0 ? Math.round((e.numerator / e.denominator) * 100) : null,
-      absences: e.absences,
-      denominator: e.denominator,
+      rate,
+      absent,
+      denominator: total,
     };
   }
   return result;
@@ -169,18 +190,14 @@ export async function getStudentAttendanceSummary(
 ) {
   const [counts, attendances] = await Promise.all([
     getStudentAttendanceStatusCounts(studentId, orgId),
-    getStudentAttendances(studentId, orgId),
+    getStudentAttendances(studentId, orgId, { completedOnly: true }),
   ]);
 
-  const sum = (statuses: readonly AttendanceStatus[]) =>
-    statuses.reduce((acc, st) => acc + (counts[st] ?? 0), 0);
-  const numerator = sum(ATTENDANCE_NUMERATOR_STATUSES);
-  const denominator = sum(ATTENDANCE_DENOMINATOR_STATUSES);
-  const rate = denominator > 0 ? Math.round((numerator / denominator) * 100) : null;
+  const { rate, absent } = computeAttendanceRate(counts);
 
   return {
     rate,
-    absences: counts.ABSENT ?? 0,
+    absent,
     recentAbsences: attendances.filter((a) => a.status === "ABSENT").slice(0, 5),
   };
 }

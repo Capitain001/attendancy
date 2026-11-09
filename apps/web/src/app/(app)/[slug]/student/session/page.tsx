@@ -1,9 +1,8 @@
 // src/app/(app)/[slug]/student/session/page.tsx
-// Séance en cours étudiant — visuel porté de la V1.
+// Séance en cours étudiant — mise en page typographique, sans cartes ni fonds.
 import { connection } from "next/server";
 import { format } from "date-fns";
-import { fr } from "date-fns/locale";
-import { Clock, MapPin, User } from "lucide-react";
+import { Check, Clock, X } from "lucide-react";
 import type { AttendanceStatus } from "@/generated/prisma/client";
 
 import {
@@ -11,160 +10,162 @@ import {
   getStudentActiveSessionAction,
 } from "@/services/student";
 import { StudentScanButton } from "@/components/student/session/StudentScanButton";
-import { AttendanceStatusBadge, ATTENDANCE_META } from "@/components/student/ui/badges";
+import { ATTENDANCE_META } from "@/components/student/ui/badges";
 import {
   SessionPauseIllustration,
   StudentEmpty,
 } from "@/components/student/ui/illustrations";
 import { cn } from "@/lib/utils";
 
-/** Texte rassurant par statut (P-25) — la pastille couleur vient du badge canonique. */
 const PRESENCE_HINT: Record<AttendanceStatus, string> = {
-  PENDING: "Ta présence a été enregistrée, en attente de validation par l'enseignant.",
+  PENDING: "En attente de validation par l'enseignant.",
   PRESENT: "Ta présence est confirmée.",
   LATE: "Présence confirmée, marquée en retard.",
   ABSENT: "Tu es marqué absent pour cette séance.",
   EXCUSED: "Absence justifiée.",
 };
 
+function Message({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex h-full items-center justify-center">
+      <p className="text-sm text-muted-foreground">{children}</p>
+    </div>
+  );
+}
+
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-baseline justify-between gap-4 border-b py-3.5">
+      <dt className="text-sm text-muted-foreground">{label}</dt>
+      <dd className="text-right text-base font-medium">{value}</dd>
+    </div>
+  );
+}
+
 export default async function StudentSessionPage() {
   await connection();
 
   const profileRes = await getStudentProfileAction();
-  if ("error" in profileRes) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <p className="text-sm text-muted-foreground">{profileRes.error}</p>
-      </div>
-    );
-  }
+  if ("error" in profileRes) return <Message>{profileRes.error}</Message>;
 
   const { classId, groupIds } = profileRes.data;
-  if (!classId) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <p className="text-sm text-muted-foreground">Aucune classe associée</p>
-      </div>
-    );
-  }
+  if (!classId) return <Message>Aucune classe associée</Message>;
 
   const res = await getStudentActiveSessionAction({ classId, groupIds });
-  if ("error" in res) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <p className="text-sm text-muted-foreground">{res.error}</p>
-      </div>
-    );
-  }
+  if ("error" in res) return <Message>{res.error}</Message>;
+
   const active = res.data;
-  const now = new Date();
 
-  const totalMs = active ? active.endTime.getTime() - active.startTime.getTime() : 0;
-  const elapsedMs = active
-    ? Math.min(Math.max(now.getTime() - active.startTime.getTime(), 0), totalMs)
-    : 0;
-  const progress = totalMs > 0 ? Math.round((elapsedMs / totalMs) * 100) : 0;
-  const remainingMin = active
-    ? Math.max(0, Math.round((active.endTime.getTime() - now.getTime()) / 60000))
-    : 0;
-
-  return (
-    <div className="flex flex-col gap-6 pb-16">
-      <header className="flex items-start justify-between gap-3">
-        <div>
-          <h1 className="font-display mt-1 text-4xl font-bold tracking-tight">
-            {active ? "En direct" : "En pause"}
-          </h1>
-        </div>
-
-        {active && (
-          <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary">
-            <span className="relative flex size-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
-              <span className="relative inline-flex size-2 rounded-full bg-primary" />
-            </span>
-            En direct
-          </span>
-        )}
-      </header>
-
-      {!active ? (
+  if (!active) {
+    return (
+      <div className="flex flex-col gap-6 pb-16">
+        <h1 className="font-display text-4xl font-bold tracking-tight">En pause</h1>
         <StudentEmpty
           illustration={<SessionPauseIllustration />}
           title="Aucune séance en cours"
           hint="Quand un enseignant ouvre une séance pour ta classe, elle s'affiche ici avec le statut de ta présence."
         />
-      ) : (
-        <section className="overflow-hidden rounded-2xl border bg-card">
-          <div className="h-1 w-full bg-muted">
-            <div className="h-full bg-primary transition-all" style={{ width: `${progress}%` }} />
-          </div>
+      </div>
+    );
+  }
 
-          <div className="p-5">
-            <h2 className="font-serif text-2xl font-normal leading-tight">{active.course}</h2>
+  const now = new Date();
+  const totalMs = active.endTime.getTime() - active.startTime.getTime();
+  const elapsedMs = Math.min(Math.max(now.getTime() - active.startTime.getTime(), 0), totalMs);
+  const progress = totalMs > 0 ? Math.round((elapsedMs / totalMs) * 100) : 0;
+  const remainingMin = Math.max(0, Math.round((active.endTime.getTime() - now.getTime()) / 60000));
 
-            <div className="mt-3 flex flex-wrap items-center gap-2">
-              <span className="font-display inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs tabular-nums text-muted-foreground">
-                <Clock className="size-3.5" />
-                {format(active.startTime, "HH:mm")} – {format(active.endTime, "HH:mm")}
-              </span>
-              {active.room && (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">
-                  <MapPin className="size-3.5" />
-                  {active.room}
-                </span>
-              )}
-              {active.teacher && (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">
-                  <User className="size-3.5" />
-                  {active.teacher}
-                </span>
-              )}
-            </div>
+  return (
+    <div className="flex flex-col gap-10 pb-16">
+      {/* En-tête */}
+      <header className="space-y-4 ">
+        {/* <div className="flex items-center justify-between gap-3 text-xs">
+          <span className="inline-flex items-center gap-2 font-semibold uppercase tracking-widest text-foreground">
+            <span className="relative flex size-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-foreground opacity-60" />
+              <span className="relative inline-flex size-2 rounded-full bg-foreground" />
+            </span>
+            Séance en cours
+          </span>
+          <span className="text-muted-foreground">
+            {remainingMin > 0 ? `${remainingMin} min restantes` : "Bientôt terminée"}
+          </span>
+        </div> */}
+        <h1 className="font-serif text-4xl mt-8 leading-tight">{active.course}</h1>
+      </header>
 
-            <p className="mt-3 text-xs text-muted-foreground">
-              {remainingMin > 0
-                ? `Encore ${remainingMin} min · ${progress}% écoulé`
-                : "Séance bientôt terminée"}
-            </p>
+      {/* Progression */}
+      <section className="space-y-2">
+        <div className="h-1 w-full overflow-hidden rounded-full bg-muted">
+          <div className="h-full rounded-full bg-foreground transition-all" style={{ width: `${progress}%` }} />
+        </div>
+        <div className="flex justify-between font-display text-sm font-medium tabular-nums">
+          <span>{format(active.startTime, "HH:mm")}</span>
+          <span>{format(active.endTime, "HH:mm")}</span>
+        </div>
+      </section>
 
-            <div className="mt-5 border-t border-border/60 pt-4">
-              {active.myAttendance ? (
-                <PresenceState attendance={active.myAttendance} />
-              ) : (
-                <div className="space-y-3">
-                  <p className="text-sm text-muted-foreground">
-                    Tu n&apos;as pas encore marqué ta présence.
-                  </p>
-                  <StudentScanButton />
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
+      {/* Détails */}
+      {(active.room || active.teacher) && (
+        <dl className="border-t">
+          {active.room && <Row label="Salle" value={active.room} />}
+          {active.teacher && <Row label="Enseignant" value={active.teacher} />}
+        </dl>
       )}
+
+      {/* Présence */}
+      <section>
+        {active.myAttendance ? (
+          <PresenceState attendance={active.myAttendance} />
+        ) : (
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">Tu n&apos;as pas encore marqué ta présence.</p>
+            <StudentScanButton />
+          </div>
+        )}
+      </section>
     </div>
   );
 }
 
+const PRESENCE_ICON: Record<AttendanceStatus, typeof Check> = {
+  PENDING: Clock,
+  PRESENT: Check,
+  LATE: Check,
+  ABSENT: X,
+  EXCUSED: Check,
+};
+
+/** Nuances de gris uniquement : plein = confirmé, contour = en attente, doux = absent. */
+const PRESENCE_TONE: Record<AttendanceStatus, string> = {
+  PRESENT: "bg-foreground text-background",
+  LATE: "bg-foreground text-background",
+  EXCUSED: "bg-foreground/80 text-background",
+  PENDING: "bg-muted  text-foreground/60",
+  ABSENT: "bg-muted text-muted-foreground",
+};
+
 function PresenceState({
   attendance,
 }: {
-  attendance: { status: AttendanceStatus; recordedAt: Date };
+  attendance: { status: AttendanceStatus };
 }) {
-  const meta = ATTENDANCE_META[attendance.status];
+  const Icon = PRESENCE_ICON[attendance.status];
   return (
-    <div className={cn("rounded-xl p-4", meta.className)}>
-      <div className="flex items-center justify-between gap-2">
-        <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider">
-          <span className={cn("size-2 shrink-0 rounded-full", meta.dot)} />
-          Ma présence
-        </span>
-        <AttendanceStatusBadge status={attendance.status} className="bg-background/60" />
-      </div>
-      <p className="mt-2 text-sm">{PRESENCE_HINT[attendance.status]}</p>
-      <p className="mt-1 text-xs opacity-70">
-        Enregistré le {format(attendance.recordedAt, "d MMM 'à' HH:mm", { locale: fr })}
+    <div className="flex flex-col items-center gap-4 pt-4 text-center">
+      <span
+        className={cn(
+          "flex size-14 items-center justify-center rounded-full",
+          PRESENCE_TONE[attendance.status],
+        )}
+      >
+        <Icon className="size-7" strokeWidth={3} />
+      </span>
+      <p className="font-display text-2xl font-bold tracking-tight">
+        {PRESENCE_HINT[attendance.status]}
+      </p>
+      <p className="text-sm font-medium uppercase tracking-widest text-muted-foreground">
+        {ATTENDANCE_META[attendance.status].label}
       </p>
     </div>
   );

@@ -9,7 +9,6 @@ export {
   getInvitationStatsAction,
   getOrgInvitationsAction,
 } from "./actions";
-export type { InvitationActionResult } from "./actions";
 
 // Invitations par rôle
 export { inviteDirection } from "./direction/actions";

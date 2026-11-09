@@ -9,14 +9,14 @@ Le web utilise habituellement les Server Actions directement. Le RPC est la couc
 ## Architecture
 
 ```text
-Application cliente
+Application cliente (ex: apps/teacher, apps/desktop)
   └─ api.<action>(input)
-       └─ client RPC local (`apps/desktop/src/lib/api.ts`)
+       └─ client RPC (`packages/auth/src/api.ts` ou `apps/desktop/src/lib/api.ts`)
             └─ POST /api/rpc/<action> + JSON + Bearer token
                  └─ route Next.js (`apps/web/src/app/api/rpc/[action]/route.ts`)
                       └─ registre public (`apps/web/src/lib/rpc/actions.ts`)
                            └─ Server Action du service web
-                                └─ auth, validation, services et Prisma côté serveur
+                                └─ auth (getUserInfo/authAccess dual-mode), validation, services et Prisma côté serveur
 ```
 
 Les fichiers générés de `packages/rpc` sont de petits wrappers de noms d'actions vers le client local. Ils ne contiennent ni logique métier, ni accès réseau autonome, ni copie des Server Actions.
@@ -30,10 +30,10 @@ Les fichiers générés de `packages/rpc` sont de petits wrappers de noms d'acti
 | `apps/web/src/app/api/rpc/[action]/route.ts` | Route HTTP générique `POST` et `OPTIONS`, sélection de l'action enregistrée, parsing JSON, contrôle d'authentification, CORS et conversion des erreurs en statuts HTTP. |
 | `packages/rpc/scripts/gen.mjs`               | Lit les imports directs et le registre `ACTIONS`, puis génère les wrappers client par service.                                                                          |
 | `packages/rpc/src/generated/*.ts`            | Wrappers générés, à ne pas éditer manuellement.                                                                                                                         |
-| `apps/desktop/src/lib/api.ts`                | Proxy client typé `ApiClient`; ajoute le token Supabase, effectue le `fetch` et réessaie une fois après un `401` si le refresh de session réussit.                      |
+| `packages/auth/src/api.ts`                   | Proxy client typé `ApiClient` partagé (utilisé par `apps/teacher`) ; ajoute le token Supabase, effectue le `fetch` et réessaie une fois après un `401` si le refresh de session réussit. |
 | `packages/types`                             | Publie les types de contrat RPC réutilisables par les clients, notamment `ApiClient`, `ApiInput` et `ApiOutput`.                                                        |
 
-`@rpc-api` est un alias de résolution, pas un endpoint ou un package réseau : le desktop le résout vers son propre client dans `apps/desktop/vite.config.ts` et `apps/desktop/tsconfig.json`.
+`@rpc-api` est un alias de résolution Vite/TS, pas un endpoint ou un package réseau : chaque application cliente (`apps/teacher`, `apps/desktop`) le résout vers son client RPC (`@attendancy/auth` dans `apps/teacher/src/lib/api.ts`).
 
 ## Ajouter ou retirer une action RPC
 

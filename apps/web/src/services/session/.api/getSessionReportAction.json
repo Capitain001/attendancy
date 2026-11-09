@@ -1,0 +1,11 @@
+{
+  "name": "getSessionReportAction",
+  "file": "src/services/session/actions/session.queries.ts",
+  "sig": "(sessionId: string) => Promise<{ error: string; data?: undefined; } | { data: { schedule: { id: string; teacherId: string; startTime: Date; endTime: Date; scheduleType: ScheduleType; status: ScheduleStatus; ... 7 more ...; teacher: { ...; }; }; organization: { ...; }; session: { ...; }; summary: { ...; }; attendances: { ...; }[]; }; error...",
+  "calls": [
+    "getSessionReport"
+  ],
+  "auth": {},
+  "rules": [],
+  "why_ref": ""
+}

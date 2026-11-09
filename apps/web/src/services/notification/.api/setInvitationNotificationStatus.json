@@ -1,7 +1,7 @@
 {
   "name": "setInvitationNotificationStatus",
   "file": "src/services/notification/database/notification.mutations.ts",
-  "sig": "(tx: Tx, params: { userId: string; invitationId: string; status: 'ACCEPTED' | 'DECLINED' | 'REVOKED' }) => Promise<{ id: string; } | null>",
+  "sig": "(tx: Tx, params: { userId: string; invitationId: string; status: \"ACCEPTED\" | \"DECLINED\" | \"REVOKED\" }) => Promise<{ id: string; } | null>",
   "composes": [],
   "rules": [],
   "why_ref": ""

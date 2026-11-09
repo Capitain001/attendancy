@@ -30,9 +30,9 @@ const Layout = async ({ children, params }: LayoutProps) => {
   const [user, { slug }] = await Promise.all([getUserInfo(), params]);
 
   return (
-    <SidebarProvider className="h-full overflow-hidden">
+    <SidebarProvider className="h-full min-h-0 overflow-hidden">
       <UserSidebarSlot routes={studentRoutes} user={user ?? undefined} slug={slug} />
-      <SidebarInset className="min-w-0 overflow-hidden flex flex-col">
+      <SidebarInset className="min-w-0 min-h-0 overflow-hidden flex flex-col">
         <header className="flex h-12 shrink-0 items-center  transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4 justify-between w-full bg-transparent md:bg-inherit">
             <div className="flex items-center gap-2 ">
@@ -51,7 +51,7 @@ const Layout = async ({ children, params }: LayoutProps) => {
             </div>
           </div>
         </header>
-        <div className="flex flex-1 flex-col  overflow-y-auto scrollbar-hidden gap-4 p-2 md:p-4 pt-0 min-w-0">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden scrollbar-hidden gap-4 p-2 md:p-4 pt-0">
           {children}
         </div>
       </SidebarInset>

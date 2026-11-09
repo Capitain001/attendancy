@@ -1,0 +1,9 @@
+domains:
+  - id: cache
+    file: rules/cache.yaml
+    applies_to: [query-hook, rsc-page, cache]
+    summary: "Partage de clés React Query pour les états dérivés (useMemo) et préchargement RSC via connection() + HydrationBoundary."
+  - id: services
+    file: rules/services.yaml
+    applies_to: [orchestrator-service, server-action, test]
+    summary: "Conception des services orchestrateurs de feature pour une testabilité E2E/intégration et unitaire hors runtime Next.js."

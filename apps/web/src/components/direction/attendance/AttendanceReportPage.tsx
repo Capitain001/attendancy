@@ -134,7 +134,7 @@ export function AttendanceReportPage({
                 <th className={cn(typography.label, 'px-4 py-2.5 text-left font-medium')}>Étudiant</th>
                 <th className={cn(typography.label, 'px-4 py-2.5 text-left font-medium hidden sm:table-cell')}>Classe</th>
                 <th className={cn(typography.label, 'px-4 py-2.5 text-right font-medium')}>Taux</th>
-                <th className={cn(typography.label, 'px-4 py-2.5 text-right font-medium hidden md:table-cell')}>Absences</th>
+                <th className={cn(typography.label, 'px-4 py-2.5 text-right font-medium hidden md:table-cell')}>Absences non justifiées</th>
                 <th className={cn(typography.label, 'px-4 py-2.5 text-left font-medium')}>Statut</th>
               </tr>
             </thead>
@@ -161,7 +161,7 @@ export function AttendanceReportPage({
                       </span>
                     </td>
                     <td className="px-4 py-3 text-right text-text-secondary hidden md:table-cell">
-                      {r.absences}/{r.denominator}
+                      {r.absent}/{r.denominator}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1.5">

@@ -3,10 +3,8 @@
 import { startOfDay, endOfDay } from "date-fns";
 
 import { prisma } from "@/lib/prisma";
-import {
-  ATTENDANCE_NUMERATOR_STATUSES,
-  ATTENDANCE_DENOMINATOR_STATUSES,
-} from "../policy";
+import { computeAttendanceRate, type AttendanceCounts } from "../policy";
+import { completedScheduleWhere } from "./filter";
 
 /**
  * Absences (status ABSENT) du jour pour l'org — liste pour le pilotage direction.
@@ -58,9 +56,8 @@ export async function getClassAttendanceRates(
       schedule: {
         classId,
         orgId,
-        deletedAt: null,
+        ...completedScheduleWhere,
         ...(courseId ? { courseId } : {}),
-        session: { status: "COMPLETED" },
       },
     },
     _count: { status: true },
@@ -74,15 +71,7 @@ export async function getClassAttendanceRates(
 
   const result = new Map<string, number>();
   for (const [studentId, counts] of byStudent) {
-    const num = ATTENDANCE_NUMERATOR_STATUSES.reduce(
-      (acc, s) => acc + (counts[s] ?? 0),
-      0,
-    );
-    const den = ATTENDANCE_DENOMINATOR_STATUSES.reduce(
-      (acc, s) => acc + (counts[s] ?? 0),
-      0,
-    );
-    result.set(studentId, den > 0 ? Math.round((num / den) * 100) : 100);
+    result.set(studentId, computeAttendanceRate(counts).rate ?? 100);
   }
   return result;
 }
@@ -98,7 +87,7 @@ export async function getAttendanceReport(
 ) {
   const scheduleWhere = {
     orgId,
-    deletedAt: null as null,
+    ...completedScheduleWhere,
     ...(opts.classId ? { classId: opts.classId } : {}),
     ...(opts.startDate || opts.endDate
       ? {
@@ -108,7 +97,6 @@ export async function getAttendanceReport(
           },
         }
       : {}),
-    session: { status: 'COMPLETED' as const },
   }
 
   const rows = await prisma.attendance.groupBy({
@@ -119,16 +107,9 @@ export async function getAttendanceReport(
 
   if (rows.length === 0) return []
 
-  const numSet: Set<typeof rows[number]['status']> = new Set(ATTENDANCE_NUMERATOR_STATUSES)
-  const denSet: Set<typeof rows[number]['status']> = new Set(ATTENDANCE_DENOMINATOR_STATUSES)
-
-  const acc: Record<string, { numerator: number; denominator: number; absences: number }> = {}
+  const acc: Record<string, AttendanceCounts> = {}
   for (const r of rows) {
-    const e = (acc[r.studentId] ??= { numerator: 0, denominator: 0, absences: 0 })
-    const n = r._count._all
-    if (numSet.has(r.status)) e.numerator += n
-    if (denSet.has(r.status)) e.denominator += n
-    if (r.status === 'ABSENT') e.absences += n
+    (acc[r.studentId] ??= {})[r.status] = r._count._all
   }
 
   const studentIds = Object.keys(acc)
@@ -153,15 +134,16 @@ export async function getAttendanceReport(
     .map((studentId) => {
       const e = acc[studentId]
       const enr = enrollmentMap.get(studentId)
+      const { rate, total, absent } = computeAttendanceRate(e)
       return {
         studentId,
         firstName:   enr?.student.user.firstName ?? null,
         lastName:    enr?.student.user.lastName ?? null,
         classId:     enr?.classId ?? null,
         className:   enr?.class.name ?? null,
-        absences:    e.absences,
-        denominator: e.denominator,
-        rate: e.denominator > 0 ? Math.round((e.numerator / e.denominator) * 100) : null,
+        absent,
+        denominator: total,
+        rate,
       }
     })
     .sort((a, b) => (a.rate ?? 100) - (b.rate ?? 100))
@@ -198,21 +180,17 @@ const emptyCounts = (): StatusCounts => ({
   PENDING: 0,
 });
 
-const sum = (counts: StatusCounts, statuses: readonly AttendanceStatus[]) =>
-  statuses.reduce((acc, status) => acc + counts[status], 0);
-
 // Taux selon policy.ts : numérateur PRESENT + LATE, dénominateur
 // PRESENT + LATE + ABSENT + EXCUSED (PENDING exclu), pourcentage entier.
 function summarize(counts: StatusCounts) {
-  const numerator = sum(counts, ATTENDANCE_NUMERATOR_STATUSES);
-  const denominator = sum(counts, ATTENDANCE_DENOMINATOR_STATUSES);
+  const { total, rate } = computeAttendanceRate(counts);
   return {
     present: counts.PRESENT,
     late: counts.LATE,
     absent: counts.ABSENT,
     excused: counts.EXCUSED,
-    denominator,
-    rate: denominator > 0 ? Math.round((numerator / denominator) * 100) : null,
+    denominator: total,
+    rate,
   };
 }
 

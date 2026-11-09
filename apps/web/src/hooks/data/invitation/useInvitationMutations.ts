@@ -1,7 +1,11 @@
 // src/hooks/data/invitation/useInvitationMutations.ts
 "use client";
 
-import { useMutation, useQueryClient, type QueryKey } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  type QueryKey,
+} from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   resendInvitationAction,
@@ -10,6 +14,19 @@ import {
   type InvitationListItem,
 } from "@/modules/invitation";
 import { CACHE_KEYS } from "@/config/client_cache";
+
+async function unwrapInvitationAction<
+  T extends { success: boolean; error?: string },
+>(
+  action: Promise<T>,
+  fallbackMessage: string,
+) {
+  const result = await action;
+  if (!result.success) {
+    throw new Error(result.error || fallbackMessage);
+  }
+  return { ...result, success: true as const };
+}
 
 /**
  * Copie le lien dans le presse-papiers, avec fallback toast (description + durée longue)
@@ -32,7 +49,7 @@ export async function copyLinkOrToast(link: string, successMessage: string) {
  */
 export function invalidateInvitationQueries(
   qc: ReturnType<typeof useQueryClient>,
-  extraKeys: QueryKey[] = []
+  extraKeys: QueryKey[] = [],
 ) {
   qc.invalidateQueries({ queryKey: CACHE_KEYS.INVITATIONS.ALL });
   qc.invalidateQueries({ queryKey: CACHE_KEYS.INVITATIONS.STATS });
@@ -58,88 +75,50 @@ interface UseInvitationMutationsOptions {
  * qu'un resend/revoke fait depuis un écran scopé (ex: classe) rafraîchisse aussi les listes
  * globales où la même invitation peut apparaître.
  */
-export function useInvitationMutations({ 
-  extraInvalidateKeys = [], 
+export function useInvitationMutations({
+  extraInvalidateKeys = [],
   silentResend = false,
   onSuccess,
-  onSettled
+  onSettled,
 }: UseInvitationMutationsOptions = {}) {
   const qc = useQueryClient();
-  // Toutes les listes où l'invitation peut apparaître en cache — ALL (hub Direction)
-  // et toute portée additionnelle (ex: BY_CLASS(classId)) passée par l'appelant.
-  const targetKeys = [CACHE_KEYS.INVITATIONS.ALL, ...extraInvalidateKeys];
   const invalidate = () => invalidateInvitationQueries(qc, extraInvalidateKeys);
 
   const resend = useMutation({
-    mutationFn: resendInvitationAction,
-    onMutate: async (invitation: InvitationListItem) => {
-      await Promise.all(targetKeys.map((key) => qc.cancelQueries({ queryKey: key })));
-
-      // Snapshot par clé, pour rollback ciblé si l'appel échoue.
-      const snapshots = targetKeys.map(
-        (key) => [key, qc.getQueryData<InvitationListItem[]>(key)] as const
-      );
-
-      for (const key of targetKeys) {
-        qc.setQueryData<InvitationListItem[]>(key, (old) => {
-          if (!old) return old;
-          return old.map((inv) =>
-            inv.id === invitation.id
-              ? { ...inv, expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) } // +7 jours
-              : inv
-          );
-        });
-      }
-
-      return { snapshots };
-    },
-    onSuccess: (r) => {
-      if (!r.success) {
-        if (!silentResend) toast.error(r.error ?? "Relance impossible.");
-        return;
-      }
-      invalidate();
-      if (!silentResend) toast.success(r.message ?? "Invitation renvoyée");
+    mutationFn: (invitation: InvitationListItem) =>
+      unwrapInvitationAction(
+        resendInvitationAction(invitation),
+        "Relance impossible.",
+      ),
+    onSuccess: (result) => {
+      if (!silentResend)
+        toast.success(result.message ?? "Invitation renvoyée");
       onSuccess?.();
     },
-    onError: (_err, _invitation, context) => {
-      context?.snapshots.forEach(([key, data]) => qc.setQueryData(key, data));
-      if (!silentResend) toast.error("Relance impossible.");
+    onError: (error) => {
+      if (!silentResend) toast.error(error.message);
     },
-    onSettled: () => onSettled?.(),
+    onSettled: () => {
+      invalidate();
+      onSettled?.();
+    },
   });
 
   const revoke = useMutation({
-    mutationFn: deleteInvitationUserAction,
-    onMutate: async (invitation: InvitationListItem) => {
-      await Promise.all(targetKeys.map((key) => qc.cancelQueries({ queryKey: key })));
-
-      const snapshots = targetKeys.map(
-        (key) => [key, qc.getQueryData<InvitationListItem[]>(key)] as const
-      );
-
-      for (const key of targetKeys) {
-        qc.setQueryData<InvitationListItem[]>(key, (old) =>
-          old ? old.filter((inv) => inv.id !== invitation.id) : old
-        );
-      }
-
-      return { snapshots };
-    },
+    mutationFn: (invitation: InvitationListItem) =>
+      unwrapInvitationAction(
+        deleteInvitationUserAction(invitation),
+        "Révocation impossible.",
+      ),
     onSuccess: (r) => {
-      if (!r.success) {
-        toast.error(r.error ?? "Révocation impossible.");
-        return;
-      }
-      invalidate();
       toast.success(r.message ?? "Invitation supprimée");
       onSuccess?.();
     },
-    onError: (_err, _invitation, context) => {
-      context?.snapshots.forEach(([key, data]) => qc.setQueryData(key, data));
-      toast.error("Révocation impossible.");
+    onError: (error) => toast.error(error.message),
+    onSettled: () => {
+      invalidate();
+      onSettled?.();
     },
-    onSettled: () => onSettled?.(),
   });
 
   /**
@@ -149,18 +128,24 @@ export function useInvitationMutations({
    * forcerait toujours la copie, même quand l'appelant veut router le lien ailleurs.
    */
   const generateMagicLink = useMutation({
-    mutationFn: generateMagicLinkAction,
-    onSuccess: (r) => {
-      if (!r.success || !r.link) {
-        const err = r as { success: false; error: string };
-        toast.error(err.error ?? "Impossible de générer le lien");
-        return;
+    mutationFn: async (invitation: InvitationListItem) => {
+      const result = await unwrapInvitationAction(
+        generateMagicLinkAction(invitation),
+        "Impossible de générer le lien.",
+      );
+      if (!result.link) {
+        throw new Error("Impossible de générer le lien.");
       }
-      invalidate();
+      return { ...result, link: result.link };
+    },
+    onSuccess: () => {
       onSuccess?.();
     },
-    onError: () => toast.error("Impossible de générer le lien"),
-    onSettled: () => onSettled?.(),
+    onError: (error) => toast.error(error.message),
+    onSettled: () => {
+      invalidate();
+      onSettled?.();
+    },
   });
 
   return { resend, revoke, generateMagicLink };

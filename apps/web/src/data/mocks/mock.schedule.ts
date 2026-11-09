@@ -51,7 +51,7 @@ import { GetTeacherSchedulesDto } from '@/services/schedule';
 export const mockGetTeacherSchedules: GetTeacherSchedulesDto = [
   {
     id: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    orgId: 'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a22',
+    // orgId: 'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a22',
     courseId: 'c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33',
     classId: 'd3eebc99-9c0b-4ef8-bb6d-6bb9bd380a44',
     groupId: 'e4eebc99-9c0b-4ef8-bb6d-6bb9bd380a55',
@@ -103,7 +103,7 @@ export const mockGetTeacherSchedules: GetTeacherSchedulesDto = [
   },
   {
     id: 'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a88',
-    orgId: 'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a22',
+    // orgId: 'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a22',
     courseId: 'c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a34',
     classId: 'd3eebc99-9c0b-4ef8-bb6d-6bb9bd380a44',
     groupId: null,
@@ -155,6 +155,7 @@ export const mockGetTeacherSchedules: GetTeacherSchedulesDto = [
 
 
 import type { GetTeacherDailyScheduleDto, getTeacherSchedulesInfoAction, GetTeacherSchedulesInfoDto } from '@/services/schedule';
+import { GetStudentSchedulesDto } from '@/services/student';
 
 export const mockGetTeacherSchedulesInfo: GetTeacherSchedulesInfoDto = [
   {
@@ -327,5 +328,175 @@ export const mockGetTeacherDailySchedule: GetTeacherDailyScheduleDto = [
       locationId: 'loc-batiment-d',
     },
     session: null,
+  },
+];
+
+
+
+
+
+//
+
+
+
+
+// ─── Identifiants partagés (même classe) ─────────────────────────────────────
+const CLASS = { id: 'd3eebc99-9c0b-4ef8-bb6d-6bb9bd380a44', name: 'Master 1 Informatique' };
+const GROUP_A = { id: 'e4eebc99-9c0b-4ef8-bb6d-6bb9bd380a55', name: 'Groupe A' };
+
+const TEACHER_DUPONT = {
+  id: 'a6eebc99-9c0b-4ef8-bb6d-6bb9bd380a77',
+  user: {
+    avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jean',
+    firstName: 'Jean',
+    lastName: 'Dupont',
+  },
+};
+const TEACHER_MARTIN = {
+  id: 'a6eebc99-9c0b-4ef8-bb6d-6bb9bd380a78',
+  user: { avatar_url: null, firstName: 'Claire', lastName: 'Martin' },
+};
+
+const hours = (h: number) => new Date(now.getTime() + h * 60 * 60 * 1000);
+
+/** Champs techniques communs à toutes les séances du mock. */
+const base = {
+  classId: CLASS.id,
+  class: CLASS,
+  weekRecurrenceId: null,
+  isLocked: false,
+  notifyState: ScheduleNotifyState.SENT,
+  notifiedAt: hours(-24),
+  deletedAt: null,
+  createdAt: hours(-7 * 24),
+  updatedAt: hours(-24),
+};
+
+export const mockGetStudentSchedules: GetStudentSchedulesDto = [
+  // 1. TERMINÉ (il y a 5h)
+  {
+    ...base,
+    id: 'sched-stu-01',
+    courseId: 'c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33',
+    course: { id: 'c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33', name: 'Algorithmique Avancée' },
+    groupId: null,
+    group: null,
+    roomId: 'f5eebc99-9c0b-4ef8-bb6d-6bb9bd380a66',
+    room: { id: 'f5eebc99-9c0b-4ef8-bb6d-6bb9bd380a66', name: 'Amphi B' },
+    teacherId: TEACHER_DUPONT.id,
+    teacher: TEACHER_DUPONT,
+    startTime: hours(-5),
+    endTime: hours(-3),
+    status: ScheduleStatus.COMPLETED,
+    scheduleType: ScheduleType.CM,
+    statusChangedAt: hours(-3),
+    confirmed: true,
+    notes: null,
+  },
+
+  // 2. MANQUÉ (il y a 2h30)
+  {
+    ...base,
+    id: 'sched-stu-02',
+    courseId: 'c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a35',
+    course: { id: 'c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a35', name: 'Probabilités et Statistiques' },
+    groupId: null,
+    group: null,
+    roomId: 'f5eebc99-9c0b-4ef8-bb6d-6bb9bd380a68',
+    room: { id: 'f5eebc99-9c0b-4ef8-bb6d-6bb9bd380a68', name: 'Salle TD 4' },
+    teacherId: TEACHER_MARTIN.id,
+    teacher: TEACHER_MARTIN,
+    startTime: hours(-2.5),
+    endTime: hours(-1.5),
+    status: ScheduleStatus.MISSED,
+    scheduleType: ScheduleType.TD,
+    statusChangedAt: hours(-1.5),
+    confirmed: false,
+    notes: 'Enseignant absent.',
+  },
+
+  // 3. EN COURS (a débuté il y a 30 min, finit dans 1h30)
+  {
+    ...base,
+    id: 'sched-stu-03',
+    courseId: 'c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a34',
+    course: { id: 'c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a34', name: 'Bases de Données Avancées' },
+    groupId: GROUP_A.id,
+    group: GROUP_A,
+    roomId: 'f5eebc99-9c0b-4ef8-bb6d-6bb9bd380a67',
+    room: { id: 'f5eebc99-9c0b-4ef8-bb6d-6bb9bd380a67', name: 'Salle TP 12' },
+    teacherId: TEACHER_DUPONT.id,
+    teacher: TEACHER_DUPONT,
+    startTime: hours(-0.5),
+    endTime: hours(1.5),
+    status: ScheduleStatus.PENDING,
+    scheduleType: ScheduleType.TD,
+    statusChangedAt: hours(-24),
+    confirmed: true,
+    notes: 'Prévoir les polycopiés de TD.',
+  },
+
+  // 4. ANNULÉ (dans 2h : ne doit jamais devenir « prochain cours »)
+  {
+    ...base,
+    id: 'sched-stu-04',
+    courseId: 'c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a36',
+    course: { id: 'c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a36', name: 'Anglais Technique' },
+    groupId: null,
+    group: null,
+    roomId: 'f5eebc99-9c0b-4ef8-bb6d-6bb9bd380a69',
+    room: { id: 'f5eebc99-9c0b-4ef8-bb6d-6bb9bd380a69', name: 'Salle 201' },
+    teacherId: TEACHER_MARTIN.id,
+    teacher: TEACHER_MARTIN,
+    startTime: hours(2),
+    endTime: hours(3),
+    status: ScheduleStatus.CANCELED,
+    scheduleType: ScheduleType.TD,
+    statusChangedAt: hours(-6),
+    confirmed: false,
+    notes: 'Cours annulé par l’enseignant.',
+  },
+
+  // 5. À VENIR (dans 4h) → devient le « prochain cours »
+  {
+    ...base,
+    id: 'sched-stu-05',
+    courseId: 'c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a37',
+    course: { id: 'c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a37', name: 'Machine Learning' },
+    groupId: null,
+    group: null,
+    roomId: 'f5eebc99-9c0b-4ef8-bb6d-6bb9bd380a70',
+    room: { id: 'f5eebc99-9c0b-4ef8-bb6d-6bb9bd380a70', name: 'Amphi A' },
+    teacherId: TEACHER_DUPONT.id,
+    teacher: TEACHER_DUPONT,
+    startTime: hours(4),
+    endTime: hours(6),
+    status: ScheduleStatus.PENDING,
+    scheduleType: ScheduleType.CM,
+    statusChangedAt: null,
+    confirmed: true,
+    notes: null,
+  },
+
+  // 6. DEMAIN
+  {
+    ...base,
+    id: 'sched-stu-06',
+    weekRecurrenceId: 'w1eebc99-9c0b-4ef8-bb6d-6bb9bd380a99',
+    courseId: 'c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33',
+    course: { id: 'c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33', name: 'Algorithmique Avancée' },
+    groupId: GROUP_A.id,
+    group: GROUP_A,
+    roomId: 'f5eebc99-9c0b-4ef8-bb6d-6bb9bd380a66',
+    room: { id: 'f5eebc99-9c0b-4ef8-bb6d-6bb9bd380a66', name: 'Amphi B' },
+    teacherId: TEACHER_DUPONT.id,
+    teacher: TEACHER_DUPONT,
+    startTime: hours(24),
+    endTime: hours(26),
+    status: ScheduleStatus.PENDING,
+    scheduleType: ScheduleType.TD,
+    statusChangedAt: null,
+    confirmed: true,
+    notes: null,
   },
 ];

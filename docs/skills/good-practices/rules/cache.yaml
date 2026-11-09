@@ -1,0 +1,51 @@
+domain: cache
+rules:
+  - id: CACHE-001
+    severity: advisory
+    applies_to: [query-hook, cache]
+    rule: "Quand un hook secondaire calcule des statistiques ou vues dérivées d'une liste déjà chargée, réutiliser exactement la même queryKey (CACHE_KEYS) et calculer la dérivation dans useMemo plutôt que de créer une requête serveur dédiée."
+    why: "Évite un aller-retour réseau redondant et garantit la synchronisation instantanée entre la liste principale et ses indicateurs dérivés (ex. compteurs de présence)."
+    detect: ["useQuery({", "CACHE_KEYS."]
+    evidence: "apps/web/src/hooks/data/attendances/use-attendance-stats.ts:26-43"
+    bad: |
+      // Nouveau fetch serveur dédié pour compter les statuts d'une séance déjà chargée
+      const { data: stats } = useQuery({
+        queryKey: ['attendance-stats', scheduleId],
+        queryFn: () => getAttendanceStatsBySchedule(scheduleId),
+      })
+    good: |
+      // Réutilise le cache de la liste principale + dérivation en mémoire
+      const { data: result } = useQuery({
+        queryKey: CACHE_KEYS.ATTENDANCES.BY_SCHEDULE(scheduleId),
+        queryFn: () => getAttendancesBySchedule({ scheduleId }),
+        enabled: Boolean(scheduleId),
+        ...QUERY_PRESETS.LIVE,
+      })
+      const stats = useMemo(() => computeStats(result?.data ?? []), [result?.data])
+
+  - id: CACHE-002
+    severity: advisory
+    applies_to: [rsc-page, cache]
+    rule: "Dans une page RSC (page.tsx) dont la donnée initiale ne dépend pas d'une interaction client immédiate, appeler await connection(), précharger via queryClient.prefetchQuery avec CACHE_KEYS, et envelopper le composant client dans <HydrationBoundary state={dehydrate(queryClient)}>."
+    why: "Permet au serveur de résoudre les données initiales en SSR/PPR et d'hydrater immédiatement le cache React Query côté client sans flash de chargement initial."
+    detect: ["export default async function", "ClientPage", "prefetchQuery", "HydrationBoundary"]
+    evidence: "apps/web/src/app/(app)/personal/[slug]/teacher/sessions/page.tsx:9-23"
+    bad: |
+      export default function TeacherSessionsPage() {
+        return <TeacherSessionsClientPage />
+      }
+    good: |
+      export default async function TeacherSessionsPage() {
+        await connection()
+        const queryClient = new QueryClient()
+        await queryClient.prefetchQuery({
+          queryKey: CACHE_KEYS.SESSIONS.TEACHER_COURSES(),
+          queryFn: () => getTeacherCoursesAction(),
+        })
+        return (
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <TeacherSessionsClientPage />
+          </HydrationBoundary>
+        )
+      }
+

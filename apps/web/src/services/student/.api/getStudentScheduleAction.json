@@ -1,10 +1,8 @@
 {
   "name": "getStudentScheduleAction",
   "file": "src/services/student/actions/student.queries.ts",
-  "sig": "(params: { classId: string groupIds: string[] rangeStart: Date rangeEnd: Date }) => Promise<{ error: string; data?: undefined; } | { data: ({ room: { name: string; id: string; }; class: { name: string; id: string; }; group: { name: string; id: string; } | null; teacher: { user: { firstName: string | null; lastName: string | null; avatar_url: string | null; }; id: string; }; course: { ...; }; } & { ...",
-  "calls": [
-    "getStudentSchedules"
-  ],
+  "sig": "(params: { classId: string groupIds: string[] rangeStart: Date rangeEnd: Date }) => Promise<{ error: string; data?: undefined; } | { data: ({ class: { id: string; name: string; }; course: { id: string; name: string; }; group: { id: string; name: string; } | null; room: { id: string; name: string; }; teacher: { ...; }; } & { ...; })[]; error?: undefined; }>",
+  "calls": [],
   "auth": {},
   "rules": [],
   "why_ref": ""

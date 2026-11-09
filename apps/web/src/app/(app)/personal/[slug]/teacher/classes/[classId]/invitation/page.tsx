@@ -12,10 +12,10 @@ export default async function CourseInvitationPage({
 }: {
   params: Promise<{ slug: string; classId: string }>
 }) {
-  const { classId } = await params
+  const { slug, classId } = await params
 
   const res = await getPersonalCoursesAction({classId})
   const courses = 'error' in res ? [] : res.data
 
-  return <TClassInvitationScreen classId={classId} classLabel="Ma classe" />
+  return <TClassInvitationScreen classId={classId} classLabel="Ma classe" slug={slug} />
 }

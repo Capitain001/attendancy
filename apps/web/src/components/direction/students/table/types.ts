@@ -4,7 +4,7 @@ import type { StudentRow } from "@/components/direction/students/utils";
 
 export type { StudentRow };
 
-export type RateEntry = { rate: number | null; absences: number; denominator: number };
+export type RateEntry = { rate: number | null; absent: number; denominator: number };
 export type AttendanceRates = Record<string, RateEntry>;
 
 export type Sex = StudentRow["sex"];

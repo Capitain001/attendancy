@@ -1,8 +1,10 @@
 {
   "name": "getStudentStats",
   "file": "src/services/student/database/student.queries.ts",
-  "sig": "(params: { studentId: string; orgId: string; classId: string; groupIds: string[] }) => Promise<{ attendanceRate: number; totalCourses: number; todayCount: number; averageGrade: number; totalEvaluations: number; today: { doneSessions: number; totalSessions: number; absences: number; doneMinutes: number; totalMinutes: number; }; }>",
-  "composes": [],
+  "sig": "(params: { studentId: string; orgId: string; classId: string; groupIds: string[] }) => Promise<{ attendance: { global: { attended: number; total: number; absent: number; excused: number; missed: number; rate: number | null; }; today: { attended: number; total: number; absent: number; excused: number; missed: number; rate: number | null; }; }; ... 4 more ...; today: { ...; }; }>",
+  "composes": [
+    "getStudentAttendanceStatusCounts"
+  ],
   "rules": [],
   "why_ref": ""
 }

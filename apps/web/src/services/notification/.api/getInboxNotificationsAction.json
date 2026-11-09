@@ -1,7 +1,7 @@
 {
   "name": "getInboxNotificationsAction",
   "file": "src/services/notification/actions/notification.queries.ts",
-  "sig": "(input?: GetInboxNotificationsInput) => Promise<{ error: string; data?: undefined; } | { data: { items: ({ message: string; id: string; type: NotificationType; createdAt: Date; updatedAt: Date; metadata: JsonValue; read: boolean; scheduleId: string | null; } | { ...; })[]; nextCursor: string | undefined; }; error?: undefined; }>",
+  "sig": "(input?: GetInboxNotificationsInput) => Promise<{ error: string; data?: undefined; } | { data: { items: ({ id: string; message: string; type: NotificationType; read: boolean; metadata: JsonValue; createdAt: Date; updatedAt: Date; scheduleId: string | null; } | { ...; })[]; nextCursor: string | undefined; }; error?: undefined; }>",
   "calls": [
     "getInboxNotificationsForUser",
     "getOrgsIdentities"

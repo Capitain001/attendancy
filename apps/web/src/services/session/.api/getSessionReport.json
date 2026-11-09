@@ -1,0 +1,8 @@
+{
+  "name": "getSessionReport",
+  "file": "src/services/session/database/session.queries.ts",
+  "sig": "(sessionId: string, orgId: string) => Promise<{ schedule: { id: string; teacherId: string; startTime: Date; endTime: Date; scheduleType: ScheduleType; status: ScheduleStatus; notes: string | null; ... 6 more ...; teacher: { ...; }; }; organization: { ...; }; session: { ...; }; summary: { ...; }; attendances: { ...; }[]; } | null>",
+  "composes": [],
+  "rules": [],
+  "why_ref": ""
+}

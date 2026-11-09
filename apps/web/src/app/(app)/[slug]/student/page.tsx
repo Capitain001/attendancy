@@ -1,10 +1,9 @@
 // src/app/(app)/[slug]/student/page.tsx
-// Dashboard étudiant — visuel porté de la V1.
+// Dashboard étudiant — sections plein écran, une responsabilité par section.
 import { connection } from "next/server";
+import type { ReactNode } from "react";
 import { addDays, endOfDay, format, isSameDay, startOfDay } from "date-fns";
 import { fr } from "date-fns/locale";
-import { ArrowRight, BookOpen, Clock, MapPin } from "lucide-react";
-import Link from "next/link";
 
 import {
   getStudentProfileAction,
@@ -12,20 +11,31 @@ import {
   getStudentScheduleAction,
 } from "@/services/student";
 import { resolveScheduleUiStatus } from "@/services/schedule/policy";
-import { formatTime } from "@/lib/utils";
-import { ScheduleStatusBadge } from "@/components/student/ui/badges";
-import { StudentStat, StudentStatGrid } from "@/components/student/ui/stat";
-import { StudentDayRing } from "@/components/student/ux/StudentDayRing";
-import {
-  BackpackIllustration,
-  CalendarRestIllustration,
-  StudentEmpty,
-} from "@/components/student/ui/illustrations";
+import { cn, formatTime } from "@/lib/utils";
+import { BackpackIllustration, StudentEmpty } from "@/components/student/ui/illustrations";
+import { SectionDots } from "@/components/student/ux/SectionDots";
 
-/** Fenêtre de recherche du prochain cours (D14 : multi-jours, pas borné au jour). */
 const NEXT_COURSE_WINDOW_DAYS = 14;
-/** Au-delà, on n'affiche plus un compte à rebours mais l'heure/le jour. */
 const COUNTDOWN_MAX_MIN = 180;
+const MAX_TODAY_ROWS = 6;
+const SCROLLER_ID = "student-scroller";
+const SECTIONS = [
+  { id: "accueil", label: "Accueil" },
+  { id: "prochain", label: "Prochain cours" },
+  { id: "journee", label: "Aujourd'hui" },
+  { id: "presence", label: "Présence" },
+] as const;
+
+function Section({ id, children }: { id: string; children: ReactNode }) {
+  return (
+    <section
+      id={id}
+      className="flex h-full snap-center snap-always items-center justify-center px-6 pb-14"
+    >
+      <div className="w-full max-w-md">{children}</div>
+    </section>
+  );
+}
 
 export default async function StudentDashboardPage() {
   await connection();
@@ -54,6 +64,8 @@ export default async function StudentDashboardPage() {
   }
 
   const now = new Date();
+  const nowMs = now.getTime();
+
   const [statsRes, scheduleRes] = await Promise.all([
     getStudentStatsAction({ classId, groupIds }),
     getStudentScheduleAction({
@@ -65,18 +77,17 @@ export default async function StudentDashboardPage() {
   ]);
 
   const stats = "data" in statsRes ? statsRes.data : null;
-  const schedules = ("data" in scheduleRes ? scheduleRes.data ?? [] : []).map(
-    (s) => ({ ...s, startTime: new Date(s.startTime), endTime: new Date(s.endTime) }),
-  );
+  const schedules = ("data" in scheduleRes ? scheduleRes.data ?? [] : []).map((s) => ({
+    ...s,
+    startTime: new Date(s.startTime),
+    endTime: new Date(s.endTime),
+  }));
   const today = schedules.filter((s) => isSameDay(s.startTime, now));
-
-  const todayCourses = Array.from(
-    new Map(today.map((s) => [s.course.id, s.course])).values(),
-  );
+  const coursesTodayCount = today.filter((s) => s.status !== "CANCELED").length;
 
   const firstName = profile.user.firstName?.trim() || "Étudiant";
 
-  const nowMs = now.getTime();
+  // ── Cours en cours, sinon prochain cours ──
   const candidates = schedules.filter((s) => s.status !== "CANCELED");
   const ongoing = candidates.find(
     (s) => s.startTime.getTime() <= nowMs && s.endTime.getTime() >= nowMs,
@@ -91,173 +102,135 @@ export default async function StudentDashboardPage() {
     const isToday = isSameDay(nextCourse.startTime, now);
     const minutes = Math.round((nextCourse.startTime.getTime() - nowMs) / 60000);
     if (isToday && minutes >= 0 && minutes <= COUNTDOWN_MAX_MIN) {
-      nextLead = `${minutes} min`;
+      nextLead = `dans ${minutes} min`;
     } else if (isToday) {
-      nextLead = formatTime(nextCourse.startTime);
+      nextLead = `à ${formatTime(nextCourse.startTime)}`;
     } else {
-      nextLead = format(nextCourse.startTime, "EEE d MMM", { locale: fr });
+      nextLead = format(nextCourse.startTime, "EEEE d MMMM", { locale: fr });
     }
   }
 
+  const teacher = nextCourse
+    ? [nextCourse.teacher.user.firstName, nextCourse.teacher.user.lastName]
+        .filter(Boolean)
+        .join(" ")
+    : "";
+  const att = stats?.attendance;
+
   return (
-    <div className="flex flex-col gap-16 pt-2 pb-16">
-      {/* ── Header (zone d'impact, display) ── */}
-      <header>
-        <div className="flex items-center justify-between gap-4">
-          <h1 className="font-display text-4xl font-bold tracking-tight">
-            Bonjour, {firstName}
-          </h1>
-          <span className="font-serif text-2xl font-semibold tabular-nums text-muted-foreground">
-            {formatTime(now, "h:")}
-          </span>
-        </div>
-      </header>
+    <>
+      <div
+        id={SCROLLER_ID}
+        className="min-h-0 flex-1 snap-y snap-mandatory overflow-y-auto overscroll-contain motion-safe:scroll-smooth"
+      >
+        {/* 1 · Accueil : identité uniquement */}
+        <Section id="accueil">
+          <p className="text-sm capitalize text-muted-foreground">
+            {format(now, "EEEE d MMMM", { locale: fr })}
+          </p>
+          <h1 className="mt-2 text-4xl font-semibold tracking-tight">Bonjour, {firstName}</h1>
+          <p className="mt-3 text-sm text-muted-foreground">
+            {coursesTodayCount > 0
+              ? `Tu as ${coursesTodayCount} cours aujourd'hui`
+              : "Tu n'as pas de cours aujourd'hui"}
+          </p>
+        </Section>
 
-      {/* ── Prochain cours : bloc d'accent plein ── */}
-      {nextCourse && (
-        <section className="rounded-3xl bg-primary p-6 text-primary-foreground">
-          <div className="flex items-center justify-between gap-3">
-            <span className="rounded-full bg-primary-foreground/15 px-3 py-1 text-xs font-bold uppercase tracking-wide">
-              {ongoing ? "En cours" : "Prochain cours"}
-            </span>
-            {nextLead && (
-              <span className="font-display text-2xl font-bold tabular-nums">{nextLead}</span>
+        {/* 2 · Prochain cours : un seul cours */}
+        <Section id="prochain">
+          {nextCourse ? (
+            <>
+              <p className="text-sm text-muted-foreground">
+                {ongoing ? "Actuellement tu as :" : `Prochain cours · ${nextLead}`}
+              </p>
+              <h2 className="mt-3 text-4xl font-semibold leading-tight tracking-tight">
+                {nextCourse.course.name}
+              </h2>
+              <p className="mt-4 text-sm tabular-nums text-muted-foreground">
+                <span className="text-lg font-semibold tabular-nums [word-spacing:0.25rem]">
+                  {formatTime(nextCourse.startTime)} – {formatTime(nextCourse.endTime)} ·{" "}
+                </span>
+                {nextCourse.room.name}
+              </p>
+              {teacher && <p className="mt-1 text-sm text-muted-foreground">{teacher}</p>}
+            </>
+          ) : (
+            <>
+              <p className="text-sm text-muted-foreground">Prochain cours</p>
+              <p className="mt-3 text-4xl font-semibold tracking-tight">Aucun cours à venir.</p>
+            </>
+          )}
+        </Section>
+
+        {/* 3 · Journée : la liste du jour */}
+        <Section id="journee">
+          <h2 className="mb-4 text-sm text-muted-foreground">
+            Aujourd&apos;hui
+            {stats?.today && stats.today.totalSessions > 0 && (
+              <span className="tabular-nums">
+                {" "}· {stats.today.doneSessions}/{stats.today.totalSessions} terminés
+              </span>
             )}
-          </div>
-
-          <h2 className="font-display mt-4 text-2xl font-bold leading-tight">
-            {nextCourse.course.name}
           </h2>
 
-          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm font-medium opacity-90">
-            <span className="inline-flex items-center gap-1.5">
-              <Clock className="size-4" />
-              {formatTime(nextCourse.startTime)}–{formatTime(nextCourse.endTime)}
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <MapPin className="size-4" />
-              {nextCourse.room.name}
-            </span>
-          </div>
-        </section>
-      )}
+          {today.length === 0 ? (
+            <p className="text-2xl font-medium">Pas de cours aujourd&apos;hui.</p>
+          ) : (
+            <>
+              <ul className="divide-y">
+                {today.slice(0, MAX_TODAY_ROWS).map((s) => {
+                  const uiStatus = resolveScheduleUiStatus(s, now);
+                  const done = uiStatus === "COMPLETED" || uiStatus === "MISSED";
+                  return (
+                    <li
+                      key={s.id}
+                      className={cn(
+                        "flex items-baseline gap-4 py-3.5",
+                        (done || s.status === "CANCELED") && "opacity-50",
+                        s.status === "CANCELED" && "line-through",
+                      )}
+                    >
+                      <span className="w-12 shrink-0 text-sm tabular-nums text-muted-foreground">
+                        {formatTime(s.startTime)}
+                      </span>
+                      <span className="min-w-0 flex-1 truncate">{s.course.name}</span>
+                      <span className="shrink-0 text-xs text-muted-foreground">{s.room.name}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+              {today.length > MAX_TODAY_ROWS && (
+                <p className="mt-3 text-xs text-muted-foreground">
+                  +{today.length - MAX_TODAY_ROWS} autre(s)
+                </p>
+              )}
+            </>
+          )}
+        </Section>
 
-      {/* ── Ta journée ── */}
-      <section className="space-y-2">
-        <div className="flex items-center justify-between px-1">
-          <h3 className="font-display text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Ta journée
-          </h3>
-          <Link
-            href="./student/planning"
-            className="inline-flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Planning <ArrowRight className="size-3.5" />
-          </Link>
-        </div>
+        {/* 4 · Présence du jour */}
+        <Section id="presence">
+          <p className="text-sm text-muted-foreground">Ta présence aujourd&apos;hui</p>
+          <p className="mt-2 text-8xl font-semibold tabular-nums tracking-tight">
+            {att?.today.rate ?? "—"}
+            {att?.today.rate != null && (
+              <span className="text-4xl text-muted-foreground">%</span>
+            )}
+          </p>
+          <p className="mt-4 text-sm text-muted-foreground tabular-nums">
+            {att && att.today.total > 0
+              ? `${att.today.attended}/${att.today.total} séances complétées`
+              : "Aucune séance terminée aujourd'hui."}
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground tabular-nums">
+            {att && att.today.total > 0
+              ? `${att.today.missed} séance${att.today.missed === 1 ? "" : "s"} manquée${att.today.missed === 1 ? "" : "s"}`
+              : "Aucune séance manquée aujourd'hui."}
+          </p>
+        </Section>
+      </div>
 
-        {today.length === 0 ? (
-          <StudentEmpty
-            illustration={<CalendarRestIllustration />}
-            title="Pas de cours aujourd'hui"
-            hint="Profite de ta journée — ton prochain cours est affiché plus haut."
-            className=""
-          />
-        ) : (
-          today.map((s) => {
-            const uiStatus = resolveScheduleUiStatus(s, now);
-            const done = uiStatus === "COMPLETED" || uiStatus === "MISSED";
-            return (
-              <div
-                key={s.id}
-                className={`flex items-center gap-4 rounded-lg bg-muted/50 p-4 transition-colors hover:bg-accent/40 ${done ? "opacity-50" : ""}`}
-              >
-                <span className="font-display w-12 shrink-0 text-sm font-medium tabular-nums text-muted-foreground">
-                  {formatTime(s.startTime)}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="font-serif truncate text-lg leading-snug">{s.course.name}</p>
-                  <p className="flex items-center gap-1 truncate text-sm text-muted-foreground">
-                    <MapPin className="size-3.5" />
-                    {s.room.name}
-                  </p>
-                </div>
-                <ScheduleStatusBadge status={uiStatus} />
-              </div>
-            );
-          })
-        )}
-      </section>
-
-      {/* ── Aperçu de la journée (anneau interactif) ── */}
-      {stats?.today && (
-        <section className="space-y-2">
-          <h3 className="font-display px-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Aperçu de la journée
-          </h3>
-          <div className="flex justify-center py-2">
-            <StudentDayRing
-              doneSessions={stats.today.doneSessions}
-              totalSessions={stats.today.totalSessions}
-              absences={stats.today.absences}
-              doneMinutes={stats.today.doneMinutes}
-              totalMinutes={stats.today.totalMinutes}
-              nextLead={nextLead}
-            />
-          </div>
-        </section>
-      )}
-
-      {/* ── Mon suivi (stats serif, factuel P-25) ── */}
-      {stats && (
-        <section className="space-y-2">
-          <h3 className="font-display px-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Mon suivi
-          </h3>
-          <StudentStatGrid>
-            <StudentStat value={`${stats.attendanceRate}%`} label="Présence" accent="text-emerald-600" />
-            <StudentStat value={stats.todayCount} label="Aujourd'hui" />
-            <StudentStat value={stats.totalCourses} label="Cours" />
-          </StudentStatGrid>
-        </section>
-      )}
-
-      {/* ── Mes cours du jour ── */}
-      <section className="space-y-2">
-        <div className="flex items-center justify-between px-1">
-          <h3 className="font-display text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Mes cours du jour
-          </h3>
-          <Link
-            href="student/courses"
-            className="inline-flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Tout voir <ArrowRight className="size-3.5" />
-          </Link>
-        </div>
-
-        {todayCourses.length === 0 ? (
-          <StudentEmpty
-            illustration={<BackpackIllustration />}
-            title="Aucun cours aujourd'hui"
-            hint="Retrouve l'ensemble de tes cours via « Tout voir »."
-            className="border-0 bg-transparent py-6"
-          />
-        ) : (
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            {todayCourses.map((course) => (
-              <Link
-                key={course.id}
-                href={`student/courses/${course.id}`}
-                className="flex items-center gap-3 rounded-lg bg-muted/50 p-4 transition-colors hover:bg-accent/40"
-              >
-                <BookOpen className="size-4 shrink-0 text-muted-foreground" />
-                <span className="font-serif truncate text-base">{course.name}</span>
-              </Link>
-            ))}
-          </div>
-        )}
-      </section>
-    </div>
+      <SectionDots sections={SECTIONS} scrollerId={SCROLLER_ID} />
+    </>
   );
 }

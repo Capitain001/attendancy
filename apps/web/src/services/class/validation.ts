@@ -50,7 +50,6 @@ export const createPersonalClassSchema = v.object({
 export type CreatePersonalClassInput = v.InferInput<typeof createPersonalClassSchema>   // { name?: string }
 export type CreatePersonalClassOutput = v.InferOutput<typeof createPersonalClassSchema> // { name: string }
  
-
 export const removeClassSchema = v.object({
   classId: v.pipe(v.string(), v.uuid('Identifiant de classe invalide')),
 })

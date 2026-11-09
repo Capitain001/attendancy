@@ -69,10 +69,10 @@ export function useOrgInvitations(limit = 50) {
    * fallback sur la copie presse-papiers avec toast.
    */
   const shareInvitation = async (inv: InvitationListItem) => {
-    const result = await generateMagicLink.mutateAsync(inv)
-    if (!result.success || !result.link) {
-      const err = result as { success: false; error?: string }
-      toast.error(err.error ?? 'Impossible de générer le lien')
+    let result
+    try {
+      result = await generateMagicLink.mutateAsync(inv)
+    } catch {
       return
     }
     try {

@@ -3,12 +3,11 @@ import { cacheTag, cacheLife } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { CACHE } from '@/cache/server/key';;
 import { getActiveSessions } from '@/services/session/database/session.queries'
-import { getUserAttendance } from '@/services/attendance/database/attendance.queries'
 import {
-  ATTENDANCE_NUMERATOR_STATUSES,
-  ATTENDANCE_DENOMINATOR_STATUSES,
-} from '@/services/attendance/policy'
-import type { AttendanceStatus } from '@/generated/prisma/client'
+  computeAttendanceRate,
+  getStudentAttendanceStatusCounts,
+  getUserAttendance,
+} from '@/services/attendance/server'
 import { getSchedules } from '@/services/schedule/database';
 
 /** Profil étudiant courant — classId + groupIds pour filtrer les schedules. */
@@ -66,12 +65,15 @@ export async function getStudentStats(params: {
     ...(params.groupIds.length > 0 ? [{ groupId: { in: params.groupIds } }] : []),
   ]
 
-  const [total, present, coursesCount, todaySchedules, absencesToday, grades] = await Promise.all([
-    prisma.attendance.count({
-      where: { studentId: params.studentId, orgId: params.orgId },
+  const [globalCounts, todayCounts, coursesCount, todaySchedules, grades] = await Promise.all([
+    getStudentAttendanceStatusCounts(params.studentId, params.orgId, {
+      classId: params.classId,
+      groupIds: params.groupIds,
     }),
-    prisma.attendance.count({
-      where: { studentId: params.studentId, orgId: params.orgId, status: 'PRESENT' },
+    getStudentAttendanceStatusCounts(params.studentId, params.orgId, {
+      classId: params.classId,
+      groupIds: params.groupIds,
+      range: { start, end },
     }),
     prisma.courseTeacher.count({
       where: { course: { classId: params.classId, orgId: params.orgId, deletedAt: null } },
@@ -83,12 +85,6 @@ export async function getStudentStats(params: {
         OR: groupOr,
       },
       select: { status: true, startTime: true, endTime: true },
-    }),
-    prisma.attendance.count({
-      where: {
-        studentId: params.studentId, orgId: params.orgId, status: 'ABSENT',
-        schedule: { startTime: { gte: start, lte: end } },
-      },
     }),
     prisma.grade.findMany({
       where: {
@@ -115,7 +111,10 @@ export async function getStudentStats(params: {
     Math.round(list.reduce((acc, s) => acc + (s.endTime.getTime() - s.startTime.getTime()) / 60000, 0))
 
   return {
-    attendanceRate:   total > 0 ? Math.round((present / total) * 100) : 100,
+    attendance: {
+      global: computeAttendanceRate(globalCounts),
+      today: computeAttendanceRate(todayCounts),
+    },
     totalCourses:     coursesCount,
     todayCount:       todaySchedules.length,
     averageGrade:     totalMaxScore > 0 ? Math.round((totalScore / totalMaxScore) * 100 * 100) / 100 : 0,
@@ -123,7 +122,6 @@ export async function getStudentStats(params: {
     today: {
       doneSessions:  doneToday.length,
       totalSessions: activeToday.length,
-      absences:      absencesToday,
       doneMinutes:   minutesOf(doneToday),
       totalMinutes:  minutesOf(activeToday),
     },
@@ -191,21 +189,14 @@ export async function getStudentSessionDetail(params: {
 
   const [myAttendance, courseRows] = await Promise.all([
     getUserAttendance(studentId, scheduleId, orgId),
-    prisma.attendance.groupBy({
-      by: ['status'],
-      where: { studentId, schedule: { orgId, courseId: schedule.courseId } },
-      _count: { status: true },
+    getStudentAttendanceStatusCounts(studentId, orgId, {
+      classId,
+      courseId: schedule.courseId,
+      groupIds,
     }),
   ])
 
-  let numerator = 0
-  let denominator = 0
-  for (const row of courseRows) {
-    const n = row._count.status
-    if ((ATTENDANCE_NUMERATOR_STATUSES as readonly AttendanceStatus[]).includes(row.status)) numerator += n
-    if ((ATTENDANCE_DENOMINATOR_STATUSES as readonly AttendanceStatus[]).includes(row.status)) denominator += n
-  }
-  const courseRate = denominator > 0 ? Math.round((numerator / denominator) * 100) : null
+  const courseRate = computeAttendanceRate(courseRows).rate
 
   const t = schedule.teacher?.user ?? null
   return {

@@ -98,8 +98,8 @@ export function StudentDetailPage({
             <span className={typography.small}>Taux d'assiduité</span>
           </div>
           <div className={cn(card.stat, 'flex flex-col gap-1')}>
-            <span className="text-2xl font-bold text-red-600">{summary.absences}</span>
-            <span className={typography.small}>Absences totales</span>
+            <span className="text-2xl font-bold text-red-600">{summary.absent}</span>
+            <span className={typography.small}>Absences non justifiées</span>
           </div>
         </div>
       )}

@@ -11,10 +11,9 @@
 import { startOfMonth } from "date-fns";
 
 import {
-  ATTENDANCE_NUMERATOR_STATUSES,
-  ATTENDANCE_DENOMINATOR_STATUSES,
-} from "@/services/attendance/policy";
-import { getStudentAttendanceStatusCounts } from "@/services/attendance/database";
+  computeAttendanceRate,
+  getStudentAttendanceStatusCounts,
+} from "@/services/attendance/server";
 import {
   getStudentProfile,
   getStudentSchedules,
@@ -176,12 +175,7 @@ async function buildChildOverview(params: {
   const dayDone = todaySchedules.filter((s) => s.status === "COMPLETED").length;
 
   // Taux de présence hors PENDING (policy partagée).
-  const sum = (statuses: readonly (keyof typeof counts)[]) =>
-    statuses.reduce((acc, st) => acc + (counts[st] ?? 0), 0);
-  const numerator = sum(ATTENDANCE_NUMERATOR_STATUSES);
-  const denominator = sum(ATTENDANCE_DENOMINATOR_STATUSES);
-  const attendanceRate =
-    denominator > 0 ? Math.round((numerator / denominator) * 100) : 0;
+  const attendanceRate = computeAttendanceRate(counts).rate ?? 0;
 
   return {
     ...base,

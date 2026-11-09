@@ -35,6 +35,7 @@ export const MODEL_SERVICES = {
   'notification': { model: 'Notification', path: '../services/notification' },
   'organization': { model: 'Organization', path: '../services/organization' },
   'parent': { model: 'Parent', path: '../services/parent' },
+  'parent-relation': { model: 'ParentRelation', path: '../services/parent-relation' },
   'permission': { model: 'Permission', path: '../services/permission' },
   'program': { model: 'Program', path: '../services/program' },
   'program-track': { model: 'ProgramTrack', path: '../services/program-track' },
@@ -62,7 +63,6 @@ export const DOMAIN_SERVICES = {
   'curriculum': { path: '../services/curriculum' },
   'device': { path: '../services/device' },
   'entity': { path: '../services/entity' },
-  'personal': { path: '../services/personal' },
   'planning': { path: '../services/planning' },
   'seed': { path: '../services/seed' },
 } satisfies Record<string, { path: string }>
@@ -98,8 +98,8 @@ export type GroupServiceIndex = typeof import('../services/group')
 export type NotificationServiceIndex = typeof import('../services/notification')
 export type OrganizationServiceIndex = typeof import('../services/organization')
 export type ParentServiceIndex = typeof import('../services/parent')
+export type ParentRelationServiceIndex = typeof import('../services/parent-relation')
 export type PermissionServiceIndex = typeof import('../services/permission')
-export type PersonalServiceIndex = typeof import('../services/personal')
 export type PlanningServiceIndex = typeof import('../services/planning')
 export type ProgramServiceIndex = typeof import('../services/program')
 export type ProgramTrackServiceIndex = typeof import('../services/program-track')

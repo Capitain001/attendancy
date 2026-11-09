@@ -115,7 +115,8 @@ export async function getStudentScheduleAction(params: {
   const { orgId } = auth.data
 
   try {
-    return { data: await getStudentSchedules(params.groupIds, { orgId, ...params }) }
+    // return { data: await getStudentSchedules(params.groupIds, { orgId, ...params }) }
+    return {data:mockGetStudentSchedules}
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
@@ -230,6 +231,7 @@ export async function getDirectionStudentsAction(classId?: string) {
 
 
 import { getStudents } from '../database'
+import { mockGetStudentSchedules } from '@/data/mocks/mock.schedule'
 
 export async function getStudentsAction() {
   const auth = await authAccess()

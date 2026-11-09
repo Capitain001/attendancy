@@ -2,14 +2,14 @@ import { Search, X } from "lucide-react";
 import { input } from "@/styles";
 import { Button } from "@/components/ui/button";
 import { Role } from "@/generated/prisma/client";
-import { InvitationStatus } from "@/modules/invitation/status";
+import type { InvitationUiStatus } from "@/modules/invitation/policy";
 
-const FILTERS: { value: 'all' | InvitationStatus; label: string }[] = [
+const FILTERS: { value: 'all' | InvitationUiStatus; label: string }[] = [
   { value: 'all', label: 'Toutes les invitations' },
-  { value: 'pending', label: 'En attente' },
-  { value: 'accepted', label: 'Acceptées' },
-  { value: 'expired', label: 'Expirées' },
-  { value: 'declined', label: 'Refusées' },
+  { value: 'PENDING', label: 'En attente' },
+  { value: 'ACCEPTED', label: 'Acceptées' },
+  { value: 'EXPIRED', label: 'Expirées' },
+  { value: 'DECLINED', label: 'Refusées' },
 ];
 
 const ROLES: { value: Role; label: string }[] = [
@@ -25,8 +25,8 @@ interface InvitationFilterProps {
   setQuery: (q: string) => void;
   role: Role | '';
   setRole: (r: Role | '') => void;
-  status: InvitationStatus | 'all';
-  setStatus: (s: InvitationStatus | 'all') => void;
+  status: InvitationUiStatus | 'all';
+  setStatus: (s: InvitationUiStatus | 'all') => void;
 }
 
 export function InvitationFilter({
@@ -87,7 +87,7 @@ export function InvitationFilter({
         {/* <select
           className={input.base}
           value={status}
-          onChange={(e) => setStatus(e.target.value as InvitationStatus | 'all')}
+          onChange={(e) => setStatus(e.target.value as InvitationUiStatus | 'all')}
         >
           {FILTERS.map((f) => (
             <option key={f.value} value={f.value}>

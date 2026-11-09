@@ -3,7 +3,8 @@
   "file": "src/services/student/database/student.queries.ts",
   "sig": "(params: { studentId: string; scheduleId: string; orgId: string; classId: string; groupIds: string[] }) => Promise<{ schedule: { id: string; courseName: string; credits: number; roomName: string; startTime: Date; endTime: Date; status: ScheduleStatus; confirmed: boolean; notes: string | null; teacher: { ...; } | null; }; myAttendance: { ...; } | null; session: { ...; } | null; courseRate: number | null; } | null>",
   "composes": [
-    "getUserAttendance"
+    "getUserAttendance",
+    "getStudentAttendanceStatusCounts"
   ],
   "rules": [],
   "why_ref": ""

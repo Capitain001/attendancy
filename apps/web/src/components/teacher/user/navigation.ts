@@ -45,6 +45,12 @@ export const teacherRoutes: Route[] = [
     link: "/teacher/students",
   },
   {
+    id: "session",
+    title: "Ma session",
+  icon: "Activity",
+    link: "/teacher/session",
+  },
+    {
     id: "sessions",
     title: "Mes sessions",
     icon: "Activity",

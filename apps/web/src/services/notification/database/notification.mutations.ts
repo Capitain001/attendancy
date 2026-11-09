@@ -19,7 +19,9 @@ export async function createUserNotification(params: {
       message: params.data.message,
       type: params.data.type ?? 'GENERAL',
       scheduleId: params.data.scheduleId ?? null,
-      metadata: params.data.metadata ? JSON.parse(JSON.stringify(params.data.metadata)) : null,
+      metadata: params.data.metadata
+        ? JSON.parse(JSON.stringify(params.data.metadata))
+        : null,
     },
     select: {
       id: true,
@@ -36,7 +38,10 @@ export async function createUserNotification(params: {
   return result
 }
 
-export async function markNotificationRead(params: { notificationId: string; userId: string }) {
+export async function markNotificationRead(params: {
+  notificationId: string
+  userId: string
+}) {
   const result = await prisma.notification.updateMany({
     where: { id: params.notificationId, userId: params.userId },
     data: { read: true },
@@ -55,7 +60,10 @@ export async function markAllNotificationsRead(userId: string) {
 }
 
 // Hard delete — pas de soft delete sur Notification (cycle de vie géré par `read`)
-export async function removeNotification(params: { notificationId: string; userId: string }) {
+export async function removeNotification(params: {
+  notificationId: string
+  userId: string
+}) {
   await prisma.notification.deleteMany({
     where: { id: params.notificationId, userId: params.userId },
   })
@@ -64,7 +72,10 @@ export async function removeNotification(params: { notificationId: string; userI
 
 // ─── Notifications admin (scope organisation) ─────────────────────────────────
 
-export async function checkOrgMembership(userId: string, orgId: string): Promise<boolean> {
+export async function checkOrgMembership(
+  userId: string,
+  orgId: string,
+): Promise<boolean> {
   const membership = await prisma.userOrganization.findFirst({
     where: { userId, orgId },
     select: { id: true },
@@ -81,7 +92,8 @@ export async function createNotificationForOrgUser(params: {
     where: { userId: params.userId, orgId: params.orgId },
     select: { id: true },
   })
-  if (!membership) throw new Error("L'utilisateur n'appartient pas à cette organisation")
+  if (!membership)
+    throw new Error("L'utilisateur n'appartient pas à cette organisation")
 
   const result = await prisma.notification.create({
     data: {
@@ -89,7 +101,9 @@ export async function createNotificationForOrgUser(params: {
       message: params.data.message,
       type: params.data.type ?? 'GENERAL',
       scheduleId: params.data.scheduleId ?? null,
-      metadata: params.data.metadata ? JSON.parse(JSON.stringify(params.data.metadata)) : null,
+      metadata: params.data.metadata
+        ? JSON.parse(JSON.stringify(params.data.metadata))
+        : null,
     },
     select: {
       id: true,
@@ -118,7 +132,9 @@ export interface InvitationNotificationSource {
   resourceType?: Resource | null
 }
 
-export function buildInvitationNotification(source: InvitationNotificationSource) {
+export function buildInvitationNotification(
+  source: InvitationNotificationSource,
+) {
   const orgName = source.organization.name ?? 'une organisation'
 
   return {
@@ -149,13 +165,61 @@ export async function createInvitationNotification(
 
   return tx.notification.create({
     data: { userId: params.userId, type, message, metadata },
-    select: { id: true, type: true, message: true, metadata: true, createdAt: true },
+    select: {
+      id: true,
+      type: true,
+      message: true,
+      metadata: true,
+      createdAt: true,
+    },
+  })
+}
+
+export async function upsertInvitationNotification(
+  tx: Tx,
+  params: { userId: string; source: InvitationNotificationSource },
+) {
+  const notification = buildInvitationNotification(params.source)
+  const existing = await tx.notification.findFirst({
+    where: {
+      userId: params.userId,
+      type: 'INVITATION',
+      metadata: {
+        path: ['invitationId'],
+        equals: params.source.invitationId,
+      },
+    },
+    select: { id: true },
+  })
+
+  if (!existing) {
+    return createInvitationNotification(tx, params)
+  }
+
+  return tx.notification.update({
+    where: { id: existing.id },
+    data: {
+      read: false,
+      message: notification.message,
+      metadata: notification.metadata,
+    },
+    select: {
+      id: true,
+      type: true,
+      message: true,
+      metadata: true,
+      createdAt: true,
+    },
   })
 }
 
 export async function setInvitationNotificationStatus(
   tx: Tx,
-  params: { userId: string; invitationId: string; status: 'ACCEPTED' | 'DECLINED' | 'REVOKED' },
+  params: {
+    userId: string
+    invitationId: string
+    status: 'ACCEPTED' | 'DECLINED' | 'REVOKED'
+  },
 ) {
   const notif = await tx.notification.findFirst({
     where: {
@@ -190,7 +254,8 @@ export async function createInvitationResponseNotification(
   params: { userId: string; source: InvitationResponseSource },
 ) {
   const isAccepted = params.source.kind === 'INVITATION_ACCEPTED'
-  const actorName = params.source.sender.name || params.source.sender.email || 'Un utilisateur'
+  const actorName =
+    params.source.sender.name || params.source.sender.email || 'Un utilisateur'
   const message = isAccepted
     ? `${actorName} a accepté votre invitation à rejoindre ${params.source.orgName}.`
     : `${actorName} a décliné votre invitation à rejoindre ${params.source.orgName}.`

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
 import { AlertCircle, CheckCircle2, LogIn, LogOut, Radio,} from "lucide-react";
 import { differenceInMinutes } from "date-fns";
@@ -84,6 +85,10 @@ export default function SessionPageInner({
   schedule: TeacherSchedule;
   teacherId: string;
 }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const params = useParams<{ slug?: string }>();
+
   const startAt = useMemo(() => new Date(schedule.startTime), [schedule.startTime]);
   const endAt = useMemo(() => new Date(schedule.endTime), [schedule.endTime]);
 
@@ -105,8 +110,13 @@ export default function SessionPageInner({
     onStarted: ({ sessionId }) => {
       setOptimisticSession({ id: sessionId, status: "ACTIVE", checkIn: new Date() });
     },
-    onEnded: () => {
+    onEnded: (_durationMinutes, endedSessionId) => {
       setOptimisticSession((prev) => (prev ? { ...prev, status: "COMPLETED" } : prev));
+      if (pathname?.startsWith("/personal/") && params?.slug && endedSessionId) {
+        router.push(
+          `/personal/${encodeURIComponent(params.slug)}/teacher/sessions/${endedSessionId}`,
+        );
+      }
     },
   });
 

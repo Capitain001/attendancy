@@ -1,7 +1,7 @@
 {
   "name": "getInboxNotificationsForUser",
   "file": "src/services/notification/database/notification.queries.ts",
-  "sig": "(userId: string, filter: InboxFilter = 'all', limit = 20, cursor?: string) => Promise<{ message: string; id: string; type: NotificationType; createdAt: Date; updatedAt: Date; metadata: JsonValue; read: boolean; scheduleId: string | null; }[]>",
+  "sig": "(userId: string, filter: InboxFilter = 'all', limit = 20, cursor?: string) => Promise<{ id: string; message: string; type: NotificationType; read: boolean; metadata: JsonValue; createdAt: Date; updatedAt: Date; scheduleId: string | null; }[]>",
   "composes": [],
   "rules": [],
   "why_ref": ""

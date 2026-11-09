@@ -1,42 +1,40 @@
-# Auth module — CLAUDE.md
+# Module Auth — CLAUDE.md
 
-Contexte complet du flow auth : `docs/techs/auth-context.md`
+Contexte complet et architecture détaillée : [`docs/techs/auth/auth-context.md`](../../../../docs/techs/auth/auth-context.md) et [`docs/techs/auth/`](../../../../docs/techs/auth/README.md).
 
-## Ce que fait ce module
+## Rôle de ce module
 
-Auth **web SSR uniquement** (cookies Supabase). Ne gère PAS le mode Bearer/Tauri — voir `src/utils/supabase/api.ts`.
+Orchestre l'authentification, le contrôle d'accès (`authAccess`), l'inscription (`PRINCIPAL` / `PERSONAL`), la complétion du profil civique et l'acceptation d'invitations (via lien externe ou notification Inbox interne).
 
 ## Primitives à utiliser
 
-- **Dans un Server Action / RSC** : `authAccess()` (ici, `persmission/acces.ts`)
+- **Dans une Server Action / RSC (contrôle d'accès + `orgId`)** : `authAccess()` (`persmission/acces.ts`, ré-exporté par `@/services/auth`)
   ```typescript
-  const auth = await authAccess();
-  if ("error" in auth) return { error: auth.error };
+  const auth = await authAccess({ requiredRole: "TEACHER", allowPersonalOrg: true });
+  if (!auth.data) return { error: auth.error };
   const { orgId, user } = auth.data;
   ```
-- **Pour juste lire le profil** : `getUserInfo()` depuis `src/modules/user`
-- **Pour les opérations Supabase Auth** (login, logout, signup…) : fonctions de `supabase.ts`
+- **Pour lire le profil utilisateur courant (Cookies SSR ou Bearer RPC)** : `getUserInfo()` depuis `@/modules/user`
+- **Pour les opérations Supabase Auth serveur** (login, logout, signup, OAuth, admin) : fonctions de [`supabase.ts`](./supabase.ts)
+- **Pour exposer le profil au client RPC (Tauri)** : `getCurrentUserAction()` dans [`rpc/actions.ts`](./rpc/actions.ts)
 
 ## Invariants
 
-- `orgId` toujours depuis `auth.data.orgId` — jamais body/query/headers
-- `"use server"` sur toutes les fonctions de `actions/`
-- `createClient()` = client SSR (cookies). Ne jamais importer le client browser ici.
-- Les helpers DB dans `members/utils.ts` ne sont pas des Server Actions : ils utilisent `import 'server-only'` et reçoivent le client Prisma ou transactionnel fourni par leur appelant.
-- `enrollStudentInClass` délègue à `createStudentEnrollmentRaw` du service `student-enrollment`; vérifier et préserver le scope classe/organisation avant l'appel. Les groupes ajoutés sont idempotents.
-- Les flux d'acceptation d'invitation matérialisent les liens parent-étudiant avec `ensureParentRelation` depuis `@/services/parent-relation/server`, en passant la transaction courante.
-- Pour l'inscription étudiant issue d'une invitation, `resourceId` avec `resourceType === "CLASS"` est la seule source du `classId`; `details.enrollment` peut fournir les groupes, mais son `classId` n'est pas lu.
+- **`orgId` toujours depuis `auth.data.orgId`** — jamais du body, des query params ou des headers.
+- **Dual-mode transparent** : `authAccess()` et `getUserInfo()` supportent nativement les cookies SSR (Web) et l'en-tête `Authorization: Bearer <token>` (clients Tauri via `/api/rpc/[action]`, vérifié par `createBearerClient()` dans `src/utils/supabase/bearer.ts`).
+- **Séparation `app_metadata` / `user_metadata`** : `role`, `function`, `status`, `organization` et `organizations` sont lus/écrits exclusivement dans `app_metadata` (`src/modules/user/access.ts`), jamais dans `user_metadata`.
+- `"use server"` uniquement sur les fichiers d'actions (`actions/`, `members/actions.ts`, `members/complete-signup.ts`, `members/inbox-invitation.ts`, `profile/user.ts`, `rpc/actions.ts`).
+- Les helpers DB dans [`members/utils.ts`](./members/utils.ts) utilisent `import 'server-only'` et reçoivent le client Prisma ou transactionnel (`tx`) fourni par leur appelant.
+- `enrollStudentInClass` délègue à `createStudentEnrollmentRaw` du service `student-enrollment` ; les groupes ajoutés sont idempotents (`skipDuplicates: true`).
+- Les flux d'acceptation d'invitation (`completeSignup` et `acceptInboxInvitationAction`) matérialisent les liens parent-étudiant avec `ensureParentRelation` depuis `@/services/parent-relation/server`, en passant la transaction courante.
+- Pour l'inscription étudiant issue d'une invitation, `invitation.resourceId` avec `resourceType === "CLASS"` est la seule source du `classId` ; `details.enrollment` peut fournir les `groupIds`, mais son `classId` n'est pas lu.
 
-## Permissions / rôles
+## Permissions & Rôles
 
-`persmission/acces.ts` → `authAccess({ requiredRole?, requiredFunction? })`  
-Config des rôles : `persmission/config.ts`  
-Types : `persmission/types.ts`
+- [`persmission/acces.ts`](./persmission/acces.ts) → `authAccess({ requiredRole?, requiredFunction?, requiredPermission?, requiredOrgType?, allowPersonalOrg? })`
+- [`persmission/autorization.ts`](./persmission/autorization.ts) → `getAuthorization()`
+- [`persmission/config.ts`](./persmission/config.ts) → Configuration de la hiérarchie des rôles et fonctions
 
-## Auth desktop (Tauri)
+## Auth Client (Vite / Tauri — `apps/teacher`)
 
-Hors de ce module. Voir :
-
-- `apps/desktop/src/lib/supabase.ts`
-- `apps/desktop/src/hooks/useAuth.ts`
-- `apps/web/src/utils/supabase/api.ts` (vérification Bearer côté API routes)
+Gérée par le package partagé `@attendancy/auth` (`packages/auth/`) et documentée dans [`docs/techs/auth/client-tauri.md`](../../../../docs/techs/auth/client-tauri.md).

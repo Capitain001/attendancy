@@ -4,7 +4,6 @@ import { getQueryClient } from "@/lib/react-query";
 import { CACHE_KEYS } from "@/config/client_cache";
 import { getCurrentTeacherId } from "@/services/teacher";
 import { getTeacherNextScheduleAction } from "@/services/schedule";
-import TeacherSessionPage from "@/components/session/TeacherSessionPage";
 
 export default async function PersonalTeacherSessionsPage() {
   await connection();
@@ -13,14 +12,14 @@ export default async function PersonalTeacherSessionsPage() {
   if (!teacherId) return <div />;
 
   const queryClient = getQueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: CACHE_KEYS.SCHEDULES.NEXT(teacherId),
-    queryFn: () => getTeacherNextScheduleAction({ teacherId }),
-  });
+  // await queryClient.prefetchQuery({
+  //   queryKey: CACHE_KEYS.SCHEDULES.NEXT(teacherId),
+  //   queryFn: () => getTeacherNextScheduleAction({ teacherId }),
+  // });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <TeacherSessionPage teacherId={teacherId} />
+      {/* <TeacherSessionsPage teacherId={teacherId} /> */}
     </HydrationBoundary>
   );
 }

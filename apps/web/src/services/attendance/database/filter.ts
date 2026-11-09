@@ -1,6 +1,12 @@
 // src/services/attendance/database/filter.ts
 // (ou un emplacement neutre partagé si schedule/session le consomment aussi)
-import { Prisma } from "@/generated/prisma/client";
+import type { Prisma } from "@/generated/prisma/client";
+
+/** Séances effectives pour les calculs de taux : clôturées et non supprimées. */
+export const completedScheduleWhere = {
+  deletedAt: null,
+  session: { is: { status: "COMPLETED" } },
+} satisfies Prisma.ScheduleWhereInput;
 
 /** Filtre "inscrit actif" : student non soft-deleted. */
 export const activeEnrollmentWhere = {

@@ -32,9 +32,9 @@ export default function TestStudentsTablePage() {
       <StudentsTable
         data={mockGetDirectionStudents}
         rates={{
-          'std-1': { rate: 95, absences: 1, denominator: 20 },
-          'std-2': { rate: 82, absences: 3, denominator: 20 },
-          'std-3': { rate: 68, absences: 6, denominator: 20 },
+          'std-1': { rate: 95, absent: 1, denominator: 20 },
+          'std-2': { rate: 82, absent: 3, denominator: 20 },
+          'std-3': { rate: 68, absent: 6, denominator: 20 },
         }}
         selected={selected}
         onToggle={handleToggle}

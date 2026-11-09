@@ -1,3 +1,4 @@
+//docs\cmd\generators.md
 # Générateurs de code
 
 Scripts dans `scripts/generate/` — exécutables via `npm run` ou `npx tsx` directement.

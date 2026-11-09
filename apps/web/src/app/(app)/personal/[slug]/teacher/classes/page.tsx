@@ -45,10 +45,10 @@ export default async function PersonalTeacherClassesPage({
 
   return (
     <main className="min-h-screen bg-background px-4 py-8 sm:px-6">
+    
       <div className="mx-auto w-full max-w-5xl space-y-6">
         <header className="space-y-2">
           <h1 className="text-2xl font-bold tracking-tight">Mes classes</h1>
-          
           <p className="text-sm text-foreground/45">
             {activeCount} classe{activeCount === 1 ? "" : "s"} active{activeCount === 1 ? "" : "s"}
             {quota?.maxClasses == null ? "" : ` sur ${quota.maxClasses}`}

@@ -40,6 +40,20 @@ export async function getClassSchedulesAction(
   }
 }
 
+export async function getTeacherNextScheduleAction({ teacherId }: { teacherId: string }) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
+  try {
+    // return { data: await getTeacherNextSchedule(teacherId, orgId) }
+    return {data: mockGetTeacherNextSchedule}
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
+
+
 export async function getSchedulesAction(
   params: Omit<ScheduleFilterParams, 'orgId'>,
 ) {
@@ -95,18 +109,6 @@ export async function getScheduleDaysAction({ month, filters }: GetScheduleDaysI
     return { data: days }
   } catch (error) {
     return { error: error instanceof Error ? error.message : ERRORS.SERVER }
-  }
-}
-export async function getTeacherNextScheduleAction({ teacherId }: { teacherId: string }) {
-  const auth = await authAccess()
-  if (!auth.data) return { error: auth.error }
-  const { orgId } = auth.data
-
-  try {
-    // return { data: await getTeacherNextSchedule(teacherId, orgId) }
-    return {data: mockGetTeacherNextSchedule}
-  } catch (e) {
-    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
 }
 

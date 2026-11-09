@@ -21,12 +21,15 @@ et affectations aux groupes (`StudentGroup`).
 | `database/index.ts` | Barrel interne (non exporté) |
 | `database/student.analytics.ts` | Fonctions liées aux statistiques |
 | `database/student.mutations.ts` | `enrollStudent`, `removeEnrollment`, `assignStudentGroup`, `deleteStudentGroup` |
-| `database/student.queries.ts` | `getEnrolledStudents(classId, orgId)` — liste avec groupes |
+| `database/student.queries.ts` | Profil, planning, statistiques et détails des séances étudiant |
 | `generated.types.ts` | Types générés automatiquement (DTOs de lecture) |
 | `index.ts` | Point d'entrée du service (export actions + types) |
 | `types.ts` | DTOs et types du domaine |
 | `validation.ts` | `enrollStudentSchema`, `assignStudentGroupSchema` |
 ## Invariants
+
+- Les statistiques de présence réutilisent les règles du service attendance via son point d'entrée serveur.
+- Le périmètre des taux étudiant est limité à la classe active, aux groupes de l'étudiant et aux séances clôturées.
 
 - `@@unique([studentId, classId])` → `StudentEnrollment_studentId_classId_key`
 - `@@unique([enrollmentId, groupId])` → `StudentGroup_enrollmentId_groupId_key`

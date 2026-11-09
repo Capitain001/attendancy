@@ -32,7 +32,7 @@ Voir [userInfo.ts](userInfo.ts).
 | `cache` | `refresh` | Comportement                                     |
 | ------- | --------- | ------------------------------------------------ |
 | `true`  | `false`   | Défaut. React cache + LRU (10 min). O(1) en hit. |
-| `true`  | `true`    | Bypass LRU, fetch frais, met à jour LRU.         |
+| `true`  | `true`    | Bypass LRU, fetch frais (sauf déduplication React `cache()` intra-request), met à jour LRU. |
 | `false` | —         | Ignore LRU. React cache reste actif par request. |
 
 ## Architecture de cache (3 niveaux)
@@ -59,6 +59,7 @@ Voir [userInfo.ts](userInfo.ts).
 - Ne jamais autoriser une action à partir de `user_metadata`.
 - Ne jamais lire `role`, `function`, `status`, `organization` ou `organizations` dans `user_metadata`.
 - Toute modification d'accès passe par les helpers de [access.ts](access.ts), et invalide/rafraîchit le cache selon le helper utilisé.
+- `setUserAccess()` invalide le LRU après écriture ; la donnée fraîche doit être relue lors de la requête suivante. Ne pas relire `getUserInfo({ refresh: true })` après l'écriture dans la même requête, car `React.cache()` peut restaurer la valeur pré-écriture.
 - Après mutation profil → `removeUser(userId)` ou `getUserInfo({ refresh: true })`.
 - `UserInfo` est `Partial<>` — toujours guard les champs avant usage.
 - Dans `app_metadata`, `organization` représente l'organisation **courante / active** et `organizations` les appartenances connues.

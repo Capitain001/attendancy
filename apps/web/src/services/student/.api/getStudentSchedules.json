@@ -1,7 +1,7 @@
 {
   "name": "getStudentSchedules",
   "file": "src/services/student/database/student.queries.ts",
-  "sig": "(groupIds: string[], params: { orgId: string; classId: string; rangeStart: Date; rangeEnd: Date }) => Promise<({ room: { name: string; id: string; }; class: { name: string; id: string; }; group: { name: string; id: string; } | null; teacher: { user: { firstName: string | null; lastName: string | null; avatar_url: string | null; }; id: string; }; course: { ...; }; } & { ...; })[]>",
+  "sig": "(groupIds: string[], params: { orgId: string; classId: string; rangeStart: Date; rangeEnd: Date }) => Promise<({ class: { id: string; name: string; }; course: { id: string; name: string; }; group: { id: string; name: string; } | null; room: { id: string; name: string; }; teacher: { id: string; user: { firstName: string | null; lastName: string | null; avatar_url: string | null; }; }; } & { ...; })[]>",
   "composes": [
     "getSchedules"
   ],

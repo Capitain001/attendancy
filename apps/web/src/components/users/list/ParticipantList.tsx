@@ -27,7 +27,7 @@ export function ParticipantList({ participants, className }: ParticipantListProp
             name={user.firstName ?? user.email}
             showName
             className="w-[72px]"
-            avatarClassName="size-14"
+            avatarClassName="size-14 border-0"
           />
         </li>
       ))}

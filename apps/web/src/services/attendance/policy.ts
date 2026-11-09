@@ -147,7 +147,38 @@ export const ATTENDANCE_DENOMINATOR_STATUSES = [
   "EXCUSED",
 ] satisfies AttendanceStatus[];
 
+export const ATTENDANCE_MISSED_STATUSES = [
+  "ABSENT",
+  "EXCUSED",
+] satisfies AttendanceStatus[];
+
 // PENDING exclu intentionnellement des deux
+
+export type AttendanceCounts = Partial<Record<AttendanceStatus, number>>;
+
+const sumStatuses = (
+  counts: AttendanceCounts,
+  statuses: readonly AttendanceStatus[],
+) => statuses.reduce((acc, status) => acc + (counts[status] ?? 0), 0);
+
+/** Comptabilise les séances manquées, en distinguant ABSENT de EXCUSED. */
+export function countMissed(counts: AttendanceCounts): number {
+  return sumStatuses(counts, ATTENDANCE_MISSED_STATUSES);
+}
+
+export function computeAttendanceRate(counts: AttendanceCounts) {
+  const attended = sumStatuses(counts, ATTENDANCE_NUMERATOR_STATUSES);
+  const total = sumStatuses(counts, ATTENDANCE_DENOMINATOR_STATUSES);
+
+  return {
+    attended,
+    total,
+    absent: counts.ABSENT ?? 0,
+    excused: counts.EXCUSED ?? 0,
+    missed: countMissed(counts),
+    rate: total > 0 ? Math.round((attended / total) * 100) : null,
+  };
+}
 
 // -----------------------------------------------------------------------------
 // ABSENTÉISME  seuil de pilotage direction (P-23)

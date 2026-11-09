@@ -1,14 +1,15 @@
 import { useState, useMemo } from 'react';
 import type { InvitationListItem } from '@/modules/invitation';
-import { resolveInvitationStatus, type InvitationStatus } from '@/modules/invitation/status';
+import { resolveInvitationUiStatus, type InvitationUiStatus } from '@/modules/invitation/policy';
 import { Role } from '@/generated/prisma/client';
 
 export function useInvitationsFilter(initialInvitations: InvitationListItem[]) {
   const [query, setQuery] = useState('');
   const [role, setRole] = useState<Role | ''>('');
-  const [status, setStatus] = useState<InvitationStatus | 'all'>('all');
+  const [status, setStatus] = useState<InvitationUiStatus | 'all'>('all');
 
   const filteredInvitations = useMemo(() => {
+    const now = new Date();
     return initialInvitations.filter(inv => {
       // Recherche par email (ou par rôle dans les détails si l'email ne match pas)
       if (query) {
@@ -33,7 +34,7 @@ export function useInvitationsFilter(initialInvitations: InvitationListItem[]) {
 
       // Filtre par statut
       if (status !== 'all') {
-        const invStatus = resolveInvitationStatus(inv);
+        const invStatus = resolveInvitationUiStatus(inv, now);
         if (invStatus !== status) {
           return false;
         }

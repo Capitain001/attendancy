@@ -12,7 +12,7 @@ import {
   getStudentActiveSession,
   getStudentSessionDetail,
 } from "@/services/student/database";
-import { getStudentAttendances } from "@/services/attendance/database";
+import { getStudentAttendances } from "@/services/attendance/server";
 
 import {
   getParentStudents,

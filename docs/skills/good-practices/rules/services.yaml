@@ -1,0 +1,28 @@
+domain: services
+rules:
+  - id: SERVICES-001
+    severity: blocking
+    applies_to: [orchestrator-service, server-action, test]
+    rule: "Contrairement aux services classiques morcelés par modèle, concevoir tout service orchestrateur de feature pour être testable en E2E/intégration et en unitaire sans le runtime Next.js (isoler les règles métier pures dans policy.ts et injecter prismaClient en paramètre des fonctions cœur de feature)."
+    why: "Les services classiques (1 modèle = 1 service) sont granulaires et couplés à leur appelant ; un service orchestrateur porte une feature complète et doit pouvoir être vérifié de bout en bout (E2E/intégration sur vraie DB ou unitaire avec mock) sans dépendre de cookies() ou du contexte Next.js."
+    detect: ["services/", "prismaClient:", "policy.ts", ".integration.test.ts"]
+    evidence: "apps/web/src/services/planning/conflict/check/availability.ts:9-19, apps/web/src/services/planning/conflict/check/conflicts.integration.test.ts:1-60, apps/web/src/services/planning/policy.ts:1-50"
+    bad: |
+      // Fonction cœur d'orchestrateur couplée à getUserInfo() / cookies() et au singleton prisma
+      export async function checkAvailability(params: Params) {
+        const user = await getUserInfo()
+        return prisma.schedule.findMany({ where: { orgId: user.organizationId } })
+      }
+    good: |
+      // Fonction cœur découplée du runtime Next.js : reçoit orgId et prismaClient injecté
+      export interface CheckAvailabilityParams {
+        start: Date
+        end: Date
+        orgId: string
+        prismaClient: PrismaClient
+        // ...
+      }
+      export async function checkAvailability(params: CheckAvailabilityParams): Promise<CheckAvailabilityResult> {
+        // Testable en unitaire (mock PrismaClient) et en E2E/intégration (vraie DB de test)
+      }
+

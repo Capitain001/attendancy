@@ -31,15 +31,35 @@ source de vérité, un seul cache, un seul point d'évolution**.
 
 Un service qui _consomme_ une donnée ne devient pas propriétaire : il ne refait
 pas un `prisma.x.findMany()` sur un modèle d'un autre domaine. Il appelle la
-query déjà exposée par l'owner.
+query ou primitive déjà exposée par l'owner via son point d'entrée serveur
+(`@/services/<owner>/server`).
 
 ```ts
-// ❌ depuis un service consommateur
+// ❌ depuis un service consommateur : requête Prisma directe sur un modèle étranger
 await prisma.resource.findMany(...)
 
-// ✅
+// ❌ import profond dans le dossier interne d'un autre service
+import { getResources } from "@/services/resource/database";
+
+// ✅ import via l'entrée server-only de l'owner
+import { getResources } from "@/services/resource/server";
 const resources = await getResources(parentId, orgId); // owner: service resource
 ```
+
+### Deux points d'entrée par service : `index.ts` vs `server.ts`
+
+Référence : [`docs/techs/module-server-entrypoints.md`](../../../../docs/techs/module-server-entrypoints.md).
+
+- **`index.ts` (`@/services/<service>`) — barrel public (client-safe)** :
+  Expose uniquement `actions/` (`"use server"`) et `types.ts`. Consommé par le
+  frontend (composants clients, hooks React Query, pages RSC). Ne doit **jamais**
+  ré-exporter `database/` ni de helpers serveur (sinon un import côté client
+  tire Prisma ou `next/headers` dans le bundle).
+- **`server.ts` (`@/services/<service>/server`) — barrel server-only** :
+  Commence par `import "server-only"`. Ré-exporte `database/` (en totalité via
+  `export * from "./database"` ou un sous-ensemble volontaire de queries /
+  primitives transactionnelles `tx`). Consommé **uniquement** par du code
+  serveur externe au service (`src/services/*/database/`, `src/modules/*`).
 
 ---
 
@@ -243,6 +263,7 @@ un état pré-existant.
 ## 9. Checklist mentale
 
 - [ ] Quel service possède ce modèle ? Sa query existe-t-elle déjà ?
+- [ ] Si un autre service/module serveur consomme ma fonction DB, est-elle exposée via `server.ts` (`import "server-only"`) et non via `index.ts` ?
 - [ ] Ma fonction transforme/fusionne/filtre — ou n'est-ce qu'un wrapper ?
 - [ ] L'appelant peut-il fournir les ids/données plutôt que moi les résoudre ?
 - [ ] Est-ce du contexte auth (`orgId` ← token) ou de la donnée métier (id ← props) ?

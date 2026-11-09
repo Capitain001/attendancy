@@ -1,6 +1,6 @@
 ---
 name: service-module-pattern
-description: Convention des modules sous src/services/ (actions/database/validation/types/cache/index). Utiliser AVANT d'écrire, modifier ou refactorer du code dans src/services/ — créer un service, ajouter une action serveur, placer une requête Prisma, ou décider où va la logique métier.
+description: Convention des modules sous src/services/ (actions/database/validation/types/cache/index/server). Utiliser AVANT d'écrire, modifier ou refactorer du code dans src/services/ — créer un service, ajouter une action serveur, exposer des fonctions via server.ts, placer une requête Prisma, ou décider où va la logique métier.
 ---
 
 # Pattern des services (`src/services/<module>/`)
@@ -18,13 +18,14 @@ Réflexion domaine : voir [`src/services/SERVICE_CONTEXT.md`](../../../src/servi
 ```
 src/services/<module>/
   CLAUDE.md              # Contexte du service : rôle, fichiers, extensions, invariants
-  index.ts               # Barrel : export * actions + types — JAMAIS database
+  index.ts               # Barrel public (client-safe) : export * actions + types — JAMAIS database
+  server.ts              # Barrel server-only (optionnel) : import "server-only" + exports database pour autres services/modules
   actions/               # JAMAIS actions.ts à la racine — toujours ce dossier
     index.ts             # Barrel : export * de tous les fichiers d'actions
     <model>.mutations.ts # "use server" — mutations serveur
     <model>.queries.ts   # "use server" — lectures (wrappent auth + orgId)
   database/
-    index.ts             # Barrel : export * queries + mutations
+    index.ts             # Barrel interne : export * queries + mutations
     <model>.queries.ts   # Lectures Prisma + "use cache" + cacheTag + cacheLife
     <model>.mutations.ts # Écritures Prisma + invalidateEvent
 
@@ -361,12 +362,33 @@ export type UpdateEntityData = Partial<CreateEntityData>
 - Rôle, table des fichiers, points d'extension (⚠), invariants.
 - Mis à jour à CHAQUE évolution du service — il fait partie du livrable.
 
-### `index.ts` (racine)
+### `index.ts` (racine — barrel public)
+
+Point d'entrée public et client-safe (`@/services/<module>`). Ne doit **jamais** ré-exporter `database/` ni de helpers serveur (sinon un composant client important un type ou une action depuis le barrel tire Prisma ou `next/headers` dans son graphe de modules).
 
 ```ts
 export * from './actions'
-// database/ est interne au service — jamais exporté
+// database/ est interne au service — jamais exporté dans index.ts
 export * from './types'
+```
+
+### `server.ts` (racine — barrel server-only)
+
+Point d'entrée dédié aux consommateurs **serveur** externes au service (`@/services/<module>/server`) : autres services (`src/services/*/database/`), modules serveur (`src/modules/*`), ou orchestrateurs transactionnels (`tx`).
+Référence : [`docs/techs/module-server-entrypoints.md`](../../techs/module-server-entrypoints.md).
+
+- Commence **toujours** par `import 'server-only'`.
+- Ré-exporte les fonctions de `./database` destinées à la composition inter-services (`export * from './database'` par défaut, ou exports nommés quand seul un sous-ensemble — ex. primitives `ensure*` / fonctions prenant `tx` — doit être exposé).
+- Ne contient **jamais** les Server Actions (`actions/` reste dans `index.ts`).
+- Les mutations exposées avec `tx` n'invalident pas le cache en interne : l'orchestrateur appelant déclenche `invalidateEvent` après le commit de la transaction.
+
+```ts
+// src/services/<module>/server.ts
+import 'server-only'
+
+export * from './database'
+// ou exposition ciblée :
+// export { getEntities, ensureEntity } from './database'
 ```
 
 ## Contraintes absolues
@@ -376,18 +398,11 @@ export * from './types'
 - TypeScript strict — jamais `any`. Inférer depuis le code existant.
 - `"use server"` uniquement dans `actions/` — jamais sur les utilitaires.
 - Prisma uniquement dans `database/` — jamais dans les actions ou composants.
-- **`database/` est interne au service** — jamais importé en dehors de
-  `src/services/<module>/`. Ni pages, ni composants, ni hooks.
-- **Tout le frontend (pages RSC incluses) appelle uniquement `actions/`** —
-  c'est la couche qui porte l'auth, l'orgId et le scoping multi-tenant.
-- **Jamais de `actions.ts` à la racine d'un service** — uniquement le dossier
-  `actions/`. (Exception unique : services d'infrastructure sans modèle, comme
-  `auth` — documentée dans leur CLAUDE.md.)
-- **Jamais de type de retour explicite `Promise<...>` sur les actions** —
-  laisser TypeScript inférer.
-- **Update : id + data validés dans un seul `v.safeParse`**, via
-  `validateWithId` — jamais deux paramètres de fonction séparés
-  (`(entityId: string, data: unknown)`) sur une action.
+- **`database/` est interne au service** — jamais importé en chemin profond (`@/services/<module>/database/...`) en dehors de `src/services/<module>/`. Les autres services ou modules serveur passent par `@/services/<module>/server` (`server.ts`). Ni pages, ni composants, ni hooks n'importent `server.ts` ou `database/`.
+- **Tout le frontend (pages RSC incluses) appelle uniquement `actions/`** (via `@/services/<module>`) — c'est la couche qui porte l'auth, l'orgId et le scoping multi-tenant.
+- **Jamais de `actions.ts` à la racine d'un service** — uniquement le dossier `actions/`. (Exception unique : services d'infrastructure sans modèle, comme `auth` — documentée dans leur CLAUDE.md.)
+- **Jamais de type de retour explicite `Promise<...>` sur les actions** — laisser TypeScript inférer.
+- **Update : id + data validés dans un seul `v.safeParse`**, via `validateWithId` — jamais deux paramètres de fonction séparés (`(entityId: string, data: unknown)`) sur une action.
 - Pas d'imports/variables inutilisés.
 - Variables locales : `entity_` quand le nom naturel est un mot réservé.
 
@@ -402,9 +417,10 @@ export * from './types'
 7. `actions/<model>.queries.ts` + `actions/<model>.mutations.ts`.
 8. `actions/index.ts` — `export *`.
 9. `types.ts` — DTOs `<FnName>Dto` .
-10. `index.ts` — barrel racine (actions + types).
-11. `CLAUDE.md` — contexte du service.
-12. Ownership dans `SERVICE_CONTEXT.md` + régénérer `.api/`.
+10. `index.ts` — barrel racine public (actions + types).
+11. `server.ts` — (si consommé par d'autres services/modules serveur) `import 'server-only'` + ré-export de `./database`.
+12. `CLAUDE.md` — contexte du service.
+13. Ownership dans `SERVICE_CONTEXT.md` + régénérer `.api/`.
 
 ## Anti-patterns
 
@@ -417,7 +433,7 @@ export * from './types'
 - Mutation cachée derrière un nom `get*`.
 - Préfixe `list*` sur une action (toujours `get*`).
 - Sous-entités dans un service — chaque modèle a son propre service.
-- Import de `database/` en dehors du service.
+- Import direct de `database/` en dehors du service (utiliser `server.ts` pour la composition inter-services côté serveur) ou ré-export de `database/` dans `index.ts`.
 - `actions.ts` à la racine d'un service à modèle.
 - Service sans `CLAUDE.md` ou avec un `CLAUDE.md` obsolète.
 - `v.parse` dans une action (préférer `v.safeParse` pour un retour d'erreur explicite).

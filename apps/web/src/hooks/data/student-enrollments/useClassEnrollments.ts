@@ -13,7 +13,7 @@ export function useClassEnrollments(classId: string) {
     queryKey: CACHE_KEYS.STUDENT_ENROLLMENTS.BY_CLASS(classId),
     queryFn: () => getStudentsEnrollmentsAction({ classId }),
     enabled: !!classId,
-    ...QUERY_PRESETS.LIVE,
+    ...QUERY_PRESETS.RETAINED,
   });
 
   const enrollments = useMemo(() => response?.data ?? [], [response]);

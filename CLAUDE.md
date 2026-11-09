@@ -6,12 +6,18 @@
   attendancy/                    ← racine monorepo (bun workspaces + TurboRepo)
   ├── apps/
   │   ├── web/                   ← app Next.js 16 (tout le backend + frontend web)
-  │   └── desktop/               ← app Vite + Tauri v2 (shell desktop/mobile)
+  │   ├── teacher/               ← app Vite + TanStack Router + Tauri v2 (espace enseignant desktop/mobile)
+  │   └── desktop/               ← app Vite + Tauri v2
   ├── packages/
-  │   ├── types/                 ← DTOs partagés (@attendancy/types)
-  │   └── planning/              ← hooks React Query + vues planning (@attendancy/planning)
+  │   ├── app/                   ← shell routeur partagé (@attendancy/app)
+  │   ├── auth/                  ← auth client + transport RPC Bearer (@attendancy/auth)
+  │   ├── cache/                 ← React Query + persister IndexedDB (@attendancy/cache)
+  │   ├── db/                    ← client/types Prisma générés (@attendancy/db)
+  │   ├── rpc/                   ← stubs RPC générés (@attendancy/rpc)
+  │   ├── types/                 ← DTOs et contrats RPC partagés (@attendancy/types)
+  │   └── ui/                    ← composants UI et thèmes partagés (@attendancy/ui)
   ├── docs/
-  │   └── techs/                 ← stack.md, migration-monorepo.md
+  │   └── techs/                 ← auth-context.md, auth/, rpc-systeme.md, hooks-partages.md, stack.md…
   └── turbo.json
   ```
 
