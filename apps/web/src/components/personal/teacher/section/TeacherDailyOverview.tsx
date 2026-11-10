@@ -40,7 +40,7 @@ export function TeacherDailyOverview<S extends ScheduleCardSchedule>({
           {action}
         </div>
       ) : (
-        <p className="text-sm text-muted-foreground">Plus de cours aujourd&apos;hui</p>
+        <p className="text-sm text-muted-foreground">Aucun cours en attente aujourd&apos;hui</p>
       )}
     </section>
   )

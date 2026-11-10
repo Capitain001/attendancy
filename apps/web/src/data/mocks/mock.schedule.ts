@@ -1,3 +1,4 @@
+// apps\web\src\data\mocks\mock.schedule.ts
 import { ScheduleStatus, SessionStatus, Level } from '@/generated/prisma/browser';
 import { GetTeacherNextScheduleDto } from '@/services/schedule';
 
