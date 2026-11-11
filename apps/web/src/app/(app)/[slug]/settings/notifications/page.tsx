@@ -92,7 +92,7 @@ function PushSection() {
               variant="outline"
               size="sm"
               className="h-8 text-xs gap-1.5"
-              onClick={() => actions.sendNotification("🔔 Notification de test — tout fonctionne !")}
+              onClick={() => actions.sendNotification("🔔 Vous êtes connecté à notre application !")}
               disabled={isLoading}
             >
               {isLoading ? (
