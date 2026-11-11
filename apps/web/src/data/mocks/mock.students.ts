@@ -1,3 +1,4 @@
+// src/data/mocks/mock.students.ts
 import type { GetDirectionStudentsDto } from '@/services/student/types'
 
 export const mockGetDirectionStudents: GetDirectionStudentsDto = [

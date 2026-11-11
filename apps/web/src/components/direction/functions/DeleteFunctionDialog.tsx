@@ -1,3 +1,4 @@
+// src/components/direction/functions/DeleteFunctionDialog.tsx
 'use client'
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,

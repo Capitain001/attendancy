@@ -1,3 +1,4 @@
+// src/components/session/attendance-list/AttendanceEmptyState.tsx
 import { Clock } from "lucide-react";
 
 export function AttendanceEmptyState() {

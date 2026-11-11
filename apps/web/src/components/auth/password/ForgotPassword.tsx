@@ -1,3 +1,4 @@
+// src/components/auth/password/ForgotPassword.tsx
 'use client';
 
 import { useActionState } from 'react';

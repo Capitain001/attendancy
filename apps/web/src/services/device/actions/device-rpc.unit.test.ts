@@ -1,3 +1,4 @@
+// src/services/device/actions/device-rpc.unit.test.ts
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const {

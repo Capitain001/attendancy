@@ -1,7 +1,11 @@
 // src/services/planning/queries.ts
 // Factory pure réutilisable côté serveur (prefetch) ET client (hook).
+import { format } from 'date-fns'
+
 import { getSchedulesAction, getScheduleDaysAction, getTeacherSchedulesAction, getTeacherDailyScheduleAction } from '@/services/schedule/actions'
 import type { GetScheduleDaysInput, GetSchedulesDto } from '@/services/schedule'
+import { getStudentScheduleAction } from '@/services/student/actions'
+import type { GetStudentSchedulesDto } from '@/services/student'
 
 import { CACHE_KEYS, QUERY_PRESETS } from '@/cache/client/key'
 import { getPlanningRange } from './utils'
@@ -117,4 +121,41 @@ export function teacherDaySchedulesQuery({ teacherId, dayKey }: GetTeacherDaySch
   };
 }
 
+export type StudentMonthScheduleFilters = {
+  classId: string;
+  groupIds: string[];
+  date: string | null; // ISO YYYY-MM-DD
+};
 
+/**
+ * Séances complètes d'un étudiant pour le mois entier (déduit de `date`).
+ * Une entrée cache par (classe, groupes, mois). La navigation jour par jour
+ * filtre ensuite en mémoire, sans requête serveur.
+ * Preset RETAINED : les mois déjà visités restent en cache (gcTime long).
+ */
+export function studentMonthSchedulesQuery(filters: StudentMonthScheduleFilters) {
+  const { rangeStart, rangeEnd } = getPlanningRange(filters.date);
+  const monthKey = format(rangeStart, "yyyy-MM");
+  const groupIdsKey = [...filters.groupIds].sort().join(",");
+
+  return {
+    queryKey: CACHE_KEYS.SCHEDULES.STUDENT_MONTH({
+      classId: filters.classId,
+      groupIdsKey,
+      monthKey,
+    }),
+    queryFn: async (): Promise<GetStudentSchedulesDto> => {
+      const res = await getStudentScheduleAction({
+        classId: filters.classId,
+        groupIds: filters.groupIds,
+        rangeStart,
+        rangeEnd,
+      });
+      if ("error" in res && res.error) {
+        throw new Error(res.error);
+      }
+      return res.data ?? [];
+    },
+    ...QUERY_PRESETS.RETAINED,
+  };
+}

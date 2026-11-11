@@ -1,3 +1,4 @@
+// src/modules/user/constants.ts
 import type { Role } from '@/types/user'
 
 export const ROLE_LABELS = {

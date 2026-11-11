@@ -1,3 +1,4 @@
+// src/components/attendance/AttendanceBar.tsx
 import { cn } from '@/lib/utils'
 
 interface AttendanceBarProps {

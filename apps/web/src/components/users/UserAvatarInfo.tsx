@@ -1,3 +1,4 @@
+// src/components/users/UserAvatarInfo.tsx
 "use client"
 
 import { useState } from "react"

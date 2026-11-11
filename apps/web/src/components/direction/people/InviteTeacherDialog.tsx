@@ -1,3 +1,4 @@
+// src/components/direction/people/InviteTeacherDialog.tsx
 'use client'
 
 import { useState, useTransition } from 'react'

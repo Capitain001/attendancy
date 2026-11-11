@@ -1,3 +1,4 @@
+// scripts/generate/api/api.ts
 /**
  * //scripts/generate/api/api.ts
  * api.ts — Régime B du skill service-api-index.

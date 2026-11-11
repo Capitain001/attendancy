@@ -1,3 +1,4 @@
+// src/hooks/utils/use-event-visibility.ts
 "use client";
 
 import { useLayoutEffect, useMemo, useRef, useState } from "react";

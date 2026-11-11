@@ -1,3 +1,4 @@
+// src/components/notification/notification-history/config.ts
 // components/notification/notification-history/config.ts
 import type { LucideIcon } from "lucide-react";
 import {

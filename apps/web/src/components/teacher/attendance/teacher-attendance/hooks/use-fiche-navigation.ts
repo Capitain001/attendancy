@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/teacher-attendance/hooks/use-fiche-navigation.ts
 "use client"
 
 import { useState } from "react"

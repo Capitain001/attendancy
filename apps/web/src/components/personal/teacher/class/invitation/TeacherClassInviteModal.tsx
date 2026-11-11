@@ -1,3 +1,4 @@
+// src/components/personal/teacher/class/invitation/TeacherClassInviteModal.tsx
 'use client'
 
 /**

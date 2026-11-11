@@ -1,3 +1,4 @@
+// src/types/permissions.ts
 // types/permissions.ts
 
 /**

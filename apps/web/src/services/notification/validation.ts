@@ -49,6 +49,8 @@ export const invitationMetadataSchema = v.object({
   orgType: v.optional(v.picklist(ORGANIZATION_TYPES)),
   role: v.optional(v.string()),
   resourceType: v.optional(v.string()),
+  resourceName: v.optional(v.nullable(v.string())),
+  action: v.optional(v.picklist(['JOIN_ORG', 'JOIN_CLASS', 'GRANT_ROLE'] as const)),
   senderName: v.optional(v.string()),
   expiresAt: v.optional(v.string()),
   status: v.optional(v.string()),

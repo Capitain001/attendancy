@@ -1,3 +1,4 @@
+// src/components/design/ux/family-drawer/default-view.tsx
 'use client'
 
 import { Lock, LucideProps, NotepadText, TriangleAlert, X } from 'lucide-react'

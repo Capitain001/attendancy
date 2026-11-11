@@ -1,3 +1,4 @@
+// src/modules/notification/service-worker.ts
 //src/modules/notification/service-worker.ts
 import { NOTIFICATION_CONFIG } from '@/config/notification'
 import { urlBase64ToUint8Array, withTimeout } from './utils'

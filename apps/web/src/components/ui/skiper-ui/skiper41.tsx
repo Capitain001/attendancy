@@ -1,3 +1,4 @@
+// src/components/ui/skiper-ui/skiper41.tsx
 import React from "react";
 
 type ProgressiveBlurProps = {

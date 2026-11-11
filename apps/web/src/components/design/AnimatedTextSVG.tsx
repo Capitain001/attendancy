@@ -1,3 +1,4 @@
+// src/components/design/AnimatedTextSVG.tsx
 import React from 'react';
 
 /**

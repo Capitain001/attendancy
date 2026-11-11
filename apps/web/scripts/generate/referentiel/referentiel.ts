@@ -1,5 +1,6 @@
 #!/usr/bin/env tsx
 // scripts/generate/referentiel/referentiel.ts
+// scripts/generate/referentiel/referentiel.ts
 //
 // Scanne src/services/* et prisma/schemas/*.prisma, écrit intégralement
 // src/generated/referentiel.ts (classification MODEL/DOMAIN + path + alias

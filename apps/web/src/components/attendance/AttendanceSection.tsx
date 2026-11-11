@@ -1,3 +1,4 @@
+// src/components/attendance/AttendanceSection.tsx
 "use client";
 
 import { Users } from "lucide-react";

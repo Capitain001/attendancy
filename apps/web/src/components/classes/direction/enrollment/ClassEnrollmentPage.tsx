@@ -1,3 +1,4 @@
+// src/components/classes/direction/enrollment/ClassEnrollmentPage.tsx
 import { getStudentsEnrollmentsAction } from "@/services/student-enrollment";
 import type { GetClassDto } from "@/services/class/types";
 import { EnrollmentWorkspace } from "./EnrollmentWorkspace";

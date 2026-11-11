@@ -1,3 +1,4 @@
+// src/components/auth/signup/flow/invited/NewUserPage.tsx
 'use client'
 
 import { useState } from 'react'

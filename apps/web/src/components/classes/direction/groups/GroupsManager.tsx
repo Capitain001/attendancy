@@ -1,3 +1,4 @@
+// src/components/classes/direction/groups/GroupsManager.tsx
 "use client";
 
 import { useState } from "react";

@@ -1,3 +1,4 @@
+// src/components/program-tracks/ui/ProgramTrackBanner.tsx
 import { BackgroundPattern } from "@/components/design/BackgroundPattern";
 import { ProgramTrackDto } from "@/services/program-track/types";
 

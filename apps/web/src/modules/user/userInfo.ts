@@ -1,3 +1,4 @@
+// src/modules/user/userInfo.ts
 // src/services/users/getUserInfo.ts
 "use server"
 import { cache } from "react"

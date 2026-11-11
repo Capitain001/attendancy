@@ -1,10 +1,8 @@
 {
   "name": "createInvitationNotification",
   "file": "src/services/notification/database/notification.mutations.ts",
-  "sig": "(tx: Tx, params: { userId: string; source: InvitationNotificationSource }) => Promise<{ id: string; message: string; type: NotificationType; metadata: JsonValue; createdAt: Date; }>",
-  "composes": [
-    "buildInvitationNotification"
-  ],
+  "sig": "(tx: Tx, params: { userId: string; payload: NotificationPayload }) => Promise<{ id: string; message: string; type: NotificationType; metadata: JsonValue; createdAt: Date; }>",
+  "composes": [],
   "rules": [],
   "why_ref": ""
 }

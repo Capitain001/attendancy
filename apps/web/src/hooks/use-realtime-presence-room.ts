@@ -1,3 +1,4 @@
+// src/hooks/use-realtime-presence-room.ts
 'use client'
 
 import { generateUserInfo } from '@/modules/user'

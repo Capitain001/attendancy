@@ -1,3 +1,4 @@
+// src/styles/layout.ts
 import { cn } from "@/lib/utils";
 
 export const layout = {

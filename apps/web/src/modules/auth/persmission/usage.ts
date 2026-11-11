@@ -1,3 +1,4 @@
+// src/modules/auth/persmission/usage.ts
 // Dans vos composants ou API routes
 import { UserInfo } from '@/types';
 import { authorize, checkResourcePermission } from './autorization';

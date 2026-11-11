@@ -1,4 +1,5 @@
 #!/usr/bin/env ts-node
+// scripts/generate/path/comment.ts
 
 import { glob } from 'glob';
 import fs from 'fs/promises';

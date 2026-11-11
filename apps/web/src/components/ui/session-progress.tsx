@@ -1,3 +1,4 @@
+// src/components/ui/session-progress.tsx
 import { GripVertical } from "lucide-react"
 
 // components/ui/session-progress.tsx

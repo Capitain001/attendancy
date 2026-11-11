@@ -1,3 +1,4 @@
+// src/components/direction/functions/ui/FunctionPermissionsList.tsx
 import { Badge } from '@/components/ui/badge'
 import { permissionLabel } from '@/services/permission'
 import type { GetFunctionDetailDto } from '@/services/function'

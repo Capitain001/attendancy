@@ -1,3 +1,4 @@
+// src/components/design/phone/phone-mock-up.tsx
 import {
   PhoneCarousel,
   type ImageItem,

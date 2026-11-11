@@ -1,3 +1,4 @@
+// src/components/personal/teacher/class/invitation/PersonalInvitationCard.tsx
 import Link from "next/link";
 import { ChevronRight, UserPlus } from "lucide-react";
 

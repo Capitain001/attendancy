@@ -1,3 +1,4 @@
+// src/components/users/avatars/skeleton-1.tsx
 import React from "react";
 import clsx from "clsx";
 import { twMerge } from "tailwind-merge";

@@ -3,6 +3,8 @@ name: good-practices
 description: Registre évolutif des bonnes pratiques du projet — à charger avant de planifier ou de valider toute tâche de code.
 ---
 
+<!-- Path: docs/skills/good-practices/SKILL.md -->
+
 # Registre de Bonnes Pratiques (`docs/skills/good-practices/`)
 
 Ce skill maintient un registre de règles d'ingénierie validées au fil des sessions, indexé par domaine dans [`index.yaml`](./index.yaml) et détaillé dans `rules/<domaine>.yaml`.
@@ -10,6 +12,15 @@ Ce skill maintient un registre de règles d'ingénierie validées au fil des ses
 ---
 
 ## 1. Comment utiliser ce registre
+
+### 0. Avant tout plan : inventaire de l'existant
+1. Lire [`MAP.md`](./MAP.md).
+2. Pour tout élément qu'on pense « à créer » (clé de cache, query factory, preset, util, hook, action),
+   faire une recherche ciblée dans l'emplacement indiqué par la carte et citer le résultat (`chemin:lignes`).
+   Un « à créer » sans recherche citée est invalide.
+3. Une référence fournie par OPERATOR est la source de vérité : suivre ses imports et ses usages
+   avant de conclure qu'un élément manque.
+4. Périmètre : uniquement les dossiers listés dans `MAP.md`. Pas de scan global du dépôt.
 
 ### A. Avant de planifier une tâche
 1. Lire [`index.yaml`](./index.yaml).
@@ -63,4 +74,3 @@ rules:
 - **Anti-duplication & conflits** :
   - Vérifier qu'aucune règle existante ne couvre déjà le cas (proposer de modifier la règle existante plutôt qu'en créer une seconde).
   - Si une règle validée contredit une règle existante, le signaler à `OPERATOR` sans trancher soi-même.
-

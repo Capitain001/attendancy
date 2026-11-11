@@ -1,3 +1,4 @@
+// src/components/invitation/GlobalInviteStudentDialog.tsx
 'use client'
 
 import { useState, useTransition } from 'react'

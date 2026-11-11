@@ -1,3 +1,4 @@
+// src/components/icons/generated/icons.tsx
 /* eslint-disable */
 /* auto-generated — do not edit manually */
 /* source: public\assets\resources/ */

@@ -1,3 +1,4 @@
+// src/components/direction/students/table/types.ts
 //types
 import type { ComponentType } from "react";
 import type { StudentRow } from "@/components/direction/students/utils";

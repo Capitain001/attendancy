@@ -1,3 +1,4 @@
+// src/modules/invitation/index.ts
 // Barrel des actions/​types invitation consommés par le frontend (hooks/data/invitation).
 // Les helpers purs de statut restent importés depuis "./status" (usage client direct).
 
@@ -17,3 +18,5 @@ export { inviteTeacher } from "./teacher/invite";
 
 // Types partagés
 export type { InvitationListItem, InvitationStats } from "./database";
+
+export * from "./message";

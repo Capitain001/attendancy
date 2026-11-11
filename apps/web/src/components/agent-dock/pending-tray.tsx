@@ -1,3 +1,4 @@
+// src/components/agent-dock/pending-tray.tsx
 "use client";
 
 import * as React from "react";

@@ -1,3 +1,4 @@
+// src/hooks/data/sessions/useNextSchedule.ts
 "use client"
 import { useQuery } from "@tanstack/react-query";
 import { getTeacherNextScheduleAction } from "@/services/schedule";

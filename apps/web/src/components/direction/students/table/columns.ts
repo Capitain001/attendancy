@@ -1,3 +1,4 @@
+// src/components/direction/students/table/columns.ts
 import { Activity, Cake, DoorOpen, Mail, Phone, School, User, Users, Venus } from "lucide-react";
 
 import { CLASS_LABEL } from "@/services/class/policy";

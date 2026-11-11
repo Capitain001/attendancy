@@ -1,3 +1,4 @@
+// src/components/auth/ui/OrgLink.tsx
 import { orgPath, redirectUser } from '@/config'
 import { UserInfo } from '@/types'
 import Link from 'next/link'

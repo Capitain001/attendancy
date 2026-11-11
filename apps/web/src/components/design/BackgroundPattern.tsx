@@ -1,3 +1,4 @@
+// src/components/design/BackgroundPattern.tsx
 // components/ui/BackgroundPattern.tsx
 import { useId } from "react";
 import { cn } from "@/lib/utils";

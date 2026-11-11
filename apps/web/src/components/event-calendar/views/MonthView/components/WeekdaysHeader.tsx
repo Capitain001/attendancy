@@ -1,3 +1,4 @@
+// src/components/event-calendar/views/MonthView/components/WeekdaysHeader.tsx
 import { cn } from "@/lib/utils";
 import React from "react";
 

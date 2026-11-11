@@ -1,3 +1,4 @@
+// src/hooks/data/organization/useOrgDetails.ts
 "use client";
 
 import { useState, useCallback, useEffect } from "react";

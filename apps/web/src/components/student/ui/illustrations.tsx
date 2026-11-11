@@ -1,3 +1,4 @@
+// src/components/student/ui/illustrations.tsx
 import { cn } from "@/lib/utils";
 
 /**

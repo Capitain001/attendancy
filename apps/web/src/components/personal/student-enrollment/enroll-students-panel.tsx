@@ -1,3 +1,4 @@
+// src/components/personal/student-enrollment/enroll-students-panel.tsx
 "use client";
 
 import { button, input, typography } from "@/styles";

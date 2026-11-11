@@ -1,3 +1,4 @@
+// src/modules/presence/channel.ts
 // services/presence/channel.ts
 import { UserInfo } from "@/types/user"
 import { supabase } from "@/utils/supabase/client"

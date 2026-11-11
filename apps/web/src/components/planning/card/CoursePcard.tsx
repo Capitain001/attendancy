@@ -1,3 +1,4 @@
+// src/components/planning/card/CoursePcard.tsx
 import { Calendar } from "lucide-react";
 import type { ScheduleStatus } from "@/generated/prisma/browser";
 import StatusClock from "@/components/ux/StatusClock";

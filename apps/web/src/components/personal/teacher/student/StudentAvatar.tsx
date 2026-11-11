@@ -1,3 +1,4 @@
+// src/components/personal/teacher/student/StudentAvatar.tsx
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getFullName, getUserInitials } from "@/lib/utils";
 import { getStudentName } from "./helpers";

@@ -1,3 +1,4 @@
+// src/components/classes/direction/section/ui/Promotioncoursessection.example.tsx
 "use client"
 import { PromotionCoursesSection, type PromotionCourse } from './PromotionCoursesSection'
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env ts-node
+// scripts/generate/path/tree.ts
 
 import fs from 'fs/promises';
 import path from 'path';

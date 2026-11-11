@@ -1,3 +1,4 @@
+// src/components/ui/sidebar/context.tsx
 "use client"
 
 import * as React from "react"

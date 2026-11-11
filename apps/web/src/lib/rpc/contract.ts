@@ -1,3 +1,4 @@
+// src/lib/rpc/contract.ts
 // apps/web/src/lib/rpc/contract.ts
 import type { ACTIONS } from './actions'
 import type {

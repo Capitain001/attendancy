@@ -1,3 +1,4 @@
+// src/components/notification/cardstack/types.ts
 import type { ReactNode } from "react"
 
 export type NotificationCategory = "PERSONNEL" | "ACADEMIQUE" | "URGENT"

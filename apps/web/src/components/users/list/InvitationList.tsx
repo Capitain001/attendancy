@@ -1,3 +1,4 @@
+// src/components/users/list/InvitationList.tsx
 // apps/web/src/components/users/list/InvitationList.tsx
 import type { InvitationListItem } from "@/modules/invitation";
 

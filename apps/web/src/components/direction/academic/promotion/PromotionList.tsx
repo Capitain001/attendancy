@@ -1,3 +1,4 @@
+// src/components/direction/academic/promotion/PromotionList.tsx
 "use client";
 
 import { useMemo, useState } from "react";

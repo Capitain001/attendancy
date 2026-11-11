@@ -1,3 +1,4 @@
+// src/modules/notification/push.ts
 import 'server-only'
 import webpush from 'web-push'
 import { NOTIFICATION_CONFIG, NOTIFICATION_TITLES } from '@/config/notification'
@@ -59,7 +60,7 @@ export async function sendToDevice(
       endpoint: subscription.endpoint,
       keys: { p256dh: subscription.p256dh, auth: subscription.auth },
     }
-    const result = await webpush.sendNotification(pushSub, payload)
+    const result = await webpush.sendNotification(pushSub, payload, { urgency: 'high' })
     return {
       success: true,
       endpoint: subscription.endpoint,

@@ -1,3 +1,4 @@
+// src/providers/eruda-provider.tsx
 'use client'
 import { useEffect } from 'react'
 

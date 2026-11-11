@@ -1,3 +1,4 @@
+// src/components/event-calendar/components/event-item.tsx
 "use client";
 
 import { memo, useMemo } from "react";

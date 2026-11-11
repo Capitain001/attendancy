@@ -1,3 +1,4 @@
+// src/components/direction/students/table/ui/RecordBarButton.tsx
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
 const BAR_BTN =

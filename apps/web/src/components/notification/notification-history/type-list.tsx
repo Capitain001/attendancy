@@ -1,3 +1,4 @@
+// src/components/notification/notification-history/type-list.tsx
 // components/notification/notification-history/type-list.tsx
 "use client";
 

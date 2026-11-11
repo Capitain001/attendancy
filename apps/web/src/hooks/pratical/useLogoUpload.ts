@@ -1,3 +1,4 @@
+// src/hooks/pratical/useLogoUpload.ts
 import { createClient } from "@/utils/supabase/client";
 
 export const useLogoUpload = () => {

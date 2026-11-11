@@ -1,3 +1,4 @@
+// src/components/ui/icons.tsx
 // SVG Icons for the application
 // Use these for consistent iconography throughout the app
 

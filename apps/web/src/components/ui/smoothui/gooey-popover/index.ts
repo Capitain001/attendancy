@@ -1,3 +1,4 @@
+// src/components/ui/smoothui/gooey-popover/index.ts
 export { default as GooeyPopover } from "./GooeyPopover";
 export type { GooeyPopoverProps } from "./GooeyPopover";
 

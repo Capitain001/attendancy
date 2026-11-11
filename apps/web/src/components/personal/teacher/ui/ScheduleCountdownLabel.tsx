@@ -1,3 +1,4 @@
+// src/components/personal/teacher/ui/ScheduleCountdownLabel.tsx
 // components/personal/teacher/section/ScheduleCountdownLabel.tsx
 'use client'
 

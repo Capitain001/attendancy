@@ -1,3 +1,4 @@
+// public/sw.js
 // Version du SW pour forcer la mise à jour
 const SW_VERSION = 'v1.0.3'
 console.log(`🔧 Service Worker ${SW_VERSION} démarré`)

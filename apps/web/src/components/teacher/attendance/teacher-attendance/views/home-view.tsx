@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/teacher-attendance/views/home-view.tsx
 import { Em } from "../components/em"
 import { Field } from "../components/field"
 import { Leader } from "../components/leader"

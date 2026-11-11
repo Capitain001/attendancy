@@ -1,3 +1,4 @@
+// src/components/design/ux/family-drawer/phrase-view.tsx
 import {
   Ban,
   RectangleEllipsis,

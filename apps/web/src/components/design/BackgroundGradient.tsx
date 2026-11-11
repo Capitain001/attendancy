@@ -1,3 +1,4 @@
+// src/components/design/BackgroundGradient.tsx
 "use client";
 
 import React from "react";

@@ -1,3 +1,4 @@
+// src/components/courses/direction/ui/ECourseCard.tsx
 'use client'
 
 import { PCourseCard, type PCourse } from './PCourseCard'

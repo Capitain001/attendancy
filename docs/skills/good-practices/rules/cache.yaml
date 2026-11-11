@@ -1,3 +1,4 @@
+# Path: docs/skills/good-practices/rules/cache.yaml
 domain: cache
 rules:
   - id: CACHE-001
@@ -29,23 +30,69 @@ rules:
     rule: "Dans une page RSC (page.tsx) dont la donnée initiale ne dépend pas d'une interaction client immédiate, appeler await connection(), précharger via queryClient.prefetchQuery avec CACHE_KEYS, et envelopper le composant client dans <HydrationBoundary state={dehydrate(queryClient)}>."
     why: "Permet au serveur de résoudre les données initiales en SSR/PPR et d'hydrater immédiatement le cache React Query côté client sans flash de chargement initial."
     detect: ["export default async function", "ClientPage", "prefetchQuery", "HydrationBoundary"]
-    evidence: "apps/web/src/app/(app)/personal/[slug]/teacher/sessions/page.tsx:9-23"
+    evidence: "apps/web/src/app/(app)/[slug]/teacher/planning/page.tsx:5-33"
     bad: |
       export default function TeacherSessionsPage() {
         return <TeacherSessionsClientPage />
       }
     good: |
-      export default async function TeacherSessionsPage() {
+      import { connection } from "next/server"
+      import { dehydrate, HydrationBoundary } from "@tanstack/react-query"
+      import { format } from "date-fns/format"
+      import { startOfMonth } from "date-fns/startOfMonth"
+      import { getQueryClient } from "@/lib/react-query"
+      import { getCurrentTeacherId } from "@/services/teacher"
+      import { scheduleDaysQuery } from "@/services/planning/queries"
+      import { TeacherPlanning } from "@/components/teacher/planning/TeacherPlanning"
+
+      export default async function TeacherPlanningPage({
+        searchParams,
+      }: {
+        searchParams: Promise<{ month?: string }>
+      }) {
         await connection()
-        const queryClient = new QueryClient()
-        await queryClient.prefetchQuery({
-          queryKey: CACHE_KEYS.SESSIONS.TEACHER_COURSES(),
-          queryFn: () => getTeacherCoursesAction(),
-        })
+        const teacherId = await getCurrentTeacherId()
+        if (!teacherId) return <div />
+
+        const { month } = await searchParams
+        const monthKey = month ?? format(startOfMonth(new Date()), "yyyy-MM")
+        const queryClient = getQueryClient()
+        await queryClient.prefetchQuery(
+          scheduleDaysQuery({ month: monthKey, filters: { teacherId } })
+        )
+
         return (
           <HydrationBoundary state={dehydrate(queryClient)}>
-            <TeacherSessionsClientPage />
+            <TeacherPlanning teacherId={teacherId} />
           </HydrationBoundary>
         )
       }
 
+  - id: CACHE-003
+    severity: advisory
+    applies_to: [query-hook, rsc-page, cache]
+    rule: "Pour une query partagée entre serveur et client, définir une factory pure `xxxQuery(input)` dans `services/<domaine>/queries.ts`, construite avec CACHE_KEYS et QUERY_PRESETS, puis réutiliser cette factory dans `prefetchQuery` et `useQuery` au lieu de recréer la clé ou les options."
+    why: "Garantit que le préchargement serveur et la lecture client partagent la même queryKey, queryFn et politique de cache, évitant les divergences et les requêtes redondantes."
+    detect: ["queryKey:", "useQuery({", "prefetchQuery({"]
+    evidence: "apps/web/src/services/planning/queries.ts:27-45, apps/web/src/services/planning/queries.ts:56-68, apps/web/src/hooks/data/planning/useScheduleDays.ts:28-41, apps/web/src/app/(app)/[slug]/teacher/planning/page.tsx:26-32"
+    bad: |
+        useQuery({
+          queryKey: ["schedules", "days", month],
+          queryFn: () => getScheduleDaysAction({ month, filters }),
+        })
+
+        queryClient.prefetchQuery({
+          queryKey: ["schedule-days", month],
+          queryFn: () => getScheduleDaysAction({ month, filters }),
+        })
+    good: |
+        export function scheduleDaysQuery(input: GetScheduleDaysInput) {
+          return {
+            queryKey: CACHE_KEYS.SCHEDULES.DAYS(input.month, input.filters),
+            queryFn: () => getScheduleDaysAction(input),
+            ...QUERY_PRESETS.DASHBOARD,
+          }
+        }
+
+        useQuery(scheduleDaysQuery(input))
+        queryClient.prefetchQuery(scheduleDaysQuery(input))

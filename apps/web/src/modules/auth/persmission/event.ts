@@ -1,3 +1,4 @@
+// src/modules/auth/persmission/event.ts
 import { FunctionName } from "@/config/data";
 
 export const RESOURCE_EVENTS = {

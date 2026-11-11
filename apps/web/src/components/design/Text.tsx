@@ -1,3 +1,4 @@
+// src/components/design/Text.tsx
 "use client" 
 
 import * as React from "react"

@@ -1,3 +1,4 @@
+// src/components/direction/functions/index.ts
 export { FunctionDirectionPage }     from './FunctionDirectionPage'
 export { FunctionCard }              from './FunctionCard'
 export { FunctionList }              from './FunctionList'

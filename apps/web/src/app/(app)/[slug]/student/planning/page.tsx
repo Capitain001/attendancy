@@ -1,26 +1,24 @@
 // src/app/(app)/[slug]/student/planning/page.tsx
-// Planning global étudiant — visuel porté de la V1.
 import { connection } from "next/server";
-import { addMonths, endOfMonth, startOfMonth, subMonths } from "date-fns";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { format, isValid, parseISO } from "date-fns";
 
-import { StudentPlanningCalendar } from "@/components/student/planning";
-import { mapScheduleToEvent } from "@/components/planning/utils";
-import {
-  BackpackIllustration,
-  StudentEmpty,
-} from "@/components/student/ui/illustrations";
-import {
-  getStudentProfileAction,
-  getStudentScheduleAction,
-} from "@/services/student";
+import { getQueryClient } from "@/lib/react-query";
+import { StudentPlanning } from "@/components/student/planning/StudentPlanning";
+import { BackpackIllustration, StudentEmpty } from "@/components/student/ui/illustrations";
+import { getStudentProfileAction } from "@/services/student";
+import { studentMonthSchedulesQuery } from "@/services/planning/queries";
 
-export default async function StudentPlanningPage() {
+type Props = { searchParams: Promise<{ date?: string }> };
+
+export default async function StudentPlanningPage({ searchParams }: Props) {
   await connection();
+  const { date: dateParam } = await searchParams;
 
   const profileRes = await getStudentProfileAction();
   if ("error" in profileRes) {
     return (
-      <div className="flex items-center justify-center h-full">
+      <div className="flex h-full items-center justify-center">
         <p className="text-sm text-muted-foreground">{profileRes.error}</p>
       </div>
     );
@@ -38,23 +36,18 @@ export default async function StudentPlanningPage() {
     );
   }
 
-  const now = new Date();
-  const res = await getStudentScheduleAction({
-    classId,
-    groupIds,
-    rangeStart: startOfMonth(subMonths(now, 1)),
-    rangeEnd: endOfMonth(addMonths(now, 1)),
-  });
+  // Date validée : un ?date=abc ne doit pas faire planter getPlanningRange.
+  const parsed = dateParam ? parseISO(dateParam) : new Date();
+  const activeDate = format(isValid(parsed) ? parsed : new Date(), "yyyy-MM-dd");
 
-  if ("error" in res) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <p className="text-sm text-muted-foreground">{res.error}</p>
-      </div>
-    );
-  }
+  const queryClient = getQueryClient();
+  await queryClient.prefetchQuery(
+    studentMonthSchedulesQuery({ classId, groupIds, date: activeDate }),
+  );
 
-  const events = res.data.map((s) => mapScheduleToEvent(s));
-
-  return <StudentPlanningCalendar events={events} />;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <StudentPlanning classId={classId} groupIds={groupIds} initialDate={activeDate} />
+    </HydrationBoundary>
+  );
 }

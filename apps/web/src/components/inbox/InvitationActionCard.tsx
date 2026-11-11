@@ -1,3 +1,4 @@
+// src/components/inbox/InvitationActionCard.tsx
 'use client'
 
 import { useState } from 'react'
@@ -11,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ROLE_LABELS } from '@/modules/user'
 import { getOrganizationRolePath } from '@/config/redirects'
 import { selectOrganizationProfileAction } from '@/services/organization'
+import { INVITATION_ACCEPT_LABELS, readInvitationContext } from '@/modules/invitation'
 import { useAcceptInvitation, useDeclineInvitation } from '@/hooks/inbox'
 import type { EnrichedInboxNotification } from './types'
 
@@ -21,6 +23,7 @@ interface InvitationActionCardProps {
 export function InvitationActionCard({ notification }: InvitationActionCardProps) {
   const router = useRouter()
   const metadata = notification.metadata
+  const { action } = readInvitationContext(metadata)
   const invitationId = metadata?.invitationId
   const kind = metadata?.kind ?? 'INVITATION_RECEIVED'
   const rawStatus = metadata?.status ?? 'PENDING'
@@ -249,7 +252,7 @@ export function InvitationActionCard({ notification }: InvitationActionCardProps
             ) : (
               <Check className="mr-1.5 size-3.5" />
             )}
-            Accepter l'invitation
+            {INVITATION_ACCEPT_LABELS[action ?? 'JOIN_ORG']}
           </Button>
         </CardFooter>
       )}

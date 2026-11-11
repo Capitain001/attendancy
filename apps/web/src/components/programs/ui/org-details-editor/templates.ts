@@ -1,3 +1,4 @@
+// src/components/programs/ui/org-details-editor/templates.ts
 import { BlockTemplate } from "./types";
 
 export const BUILT_IN_TEMPLATES: BlockTemplate[] = [

@@ -1,3 +1,4 @@
+// src/components/layout/sidebar/mockData.ts
 import { SidebarData } from "./types";
 import { 
   Search, 

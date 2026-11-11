@@ -1,3 +1,4 @@
+// src/components/personal/teacher/ui/ScheduleCard.tsx
 // components/personal/teacher/ui/ScheduleCard.tsx
 import { cn, formatDuration, formatTime } from '@/lib/utils'
 import { ScheduleStatusIcon, type ScheduleIcon } from '@/components/personal/teacher/ui/ScheduleStatusIcon'

@@ -1,3 +1,4 @@
+// src/hooks/chat/useChat.ts
 // hooks/chat/useChat.ts
 'use client'
 

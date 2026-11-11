@@ -1,3 +1,4 @@
+// src/components/event-calendar/views/MonthView/hooks/month-view-hooks.ts
 import { useMemo, useState, useEffect, useCallback } from "react";
 
 import { ScheduleEvent } from "@/components/event-calendar";

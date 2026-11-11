@@ -1,3 +1,4 @@
+// src/components/session/ui/SessionStatusBadge.tsx
 import { cn } from "@/lib/utils";
 import type { UISessionStatus } from "@/hooks/data/sessions/use-session-state";
 

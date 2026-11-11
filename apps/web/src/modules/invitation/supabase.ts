@@ -1,3 +1,4 @@
+// src/modules/invitation/supabase.ts
 import { INVITE_URL } from '@/config/url'
 import { createClient } from '@/utils/supabase/server'
 import type { User as SupabaseUser } from '@supabase/supabase-js'

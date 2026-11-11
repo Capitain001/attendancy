@@ -1,3 +1,4 @@
+// src/modules/notification/helper.ts
 // src/services/notification/push-helpers.ts
 'use server'
 
@@ -31,7 +32,7 @@ export async function sendToDevice(subscription: any, payload: string) {
 
     console.log('📤 Envoi en cours à:', subscription.endpoint.substring(0, 50) + '...')
     
-    const result = await webpush.sendNotification(pushSubscription, payload)
+    const result = await webpush.sendNotification(pushSubscription, payload, { urgency: 'high' })
     
     console.log('✅ Notification envoyée!', {
       endpoint: subscription.endpoint.substring(0, 50) + '...',

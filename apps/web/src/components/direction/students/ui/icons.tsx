@@ -1,3 +1,4 @@
+// src/components/direction/students/ui/icons.tsx
 import { cn } from '@/lib/utils'
 import type { Sex } from '@/generated/prisma/browser'
 

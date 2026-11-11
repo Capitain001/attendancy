@@ -1,3 +1,4 @@
+// src/hooks/data/student-enrollments/useClassEnrollments.ts
 //apps\web\src\hooks\data\student-enrollments\useClassEnrollments.ts
 "use client";
 

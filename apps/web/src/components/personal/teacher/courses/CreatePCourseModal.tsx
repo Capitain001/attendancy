@@ -1,3 +1,4 @@
+// src/components/personal/teacher/courses/CreatePCourseModal.tsx
 import { createPersonalCourseFormAction } from "@/features/personal/services/course";
 import { Plus, X } from "lucide-react";
 

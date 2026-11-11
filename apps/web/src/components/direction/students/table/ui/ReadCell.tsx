@@ -1,3 +1,4 @@
+// src/components/direction/students/table/ui/ReadCell.tsx
 import { cn } from "@/lib/utils";
 import { sexLabel } from "@/components/direction/students/utils";
 import type { BaseColumnDef, Sex } from "../types";

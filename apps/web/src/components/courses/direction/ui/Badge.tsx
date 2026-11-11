@@ -1,3 +1,4 @@
+// src/components/courses/direction/ui/Badge.tsx
 import { cn } from '@/lib/utils'
 
 export function Badge({ label, className }: { label: string; className?: string }) {

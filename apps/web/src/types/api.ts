@@ -1,3 +1,4 @@
+// src/types/api.ts
 // types/api.ts
 
 // Statuts HTTP courants pour autocomplétion

@@ -1,3 +1,4 @@
+// src/components/student/sections/StudentDetailModal.tsx
 'use client'
 
 import Link from 'next/link'

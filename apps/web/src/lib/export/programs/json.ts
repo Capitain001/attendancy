@@ -1,3 +1,4 @@
+// src/lib/export/programs/json.ts
 import type { ProgramPageData } from "@/components/programs/types";
 
 export function buildJSON(data: ProgramPageData): string {

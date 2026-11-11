@@ -1,3 +1,4 @@
+// src/components/users/settings/PersonalOrganizationNameRow.tsx
 "use client";
 
 import { useState, useTransition } from "react";

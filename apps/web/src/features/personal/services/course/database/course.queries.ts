@@ -1,3 +1,4 @@
+// src/features/personal/services/course/database/course.queries.ts
 import { prisma } from "@/lib/prisma";
 import { CACHE } from "@/cache/server/key";
 import { cacheLife, cacheTag } from "next/cache";

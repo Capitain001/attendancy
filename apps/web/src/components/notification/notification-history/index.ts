@@ -1,3 +1,4 @@
+// src/components/notification/notification-history/index.ts
 // components/notification/notification-history/index.ts
 export { NotificationTypeIcon, NotificationTypeRow, NotificationTypeList } from "./type-list";
 export type { NotificationGroup } from "./type-list";

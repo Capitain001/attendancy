@@ -1,3 +1,4 @@
+// src/hooks/data/accademicYears/helper.ts
 import type { AcademicYear } from "@/generated/prisma/client";
 // Helper pour le statut
 export const getYearStatus = (year: AcademicYear) => {

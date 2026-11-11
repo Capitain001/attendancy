@@ -1,3 +1,4 @@
+// src/components/event-calendar/views/MonthView/month-view.tsx
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";

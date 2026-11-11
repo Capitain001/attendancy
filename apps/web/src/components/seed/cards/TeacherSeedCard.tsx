@@ -1,3 +1,4 @@
+// src/components/seed/cards/TeacherSeedCard.tsx
 'use client'
 
 import { useState } from 'react'

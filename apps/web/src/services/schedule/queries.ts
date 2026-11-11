@@ -1,3 +1,4 @@
+// src/services/schedule/queries.ts
 
 // Factory pure réutilisable côté serveur (prefetch) ET client (hook).
 import { getTeacherDailyScheduleAction } from '@/services/schedule/actions'

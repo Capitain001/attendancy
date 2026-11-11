@@ -1,3 +1,4 @@
+// src/components/event-calendar/constants.ts
 import type { Day } from "date-fns";
 import { fr } from "date-fns/locale";
 

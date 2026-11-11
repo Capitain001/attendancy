@@ -1,3 +1,4 @@
+// src/components/stats/ui/CompactMetricCard.tsx
 import { cn } from '@/lib/utils'
 
 export interface CompactMetricCardProps {

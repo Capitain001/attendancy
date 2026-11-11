@@ -1,3 +1,4 @@
+// src/hooks/auth/useProfileMutations.ts
 "use client"
 
 import { useMutation } from "@tanstack/react-query"

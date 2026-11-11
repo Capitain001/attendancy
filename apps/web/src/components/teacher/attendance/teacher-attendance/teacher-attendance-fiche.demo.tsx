@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/teacher-attendance/teacher-attendance-fiche.demo.tsx
 import { CLASS_DETAIL_MOCK } from "./mocks/class-detail.mock"
 import { CLASSES_MOCK } from "./mocks/classes.mock"
 import { HOME_MOCK } from "./mocks/home.mock"

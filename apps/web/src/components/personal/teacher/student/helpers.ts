@@ -1,3 +1,4 @@
+// src/components/personal/teacher/student/helpers.ts
 import { excludeByIds } from "@/lib/filter";
 import { getFullName } from "@/lib/utils";
 import type { ClassEnrollment, StudentUser } from "./types";

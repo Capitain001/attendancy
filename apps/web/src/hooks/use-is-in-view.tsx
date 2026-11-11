@@ -1,3 +1,4 @@
+// src/hooks/use-is-in-view.tsx
 import * as React from 'react';
 import { useInView, type UseInViewOptions } from 'motion/react';
 

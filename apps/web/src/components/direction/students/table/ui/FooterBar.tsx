@@ -1,3 +1,4 @@
+// src/components/direction/students/table/ui/FooterBar.tsx
 import { Button } from "@/components/ui/button";
 import type { useStudentsTable } from "../useStudentsTable";
 

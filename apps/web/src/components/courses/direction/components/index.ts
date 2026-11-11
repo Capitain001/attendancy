@@ -1,3 +1,4 @@
+// src/components/courses/direction/components/index.ts
 export { CourseInfoCard } from './CourseInfoCard'
 export { UpcomingSessionsCard } from './UpcomingSessionsCard'
 export { HistoryCard } from './HistoryCard'

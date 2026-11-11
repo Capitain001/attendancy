@@ -1,3 +1,4 @@
+// src/lib/export/session-attendance/pdf.ts
 // apps/web/src/lib/export/session-attendance/pdf.ts
 import { jsPDF } from "jspdf";
 

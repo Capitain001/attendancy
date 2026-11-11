@@ -1,3 +1,4 @@
+// src/hooks/entity/index.ts
 export * from "./entityFilters"
 export * from "./useEntityFilter"
 export * from "./useEntity"

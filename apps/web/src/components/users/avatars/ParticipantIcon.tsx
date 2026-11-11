@@ -1,3 +1,4 @@
+// src/components/users/avatars/ParticipantIcon.tsx
 
 import { cn } from '@/lib/utils'
 import UserIcon from '../UserIcon'

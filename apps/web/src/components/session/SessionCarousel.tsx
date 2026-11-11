@@ -1,3 +1,4 @@
+// src/components/session/SessionCarousel.tsx
 "use client";
 
 import { ReactNode, useState } from "react";

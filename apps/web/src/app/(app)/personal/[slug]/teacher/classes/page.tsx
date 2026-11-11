@@ -1,3 +1,4 @@
+// src/app/(app)/personal/[slug]/teacher/classes/page.tsx
 import type { Metadata } from "next";
 import type { ClassType } from "@/generated/prisma/client";
 import { personal } from "@/modules/personal/paths";

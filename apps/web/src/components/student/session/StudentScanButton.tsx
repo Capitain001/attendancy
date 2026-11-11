@@ -1,3 +1,4 @@
+// src/components/student/session/StudentScanButton.tsx
 "use client";
 
 import { useState } from "react";

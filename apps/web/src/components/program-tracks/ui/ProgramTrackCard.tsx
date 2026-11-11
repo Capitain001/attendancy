@@ -1,3 +1,4 @@
+// src/components/program-tracks/ui/ProgramTrackCard.tsx
 import Link from "next/link";
 import { ArrowUpRight, BookOpen, GraduationCap } from "lucide-react";
 

@@ -1,3 +1,4 @@
+// src/hooks/data/schedule/useScheduleCountdownLabel.ts
 // apps/web/src/hooks/data/schedule/useScheduleCountdownLabel.ts
 'use client'
 

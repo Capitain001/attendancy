@@ -1,3 +1,4 @@
+// src/hooks/stripe/useStripe.ts
 'use client';
 
 import { useState } from 'react';

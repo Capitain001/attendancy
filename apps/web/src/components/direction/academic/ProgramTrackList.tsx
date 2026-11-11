@@ -1,3 +1,4 @@
+// src/components/direction/academic/ProgramTrackList.tsx
 'use client'
 import { School } from 'lucide-react'
 import { CollapseSection } from '@/components/layout/CollapseSection'

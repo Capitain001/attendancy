@@ -1,3 +1,4 @@
+// src/components/term/Generatetermsbutton.tsx
 "use client"
 
 // src/components/term/GenerateTermsButton.tsx

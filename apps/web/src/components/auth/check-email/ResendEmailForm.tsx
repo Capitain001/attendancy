@@ -1,3 +1,4 @@
+// src/components/auth/check-email/ResendEmailForm.tsx
 'use client'
 
 import { useActionState } from 'react'

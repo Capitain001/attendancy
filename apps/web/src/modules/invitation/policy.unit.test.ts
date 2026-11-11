@@ -1,3 +1,4 @@
+// src/modules/invitation/policy.unit.test.ts
 import { describe, expect, it } from "vitest";
 import { resolveInvitationUiStatus } from "./policy";
 

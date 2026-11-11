@@ -1,3 +1,4 @@
+// src/components/ui/sidebar/index.ts
 // Re-export all sidebar components from a single entry point
 
 // Context and Provider

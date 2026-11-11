@@ -1,3 +1,4 @@
+// src/components/classes/direction/section/ui/PromotionBanner.tsx
 import { BackgroundPattern } from "@/components/design/BackgroundPattern";
 import { GetClassDto } from "@/services/class/types";
 import { Users, GraduationCap } from "lucide-react";

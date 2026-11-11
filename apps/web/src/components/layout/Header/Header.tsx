@@ -1,3 +1,4 @@
+// src/components/layout/Header/Header.tsx
 import Link from 'next/link'
 import { ModeToggle } from './ModeToggle'
 import { UserInfo } from '@/types/user'

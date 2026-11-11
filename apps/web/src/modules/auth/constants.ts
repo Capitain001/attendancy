@@ -1,3 +1,4 @@
+// src/modules/auth/constants.ts
 // src/services/auth/constants.ts
 import { Role } from '@/generated/prisma/browser'
 export const PERSONAL_SIGNUP_ROLES = [

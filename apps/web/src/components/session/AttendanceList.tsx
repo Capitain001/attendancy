@@ -1,3 +1,4 @@
+// src/components/session/AttendanceList.tsx
 "use client";
 
 import { useState, useEffect, useCallback } from "react";

@@ -1,3 +1,4 @@
+// src/hooks/utils/index.ts
 export * from "./use-slider-with-input"
 export * from "./use-event-visibility"
 export * from "./use-click-outside"

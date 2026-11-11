@@ -1,3 +1,4 @@
+// src/components/direction/academic/PromotionFilter.tsx
 import { Search, X } from 'lucide-react'
 import { input } from '@/styles'
 import { LEVEL_LABEL } from '@/services/class/constants'

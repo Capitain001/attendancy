@@ -1,3 +1,4 @@
+// scripts/check-test-db.cjs
 const { readFileSync } = require("node:fs");
 const { resolve } = require("node:path");
 const { Client } = require("pg");

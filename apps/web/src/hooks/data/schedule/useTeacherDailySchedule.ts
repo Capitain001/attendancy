@@ -1,3 +1,4 @@
+// src/hooks/data/schedule/useTeacherDailySchedule.ts
 // apps/web/src/hooks/data/schedule/useTeacherDailySchedule.ts
 'use client'
 

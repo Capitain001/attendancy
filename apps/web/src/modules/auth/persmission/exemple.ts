@@ -1,3 +1,4 @@
+// src/modules/auth/persmission/exemple.ts
 const actions = {
     READ: "Voir",
     CREATE: "Créer",

@@ -1,3 +1,4 @@
+// scripts/test/generate-session-attendance-pdf.ts
 // apps/web/scripts/test/generate-session-attendance-pdf.ts
 import fs from "node:fs";
 import path from "node:path";

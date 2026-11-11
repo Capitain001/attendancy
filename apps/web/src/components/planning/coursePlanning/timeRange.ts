@@ -1,3 +1,4 @@
+// src/components/planning/coursePlanning/timeRange.ts
 import { isBefore } from "date-fns";
 
 import type { CoursePlanningCardUpdatePatch } from "../types";

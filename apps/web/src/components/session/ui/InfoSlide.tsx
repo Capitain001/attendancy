@@ -1,3 +1,4 @@
+// src/components/session/ui/InfoSlide.tsx
 "use client";
 
 import { useState } from "react";

@@ -1,3 +1,4 @@
+// src/utils/server/form/data.ts
 const FORBIDDEN_KEYS = new Set(["__proto__", "constructor", "prototype"]);
 
 // FormData -> objet imbriqué. Les noms de champs en notation pointée deviennent

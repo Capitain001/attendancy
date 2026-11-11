@@ -1,3 +1,4 @@
+// src/components/event-calendar/views/MonthView/components/CalendarWeek.tsx
 import React from "react";
 import { ScheduleEvent } from "@/components/event-calendar";
 import { CalendarDay } from "./CalendarDay";

@@ -1,3 +1,4 @@
+// src/components/tools/AccordionSection.tsx
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 

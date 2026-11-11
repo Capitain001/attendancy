@@ -1,3 +1,4 @@
+// src/hooks/optimiste/DebugQueries.tsx
 "use client";
 import { useQueryClient } from "@tanstack/react-query";
 

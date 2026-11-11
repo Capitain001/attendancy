@@ -1,3 +1,4 @@
+// src/components/event-calendar/draggable-event.tsx
 "use client";
 
 import { useRef, useState } from "react";

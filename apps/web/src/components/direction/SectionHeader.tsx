@@ -1,3 +1,4 @@
+// src/components/direction/SectionHeader.tsx
 import type { ReactNode } from 'react'
 import { typography } from '@/styles'
 

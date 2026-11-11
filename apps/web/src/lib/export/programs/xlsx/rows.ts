@@ -1,3 +1,4 @@
+// src/lib/export/programs/xlsx/rows.ts
 import type { Row, Worksheet } from "exceljs";
 import type { ProgramSemesterDTO } from "@/services/ue/types";
 import type { ProgramExportConfig } from "../types";

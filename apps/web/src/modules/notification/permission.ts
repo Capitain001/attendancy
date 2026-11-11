@@ -1,3 +1,4 @@
+// src/modules/notification/permission.ts
 import { NOTIFICATION_CONFIG } from '@/config/notification'
 import { getCurrentPermission } from './utils'
 import type { PermissionStatus } from './types'

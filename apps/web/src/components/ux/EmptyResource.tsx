@@ -1,3 +1,4 @@
+// src/components/ux/EmptyResource.tsx
 import Link from 'next/link'
 import { GridDeco } from '../design/GridDeco'
 import { cn } from '@/lib/utils'

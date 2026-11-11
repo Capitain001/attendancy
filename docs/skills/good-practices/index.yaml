@@ -1,9 +1,18 @@
+# Path: docs/skills/good-practices/index.yaml
 domains:
   - id: cache
     file: rules/cache.yaml
     applies_to: [query-hook, rsc-page, cache]
-    summary: "Partage de clés React Query pour les états dérivés (useMemo) et préchargement RSC via connection() + HydrationBoundary."
+    summary: "Factories de queries partagées serveur/client, partage des clés React Query pour les états dérivés (useMemo) et préchargement RSC via connection() + getQueryClient() + HydrationBoundary."
   - id: services
     file: rules/services.yaml
-    applies_to: [orchestrator-service, server-action, test]
-    summary: "Conception des services orchestrateurs de feature pour une testabilité E2E/intégration et unitaire hors runtime Next.js."
+    applies_to: [orchestrator-service, server-action, ui-component, test]
+    summary: "Conception des services orchestrateurs de feature testables hors Next.js, résolveurs purs de messages/actions (Record<Action, fn>), persistance de contexte d'action dans metadata et piping zéro-requête des libellés de ressource."
+  - id: hooks
+    file: rules/hooks.yaml
+    applies_to: [mutation-hook, query-hook, ui-component]
+    summary: "Découpage des formulaires complexes en hooks spécialisés par responsabilité unique sous hooks/data/<domaine>/<sous-domaine> et extraction des helpers purs dans utils.ts."
+  - id: prisma
+    file: rules/prisma.yaml
+    applies_to: [prisma-query, securite]
+    summary: "Pagination sans COUNT via take: PAGE_SIZE + 1 avec tri déterministe et scoping multi-tenant relationnel sur modèles enfants."

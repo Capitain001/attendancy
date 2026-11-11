@@ -1,3 +1,4 @@
+// src/app/(app)/personal/[slug]/teacher/page.tsx
 import { connection } from 'next/server'
 import TeacherDailyScreen from '@/components/personal/teacher/screen/TeacherDailyScreen'
 

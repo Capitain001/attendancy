@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/teacher-attendance/components/view-header.tsx
 import type { View } from "../types"
 
 export function ViewHeader({ title, sub, backTo, backLabel = "Retour", onBack }: {

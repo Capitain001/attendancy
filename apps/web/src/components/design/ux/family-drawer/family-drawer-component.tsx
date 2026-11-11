@@ -1,3 +1,4 @@
+// src/components/design/ux/family-drawer/family-drawer-component.tsx
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'

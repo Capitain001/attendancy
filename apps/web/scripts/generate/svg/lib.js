@@ -1,3 +1,4 @@
+// scripts/generate/svg/lib.js
 const fs = require("node:fs");
 const path = require("node:path");
 

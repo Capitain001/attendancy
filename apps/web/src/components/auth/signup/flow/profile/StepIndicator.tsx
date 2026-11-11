@@ -1,3 +1,4 @@
+// src/components/auth/signup/flow/profile/StepIndicator.tsx
 "use client"
 
 import { motion } from "framer-motion"

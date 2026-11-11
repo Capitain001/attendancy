@@ -1,3 +1,4 @@
+// src/components/personal/teacher/screen/TeacherDailyScheduleListScreen.tsx
 // components/personal/teacher/screen/TeacherDailyScheduleListScreen.tsx
 'use client'
 

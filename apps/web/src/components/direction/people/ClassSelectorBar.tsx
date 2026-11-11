@@ -1,3 +1,4 @@
+// src/components/direction/people/ClassSelectorBar.tsx
 'use client'
 
 import Link from 'next/link'

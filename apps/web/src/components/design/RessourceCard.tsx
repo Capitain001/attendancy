@@ -1,3 +1,4 @@
+// src/components/design/RessourceCard.tsx
 // components/ux/design/RessourceCard.tsx
 import { ReactNode } from "react"
 import { cn } from "@/lib/utils"

@@ -1,3 +1,4 @@
+// src/utils/server/debug.ts
 import { cookies } from "next/headers";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
 

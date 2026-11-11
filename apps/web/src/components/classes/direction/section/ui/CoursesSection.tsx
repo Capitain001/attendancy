@@ -1,3 +1,4 @@
+// src/components/classes/direction/section/ui/CoursesSection.tsx
 'use client'
 
 import { motion } from 'framer-motion'

@@ -1,3 +1,4 @@
+// src/components/layout/sidebar/ui/sidebar-switcher.tsx
 "use client";
 
 import { motion } from "motion/react";

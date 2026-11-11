@@ -1,9 +1,29 @@
 // src/services/session/actions/session.queries.ts
 'use server'
+import * as v from 'valibot'
 import { startOfDay, endOfDay } from 'date-fns'
 import { ERRORS } from '@/config'
 import { authAccess } from '@/services/auth'
-import { getTeacherNextSchedule, getActiveSessions, getOrgDaySchedulesWithSession } from '../database'
+import { getTeacherNextSchedule, getActiveSessions, getOrgDaySchedulesWithSession, getSessionReport , getTeacherPastSessions} from '../database'
+import { getTeacherPastSessionsSchema } from '../validation'
+import type { GetTeacherPastSessionsInput } from '../validation'
+import { mockGetTeacherPastSessions } from '@/data/mocks/mock.session'
+
+export async function getTeacherPastSessionsAction(input: GetTeacherPastSessionsInput) {
+  const auth = await authAccess()
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
+  const parsed = v.safeParse(getTeacherPastSessionsSchema, input)
+  if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
+
+  try {
+    return { data: await getTeacherPastSessions(parsed.output.teacherId, orgId, parsed.output.page) }
+    // return {data:mockGetTeacherPastSessions}
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}
 
 export async function getActiveSessionsAction() {
   const auth = await authAccess()
@@ -60,3 +80,24 @@ export async function getTeacherNextScheduleAction() {
 }
 
 
+export async function getSessionReportAction(sessionId: string) {
+  const auth = await authAccess({ requiredRole: ['TEACHER', 'DIRECTION', 'ADMIN'] })
+  if (!auth.data) return { error: auth.error }
+  const { orgId, user } = auth.data
+
+  try {
+    const report = await getSessionReport(sessionId, orgId)
+    if (!report) return { error: 'Session introuvable' }
+
+    if (
+      user.role === 'TEACHER' &&
+      user.organization?.teacherId !== report.schedule.teacherId
+    ) {
+      return { error: 'Accès non autorisé à cette session' }
+    }
+
+    return { data: report }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : ERRORS.SERVER }
+  }
+}

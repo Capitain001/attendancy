@@ -1,3 +1,4 @@
+// src/components/ux/Icons.tsx
 export const ICONS = {
   currentYear: ExagonalCheck,
   chainedHeart: ChainedHeart,

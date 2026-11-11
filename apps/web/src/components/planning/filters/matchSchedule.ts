@@ -1,3 +1,4 @@
+// src/components/planning/filters/matchSchedule.ts
 import type { ScheduleEvent } from "@/components/event-calendar/types";
 import type { PlanningFilters } from "@/hooks/data/planning/usePlanningFilters";
 

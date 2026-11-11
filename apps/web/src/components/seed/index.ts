@@ -1,3 +1,4 @@
+// src/components/seed/index.ts
 export * from './SeedPanel'
 export * from './cards/TeacherSeedCard'
 export * from './cards/StudentSeedCard'

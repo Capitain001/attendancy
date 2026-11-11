@@ -1,3 +1,4 @@
+// src/components/auth/ui/LoadButton.tsx
 
 import React from "react";
 import clsx from "clsx";

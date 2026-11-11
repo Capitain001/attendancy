@@ -1,3 +1,4 @@
+// src/components/icons/ResourceIcon.tsx
 import type { ResourceIconName } from "@/components/icons/generated";
 import { RESOURCE_ICONS } from "@/components/icons/generated";
 import { cn } from "@/lib/utils";

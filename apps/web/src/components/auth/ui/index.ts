@@ -1,3 +1,4 @@
+// src/components/auth/ui/index.ts
 export * from './AuthButton';
 export * from './FormCard';
 export * from './authBar';

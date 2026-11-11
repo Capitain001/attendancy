@@ -1,3 +1,4 @@
+// src/components/design/GridDeco.tsx
 import { GridPattern } from '@/components/ui/grid-pattern'
 
 export function GridDeco() {

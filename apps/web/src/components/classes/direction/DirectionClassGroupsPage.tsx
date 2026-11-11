@@ -1,3 +1,4 @@
+// src/components/classes/direction/DirectionClassGroupsPage.tsx
 import { GroupsManager } from "./groups/GroupsManager";
 
 interface DirectionClassGroupsPageProps {

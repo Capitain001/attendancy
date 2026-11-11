@@ -1,3 +1,4 @@
+// src/components/event-calendar/hooks/useCalendarEvents.ts
 import { useCallback, useState } from "react";
 import { ScheduleEvent, ScheduleUpdateSource } from "../types";
 

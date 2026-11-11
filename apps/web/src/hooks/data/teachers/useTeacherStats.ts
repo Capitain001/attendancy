@@ -1,3 +1,4 @@
+// src/hooks/data/teachers/useTeacherStats.ts
 "use client";
 
 import { useQuery } from "@tanstack/react-query";

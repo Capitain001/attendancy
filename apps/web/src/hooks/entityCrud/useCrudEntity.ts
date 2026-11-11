@@ -1,3 +1,4 @@
+// src/hooks/entityCrud/useCrudEntity.ts
 "use client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 

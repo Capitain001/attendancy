@@ -1,3 +1,4 @@
+// src/components/auth/page/LoginPage.tsx
 import { Metadata } from "next";
 
 import { redirect } from "next/navigation";

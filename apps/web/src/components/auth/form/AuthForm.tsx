@@ -1,3 +1,4 @@
+// src/components/auth/form/AuthForm.tsx
 
 
 import AuthBar from "../ui/authBar";

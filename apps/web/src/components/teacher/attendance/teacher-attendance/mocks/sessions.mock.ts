@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/teacher-attendance/mocks/sessions.mock.ts
 import type { SessionsData } from "../views/sessions-view"
 
 export const SESSIONS_MOCK: SessionsData = {

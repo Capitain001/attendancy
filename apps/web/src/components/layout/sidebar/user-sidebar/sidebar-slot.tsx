@@ -1,3 +1,4 @@
+// src/components/layout/sidebar/user-sidebar/sidebar-slot.tsx
 "use client";
 
 import { useSelectedLayoutSegment } from "next/navigation";

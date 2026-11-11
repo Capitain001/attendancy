@@ -1,3 +1,4 @@
+// src/app/(app)/personal/[slug]/teacher/classes/[classId]/invitation/page.tsx
 // apps/web/src/app/(app)/personal/[slug]/teacher/classes/[id]/invitation/page.tsx
 // Page serveur 
 

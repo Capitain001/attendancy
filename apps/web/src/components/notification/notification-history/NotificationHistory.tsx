@@ -1,3 +1,4 @@
+// src/components/notification/notification-history/NotificationHistory.tsx
 // components/notification/NotificationHistory.tsx
 "use client";
 

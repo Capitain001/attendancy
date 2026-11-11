@@ -1,3 +1,4 @@
+// src/app/(app)/[slug]/teacher/attendance/page.tsx
 import { Card, CardContent } from '@/components/ui/card'
 import { getTeacherAttendanceFicheAction } from '@/services/attendance'
 import TeacherAttendanceFiche from '@/components/teacher/attendance/teacher-attendance/teacher-attendance-fiche'

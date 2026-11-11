@@ -1,3 +1,5 @@
+// src/hooks/data/planning/useClassGroups.ts
+//apps\web\src\hooks\data\planning\useClassGroups.ts
 "use client";
 
 import { useQueries } from "@tanstack/react-query";

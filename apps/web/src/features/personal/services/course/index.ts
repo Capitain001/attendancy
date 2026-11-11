@@ -1,3 +1,4 @@
+// src/features/personal/services/course/index.ts
 
 export * from './actions'
 export * from './form'

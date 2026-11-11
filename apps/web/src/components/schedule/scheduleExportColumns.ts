@@ -1,3 +1,4 @@
+// src/components/schedule/scheduleExportColumns.ts
 import { format } from "date-fns";
 
 import type { ExportColumn } from "@/lib/export";

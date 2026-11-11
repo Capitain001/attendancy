@@ -1,3 +1,5 @@
+// src/components/planning/hook/usePlanningEvents.ts
+//apps\web\src\components\planning\hook\usePlanningEvents.ts
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";

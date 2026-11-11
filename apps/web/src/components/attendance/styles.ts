@@ -1,3 +1,4 @@
+// src/components/attendance/styles.ts
 
 
 export const attendanceStatus = {

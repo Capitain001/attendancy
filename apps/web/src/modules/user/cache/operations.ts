@@ -1,3 +1,4 @@
+// src/modules/user/cache/operations.ts
 // src/services/users/cache/invalidation.ts
 /**
  * Helpers pour l'invalidation intelligente du cache utilisateur

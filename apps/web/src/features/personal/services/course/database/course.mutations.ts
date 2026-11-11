@@ -1,3 +1,4 @@
+// src/features/personal/services/course/database/course.mutations.ts
 // apps/web/src/features/personal/services/course/database/course.mutations.ts
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'

@@ -1,3 +1,4 @@
+// src/app/(app)/personal/[slug]/teacher/attendance/page.tsx
 import { connection } from "next/server";
 import { Card, CardContent } from "@/components/ui/card";
 import { getTeacherAttendanceFicheAction } from "@/services/attendance";

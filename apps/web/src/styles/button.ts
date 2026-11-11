@@ -1,3 +1,4 @@
+// src/styles/button.ts
 import { cn } from "@/lib/utils";
 
 export const button = {

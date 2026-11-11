@@ -1,3 +1,4 @@
+// src/components/planning/utils.ts
 import type { ScheduleStatus } from "@/generated/prisma/browser";
 import type { ScheduleEvent, EventColor } from "@/components/event-calendar/types";
 import type { ScheduleRow } from "@/services/planning";

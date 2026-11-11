@@ -1,3 +1,4 @@
+// src/components/stripe/ManageSubscriptionButton.tsx
 'use client'
 
 interface ManageSubscriptionButtonProps {

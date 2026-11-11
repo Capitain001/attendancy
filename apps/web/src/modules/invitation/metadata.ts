@@ -1,3 +1,4 @@
+// src/modules/invitation/metadata.ts
 // ==========================================
 // src/modules/invitation/metadata.ts
 // ==========================================

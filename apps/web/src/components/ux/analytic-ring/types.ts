@@ -1,3 +1,4 @@
+// src/components/ux/analytic-ring/types.ts
 import type { ReactNode } from "react";
 
 /** Un segment de l'anneau = un onglet cliquable. */

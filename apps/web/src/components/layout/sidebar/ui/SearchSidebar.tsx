@@ -1,3 +1,4 @@
+// src/components/layout/sidebar/ui/SearchSidebar.tsx
 "use client";
 
 import { Search } from "lucide-react";

@@ -1,3 +1,4 @@
+// src/components/ui/sidebar/primitives.tsx
 "use client"
 
 import type * as React from "react"

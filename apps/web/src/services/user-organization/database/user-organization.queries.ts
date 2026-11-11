@@ -13,3 +13,10 @@ export async function getUserOrganizations(orgId: string) {
     select: { id: true },
   });
 }
+
+export async function isOrgMember(userId: string, orgId: string): Promise<boolean> {
+  const count = await prisma.userOrganization.count({
+    where: { userId, orgId },
+  });
+  return count > 0;
+}

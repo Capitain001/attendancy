@@ -1,3 +1,4 @@
+// src/app/(app)/inbox/page.tsx
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { InboxLayout } from '@/components/inbox/InboxLayout'

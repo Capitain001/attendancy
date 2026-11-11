@@ -1,3 +1,4 @@
+// src/lib/storage/avatar.ts
 // lib/storage/avatar.ts
 
 export const AVATAR_BUCKET = "avatars";

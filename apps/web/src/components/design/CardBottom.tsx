@@ -1,3 +1,4 @@
+// src/components/design/CardBottom.tsx
 import { Card, CardContent, CardHeader, CardDescription, CardTitle } from '@/components/ui/card'
 import UserIcon from '../users/UserIcon'
 

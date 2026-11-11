@@ -1,3 +1,4 @@
+// src/store/presenceStore.ts
 "use client"
 
 import { create } from "zustand"

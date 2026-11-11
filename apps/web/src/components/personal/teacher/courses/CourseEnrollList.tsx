@@ -1,3 +1,4 @@
+// src/components/personal/teacher/courses/CourseEnrollList.tsx
 // courses/CourseEnrollList.tsx
 "use client";
 

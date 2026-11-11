@@ -1,3 +1,4 @@
+// src/components/personal/teacher/class/ClassOverviewCard.tsx
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 

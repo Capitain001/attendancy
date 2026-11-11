@@ -1,3 +1,4 @@
+// src/hooks/entityCrud/usageExemple.tsx
 // usageExemple.tsx
 import { useCrudEntity, Payload } from "./useCrudEntity";
 import { Teacher } from "./types";

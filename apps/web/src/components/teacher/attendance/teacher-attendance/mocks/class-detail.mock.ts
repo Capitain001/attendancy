@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/teacher-attendance/mocks/class-detail.mock.ts
 import type { ClassDetailData } from "../views/class-detail-view"
 
 export const CLASS_DETAIL_MOCK: ClassDetailData = {

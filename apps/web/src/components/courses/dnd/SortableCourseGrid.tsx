@@ -1,3 +1,4 @@
+// src/components/courses/dnd/SortableCourseGrid.tsx
 'use client'
 
 

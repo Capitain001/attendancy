@@ -1,3 +1,4 @@
+// src/components/personal/teacher/screen/TCourseEnrollScreen.tsx
 // screen/TCourseEnrollScreen.tsx
 "use client";
 

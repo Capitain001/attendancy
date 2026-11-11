@@ -1,3 +1,4 @@
+// src/modules/auth/rpc/actions.ts
 //apps\web\src\modules\auth\rpc\actions.ts
 "use server";
 import { getUserInfo } from "@/modules/user";

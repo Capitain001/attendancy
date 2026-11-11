@@ -1,3 +1,4 @@
+// src/components/swipe-navigator.tsx
 "use client"
 
 import { useCallback, useRef, type ReactNode } from "react"

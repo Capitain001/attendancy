@@ -1,3 +1,4 @@
+// src/components/courses/direction/types.ts
 import type { GetCourseDetailDto } from '@/services/course'
 import type { GetTeachersDto } from '@/services/teacher'
 import type { GetCourseTeachersDto } from '@/services/course-teacher'

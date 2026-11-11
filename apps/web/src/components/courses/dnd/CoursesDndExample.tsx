@@ -1,3 +1,4 @@
+// src/components/courses/dnd/CoursesDndExample.tsx
 "use client"
 import { CoursesTab } from "@/components/tools/CoursesTab"
 import { SortableCourseGrid } from "./SortableCourseGrid"

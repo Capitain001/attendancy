@@ -1,3 +1,4 @@
+// src/components/notification/NotifBar.tsx
 "use client"
 import {NotificationBar} from '@/components/notification/NotificationBar'
 import { useNotifications } from '@/hooks/notification/useNotification'

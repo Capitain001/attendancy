@@ -1,3 +1,4 @@
+// src/components/invitation/InviteDialog.tsx
 'use client'
 // Dialog unifié d'invitation staff : Enseignant | Direction (fonctions conditionnelles).
 // Ne touche pas aux actions serveur — délègue aux mutations passées par la page (hook).

@@ -1,3 +1,4 @@
+// src/components/illustrations/Resourceillustration.tsx
 import type { ResourceIllustrationName } from "@/components/illustrations/generated";
 import { RESOURCE_ILLUSTRATIONS } from "@/components/illustrations/generated";
 import type { SVGProps } from "react";

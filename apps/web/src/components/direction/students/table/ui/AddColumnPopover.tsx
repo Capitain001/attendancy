@@ -1,3 +1,4 @@
+// src/components/direction/students/table/ui/AddColumnPopover.tsx
 import { Eye, Plus } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import type { useStudentsTable } from "../useStudentsTable";

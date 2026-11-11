@@ -1,3 +1,4 @@
+// src/components/design/ui/skiper3.tsx
 
 "use client"
 import { motion } from "framer-motion";

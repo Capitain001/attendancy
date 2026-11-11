@@ -1,3 +1,4 @@
+// src/components/direction/academic/DepartmentList.tsx
 'use client'
 import { Building2 } from 'lucide-react'
 import { CollapseSection } from '@/components/layout/CollapseSection'

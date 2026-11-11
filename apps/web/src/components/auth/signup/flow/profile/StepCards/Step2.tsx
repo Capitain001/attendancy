@@ -1,3 +1,4 @@
+// src/components/auth/signup/flow/profile/StepCards/Step2.tsx
 
 
 import { Button } from "@/components/ui/button"

@@ -1,3 +1,4 @@
+// src/components/auth/ui/AuthLinks.tsx
 import Link from "next/link";
 import { headers } from "next/headers";
 import { LogIn } from "@/components/animate-ui/icons/log-in";

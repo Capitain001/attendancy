@@ -1,3 +1,4 @@
+// src/components/event-calendar/views/WeekView/components/DayColumn.tsx
 import { isToday, getHours, getDay, endOfDay } from "date-fns";
 import { ScheduleEvent } from "@/components/event-calendar/types";
 import { DraggableEvent } from "@/components/event-calendar/draggable-event";

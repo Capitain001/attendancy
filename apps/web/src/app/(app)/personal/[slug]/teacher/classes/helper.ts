@@ -1,3 +1,4 @@
+// src/app/(app)/personal/[slug]/teacher/classes/helper.ts
 
 // ## ce fichier servira de helper ex: Helper.ts a coter de la page ou ui qui l utilisera
 import { getPersonalClassesAction } from "@/features/personal/services/class";

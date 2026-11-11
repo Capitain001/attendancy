@@ -1,3 +1,4 @@
+// src/components/programs/ui/ProgramUeList.tsx
 "use client";
 
 import type { UpdateUEData } from "@/services/ue/database";

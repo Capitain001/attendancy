@@ -1,3 +1,4 @@
+// src/modules/auth/persmission/config.ts
 //src/services/auth/persmission/config.ts
 import { Role } from "@/types";
 

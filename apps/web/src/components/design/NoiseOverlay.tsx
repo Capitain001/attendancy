@@ -1,3 +1,4 @@
+// src/components/design/NoiseOverlay.tsx
 import { cn } from "@/lib/utils"
 
 type NoiseOverlayProps = {

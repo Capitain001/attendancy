@@ -1,3 +1,4 @@
+// src/components/layout/sidebar/user-sidebar/content.tsx
 "use client"
 
 import DashboardNavigation from "@/components/layout/sidebar/ui/nav-main";

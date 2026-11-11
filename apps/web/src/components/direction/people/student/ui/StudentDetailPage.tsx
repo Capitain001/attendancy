@@ -1,3 +1,4 @@
+// src/components/direction/people/student/ui/StudentDetailPage.tsx
 import Link from 'next/link'
 import { ChevronLeft, BookOpen, Clock, TrendingDown, TrendingUp, Minus } from 'lucide-react'
 import { Button } from '@/components/ui/button'

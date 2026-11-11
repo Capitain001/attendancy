@@ -1,3 +1,4 @@
+// src/modules/invitation/database.ts
 // ==========================================
 // src/modules/invitation/database.ts
 // ==========================================
@@ -5,6 +6,7 @@
 import { prisma } from "@/lib/prisma";
 import { invalidateEvent } from "@/cache/server/graph";
 import { createInvitationNotification } from "@/services/notification/server";
+import { buildInvitationNotificationPayload } from "./message";
 import { Prisma } from "@/generated/prisma/client";
 import {
   InvitationMetadata,
@@ -97,6 +99,8 @@ export interface SaveInvitationParams {
   action: Action;
   resourceId?: string;
   resourceType?: Resource;
+  resourceName?: string | null;
+  isExistingMember?: boolean;
   targetUserId?: string;
 }
 
@@ -137,7 +141,7 @@ export async function saveInvitationWithAudit(params: SaveInvitationParams) {
       const notification = params.targetUserId
         ? await createInvitationNotification(tx, {
             userId: params.targetUserId,
-            source: {
+            payload: buildInvitationNotificationPayload({
               invitationId: invitation.id,
               expiresAt: params.expiresAt,
               role: params.metadata.role,
@@ -145,7 +149,9 @@ export async function saveInvitationWithAudit(params: SaveInvitationParams) {
               senderName: params.metadata.invited_by?.name,
               resourceId: params.resourceId,
               resourceType: params.resourceType,
-            },
+              resourceName: params.resourceName,
+              isExistingMember: params.isExistingMember,
+            }),
           })
         : null;
 

@@ -1,3 +1,4 @@
+// src/components/event-calendar/views/agenda-view.tsx
 "use client";
 
 import { useMemo } from "react";

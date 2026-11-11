@@ -1,3 +1,4 @@
+// scripts/test-inbox-backend.ts
 /**
  * scripts/test-inbox-backend.ts
  *
@@ -23,8 +24,9 @@ import {
 import {
   markNotificationRead,
   setInvitationNotificationStatus,
-  createInvitationResponseNotification,
+  createInvitationNotification,
 } from '@/services/notification/database/notification.mutations'
+import { buildInvitationResponsePayload } from '@/modules/invitation'
 import { generateInvitationMetadata } from '@/modules/invitation/metadata'
 import { invitationMetadataSchema } from '@/services/notification/validation'
 import { getOrgsIdentities } from '@/services/organization/server'
@@ -251,9 +253,9 @@ async function run() {
       })
 
       // Création de l'accusé pour l'émetteur
-      await createInvitationResponseNotification(tx, {
+      await createInvitationNotification(tx, {
         userId: inviterId,
-        source: {
+        payload: buildInvitationResponsePayload({
           invitationId: invitationId1,
           orgId,
           orgName: org.name,
@@ -263,7 +265,7 @@ async function run() {
             name: 'Invité Test',
             email: inviteeEmail,
           },
-        },
+        }),
       })
     })
 
@@ -345,9 +347,9 @@ async function run() {
         status: 'DECLINED',
       })
 
-      await createInvitationResponseNotification(tx, {
+      await createInvitationNotification(tx, {
         userId: inviterId,
-        source: {
+        payload: buildInvitationResponsePayload({
           invitationId: invitationId2,
           orgId,
           orgName: org.name,
@@ -357,7 +359,7 @@ async function run() {
             name: 'Invité Test',
             email: inviteeEmail,
           },
-        },
+        }),
       })
     })
 

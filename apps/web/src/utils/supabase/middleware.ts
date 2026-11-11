@@ -1,3 +1,4 @@
+// src/utils/supabase/middleware.ts
 // Rafraîchissement de session Supabase dans le middleware Edge.
 // Appelé depuis middleware.ts (racine) sur chaque requête matchée.
 import { getOrGenerateDeviceId, setDeviceIdCookieOnResponse } from '@/lib/device'

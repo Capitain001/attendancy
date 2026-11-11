@@ -1,3 +1,4 @@
+// src/components/auth/ui/WelcomeLink.tsx
 import { getUserInfo } from "@/services/user";
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";

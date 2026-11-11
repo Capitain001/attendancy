@@ -1,3 +1,4 @@
+// src/components/courses/direction/CourseBanner.tsx
 import { BackgroundPattern } from '@/components/design/BackgroundPattern'
 import type { CourseBannerData } from './types'
 

@@ -1,3 +1,4 @@
+// src/components/program-tracks/ui/ProgramTrackInfo.tsx
 "use server"
 import { getProgramTrackAction } from '@/services/program-track/actions';
 import { ProgramTrackActions } from './ProgramTrackActions';

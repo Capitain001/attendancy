@@ -1,3 +1,4 @@
+// src/components/auth/ui/AuthButton.tsx
 "use server"
 import { UserInfo } from "@/types/user";
 import { AuthButtonPopover } from "./AuthButtonPopover"; // ← client component

@@ -1,3 +1,4 @@
+// src/app/(app)/personal/[slug]/teacher/sessions/[sessionId]/page.tsx
 // apps/web/src/app/(app)/personal/[slug]/teacher/sessions/[sessionId]/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -19,8 +20,9 @@ export default async function PersonalTeacherSessionSummaryPage({
   params,
 }: PageProps) {
   await connection();
-  const { slug, sessionId } = await params;
 
+  const { slug, sessionId } = await params;
+   
   const res = await getSessionReportAction(sessionId);
 
   if ("error" in res) {

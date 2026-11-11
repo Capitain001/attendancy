@@ -1,3 +1,4 @@
+// src/styles/typography.ts
 import { cn } from "@/lib/utils";
 
 // ─── Dashboard ────────────────────────────────────────────────────────────────

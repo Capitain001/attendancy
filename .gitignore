@@ -27,6 +27,8 @@ next-env.d.ts
 /apps/web/src/generated/
 /packages/db/src/generated/
 
+# Generated service API indexes
+.api/
 
 # rust build artifacts
 src-tauri/target/

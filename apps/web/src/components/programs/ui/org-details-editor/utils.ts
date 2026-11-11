@@ -1,3 +1,4 @@
+// src/components/programs/ui/org-details-editor/utils.ts
 import { BlockField, FieldType, TemplateField, DetailsBlock, BlockTemplate } from "./types";
 
 let _n = 0;

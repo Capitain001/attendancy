@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+// scripts/generate/referentiel/check.ts
 /**
  * scripts/generate/referentiel/check.ts
  *

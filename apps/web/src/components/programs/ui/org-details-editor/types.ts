@@ -1,3 +1,4 @@
+// src/components/programs/ui/org-details-editor/types.ts
 export type FieldType = "text" | "multi";
 
 export interface BlockField {

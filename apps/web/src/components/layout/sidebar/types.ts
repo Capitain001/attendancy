@@ -1,3 +1,4 @@
+// src/components/layout/sidebar/types.ts
 import { LucideIcon } from "lucide-react";
 import type { ElementType } from "react";
 

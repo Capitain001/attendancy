@@ -1,3 +1,4 @@
+// src/hooks/use-realtime-cursors.ts
 //src/hooks/use-realtime-cursors.ts
 
 import { supabase } from '@/utils/supabase/client'

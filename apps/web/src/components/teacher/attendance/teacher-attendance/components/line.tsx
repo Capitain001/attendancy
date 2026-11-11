@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/teacher-attendance/components/line.tsx
 import type { ReactNode } from "react"
 import type { TagData } from "../types"
 import { Tag } from "./tag"

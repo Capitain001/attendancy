@@ -1,3 +1,4 @@
+// src/lib/metadata.ts
 import * as v from 'valibot'
 
 /** Tout schéma d'objet Valibot dont on peut parcourir les entrées (ex. `v.partial(v.object({...}))`). */

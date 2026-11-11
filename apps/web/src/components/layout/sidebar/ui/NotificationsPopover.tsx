@@ -1,3 +1,4 @@
+// src/components/layout/sidebar/ui/NotificationsPopover.tsx
 //apps\web\src\components\layout\sidebar\ui\NotificationsPopover.tsx
 "use client";
 

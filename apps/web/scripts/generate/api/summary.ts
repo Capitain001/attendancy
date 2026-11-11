@@ -1,3 +1,4 @@
+// scripts/generate/api/summary.ts
 /**
  * //scripts/generate/api/summary.ts
  * summary — consolide les .api/ (1 fichier par fonction) en summary/

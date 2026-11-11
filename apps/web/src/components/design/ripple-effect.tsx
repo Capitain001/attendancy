@@ -1,3 +1,4 @@
+// src/components/design/ripple-effect.tsx
 "use client";
 
 import React from "react";

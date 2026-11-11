@@ -1,3 +1,4 @@
+// src/components/design/NoiseCard.tsx
 import NoiseOverlay from "./NoiseOverlay";
 
 interface NoiseCardProps {

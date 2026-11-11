@@ -1,3 +1,4 @@
+// src/components/planning/card/CourseEventDialog.tsx
 "use client"
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";

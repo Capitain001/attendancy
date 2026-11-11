@@ -1,3 +1,4 @@
+// src/components/courses/direction/ui/MetricCard.tsx
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 

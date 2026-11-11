@@ -1,3 +1,4 @@
+// src/components/ui/record-table.tsx
 "use client";
 
 // Primitives de table « record » — réplique fidèle du formalisme Twenty

@@ -1,3 +1,4 @@
+// src/components/planning/coursePlanning/resourceMaps.ts
 import type { PlanningCourseRow, PlanningRoomRow, PlanningTeacherRow } from "../types";
 
 export function buildCourseMap(courses: PlanningCourseRow[]): Map<string, PlanningCourseRow> {

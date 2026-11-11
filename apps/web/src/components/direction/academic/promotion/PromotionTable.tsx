@@ -1,3 +1,4 @@
+// src/components/direction/academic/promotion/PromotionTable.tsx
 'use client'
 
 import { useState } from 'react'

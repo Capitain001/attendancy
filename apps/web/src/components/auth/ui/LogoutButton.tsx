@@ -1,3 +1,4 @@
+// src/components/auth/ui/LogoutButton.tsx
 "use client";
 import { Button } from "@/components/ui/button";
 import { logoutAction } from "@/modules/auth/actions";

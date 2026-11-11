@@ -1,3 +1,4 @@
+// src/components/direction/people/teacher/sections/TeacherStatsSection.tsx
 import { card, typography } from '@/styles'
 import { cn } from '@/lib/utils'
 import type { GetTeacherDto, GetTeacherNotNull } from '@/services/teacher'

@@ -1,3 +1,4 @@
+// src/components/direction/students/table/presentation.ts
 import type { ImportanceTier } from "./types";
 
 /**

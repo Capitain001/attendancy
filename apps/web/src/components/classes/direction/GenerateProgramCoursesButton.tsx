@@ -1,3 +1,4 @@
+// src/components/classes/direction/GenerateProgramCoursesButton.tsx
 // src/components/course/GenerateCoursesFromProgramButton.tsx
 //
 // Bouton qui déclenche generateCoursesFromProgramAction pour une (programId,

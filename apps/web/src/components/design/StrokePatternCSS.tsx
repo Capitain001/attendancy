@@ -1,3 +1,4 @@
+// src/components/design/StrokePatternCSS.tsx
 export function StrokePatternCSS() {
   return (
     <div

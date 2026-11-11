@@ -1,3 +1,4 @@
+// src/components/seed/SeedPanel.tsx
 'use client'
 
 import { useEffect, useState } from 'react'

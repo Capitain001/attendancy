@@ -1,3 +1,4 @@
+// src/modules/auth/database/user.mutations.ts
 // src/services/auth/database/user.mutations.ts
 // Création du record User applicatif après le signup Supabase.
 // L'id Supabase Auth est la source de vérité — jamais généré côté appli.

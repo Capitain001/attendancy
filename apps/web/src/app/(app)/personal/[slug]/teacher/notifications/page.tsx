@@ -1,3 +1,4 @@
+// src/app/(app)/personal/[slug]/teacher/notifications/page.tsx
 import { connection } from "next/server";
 import { TeacherNotificationsPage } from "@/components/teacher/pages/TeacherNotificationsPage";
 

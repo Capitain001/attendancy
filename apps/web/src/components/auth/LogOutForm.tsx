@@ -1,3 +1,4 @@
+// src/components/auth/LogOutForm.tsx
 import { LogOut } from 'lucide-react'
 import React from 'react'
 import { Button } from '../ui/button'

@@ -1,3 +1,4 @@
+// src/lib/export/programs/pdf/signatures.ts
 import type jsPDF from "jspdf";
 import { PDF_COLORS, PDF_PAGE } from "./colors";
 

@@ -1,3 +1,4 @@
+// src/hooks/chat/use-realtime-chat.ts
 //src/hook/use-realtime-chat
 'use client'
 

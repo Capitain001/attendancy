@@ -1,3 +1,4 @@
+// src/components/inbox/InboxMessageView.tsx
 'use client'
 
 import { useEffect, useRef } from 'react'

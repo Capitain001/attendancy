@@ -1,3 +1,4 @@
+// src/components/auth/ui/AuthButtonPopover.tsx
 
 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";

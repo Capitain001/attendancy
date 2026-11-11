@@ -1,3 +1,4 @@
+// src/modules/invitation/user.ts
 //apps\web\src\modules\invitation\user.ts
 // ==========================================
 // actions/invite-user.ts
@@ -14,6 +15,7 @@ import { saveInvitationWithAudit } from "./database";
 import { Action } from "@/generated/prisma/browser";
 import { getAuthorization } from "../auth/persmission";
 import { prisma } from "@/lib/prisma";
+import { isOrgMember } from "@/services/user-organization/server";
 import { UserStatus } from "@/types";
 // : Promise<InvitationResult>
 
@@ -53,6 +55,10 @@ export async function inviteUser(params: InvitationParams) {
       where: { email: { equals: params.email, mode: "insensitive" } },
       select: { id: true },
     });
+    const orgId = user.organization?.id;
+    const isExistingMember = existingUser && orgId
+      ? await isOrgMember(existingUser.id, orgId)
+      : false;
     const userStatus: UserStatus = existingUser ? "ACTIVE" : "NEW";
 
     // ---------------------------------------------------------
@@ -104,6 +110,8 @@ export async function inviteUser(params: InvitationParams) {
       action: Action.CREATE,
       resourceId: params.resourceId,
       resourceType: params.resourceType,
+      resourceName: params.resourceName,
+      isExistingMember,
       targetUserId: existingUser?.id,
     });
 

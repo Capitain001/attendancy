@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/teacher-attendance/teacher-attendance-fiche.tsx
 "use client"
 
 import { useFicheNavigation } from "./hooks/use-fiche-navigation"

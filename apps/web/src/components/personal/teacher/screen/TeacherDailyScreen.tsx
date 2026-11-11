@@ -1,3 +1,4 @@
+// src/components/personal/teacher/screen/TeacherDailyScreen.tsx
 "use client";
 
 import { useState } from "react";

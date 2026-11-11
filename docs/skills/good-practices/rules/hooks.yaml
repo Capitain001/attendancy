@@ -1,0 +1,22 @@
+# Path: docs/skills/good-practices/rules/hooks.yaml
+domain: hooks
+rules:
+  - id: HOOKS-001
+    severity: advisory
+    applies_to: [mutation-hook, query-hook, ui-component]
+    rule: "Découper la logique des formulaires complexes en hooks spécialisés par responsabilité unique (ex. saisie/cycle de vie vs vérification de disponibilité/conflits temps réel) placés sous `hooks/data/<domaine>/<sous-domaine>`, et exporter des helpers purs dans `utils.ts`."
+    why: "Évite les composants UI monolithiques et les hooks « fourre-tout » difficiles à tester, permet d'isoler les effets de validation/requêtes asynchrones et garantit la réutilisabilité des briques de formulaire sur mobile et desktop."
+    detect: ["hooks/data/", "useTeacherPlanningForm", "useTeacherPlanningAvailability"]
+    evidence: "apps/web/src/hooks/data/planning/teacher/useTeacherPlanningForm.ts:1-180, apps/web/src/hooks/data/planning/teacher/useTeacherPlanningAvailability.ts:1-35, apps/web/src/components/teacher/planning/ui/TeacherPlanningDialog.tsx:1-430"
+    bad: |
+      // Composant dialog géant qui mélange saisie, validation, mutation et vérification de conflits
+      export function ScheduleDialog() {
+        const [form, setForm] = useState(...)
+        const { hasConflict } = useAvailability(...)
+        const handleSubmit = async () => { ... }
+        // 600 lignes de logique entremêlée dans le composant
+      }
+    good: |
+      // Hooks découpés par responsabilité sous hooks/data/<domaine>/<sous-domaine>
+      const { form, handleSubmit, isBusy } = useTeacherPlanningForm({ event, onSave, ... })
+      const { hasConflict, isChecking } = useTeacherPlanningAvailability({ form, enabled: isOpen, ... })

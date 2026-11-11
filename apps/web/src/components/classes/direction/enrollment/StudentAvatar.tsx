@@ -1,3 +1,4 @@
+// src/components/classes/direction/enrollment/StudentAvatar.tsx
 import { cn } from "@/lib/utils";
 
 function initials(name: string) {

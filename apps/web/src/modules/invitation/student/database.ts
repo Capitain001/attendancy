@@ -1,3 +1,4 @@
+// src/modules/invitation/student/database.ts
 // src/services/invitation/student/database.ts
 
 import { prisma } from "@/lib/prisma";
@@ -35,7 +36,7 @@ export async function checkInvitationResources(
           isActive: true,
         },
       },
-      select: { id: true },
+      select: { id: true, name: true },
     }),
 
     // Compte combien de groupes de la liste appartiennent bien à la classe
@@ -59,7 +60,7 @@ export async function checkInvitationResources(
     return { valid: false, error: "Un ou plusieurs groupes ne sont pas valides ou n'appartiennent pas à cette classe" };
   }
 
-  return { valid: true };
+  return { valid: true as const, resourceName: _class.name };
 }
 
 /**

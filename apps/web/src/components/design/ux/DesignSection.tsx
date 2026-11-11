@@ -1,3 +1,4 @@
+// src/components/design/ux/DesignSection.tsx
 
 
 export const DesignSection = ({title, children}:{title?:string, children?:React.ReactNode}) => {

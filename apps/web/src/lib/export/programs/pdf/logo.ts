@@ -1,3 +1,4 @@
+// src/lib/export/programs/pdf/logo.ts
 // Récupère le logo de l'organisation en base64 pour l'intégrer au PDF.
 // Retourne null si absent ou si le fetch échoue — le PDF est alors généré
 // sans logo plutôt que de bloquer l'export.

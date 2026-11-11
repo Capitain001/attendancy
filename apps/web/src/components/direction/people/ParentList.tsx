@@ -1,3 +1,4 @@
+// src/components/direction/people/ParentList.tsx
 'use client'
 
 import { useMemo, useState } from 'react'

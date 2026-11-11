@@ -1,3 +1,4 @@
+// src/components/programs/types.ts
 import type { ProgramSemesterDTO } from '@/services/ue/types'
 
 export interface ProgramOrganizationData {

@@ -1,3 +1,4 @@
+// src/components/ui/primitive.tsx
 'use client';
 
 import { SearchIcon, XIcon } from './icons';

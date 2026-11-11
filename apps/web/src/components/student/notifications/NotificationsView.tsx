@@ -1,3 +1,4 @@
+// src/components/student/notifications/NotificationsView.tsx
 "use client";
 
 import { formatDistanceToNow } from "date-fns";

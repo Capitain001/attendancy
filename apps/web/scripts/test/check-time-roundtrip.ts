@@ -1,3 +1,4 @@
+// scripts/test/check-time-roundtrip.ts
 // scripts/check-time-roundtrip.ts
 import { PrismaClient } from '@/generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';

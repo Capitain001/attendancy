@@ -1,3 +1,4 @@
+// src/components/inbox/index.ts
 // apps/web/src/components/inbox/index.ts
 export * from './types'
 export * from './InvitationActionCard'

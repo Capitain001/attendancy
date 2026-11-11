@@ -1,3 +1,4 @@
+// src/components/courses/dnd/SortablePCourseCard.tsx
 'use client'
 
 import { PCourse, PCourseCard } from '../direction/ui/PCourseCard'

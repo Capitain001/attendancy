@@ -1,3 +1,4 @@
+// src/components/direction/functions/FunctionCard.tsx
 'use client'
 import Link from 'next/link'
 import { Pencil, Trash2, Settings2 } from 'lucide-react'

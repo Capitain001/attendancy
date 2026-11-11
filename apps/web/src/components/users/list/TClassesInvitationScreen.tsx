@@ -1,3 +1,4 @@
+// src/components/users/list/TClassesInvitationScreen.tsx
 'use client'
 
 /**

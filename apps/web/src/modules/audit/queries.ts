@@ -1,3 +1,4 @@
+// src/modules/audit/queries.ts
 // src/services/audit/queries.ts
 //
 // Lectures de l'AuditLog (owner audit). Journal admin scopé.

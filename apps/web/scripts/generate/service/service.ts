@@ -1,5 +1,6 @@
 #!/usr/bin/env tsx
 // scripts/generate/service/service.ts
+// scripts/generate/service/service.ts
 //
 // Génère la structure minimale d'un service `src/services/<n>/`, conforme
 // au pattern documenté dans `service-module-pattern` (cf. `src/services/entity/`,

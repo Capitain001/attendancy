@@ -1,3 +1,4 @@
+// src/app/(app)/personal/[slug]/teacher/layout.tsx
 import { connection } from "next/server";
 import type { ReactNode } from "react";
 import MobileNavMenu from "@/components/layout/to-implemente/mobile-navbar";

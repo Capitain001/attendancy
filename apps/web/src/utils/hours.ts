@@ -1,3 +1,4 @@
+// src/utils/hours.ts
 export interface HoursDetails {
   CM?: number
   TD?: number

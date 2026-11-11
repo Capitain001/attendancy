@@ -1,3 +1,4 @@
+// src/components/icons/generated/index.ts
 /* eslint-disable */
 /* auto-generated — do not edit manually */
 

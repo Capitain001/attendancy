@@ -1,3 +1,4 @@
+// src/components/auth/ui/InfoCard.tsx
 import { CircleUser, ClockIcon } from "lucide-react"
 
 interface InfoCardProps {

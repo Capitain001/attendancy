@@ -1,3 +1,4 @@
+// src/components/planning/filters/index.tsx
 "use client";
 
 import { GraduationCap, Users, UserRound, DoorOpen, CircleDashed } from "lucide-react";

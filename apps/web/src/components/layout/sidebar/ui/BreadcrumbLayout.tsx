@@ -1,3 +1,4 @@
+// src/components/layout/sidebar/ui/BreadcrumbLayout.tsx
 
 "use client"
 

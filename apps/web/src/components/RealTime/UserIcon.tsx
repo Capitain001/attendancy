@@ -1,3 +1,4 @@
+// src/components/RealTime/UserIcon.tsx
 // components/UserIcon.tsx
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";

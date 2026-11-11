@@ -1,3 +1,4 @@
+// src/modules/auth/index.ts
 export * from "./responsable/signup";
 export * from "./auth";
 export * from "./persmission"

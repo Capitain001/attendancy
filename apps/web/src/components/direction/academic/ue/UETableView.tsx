@@ -1,3 +1,4 @@
+// src/components/direction/academic/ue/UETableView.tsx
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { typography } from "@/styles"

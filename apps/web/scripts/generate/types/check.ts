@@ -1,3 +1,4 @@
+// scripts/generate/types/check.ts
 /**
  * scripts/generate/types/check.ts
  *

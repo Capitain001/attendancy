@@ -1,3 +1,4 @@
+// src/components/auth/signup/flow/profile/StepCards/StepCard.tsx
 interface StepCardProps {
     title: string
     children: React.ReactNode

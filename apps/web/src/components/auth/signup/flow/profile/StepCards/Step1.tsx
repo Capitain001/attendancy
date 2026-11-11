@@ -1,3 +1,4 @@
+// src/components/auth/signup/flow/profile/StepCards/Step1.tsx
 import AvatarUploader from "@/components/users/AvatarUploader"
 import { StepCard } from "./StepCard"
 

@@ -1,3 +1,4 @@
+// src/components/event-calendar/views/MonthView/index.ts
 /**
  * Point d'entrée principal pour le module MonthView
  * 

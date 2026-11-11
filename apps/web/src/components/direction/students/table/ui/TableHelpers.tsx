@@ -1,3 +1,4 @@
+// src/components/direction/students/table/ui/TableHelpers.tsx
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Sex } from "../types";

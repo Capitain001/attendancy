@@ -1,3 +1,4 @@
+// src/modules/auth/members/inbox-invitation.ts
 //apps\web\src\modules\auth\members\inbox-invitation.ts
 //action sur une invitation via inbox (notification intern)
 'use server'
@@ -13,8 +14,12 @@ import { Action, Prisma, Resource, Role } from '@/generated/prisma/client'
 import { logAuditAsync } from '@/utils/server'
 import type { DatabaseInvitationDetails } from '@/types/invitation'
 import {
+  readInvitationContext,
+  buildInvitationResponsePayload,
+} from '@/modules/invitation'
+import {
   setInvitationNotificationStatus,
-  createInvitationResponseNotification,
+  createInvitationNotification,
 } from '@/services/notification/server'
 import { ensureUserOrganization } from '@/services/user-organization/server'
 import { ensureParentRelation } from '@/services/parent-relation/server'
@@ -155,11 +160,13 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
         }
 
         // F. Mettre à jour la notification via le service notification
-        await setInvitationNotificationStatus(tx, {
+        const updatedNotif = await setInvitationNotificationStatus(tx, {
           userId,
           invitationId: invitation.id,
           status: 'ACCEPTED',
         })
+        const { action, resourceName } = readInvitationContext(updatedNotif?.metadata)
+
         for (const revokedInvitation of revokedInvitations) {
           if (revokedInvitation.userId) {
             await setInvitationNotificationStatus(tx, {
@@ -172,15 +179,17 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
 
         // G. Notifier l'émetteur de l'acceptation via le service notification
         if (senderId) {
-          await createInvitationResponseNotification(tx, {
+          await createInvitationNotification(tx, {
             userId: senderId,
-            source: {
+            payload: buildInvitationResponsePayload({
               kind: 'INVITATION_ACCEPTED',
               invitationId: invitation.id,
               orgId: invitation.orgId,
               orgName: invitation.organization.name,
               sender: { id: userId, name: user.name, email: user.email },
-            },
+              action,
+              resourceName,
+            }),
           })
         }
 
@@ -333,22 +342,25 @@ export async function declineInboxInvitationAction(input: { invitationId: string
     // Les écritures de notification sont secondaires : un échec ne doit pas annuler le refus.
     try {
       await prisma.$transaction(async (tx) => {
-        await setInvitationNotificationStatus(tx, {
+        const updatedNotif = await setInvitationNotificationStatus(tx, {
           userId,
           invitationId: invitation.id,
           status: 'DECLINED',
         })
+        const { action, resourceName } = readInvitationContext(updatedNotif?.metadata)
 
         if (senderId) {
-          await createInvitationResponseNotification(tx, {
+          await createInvitationNotification(tx, {
             userId: senderId,
-            source: {
+            payload: buildInvitationResponsePayload({
               kind: 'INVITATION_DECLINED',
               invitationId: invitation.id,
               orgId: invitation.orgId,
               orgName: invitation.organization?.name ?? 'l’organisation',
               sender: { id: userId, name: user.name, email: user.email },
-            },
+              action,
+              resourceName,
+            }),
           })
         }
       })

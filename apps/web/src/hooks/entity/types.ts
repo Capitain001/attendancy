@@ -1,3 +1,4 @@
+// src/hooks/entity/types.ts
 //@/hooks/entity/types.ts
 import type { UseEntityOptions } from "./useEntity";
 

@@ -1,3 +1,4 @@
+// scripts/test/prisma-constraint-fix.ts
 /**
  * scripts/test/prisma-constraint-fix.ts
  * Valide que tryConstraint / uniqueError retournent le bon message après le fix Prisma 7.

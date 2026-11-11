@@ -1,3 +1,4 @@
+// src/components/users/AvatarPlus.tsx
 import { PlusCircleIcon } from 'lucide-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'

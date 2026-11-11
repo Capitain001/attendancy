@@ -1,3 +1,4 @@
+// src/data/mocks/mock.course-teacher.ts
 export interface CourseDetailView {
   id: string
   name: string

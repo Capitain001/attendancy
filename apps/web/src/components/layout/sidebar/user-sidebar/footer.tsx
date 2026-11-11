@@ -1,3 +1,4 @@
+// src/components/layout/sidebar/user-sidebar/footer.tsx
 "use client";
 
 import { Team, TeamSwitcher } from "@/components/team-switcher";

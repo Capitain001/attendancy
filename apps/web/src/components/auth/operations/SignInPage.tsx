@@ -1,3 +1,4 @@
+// src/components/auth/operations/SignInPage.tsx
 import { loginAction } from "@/modules/auth/actions";
 import { GlassInputWrapper, GoogleIcon } from "../ui/components";
 import { PasswordInput } from "../ui/PasswordInput";

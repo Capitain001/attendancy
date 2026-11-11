@@ -1,3 +1,4 @@
+// src/components/direction/students/table/ui/HeaderCell.tsx
 import { cn } from "@/lib/utils";
 import type { BaseColumnDef } from "../types";
 import { HEADER_BORDER_CLASS, TIER_HEADER_CLASS } from "../presentation";

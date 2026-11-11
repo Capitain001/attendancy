@@ -1,3 +1,4 @@
+// src/components/courses/direction/components/HistoryCard.tsx
 import { Section } from '../ui/Section'
 import { Badge } from '../ui/Badge'
 import type { ScheduleItem } from '../types'

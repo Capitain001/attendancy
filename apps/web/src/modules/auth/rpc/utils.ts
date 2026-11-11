@@ -1,3 +1,4 @@
+// src/modules/auth/rpc/utils.ts
 // src/services/auth/rpc.ts
 import type { UserInfo } from '@/types/user'
 

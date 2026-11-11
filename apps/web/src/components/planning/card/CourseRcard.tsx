@@ -1,3 +1,4 @@
+// src/components/planning/card/CourseRcard.tsx
 import { AlertCircle, BookOpen, Users, MapPin } from "lucide-react";
 
 export interface CourseRCardProps {

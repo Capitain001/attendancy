@@ -1,3 +1,4 @@
+// src/lib/export/programs/flatten.ts
 import type { ProgramSemesterDTO } from "@/services/ue/types";
 
 export interface ProgramExportRow {

@@ -1,3 +1,4 @@
+// src/components/student/ux/StudentDayRing.tsx
 "use client";
 
 import { cloneElement, isValidElement, useState } from "react";

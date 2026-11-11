@@ -1,3 +1,4 @@
+// src/modules/invitation/student/types.ts
 // src/services/invitation/student/types.ts
 
 /**

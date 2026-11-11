@@ -1,3 +1,4 @@
+// scripts/generate/referentiel/config.ts
 /**
  * scripts/generate/referentiel/config.ts
  * Configuration du générateur — TOUT ce qui est spécifique à un projet/

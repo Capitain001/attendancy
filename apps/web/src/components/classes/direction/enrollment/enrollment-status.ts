@@ -1,3 +1,4 @@
+// src/components/classes/direction/enrollment/enrollment-status.ts
 import type { SearchStudentsForEnrollmentDto } from "@/services/student-enrollment";
 
 export type EnrollmentState = "available" | "reactivable" | "enrolled";

@@ -1,3 +1,4 @@
+// src/components/auth/signup/flow/profile/ProfileStepper.tsx
 "use client"
 
 import { motion, AnimatePresence } from "framer-motion"

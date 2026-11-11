@@ -1,3 +1,4 @@
+// scripts/seed-planning-dev.ts
 /**
  * Seed de planning pour dev/test.
  * Usage : bun run scripts/seed-planning-dev.ts

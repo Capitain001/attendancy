@@ -1,3 +1,4 @@
+// scripts/test/check-conflicts-db.ts
 /**
  * Diagnostic : est-ce que checkConflicts peut s'exécuter sur le test DB ?
  * Si Schedule.notifyState manque → Prisma 7 échouera à créer le schedule interne.

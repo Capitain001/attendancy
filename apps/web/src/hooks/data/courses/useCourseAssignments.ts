@@ -1,3 +1,4 @@
+// src/hooks/data/courses/useCourseAssignments.ts
 //apps\web\src\hooks\data\courses\useCourseAssignments.ts
 "use client";
 

@@ -1,3 +1,4 @@
+// src/app/(app)/personal/[slug]/teacher/classes/[classId]/students/page.tsx
 import type { Metadata } from "next";
 import { connection } from "next/server";
 import { getClassAction } from "@/services/class";

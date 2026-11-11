@@ -1,3 +1,4 @@
+// src/components/notification/utils.ts
 export function getUnreadBadgeInfo(count: number) {
   switch (true) {
     case count > 99:

@@ -1,3 +1,4 @@
+// src/components/courses/direction/DirectionCourseDetailPage.tsx
 import { Suspense } from 'react'
 import { CollapseSection } from './ui/CollapseSection'
 import {

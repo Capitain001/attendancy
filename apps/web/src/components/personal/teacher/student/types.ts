@@ -1,3 +1,4 @@
+// src/components/personal/teacher/student/types.ts
 import type { GetPersonalCoursesDto } from "@/features/personal/services/course";
 import type { GetStudentsEnrollmentsDto } from "@/services/student-enrollment";
 

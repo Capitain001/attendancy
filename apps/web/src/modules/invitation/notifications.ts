@@ -1,3 +1,4 @@
+// src/modules/invitation/notifications.ts
 import { prisma } from "@/lib/prisma";
 import { NotificationType, Role } from "@/generated/prisma/client";
 import { sendPushNotificationToUserById as sendPushNotificationById } from "@/modules/notification/user";
@@ -6,16 +7,21 @@ export type InvitationNotifyEvent = "CREATED" | "RESENT" | "LINK_GENERATED";
 
 const DIRECTION_FUNCTION_NAMES = ["PRINCIPAL", "SECRETARY"] as const;
 
-function buildMessage(event: InvitationNotifyEvent, invitedEmail: string): string {
+function buildMessage(
+  event: InvitationNotifyEvent,
+  invitedEmail: string,
+  className?: string | null,
+): string {
+  const suffix = className ? ` (classe ${className})` : "";
   switch (event) {
     case "CREATED":
-      return `Invitation étudiant envoyée à ${invitedEmail}`;
+      return `Invitation étudiant envoyée à ${invitedEmail}${suffix}`;
     case "RESENT":
-      return `Invitation étudiant renvoyée pour ${invitedEmail}`;
+      return `Invitation étudiant renvoyée pour ${invitedEmail}${suffix}`;
     case "LINK_GENERATED":
-      return `Lien d'invitation généré pour ${invitedEmail}`;
+      return `Lien d'invitation généré pour ${invitedEmail}${suffix}`;
     default:
-      return `Mise à jour d'invitation pour ${invitedEmail}`;
+      return `Mise à jour d'invitation pour ${invitedEmail}${suffix}`;
   }
 }
 
@@ -30,9 +36,10 @@ export async function notifyInvitationStakeholders(params: {
   event: InvitationNotifyEvent;
   invitedEmail: string;
   classId?: string;
+  className?: string | null;
 }): Promise<void> {
   try {
-    const { invitationId, orgId, actorId, event, invitedEmail, classId } = params;
+    const { invitationId, orgId, actorId, event, invitedEmail, classId, className } = params;
 
     const directionRows = await prisma.userOrganization.findMany({
       where: {
@@ -58,7 +65,7 @@ export async function notifyInvitationStakeholders(params: {
       recipientIds.add(row.userId);
     }
 
-    const message = buildMessage(event, invitedEmail);
+    const message = buildMessage(event, invitedEmail, className);
     const metadata = {
       kind: "student_invitation" as const,
       invitationId,

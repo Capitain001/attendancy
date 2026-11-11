@@ -1,3 +1,4 @@
+// src/components/classes/direction/section/ui/PromotionCoursesSection.tsx
 'use client'
 
 import { useMemo, useState } from 'react'

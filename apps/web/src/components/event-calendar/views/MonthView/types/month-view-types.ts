@@ -1,3 +1,4 @@
+// src/components/event-calendar/views/MonthView/types/month-view-types.ts
 import { ScheduleEvent } from "@/components/event-calendar";
 
 /**

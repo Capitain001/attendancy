@@ -1,3 +1,4 @@
+// src/modules/invitation/direction/database.ts
 // src/services/invitation/direction/database.ts
 import { prisma } from "@/lib/prisma";
 import type { Function as PrismaFunction } from "@/generated/prisma/client";

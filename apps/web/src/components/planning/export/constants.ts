@@ -1,3 +1,4 @@
+// src/components/planning/export/constants.ts
 export type Axis = "class" | "group" | "teacher" | "room";
 export type Period = "day" | "week" | "month" | "custom";
 

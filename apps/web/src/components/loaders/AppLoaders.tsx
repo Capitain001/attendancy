@@ -1,3 +1,4 @@
+// src/components/loaders/AppLoaders.tsx
 
 import { Skeleton, SkeletonCard } from '../ui/skeleton'
 import { FormButton } from '../forms/FormButton';

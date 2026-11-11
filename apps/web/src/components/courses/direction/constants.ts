@@ -1,3 +1,4 @@
+// src/components/courses/direction/constants.ts
 import type { ScheduleStatus, EvaluationType } from './types'
 
 export const SCHEDULE_STATUS_LABELS: Record<ScheduleStatus, string> = {

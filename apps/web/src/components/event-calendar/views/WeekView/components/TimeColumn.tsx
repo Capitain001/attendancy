@@ -1,3 +1,4 @@
+// src/components/event-calendar/views/WeekView/components/TimeColumn.tsx
 // TimeColumn.tsx
 import React from "react"
 interface TimeColumnProps {

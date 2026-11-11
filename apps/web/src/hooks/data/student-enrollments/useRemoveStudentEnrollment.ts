@@ -1,3 +1,4 @@
+// src/hooks/data/student-enrollments/useRemoveStudentEnrollment.ts
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";

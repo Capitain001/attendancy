@@ -1,3 +1,4 @@
+// src/components/direction/academic/ue/detail/UECourseForm.tsx
 'use client'
 import { useRef } from 'react'
 import { useUECourse } from '@/hooks/data/ue-course/useUECourse'

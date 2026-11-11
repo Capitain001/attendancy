@@ -1,3 +1,4 @@
+// src/components/personal/teacher/section/TeacherDailyOverview.tsx
 // components/personal/teacher/section/TeacherDailyOverview.tsx
 import type { ReactNode } from 'react'
 import { ScheduleCard, type ScheduleCardSchedule } from '@/components/personal/teacher/ui/ScheduleCard'

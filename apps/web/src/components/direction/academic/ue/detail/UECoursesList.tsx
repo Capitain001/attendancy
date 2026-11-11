@@ -1,3 +1,4 @@
+// src/components/direction/academic/ue/detail/UECoursesList.tsx
 'use client'
 import { useState, useMemo } from "react"
 import {

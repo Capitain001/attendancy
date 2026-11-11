@@ -1,3 +1,4 @@
+// src/lib/invitation/toast.ts
 // Livraison d'un lien d'invitation : partage natif, sinon repli presse-papiers.
 import { toast } from 'sonner'
 import { share } from '@/lib/invitation/share'

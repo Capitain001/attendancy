@@ -1,3 +1,4 @@
+// src/components/inbox/types.ts
 import type { NotificationType } from '@attendancy/types'
 import type { InvitationMetadataOutput } from '@/services/notification/validation'
 

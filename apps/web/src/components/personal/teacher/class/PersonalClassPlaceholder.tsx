@@ -1,3 +1,4 @@
+// src/components/personal/teacher/class/PersonalClassPlaceholder.tsx
 import { Plus } from "lucide-react";
 
 type PersonalClassPlaceholderProps = {

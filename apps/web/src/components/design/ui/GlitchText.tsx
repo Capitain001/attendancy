@@ -1,3 +1,4 @@
+// src/components/design/ui/GlitchText.tsx
 
 const GlitchText = () => {
   return (

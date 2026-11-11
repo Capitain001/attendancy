@@ -1,3 +1,4 @@
+// src/components/classes/direction/section/ui/mockPromotionCourses.ts
 import type { PromotionCourse } from './PromotionCoursesSection'
 
 export const MOCK_PROMOTION_COURSES: PromotionCourse[] = [

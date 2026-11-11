@@ -1,3 +1,4 @@
+// src/lib/device.ts
 import type { NextRequest, NextResponse } from 'next/server'
 import type { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies'
 

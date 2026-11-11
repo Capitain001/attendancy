@@ -1,3 +1,4 @@
+// src/components/notification/NotificationButton.tsx
 // src/components/notification-permission-button.tsx
 "use client"
 import { BUTTON_CONFIG } from "@/config/notification"

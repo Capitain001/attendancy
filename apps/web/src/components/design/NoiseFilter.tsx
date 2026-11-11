@@ -1,3 +1,4 @@
+// src/components/design/NoiseFilter.tsx
 export {
   NoiseFilter,
   NoiseFilterDefs,

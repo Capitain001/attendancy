@@ -1,3 +1,4 @@
+// src/lib/paths.ts
 type SlugPaths = Record<string, (slug: string) => string>;
 
 // Résout un objet de chemins `(slug) => string` en `{ clé: chemin }`.

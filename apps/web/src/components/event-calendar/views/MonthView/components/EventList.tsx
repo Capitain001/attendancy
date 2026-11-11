@@ -1,3 +1,4 @@
+// src/components/event-calendar/views/MonthView/components/EventList.tsx
 import React from "react";
 import { format, isSameDay } from "date-fns";
 import {

@@ -1,3 +1,4 @@
+// src/components/design/prim/skiper87.tsx
 import React from "react";
 
 import { ScrollArea } from "@/components/ui/scroll-area";

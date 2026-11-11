@@ -1,3 +1,4 @@
+// src/modules/user/profile.ts
 // src/services/user/profile.ts
 
 import type { Organization ,UserInfo} from "@/types/user";

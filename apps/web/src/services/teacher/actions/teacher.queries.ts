@@ -5,7 +5,7 @@ import { ERRORS } from '@/config'
 import { getTeachers, getTeacher, getTeacherTodaySchedules, getTeacherSchedules } from '../database'
 import { mockgetTeachers } from '@/data/mocks/teachers'
 
-export async function getCurrentTeacherId(): Promise<string | null> {
+export async function getCurrentTeacherId() {
   const auth = await authAccess()
   if (!auth.data) return null
   return auth.data.user?.organization?.teacherId ?? null

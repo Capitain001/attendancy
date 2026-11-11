@@ -1,3 +1,4 @@
+// src/lib/export/programs/pdf/table.ts
 import type { ProgramSemesterDTO, ProgramUECourses } from "@/services/ue/types";
 import type { ProgramExportConfig } from "../types";
 import { PDF_COLORS } from "./colors";

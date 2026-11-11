@@ -1,3 +1,4 @@
+// src/components/courses/direction/components/UpcomingSessionsCard.tsx
 'use client'
 
 import { Section } from '../ui/Section'

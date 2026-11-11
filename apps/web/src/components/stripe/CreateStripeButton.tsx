@@ -1,3 +1,4 @@
+// src/components/stripe/CreateStripeButton.tsx
 'use client'
 
 interface CreateStripeButtonProps {

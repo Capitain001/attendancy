@@ -1,3 +1,4 @@
+// src/components/session/attendance-list/AttendanceCard.tsx
 "use client";
 
 import { motion } from "framer-motion";

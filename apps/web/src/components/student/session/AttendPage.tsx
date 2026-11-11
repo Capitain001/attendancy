@@ -1,3 +1,4 @@
+// src/components/student/session/AttendPage.tsx
 // src/app/(student)/attend/page.tsx
 "use client";
 

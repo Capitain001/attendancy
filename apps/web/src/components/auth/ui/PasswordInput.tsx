@@ -1,3 +1,4 @@
+// src/components/auth/ui/PasswordInput.tsx
 // src/components/PasswordInput.tsx (Client Component)
 "use client"
 import { useState } from "react";

@@ -1,3 +1,4 @@
+// src/components/invitation/InviteUserPlaceholder.tsx
 import React from 'react';
 import { Link } from 'lucide-react';
 import { cn } from '@/lib/utils';

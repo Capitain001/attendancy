@@ -1,3 +1,4 @@
+// src/components/icons/tabler-laurel-wreath.tsx
 import * as React from "react";
 
 export function LaurelWreathIcon({

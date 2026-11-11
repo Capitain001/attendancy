@@ -1,3 +1,4 @@
+// src/components/auth/signup/flow/invited/InvitationSteps.tsx
 'use client'
 
 import { motion } from 'motion/react'

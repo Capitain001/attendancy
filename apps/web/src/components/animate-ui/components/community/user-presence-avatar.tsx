@@ -1,3 +1,4 @@
+// src/components/animate-ui/components/community/user-presence-avatar.tsx
 'use client';
 
 import * as React from 'react';

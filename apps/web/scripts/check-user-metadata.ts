@@ -1,3 +1,4 @@
+// scripts/check-user-metadata.ts
 import { readdirSync, readFileSync } from "node:fs";
 import { relative, resolve } from "node:path";
 import * as ts from "typescript";

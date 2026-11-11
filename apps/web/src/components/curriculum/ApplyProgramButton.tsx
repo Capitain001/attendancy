@@ -1,3 +1,4 @@
+// src/components/curriculum/ApplyProgramButton.tsx
 "use client"
 
 // src/components/curriculum/ApplyProgramButton.tsx

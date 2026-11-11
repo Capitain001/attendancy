@@ -1,3 +1,4 @@
+// src/modules/invitation/actions.ts
 //src/modules/invitation/actions.ts
 "use server";
 
@@ -17,6 +18,7 @@ import { ERRORS } from "@/config";
 import { notifyInvitationStakeholders } from "./notifications";
 import type { DatabaseInvitationDetails } from "@/types/invitation";
 import { Role } from "@/generated/prisma/browser";
+import { buildInvitationNotificationPayload } from "./message";
 import { Prisma } from "@/generated/prisma/client";
 import {
   setInvitationNotificationStatus,
@@ -103,6 +105,23 @@ export async function resendInvitationAction(
         };
       }
 
+      const membership = await prisma.userOrganization.findUnique({
+        where: { userId_orgId: { userId: recipientId, orgId } },
+        select: { id: true },
+      });
+      const isExistingMember = !!membership;
+      const resourceName =
+        (details as any)?.resourceName ??
+        (details as any)?.enrollment?.className ??
+        (stored.resourceType === "CLASS" && stored.resourceId
+          ? (
+              await prisma.class.findFirst({
+                where: { id: stored.resourceId, academicYear: { orgId } },
+                select: { name: true },
+              })
+            )?.name ?? null
+          : null);
+
       const source = {
         invitationId: stored.id,
         expiresAt,
@@ -114,6 +133,8 @@ export async function resendInvitationAction(
         senderName: details?.invited_by?.name,
         resourceId: stored.resourceId,
         resourceType: stored.resourceType,
+        resourceName,
+        isExistingMember,
       };
 
       await prisma.$transaction(async (tx) => {
@@ -127,7 +148,8 @@ export async function resendInvitationAction(
 
         await upsertInvitationNotification(tx, {
           userId: recipientId,
-          source,
+          invitationId: stored.id,
+          payload: buildInvitationNotificationPayload(source),
         });
       });
 

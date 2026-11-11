@@ -1,3 +1,4 @@
+// src/components/auth/page/OrganizationInfo.tsx
 // src/components/organization/OrganizationInfo.tsx
 'use client'
 

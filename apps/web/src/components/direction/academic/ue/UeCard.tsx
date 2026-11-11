@@ -1,3 +1,4 @@
+// src/components/direction/academic/ue/UeCard.tsx
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";

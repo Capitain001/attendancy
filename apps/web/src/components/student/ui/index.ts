@@ -1,3 +1,4 @@
+// src/components/student/ui/index.ts
 export {
   ScheduleStatusBadge,
   AttendanceStatusBadge,

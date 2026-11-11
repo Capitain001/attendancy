@@ -1,3 +1,4 @@
+// src/modules/auth/persmission/utils.ts
 // utils/permission-helpers.ts
 import { UserInfo } from "@/types";
 import { Permission, PermissionAction, PermissionResource } from "@/types/permissions";

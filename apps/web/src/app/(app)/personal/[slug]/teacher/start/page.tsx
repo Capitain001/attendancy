@@ -1,3 +1,4 @@
+// src/app/(app)/personal/[slug]/teacher/start/page.tsx
 import { PersonalTeacherOnboarding } from '@/components/personal/teacher/ux/PersonalTeacherOnboarding'
 import { resolveCreatePersonalClassAction } from './helper'
 

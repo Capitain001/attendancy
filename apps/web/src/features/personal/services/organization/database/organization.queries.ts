@@ -1,3 +1,4 @@
+// src/features/personal/services/organization/database/organization.queries.ts
 import { prisma } from '@/lib/prisma'
 import type { PrismaClient, Prisma } from '@/generated/prisma/client'
 import type { PersonalSignupRole } from '@/modules/auth/constants'

@@ -1,3 +1,4 @@
+// src/modules/auth/persmission/autorization.ts
 // utils/authorization.ts
 import { ERROR_CODES } from '@/config'
 import { UserInfo, Role, Functions, AuthenticatedUser } from "@/types/user";

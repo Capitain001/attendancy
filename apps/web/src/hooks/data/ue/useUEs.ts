@@ -1,3 +1,4 @@
+// src/hooks/data/ue/useUEs.ts
 "use client";
 import { useCrudEntity } from "@/hooks/entity/useCrudEntity";
 import { toFetchFn, toCreateFn, toUpdateFn, toDeleteFn } from "@/hooks/entity/actionHelpers";

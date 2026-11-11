@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// scripts/generate/themes/themes.ts
 /**
  * apps/web/scripts/generate/themes/themes.ts
  *

@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/teacher-attendance/components/actions.tsx
 import type { ReactNode } from "react"
 
 export function Actions({ children }: { children: ReactNode }) {

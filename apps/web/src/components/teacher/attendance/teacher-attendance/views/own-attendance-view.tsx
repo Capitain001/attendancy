@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/teacher-attendance/views/own-attendance-view.tsx
 import Link from "next/link"
 import { Actions, FicheButton } from "../components/actions"
 import { Field } from "../components/field"

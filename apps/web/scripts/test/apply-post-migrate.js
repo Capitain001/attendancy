@@ -1,3 +1,4 @@
+// scripts/test/apply-post-migrate.js
 import { execSync } from 'node:child_process'
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { resolve, join } from 'node:path'

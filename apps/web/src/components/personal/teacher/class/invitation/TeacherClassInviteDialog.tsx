@@ -1,3 +1,4 @@
+// src/components/personal/teacher/class/invitation/TeacherClassInviteDialog.tsx
 'use client'
 // Dialog épuré d'invitation à la classe : email libre ou étudiant existant, envoi par email ou partage du lien.
 // Les retours utilisateur (toasts, partage du lien) sont gérés par le hook d'invitation.

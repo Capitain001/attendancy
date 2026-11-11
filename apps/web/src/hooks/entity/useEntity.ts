@@ -1,3 +1,4 @@
+// src/hooks/entity/useEntity.ts
 // @/hooks/entity/useEntity.ts
 "use client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";

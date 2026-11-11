@@ -1,3 +1,4 @@
+// src/components/programs/ui/ProgramHeader.tsx
 import { ClassProgram } from "@/services/program/types"
 
 type ProgramHeaderProps = {

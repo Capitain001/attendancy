@@ -1,3 +1,4 @@
+// src/components/users/settings/EditEmailDialog.tsx
 "use client";
 
 import { useState, useTransition } from "react";

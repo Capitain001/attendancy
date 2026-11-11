@@ -1,3 +1,4 @@
+// src/components/event-calendar/index.ts
 "use client";
 
 // Component exports

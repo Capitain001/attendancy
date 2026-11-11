@@ -1,3 +1,4 @@
+// src/app/(app)/personal/[slug]/teacher/classes/[classId]/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -28,7 +29,6 @@ interface PageProps {
 export default async function PersonalTeacherClassPage({ params }: PageProps) {
   await connection();
   const { slug, classId } = await params;
-
   const classResult = await getClassAction({ classId });
   const classData = "data" in classResult ? classResult.data : null;
   if (!classData) notFound();
@@ -57,7 +57,7 @@ export default async function PersonalTeacherClassPage({ params }: PageProps) {
     {
       title: "Planning & Séances",
       description: "Accéder à l'emploi du temps, consulter les créneaux et planifier des séances.",
-      href: `${personal.home(slug)}/planning`,
+      href: `${personal.home(slug)}/planning?classId=${encodeURIComponent(classId)}`,
       icon: Calendar,
       badge: "Calendrier",
       actionLabel: "Ouvrir le planning",

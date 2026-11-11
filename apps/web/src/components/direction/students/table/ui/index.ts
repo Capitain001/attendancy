@@ -1,3 +1,4 @@
+// src/components/direction/students/table/ui/index.ts
 export * from "./TableHelpers";
 export * from "./Toolbar";
 export * from "./FilterPanel";

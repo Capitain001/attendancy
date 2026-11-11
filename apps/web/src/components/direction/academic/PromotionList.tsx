@@ -1,3 +1,4 @@
+// src/components/direction/academic/PromotionList.tsx
 'use client'
 
 import { useState } from 'react'

@@ -1,3 +1,4 @@
+// src/components/personal/teacher/ui/ScheduleStatusIcon.tsx
 // components/personal/teacher/ui/ScheduleStatusIcon.tsx
 import { CircleCheck, CircleX, TriangleAlert, type LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'

@@ -1,3 +1,4 @@
+// src/components/personal/organization/profile/PersonalRolePicker.tsx
 import { X, Plus } from "lucide-react";
 import { PersonalRoleOptions } from "./PersonalRoleOptions";
 import { ROLE_OPTIONS, type RoleOptionConfig } from "./roles";

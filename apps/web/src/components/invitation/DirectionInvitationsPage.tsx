@@ -1,3 +1,4 @@
+// src/components/invitation/DirectionInvitationsPage.tsx
 'use client'
 // Hub Direction : stats + historique + dialog d'invitation staff.
 

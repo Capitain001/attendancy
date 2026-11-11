@@ -1,3 +1,4 @@
+// src/components/session/attendance-list/AttendanceSkeleton.tsx
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function AttendanceSkeleton() {

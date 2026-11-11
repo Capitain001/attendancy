@@ -1,3 +1,4 @@
+// src/types/user.ts
 //src/types/user.ts
 import { FUNCTIONS } from '@/config/data'
 import { OrganizationType, Role as DBRole } from '@/generated/prisma/browser'

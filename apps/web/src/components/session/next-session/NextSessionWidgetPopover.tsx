@@ -1,3 +1,4 @@
+// src/components/session/next-session/NextSessionWidgetPopover.tsx
 // src/components/session/widget/NextSessionWidgetPopover.tsx
 "use client";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";

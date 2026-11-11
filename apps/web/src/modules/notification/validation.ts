@@ -1,3 +1,4 @@
+// src/modules/notification/validation.ts
 import * as v from 'valibot'
 
 // Schema générique Web Push spec — réutilisable sans couplage métier

@@ -1,3 +1,4 @@
+// src/components/planning/conflictsToast.ts
 import { toast } from "sonner";
 
 import type { ConflictReportDto } from "@/services/planning/conflict/actions";

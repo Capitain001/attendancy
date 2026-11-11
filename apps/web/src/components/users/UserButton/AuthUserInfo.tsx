@@ -1,3 +1,4 @@
+// src/components/users/UserButton/AuthUserInfo.tsx
 import {
     Accordion,
     AccordionContent,

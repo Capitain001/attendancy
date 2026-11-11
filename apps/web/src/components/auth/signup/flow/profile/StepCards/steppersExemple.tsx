@@ -1,3 +1,4 @@
+// src/components/auth/signup/flow/profile/StepCards/steppersExemple.tsx
 // Exemple d'utilisation
 
 import { useState } from 'react'

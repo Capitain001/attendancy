@@ -1,3 +1,4 @@
+// src/components/planning/filters/constants.ts
 import { ScheduleStatus } from '@/generated/prisma/browser'
 
 export const SCHEDULE_STATUS_VALUES = [

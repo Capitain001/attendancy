@@ -1,3 +1,4 @@
+// src/components/courses/direction/components/EvaluationsCard.tsx
 import { Section, SectionHeader } from '../ui/Section'
 import type { EvaluationSummary } from '../types'
 import { EVAL_TYPE_LABELS } from '../constants'

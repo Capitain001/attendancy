@@ -1,3 +1,4 @@
+// src/lib/stripe.ts
 // ## 3. Configuration Stripe (lib/stripe.ts)
 
 import Stripe from 'stripe'

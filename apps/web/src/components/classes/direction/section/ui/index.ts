@@ -1,3 +1,4 @@
+// src/components/classes/direction/section/ui/index.ts
 export type { ClassProfileData, StudentData, ScheduleStatus } from './types'
 export { CollapseSection } from './CollapseSection'
 export { CoursesSection } from './CoursesSection'

@@ -1,3 +1,4 @@
+// src/components/inbox/InboxSidebar.tsx
 'use client'
 
 import { Mail, Inbox, Bell, ShieldAlert } from 'lucide-react'

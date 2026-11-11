@@ -1,3 +1,4 @@
+// src/components/ui/sidebar/config.ts
 // Constants for sidebar configuration
 export const SIDEBAR_COOKIE_NAME = "sidebar_state"
 export const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7

@@ -1,3 +1,4 @@
+// src/features/personal/services/class/types.ts
 import type { Prisma } from '@/generated/prisma/client'
 
 export type CreatePersonalClassData = Pick<Prisma.ClassUncheckedCreateInput, 'name' | 'type'>

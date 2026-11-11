@@ -1,3 +1,4 @@
+// src/components/personal/teacher/section/TeacherDailyScheduleList.tsx
 // components/personal/teacher/section/TeacherDailyScheduleList.tsx
 import { ChevronsDown } from 'lucide-react'
 import { cn } from '@/lib/utils'

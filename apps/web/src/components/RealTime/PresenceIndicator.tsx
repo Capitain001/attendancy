@@ -1,3 +1,4 @@
+// src/components/RealTime/PresenceIndicator.tsx
 // // components/PresenceIndicator.tsx
 // 'use client';
 

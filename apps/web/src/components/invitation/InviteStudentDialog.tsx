@@ -1,3 +1,4 @@
+// src/components/invitation/InviteStudentDialog.tsx
 //apps\web\src\components\invitation\InviteStudentDialog.tsx
 'use client'
 // Dialog d'invitation étudiant (écran classe) : email, identité, groupes, parent optionnel.

@@ -1,3 +1,4 @@
+// src/components/design/svg/FontCadre.tsx
 import { cn } from "@/lib/utils";
 
 

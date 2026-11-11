@@ -1,9 +1,7 @@
-// src/cache/client/keys.ts
+// src/cache/client/key.ts
 // Registre métier des clés de cache React Query. Ce fichier ne contient QUE
 // le vocabulaire applicatif (quelles entités, quelles variantes) — le
 // mécanisme (entityKeys, subKey, durées, presets) vit dans ./engine.
-//
-// Exemple ci-dessous, à remplacer par le vocabulaire réel du projet.
 import { entityKeys, subKey } from "./engine";
 
 export const CACHE_KEYS = {
@@ -21,6 +19,15 @@ export const CACHE_KEYS = {
     },
     TEACHER_DAY: ({ teacherId, dayKey }: { teacherId: string; dayKey: string }) =>
       ["schedules", "teacher-day", teacherId, dayKey] as const,
+    STUDENT_MONTH: ({
+      classId,
+      groupIdsKey,
+      monthKey,
+    }: {
+      classId: string;
+      groupIdsKey: string;
+      monthKey: string;
+    }) => ["schedules", "student-month", classId, groupIdsKey, monthKey] as const,
   },
 
   SESSIONS: {
@@ -42,7 +49,6 @@ export const CACHE_KEYS = {
     ALL: ["invitations", "all"] as const,
     BY_CLASS: (classId: string) => ["invitations", "by-class", classId] as const,
     STATS: ["invitations", "stats"] as const,
-
   },
   PROGRAMS: {
     BY_ID: (programId: string) => ["programs", programId] as const,
@@ -62,7 +68,6 @@ export const CACHE_KEYS = {
   STUDENT_ENROLLMENTS: {
     BY_CLASS: subKey("student-enrollments", "by-class"), // (classId) → ["student-enrollments", "by-class", classId]
   },
-
 } as const;
 
 export type CacheKeys = typeof CACHE_KEYS;

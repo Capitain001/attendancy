@@ -1,3 +1,4 @@
+// src/config/images.ts
 //src/config/images.ts
 
 export const icon = {

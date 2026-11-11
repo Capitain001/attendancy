@@ -1,3 +1,4 @@
+// src/components/classes/direction/enrollment/ui.tsx
 import { cn } from "@/lib/utils";
 
 // Pill de statut douce (inspirée des badges de rôle Clerk) — partagée entre

@@ -1,3 +1,4 @@
+// src/components/tools/ColorOption.tsx
 "use client"
 
 import Link from "next/link"

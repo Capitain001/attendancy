@@ -1,3 +1,4 @@
+// src/components/student/sections/StudentsSection.tsx
 'use client'
 
 import { useMemo, useState } from 'react'

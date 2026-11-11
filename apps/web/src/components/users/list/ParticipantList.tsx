@@ -1,3 +1,4 @@
+// src/components/users/list/ParticipantList.tsx
 // apps/web/src/components/invitation/thematic/ParticipantList.tsx
 // Rangée d'un extrait des membres de la classe (affichage pur, sans sélection).
 // Le nombre d'avatars visibles dépend de la largeur disponible : seule la 1re ligne de la grille est affichée.

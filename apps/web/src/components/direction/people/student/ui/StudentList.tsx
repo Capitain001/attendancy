@@ -1,3 +1,4 @@
+// src/components/direction/people/student/ui/StudentList.tsx
 import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { GraduationCap } from 'lucide-react'

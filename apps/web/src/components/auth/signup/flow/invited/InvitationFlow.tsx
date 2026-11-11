@@ -1,3 +1,4 @@
+// src/components/auth/signup/flow/invited/InvitationFlow.tsx
 'use client'
 
 import { memo, useCallback, useState } from 'react'

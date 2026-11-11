@@ -1,3 +1,4 @@
+// src/components/notification/ui/NotificationDevices.tsx
 // components/notification/NotificationDevices.tsx
 "use client"
 

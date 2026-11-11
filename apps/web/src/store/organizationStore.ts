@@ -1,3 +1,4 @@
+// src/store/organizationStore.ts
 "use client"
 import { Organization, UserInfo } from "@/services/user";
 import { create } from "zustand";

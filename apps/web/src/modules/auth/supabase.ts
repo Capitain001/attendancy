@@ -1,3 +1,4 @@
+// src/modules/auth/supabase.ts
 // src/services/auth/supabase.ts
 // Opérations Supabase Auth — seule couche qui parle à supabase.auth.
 // Les actions (actions.ts) orchestrent par-dessus.

@@ -1,3 +1,4 @@
+// src/components/personal/teacher/class/PersonalClassCard.tsx
 //apps\web\src\components\personal\teacher\class\PersonalClassCard.tsx
 import Link from "next/link";
 import { Archive, ChevronDown, Pencil } from "lucide-react";

@@ -1,3 +1,4 @@
+// src/components/ui/tooltip.tsx
 "use client";
 
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";

@@ -1,3 +1,4 @@
+// src/components/event-calendar/views/MonthView/utils/month-view-utils.ts
 import {
     addDays,
     eachDayOfInterval,

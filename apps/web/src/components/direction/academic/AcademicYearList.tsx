@@ -1,3 +1,4 @@
+// src/components/direction/academic/AcademicYearList.tsx
 'use client'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'

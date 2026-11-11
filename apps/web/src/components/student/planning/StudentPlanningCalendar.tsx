@@ -1,3 +1,4 @@
+// src/components/student/planning/StudentPlanningCalendar.tsx
 "use client";
 
 // Wrapper client du planning étudiant : porte le `renderEventDialog` (non sérialisable

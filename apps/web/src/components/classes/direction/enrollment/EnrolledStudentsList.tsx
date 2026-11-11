@@ -1,3 +1,4 @@
+// src/components/classes/direction/enrollment/EnrolledStudentsList.tsx
 "use client";
 
 import { UserMinus } from "lucide-react";

@@ -1,3 +1,4 @@
+// src/components/personal/teacher/screen/TeacherSessionSummaryScreen.tsx
 // apps/web/src/components/personal/teacher/screen/TeacherSessionSummaryScreen.tsx
 "use client";
 

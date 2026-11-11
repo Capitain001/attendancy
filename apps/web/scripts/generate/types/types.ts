@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+// scripts/generate/types/types.ts
 /**
  * scripts/generate/types/types.ts
  *

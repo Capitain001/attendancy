@@ -1,3 +1,4 @@
+// src/hooks/utils/use-image-upload.ts
 import { useCallback, useEffect, useRef, useState } from "react";
 
 interface UseImageUploadProps {

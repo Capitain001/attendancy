@@ -1,3 +1,4 @@
+// src/hooks/utils/use-click-outside.ts
 "use client";
 
 import { type RefObject, useEffect } from "react";

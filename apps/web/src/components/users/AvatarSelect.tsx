@@ -1,3 +1,4 @@
+// src/components/users/AvatarSelect.tsx
 //apps\web\src\components\users\AvatarSelect.tsx
 "use client"
 

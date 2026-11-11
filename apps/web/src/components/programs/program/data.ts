@@ -1,3 +1,4 @@
+// src/components/programs/program/data.ts
 import { ProgramSemesterDTO } from "@/services/ue";
 import { ProgramPageData } from "./types";
 

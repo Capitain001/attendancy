@@ -1,3 +1,4 @@
+// src/components/planning/coursePlanning/availabilityParams.ts
 import type { UseAvailabilityParams } from "@/hooks/data/planning/useAvailability";
 import type { PlanningResources } from "@/services/planning";
 

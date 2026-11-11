@@ -1,3 +1,4 @@
+// src/components/ui/skiper-ui/skiper64.tsx
 "use client";
 
 import { motion } from "motion/react";

@@ -1,3 +1,4 @@
+// src/components/direction/rooms/RoomList.tsx
 'use client'
 import { MapPin, Container } from 'lucide-react'
 import { CollapseSection } from '@/components/layout/CollapseSection'

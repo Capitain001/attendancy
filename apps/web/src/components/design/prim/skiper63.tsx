@@ -1,3 +1,4 @@
+// src/components/design/prim/skiper63.tsx
 "use client";
 
 import { motion } from "framer-motion";

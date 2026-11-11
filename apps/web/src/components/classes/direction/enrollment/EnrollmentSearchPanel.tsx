@@ -1,3 +1,4 @@
+// src/components/classes/direction/enrollment/EnrollmentSearchPanel.tsx
 "use client";
 
 import { Check, RefreshCw, Search } from "lucide-react";

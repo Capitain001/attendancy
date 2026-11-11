@@ -1,3 +1,4 @@
+// src/components/users/avatars/avatar-1.tsx
 import React from "react";
 import { Skeleton } from "@/components/users/avatars/skeleton-1";
 import clsx from "clsx";

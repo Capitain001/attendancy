@@ -1,3 +1,4 @@
+// src/components/layout/sidebar/hooks/use-sidebar-views.ts
 "use client";
 
 import { useEffect, useState } from "react";

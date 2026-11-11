@@ -1,3 +1,4 @@
+// src/hooks/data/departments/useDepartments.ts
 "use client";
 
 import { useCrudEntity } from "@/hooks/entity/useCrudEntity";

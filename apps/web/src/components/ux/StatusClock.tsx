@@ -1,3 +1,4 @@
+// src/components/ux/StatusClock.tsx
 import { CircleCheckBig, Clock, ClockAlert, Hourglass } from "lucide-react";
 import {
   SCHEDULE_UI_STATUS_LABEL,

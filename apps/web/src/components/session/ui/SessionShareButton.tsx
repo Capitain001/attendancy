@@ -1,3 +1,4 @@
+// src/components/session/ui/SessionShareButton.tsx
 "use client";
 
 import { useEffect, useRef, useState } from "react";

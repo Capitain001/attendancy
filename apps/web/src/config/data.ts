@@ -1,3 +1,4 @@
+// src/config/data.ts
 //src/config/data.ts
 
 import { RESOURCE_ICONS, ResourceIconName } from "@/components/icons/generated"

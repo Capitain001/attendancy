@@ -1,3 +1,4 @@
+// src/hooks/entity/utils.ts
 //@/utils.ts
 /**
  * Calculs de pagination externalisés - seulement appelés si besoin dans les composants UI

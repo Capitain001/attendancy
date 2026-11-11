@@ -1,3 +1,4 @@
+// src/components/direction/functions/FunctionList.tsx
 'use client'
 import { Settings2 } from 'lucide-react'
 import { card, typography } from '@/styles'

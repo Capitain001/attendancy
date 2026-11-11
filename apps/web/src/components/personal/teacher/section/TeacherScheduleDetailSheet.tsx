@@ -1,3 +1,4 @@
+// src/components/personal/teacher/section/TeacherScheduleDetailSheet.tsx
 // components/personal/teacher/section/TeacherScheduleDetailSheet.tsx
 'use client'
 

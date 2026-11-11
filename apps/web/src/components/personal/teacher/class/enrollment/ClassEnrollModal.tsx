@@ -1,3 +1,4 @@
+// src/components/personal/teacher/class/enrollment/ClassEnrollModal.tsx
 "use client"; // imposé par useClassEnrollForm (hook), le rendu lui-même est du pur HTML/CSS
 
 import { X } from "lucide-react";

@@ -1,3 +1,4 @@
+// src/components/direction/students/table/ui/EditCell.tsx
 import { sexLabel } from "@/components/direction/students/utils";
 import type { BaseColumnDef, Sex } from "../types";
 import { SEX_OPTIONS, editInputClass } from "./TableHelpers";

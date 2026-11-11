@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/teacher-attendance/mocks/justifications.mock.ts
 import type { JustificationsData } from "../views/justifications-view"
 
 export const JUSTIFICATIONS_MOCK: JustificationsData = {

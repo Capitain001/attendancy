@@ -1,3 +1,4 @@
+// src/types/invitation.ts
 // types/invitation.ts
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 import type {
@@ -37,6 +38,7 @@ export interface ParentLinkDetails {
 export interface InvitationDetails {
   enrollment?: EnrollmentDetails
   parentLink?: ParentLinkDetails
+  resourceName?: string | null
 }
 
 /**
@@ -80,6 +82,7 @@ export interface InvitationParams {
   resources?: TeacherResources
   resourceId?: string      // ID de la ressource liée (classe, événement, etc.)
   resourceType?: Resource  // Type de ressource (CLASS, EVENT, etc.)
+  resourceName?: string | null
   /** Durée de validité du token en jours (1, 3, 7, 14 ou 30). Défaut : 7 */
   expiresInDays?: number
   deliveryMethod?: 'email' | 'link' // défaut "email"

@@ -1,3 +1,4 @@
+// src/components/event-calendar/views/WeekView/utils/eventPositioning.ts
 // eventPositioning.ts
 // Extraction de la logique de positionnement des événements depuis WeekView
 

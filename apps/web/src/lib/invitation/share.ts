@@ -1,3 +1,4 @@
+// src/lib/invitation/share.ts
 // lib/invitation/share.ts
 
 const DEFAULT_TEXT = "Invitation";

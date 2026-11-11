@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/teacher-attendance/types.ts
 export type View = "home" | "seances" | "classes" | "classe" | "assiduite" | "justifs"
 export type Tone = "neutral" | "warn" | "ok"
 

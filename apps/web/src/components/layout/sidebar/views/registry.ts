@@ -1,3 +1,4 @@
+// src/components/layout/sidebar/views/registry.ts
 import dynamic from "next/dynamic";
 import { List, CalendarDays, type LucideIcon } from "lucide-react";
 import type { ComponentType } from "react";

@@ -1,3 +1,4 @@
+// src/components/student/user/navigation.ts
 import { Route } from "@/components/layout/sidebar/types";
 
 /** Navigation latérale de l'espace étudiant (portée de la V1). */

@@ -1,3 +1,4 @@
+// src/components/planning/card/CourseEcard.tsx
 "use client";
 
 import { useState } from "react";

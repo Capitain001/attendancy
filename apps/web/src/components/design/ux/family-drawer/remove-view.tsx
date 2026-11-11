@@ -1,3 +1,4 @@
+// src/components/design/ux/family-drawer/remove-view.tsx
 import { TriangleAlert } from 'lucide-react'
 
 import { Header, SecondaryButton } from './default-view'

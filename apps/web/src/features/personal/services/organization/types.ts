@@ -1,3 +1,4 @@
+// src/features/personal/services/organization/types.ts
 import type { PersonalRole } from '@/modules/auth/constants'
 
 export type CreatePersonalOrgParams = {

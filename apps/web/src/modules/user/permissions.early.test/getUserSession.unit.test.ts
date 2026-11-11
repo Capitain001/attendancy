@@ -1,3 +1,4 @@
+// src/modules/user/permissions.early.test/getUserSession.unit.test.ts
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 import { getUserSession } from "../helpers";

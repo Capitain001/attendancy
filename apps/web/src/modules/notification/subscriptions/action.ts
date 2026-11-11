@@ -1,3 +1,4 @@
+// src/modules/notification/subscriptions/action.ts
 'use server'
 
 import webpush from 'web-push'
@@ -91,7 +92,7 @@ export async function sendNotification(message: string) {
 
     console.log('📤 Envoi en cours...', payload)
     
-    const result = await webpush.sendNotification(pushSubscription, payload)
+    const result = await webpush.sendNotification(pushSubscription, payload, { urgency: 'high' })
     
     console.log('✅ Notification envoyée!', {
       statusCode: result.statusCode,

@@ -1,3 +1,4 @@
+// src/components/student/planning/StudentSessionDialog.tsx
 "use client";
 
 // Dialog de détail d'une séance (planning étudiant) — LECTURE SEULE.

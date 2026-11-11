@@ -1,3 +1,4 @@
+// src/modules/auth/utils.ts
 import { UserInfo } from "@/types";
 import { getUserInfo } from '@/modules/user';
 

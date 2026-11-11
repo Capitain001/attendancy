@@ -1,3 +1,4 @@
+// src/config/ui.ts
 export const UI = {
   PERSONAL_STATUS_UNAVAILABLE: 'Impossible de charger l’état de votre espace. Réessayez dans un instant.',
   CLASS_LIMIT_NONE_ALLOWED: 'Vous avez atteint la limite de votre quota actuel.',

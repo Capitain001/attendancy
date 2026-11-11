@@ -1,3 +1,5 @@
+// src/hooks/data/planning/useOrgPlanningResources.ts
+//apps\web\src\hooks\data\planning\useOrgPlanningResources.ts
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
@@ -17,3 +19,10 @@ export function useOrgPlanningResources() {
     isLoading: q.isLoading,
   };
 }
+
+
+// ex:
+// (property) rooms: {
+//     name: string;
+//     id: string;
+// }[]

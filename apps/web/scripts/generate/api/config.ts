@@ -1,3 +1,4 @@
+// scripts/generate/api/config.ts
 /**
  * //scripts/generate-api/config.ts
  * Configuration du générateur — TOUT ce qui est spécifique à un projet/domaine

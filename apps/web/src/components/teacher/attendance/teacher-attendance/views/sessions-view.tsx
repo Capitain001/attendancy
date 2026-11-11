@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/teacher-attendance/views/sessions-view.tsx
 import { Actions, FicheButton } from "../components/actions"
 import { Line } from "../components/line"
 import { SectionTitle } from "../components/section-title"

@@ -1,3 +1,4 @@
+// src/components/design/phone/phone-carousel.tsx
 "use client";
 
 import type React from "react";

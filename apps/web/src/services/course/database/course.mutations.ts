@@ -1,3 +1,4 @@
+// src/services/course/database/course.mutations.ts
 //ici il s agt simplement de l existant dans un service normal 
 // src/services/course/database/course.mutations.ts
 import { prisma } from '@/lib/prisma'

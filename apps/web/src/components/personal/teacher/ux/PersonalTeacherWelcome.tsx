@@ -1,3 +1,4 @@
+// src/components/personal/teacher/ux/PersonalTeacherWelcome.tsx
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";

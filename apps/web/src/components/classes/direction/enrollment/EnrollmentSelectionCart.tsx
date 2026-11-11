@@ -1,3 +1,4 @@
+// src/components/classes/direction/enrollment/EnrollmentSelectionCart.tsx
 "use client";
 
 import { Mail, Trash2, X } from "lucide-react";

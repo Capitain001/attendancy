@@ -1,3 +1,4 @@
+// src/lib/export/programs/pdf/colors.ts
 import type { RGB } from "../types";
 
 export const PDF_PAGE = {

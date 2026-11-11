@@ -1,3 +1,4 @@
+// src/components/layout/ShowHideModal.tsx
 "use client";
 import { usePathname } from "next/navigation";
 import * as React from "react";

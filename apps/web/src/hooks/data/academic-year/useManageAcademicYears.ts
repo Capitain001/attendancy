@@ -1,3 +1,4 @@
+// src/hooks/data/academic-year/useManageAcademicYears.ts
 'use client'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getAcademicYearsAction } from '@/services/academic-year'

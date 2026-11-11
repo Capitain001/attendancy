@@ -1,3 +1,4 @@
+// src/components/notification/cardstack/categoryConfig.tsx
 import { User, GraduationCap, AlertTriangle } from "lucide-react"
 import type { NotificationCategory } from "./types"
 

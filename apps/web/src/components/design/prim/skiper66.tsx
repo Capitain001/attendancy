@@ -1,3 +1,4 @@
+// src/components/design/prim/skiper66.tsx
 import React from "react";
 
 import { cn } from "@/lib/utils";

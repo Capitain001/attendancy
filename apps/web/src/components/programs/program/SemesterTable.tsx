@@ -1,3 +1,4 @@
+// src/components/programs/program/SemesterTable.tsx
 //src/components/programs/program/SemesterTable.tsx
 import React from 'react';
 import { DndContext, closestCenter, DragOverlay } from '@dnd-kit/core';

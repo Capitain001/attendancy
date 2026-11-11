@@ -1,3 +1,4 @@
+// src/hooks/data/programs/useProgramData.ts
 import { useMemo } from 'react';
 import type { ProgramSemesterDTO } from '@/services/ue/types';
 import { getCourses } from '@/services/ue/utils';

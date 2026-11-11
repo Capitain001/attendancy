@@ -1,3 +1,4 @@
+// src/modules/invitation/status.ts
 import type { InvitationUiStatus } from "./policy";
 
 export type InvitationBadgeVariant = "default" | "destructive" | "secondary";

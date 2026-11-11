@@ -1,3 +1,4 @@
+// src/config/notification.ts
 import { NotificationType } from "@/generated/prisma/client";
 
 // src/config/notification.ts

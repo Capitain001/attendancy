@@ -1,3 +1,4 @@
+// src/components/auth/signup/SignupSection.tsx
 
 import SignupForm from './SignupForm'
 import { TextShimmer } from '@/components/ui/text-shimmer'

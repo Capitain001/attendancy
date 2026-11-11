@@ -1,3 +1,4 @@
+// src/components/design/Transitionx.tsx
 'use client';
 import React, { useRef, useEffect, useState } from 'react';
 import { gsap } from 'gsap';

@@ -1,3 +1,4 @@
+// src/components/classes/direction/section/ui/helpers.ts
 import type { ScheduleStatus } from './types'
 
 export const SCHEDULE_STATUS_CONFIG: Record<ScheduleStatus, { label: string; dot: string; badge: string }> = {

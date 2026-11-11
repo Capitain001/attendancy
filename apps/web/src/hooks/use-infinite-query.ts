@@ -1,3 +1,4 @@
+// src/hooks/use-infinite-query.ts
 'use client'
 
 

@@ -1,3 +1,4 @@
+// src/components/users/list/ClassInvitationsSection.tsx
 import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";

@@ -1,3 +1,4 @@
+// src/components/student/ui/badges.tsx
 import type { AttendanceStatus } from "@/generated/prisma/client";
 
 import { cn } from "@/lib/utils";

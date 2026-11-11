@@ -1,3 +1,4 @@
+// src/components/layout/Header/UserMenu.tsx
 import { logoutAction, logoutActionForm } from '@/modules/auth'
 import type { UserInfo } from '@/types/user'
 import Link from 'next/link'

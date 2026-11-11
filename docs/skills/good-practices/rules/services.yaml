@@ -1,3 +1,4 @@
+# Path: docs/skills/good-practices/rules/services.yaml
 domain: services
 rules:
   - id: SERVICES-001
@@ -25,4 +26,62 @@ rules:
       export async function checkAvailability(params: CheckAvailabilityParams): Promise<CheckAvailabilityResult> {
         // Testable en unitaire (mock PrismaClient) et en E2E/intégration (vraie DB de test)
       }
+
+  - id: SERVICES-002
+    severity: blocking
+    applies_to: [orchestrator-service, ui-component, test]
+    rule: "Isoler la résolution d'actions métier et la formulation de messages sous forme de fonctions pures et gabarits Record<Action, (input) => string> dans un module partagé pur (sans 'use server' ni imports serveur), garantissant l'exhaustivité TypeScript et la réutilisabilité UI + backend."
+    why: "Permet de tester unitairement 100% de la combinatoire de messages sans mocks DB ou Next.js, tout en partageant exactement le même vocabulaire et les libellés de boutons avec les composants client et serveur."
+    detect: ["Record<", "as const", "resolveInvitationAction", "buildInvitationNotificationPayload"]
+    evidence: "apps/web/src/modules/invitation/message.ts:1-131, apps/web/src/modules/invitation/__tests__/invitation-message.unit.test.ts:1-140"
+    bad: |
+      // Builder serveur avec switch incomplet et gabarits dispersés
+      export function buildNotification(source: Source) {
+        let msg = 'Vous avez été invité'
+        if (source.role === 'STUDENT') msg += ' en tant qu\'étudiant'
+        return { message: msg }
+      }
+    good: |
+      // Module pur sans Prisma serveur, gabarits indexés exhaustifs
+      export const INVITATION_ACTIONS = ['JOIN_ORG', 'JOIN_CLASS', 'GRANT_ROLE'] as const
+      export type InvitationAction = (typeof INVITATION_ACTIONS)[number]
+      export const INVITATION_MESSAGES: Record<InvitationAction, (i: Input) => string> = {
+        JOIN_ORG: (i) => `Vous avez été invité à rejoindre ${i.orgName}.`,
+        JOIN_CLASS: (i) => i.isExistingMember ? `Vous avez été invité à rejoindre ${i.className}.` : `...`,
+        GRANT_ROLE: (i) => `${i.orgName} vous propose le rôle de ${i.role}.`,
+      }
+
+  - id: SERVICES-003
+    severity: advisory
+    applies_to: [orchestrator-service, server-action, ui-component]
+    rule: "Persister l'action discriminée et les libellés de ressource dans le JSON metadata de l'entité (Notification.metadata), puis fournir une fonction d'extraction typée pure (readContext) pour permettre aux composants UI et actions de suivi de réagir sans mapping ni jointure additionnelle."
+    why: "Évite des requêtes de jointures superflues lors de l'affichage de listes ou de l'exécution d'actions de cycle de vie (acceptation/refus), tout en préservant le contexte exact au moment de l'événement."
+    detect: ["metadata.action", "readInvitationContext", "INVITATION_ACCEPT_LABELS"]
+    evidence: "apps/web/src/modules/invitation/message.ts:43-49, apps/web/src/modules/auth/members/inbox-invitation.ts:167-200, apps/web/src/components/inbox/InvitationActionCard.tsx:23-252"
+    bad: |
+      // UI qui recalcule ou infère le libellé par des tests complexes
+      <Button>{isClass ? 'Rejoindre' : 'Accepter'}</Button>
+    good: |
+      // Lecture typée directe de metadata
+      const { action } = readInvitationContext(notification.metadata)
+      <Button>{INVITATION_ACCEPT_LABELS[action ?? 'JOIN_ORG']}</Button>
+
+  - id: SERVICES-004
+    severity: advisory
+    applies_to: [orchestrator-service, prisma-query]
+    rule: "Profiter des vérifications de pré-requis et validations d'intégrité (ex: checkInvitationResources) pour sélectionner et retourner directement les libellés utiles (name: true), afin de les propager dans la chaîne sans déclencher de requête ultérieure."
+    why: "Supprime les requêtes N+1 et les requêtes redondantes sur les mêmes tables dans un flux de création/orchestration."
+    detect: ["checkInvitationResources", "resourceName:", "className:"]
+    evidence: "apps/web/src/modules/invitation/student/database.ts:39-63, apps/web/src/modules/invitation/student/actions.ts:86-122"
+    bad: |
+      const check = await checkResources({ classId })
+      await inviteUser({ classId })
+      // Plus loin : re-lecture de la classe pour le libellé de notification
+      const cls = await prisma.class.findUnique({ where: { id: classId } })
+    good: |
+      // checkInvitationResources sélectionne déjà { id: true, name: true }
+      const check = await checkInvitationResources({ classId, orgId })
+      await inviteUser({ classId, resourceName: check.resourceName })
+      void notifyStakeholders({ classId, className: check.resourceName })
+
 

@@ -1,3 +1,4 @@
+// src/components/classes/direction/enrollment/EnrollmentWorkspace.tsx
 "use client";
 
 

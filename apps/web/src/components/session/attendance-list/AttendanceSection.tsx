@@ -1,3 +1,4 @@
+// src/components/session/attendance-list/AttendanceSection.tsx
 import { cn } from "@/lib/utils";
 
 interface AttendanceSectionProps {

@@ -1,3 +1,4 @@
+// src/components/session/next-session/NextSessionWidgetServer.tsx
 // src/components/session/widget/NextSessionWidgetServer.tsx
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { getTeacherNextScheduleAction } from "@/services/schedule";

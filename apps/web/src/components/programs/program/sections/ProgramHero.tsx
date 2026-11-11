@@ -1,3 +1,4 @@
+// src/components/programs/program/sections/ProgramHero.tsx
 "use client";
 
 import React from "react";

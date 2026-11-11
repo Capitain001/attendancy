@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/teacher-attendance/components/section-title.tsx
 import type { ReactNode } from "react"
 
 export function SectionTitle({ children }: { children: ReactNode }) {

@@ -1,3 +1,4 @@
+// src/components/event-calendar/views/WeekView/components/AllDaySection.tsx
 // AllDaySection.tsx
 // Extraction de la section All Day depuis WeekView
 

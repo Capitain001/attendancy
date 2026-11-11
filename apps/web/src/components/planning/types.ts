@@ -1,3 +1,4 @@
+// src/components/planning/types.ts
 import type { ScheduleStatus } from "@/generated/prisma/browser";
 
 import type { PlanningResources } from "@/services/planning";

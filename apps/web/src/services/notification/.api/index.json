@@ -2,7 +2,7 @@
   "service": "notification",
   "path": "src/services/notification/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "1d1dee3",
+  "derived_at": "db20c28",
   "utils_dir": null,
   "fns": {
     "createUserNotification": {
@@ -35,11 +35,6 @@
       "layer": "db",
       "kind": "mutation"
     },
-    "buildInvitationNotification": {
-      "f": ".api/buildInvitationNotification.json",
-      "layer": "db",
-      "kind": "mutation"
-    },
     "createInvitationNotification": {
       "f": ".api/createInvitationNotification.json",
       "layer": "db",
@@ -52,11 +47,6 @@
     },
     "setInvitationNotificationStatus": {
       "f": ".api/setInvitationNotificationStatus.json",
-      "layer": "db",
-      "kind": "mutation"
-    },
-    "createInvitationResponseNotification": {
-      "f": ".api/createInvitationResponseNotification.json",
       "layer": "db",
       "kind": "mutation"
     },
@@ -265,16 +255,11 @@
     "createNotificationForOrgUser": [
       "createAdminNotification"
     ],
-    "buildInvitationNotification": [
-      "createInvitationNotification",
-      "upsertInvitationNotification"
-    ],
     "createInvitationNotification": [
       "upsertInvitationNotification"
     ],
     "upsertInvitationNotification": [],
     "setInvitationNotificationStatus": [],
-    "createInvitationResponseNotification": [],
     "getInboxNotificationsForUser": [
       "getInboxNotificationsAction"
     ],

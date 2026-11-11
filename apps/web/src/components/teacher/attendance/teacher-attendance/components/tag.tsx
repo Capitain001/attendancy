@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/teacher-attendance/components/tag.tsx
 import type { Tone } from "../types"
 
 const TONES: Record<Tone, string> = {

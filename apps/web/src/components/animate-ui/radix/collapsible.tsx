@@ -1,3 +1,4 @@
+// src/components/animate-ui/radix/collapsible.tsx
 'use client';
 
 import * as React from 'react';

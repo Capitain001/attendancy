@@ -1,3 +1,4 @@
+// src/components/programs/ui/ProgramUeCourse.tsx
 import AccordionSection from "@/components/tools/AccordionSection";
 import { UeCourseDTO } from "@/services/ue/types";
 

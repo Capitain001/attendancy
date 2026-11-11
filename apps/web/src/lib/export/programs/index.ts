@@ -1,3 +1,4 @@
+// src/lib/export/programs/index.ts
 export type { ExportFormat, ExportTemplate, ExportStatus, ProgramExportConfig, RGB } from "./types";
 export { buildExportFilename } from "./filename";
 export { triggerDownload } from "./download";

@@ -1,3 +1,4 @@
+// src/components/direction/students/table/ui/StudentDetailSheet.tsx
 "use client";
 
 import { useEffect, useState } from "react";

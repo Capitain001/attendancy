@@ -1,3 +1,4 @@
+// scripts/fix-userInfo-imports.ts
 // scripts/fix-getAuthorization-import.ts
 // ============================================================================
 // CORRECTION DES IMPORTS getAuthorization

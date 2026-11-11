@@ -1,5 +1,6 @@
 #!/usr/bin/env tsx
 // scripts/generate/referentiel/classify.ts
+// scripts/generate/referentiel/classify.ts
 //
 // Compare les dossiers de src/services/ aux modèles Prisma
 // (prisma/schemas/*.prisma) pour proposer un classement MODEL vs DOMAIN.

@@ -1,3 +1,4 @@
+// src/components/courses/direction/components/TeacherSection.tsx
 'use client'
 
 import { useState, useRef, useEffect } from 'react'

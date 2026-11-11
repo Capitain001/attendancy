@@ -2,7 +2,7 @@
   "service": "session",
   "path": "src/services/session/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "1d1dee3",
+  "derived_at": "db20c28",
   "utils_dir": null,
   "fns": {
     "startSession": {
@@ -35,6 +35,11 @@
       "layer": "db",
       "kind": "query"
     },
+    "getTeacherPastSessions": {
+      "f": ".api/getTeacherPastSessions.json",
+      "layer": "db",
+      "kind": "query"
+    },
     "getSessionReport": {
       "f": ".api/getSessionReport.json",
       "layer": "db",
@@ -62,6 +67,11 @@
     },
     "completeSessionAction": {
       "f": ".api/completeSessionAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
+    "getTeacherPastSessionsAction": {
+      "f": ".api/getTeacherPastSessionsAction.json",
       "layer": "action",
       "kind": "server-action"
     },
@@ -121,6 +131,9 @@
     "getTeacherNextSchedule": [
       "getTeacherNextScheduleAction"
     ],
+    "getTeacherPastSessions": [
+      "getTeacherPastSessionsAction"
+    ],
     "getSessionReport": [
       "getSessionReportAction"
     ],
@@ -135,6 +148,7 @@
     ],
     "startSessionAction": [],
     "completeSessionAction": [],
+    "getTeacherPastSessionsAction": [],
     "getActiveSessionsAction": [],
     "getDirectionSessionsAction": [],
     "getDirectionSessionsByDateAction": [],

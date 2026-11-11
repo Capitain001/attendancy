@@ -1,3 +1,4 @@
+// src/components/programs/ui/ProgramCard.tsx
 import Link from "next/link";
 import { BackgroundPattern } from "@/components/design/BackgroundPattern";
 import {

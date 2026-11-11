@@ -1,3 +1,4 @@
+// src/features/personal/services/class/database/class.queries.ts
 //apps\web\src\services\class\personal\database\class.queries.ts
 import { CACHE } from "@/cache/server/key"
 import { PERSONAL } from "@/features/personal/constants"

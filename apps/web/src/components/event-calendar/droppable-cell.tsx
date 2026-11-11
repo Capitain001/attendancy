@@ -1,3 +1,4 @@
+// src/components/event-calendar/droppable-cell.tsx
 "use client";
 
 import { useDroppable } from "@dnd-kit/core";

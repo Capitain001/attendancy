@@ -1,3 +1,4 @@
+// src/components/direction/academic/DepartmentForm.tsx
 'use client'
 import { useRef, useState } from 'react'
 import { useDepartments } from '@/hooks/data/departments/useDepartments'

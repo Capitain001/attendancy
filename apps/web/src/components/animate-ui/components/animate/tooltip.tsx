@@ -1,3 +1,4 @@
+// src/components/animate-ui/components/animate/tooltip.tsx
 import * as React from 'react';
 import * as motion from 'motion/react-client';
 

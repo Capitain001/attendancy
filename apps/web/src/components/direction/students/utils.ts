@@ -1,3 +1,4 @@
+// src/components/direction/students/utils.ts
 import type { GetDirectionStudentsDto } from '@/services/student/types'
 
 export type StudentRow = GetDirectionStudentsDto[number]

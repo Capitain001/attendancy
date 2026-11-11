@@ -1,3 +1,4 @@
+// src/components/planning/coursePlanning/index.ts
 export { NO_GROUP, NO_TEACHER } from "./constants";
 export {
   assertEndNotBeforeStart,

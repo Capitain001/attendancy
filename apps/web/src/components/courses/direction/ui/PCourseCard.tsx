@@ -1,3 +1,4 @@
+// src/components/courses/direction/ui/PCourseCard.tsx
 'use client'
 
 import { GridDeco } from '@/components/design/GridDeco'

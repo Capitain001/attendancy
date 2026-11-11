@@ -1,3 +1,4 @@
+// src/modules/user/lru-cache.ts
 // src/services/users/lru-cache.ts
 /**
  * Cache LRU pour les informations utilisateur

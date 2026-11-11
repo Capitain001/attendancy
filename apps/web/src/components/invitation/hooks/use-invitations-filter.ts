@@ -1,3 +1,4 @@
+// src/components/invitation/hooks/use-invitations-filter.ts
 import { useState, useMemo } from 'react';
 import type { InvitationListItem } from '@/modules/invitation';
 import { resolveInvitationUiStatus, type InvitationUiStatus } from '@/modules/invitation/policy';

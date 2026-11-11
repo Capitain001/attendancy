@@ -1,3 +1,4 @@
+// src/components/programs/pages/ProgramInfo.tsx
 "use server";
 
 import { getUEsAction } from '@/services/ue/actions';

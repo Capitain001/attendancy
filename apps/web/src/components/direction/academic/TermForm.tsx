@@ -1,3 +1,4 @@
+// src/components/direction/academic/TermForm.tsx
 'use client'
 
 import { useRef } from 'react'

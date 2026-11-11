@@ -1,3 +1,4 @@
+// src/features/personal/services/class/database/class.mutations.ts
 // apps\web\src\features\personal\services\class\database\class.mutations.ts
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
@@ -8,8 +9,26 @@ import type { CreatePersonalClassOutput, UpdatePersonalClassDataOutput } from '.
 
 type Tx = Prisma.TransactionClient
 
-// AcademicYear → Department → ProgramTrack → Class.
-// Les trois upserts sont idempotents ; `class.create` ne l'est PAS.
+/**
+ * Garantit qu'une org perso possède au moins une salle (Schedule.roomId est NOT NULL).
+ * Idempotent : ne crée rien si l'org a déjà une salle (celle du prof ou une précédente).
+ * Retourne true si une salle a été créée (pour invalider le cache après commit).
+ */
+export async function ensurePersonalRoom(tx: Tx, orgId: string): Promise<boolean> {
+  const existing = await tx.room.findFirst({ where: { orgId, deletedAt: null }, select: { id: true } })
+  if (existing) return false
+
+  await tx.room.upsert({
+    where: { name_orgId: { name: PERSONAL.ROOM_NAME, orgId } },
+    update: { deletedAt: null },
+    create: { name: PERSONAL.ROOM_NAME, orgId },
+    select: { id: true },
+  })
+  return true
+}
+
+// AcademicYear → Department → ProgramTrack → Class (+ salle par défaut de l'org).
+// Les upserts et ensurePersonalRoom sont idempotents ; `class.create` ne l'est PAS.
 async function insertPersonalClass(tx: Tx, { orgId, name, type }: CreatePersonalClassOutput & { orgId: string }) {
   const academicYear = await tx.academicYear.upsert({
     where: { name_orgId: { name: PERSONAL.NAME, orgId } },
@@ -32,10 +51,13 @@ async function insertPersonalClass(tx: Tx, { orgId, name, type }: CreatePersonal
     select: { id: true },
   })
 
-  return tx.class.create({
+  const created = await tx.class.create({
     data: { name, type, level: 'L1', programTrackId: programTrack.id, academicYearId: academicYear.id },
     select: { id: true },
   })
+
+  await ensurePersonalRoom(tx, orgId)
+  return created
 }
 
 // À appeler APRÈS le commit lorsque createPersonalClass a reçu un `tx`.
@@ -45,6 +67,7 @@ export function invalidatePersonalClassEvents(orgId: string) {
     invalidateEvent('CLASS_CREATED', orgId),
     invalidateEvent('PROGRAM_TRACK_CREATED', orgId),
     invalidateEvent('DEPARTMENT_CREATED', orgId),
+    invalidateEvent('ROOM_CREATED', orgId), // ⚠ nom d'événement à confirmer dans cache/server/graph
   ])
 }
 

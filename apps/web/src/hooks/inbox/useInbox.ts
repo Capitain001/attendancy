@@ -1,3 +1,4 @@
+// src/hooks/inbox/useInbox.ts
 'use client'
 
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'

@@ -1,3 +1,4 @@
+// src/components/programs/ui/ProgramLabel.tsx
 "use client";
 
 export function ProgramLabel() {

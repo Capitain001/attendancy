@@ -1,3 +1,4 @@
+// scripts/test/rpc/test-rpc.mjs
 // scripts/test-rpc.mjs
 // Lancer : node --env-file=.env.local scripts/test-rpc.mjs
 const {

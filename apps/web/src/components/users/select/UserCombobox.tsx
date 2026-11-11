@@ -1,3 +1,4 @@
+// src/components/users/select/UserCombobox.tsx
 // apps/web/src/components/invitation/thematic/ExistingUserCombobox.tsx
 'use client'
 // Bouton « + » ouvrant un combobox d'utilisateurs existants de l'org.

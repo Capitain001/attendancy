@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/TeacherAttendanceFiche.tsx
 "use client"
 
 import { useState, type ReactNode } from "react"

@@ -1,3 +1,4 @@
+// src/modules/notification/index.ts
 export * from './types'
 export * from './validation'
 export * from './utils'

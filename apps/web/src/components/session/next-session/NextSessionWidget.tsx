@@ -1,3 +1,4 @@
+// src/components/session/next-session/NextSessionWidget.tsx
 "use client";
 
 import { useEffect, useState } from "react";

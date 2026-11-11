@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/teacher-attendance/mocks/own-attendance.mock.ts
 import type { OwnAttendanceData } from "../views/own-attendance-view"
 
 export const OWN_ATTENDANCE_MOCK: OwnAttendanceData = {

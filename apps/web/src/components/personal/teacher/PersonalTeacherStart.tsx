@@ -1,3 +1,4 @@
+// src/components/personal/teacher/PersonalTeacherStart.tsx
 // components/personal/teacher/PersonalTeacherStart.tsx
 // Composant serveur : tout ce qui concerne l'écran de démarrage.
 import { redirect } from 'next/navigation'

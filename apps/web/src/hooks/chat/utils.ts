@@ -1,3 +1,4 @@
+// src/hooks/chat/utils.ts
 import type { ChatMessage as RealtimeMessage } from "@/hooks/chat/use-realtime-chat";
 import type { ChatMessage as DbChatMessage } from "@/services/chat";
 

@@ -1,3 +1,4 @@
+// src/modules/personal/paths.ts
 //apps\web\src\modules\personal\paths.ts
 
 import { getUserInfo } from "@/modules/user/userInfo";

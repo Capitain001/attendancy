@@ -1,3 +1,4 @@
+// src/components/design/DotCircle.tsx
 import { cn } from "@/lib/utils"
 
 export interface DotCircleProps {

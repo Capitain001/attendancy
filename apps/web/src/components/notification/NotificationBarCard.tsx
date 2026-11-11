@@ -1,3 +1,4 @@
+// src/components/notification/NotificationBarCard.tsx
 "use client";
 
 interface NotificationCardProps {

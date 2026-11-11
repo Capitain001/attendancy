@@ -1,3 +1,4 @@
+// src/components/courses/direction/ui/DescriptionDialog.tsx
 'use client'
 
 interface DescriptionDialogProps {

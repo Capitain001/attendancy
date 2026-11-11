@@ -1,3 +1,4 @@
+// src/components/auth/ui/LoginButton.tsx
 import { LogIn } from "lucide-react";
 
 export function LoginButton({

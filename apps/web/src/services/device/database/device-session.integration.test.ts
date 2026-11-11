@@ -1,3 +1,4 @@
+// src/services/device/database/device-session.integration.test.ts
 import { randomUUID } from 'node:crypto'
 import { PrismaClient } from '@/generated/prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'

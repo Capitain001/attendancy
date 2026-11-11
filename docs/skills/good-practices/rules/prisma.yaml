@@ -1,0 +1,55 @@
+# Path: docs/skills/good-practices/rules/prisma.yaml
+domain: prisma
+rules:
+  - id: PRISMA-001
+    severity: advisory
+    applies_to: [prisma-query]
+    rule: "Pour paginer une liste en base sans requête count supplémentaire, demander take: PAGE_SIZE + 1 avec un orderBy déterministe incluant { id: 'desc' } en bris d'égalité, puis retourner rows.slice(0, PAGE_SIZE) et hasNext: rows.length > PAGE_SIZE."
+    why: "Évite une seconde requête SQL COUNT(*) coûteuse et garantit une pagination stable sans doublon ni saut lorsque plusieurs lignes partagent le même timestamp."
+    detect: ["skip:", "take:", "orderBy:"]
+    evidence: "apps/web/src/services/session/database/session.queries.ts:167-208"
+    bad: |
+      const [rows, total] = await Promise.all([
+        prisma.session.findMany({
+          where,
+          orderBy: { schedule: { startTime: 'desc' } },
+          skip: (page - 1) * PAGE_SIZE,
+          take: PAGE_SIZE,
+        }),
+        prisma.session.count({ where }),
+      ])
+    good: |
+      const rows = await prisma.session.findMany({
+        where,
+        orderBy: [{ schedule: { startTime: 'desc' } }, { id: 'desc' }],
+        skip: (page - 1) * PAST_SESSIONS_PAGE_SIZE,
+        take: PAST_SESSIONS_PAGE_SIZE + 1,
+        select: { ... },
+      })
+      return {
+        sessions: rows.slice(0, PAST_SESSIONS_PAGE_SIZE),
+        hasNext: rows.length > PAST_SESSIONS_PAGE_SIZE,
+      }
+
+  - id: PRISMA-002
+    severity: blocking
+    applies_to: [prisma-query, securite]
+    rule: "Lorsqu'un modèle Prisma enfant (Session, Attendance) ne possède pas de colonne orgId directe, imposer systématiquement le scope tenant et l'exclusion soft-delete via la relation parente (schedule: { orgId, deletedAt: null }) dans le where."
+    why: "Garantit l'isolation multi-tenant stricte et exclut les séances supprimées logiquement même sur les tables enfants dépourvues de colonne orgId."
+    detect: ["prisma.session.find", "prisma.attendance.find", "prisma.attendance.groupBy"]
+    evidence: "apps/web/src/services/session/database/session.queries.ts:180-183, apps/web/src/services/attendance/database/analytics.ts:16-23"
+    bad: |
+      return prisma.session.findMany({
+        where: {
+          status: { in: ['COMPLETED', 'CANCELED'] },
+          schedule: { teacherId },
+        },
+      })
+    good: |
+      return prisma.session.findMany({
+        where: {
+          status: { in: ['COMPLETED', 'CANCELED'] },
+          schedule: { orgId, teacherId, deletedAt: null },
+        },
+        select: { ... },
+      })

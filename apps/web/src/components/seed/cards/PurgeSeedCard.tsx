@@ -1,3 +1,4 @@
+// src/components/seed/cards/PurgeSeedCard.tsx
 'use client'
 
 import { useState } from 'react'

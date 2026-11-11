@@ -1,3 +1,4 @@
+// src/components/direction/academic/UETemplateList.tsx
 // 'use client'
 // import { useState, useMemo } from 'react'
 // import { BookOpen, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, GraduationCap, Library } from 'lucide-react'

@@ -1,3 +1,4 @@
+// src/components/personal/teacher/class/CreateClassModal.tsx
 import { Plus, X } from "lucide-react";
 import type { ClassType } from "@/generated/prisma/client";
 import { createClassFormAction } from "@/services/class/form";

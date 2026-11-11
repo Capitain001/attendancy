@@ -1,3 +1,4 @@
+// src/components/personal/teacher/courses/CourseEnrollModal.tsx
 // courses/CourseEnrollModal.tsx
 "use client";
 

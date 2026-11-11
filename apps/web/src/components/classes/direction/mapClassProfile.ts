@@ -1,3 +1,4 @@
+// src/components/classes/direction/mapClassProfile.ts
 import type { ClassProfileData } from './section/ui/types'
 import type { GetCoursesDto } from '@/services/course/types'
 import type { GetTodayClassSchedulesDto } from '@/services/schedule/types'

@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/teacher-attendance/mocks/home.mock.ts
 import type { HomeData } from "../views/home-view"
 
 export const HOME_MOCK: HomeData = {

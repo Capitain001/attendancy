@@ -1,3 +1,4 @@
+// src/app/(app)/personal/[slug]/teacher/classes/[classId]/courses/invitation/page.tsx
 // apps/web/src/app/(app)/personal/[slug]/teacher/classes/[classId]/invitation/page.tsx
 import { TCourseEnrollScreen } from "@/components/personal/teacher/screen/TCourseEnrollScreen";
 import { getPersonalCoursesAction } from "@/features/personal/services/course";

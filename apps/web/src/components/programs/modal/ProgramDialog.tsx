@@ -1,3 +1,4 @@
+// src/components/programs/modal/ProgramDialog.tsx
 "use client";
 
 import { useEffect, useState } from "react";

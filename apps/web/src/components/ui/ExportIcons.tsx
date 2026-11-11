@@ -1,3 +1,4 @@
+// src/components/ui/ExportIcons.tsx
 export function IconPDF() {
   return (
     <svg className="size-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">

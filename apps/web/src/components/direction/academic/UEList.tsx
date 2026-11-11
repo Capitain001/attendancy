@@ -1,3 +1,4 @@
+// src/components/direction/academic/UEList.tsx
 'use client'
 import { BookOpen } from 'lucide-react'
 import { CollapseSection } from '@/components/layout/CollapseSection'

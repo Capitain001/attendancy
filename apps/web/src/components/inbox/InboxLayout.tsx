@@ -1,3 +1,4 @@
+// src/components/inbox/InboxLayout.tsx
 'use client'
 
 import { useState, useMemo, useEffect } from 'react'

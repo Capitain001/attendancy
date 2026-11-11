@@ -1,3 +1,4 @@
+// src/components/direction/academic/ue/detail/UECourseFilter.tsx
 import { Search, X } from "lucide-react";
 import { input } from "@/styles";
 import { Button } from "@/components/ui/button";

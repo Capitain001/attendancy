@@ -1,3 +1,4 @@
+// src/modules/user/index.ts
 
 export * from "./userInfo";
 export * from "./avatar_url";

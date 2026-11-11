@@ -1,3 +1,4 @@
+// src/components/programs/program/ui.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GridPattern } from '@/components/ui/grid-pattern';

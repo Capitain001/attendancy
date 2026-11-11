@@ -1,3 +1,4 @@
+// src/components/courses/direction/components/CourseInfoCard.tsx
 'use client'
 
 import { useEffect, useState } from 'react'

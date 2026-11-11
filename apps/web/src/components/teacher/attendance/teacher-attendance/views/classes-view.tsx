@@ -1,3 +1,4 @@
+// src/components/teacher/attendance/teacher-attendance/views/classes-view.tsx
 import { Line } from "../components/line"
 import { ViewHeader } from "../components/view-header"
 import type { Period, ViewProps } from "../types"

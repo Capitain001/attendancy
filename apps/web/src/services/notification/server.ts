@@ -5,9 +5,6 @@
 export {
   createInvitationNotification,
   upsertInvitationNotification,
-  buildInvitationNotification,
   setInvitationNotificationStatus,
-  createInvitationResponseNotification,
-  type InvitationNotificationSource,
-  type InvitationResponseSource,
+  type NotificationPayload,
 } from './database/notification.mutations'

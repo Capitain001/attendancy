@@ -83,6 +83,7 @@ export async function inviteStudent(params: InviteStudentParams) {
       expiresInDays: expiresInDays ?? 7,
       resourceId:    classId,
       resourceType:  "CLASS",
+      resourceName:  check.resourceName,
       deliveryMethod: params.deliveryMethod,
       details: {
         enrollment: {
@@ -118,10 +119,10 @@ export async function inviteStudent(params: InviteStudentParams) {
           event:        "CREATED",
           invitedEmail: email,
           classId,
+          className:    check.resourceName,
         });
       }
     }
-
     return {
       success: true,
       message: result.data?.link
@@ -139,7 +140,6 @@ export async function inviteStudent(params: InviteStudentParams) {
     };
   }
 }
-
 
 
 const CONCURRENCY = 5;
@@ -234,6 +234,7 @@ export async function inviteStudentsAction(
             expiresInDays: expiresInDays ?? 7,
             resourceId: classId,
             resourceType: "CLASS",
+            resourceName: check.resourceName,
             deliveryMethod,
             details: {
               enrollment: {
@@ -284,6 +285,7 @@ export async function inviteStudentsAction(
                 event: "CREATED",
                 invitedEmail: s.email,
                 classId,
+                className: check.resourceName,
               })
             )
         );

@@ -1,3 +1,4 @@
+// src/components/classes/direction/section/ui/ScheduleSection.tsx
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'

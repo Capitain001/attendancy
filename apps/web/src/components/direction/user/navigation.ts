@@ -1,3 +1,4 @@
+// src/components/direction/user/navigation.ts
 import { Route } from "@/components/layout/sidebar/types";
 
 export const directionRoutes: Route[] = [

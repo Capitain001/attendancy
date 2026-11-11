@@ -1,3 +1,4 @@
+// src/components/users/mockUsers.ts
 import { UserType } from "./AvatarSelect";
 
   export const mockUsers: UserType[] = [

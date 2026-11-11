@@ -1,3 +1,4 @@
+// src/data/mocks/mock.user.ts
 import type { UserInfo } from '@/types/user'
 
 export const mockUser: UserInfo = {

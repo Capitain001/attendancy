@@ -1,3 +1,4 @@
+// src/components/auth/page/AuthError.tsx
 'use client'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'

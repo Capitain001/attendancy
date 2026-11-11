@@ -1,3 +1,4 @@
+// src/components/classes/direction/enrollment/useEnrollmentWorkspace.ts
 //apps\web\src\components\classes\direction\enrollment\useEnrollmentWorkspace.ts
 "use client";
 

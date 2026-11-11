@@ -1,3 +1,4 @@
+// scripts/generate/naming/check.ts
 /**
  * scripts/generate/naming/check.ts
  *

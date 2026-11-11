@@ -1,3 +1,4 @@
+// scripts/generate/utils/services.ts
 /**
  * //scripts/generate/utils/services.ts
  * Localisation des services : argument CLI → dossier, dossier → id canonique,

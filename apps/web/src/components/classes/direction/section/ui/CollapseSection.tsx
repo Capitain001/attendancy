@@ -1,2 +1,3 @@
+// src/components/classes/direction/section/ui/CollapseSection.tsx
 // Redirigé vers le composant canonique unique dans layout/
 export { CollapseSection } from '@/components/layout/CollapseSection'

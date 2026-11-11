@@ -1,3 +1,4 @@
+// src/components/direction/academic/ue/UEViews.tsx
 import { CollapseSection } from "@/components/layout/CollapseSection"
 import { UECard } from "./UeCard"
 import { UETableView } from "./UETableView"

@@ -1,3 +1,4 @@
+// src/components/classes/direction/DirectionPromotionDetailPage.tsx
 import { notFound } from 'next/navigation'
 import { getClassAction } from '@/services/class'
 import { getCoursesAction } from '@/services/course'

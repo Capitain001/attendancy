@@ -1,3 +1,4 @@
+// src/components/personal/organization/profile/PersonalRoleOptions.tsx
 import type { RoleOptionConfig } from "./roles";
 import { Presentation, GraduationCap, UsersRound, type LucideIcon } from "lucide-react";
 import type { PersonalRole } from "@/modules/auth/constants";

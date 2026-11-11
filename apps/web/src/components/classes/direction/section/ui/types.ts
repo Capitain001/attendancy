@@ -1,3 +1,4 @@
+// src/components/classes/direction/section/ui/types.ts
 export type Level = 'L1' | 'L2' | 'L3' | 'M1' | 'M2' | 'D1' | 'D2' | 'D3'
 export type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE' | 'EXCUSED'
 export type EvaluationType = 'DEVOIR' | 'EXAMEN' | 'PARTICIPATION' | 'PROJET'

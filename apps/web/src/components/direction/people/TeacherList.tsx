@@ -1,3 +1,4 @@
+// src/components/direction/people/TeacherList.tsx
 "use client"
 
 import type { ReactNode } from 'react'

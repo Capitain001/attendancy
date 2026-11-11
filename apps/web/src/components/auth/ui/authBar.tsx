@@ -1,3 +1,4 @@
+// src/components/auth/ui/authBar.tsx
 import React from "react";
 
 interface AuthBarProps {

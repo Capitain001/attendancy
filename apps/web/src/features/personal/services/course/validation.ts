@@ -1,3 +1,4 @@
+// src/features/personal/services/course/validation.ts
 import * as v from 'valibot'
 
 export const createPersonalCourseSchema = v.object({

@@ -1,3 +1,4 @@
+// src/lib/prisma.ts
 // src/lib/db.ts
 // Singleton Prisma — adapter pg (driver natif, requis par Prisma v7).
 // Le client est généré dans src/generated/prisma/ (gitignored) :

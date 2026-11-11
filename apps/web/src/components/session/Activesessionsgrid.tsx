@@ -1,3 +1,4 @@
+// src/components/session/Activesessionsgrid.tsx
 "use client";
 
 import { MapPin, Clock, User, CalendarX } from "lucide-react";

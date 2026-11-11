@@ -1,3 +1,4 @@
+// src/components/design/index.ts
 export * from "./AnimatedTextSVG"
 export * from "./CardBackground"
 export * from "./DesignCard"

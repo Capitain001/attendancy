@@ -1,3 +1,4 @@
+// src/components/ux/analytic-ring/AnalyticRing.tsx
 "use client";
 
 import { useId, useMemo, useState } from "react";

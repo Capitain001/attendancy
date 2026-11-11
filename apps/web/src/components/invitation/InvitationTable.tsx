@@ -1,3 +1,4 @@
+// src/components/invitation/InvitationTable.tsx
 'use client'
 import { useState } from 'react'
 import { Loader2, RotateCw, Trash2, Share2, ChevronRight, CircleAlert } from 'lucide-react'

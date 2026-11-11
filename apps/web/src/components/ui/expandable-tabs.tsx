@@ -1,3 +1,4 @@
+// src/components/ui/expandable-tabs.tsx
 // @ts-nocheck
 "use client";
 

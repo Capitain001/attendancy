@@ -1,3 +1,4 @@
+// src/components/notification/cardstack/CardListView.tsx
 "use client"
 
 import { motion, AnimatePresence, type PanInfo } from "framer-motion"

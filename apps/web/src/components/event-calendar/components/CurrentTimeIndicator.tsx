@@ -1,3 +1,4 @@
+// src/components/event-calendar/components/CurrentTimeIndicator.tsx
 import React from "react"
 
 interface CurrentTimeIndicatorProps {

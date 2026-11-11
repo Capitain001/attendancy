@@ -1,3 +1,4 @@
+// src/lib/export/programs/pdf/layout.ts
 import type jsPDF from "jspdf";
 import type { ProgramPageData } from "@/components/programs/types";
 import type { ProgramExportConfig } from "../types";

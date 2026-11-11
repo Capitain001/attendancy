@@ -1,3 +1,4 @@
+// src/components/personal/teacher/lib.ts
 // apps\web\src\components\teacher\personal\lib.ts
 import { checkClassQuotaLimitAction } from '@/services/organization'
 

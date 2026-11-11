@@ -1,3 +1,4 @@
+// src/data/mocks/teachers.ts
 import { GetTeacherSchedulesInfoDto } from "@/services/schedule";
 import { GetTeachersDto } from "@/services/teacher";
 

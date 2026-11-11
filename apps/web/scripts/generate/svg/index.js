@@ -1,3 +1,4 @@
+// scripts/generate/svg/index.js
 const path = require("node:path");
 const { generateCollection } = require("./lib");
 

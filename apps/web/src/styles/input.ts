@@ -1,3 +1,4 @@
+// src/styles/input.ts
 import { cn } from "@/lib/utils";
 
 export const input = {

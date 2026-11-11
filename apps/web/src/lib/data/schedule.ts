@@ -1,3 +1,4 @@
+// src/lib/data/schedule.ts
 // apps/web/src/lib/data/schedule.ts
 export const scheduleCountdownMessages = {
   upcoming: 'Cours suivant dans',

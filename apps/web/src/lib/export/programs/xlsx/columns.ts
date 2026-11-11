@@ -1,3 +1,4 @@
+// src/lib/export/programs/xlsx/columns.ts
 import type { Worksheet } from "exceljs";
 import type { ProgramExportConfig } from "../types";
 import { XLSX_BORDER, XLSX_FILLS } from "./styles";

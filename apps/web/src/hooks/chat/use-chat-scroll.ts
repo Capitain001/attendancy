@@ -1,3 +1,4 @@
+// src/hooks/chat/use-chat-scroll.ts
 //src/hooks/use-chat-scroll.ts
 import { useCallback, useRef } from 'react'
 

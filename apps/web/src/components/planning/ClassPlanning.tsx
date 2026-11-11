@@ -1,3 +1,5 @@
+// src/components/planning/ClassPlanning.tsx
+//apps\web\src\components\planning\ClassPlanning.tsx
 "use client";
 
 import dynamic from "next/dynamic";

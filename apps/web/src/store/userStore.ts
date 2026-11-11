@@ -1,3 +1,4 @@
+// src/store/userStore.ts
 "use client"
 
 import { create } from "zustand"

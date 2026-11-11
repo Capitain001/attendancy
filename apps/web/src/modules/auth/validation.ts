@@ -1,3 +1,4 @@
+// src/modules/auth/validation.ts
 // src/services/auth/validation.ts
 // Schémas Valibot
 import { object, string, pipe, email, minLength, trim } from "valibot";

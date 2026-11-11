@@ -1,3 +1,4 @@
+// src/components/direction/people/DirectionTeachersSection.tsx
 'use client'
 
 import { useState } from 'react'

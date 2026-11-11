@@ -1,3 +1,4 @@
+// src/lib/export/programs/types.ts
 export type ExportFormat = "pdf" | "xlsx" | "json" | "csv";
 export type ExportTemplate = "official" | "synthetic" | "teaching_load";
 export type ExportStatus = "idle" | "loading" | "done" | "error";

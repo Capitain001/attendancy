@@ -1,3 +1,4 @@
+// src/hooks/utils/use-slider-with-input.ts
 "use client";
 
 import { useCallback, useState } from "react";

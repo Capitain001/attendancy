@@ -1,3 +1,4 @@
+// src/lib/export/programs/xlsx/styles.ts
 export const XLSX_BORDER = {
   top: { style: "thin", color: { argb: "FFB0B0B5" } },
   bottom: { style: "thin", color: { argb: "FFB0B0B5" } },

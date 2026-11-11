@@ -42,6 +42,9 @@
   - `packages/types/**` → DTOs cross-platform — pas de dépendance Prisma, types simples uniquement.
   - `packages/planning/**` → hooks React Query + vues — appels HTTP vers `/api/*`, pas de server actions.
   - Tout nouveau service créé → écrire son `CLAUDE.md` avant le premier commit.
+  - `docs/skills/good-practices/` → registre évolutif des bonnes pratiques (`index.yaml` + `rules/*.yaml`).
+    Consulter **obligatoirement** au début de chaque tâche pour appliquer les règles existantes,
+    et proposer au maximum 3 nouveaux candidats en fin de réponse pour enrichir le registre.
 
   ## Stack (non négociable)
 

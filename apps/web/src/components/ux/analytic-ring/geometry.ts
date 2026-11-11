@@ -1,3 +1,4 @@
+// src/components/ux/analytic-ring/geometry.ts
 /**
  * Géométrie de l'anneau : répartit N arcs sur un cercle (départ en haut, sens
  * horaire), longueur proportionnelle au poids. Produit pour chaque segment un

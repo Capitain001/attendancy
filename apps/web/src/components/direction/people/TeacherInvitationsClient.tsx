@@ -1,3 +1,4 @@
+// src/components/direction/people/TeacherInvitationsClient.tsx
 'use client'
 
 import { useMemo } from 'react'

@@ -1,3 +1,4 @@
+// src/components/event-calendar/components/event-dialog.tsx
 "use client";
 
 import { useEffect, useMemo, useState } from "react";

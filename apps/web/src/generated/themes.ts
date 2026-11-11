@@ -1,3 +1,4 @@
+// src/generated/themes.ts
 // Fichier généré par scripts/generate/themes/themes.ts — ne pas éditer à la main.
 // Pour ajouter un thème : créer styles/themes/mon-theme.css avec un
 // sélecteur ".theme-mon-theme { ... }", puis relancer ce script.

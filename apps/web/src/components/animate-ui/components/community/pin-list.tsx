@@ -1,3 +1,4 @@
+// src/components/animate-ui/components/community/pin-list.tsx
 'use client';
 
 import * as React from 'react';

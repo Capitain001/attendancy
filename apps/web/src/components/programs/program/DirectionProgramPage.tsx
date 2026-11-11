@@ -1,3 +1,4 @@
+// src/components/programs/program/DirectionProgramPage.tsx
 //src/components/programs/program/DirectionProgramPage.tsx
 "use client";
 

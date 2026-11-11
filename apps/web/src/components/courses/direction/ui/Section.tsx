@@ -1,3 +1,4 @@
+// src/components/courses/direction/ui/Section.tsx
 import { cn } from '@/lib/utils'
 
 export function Section({

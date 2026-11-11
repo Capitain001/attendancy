@@ -1,3 +1,4 @@
+// src/components/ui/smoothui/gooey-popover/usage-examples.ts
 /**
  * GooeyPopover — Usage examples
  * ============================================================

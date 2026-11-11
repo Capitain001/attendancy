@@ -1,3 +1,4 @@
+// src/components/invitation/ClassInvitationsPage.tsx
 'use client'
 // Écran classe : inviter des étudiants + historique des invitations de la classe.
 

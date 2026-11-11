@@ -1,3 +1,4 @@
+// src/components/personal/teacher/PersonalTeacherWelcome.tsx
 // components/personal/teacher/PersonalTeacherWelcome.tsx
 import { AlertCircle, ArrowRight, Ban } from 'lucide-react'
 import { RippleButton } from '@/components/ui/ripple-button';

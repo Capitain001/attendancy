@@ -1,3 +1,4 @@
+// src/components/session/section/SessionPageInner.tsx
 "use client";
 
 import { useEffect, useMemo, useState } from "react";

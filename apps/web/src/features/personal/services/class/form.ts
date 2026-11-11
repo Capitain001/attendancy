@@ -1,3 +1,4 @@
+// src/features/personal/services/class/form.ts
 import { createPersonalClassAction } from './actions' 
 //temp apres avoir brancher les type regenerer on utilisera le fichier type 
 type CreatePersonalClassInput = Parameters<typeof createPersonalClassAction>[0]

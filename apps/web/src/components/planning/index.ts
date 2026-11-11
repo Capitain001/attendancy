@@ -1,3 +1,4 @@
+// src/components/planning/index.ts
 export { ClassPlanning } from "./ClassPlanning";
 export { CoursePlanningDialog } from "./CoursePlanningDialog";
 export type { CoursePlanningDialogProps } from "./CoursePlanningDialog";

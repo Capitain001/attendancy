@@ -1,3 +1,4 @@
+// src/components/auth/ui/EmailConfirmationPendingCard.tsx
 'use client';
 import { ArrowLeftIcon, Fingerprint, MailIcon } from 'lucide-react';
 

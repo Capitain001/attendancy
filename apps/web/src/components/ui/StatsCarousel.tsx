@@ -1,3 +1,4 @@
+// src/components/ui/StatsCarousel.tsx
 'use client'
 
 import {

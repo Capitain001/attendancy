@@ -1,3 +1,4 @@
+// src/components/planning/coursePlanning/formState.ts
 import type { ScheduleEvent } from "@/components/event-calendar";
 import {
   DefaultEndHour,

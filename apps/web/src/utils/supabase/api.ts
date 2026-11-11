@@ -1,3 +1,4 @@
+// src/utils/supabase/api.ts
 // Vérification d'un Bearer token JWT Supabase depuis une API route Next.js.
 // Utilisé par les routes appelées depuis Tauri (pas de cookies cross-origin).
 import { createClient } from '@supabase/supabase-js'

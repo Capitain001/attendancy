@@ -1,3 +1,4 @@
+// src/components/planning/coursePlanning/filters.ts
 import type { CourseTeacherItem } from "@/components/users/SelectCourseTeachers";
 
 import type { PlanningCourseRow, PlanningRoomRow } from "../types";

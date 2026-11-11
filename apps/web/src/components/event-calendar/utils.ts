@@ -1,3 +1,4 @@
+// src/components/event-calendar/utils.ts
 import { eachDayOfInterval, endOfWeek, isSameDay, startOfWeek } from "date-fns";
 
 import type {

@@ -1,3 +1,4 @@
+// src/components/direction/people/teacher/sections/TeacherCoursesSection.tsx
 import { BookOpen } from 'lucide-react'
 import { card, typography } from '@/styles'
 import { cn } from '@/lib/utils'

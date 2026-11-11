@@ -1,3 +1,4 @@
+// src/config/session.ts
 //src/config/session.ts
 export interface SessionState {
     status: "upcoming" | "check-in-available" | "ongoing" | "check-out-available" | "completed";

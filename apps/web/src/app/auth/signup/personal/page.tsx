@@ -1,3 +1,4 @@
+// src/app/auth/signup/personal/page.tsx
 // app/auth/signup/page.tsx
 import { SignupPersonalForm } from '@/components/auth/signup/SignupPersonalForm'
 import { signupPersonalAction } from '@/modules/auth/actions/signup'

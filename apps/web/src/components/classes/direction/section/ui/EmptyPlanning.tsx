@@ -1,3 +1,4 @@
+// src/components/classes/direction/section/ui/EmptyPlanning.tsx
 import Link from 'next/link'
 import { GridDeco } from '../../../../design/GridDeco'
 import { cn } from '@/lib/utils'

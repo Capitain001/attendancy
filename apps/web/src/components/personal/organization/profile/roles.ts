@@ -1,3 +1,4 @@
+// src/components/personal/organization/profile/roles.ts
 import type { PersonalRole } from "@/modules/auth/constants";
 
 export type RoleOptionConfig = {
