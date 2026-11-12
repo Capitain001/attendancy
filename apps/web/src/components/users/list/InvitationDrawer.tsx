@@ -1,3 +1,4 @@
+
 // src/components/users/list/InvitationDrawer.tsx
 "use client";
 
@@ -102,25 +103,10 @@ export function InvitationDrawer({
 
             <dl className="min-h-0 flex-1 space-y-5 overflow-y-auto p-6">
               <div className="space-y-1">
-                <dt className="text-sm text-muted-foreground">Adresse e-mail</dt>
-                <dd className="break-all text-sm font-medium">
-                  {invitation.email}
-                </dd>
-              </div>
-              {invitation.details?.name && (
-                <div className="space-y-1">
-                  <dt className="text-sm text-muted-foreground">
-                    Nom de l’étudiant
-                  </dt>
-                  <dd className="text-sm font-medium">
-                    {invitation.details.name}
-                  </dd>
-                </div>
-              )}
-              <div className="space-y-1">
                 <dt className="text-sm text-muted-foreground">Classe</dt>
                 <dd className="text-sm font-medium">{classLabel}</dd>
               </div>
+
               {invitation.details?.enrollment?.parentEmail && (
                 <div className="space-y-1">
                   <dt className="text-sm text-muted-foreground">
@@ -131,6 +117,7 @@ export function InvitationDrawer({
                   </dd>
                 </div>
               )}
+
               <div className="space-y-1">
                 <dt className="text-sm text-muted-foreground">Statut</dt>
                 <dd className="text-sm font-medium">
@@ -142,6 +129,7 @@ export function InvitationDrawer({
                   )}
                 </dd>
               </div>
+
               <div className="space-y-1">
                 <dt className="text-sm text-muted-foreground">Envoyée le</dt>
                 <dd className="text-sm font-medium">
@@ -150,6 +138,7 @@ export function InvitationDrawer({
                   </time>
                 </dd>
               </div>
+
               <div className="space-y-1">
                 <dt className="text-sm text-muted-foreground">Expire le</dt>
                 <dd className="text-sm font-medium">
@@ -162,6 +151,7 @@ export function InvitationDrawer({
                   )}
                 </dd>
               </div>
+
               {invitation.usedAt && (
                 <div className="space-y-1">
                   <dt className="text-sm text-muted-foreground">

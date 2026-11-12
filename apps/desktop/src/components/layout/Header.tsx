@@ -1,3 +1,4 @@
+//apps\desktop\src\components\layout\Header.tsx
 import { Header as SharedHeader } from "@attendancy/ui";
 import { NotificationsPopover } from "@/components/layout/sidebar/ui/NotificationsPopover";
 import type { UserInfo } from "@desktop/types/user";
@@ -14,6 +15,7 @@ interface HeaderProps {
 export function Header({ user }: HeaderProps) {
   return (
     <SharedHeader
+     onSignOut={()=>{}}
       user={user}
       brandHref={user ? orgPath(user) : undefined}
       notifications={user ? <NotificationsPopover /> : undefined}

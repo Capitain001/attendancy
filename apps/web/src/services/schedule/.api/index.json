@@ -2,7 +2,7 @@
   "service": "schedule",
   "path": "src/services/schedule/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "1d1dee3",
+  "derived_at": "0d1ed622",
   "utils_dir": null,
   "fns": {
     "createSchedule": {
@@ -25,13 +25,18 @@
       "layer": "db",
       "kind": "mutation"
     },
-    "markScheduleCreationNotified": {
-      "f": ".api/markScheduleCreationNotified.json",
+    "claimScheduleAnnouncement": {
+      "f": ".api/claimScheduleAnnouncement.json",
       "layer": "db",
       "kind": "mutation"
     },
     "getScheduleForNotify": {
       "f": ".api/getScheduleForNotify.json",
+      "layer": "db",
+      "kind": "mutation"
+    },
+    "getScheduleNotificationContext": {
+      "f": ".api/getScheduleNotificationContext.json",
       "layer": "db",
       "kind": "mutation"
     },
@@ -170,6 +175,11 @@
       "layer": "action",
       "kind": "server-action"
     },
+    "getTeacherNextScheduleAction": {
+      "f": ".api/getTeacherNextScheduleAction.json",
+      "layer": "action",
+      "kind": "server-action"
+    },
     "getSchedulesAction": {
       "f": ".api/getSchedulesAction.json",
       "layer": "action",
@@ -187,11 +197,6 @@
     },
     "getScheduleDaysAction": {
       "f": ".api/getScheduleDaysAction.json",
-      "layer": "action",
-      "kind": "server-action"
-    },
-    "getTeacherNextScheduleAction": {
-      "f": ".api/getTeacherNextScheduleAction.json",
       "layer": "action",
       "kind": "server-action"
     },
@@ -240,13 +245,14 @@
     "restoreSchedule": [
       "restoreScheduleAction"
     ],
-    "markScheduleCreationNotified": [
-      "notifyScheduleCreationAction",
-      "notifyScheduleCreationsAction"
-    ],
+    "claimScheduleAnnouncement": [],
     "getScheduleForNotify": [
       "notifyScheduleCreationAction",
       "notifyScheduleCreationsAction"
+    ],
+    "getScheduleNotificationContext": [
+      "updateScheduleAction",
+      "cancelScheduleAction"
     ],
     "removeSchedulesByRule": [],
     "removeNextSchedulesByRule": [],
@@ -264,7 +270,9 @@
       "getDaySchedulesAction"
     ],
     "getClassSchedules": [],
-    "getTeacherSchedules": [],
+    "getTeacherSchedules": [
+      "getTeacherSchedulesAction"
+    ],
     "getRoomSchedules": [],
     "getSchedulesByClass": [
       "getClassSchedulesAction"
@@ -275,11 +283,15 @@
     "getScheduleDays": [
       "getScheduleDaysAction"
     ],
-    "getTeacherNextSchedule": [],
+    "getTeacherNextSchedule": [
+      "getTeacherNextScheduleAction"
+    ],
     "getTodayClassSchedules": [
       "getTodayClassSchedulesAction"
     ],
-    "getTeacherDailySchedule": [],
+    "getTeacherDailySchedule": [
+      "getTeacherDailyScheduleAction"
+    ],
     "assertClassInOrg": [],
     "getTeacherSchedulesInfo": [
       "getTeacherSchedulesInfoAction"
@@ -299,11 +311,11 @@
     "notifyScheduleCreationsAction": [],
     "toggleScheduleLockAction": [],
     "getClassSchedulesAction": [],
+    "getTeacherNextScheduleAction": [],
     "getSchedulesAction": [],
     "getDaySchedulesAction": [],
     "getCourseScheduleAction": [],
     "getScheduleDaysAction": [],
-    "getTeacherNextScheduleAction": [],
     "getTodayClassSchedulesAction": [],
     "getClassScheduleOptionsAction": [],
     "getTeacherSchedulesAction": [],

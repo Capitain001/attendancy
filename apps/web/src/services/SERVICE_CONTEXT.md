@@ -16,6 +16,7 @@ service dans `src/services/*`.
 | Modèle Prisma                                 | Service propriétaire |
 | --------------------------------------------- | -------------------- |
 | `Organization`                                | `org`                |
+| `OrganizationSettings`                        | `org`                |
 | `User` (record applicatif)                    | `auth`               |
 | `Course`                                      | `course`             |
 | `CourseTeacher`                               | `course-teacher`     |

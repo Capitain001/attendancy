@@ -3,7 +3,7 @@
 // Lectures Prisma du service org — Prisma pur, AUCUNE auth ici.
 import { cacheTag, cacheLife } from 'next/cache'
 import { prisma } from '@/lib/prisma'
-import { CACHE } from '@/cache/server/key';;;
+import { CACHE } from '@/cache/server/key';
 import type { OrgDetails } from '../types'
 import { getActiveClassesCount } from '@/services/class/database';
 import { ERRORS } from '@/config';
@@ -48,6 +48,13 @@ export async function getOrgClassQuota(orgId: string) {
   return prisma.organizationSettings.findUnique({
     where: { orgId },
     select: { maxClasses: true },
+  })
+}
+
+export async function getOrgParentalNotifications(orgId: string) {
+  return prisma.organizationSettings.findUnique({
+    where: { orgId },
+    select: { parentalNotifications: true },
   })
 }
 

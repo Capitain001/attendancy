@@ -9,7 +9,7 @@ import type { GetStudentSchedulesDto } from '@/services/student'
 
 import { CACHE_KEYS, QUERY_PRESETS } from '@/cache/client/key'
 import { getPlanningRange } from './utils'
-import { getOrgPlanningResourcesAction } from './actions'
+import { getOrgPlanningResourcesAction, getPlanningResourcesAction } from './actions'
 import type { OrgPlanningResources } from './types'
 import { ScheduleStatus } from '@/generated/prisma/browser'
 import { ScheduleDaysFilterParams } from '../schedule/database'
@@ -159,3 +159,32 @@ export function studentMonthSchedulesQuery(filters: StudentMonthScheduleFilters)
     ...QUERY_PRESETS.RETAINED,
   };
 }
+
+/**
+ * Ressources planning d'UNE classe (cours, salles, groupes) pour le formulaire de séance.
+ * Une entrée cache par classe. Réutilisable serveur (setQueryData / prefetch) + client (hook).
+ */
+export function planningResourcesQuery(classId: string) {
+  return {
+    queryKey: CACHE_KEYS.PLANNING.RESOURCES(classId),
+    queryFn: async () => {
+      const res = await getPlanningResourcesAction(classId);
+      if ("error" in res || !res.data) {
+        throw new Error(
+          ("error" in res && res.error) || "Impossible de charger les options du formulaire."
+        );
+      }
+      return res.data;
+    },
+    ...QUERY_PRESETS.STATIC,
+  };
+}
+
+/* 
+. Invalidation à prévoir
+
+Avec un preset statique, un cours ou une salle créé ailleurs n’apparaîtra pas tant que le cache n’est pas invalidé. Dans les mutations de création et de modification de cours ou de salles :
+
+ts
+queryClient.invalidateQueries({ queryKey: ["planning", "resources"] });
+*/

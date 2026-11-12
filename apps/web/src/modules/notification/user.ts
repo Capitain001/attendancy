@@ -8,7 +8,6 @@ import {
   findPushSubscriptionsByUserId,
   unsubscribeDevice,
   unsubscribeAllDevices,
-  markSubscriptionAsExpired,
   getSubscriptionStats
 } from './subscriptions/database'
 

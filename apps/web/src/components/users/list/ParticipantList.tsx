@@ -27,8 +27,8 @@ export function ParticipantList({ participants, className }: ParticipantListProp
             avatarUrl={user.avatar_url ?? undefined}
             name={user.firstName ?? user.email}
             showName
-            className="w-[72px]"
-            avatarClassName="size-14 border-0"
+            className="w-18"
+            avatarClassName="size-12 border-0"
           />
         </li>
       ))}

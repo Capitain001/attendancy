@@ -16,3 +16,7 @@ domains:
     file: rules/prisma.yaml
     applies_to: [prisma-query, securite]
     summary: "Pagination sans COUNT via take: PAGE_SIZE + 1 avec tri déterministe et scoping multi-tenant relationnel sur modèles enfants."
+  - id: reasoning
+    file: rules/reasoning.yaml
+    applies_to: [debugging, bug-fix, code-change]
+    summary: "Comprendre et tracer le contexte réel, expliquer les causes et usages confirmés, puis proposer et vérifier une correction ciblée."

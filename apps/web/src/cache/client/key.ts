@@ -3,6 +3,7 @@
 // le vocabulaire applicatif (quelles entités, quelles variantes) — le
 // mécanisme (entityKeys, subKey, durées, presets) vit dans ./engine.
 import { entityKeys, subKey } from "./engine";
+import type { InvitationStatus } from "@/types/invitation";
 
 export const CACHE_KEYS = {
   ATTENDANCES: {
@@ -30,6 +31,11 @@ export const CACHE_KEYS = {
     }) => ["schedules", "student-month", classId, groupIdsKey, monthKey] as const,
   },
 
+  PLANNING: {
+    RESOURCES_ALL: ["planning", "resources"] as const,
+    RESOURCES: (classId: string) => ["planning", "resources", classId] as const,
+  },
+
   SESSIONS: {
     ACTIVE: ["sessions", "active"] as const,
   },
@@ -47,7 +53,15 @@ export const CACHE_KEYS = {
   },
   INVITATIONS: {
     ALL: ["invitations", "all"] as const,
-    BY_CLASS: (classId: string) => ["invitations", "by-class", classId] as const,
+    BY_CLASS: (classId: string, statuses?: readonly InvitationStatus[]) =>
+      statuses?.length
+        ? ([
+          "invitations",
+          "by-class",
+          classId,
+          [...statuses].sort().join(","),
+        ] as const)
+        : (["invitations", "by-class", classId] as const),
     STATS: ["invitations", "stats"] as const,
   },
   PROGRAMS: {

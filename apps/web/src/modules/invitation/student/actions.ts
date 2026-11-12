@@ -5,7 +5,13 @@ import { after } from "next/server";
 import { inviteUser }                          from "../user";
 import { InviteStudentParams, type InviteStudentsBulkResult, type BulkInviteItemSuccess, type BulkInviteItemFailure } from "./types";
 import { checkInvitationResources }            from "./database";
-import { inviteStudentSchema, inviteStudentsBulkSchema, type InviteStudentsBulkInput } from "./validation";
+import {
+  getClassInvitationsSchema,
+  inviteStudentSchema,
+  inviteStudentsBulkSchema,
+  type GetClassInvitationsInput,
+  type InviteStudentsBulkInput,
+} from "./validation";
 import { safeParse }                           from "valibot";
 import { notifyInvitationStakeholders }        from "../notifications";
 import { getAuthorization } from "@/modules/auth";
@@ -131,7 +137,6 @@ export async function inviteStudent(params: InviteStudentParams) {
       metadata: result.data?.metadata,
       link: result.data?.link,
     };
-
   } catch (error) {
     console.error("Erreur lors de l'invitation de l'étudiant:", error);
     return {
@@ -140,7 +145,6 @@ export async function inviteStudent(params: InviteStudentParams) {
     };
   }
 }
-
 
 const CONCURRENCY = 5;
 
@@ -307,11 +311,14 @@ export async function inviteStudentsAction(
   }
 }
 
-
-
-
-export async function getClassInvitationsAction({ classId }: { classId: string }) {
+export async function getClassInvitationsAction(params: GetClassInvitationsInput) {
   try {
+    const validationResult = safeParse(getClassInvitationsSchema, params);
+    if (!validationResult.success) {
+      return { error: "Les paramètres de recherche des invitations sont invalides." };
+    }
+
+    const { classId, statuses } = validationResult.output;
     const { getUserInfo } = await import("@/services/user");
     const user = await getUserInfo();
 
@@ -324,8 +331,7 @@ export async function getClassInvitationsAction({ classId }: { classId: string }
       : getAuthorization(user, "DIRECTION", "PRINCIPAL");
     if (auth.error) throw new Error(auth.error);
 
-
-    const data = await getClassInvitations(classId, orgId);
+    const data = await getClassInvitations(classId, orgId, statuses);
 
     return { data };
   } catch (error) {

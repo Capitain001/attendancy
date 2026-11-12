@@ -1,7 +1,7 @@
 {
   "name": "getOrganizationBySlugAction",
   "file": "src/services/organization/actions/organization.queries.ts",
-  "sig": "(slug: string) => Promise<{ error: string; data?: undefined; } | { data: { settings: { id: string; updatedAt: Date; settings: JsonValue; orgId: string; maxUsers: number; storageLimit: bigint; maxCourses: number | null; ... 8 more ...; breakDuration: number; } | null; usage: { ...; } | null; } & { ...; }; error?: undefined; }>",
+  "sig": "(slug: string) => Promise<{ error: string; data?: undefined; } | { data: { settings: { id: string; orgId: string; updatedAt: Date; settings: JsonValue; maxUsers: number; storageLimit: bigint; maxCourses: number | null; ... 8 more ...; breakDuration: number; } | null; usage: { ...; } | null; } & { ...; }; error?: undefined; }>",
   "calls": [
     "getOrganizationBySlug"
   ],

@@ -21,6 +21,7 @@ Noms des contraintes : `no_room_overlap`, `no_teacher_overlap`, `no_class_overla
 | `actions/schedule.mutations.ts` | `createScheduleAction`, `updateScheduleAction`, `removeScheduleAction`, `cancelScheduleAction` |
 | `actions/schedule.queries.ts` | `getClassSchedulesAction`, `getSchedulesAction`, `getClassScheduleOptionsAction` |
 | `cache.ts` | `SCHEDULE_GRAPH` — events CREATED/UPDATED/REMOVED |
+| `notifications.ts` | `notifyScheduleStakeholders` — notifications best-effort et claim anti-doublon élèves/parents |
 | `constants.ts` | Constantes du domaine |
 | `database/index.ts` | Barrel interne (non exporté) |
 | `database/schedule.mutations.ts` | `createSchedule`, `updateSchedule`, `removeSchedule` |
@@ -39,6 +40,8 @@ Noms des contraintes : `no_room_overlap`, `no_teacher_overlap`, `no_class_overla
 - `groupId` NULL = séance pour la CLASSE ENTIÈRE (contrainte `no_class_overlap_global`)
 - `removeSchedule` = soft delete (`deletedAt`), pas hard delete
 - `teacherId` optionnel à la création (peut être assigné plus tard)
+- Les notifications de séance passent par `notifications.ts` et les points d'entrée serveur propriétaires pour les attendus et les parents.
+- `notifyState: SENT` signifie que le claim de l'annonce élèves/parents est pris, pas que les notifications sont livrées.
 
 ## Points d'extension (⚠)
 

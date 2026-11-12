@@ -1,8 +1,10 @@
 {
   "name": "getTeacherSchedulesAction",
   "file": "src/services/schedule/actions/schedule.queries.ts",
-  "sig": "(params: Omit<ScheduleFilterParams, 'orgId' | 'classId' | 'roomId'>) => Promise<{ error: string; data?: undefined; } | { data: ({ class: { id: string; name: string; }; course: { id: string; name: string; }; group: { id: string; name: string; } | null; teacher: { user: { firstName: string | null; lastName: string | null; avatar_url: string | null; }; id: string; }; room: { ...; }; } & { ...",
-  "calls": [],
+  "sig": "(params: Omit<ScheduleFilterParams, 'orgId' | 'classId' | 'roomId'>) => Promise<{ error: string; data?: undefined; } | { data: ({ class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { ...; }; } & { ...; })[]; error?: undefined; }>",
+  "calls": [
+    "getTeacherSchedules"
+  ],
   "auth": {},
   "rules": [],
   "why_ref": ""

@@ -1,8 +1,9 @@
 // src/app/(app)/personal/[slug]/teacher/classes/[classId]/students/page.tsx
 import type { Metadata } from "next";
 import { connection } from "next/server";
-import { getClassAction } from "@/services/class";
-import { TClassStudentsScreen } from "@/components/users/list/TClassStudentsScreen";
+import { getStudentsEnrollmentsAction } from "@/services/student-enrollment";
+import { TClassStudentsScreen } from "@/components/teacher/screens/TClassStudentsScreen";
+
 
 export const metadata: Metadata = {
   title: "Étudiants de la classe | Attendancy",
@@ -15,17 +16,10 @@ interface PageProps {
 
 export default async function ClassStudentsPage({ params }: PageProps) {
   await connection();
-  const { slug, classId } = await params;
+  const { classId } = await params;
 
-  const classRes = await getClassAction({ classId });
-  const classLabel = "data" in classRes ? classRes.data?.name ?? "Classe" : "Classe";
+  const res = await getStudentsEnrollmentsAction({ classId });
+  const enrollments = "data" in res && res.data ? res.data : [];
 
-  return (
-    <TClassStudentsScreen
-      classId={classId}
-      classLabel={classLabel}
-      slug={slug}
-    />
-  );
+  return <TClassStudentsScreen enrollments={enrollments} />;
 }
-

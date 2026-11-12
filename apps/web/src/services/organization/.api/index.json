@@ -2,7 +2,7 @@
   "service": "organization",
   "path": "src/services/organization/",
   "claude_md": "./CLAUDE.md",
-  "derived_at": "7513d11",
+  "derived_at": "0d1ed622",
   "utils_dir": null,
   "fns": {
     "createOrgWithDefaults": {
@@ -47,6 +47,11 @@
     },
     "getOrgClassQuota": {
       "f": ".api/getOrgClassQuota.json",
+      "layer": "db",
+      "kind": "query"
+    },
+    "getOrgParentalNotifications": {
+      "f": ".api/getOrgParentalNotifications.json",
       "layer": "db",
       "kind": "query"
     },
@@ -188,6 +193,7 @@
       "checkClassQuotaLimit",
       "getOrgClassQuotaAction"
     ],
+    "getOrgParentalNotifications": [],
     "getOrgDetails": [
       "getOrgDetailsAction"
     ],

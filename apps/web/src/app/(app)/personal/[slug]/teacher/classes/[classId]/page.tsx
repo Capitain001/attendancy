@@ -73,7 +73,7 @@ export default async function PersonalTeacherClassPage({ params }: PageProps) {
   ];
 
   return (
-    <main className="min-h-screen bg-background px-4 py-6 sm:px-6">
+    <main className="min-h-screen bg-background px-4 py-4 sm:px-6">
       <div className="mx-auto w-full max-w-4xl space-y-6">
         {/* Header */}
         <header className="space-y-3">
@@ -122,7 +122,7 @@ export default async function PersonalTeacherClassPage({ params }: PageProps) {
               <Link
                 key={card.title}
                 href={card.href}
-                className="group relative flex flex-col justify-between rounded-xl border border-foreground/15 bg-foreground/[0.02] p-5 transition-all duration-150 hover:border-foreground/30 hover:bg-foreground/[0.05]"
+                className="group relative flex flex-col justify-between rounded-sm border border-foreground/15 bg-foreground/[0.02] p-5 transition-all duration-150 hover:border-foreground/30 hover:bg-foreground/[0.05]"
               >
                 <div>
                   <div className="flex items-center justify-between gap-3">
@@ -137,13 +137,14 @@ export default async function PersonalTeacherClassPage({ params }: PageProps) {
                   <h2 className="mt-4 font-semibold tracking-tight text-foreground/90 transition-colors group-hover:text-foreground">
                     {card.title}
                   </h2>
-                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                  {/* <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                     {card.description}
-                  </p>
+                  </p> */}
                 </div>
 
                 <div className="mt-5 flex items-center justify-between border-t border-foreground/10 pt-3 text-xs font-medium text-foreground/60 transition-colors group-hover:text-foreground">
                   <span>{card.actionLabel}</span>
+                  
                   <ChevronRight
                     aria-hidden="true"
                     className="size-4 transition-transform group-hover:translate-x-0.5"

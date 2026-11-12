@@ -60,7 +60,7 @@ inviteUser(params: InvitationParams): Promise<InvitationResult>
 
 ## Sous-services par rôle
 
-- [`student/`](./student/index.ts) — `inviteStudent`, `getClassInvitationsAction`, `checkInvitationResources`. Pour une invitation étudiant de classe, **`resourceId` avec `resourceType: "CLASS"` est la seule source de vérité du `classId`** lors de l'acceptation (`details.enrollment` ne sert qu'aux `groupIds` et `parentEmail`).
+- [`student/`](./student/index.ts) — `inviteStudent`, `getClassInvitationsAction`, `checkInvitationResources`. `getClassInvitationsAction` accepte un filtre `statuses` optionnel; sans filtre, elle retourne tous les statuts sauf `REVOKED`. Les invitations `PENDING` expirées restent distinguées côté UI. Pour une invitation étudiant de classe, **`resourceId` avec `resourceType: "CLASS"` est la seule source de vérité du `classId`** lors de l'acceptation (`details.enrollment` ne sert qu'aux `groupIds` et `parentEmail`).
 - [`direction/`](./direction/index.ts) — `inviteDirection`, `checkFunctionsExist`, `getFunctionsByNames`.
 - [`teacher/`](./teacher/invite.ts) — `inviteTeacher`.
 

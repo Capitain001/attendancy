@@ -1,3 +1,4 @@
+//packages\ui\src\components\layout\Header\AuthButtonPopover.tsx
 "use client";
 
 import * as React from "react";
@@ -5,14 +6,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import { MirrorHover } from "../../design/MirrorHover";
 import { UserIcon } from "../../users/UserIcon";
 import { AuthMenu } from "./AuthMenu";
-import { logout } from "@attendancy/auth";
 import { cn } from "../../../lib/utils";
 import type { PublicUserInfo } from "@attendancy/types";
 
 export interface AuthButtonPopoverProps {
   user: PublicUserInfo;
   className?: string;
-  onSignOut?: () => void | Promise<void>;
+  onSignOut: () => void | Promise<void>;
   orgInfoUrl?: string;
 }
 
@@ -28,11 +28,7 @@ export function AuthButtonPopover({
   const handleSignOut = async () => {
     try {
       setIsLoggingOut(true);
-      if (onSignOut) {
-        await onSignOut();
-      } else {
-        await logout();
-      }
+      await onSignOut();
     } finally {
       setIsLoggingOut(false);
       setOpen(false);

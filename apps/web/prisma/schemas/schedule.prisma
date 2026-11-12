@@ -38,8 +38,8 @@ model Schedule {
   weekRecurrenceId String?   @db.Uuid
   deletedAt        DateTime?
 
-  // Notification de CRÉATION (manuelle) : PENDING à la création, SENT après
-  // envoi. null = hors flux (modifications, séances créées avant la feature).
+  // SENT = annonce élèves/parents déclenchée (claim pris avant envoi), pas livrée.
+  // null = séance issue de la récurrence.
   notifyState ScheduleNotifyState?
   notifiedAt  DateTime?
 

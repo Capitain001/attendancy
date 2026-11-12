@@ -1,0 +1,18 @@
+domain: reasoning
+rules:
+  - id: REASONING-001
+    severity: blocking
+    applies_to: [debugging, bug-fix, code-change]
+    rule: "Avant de proposer ou d'implémenter une correction, reconstituer le contexte réel du problème : suivre le chemin d'exécution ou d'import, examiner les définitions et les appelants pertinents, et relever les contraintes du runtime. Séparer explicitement les faits vérifiés des hypothèses. Expliquer ensuite la cause avec des éléments concrets et décrire les changements envisagés ainsi que leurs effets avant de modifier le code. Implémenter seulement après cette compréhension, puis vérifier la correction à la source et les usages concernés."
+    why: "Empêche les correctifs spéculatifs ou les contournements prématurés. Une explication vérifiable permet à l'utilisateur de juger la solution proposée et évite de modifier une surface sans avoir compris ses dépendances et ses appelants."
+    detect: ["Runtime TypeError", "import chain", "call sites", "root cause"]
+    evidence: "Méthode transversale à appliquer lors de l'investigation et de la correction de problèmes."
+    bad: |
+      // Supposer que le barrel UI est la cause et proposer immédiatement
+      // de contourner ses exports, sans tracer ses dépendances ni ses usages.
+      // Ou modifier un callback sans vérifier si les appelants le fournissent déjà.
+    good: |
+      // Tracer l'erreur depuis le point d'entrée jusqu'au module fautif.
+      // Vérifier les exports et appelants réels; constater que RootLayout
+      // fournit déjà onSignOut={logout}; expliquer ces faits et la correction
+      // ciblée, puis modifier le composant partagé et valider ses types/usages.

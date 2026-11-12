@@ -1,7 +1,7 @@
 {
   "name": "getTeacherSchedulesInfoAction",
   "file": "src/services/schedule/actions/schedule.queries.ts",
-  "sig": "({ teacherId, rangeStart, rangeEnd }: GetTeacherSchedulesParams) => Promise<{ error: string; data?: undefined; } | { data: { class: { id: string; name: string; }; course: { id: string; name: string; }; group: { id: string; name: string; } | null; room: { id: string; name: string; }; id: string; status: ScheduleStatus; startTime: Date; endTime: Date; notes: string | null; }[]; error?...",
+  "sig": "({ teacherId, rangeStart, rangeEnd }: GetTeacherSchedulesParams) => Promise<{ error: string; data?: undefined; } | { data: { id: string; startTime: Date; endTime: Date; status: ScheduleStatus; notes: string | null; class: { name: string; id: string; }; course: { ...; }; group: { ...; } | null; room: { ...; }; }[]; error?: undefined; }>",
   "calls": [
     "getTeacherSchedulesInfo"
   ],

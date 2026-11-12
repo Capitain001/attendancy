@@ -1,3 +1,4 @@
+//packages\auth\src\actions\logout.ts
 import { supabase } from "../supabase";
 import { api } from "../api";
 import { getDeviceId } from "../device-id";

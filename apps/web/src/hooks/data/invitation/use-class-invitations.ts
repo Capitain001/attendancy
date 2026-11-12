@@ -11,6 +11,7 @@ import {
 import type { InviteStudentsBulkInput } from "@/modules/invitation/student";
 import { toast } from "sonner";
 import { CACHE_KEYS } from "@/cache/client/key";
+import type { InvitationStatus } from "@/types/invitation";
 import {
   useInvitationMutations,
   invalidateInvitationQueries,
@@ -25,6 +26,8 @@ type UseClassInvitationsOptions = {
   deliverLink?: (link: string, message?: string) => void | Promise<void>;
   /** Toast d'erreur sur échec. Défaut : true. Mettre false si l'appelant affiche l'erreur lui-même. */
   toastError?: boolean;
+  /** Filtre serveur sur le statut. Absent = toutes sauf REVOKED. */
+  statuses?: InvitationStatus[];
 };
 
 export function useClassInvitations(
@@ -38,12 +41,14 @@ export function useClassInvitations(
       copyLinkOrToast(link, message ?? "Lien d'invitation copié"));
 
   const qc = useQueryClient();
-  const classKey = CACHE_KEYS.INVITATIONS.BY_CLASS(classId);
+  const { statuses } = opts;
+  const classKey = CACHE_KEYS.INVITATIONS.BY_CLASS(classId, statuses);
+  const classScopeKey = CACHE_KEYS.INVITATIONS.BY_CLASS(classId);
 
   // extraInvalidateKeys : un resend/revoke fait ici invalide aussi la portée classe,
   // en plus de ALL/STATS déjà gérés par le hook partagé.
   const { resend, revoke } = useInvitationMutations({
-    extraInvalidateKeys: [classKey],
+    extraInvalidateKeys: [classScopeKey],
   });
 
   const {
@@ -56,7 +61,7 @@ export function useClassInvitations(
   } = useQuery({
     queryKey: classKey,
     queryFn: async () => {
-      const r = await getClassInvitationsAction({ classId });
+      const r = await getClassInvitationsAction({ classId, statuses });
       if ("error" in r) throw new Error(r.error);
       return r.data;
     },
@@ -71,7 +76,7 @@ export function useClassInvitations(
           toast.error(r.error ?? "Envoi de l'invitation impossible.");
         return;
       }
-      invalidateInvitationQueries(qc, [classKey]);
+      invalidateInvitationQueries(qc, [classScopeKey]);
       if (r.link) await deliverLink(r.link, r.message);
       else toast.success(r.message ?? "Invitation envoyée");
     },
@@ -88,7 +93,7 @@ export function useClassInvitations(
         if (toastError) toast.error(r.error);
         return;
       }
-      invalidateInvitationQueries(qc, [classKey]);
+      invalidateInvitationQueries(qc, [classScopeKey]);
       if (r.data.status === "ok") {
         toast.success(`${r.data.succeeded.length} invitation(s) envoyée(s)`);
       } else if (r.data.status === "partial") {

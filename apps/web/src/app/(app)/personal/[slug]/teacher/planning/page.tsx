@@ -10,7 +10,10 @@ import { getQueryClient } from "@/lib/react-query";
 import { personal } from "@/modules/personal/paths";
 import { getCurrentTeacherId } from "@/services/teacher";
 import { getPlanningResourcesAction } from "@/services/planning";
-import { planningSchedulesQuery } from "@/services/planning/queries";
+import {
+  planningResourcesQuery,
+  planningSchedulesQuery,
+} from "@/services/planning/queries";
 import { TeacherPersonalPlanning } from "@/components/teacher/planning/TeacherPersonalPlanning";
 
 export default async function Page({
@@ -23,8 +26,7 @@ export default async function Page({
   await connection();
 
   const [{ slug }, { classId: queryClassId, month }] = await Promise.all([
-    params,
-    searchParams,
+    params, searchParams,
   ]);
 
   const [classesRes, teacherId] = await Promise.all([
@@ -52,26 +54,29 @@ export default async function Page({
   const [resourcesRes] = await Promise.all([
     getPlanningResourcesAction(activeClass.id),
     queryClient.prefetchQuery(
-      planningSchedulesQuery({ date: `${monthKey}-01`, teacherId: teacherId ?? undefined })
+      planningSchedulesQuery({ date: `${monthKey}-01`, teacherId: teacherId ?? undefined }),
     ),
   ]);
 
   if ("error" in resourcesRes || !resourcesRes.data) {
     return (
       <div className="p-6 text-destructive">
-        {"error" in resourcesRes
-          ? resourcesRes.error
-          : "Impossible de charger les options du formulaire."}
+        {"error" in resourcesRes ? resourcesRes.error : "Impossible de charger les options du formulaire."}
       </div>
     );
   }
+
+  // La classe initiale est servie depuis le cache hydraté : aucun appel client au premier rendu.
+  queryClient.setQueryData(
+    planningResourcesQuery(activeClass.id).queryKey,
+    resourcesRes.data,
+  );
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <TeacherPersonalPlanning
         classId={activeClass.id}
         teacherId={teacherId ?? undefined}
-        resources={resourcesRes.data}
         classes={classes.map((c) => ({ id: c.id, name: c.name }))}
       />
     </HydrationBoundary>

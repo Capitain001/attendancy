@@ -1,8 +1,9 @@
 {
   "name": "updateScheduleAction",
   "file": "src/services/schedule/actions/schedule.mutations.ts",
-  "sig": "(input: UpdateScheduleInput) => Promise<{ error: string; data?: undefined; } | { data: { class: { id: string; name: string; }; course: { id: string; name: string; }; group: { id: string; name: string; } | null; teacher: { user: { firstName: string | null; lastName: string | null; avatar_url: string | null; }; id: string; }; room: { ...; }; } & { ....",
+  "sig": "(input: UpdateScheduleInput) => Promise<{ error: string; data?: undefined; } | { data: { class: { name: string; id: string; }; course: { name: string; id: string; }; group: { name: string; id: string; } | null; room: { name: string; id: string; }; teacher: { ...; }; } & { ...; }; error?: undefined; }>",
   "calls": [
+    "getScheduleNotificationContext",
     "updateSchedule"
   ],
   "auth": {},

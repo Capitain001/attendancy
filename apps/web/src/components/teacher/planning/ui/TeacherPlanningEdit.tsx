@@ -1,4 +1,4 @@
-
+// src/components/teacher/planning/ui/TeacherPlanningEdit.tsx
 import { useMemo, type ReactNode } from "react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -35,6 +35,8 @@ export interface TeacherPlanningEditProps {
   classes?: Array<{ id: string; name: string }>;
   teacherId?: string;
   resources: NonNullable<PlanningResources>;
+  /** Ressources de la classe en cours de chargement (changement de classe). */
+  resourcesLoading?: boolean;
   onBack: () => void; // retour à la liste du jour (appelé aussi après save/delete par le hook)
   onSave: (event: ScheduleEvent) => void | Promise<void>;
   onDelete: (eventId: string) => void | Promise<void>;
@@ -66,6 +68,7 @@ export function TeacherPlanningEdit({
   classes = [],
   teacherId,
   resources,
+  resourcesLoading = false,
   onBack,
   onSave,
   onDelete,
@@ -102,7 +105,7 @@ export function TeacherPlanningEdit({
     classId,
     resources,
     event,
-    enabled: scheduleEditable,
+    enabled: scheduleEditable && !resourcesLoading,
   });
 
   const uiStatus = useMemo<ScheduleUiStatus>(
@@ -120,6 +123,7 @@ export function TeacherPlanningEdit({
 
   const hasCourses = resources.courses.length > 0;
   const hasRooms = resources.rooms.length > 0;
+  const canSubmit = hasCourses && hasRooms && !resourcesLoading;
 
   const currentClassName = useMemo(() => {
     return classes.find((c) => c.id === classId)?.name ?? "Classe";
@@ -159,18 +163,7 @@ export function TeacherPlanningEdit({
         </div>
 
         <div className="mt-6 pb-6">
-          {!hasCourses || !hasRooms ? (
-            <div>
-              <p className="text-base font-medium">
-                {!hasCourses ? "Aucun cours dans cette classe" : "Aucune salle disponible"}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {!hasCourses
-                  ? "Créez d'abord un cours dans votre classe pour pouvoir planifier une séance."
-                  : "Aucune salle n'est configurée pour cet espace."}
-              </p>
-            </div>
-          ) : !scheduleEditable ? (
+          {!scheduleEditable ? (
             <dl className="divide-y">
               {classes.length > 0 && <Row label="Classe">{currentClassName}</Row>}
               <Row label="Cours">{selectedCourseName}</Row>
@@ -188,7 +181,7 @@ export function TeacherPlanningEdit({
             </dl>
           ) : (
             <div className="space-y-5">
-              {/* Sélecteur de classe si plusieurs classes disponibles */}
+              {/* Sélecteur de classe : toujours accessible, même si la classe n'a pas de cours */}
               {classes.length > 1 && isCreation && onClassChange && (
                 <Field label="Classe">
                   <Select value={classId} onValueChange={onClassChange}>
@@ -207,9 +200,21 @@ export function TeacherPlanningEdit({
               )}
 
               <Field label="Cours">
-                <Select value={form.courseId} onValueChange={handleCourseChange}>
+                <Select
+                  value={form.courseId}
+                  onValueChange={handleCourseChange}
+                  disabled={!hasCourses || resourcesLoading}
+                >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Sélectionner un cours" />
+                    <SelectValue
+                      placeholder={
+                        resourcesLoading
+                          ? "Chargement…"
+                          : hasCourses
+                            ? "Sélectionner un cours"
+                            : "Aucun cours dans cette classe"
+                      }
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     {resources.courses.map((c) => (
@@ -217,6 +222,11 @@ export function TeacherPlanningEdit({
                     ))}
                   </SelectContent>
                 </Select>
+                {!hasCourses && !resourcesLoading && (
+                  <p className="text-xs text-muted-foreground">
+                    Créez d'abord un cours dans cette classe, ou changez de classe.
+                  </p>
+                )}
               </Field>
 
               <div className="grid grid-cols-2 gap-3">
@@ -250,11 +260,24 @@ export function TeacherPlanningEdit({
                 </Field>
               </div>
 
-              {resources.rooms.length > 1 && (
+              {/* Masqué uniquement s'il n'y a qu'une seule salle (sélection implicite) */}
+              {resources.rooms.length !== 1 && (
                 <Field label="Salle">
-                  <Select value={form.roomId} onValueChange={(v) => setForm((p) => ({ ...p, roomId: v }))}>
+                  <Select
+                    value={form.roomId}
+                    onValueChange={(v) => setForm((p) => ({ ...p, roomId: v }))}
+                    disabled={!hasRooms || resourcesLoading}
+                  >
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Choisir une salle" />
+                      <SelectValue
+                        placeholder={
+                          resourcesLoading
+                            ? "Chargement…"
+                            : hasRooms
+                              ? "Choisir une salle"
+                              : "Aucune salle disponible"
+                        }
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       {resources.rooms.map((room) => (
@@ -289,7 +312,7 @@ export function TeacherPlanningEdit({
                   onChange={(e) => setForm((p) => ({ ...p, notes: e.target.value }))}
                   rows={3}
                   placeholder="Consigne, chapitre abordé, matériel..."
-                  className="resize-none border-dashed border-border/80 bg-transparent text-sm shadow-none focus-visible:border-border/90"
+                  className="resize-none border-dashed border-border/80 bg-transparent text-sm shadow-none focus-visible:border-border/90 min-h-32"
                 />
               </Field>
 
@@ -312,18 +335,26 @@ export function TeacherPlanningEdit({
 
       {/* Actions */}
       <div className="border-t px-5 py-3">
-        {!hasCourses || !hasRooms || !scheduleEditable ? (
+        {!scheduleEditable ? (
           <Button variant="outline" onClick={onBack} className="w-full">
             Fermer
           </Button>
         ) : isCreation ? (
-          <Button onClick={handleSubmit} disabled={isBusy || !form.courseId} className="w-full">
+          <Button
+            onClick={handleSubmit}
+            disabled={isBusy || !form.courseId || !canSubmit}
+            className="w-full"
+          >
             {saving && <Loader2 className="size-4 animate-spin" />}
             Créer la séance
           </Button>
         ) : (
           <div className="space-y-2.5">
-            <Button onClick={handleSubmit} disabled={isBusy || !form.courseId} className="w-full">
+            <Button
+              onClick={handleSubmit}
+              disabled={isBusy || !form.courseId || !canSubmit}
+              className="w-full"
+            >
               {saving && <Loader2 className="size-4 animate-spin" />}
               Enregistrer les modifications
             </Button>

@@ -12,6 +12,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 
 module.exports = {
   turbopack: { root: path.join(__dirname, '../..') },
+  allowedDevOrigins: ['172.29.128.1'],
   experimental: {
     // Transforme les imports barrel en imports directs au build (bundle size)
     optimizePackageImports: ['lucide-react'],

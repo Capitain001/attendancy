@@ -1,8 +1,10 @@
 {
   "name": "getTeacherNextScheduleAction",
   "file": "src/services/schedule/actions/schedule.queries.ts",
-  "sig": "({ teacherId }: { teacherId: string }) => Promise<{ error: string; data?: undefined; } | { data: { class: { level: Level; _count: { studentEnrollments: number; }; name: string; }; course: { name: string; ueCourse: { code: string | null; }; }; ... 8 more ...; notes: string | null; } | null; error?: undefined; }>",
-  "calls": [],
+  "sig": "({ teacherId }: { teacherId: string }) => Promise<{ error: string; data?: undefined; } | { data: { id: string; startTime: Date; endTime: Date; status: ScheduleStatus; confirmed: boolean; notes: string | null; ... 4 more ...; session: { ...; } | null; } | null; error?: undefined; }>",
+  "calls": [
+    "getTeacherNextSchedule"
+  ],
   "auth": {},
   "rules": [],
   "why_ref": ""

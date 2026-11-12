@@ -3,8 +3,7 @@
   "file": "src/services/schedule/actions/schedule.mutations.ts",
   "sig": "(scheduleId: string) => Promise<{ error: string; data?: undefined; } | { data: true; error?: undefined; }>",
   "calls": [
-    "getScheduleForNotify",
-    "markScheduleCreationNotified"
+    "getScheduleForNotify"
   ],
   "auth": {},
   "rules": [],

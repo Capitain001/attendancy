@@ -54,3 +54,6 @@ C:\PROJECTS\PROJECT\PRODUCTIONS\attendancy\apps\web\.next\dev\server\chunks\ssr\
   5085 });
 → 5086 const programTrack = await tx.programTrack.upsert(
 Transaction API error: A query cannot be executed on an expired transaction. The timeout for this transaction was 5000 ms, however 8890 ms passed since the start of the transaction. Consider increasing the interactive transaction timeout or doing less work in the transaction.
+
+
+Invalid `prisma.programTrack.create()` invocation: { data: { name: "genie logiciel", departmentId: null, orgId: "33843a2f-78b7-4fc4-aafd-d7a40943e2b1", + department: { + create: DepartmentCreateWithoutProgramTracksInput | DepartmentUncheckedCreateWithoutProgramTracksInput, + connectOrCreate: DepartmentCreateOrConnectWithoutProgramTracksInput, + connect: DepartmentWhereUniqueInput + } }, select: { id: true, name: true, departmentId: true, description: true } } Argument `department` is missing.

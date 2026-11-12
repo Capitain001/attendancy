@@ -25,7 +25,8 @@ Les pages RSC : `await connection()`, prefetch parallèle, `HydrationBoundary` (
 
 - `useOrgInvitations(limit?)` → `{ invitations, inviteTeacher, inviteDirection, resend, revoke }` (mutations React Query).
 - `useInvitationStats()` → `{ stats }` (Total/En attente/Acceptées/Expirées).
-- `useClassInvitations(classId)` → `{ invitations, inviteStudent, resend, revoke }`.
+- `useClassInvitations(classId, { statuses? })` → `{ invitations, inviteStudent, resend, revoke }`.
+  Sans `statuses`, retourne toutes les invitations sauf `REVOKED`; la clé cache inclut les statuts lorsqu'ils sont filtrés.
 
 Les hooks **normalisent** les retours hétérogènes du module (`{success,error}` / `{data}` / `{success,stats}`).
 

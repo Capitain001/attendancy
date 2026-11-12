@@ -56,8 +56,6 @@ export default async function PersonalTeacherClassesPage({
           </p>
         </header>
 
-
-
         {loadError && (
           <p
             role="alert"
@@ -105,7 +103,6 @@ export default async function PersonalTeacherClassesPage({
             </section>
           );
         })}
-        <PersonalInvitationCard href={`${hrefs.classes}/invitation`} />
 
         {canAddClass && (
           <>

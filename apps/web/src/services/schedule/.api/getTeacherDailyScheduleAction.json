@@ -1,8 +1,10 @@
 {
   "name": "getTeacherDailyScheduleAction",
   "file": "src/services/schedule/actions/schedule.queries.ts",
-  "sig": "(input?: GetTeacherDailyScheduleInput) => Promise<{ error: string; data?: undefined; } | { data: { class: { level: Level; _count: { studentEnrollments: number; }; name: string; }; course: { name: string; }; group: { _count: { studentGroups: number; }; name: string; } | null; ... 7 more ...; notes: string | null; }[]; error?: undefined; }>",
-  "calls": [],
+  "sig": "(input?: GetTeacherDailyScheduleInput) => Promise<{ error: string; data?: undefined; } | { data: { id: string; startTime: Date; endTime: Date; status: ScheduleStatus; confirmed: boolean; notes: string | null; class: { ...; }; course: { ...; }; group: { ...; } | null; room: { ...; }; session: { ...; } | null; }[]; error?: undefined; }>",
+  "calls": [
+    "getTeacherDailySchedule"
+  ],
   "auth": {},
   "rules": [],
   "why_ref": ""

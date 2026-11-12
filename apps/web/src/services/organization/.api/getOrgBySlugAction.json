@@ -1,7 +1,7 @@
 {
   "name": "getOrgBySlugAction",
   "file": "src/services/organization/actions/organization.queries.ts",
-  "sig": "(slug: string) => Promise<{ data: { id: string; name: string; email: string | null; slug: string | null; logo: string | null; domain: string | null; } | null; error?: undefined; } | { error: string; data?: undefined; }>",
+  "sig": "(slug: string) => Promise<{ data: { name: string; id: string; email: string | null; slug: string | null; logo: string | null; domain: string | null; } | null; error?: undefined; } | { error: string; data?: undefined; }>",
   "calls": [
     "getOrgBySlug"
   ],

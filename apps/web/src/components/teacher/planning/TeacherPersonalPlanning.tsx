@@ -1,3 +1,4 @@
+// src/components/teacher/planning/TeacherPersonalPlanning.tsx
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
@@ -20,8 +21,10 @@ import { mapScheduleToEvent } from "@/components/planning/utils";
 import type { PlanningResources } from "@/services/planning";
 import type { GetSchedulesDto } from "@/services/schedule";
 import { usePlanningMonth } from "@/hooks/data/planning/use-planning-month";
-import { useLocalStorage } from "@/hooks/utils/use-local-storage";
-import { planningSchedulesQuery } from "@/services/planning/queries";
+import {
+  planningResourcesQuery,
+  planningSchedulesQuery,
+} from "@/services/planning/queries";
 
 import { PersonalPlanningDrawer } from "./ui/PersonalPlanningDrawer";
 import { TeacherPlanningPreview } from "./ui/TeacherPlanningPreview";
@@ -32,6 +35,10 @@ type Resources = NonNullable<PlanningResources>;
 type DrawerView = { kind: "day" } | { kind: "session"; event: ScheduleEvent };
 
 const EMPTY: GetSchedulesDto = []; // référence stable
+
+// Référence stable utilisée pendant le chargement des ressources d'une classe.
+// À ajuster si PlanningResources contient d'autres champs obligatoires.
+const EMPTY_RESOURCES = { courses: [], rooms: [], groups: [] } as unknown as Resources;
 
 const HAS_SCHEDULE_DECORATION: DayDecoration = {
   fillClassName: "bg-primary/10",
@@ -90,7 +97,7 @@ export function buildDraftEvent(
       roomId: resources.rooms.length === 1 ? resources.rooms[0].id : undefined,
       groupId: undefined,
       status: "PENDING",
-      confirmed: false,
+      confirmed: true,
       isLocked: false,
     },
   };
@@ -99,34 +106,34 @@ export function buildDraftEvent(
 /**
  * Planning d'un prof en organisation personnelle.
  * Calendrier (ui/custom/calendar) scopé par teacherId + drawer du jour avec switch aperçu/édition.
- * La sélection de classe est intégrée au formulaire d'édition/création et persistée en localStorage.
+ * La classe active vit en état local ; l'URL (?classId=) est synchronisée via
+ * history.replaceState, sans rerender serveur. Les ressources (cours, salles, groupes)
+ * sont chargées par classe via TanStack Query.
  */
 export function TeacherPersonalPlanning({
   classId,
   teacherId,
-  resources,
   classes = [],
 }: {
   classId: string;
   teacherId?: string;
-  resources: Resources;
   classes?: Array<{ id: string; name: string }>;
 }) {
   const queryClient = useQueryClient();
-  const [storedClassId, setStoredClassId] = useLocalStorage<string>(
-    "attendancy:personal:selectedClassId",
-    classId
-  );
-
-  const activeClassId = useMemo(() => {
-    if (classes.some((c) => c.id === storedClassId)) return storedClassId;
-    return classId;
-  }, [classes, storedClassId, classId]);
+  const [activeClassId, setActiveClassId] = useState(classId);
 
   const [visibleMonth, setVisibleMonth] = usePlanningMonth();
   const [selectedDate, setSelectedDate] = useState(() => startOfDay(new Date()));
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [view, setView] = useState<DrawerView>({ kind: "day" });
+
+  // Les ressources suivent la classe de la séance ouverte, sinon la classe active.
+  const resourcesClassId =
+    view.kind === "session" ? view.event.meta.classId || activeClassId : activeClassId;
+
+  const { data: resources, isPending: resourcesLoading } = useQuery(
+    planningResourcesQuery(resourcesClassId),
+  );
 
   const { data: monthSchedules = EMPTY } = useQuery({
     ...planningSchedulesQuery({ date: format(visibleMonth, "yyyy-MM-dd"), teacherId }),
@@ -139,7 +146,10 @@ export function TeacherPersonalPlanning({
     [monthSchedules]
   );
 
-  const getConflictResources = useCallback(async () => resources, [resources]);
+  const getConflictResources = useCallback(
+    () => queryClient.ensureQueryData(planningResourcesQuery(resourcesClassId)),
+    [queryClient, resourcesClassId]
+  );
 
   const { events, onEventAdd, onEventUpdate, onEventDelete } = usePlanningEvents({
     initialEvents,
@@ -165,13 +175,11 @@ export function TeacherPersonalPlanning({
     [scheduledDays]
   );
 
-  // const dayFooter = useCallback(
-  //   (date: Date) => (scheduledDays.has(format(date, "yyyy-MM-dd")) ? "•" : null),
-  //   [scheduledDays]
-  // );
-
   const draft = useMemo(
-    () => buildDraftEvent(selectedDate, activeClassId, teacherId, resources, dayEvents),
+    () =>
+      resources
+        ? buildDraftEvent(selectedDate, activeClassId, teacherId, resources, dayEvents)
+        : null,
     [selectedDate, activeClassId, teacherId, resources, dayEvents]
   );
 
@@ -183,6 +191,32 @@ export function TeacherPersonalPlanning({
   }, []);
 
   const backToDay = useCallback(() => setView({ kind: "day" }), []);
+
+  const handleClassChange = useCallback((nextClassId: string) => {
+    setActiveClassId(nextClassId);
+    setView((current) => {
+      if (current.kind !== "session" || current.event.id) return current;
+
+      return {
+        kind: "session",
+        event: {
+          ...current.event,
+          meta: {
+            ...current.event.meta,
+            classId: nextClassId,
+            courseId: "",
+            roomId: undefined,
+            groupId: undefined,
+          },
+        },
+      };
+    });
+
+    // Met à jour l'URL sans rerender serveur.
+    const url = new URL(window.location.href);
+    url.searchParams.set("classId", nextClassId);
+    window.history.replaceState(null, "", `${url.pathname}${url.search}`);
+  }, []);
 
   const handleSave = useCallback(
     async (event: ScheduleEvent) => {
@@ -215,13 +249,13 @@ export function TeacherPersonalPlanning({
           selected={selectedDate}
           onSelect={openDay}
           dayDecoration={dayDecoration}
-          // dayFooter={dayFooter}
           locale={fr}
           todayLabel="Auj."
           classNames={{ root: "w-full" }}
           className="mx-auto h-145 gap-3 p-2"
         />
 
+        
         <PersonalPlanningDrawer
           open={drawerOpen}
           onOpenChange={setDrawerOpen}
@@ -239,11 +273,12 @@ export function TeacherPersonalPlanning({
             <TeacherPlanningEdit
               key={view.event.id || "draft"}
               event={view.event}
-              classId={view.event.meta.classId || activeClassId}
-              onClassChange={setStoredClassId}
+              classId={resourcesClassId}
+              onClassChange={handleClassChange}
               classes={classes}
               teacherId={teacherId}
-              resources={resources}
+              resources={resources ?? EMPTY_RESOURCES}
+              resourcesLoading={resourcesLoading}
               onBack={backToDay}
               onSave={handleSave}
               onDelete={handleDelete}

@@ -1,3 +1,4 @@
+//packages\ui\src\Header.tsx
 "use client";
 
 import type { ReactNode } from "react";
@@ -12,7 +13,7 @@ const DEFAULT_BRAND = "Attendancy";
 
 export type HeaderProps = {
   user?: PublicUserInfo;
-  onSignOut?: () => void | Promise<void>;
+  onSignOut: () => void | Promise<void>;
   notifications?: ReactNode;
   brandHref?: string;
   className?: string;

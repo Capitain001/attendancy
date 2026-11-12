@@ -47,7 +47,7 @@ export function TeacherPlanningPreview({
         </h2>
 
         {events.length === 0 ? (
-          <p className="mb-6 text-2xl font-medium">Pas de cours ce jour-là.</p>
+          <p className="mb-6 text-2xl font-medium">Pas de cours programmer.</p>
         ) : (
           <div>
             <div className="flex items-center gap-4 border-b pb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">

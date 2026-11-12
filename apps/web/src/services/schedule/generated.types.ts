@@ -2,14 +2,15 @@
 // Régénérer : npx tsx scripts/generate/types/types.ts schedule
 // Pour surcharger un type, définissez-le dans ./types.ts (jamais écrasé).
 
-import { createSchedule, updateSchedule, removeSchedule, restoreSchedule, markScheduleCreationNotified, getScheduleForNotify, removeSchedulesByRule, removeNextSchedulesByRule, toggleScheduleLock, getSchedules, getDaySchedules, getClassSchedules, getTeacherSchedules, getRoomSchedules, getSchedulesByClass, getSchedulesByCourse, getScheduleDays, getTeacherNextSchedule, getTodayClassSchedules, getTeacherDailySchedule, assertClassInOrg, getTeacherSchedulesInfo, getCourseLastSchedule } from './database'
+import { createSchedule, updateSchedule, removeSchedule, restoreSchedule, claimScheduleAnnouncement, getScheduleForNotify, getScheduleNotificationContext, removeSchedulesByRule, removeNextSchedulesByRule, toggleScheduleLock, getSchedules, getDaySchedules, getClassSchedules, getTeacherSchedules, getRoomSchedules, getSchedulesByClass, getSchedulesByCourse, getScheduleDays, getTeacherNextSchedule, getTodayClassSchedules, getTeacherDailySchedule, assertClassInOrg, getTeacherSchedulesInfo, getCourseLastSchedule } from './database'
 
 export type CreateScheduleDto = Awaited<ReturnType<typeof createSchedule>>
 export type UpdateScheduleDto = Awaited<ReturnType<typeof updateSchedule>>
 export type RemoveScheduleDto = Awaited<ReturnType<typeof removeSchedule>>
 export type RestoreScheduleDto = Awaited<ReturnType<typeof restoreSchedule>>
-export type MarkScheduleCreationNotifiedDto = Awaited<ReturnType<typeof markScheduleCreationNotified>>
+export type ClaimScheduleAnnouncementDto = Awaited<ReturnType<typeof claimScheduleAnnouncement>>
 export type GetScheduleForNotifyDto = Awaited<ReturnType<typeof getScheduleForNotify>>
+export type GetScheduleNotificationContextDto = Awaited<ReturnType<typeof getScheduleNotificationContext>>
 export type RemoveSchedulesByRuleDto = Awaited<ReturnType<typeof removeSchedulesByRule>>
 export type RemoveNextSchedulesByRuleDto = Awaited<ReturnType<typeof removeNextSchedulesByRule>>
 export type ToggleScheduleLockDto = Awaited<ReturnType<typeof toggleScheduleLock>>

@@ -55,17 +55,19 @@ export function TClassInvitationScreen({
     refetch: refetchInvitations,
     resend,
     revoke,
-  } = useClassInvitations(classId);
+  } = useClassInvitations(classId, { statuses: ["PENDING"] });
   const { enrollments, isLoading: isLoadingEnrollments } =
     useClassEnrollments(classId);
 
   const participants = enrollments.map((enrollment) => enrollment.student);
-  const pendingCount = invitations.filter((invitation) =>
+  const pendingInvitations = invitations.filter((invitation) =>
     isInvitationPending(invitation, now),
-  ).length;
+  );
+  const pendingCount = pendingInvitations.length;
   const selectedInvitation =
-    invitations.find((invitation) => invitation.id === selectedInvitationId) ??
-    null;
+    pendingInvitations.find(
+      (invitation) => invitation.id === selectedInvitationId,
+    ) ?? null;
   const errorMessage =
     invitationQueryError instanceof Error
       ? invitationQueryError.message
@@ -84,7 +86,7 @@ export function TClassInvitationScreen({
           title="Inscrire des étudiants"
           aria-label="Inscrire des étudiants"
           onClick={() => setIsEnrollModalOpen(true)}
-          className="flex size-14 shrink-0 items-center justify-center rounded-full border border-dashed border-muted-foreground/40 text-muted-foreground transition-colors hover:border-primary hover:bg-primary/5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          className="flex size-12 shrink-0 items-center justify-center rounded-full border border-dashed border-muted-foreground/40 text-muted-foreground transition-colors hover:border-primary hover:bg-primary/5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           <UserPlus className="size-4" />
         </button>
@@ -114,7 +116,7 @@ export function TClassInvitationScreen({
       </section>
 
       <ClassInvitationsSection
-        invitations={invitations}
+        invitations={pendingInvitations}
         isLoading={isLoadingInvitations}
         isFetching={isFetchingInvitations}
         isError={isInvitationQueryError}

@@ -2,7 +2,10 @@
 // src/services/invitation/student/database.ts
 
 import { prisma } from "@/lib/prisma";
-import type { DatabaseInvitationDetails } from "@/types/invitation";
+import type {
+  DatabaseInvitationDetails,
+  InvitationStatus,
+} from "@/types/invitation";
 
 interface CheckInvitationResourcesParams {
   classId:   string;
@@ -66,13 +69,17 @@ export async function checkInvitationResources(
 /**
  * Invitations dont les détails contiennent `enrollment.classId` pour une classe donnée.
  */
-export async function getClassInvitations(classId: string, orgId: string) {
+export async function getClassInvitations(
+  classId: string,
+  orgId: string,
+  statuses?: readonly InvitationStatus[],
+) {
   const invitations = await prisma.invitation.findMany({
     where: {
       orgId,
       resourceId:   classId,
       resourceType: "CLASS",
-      status: { not: "REVOKED" },
+      status: statuses?.length ? { in: [...statuses] } : { not: "REVOKED" },
     },
     select: {
       id:        true,

@@ -76,3 +76,17 @@ export const inviteStudentsBulkSchema = v.object({
 });
 
 export type InviteStudentsBulkInput = v.InferInput<typeof inviteStudentsBulkSchema>;
+
+export const getClassInvitationsSchema = v.object({
+  classId: v.pipe(
+    v.string(),
+    v.nonEmpty("L'ID de la classe est requis")
+  ),
+  statuses: v.optional(
+    v.array(v.picklist(["PENDING", "ACCEPTED", "DECLINED", "REVOKED"])),
+  ),
+});
+
+export type GetClassInvitationsInput = v.InferInput<
+  typeof getClassInvitationsSchema
+>;
