@@ -43,6 +43,7 @@ export async function getStudentsEnrollments(orgId: string, filters: GetStudents
               lastName: true,
               email: true,
               avatar_url: true,
+              phone: true,
             },
           },
         },

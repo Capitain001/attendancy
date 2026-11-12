@@ -167,8 +167,8 @@ export async function getTeacherSchedulesAction(
   const { orgId } = auth.data
 
   try {
-    // return { data: mockGetTeacherSchedules }
     return { data: await getTeacherSchedules({ orgId, ...params }) }
+    // return { data: mockGetTeacherSchedules }
 
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }

@@ -79,20 +79,20 @@ export default async function StudentSessionPage() {
     <div className="flex flex-col gap-10 pb-16">
       {/* En-tête */}
       <header className="space-y-4 ">
-        {/* <div className="flex items-center justify-between gap-3 text-xs">
-          <span className="inline-flex items-center gap-2 font-semibold uppercase tracking-widest text-foreground">
-            <span className="relative flex size-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-foreground opacity-60" />
-              <span className="relative inline-flex size-2 rounded-full bg-foreground" />
-            </span>
-            Séance en cours
-          </span>
-          <span className="text-muted-foreground">
-            {remainingMin > 0 ? `${remainingMin} min restantes` : "Bientôt terminée"}
-          </span>
-        </div> */}
         <h1 className="font-serif text-4xl mt-8 leading-tight">{active.course}</h1>
       </header>
+
+      {/* Présence */}
+      <section>
+        {active.myAttendance ? (
+          <PresenceState attendance={active.myAttendance} />
+        ) : (
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">Tu n&apos;as pas encore marqué ta présence.</p>
+            <StudentScanButton />
+          </div>
+        )}
+      </section>
 
       {/* Progression */}
       <section className="space-y-2">
@@ -113,17 +113,7 @@ export default async function StudentSessionPage() {
         </dl>
       )}
 
-      {/* Présence */}
-      <section>
-        {active.myAttendance ? (
-          <PresenceState attendance={active.myAttendance} />
-        ) : (
-          <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">Tu n&apos;as pas encore marqué ta présence.</p>
-            <StudentScanButton />
-          </div>
-        )}
-      </section>
+
     </div>
   );
 }
