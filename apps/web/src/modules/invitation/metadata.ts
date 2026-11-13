@@ -1,7 +1,5 @@
 // src/modules/invitation/metadata.ts
 // ==========================================
-// src/modules/invitation/metadata.ts
-// ==========================================
 /**
  * Service de génération des métadonnées d'invitation
  * 

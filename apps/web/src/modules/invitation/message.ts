@@ -1,10 +1,11 @@
+//apps\web\src\modules\invitation\message.ts
 import { Resource } from '@/generated/prisma/browser'
 import type { Prisma } from '@/generated/prisma/client'
 import type { Role } from '@/types/user'
 import { ROLE_LABELS } from '@/modules/user/constants'
+import { INVITATION_ACTIONS, InvitationAction } from './constants'
 
-export const INVITATION_ACTIONS = ['JOIN_ORG', 'JOIN_CLASS', 'GRANT_ROLE'] as const
-export type InvitationAction = (typeof INVITATION_ACTIONS)[number]
+
 
 export function resolveInvitationAction(params: {
   resourceType?: Resource | null

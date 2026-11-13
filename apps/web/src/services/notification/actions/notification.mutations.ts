@@ -5,6 +5,7 @@ import { authAccess } from '@/modules/auth'
 import { getUserInfo } from '@/modules/user'
 import { ERRORS } from '@/config'
 import { createNotificationSchema, markNotificationAsReadSchema } from '../validation'
+import type { CreateNotificationInput } from '../validation'
 import {
   markNotificationRead,
   markAllNotificationsRead,
@@ -45,16 +46,13 @@ export async function markAllInboxNotificationsAsReadAction() {
   }
 }
 
-
 // ─── Utilisateur (actions scope personnel) ──────────────────────────────────
 
 export async function markNotificationAsRead(notificationId: string) {
-  // 1. Authentification (hors try/catch)
   const auth = await authAccess()
   if (!auth.data) return { error: auth.error }
   const { user } = auth.data
 
-  // 2. Opération métier
   try {
     await markNotificationRead({ notificationId, userId: user.id })
     return { data: true as const }
@@ -64,12 +62,10 @@ export async function markNotificationAsRead(notificationId: string) {
 }
 
 export async function markAllRead() {
-  // 1. Authentification (hors try/catch)
   const auth = await authAccess()
   if (!auth.data) return { error: auth.error }
   const { user } = auth.data
 
-  // 2. Opération métier
   try {
     await markAllNotificationsRead(user.id)
     return { data: true as const }
@@ -79,12 +75,10 @@ export async function markAllRead() {
 }
 
 export async function deleteNotification(notificationId: string) {
-  // 1. Authentification (hors try/catch)
   const auth = await authAccess()
   if (!auth.data) return { error: auth.error }
   const { user } = auth.data
 
-  // 2. Opération métier
   try {
     await removeNotification({ notificationId, userId: user.id })
     return { data: true as const }
@@ -95,22 +89,16 @@ export async function deleteNotification(notificationId: string) {
 
 // ─── Admin (scope organisation) ──────────────────────────────────────────────
 
-export async function createAdminNotification(
-  userId: string,
-  input: { message: string; type?: string; scheduleId?: string; metadata?: Record<string, unknown> },
-) {
-  // 1. Validation (hors try/catch)
+export async function createAdminNotification(userId: string, input: CreateNotificationInput) {
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   const parsed = v.safeParse(createNotificationSchema, input)
   if (!parsed.success) {
     return { error: parsed.issues[0]?.message ?? 'Données invalides' }
   }
 
-  // 2. Authentification et autorisation (hors try/catch)
-  const auth = await authAccess({ requiredRole: 'DIRECTION' })
-  if (!auth.data) return { error: auth.error }
-  const { orgId } = auth.data
-
-  // 3. Opération métier
   try {
     return { data: await createNotificationForOrgUser({ orgId, userId, data: parsed.output }) }
   } catch (e) {
@@ -118,36 +106,25 @@ export async function createAdminNotification(
   }
 }
 
-export async function sendAdminPushNotification(
-  userId: string,
-  input: { message: string; type?: string; scheduleId?: string; metadata?: Record<string, unknown> },
-) {
-  // 1. Validation (hors try/catch)
+export async function sendAdminPushNotification(userId: string, input: CreateNotificationInput) {
+  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  if (!auth.data) return { error: auth.error }
+  const { orgId } = auth.data
+
   const parsed = v.safeParse(createNotificationSchema, input)
   if (!parsed.success) {
     return { error: parsed.issues[0]?.message ?? 'Données invalides' }
   }
 
-  // 2. Authentification et autorisation (hors try/catch)
-  const auth = await authAccess({ requiredRole: 'DIRECTION' })
-  if (!auth.data) return { error: auth.error }
-  const { orgId } = auth.data
-
-  // 3. Vérification d'appartenance à l'org (hors try/catch)
   const isMember = await checkOrgMembership(userId, orgId)
   if (!isMember) {
     return { error: "L'utilisateur n'appartient pas à cette organisation" }
   }
 
-  // 4. Opération métier
   try {
     const result = await sendPushNotificationToUserById(userId, {
-      message: parsed.output.message,
-      orgId: parsed.output.orgId ?? orgId,
-      resourceType: parsed.output.resourceType,
-      resourceId: parsed.output.resourceId,
-      event: parsed.output.event,
-      metadata: parsed.output.metadata,
+      ...parsed.output,
+      orgId, // en dernier : le token écrase toujours l'orgId du body
     })
     return result.success ? { data: true as const } : { error: result.error ?? ERRORS.SERVER }
   } catch (e) {

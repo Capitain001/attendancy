@@ -15,7 +15,7 @@ const NOTIFICATION_SELECT = {
   metadata: true,
   createdAt: true,
   updatedAt: true,
-} as const
+} as const satisfies Prisma.NotificationSelect
 
 // ─── Boîte de réception (Inbox) ───────────────────────────────────────────────
 

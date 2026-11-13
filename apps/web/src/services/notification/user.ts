@@ -23,8 +23,7 @@ import {
   getPushSubscriptionStats,
 } from './database/push.queries'
 import { createUserNotification } from './database/notification.mutations'
-
-import type { Resource, NotificationEvent } from '@/generated/prisma/browser'
+import type { CreateNotificationOutput } from './validation'
 
 // ─── Abonnement push ──────────────────────────────────────────────────────────
 
@@ -80,35 +79,18 @@ export async function unsubscribeUserDevice(endpoint: string) {
 
 /**
  * Persiste la notification en base + envoie un push à tous les appareils actifs.
- * Pas d'auth requise — appelable depuis d'autres services côté serveur.
+ * Le payload est le type Output du schéma : tout est inféré depuis validation.ts.
  */
 export async function sendPushNotificationToUserById(
   userId: string,
-  payload: {
-    message: string
-    orgId?: string
-    resourceType?: Resource
-    resourceId?: string
-    event?: NotificationEvent
-    metadata?: Record<string, unknown>
-  },
-): Promise<{ success: boolean; error?: string }> {
+  payload: CreateNotificationOutput,
+) {
   try {
     if (!isVapidConfigured()) {
       return { success: false, error: 'VAPID non configuré — vérifier NEXT_PUBLIC_VAPID_PUBLIC_KEY et VAPID_PRIVATE_KEY' }
     }
 
-    await createUserNotification({
-      userId,
-      data: {
-        message: payload.message,
-        orgId: payload.orgId,
-        resourceType: payload.resourceType,
-        resourceId: payload.resourceId,
-        event: payload.event,
-        metadata: payload.metadata,
-      },
-    })
+    await createUserNotification({ userId, data: payload })
 
     const subscriptions = await getActivePushSubscriptionsByUserId(userId)
     if (subscriptions.length === 0) {
@@ -118,7 +100,9 @@ export async function sendPushNotificationToUserById(
     const pushPayload = buildPushPayload({
       message: payload.message,
       userId,
-      type: payload.resourceType,
+      resourceType: payload.resourceType,
+      resourceId: payload.resourceId,
+      event: payload.event,
     })
     const results = await Promise.allSettled(
       subscriptions.map((sub) => sendToDevice(sub, pushPayload)),
@@ -138,7 +122,7 @@ export async function sendPushNotificationToUserById(
   }
 }
 
-export async function sendNotificationToCurrentUser(payload: { message: string }): Promise<{ success: boolean; error?: string }> {
+export async function sendNotificationToCurrentUser(payload: { message: string }) {
   const auth = await authAccess()
   if (!auth.data) return { success: false, error: auth.error }
   return sendPushNotificationToUserById(auth.data.user.id, payload)

@@ -1,6 +1,7 @@
 // src/modules/notification/push.ts
 import 'server-only'
 import webpush from 'web-push'
+import type { Resource, NotificationEvent } from '@/generated/prisma/browser'
 import { NOTIFICATION_CONFIG, NOTIFICATION_TITLES } from '@/config/notification'
 import type { PushPayload, SendDeviceResult } from './types'
 
@@ -26,13 +27,15 @@ initVapid()
 export function buildPushPayload(params: {
   message: string
   userId?: string
-  type?: string
+  resourceType?: Resource
+  resourceId?: string
+  event?: NotificationEvent
   title?: string
 }): string {
   const resolvedTitle =
     params.title ??
-    (params.type && params.type in NOTIFICATION_TITLES
-      ? NOTIFICATION_TITLES[params.type as keyof typeof NOTIFICATION_TITLES]
+    (params.resourceType && params.resourceType in NOTIFICATION_TITLES
+      ? NOTIFICATION_TITLES[params.resourceType as keyof typeof NOTIFICATION_TITLES]
       : 'Notification 🔔')
 
   const payload: PushPayload = {
@@ -42,7 +45,12 @@ export function buildPushPayload(params: {
     badge: NOTIFICATION_CONFIG.defaultIcon,
     tag: `notification-${Date.now()}`,
     timestamp: Date.now(),
-    data: params.userId ? { userId: params.userId } : undefined,
+    data: {
+      userId: params.userId,
+      resourceType: params.resourceType,
+      resourceId: params.resourceId,
+      event: params.event,
+    },
   }
   return JSON.stringify(payload)
 }

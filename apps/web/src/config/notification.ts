@@ -41,11 +41,6 @@ export const NOTIFICATION_TITLES: Partial<Record<Resource, string>> & Record<str
   ATTENDANCE: "Présence / Assiduité",
   COURSE: "Cours",
   SCHEDULE: "Planning / Séance",
-
-
-
-
-
   MESSAGE:         "Nouveau message",
   INVITATION:      "Invitation",
 };
