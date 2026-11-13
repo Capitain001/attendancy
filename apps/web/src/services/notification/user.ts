@@ -24,6 +24,8 @@ import {
 } from './database/push.queries'
 import { createUserNotification } from './database/notification.mutations'
 
+import type { Resource, NotificationEvent } from '@/generated/prisma/browser'
+
 // ─── Abonnement push ──────────────────────────────────────────────────────────
 
 export async function subscribeUser(subscription: SerializedPushSubscription, userAgent?: string) {
@@ -84,8 +86,10 @@ export async function sendPushNotificationToUserById(
   userId: string,
   payload: {
     message: string
-    type?: string
-    scheduleId?: string
+    orgId?: string
+    resourceType?: Resource
+    resourceId?: string
+    event?: NotificationEvent
     metadata?: Record<string, unknown>
   },
 ): Promise<{ success: boolean; error?: string }> {
@@ -98,8 +102,10 @@ export async function sendPushNotificationToUserById(
       userId,
       data: {
         message: payload.message,
-        type: (payload.type as 'GENERAL' | undefined) ?? 'GENERAL',
-        scheduleId: payload.scheduleId,
+        orgId: payload.orgId,
+        resourceType: payload.resourceType,
+        resourceId: payload.resourceId,
+        event: payload.event,
         metadata: payload.metadata,
       },
     })
@@ -109,7 +115,11 @@ export async function sendPushNotificationToUserById(
       return { success: false, error: 'Aucun appareil push actif pour cet utilisateur' }
     }
 
-    const pushPayload = buildPushPayload({ message: payload.message, userId, type: payload.type })
+    const pushPayload = buildPushPayload({
+      message: payload.message,
+      userId,
+      type: payload.resourceType,
+    })
     const results = await Promise.allSettled(
       subscriptions.map((sub) => sendToDevice(sub, pushPayload)),
     )

@@ -112,25 +112,30 @@ model Comment {
 }
 
 // Notification in-app. Cycle de vie porté par read — pas de soft delete.
-// scheduleId : lien direct vers la séance concernée (absence, changement).
+// resourceType + resourceId : relation libre vers la ressource concernée
+// (même contrat que Document : pas de FK, intégrité vérifiée à l'écriture).
+// event : ce qui s'est passé. orgId : cloisonne les vues admin (User est global).
+// Tout est nullable : une notification système n'a ni ressource ni org.
 model Notification {
-  id         String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId     String           @db.Uuid
-  message    String
-  type       NotificationType @default(GENERAL)
-  read       Boolean          @default(false)
-  scheduleId String?          @db.Uuid
-  metadata   Json?
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
-  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  schedule   Schedule?        @relation(fields: [scheduleId], references: [id], onDelete: SetNull)
+  id           String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String             @db.Uuid
+  orgId        String?            @db.Uuid
+  message      String
+  resourceType Resource?
+  resourceId   String?            @db.Uuid
+  event        NotificationEvent?
+  read         Boolean            @default(false)
+  metadata     Json?
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization?      @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
-  @@index([userId])
-  @@index([scheduleId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([orgId, createdAt(sort: Desc)])
+  @@index([resourceType, resourceId])
   @@schema("public")
 }
-
 // Abonnement Web Push d'un appareil (clés VAPID côté client).
 model PushSubscription {
   id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -166,14 +171,13 @@ enum ParticipantRole {
   @@schema("public")
 }
 
-enum NotificationType {
-  ABSENCE
-  COURSE_CHANGE
-  NEW_COURSE
-  SCHEDULE_UPDATE
-  GENERAL
-  MESSAGE
-  INVITATION
+enum NotificationEvent {
+  CREATED
+  UPDATED
+  CANCELED
+  CONFIRMED
+  ASSIGNED
+  UNASSIGNED
 
   @@schema("public")
 }

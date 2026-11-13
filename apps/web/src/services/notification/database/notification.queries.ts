@@ -2,8 +2,20 @@
 import { cacheTag, cacheLife } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import type { Prisma } from '@/generated/prisma/client'
-import { CACHE } from '@/cache/server/key';;;
+import { CACHE } from '@/cache/server/key'
 import type { InboxFilter } from '../validation'
+
+const NOTIFICATION_SELECT = {
+  id: true,
+  message: true,
+  resourceType: true,
+  resourceId: true,
+  event: true,
+  read: true,
+  metadata: true,
+  createdAt: true,
+  updatedAt: true,
+} as const
 
 // ─── Boîte de réception (Inbox) ───────────────────────────────────────────────
 
@@ -18,29 +30,22 @@ export async function getInboxNotificationsForUser(
   if (filter === 'unread') {
     whereClause.read = false
   } else if (filter === 'invitations') {
-    whereClause.type = 'INVITATION'
+    whereClause.resourceType = 'INVITATION'
   } else if (filter === 'system') {
-    whereClause.type = { not: 'INVITATION' }
+    whereClause.OR = [
+      { resourceType: null },
+      { resourceType: { not: 'INVITATION' } },
+    ]
   }
 
   return prisma.notification.findMany({
     where: whereClause,
-    orderBy: { createdAt: 'desc' },
+    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
     take: limit,
     ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
-    select: {
-      id: true,
-      message: true,
-      type: true,
-      read: true,
-      scheduleId: true,
-      metadata: true,
-      createdAt: true,
-      updatedAt: true,
-    },
+    select: NOTIFICATION_SELECT,
   })
 }
-
 
 // ─── Notifications utilisateur ────────────────────────────────────────────────
 
@@ -52,16 +57,7 @@ export async function getNotificationsForUser(userId: string, limit = 20) {
     where: { userId },
     orderBy: { createdAt: 'desc' },
     take: limit,
-    select: {
-      id: true,
-      message: true,
-      type: true,
-      read: true,
-      scheduleId: true,
-      metadata: true,
-      createdAt: true,
-      updatedAt: true,
-    },
+    select: NOTIFICATION_SELECT,
   })
 }
 
@@ -73,16 +69,7 @@ export async function getUnreadNotificationsForUser(userId: string, limit = 10) 
     where: { userId, read: false },
     orderBy: { createdAt: 'desc' },
     take: limit,
-    select: {
-      id: true,
-      message: true,
-      type: true,
-      read: true,
-      scheduleId: true,
-      metadata: true,
-      createdAt: true,
-      updatedAt: true,
-    },
+    select: NOTIFICATION_SELECT,
   })
 }
 
@@ -101,7 +88,7 @@ export async function getUnreadCountForUser(userId: string) {
 
 export async function getOrganizationNotifications(orgId: string, limit = 50) {
   return prisma.notification.findMany({
-    where: { user: { userOrganizations: { some: { orgId } } } },
+    where: { orgId },
     include: {
       user: { select: { id: true, firstName: true, lastName: true, email: true } },
     },
@@ -113,8 +100,8 @@ export async function getOrganizationNotifications(orgId: string, limit = 50) {
 export async function getOrganizationUnreadNotifications(orgId: string, limit = 50) {
   return prisma.notification.findMany({
     where: {
+      orgId,
       read: false,
-      user: { userOrganizations: { some: { orgId } } },
     },
     include: {
       user: { select: { id: true, firstName: true, lastName: true, email: true } },
@@ -127,8 +114,8 @@ export async function getOrganizationUnreadNotifications(orgId: string, limit = 
 export async function getOrganizationUserNotifications(orgId: string, userId: string, limit = 20) {
   return prisma.notification.findMany({
     where: {
+      orgId,
       userId,
-      user: { userOrganizations: { some: { orgId } } },
     },
     include: {
       user: { select: { id: true, firstName: true, lastName: true, email: true } },
@@ -141,22 +128,22 @@ export async function getOrganizationUserNotifications(orgId: string, userId: st
 export async function getOrganizationUnreadCount(orgId: string) {
   return prisma.notification.count({
     where: {
+      orgId,
       read: false,
-      user: { userOrganizations: { some: { orgId } } },
     },
   })
 }
 
 export async function getOrganizationNotificationStats(orgId: string) {
-  const whereOrg = { user: { userOrganizations: { some: { orgId } } } } as const
+  const whereOrg = { orgId } as const
 
   const [total, unread, byType, uniqueUsers] = await Promise.all([
     prisma.notification.count({ where: whereOrg }),
-    prisma.notification.count({ where: { read: false, user: { userOrganizations: { some: { orgId } } } } }),
+    prisma.notification.count({ where: { ...whereOrg, read: false } }),
     prisma.notification.groupBy({
-      by: ['type'],
+      by: ['resourceType'],
       where: whereOrg,
-      _count: { type: true },
+      _count: { _all: true },
     }),
     prisma.notification.groupBy({
       by: ['userId'],
@@ -165,7 +152,7 @@ export async function getOrganizationNotificationStats(orgId: string) {
   ])
 
   const byTypeMap = byType.reduce<Record<string, number>>((acc, item) => {
-    acc[String(item.type)] = item._count.type
+    acc[item.resourceType ?? 'GENERAL'] = item._count._all
     return acc
   }, {})
 

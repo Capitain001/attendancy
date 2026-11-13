@@ -1,7 +1,7 @@
 // src/modules/auth/persmission/types.ts
 // services/persmission/types.ts
 
-import { Action, Resource } from "@/generated/prisma/client";
+import { Action, Resource } from "@/generated/prisma/browser";
 
 /**
  * Labels pour affichage humain
@@ -29,6 +29,7 @@ export const ResourceLabels: Record<Resource, string> = {
   FILIERE: "filiere",
   MESSAGE: "message",
   JUSTIFICATION: "justification",
+  INVITATION: "invitation",
 };
 
 /**

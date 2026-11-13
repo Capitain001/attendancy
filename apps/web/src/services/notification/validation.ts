@@ -1,22 +1,17 @@
 // src/services/notification/validation.ts
 import * as v from 'valibot'
+import { Resource, NotificationEvent } from '@/generated/prisma/browser'
 import { ORGANIZATION_TYPES } from './constants'
 
-// Types de notification métier — spécifiques au projet attendancy
-export const notificationTypeSchema = v.picklist([
-  'ABSENCE',
-  'COURSE_CHANGE',
-  'NEW_COURSE',
-  'SCHEDULE_UPDATE',
-  'GENERAL',
-  'MESSAGE',
-  'INVITATION',
-] as const)
+export const resourceTypeSchema = v.enum(Resource)
+export const notificationEventSchema = v.enum(NotificationEvent)
 
 export const createNotificationSchema = v.object({
   message: v.pipe(v.string(), v.minLength(1), v.maxLength(500)),
-  type: v.optional(notificationTypeSchema),
-  scheduleId: v.optional(v.string()),
+  orgId: v.optional(v.string()),
+  resourceType: v.optional(resourceTypeSchema),
+  resourceId: v.optional(v.string()),
+  event: v.optional(notificationEventSchema),
   metadata: v.optional(v.record(v.string(), v.unknown())),
 })
 

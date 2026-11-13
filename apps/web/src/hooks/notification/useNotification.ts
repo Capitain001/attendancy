@@ -3,7 +3,7 @@
 "use client"
 
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import type { NotificationType } from '@attendancy/types'
+import type { Resource } from '@/generated/prisma/browser'
 import { 
   getNotifications, 
   markAllRead, 
@@ -12,11 +12,11 @@ import {
 import { CACHE_KEYS } from '@/config/client_cache'
 
 interface UseNotificationsOptions {
-  type?: NotificationType
+  resourceType?: Resource
   limit?: number
 }
 
-export function useNotifications({ type, limit = 20 }: UseNotificationsOptions = {}) {
+export function useNotifications({ resourceType, limit = 20 }: UseNotificationsOptions = {}) {
   const queryClient = useQueryClient()
 
   const {
@@ -28,7 +28,7 @@ export function useNotifications({ type, limit = 20 }: UseNotificationsOptions =
     hasNextPage,
     isFetchingNextPage
   } = useInfiniteQuery({
-    queryKey: [...CACHE_KEYS.NOTIFICATIONS.ALL, { type, limit }],
+    queryKey: [...CACHE_KEYS.NOTIFICATIONS.ALL, { resourceType, limit }],
     queryFn: async ({ pageParam = 1 }) => {
       const result = await getNotifications(limit)
       if ('error' in result) throw new Error(result.error)
@@ -47,8 +47,8 @@ export function useNotifications({ type, limit = 20 }: UseNotificationsOptions =
   const allNotifications = data?.pages.flat() || []
 
   // Filtrer uniquement si un type d'enum valide est transmis
-  const filteredNotifications = type 
-    ? allNotifications.filter(n => n.type === type)
+  const filteredNotifications = resourceType 
+    ? allNotifications.filter(n => n.resourceType === resourceType)
     : allNotifications
 
   const unread = filteredNotifications.filter(n => !n.read)

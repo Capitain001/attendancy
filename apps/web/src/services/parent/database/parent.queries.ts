@@ -5,7 +5,7 @@
 // owners (student/schedule/attendance) avec le `studentId` de l'enfant.
 // Voir doc/proposals/parent-vision.md §4.
 
-import { CACHE } from '@/cache/server/key';;;;
+import { CACHE } from '@/cache/server/key'
 import { prisma } from "@/lib/prisma";
 import { unstable_cache } from "next/cache";
 
@@ -181,7 +181,7 @@ export async function searchEligibleParents(params: {
   }));
 }
 
-export async function getParentUserIdsForStudents(
+export async function getParentUserIds(
   studentIds: string[],
   orgId: string,
 ) {

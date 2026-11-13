@@ -3,7 +3,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { NotificationType } from "@/generated/prisma/browser";
+import type { Resource } from "@/generated/prisma/browser";
 import { useNotifications } from "@/hooks/notification/useNotification";
 import { NotificationDetailList } from "./detail-list";
 import { NotificationEmptyState, NotificationHistorySkeleton } from "./states";
@@ -14,16 +14,17 @@ interface NotificationHistoryProps {
 }
 
 export function NotificationHistory({ limit = 20 }: NotificationHistoryProps) {
-  const [selectedType, setSelectedType] = useState<NotificationType | null>(null);
+  const [selectedType, setSelectedType] = useState<Resource | string | null>(null);
   const { notifications, isLoading, actions } = useNotifications({ limit });
 
   // Regroupement par type. On suppose `notifications` déjà triée du plus
   // récent au plus ancien (ordre renvoyé par getNotifications) : le premier
   // élément non lu d'un groupe est donc sa dernière activité non lue.
   const { byType, groups } = useMemo(() => {
-    const byType = new Map<NotificationType, typeof notifications>();
+    const byType = new Map<Resource | string, typeof notifications>();
     notifications.forEach((item) => {
-      byType.set(item.type, [...(byType.get(item.type) ?? []), item]);
+      const groupKey = item.resourceType ?? 'GENERAL';
+      byType.set(groupKey, [...(byType.get(groupKey) ?? []), item]);
     });
 
     const groups: NotificationGroup[] = Array.from(byType.entries()).map(([type, items]) => {

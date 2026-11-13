@@ -9,9 +9,9 @@ import {
   confirmAllAttendances,
   createAttendance,
 } from "../database";
-import { AttendanceStatus } from "@/generated/prisma/client";
+import { AttendanceStatus, NotificationEvent, Resource } from "@/generated/prisma/browser";
 import { validateSessionToken } from "../../session/database/token.mutations";
-import { sendPushNotificationById } from "@/modules/notification/action";
+import { sendPushNotificationById } from "@/services/notification/server";
 
 /**
  * Notif PRESENT à la confirmation (D20) — best-effort, hors mutation :
@@ -23,8 +23,9 @@ async function notifyConfirmed(userIds: string[], scheduleId?: string) {
     userIds.map((userId) =>
       sendPushNotificationById(userId, {
         message: "Ta présence a été confirmée par l'enseignant.",
-        type: "GENERAL",
-        scheduleId,
+        resourceType: Resource.ATTENDANCE,
+        resourceId: scheduleId,
+        event: NotificationEvent.CONFIRMED,
       }),
     ),
   );

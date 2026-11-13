@@ -13,7 +13,7 @@ import {
   MessageSquare,
   Users,
 } from "lucide-react";
-import { NotificationType } from "@/generated/prisma/browser";
+import type { Resource } from "@/generated/prisma/browser";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -21,7 +21,7 @@ import { useAdminNotifications } from "@/hooks/notification/useAdminNotification
 import { cn } from "@/lib/utils";
 
 const TYPE_META: Record<
-  NotificationType,
+  string,
   { icon: React.ReactNode; label: string; className: string }
 > = {
   SCHEDULE_UPDATE: {
@@ -105,7 +105,7 @@ export function DirectionNotificationsView() {
       ) : (
         <ul className="space-y-1.5 animate-in fade-in duration-300">
           {notifications.map((n) => {
-            const meta = TYPE_META[n.type] ?? TYPE_META.GENERAL;
+            const meta = (n.resourceType && TYPE_META[n.resourceType]) ?? TYPE_META.GENERAL;
             return (
               <li key={n.id}>
                 <div

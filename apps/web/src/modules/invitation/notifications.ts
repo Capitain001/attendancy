@@ -1,7 +1,7 @@
 // src/modules/invitation/notifications.ts
 import { prisma } from "@/lib/prisma";
-import { NotificationType, Role } from "@/generated/prisma/client";
-import { sendPushNotificationToUserById as sendPushNotificationById } from "@/modules/notification/user";
+import { NotificationEvent, Resource, Role } from "@/generated/prisma/browser";
+import { sendPushNotificationById } from "@/services/notification/server";
 
 export type InvitationNotifyEvent = "CREATED" | "RESENT" | "LINK_GENERATED";
 
@@ -76,8 +76,14 @@ export async function notifyInvitationStakeholders(params: {
     await Promise.allSettled(
       [...recipientIds].map((userId) =>
         sendPushNotificationById(userId, {
+          orgId,
           message,
-          type: NotificationType.INVITATION,
+          resourceType: Resource.INVITATION,
+          resourceId: invitationId,
+          event:
+            event === "CREATED"
+              ? NotificationEvent.CREATED
+              : NotificationEvent.UPDATED,
           metadata,
         })
       )

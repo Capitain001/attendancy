@@ -160,7 +160,7 @@ async function run() {
 
     // Vérifier la notification créée pour l'invité
     const notifCreated = await prisma.notification.findFirst({
-      where: { userId: inviteeId, type: 'INVITATION' },
+      where: { userId: inviteeId, resourceType: 'INVITATION' },
     })
     if (!notifCreated) {
       throw new Error(`Aucune notification interne créée pour ${inviteeId}`)
@@ -292,7 +292,7 @@ async function run() {
     logPass(`Notification invité mise à jour avec status=ACCEPTED`)
 
     const notifInviterAccepted = await prisma.notification.findFirst({
-      where: { userId: inviterId, type: 'INVITATION' },
+      where: { userId: inviterId, resourceType: 'INVITATION' },
     })
     const metaInviter = notifInviterAccepted?.metadata as Record<string, unknown>
     if (metaInviter?.kind !== 'INVITATION_ACCEPTED') {
@@ -373,7 +373,7 @@ async function run() {
     const notifInviterDeclined = await prisma.notification.findFirst({
       where: {
         userId: inviterId,
-        type: 'INVITATION',
+        resourceType: 'INVITATION',
         metadata: { path: ['kind'], equals: 'INVITATION_DECLINED' },
       },
     })

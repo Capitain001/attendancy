@@ -2,7 +2,7 @@
 //apps\web\src\components\layout\sidebar\ui\NotificationsPopover.tsx
 "use client";
 
-import { BellIcon, AlertCircle, Calendar, BookOpen, Clock, MessageSquare, Bell } from "lucide-react";
+import { BellIcon, AlertCircle, Calendar, BookOpen, Clock, MessageSquare, Bell, Mail } from "lucide-react";
 import { useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,21 +14,21 @@ import {
 import { useNotifications } from "@/hooks/notification/useNotification";
 
 import { NotificationCardStack, NotificationCardData, NotificationCategory } from "@/components/notification/cardstack";
-import type { NotificationType } from "@attendancy/types";
+import type { Resource } from "@/generated/prisma/browser";
 import { Loader1 } from "@/components/loaders/Loader";
 import { getUnreadBadgeInfo } from "@/components/notification/utils";
 
 // Fonction pour obtenir l'icône selon le type de notification
-function getNotificationIcon(type: NotificationType) {
-  switch (type) {
-    case "ABSENCE":
+function getNotificationIcon(resourceType: Resource | null | undefined) {
+  switch (resourceType) {
+    case "ATTENDANCE":
       return <AlertCircle className="h-5 w-5" />;
-    case "COURSE_CHANGE":
+    case "SCHEDULE":
       return <Calendar className="h-5 w-5" />;
-    case "NEW_COURSE":
+    case "COURSE":
       return <BookOpen className="h-5 w-5" />;
-    case "SCHEDULE_UPDATE":
-      return <Clock className="h-5 w-5" />;
+    case "INVITATION":
+      return <Mail className="h-5 w-5" />;
     case "MESSAGE":
       return <MessageSquare className="h-5 w-5" />;
     default:
@@ -37,13 +37,13 @@ function getNotificationIcon(type: NotificationType) {
 }
 
 // Fonction pour ranger le type de notification dans une des 3 catégories de la card stack
-function getNotificationCategory(type: NotificationType): NotificationCategory {
-  switch (type) {
-    case "ABSENCE":
+function getNotificationCategory(resourceType: Resource | null | undefined): NotificationCategory {
+  switch (resourceType) {
+    case "ATTENDANCE":
       return "URGENT";
-    case "COURSE_CHANGE":
-    case "NEW_COURSE":
-    case "SCHEDULE_UPDATE":
+    case "SCHEDULE":
+    case "COURSE":
+    case "INVITATION":
       return "ACADEMIQUE";
     case "MESSAGE":
       return "PERSONNEL";
@@ -60,11 +60,11 @@ export function NotificationsPopover() {
   const cardData: NotificationCardData[] = useMemo(() => {
     return notifications.slice(0, 4).map((notification) => ({
       id: notification.id,
-      title: notification.type,
+      title: notification.resourceType ?? "Notification",
       description: notification.message,
-      icon: getNotificationIcon(notification.type),
+      icon: getNotificationIcon(notification.resourceType),
       unread: !notification.read,
-      category: getNotificationCategory(notification.type),
+      category: getNotificationCategory(notification.resourceType),
     }));
   }, [notifications]);
 

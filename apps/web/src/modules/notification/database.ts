@@ -1,17 +1,18 @@
 // src/modules/notification/database.ts
-// src/services/notification/database.ts
 'use server'
 
 import { prisma } from '@/lib/prisma'
 import { tryCatch } from '@/utils/server'
-import { Notification, NotificationType } from '@/generated/prisma/client'
+import type { Resource, NotificationEvent, Notification } from '@/generated/prisma/browser'
 
-export type CreateNotificationData = Pick<Notification, 'message' | 'type' > & {
+export type CreateNotificationData = {
+  message: string
+  orgId?: string
+  resourceType?: Resource
+  resourceId?: string
+  event?: NotificationEvent
   metadata?: any
-  scheduleId?: string
 }
-
-
 // CRUD des notifications
 export async function createUserNotification({data, userId}: {data: CreateNotificationData, userId: string}) {
   return tryCatch(
@@ -19,9 +20,10 @@ export async function createUserNotification({data, userId}: {data: CreateNotifi
       data: {
         userId: userId,
         message: data.message,
-        type: data.type || NotificationType.GENERAL,
-        metadata: data.metadata || {},
-        scheduleId: data.scheduleId
+        orgId: data.orgId,
+        resourceType: data.resourceType,
+        resourceId: data.resourceId,
+        event: data.event,
       },
       include: {
         user: {
@@ -261,10 +263,10 @@ export async function getOrganizationNotificationStats(organizationId: string) {
       })
 
       const byType = await prisma.notification.groupBy({
-        by: ['type'],
+        by: ['resourceType'],
         where: orgWhere,
         _count: {
-          type: true
+          _all: true
         }
       })
 
@@ -277,9 +279,10 @@ export async function getOrganizationNotificationStats(organizationId: string) {
         total,
         unread,
         read: total - unread,
-        byType: byType.reduce<Partial<Record<NotificationType, number>>>((acc, item) => {
-          const typedItem = item as { type: NotificationType; _count: { type: number } }
-          acc[typedItem.type] = typedItem._count.type
+        byType: byType.reduce<Record<string, number>>((acc, item) => {
+          if (item.resourceType) {
+            acc[item.resourceType] = item._count._all
+          }
           return acc
         }, {}),
         uniqueUsers: uniqueUsers.length
@@ -316,9 +319,10 @@ export async function createOrganizationNotification({
       data: {
         userId: userId,
         message: data.message,
-        type: data.type || NotificationType.GENERAL,
-        metadata: data.metadata || {},
-        scheduleId: data.scheduleId
+        orgId: data.orgId,
+        resourceType: data.resourceType,
+        resourceId: data.resourceId,
+        event: data.event,
       },
       include: {
         user: {

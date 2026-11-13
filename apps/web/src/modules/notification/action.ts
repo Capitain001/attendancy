@@ -22,7 +22,7 @@ import {
   type CreateNotificationData
 } from './database'
 import { sendPushNotificationToUserById } from './user'
-import { NotificationType } from '@/generated/prisma/client'
+import type { Resource, NotificationEvent } from '@/generated/prisma/browser'
 
 export async function isVapidConfigured(): Promise<boolean> {
   return !!(
@@ -169,9 +169,11 @@ export async function sendPushNotificationById(
   userId: string,
   data: {
     message: string
-    type?: NotificationType
+    resourceType?: Resource
+    resourceId?: string
+    event?: NotificationEvent
     metadata?: any
-    scheduleId?: string
+
   }
 ) {
   return await sendPushNotificationToUserById(userId, data)
@@ -190,9 +192,11 @@ export async function sendAdminPushNotification(
   userId: string,
   data: {
     message: string
-    type?: NotificationType
+    resourceType?: Resource
+    resourceId?: string
+    event?: NotificationEvent
     metadata?: any
-    scheduleId?: string
+
   }
 ) {
   const user = await getAuthUser()

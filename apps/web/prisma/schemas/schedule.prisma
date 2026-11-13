@@ -56,7 +56,7 @@ model Schedule {
   weekRecurence  WeekRecurence?            @relation(fields: [weekRecurrenceId], references: [id], onDelete: SetNull)
   session        Session?
   justifications Justification[]
-  notifications  Notification[]
+  
 
   @@index([classId])
   @@index([groupId])

@@ -20,6 +20,19 @@
 -- déjà présentes quel que soit l'ordre des fichiers post-migrate.
 -- =============================================================================
 
+-- Un resourceId n'a de sens qu'avec son resourceType (l'inverse est permis :
+-- anciennes notifications typées sans cible retrouvable).
+ALTER TABLE "public"."Notification"
+  DROP CONSTRAINT IF EXISTS "notification_resource_id_needs_type";
+ALTER TABLE "public"."Notification"
+  ADD CONSTRAINT "notification_resource_id_needs_type"
+  CHECK ("resourceId" IS NULL OR "resourceType" IS NOT NULL);
+
+-- Badge + liste des non lues : ne contient que les non lues, reste minuscule.
+CREATE INDEX IF NOT EXISTS "notification_unread_idx"
+  ON "public"."Notification" ("userId", "createdAt" DESC)
+  WHERE "read" = false;
+  
 -- ─── Fonctions (helpers get-or-create) ───────────────────────────────────────
 
 CREATE OR REPLACE FUNCTION "public"."chat_get_org_channel_id"(p_org_id UUID)

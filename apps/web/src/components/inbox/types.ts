@@ -1,17 +1,18 @@
 // src/components/inbox/types.ts
-import type { NotificationType } from '@attendancy/types'
+import type { Resource, NotificationEvent } from '@/generated/prisma/browser'
 import type { InvitationMetadataOutput } from '@/services/notification/validation'
 
 export type EnrichedInboxNotification = {
   id: string
-  type: NotificationType
+  orgId?: string | null
+  resourceType?: Resource | null
+  resourceId?: string | null
+  event?: NotificationEvent | null
   message: string
   read: boolean
   createdAt: string | Date
   updatedAt?: string | Date
-  scheduleId?: string | null
   userId?: string
-  orgId?: string | null
   readAt?: string | Date | null
   metadata?: (InvitationMetadataOutput & {
     orgLogo?: string | null

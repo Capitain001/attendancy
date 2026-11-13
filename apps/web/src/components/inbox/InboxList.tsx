@@ -136,7 +136,7 @@ export function InboxList({
             {filtered.map((item) => {
               const isSelected = selectedId === item.id
               const isUnread = !item.read
-              const isInvitation = item.type === 'INVITATION'
+              const isInvitation = item.resourceType === 'INVITATION'
               const sender = item.metadata?.orgName ?? (isInvitation ? 'Invitation' : 'Système')
               const initial = sender.charAt(0).toUpperCase()
 

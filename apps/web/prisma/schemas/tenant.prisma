@@ -122,6 +122,7 @@ model Organization {
   // invoices                Invoice[]
   // payments                Payment[]
   // feeWaivers              FeeWaiver[]
+  notifications           Notification[]
 
   // Un nom peut être réutilisé par les espaces personnels, mais pas par les institutions.
   @@unique([name], where: { type: "INSTITUTION" }, map: "organization_institution_name_unique")
@@ -263,25 +264,25 @@ model Permission {
 // details Json = payload par type (ex. STUDENT : classe cible, liens à créer
 // à l'acceptation).
 model Invitation {
-  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  token          String           @unique
-  email          String
-  createdAt      DateTime         @default(now())
-  expiresAt      DateTime?
-  status         InvitationStatus @default(PENDING)
-  
-/// Date de sortie de PENDING : acceptation, refus ou révocation.
-/// null ⇔ status = PENDING (CHECK en post-migrate)
-  usedAt        DateTime?
-  userId         String?          @db.Uuid
+  id        String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  token     String           @unique
+  email     String
+  createdAt DateTime         @default(now())
+  expiresAt DateTime?
+  status    InvitationStatus @default(PENDING)
+
+  /// Date de sortie de PENDING : acceptation, refus ou révocation.
+  /// null ⇔ status = PENDING (CHECK en post-migrate)
+  usedAt         DateTime?
+  userId         String?        @db.Uuid
   details        Json?
-  invitationType InvitationType   @default(INVITE_ONLY)
+  invitationType InvitationType @default(INVITE_ONLY)
   role           String?
-  orgId          String           @db.Uuid
-  resourceId     String?          @db.Uuid
+  orgId          String         @db.Uuid
+  resourceId     String?        @db.Uuid
   resourceType   Resource?
-  organization   Organization     @relation(fields: [orgId], references: [id])
-  user           User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  organization   Organization   @relation(fields: [orgId], references: [id])
+  user           User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([orgId])
   @@index([resourceId])
@@ -434,6 +435,7 @@ enum Resource {
   CLASS
   MESSAGE
   JUSTIFICATION
+  INVITATION
 
   @@schema("public")
 }

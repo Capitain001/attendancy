@@ -4,7 +4,7 @@
 
 import { useState } from "react";
 import type { LucideIcon } from "lucide-react";
-import type { NotificationType } from "@/generated/prisma/browser";
+import type { Resource } from "@/generated/prisma/browser";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -98,7 +98,7 @@ export function NotificationItem({ notification, icon, onOpen }: NotificationIte
 }
 
 interface NotificationDetailListProps {
-  type: NotificationType;
+  type: Resource | string;
   items: NotificationItemData[];
   onBack: () => void;
   onMarkAsRead: (id: string) => void;
@@ -110,7 +110,7 @@ export function NotificationDetailList({
   onBack,
   onMarkAsRead,
 }: NotificationDetailListProps) {
-  const { label, icon } = TYPE_CONFIG[type];
+  const { label, icon } = TYPE_CONFIG[type] ?? TYPE_CONFIG.GENERAL;
 
   return (
     <div className="space-y-4">

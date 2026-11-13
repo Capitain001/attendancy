@@ -1,10 +1,20 @@
 // src/services/notification/server.ts
-// Point d'entrée serveur pour les mutations participant à une transaction externe.
-// Note : les mutations avec tx n'invalident pas le cache — l'appelant appelle invalidateEvent après commit.
 
 export {
   createInvitationNotification,
   upsertInvitationNotification,
   setInvitationNotificationStatus,
   type NotificationPayload,
-} from './database/notification.mutations'
+} from "./database/notification.mutations";
+
+export {
+  onScheduleEvent,
+  isConfirmedSchedule,
+  type ScheduleNotifyBefore,
+  type ScheduleNotifyParams,
+} from "./events";
+
+export {
+  sendPushNotificationToUserById,
+  sendPushNotificationToUserById as sendPushNotificationById,
+} from "./user";

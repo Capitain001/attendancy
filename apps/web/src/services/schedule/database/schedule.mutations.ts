@@ -119,7 +119,7 @@ export async function restoreSchedule(scheduleId: string, orgId: string) {
 export async function claimScheduleAnnouncement(
   scheduleId: string,
   orgId: string,
-): Promise<boolean> {
+){
   const result = await prisma.schedule.updateMany({
     where: {
       id: scheduleId,

@@ -15,7 +15,7 @@ import {
 import { ERRORS } from '@/config'
 import { getAuthUser } from '../auth/persmission/acces'
 import { createNotification, isVapidConfigured } from './action'
-import { NotificationType } from '@/generated/prisma/client'
+
 import { createUserNotification } from './database'
 import { analyzeSendResults, sendNotificationPayload, sendToDevice } from './helper'
 import { isError } from '@/utils/server'
@@ -138,7 +138,7 @@ export async function sendNotificationToUser({ message }: { message: string }) {
 
     // 1. Créer la notification persistante
     const notification = await createUserNotification({
-      data: { message, type: NotificationType.GENERAL },
+      data: { message },
       userId
     })
 
@@ -211,89 +211,26 @@ export async function sendNotificationToUser({ message }: { message: string }) {
  * ```typescript
  * const result = await sendPushNotificationToUserById('user-id-123', {
  *   message: 'Vous avez un nouveau message',
- *   type: NotificationType.MESSAGE,
+ *   resourceType: Resource.MESSAGE,
  *   metadata: { chatId: 'chat-456' }
  * })
  * ```
  */
+import type { Resource, NotificationEvent } from '@/generated/prisma/browser'
+import { sendPushNotificationToUserById as serviceSendPush } from '@/services/notification/server'
+
 export async function sendPushNotificationToUserById(
   userId: string,
   data: {
     message: string
-    type?: NotificationType
+    orgId?: string
+    resourceType?: Resource
+    resourceId?: string
+    event?: NotificationEvent
     metadata?: any
-    scheduleId?: string
   }
 ) {
-  try {
-    // Vérifier la configuration VAPID
-    if (!isVapidConfigured()) {
-      console.error('❌ VAPID non configuré')
-      return { 
-        success: false, 
-        error: 'VAPID non configuré. Vérifiez les variables d\'environnement.' 
-      }
-    }
-
-    // Créer la notification persistante dans la base de données
-    const notification = await createUserNotification({
-      data: {
-        message: data.message,
-        type: data.type || NotificationType.GENERAL,
-        metadata: data.metadata,
-        scheduleId: data.scheduleId
-      },
-      userId
-    })
-
-    if ('error' in notification) {
-      console.error('❌ Erreur création notification db:', notification.error)
-      return { success: false, error: notification.error }
-    }
-    
-    // Récupérer les abonnements push actifs de l'utilisateur
-    const subscriptionsResult = await findPushSubscriptionsByUserId(userId)
-
-    if ('error' in subscriptionsResult) {
-      console.error('❌ Erreur récupération abonnements:', subscriptionsResult.error)
-      return { success: false, error: subscriptionsResult.error }
-    }
-
-    const subscriptions = subscriptionsResult.data || []
-    
-    // Filtrer les abonnements expirés
-    const activeSubscriptions = subscriptions.filter(
-      sub => !sub.expiresAt || sub.expiresAt > new Date()
-    )
-
-    if (activeSubscriptions.length === 0) {
-      console.warn(`⚠️ Aucun abonnement push actif pour l'utilisateur: ${userId}`)
-      return { success: false, error: 'Aucun appareil abonné actif' }
-    }
-
-    // Préparer la payload de notification
-    const payload = await sendNotificationPayload({message:data.message, userId, title:"CHAT"})
-
-    // Envoyer la notification à tous les appareils
-    await Promise.allSettled(
-      activeSubscriptions.map(subscription => sendToDevice(subscription, payload))
-    )
-
-    console.log(`✅ Notification push envoyée à l'utilisateur ${userId}`)
-    return { success: true }
-    
-  } catch (error: any) {
-    console.error('❌ Erreur sendPushNotificationToUserById:', {
-      userId,
-      message: error.message,
-      stack: error.stack
-    })
-    
-    return { 
-      success: false, 
-      error: error.message || 'Erreur inconnue lors de l\'envoi de la notification push'
-    }
-  }
+  return await serviceSendPush(userId, data)
 }
 
 

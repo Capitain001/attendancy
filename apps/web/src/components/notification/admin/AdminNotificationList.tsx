@@ -28,12 +28,12 @@ import { useAdminNotifications } from '@/hooks/notification/useAdminNotification
 import { formatDate } from '@/lib/utils'
 
 import { cn } from '@/lib/utils'
-import { NotificationType} from '@/generated/prisma/browser';
+import type { Resource } from '@/generated/prisma/browser';
 
 export function AdminNotificationList() {
   const { notifications, unread, isLoading, error, actions } = useAdminNotifications()
   const [searchQuery, setSearchQuery] = useState('')
-  const [filterType, setFilterType] = useState<'all' | 'read' | 'unread' | NotificationType>('all')
+  const [filterType, setFilterType] = useState<'all' | 'read' | 'unread' | Resource>('all')
   const [selectedUser, setSelectedUser] = useState<string | null>(null)
 
   // Filtrer les notifications
@@ -49,7 +49,7 @@ export function AdminNotificationList() {
     // Filtre par type
     if (filterType === 'read' && !notification.read) return false
     if (filterType === 'unread' && notification.read) return false
-    if (filterType !== 'all' && filterType !== 'read' && filterType !== 'unread' && notification.type !== filterType) {
+    if (filterType !== 'all' && filterType !== 'read' && filterType !== 'unread' && notification.resourceType !== filterType) {
       return false
     }
 

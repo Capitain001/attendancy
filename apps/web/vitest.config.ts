@@ -32,6 +32,8 @@ process.env.DATABASE_URL = testDirectUrl;
 export default defineConfig({
   resolve: {
     alias: {
+      '@/generated/prisma': resolve(__dirname, '../../packages/db/src/generated'),
+      '@ui': resolve(__dirname, '../../packages/ui/src'),
       '@': resolve(__dirname, './src'),
     },
   },

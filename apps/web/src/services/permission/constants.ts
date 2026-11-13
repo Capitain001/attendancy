@@ -24,4 +24,5 @@ export const RESOURCE_LABELS: Record<Resource, string> = {
   CLASS: 'les classes',
   MESSAGE: 'les messages',
   JUSTIFICATION: 'les justifications',
+  INVITATION: 'les invitations',
 }

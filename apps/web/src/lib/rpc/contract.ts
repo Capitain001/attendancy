@@ -18,11 +18,12 @@ import type {
   GetUnreadNotificationsForUserDto,
   GetUnreadCountForUserDto,
 } from '@/services/notification/types'
-import type { notificationTypeSchema } from '@/services/notification/validation'
+import type { resourceTypeSchema, notificationEventSchema } from '@/services/notification/validation'
 import type { UserInfo, UserStatus, PublicUserInfo, PublicOrganization } from '@/types/user'
 import type * as v from 'valibot'
 
-export type NotificationType = v.InferOutput<typeof notificationTypeSchema>
+export type ResourceType = v.InferOutput<typeof resourceTypeSchema>
+export type NotificationEvent = v.InferOutput<typeof notificationEventSchema>
 
 export type {
   UserInfo,

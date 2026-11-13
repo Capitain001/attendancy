@@ -143,8 +143,10 @@ export async function sendAdminPushNotification(
   try {
     const result = await sendPushNotificationToUserById(userId, {
       message: parsed.output.message,
-      type: parsed.output.type,
-      scheduleId: parsed.output.scheduleId,
+      orgId: parsed.output.orgId ?? orgId,
+      resourceType: parsed.output.resourceType,
+      resourceId: parsed.output.resourceId,
+      event: parsed.output.event,
       metadata: parsed.output.metadata,
     })
     return result.success ? { data: true as const } : { error: result.error ?? ERRORS.SERVER }

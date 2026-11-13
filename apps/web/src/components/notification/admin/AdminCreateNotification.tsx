@@ -15,14 +15,14 @@ import {
 } from '@/components/ui/select'
 import { Send, Loader2 } from 'lucide-react'
 import { useAdminNotifications } from '@/hooks/notification/useAdminNotifications'
-import { NotificationType } from '@/generated/prisma/browser'
+import { Resource } from '@/generated/prisma/browser'
 import UserIcon from '@/components/users/UserIcon'
 
 export function AdminCreateNotification() {
   const { notifications, actions } = useAdminNotifications()
   const [userId, setUserId] = useState<string>('')
   const [message, setMessage] = useState('')
-  const [type, setType] = useState<NotificationType>(NotificationType.GENERAL)
+  const [resourceType, setResourceType] = useState<Resource | undefined>(undefined)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -43,7 +43,7 @@ export function AdminCreateNotification() {
         userId,
         data: {
           message,
-          type,   
+          resourceType,   
         }
       })
       setSuccess(true)
@@ -84,18 +84,18 @@ export function AdminCreateNotification() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="type">Type</Label>
-            <Select value={type} onValueChange={(value) => setType(value as NotificationType)}>
-              <SelectTrigger id="type">
-                <SelectValue />
+            <Label htmlFor="resourceType">Type de ressource</Label>
+            <Select value={resourceType ?? 'NONE'} onValueChange={(val) => setResourceType(val === 'NONE' ? undefined : (val as Resource))}>
+              <SelectTrigger id="resourceType">
+                <SelectValue placeholder="Général" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={NotificationType.GENERAL}>Général</SelectItem>
-                <SelectItem value={NotificationType.ABSENCE}>Absence</SelectItem>
-                <SelectItem value={NotificationType.COURSE_CHANGE}>Changement de cours</SelectItem>
-                <SelectItem value={NotificationType.NEW_COURSE}>Nouveau cours</SelectItem>
-                <SelectItem value={NotificationType.SCHEDULE_UPDATE}>Mise à jour planning</SelectItem>
-                {/* <SelectItem value={NotificationType.MESSAGE}>Message</SelectItem> */}
+                <SelectItem value="NONE">Général</SelectItem>
+                <SelectItem value={Resource.MESSAGE}>Message</SelectItem>
+                <SelectItem value={Resource.SCHEDULE}>Planning / Séance</SelectItem>
+                <SelectItem value={Resource.ATTENDANCE}>Présence</SelectItem>
+                <SelectItem value={Resource.COURSE}>Cours</SelectItem>
+                <SelectItem value={Resource.INVITATION}>Invitation</SelectItem>
               </SelectContent>
             </Select>
           </div>

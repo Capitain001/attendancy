@@ -12,7 +12,7 @@ import {
   Clock,
   MessageSquare,
 } from "lucide-react";
-import { NotificationType } from "@/generated/prisma/browser";
+import type { Resource } from "@/generated/prisma/browser";
 
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -26,7 +26,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const TYPE_META: Record<
-  NotificationType,
+  string,
   { icon: React.ReactNode; className: string }
 > = {
   SCHEDULE_UPDATE: { icon: <Clock className="size-4" />, className: "bg-violet-500/15 text-violet-600" },
@@ -115,7 +115,7 @@ export function NotificationsView() {
       ) : (
         <ul className="space-y-1.5 animate-in fade-in duration-300">
           {notifications.map((n) => {
-            const meta = TYPE_META[n.type] ?? TYPE_META.GENERAL;
+            const meta = (n.resourceType && TYPE_META[n.resourceType]) ?? TYPE_META.GENERAL;
             return (
               <li key={n.id}>
                 <button

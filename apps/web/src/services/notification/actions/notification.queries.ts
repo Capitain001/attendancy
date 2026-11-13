@@ -49,7 +49,7 @@ export async function getInboxNotificationsAction(input?: GetInboxNotificationsI
     const orgIds = Array.from(
       new Set(
         notifications
-          .filter((n) => n.type === 'INVITATION' && n.metadata)
+          .filter((n) => n.resourceType === 'INVITATION' && n.metadata)
           .map((n) => {
             const meta = v.safeParse(invitationMetadataSchema, n.metadata)
             return meta.success ? meta.output.orgId : undefined
@@ -71,7 +71,7 @@ export async function getInboxNotificationsAction(input?: GetInboxNotificationsI
     const orgMap = new Map(orgs.map((o) => [o.id, o]))
 
     const enriched = notifications.map((n) => {
-      if (n.type === 'INVITATION' && n.metadata) {
+      if (n.resourceType === 'INVITATION' && n.metadata) {
         const meta = v.safeParse(invitationMetadataSchema, n.metadata)
         if (meta.success && meta.output.orgId) {
           const org = orgMap.get(meta.output.orgId)

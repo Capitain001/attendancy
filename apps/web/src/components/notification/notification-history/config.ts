@@ -11,18 +11,17 @@ import {
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
-import { NotificationType } from "@/generated/prisma/browser";
+import type { Resource } from "@/generated/prisma/browser";
 
 // Un seul traitement visuel (icône + libellé) par type — pas de couleur dédiée,
 // le ton est porté par NotificationTypeIcon de façon uniforme.
-export const TYPE_CONFIG: Record<NotificationType, { label: string; icon: LucideIcon }> = {
-  ABSENCE: { label: "Absences", icon: AlertTriangle },
-  COURSE_CHANGE: { label: "Changements de cours", icon: RefreshCw },
-  NEW_COURSE: { label: "Nouveaux cours", icon: Calendar },
-  SCHEDULE_UPDATE: { label: "Mises à jour d'horaire", icon: Calendar },
-  GENERAL: { label: "Annonces générales", icon: Megaphone },
+export const TYPE_CONFIG: Partial<Record<Resource, { label: string; icon: LucideIcon }>> & Record<string, { label: string; icon: LucideIcon }> = {
+  ATTENDANCE: { label: "Absences & Présences", icon: AlertTriangle },
+  COURSE: { label: "Cours", icon: RefreshCw },
+  SCHEDULE: { label: "Séances & Planning", icon: Calendar },
   MESSAGE: { label: "Messages", icon: MessageSquare },
   INVITATION: { label: "Invitations", icon: UserPlus },
+  GENERAL: { label: "Annonces générales", icon: Megaphone },
 };
 
 export function formatRelative(date: Date) {

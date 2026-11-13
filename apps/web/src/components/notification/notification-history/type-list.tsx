@@ -3,7 +3,7 @@
 "use client";
 
 import type { LucideIcon } from "lucide-react";
-import type { NotificationType } from "@/generated/prisma/browser";
+import type { Resource } from "@/generated/prisma/browser";
 import { TYPE_CONFIG, formatRelative } from "./config";
 
 export function NotificationTypeIcon({ icon: Icon }: { icon: LucideIcon }) {
@@ -15,14 +15,14 @@ export function NotificationTypeIcon({ icon: Icon }: { icon: LucideIcon }) {
 }
 
 export interface NotificationGroup {
-  type: NotificationType;
+  type: Resource | string;
   unreadCount: number;
   /** Date de la dernière notification non lue du type, ou de la dernière tout court s'il n'y en a aucune. */
   lastActivityAt: Date;
 }
 
 interface NotificationTypeRowProps {
-  type: NotificationType;
+  type: Resource | string;
   unreadCount: number;
   lastActivityAt: Date;
   onSelect: () => void;
@@ -34,7 +34,7 @@ export function NotificationTypeRow({
   lastActivityAt,
   onSelect,
 }: NotificationTypeRowProps) {
-  const { label, icon } = TYPE_CONFIG[type];
+  const { label, icon } = TYPE_CONFIG[type] ?? TYPE_CONFIG.GENERAL;
 
   return (
     <button
@@ -60,7 +60,7 @@ export function NotificationTypeRow({
 
 interface NotificationTypeListProps {
   groups: NotificationGroup[];
-  onSelectType: (type: NotificationType) => void;
+  onSelectType: (type: Resource | string) => void;
 }
 
 export function NotificationTypeList({ groups, onSelectType }: NotificationTypeListProps) {

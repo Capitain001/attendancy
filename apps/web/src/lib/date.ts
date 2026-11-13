@@ -39,7 +39,7 @@ export const DATE_FORMATS = {
   TIME: "HH:mm",
   TIME_SEC: "HH:mm:ss",
   ISO: "yyyy-MM-dd",
-
+  DAY_MONTH: "EEEE d MMMM",
   SHORT_MONTH: "d MMM yyyy",
   LONG_DATE: "EEEE d MMMM yyyy",
 } as const;
@@ -53,10 +53,11 @@ export function parseDate(date: Date | string): Date {
 }
 export function formatDate(
   date: Date | string,
-  formatOrKey: keyof typeof DATE_FORMATS | string = "DATE"
+  formatOrKey: DateFormat = "DATE"
 ): string {
-  const formatStr = DATE_FORMATS[formatOrKey as keyof typeof DATE_FORMATS] || formatOrKey;
-  return format(parseDate(date), formatStr, { locale: fr });
+  const formatStr =
+    DATE_FORMATS[formatOrKey as keyof typeof DATE_FORMATS] ?? formatOrKey;
+  return format(parseDate(date), formatStr, { locale: DATE_LOCALE });
 }
 
 
@@ -97,9 +98,9 @@ export function formatTime(date: Date | string, separator: string = ":"): string
  * @param date La date à formater.
  * @returns La date et heure formatées en string (ex: "14:30").
  */
-  export function formatDateTime(date: Date | string): string {
-    return formatDate(date, "DATETIME");
-  }
+export function formatDateTime(date: Date | string): string {
+  return formatDate(date, "DATETIME");
+}
 
 /**
  * Formate une date courte en string au format français.

@@ -1,10 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { NotificationType } from "@/generated/prisma/client";
+import { NotificationEvent, Resource } from "@/generated/prisma/browser";
 
 const mocks = vi.hoisted(() => ({
   claimScheduleAnnouncement: vi.fn(),
   getExpectedAttendees: vi.fn(),
-  getNotifiableParentUserIdsForStudents: vi.fn(),
+  getParentUserIds: vi.fn(),
+  getOrgParentalNotifications: vi.fn(),
   getScheduleForNotify: vi.fn(),
   sendPushNotificationById: vi.fn(),
 }));
@@ -13,12 +14,21 @@ vi.mock("../database", () => ({
   claimScheduleAnnouncement: mocks.claimScheduleAnnouncement,
   getScheduleForNotify: mocks.getScheduleForNotify,
 }));
+vi.mock("@/services/schedule/server", () => ({
+  claimScheduleAnnouncement: mocks.claimScheduleAnnouncement,
+  getScheduleForNotify: mocks.getScheduleForNotify,
+}));
 vi.mock("@/services/attendance/server", () => ({
   getExpectedAttendees: mocks.getExpectedAttendees,
 }));
+vi.mock("@/services/organization/server", () => ({
+  getOrgParentalNotifications: mocks.getOrgParentalNotifications,
+}));
 vi.mock("@/services/parent/server", () => ({
-  getNotifiableParentUserIdsForStudents:
-    mocks.getNotifiableParentUserIdsForStudents,
+  getParentUserIds: mocks.getParentUserIds,
+}));
+vi.mock("@/services/notification/user", () => ({
+  sendPushNotificationToUserById: mocks.sendPushNotificationById,
 }));
 vi.mock("@/modules/notification/action", () => ({
   sendPushNotificationById: mocks.sendPushNotificationById,
@@ -46,9 +56,10 @@ describe("notifyScheduleStakeholders", () => {
     mocks.getExpectedAttendees.mockResolvedValue([
       { studentId: "student-1", userId: "student-user-1" },
     ]);
-    mocks.getNotifiableParentUserIdsForStudents.mockResolvedValue([
-      "parent-user-1",
-    ]);
+    mocks.getOrgParentalNotifications.mockResolvedValue({
+      parentalNotifications: true,
+    });
+    mocks.getParentUserIds.mockResolvedValue(["parent-user-1"]);
     mocks.sendPushNotificationById.mockResolvedValue({ success: true });
   });
 
@@ -64,7 +75,11 @@ describe("notifyScheduleStakeholders", () => {
     expect(mocks.sendPushNotificationById).toHaveBeenCalledTimes(1);
     expect(mocks.sendPushNotificationById).toHaveBeenCalledWith(
       "teacher-new",
-      expect.objectContaining({ type: NotificationType.NEW_COURSE }),
+      expect.objectContaining({
+        resourceType: Resource.SCHEDULE,
+        resourceId: "schedule-1",
+        event: NotificationEvent.CREATED,
+      }),
     );
 
     vi.clearAllMocks();
@@ -153,7 +168,11 @@ describe("notifyScheduleStakeholders", () => {
     expect(mocks.sendPushNotificationById).toHaveBeenCalledTimes(1);
     expect(mocks.sendPushNotificationById).toHaveBeenCalledWith(
       "teacher-new",
-      expect.objectContaining({ type: NotificationType.NEW_COURSE }),
+      expect.objectContaining({
+        resourceType: Resource.SCHEDULE,
+        resourceId: "schedule-1",
+        event: NotificationEvent.CREATED,
+      }),
     );
     expect(mocks.getExpectedAttendees).not.toHaveBeenCalled();
   });
@@ -232,20 +251,28 @@ describe("notifyScheduleStakeholders", () => {
     expect(mocks.sendPushNotificationById).toHaveBeenCalledWith(
       "teacher-old",
       expect.objectContaining({
-        type: NotificationType.SCHEDULE_UPDATE,
+        resourceType: Resource.SCHEDULE,
+        resourceId: "schedule-1",
+        event: NotificationEvent.UNASSIGNED,
         message: expect.stringContaining("ne vous est plus assigné"),
       }),
     );
     expect(mocks.sendPushNotificationById).toHaveBeenCalledWith(
       "teacher-new",
       expect.objectContaining({
-        type: NotificationType.NEW_COURSE,
+        resourceType: Resource.SCHEDULE,
+        resourceId: "schedule-1",
+        event: NotificationEvent.CREATED,
         message: expect.stringContaining("Vous êtes affecté"),
       }),
     );
     expect(mocks.sendPushNotificationById).toHaveBeenCalledWith(
       "student-user-1",
-      expect.objectContaining({ type: NotificationType.NEW_COURSE }),
+      expect.objectContaining({
+        resourceType: Resource.SCHEDULE,
+        resourceId: "schedule-1",
+        event: NotificationEvent.CONFIRMED,
+      }),
     );
   });
 
@@ -270,13 +297,19 @@ describe("notifyScheduleStakeholders", () => {
     expect(mocks.sendPushNotificationById).toHaveBeenCalledWith(
       "teacher-old",
       expect.objectContaining({
-        type: NotificationType.SCHEDULE_UPDATE,
+        resourceType: Resource.SCHEDULE,
+        resourceId: "schedule-1",
+        event: NotificationEvent.UNASSIGNED,
         message: expect.stringContaining("ne vous est plus assigné"),
       }),
     );
     expect(mocks.sendPushNotificationById).toHaveBeenCalledWith(
       "teacher-new",
-      expect.objectContaining({ type: NotificationType.NEW_COURSE }),
+      expect.objectContaining({
+        resourceType: Resource.SCHEDULE,
+        resourceId: "schedule-1",
+        event: NotificationEvent.CREATED,
+      }),
     );
   });
 });

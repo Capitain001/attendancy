@@ -48,7 +48,7 @@ export function InboxMessageView({
     )
   }
 
-  const isInvitation = notification.type === 'INVITATION'
+  const isInvitation = notification.resourceType === 'INVITATION'
   const senderName = notification.metadata?.senderName ?? notification.metadata?.orgName ?? (isInvitation ? 'Invitation' : 'Système')
   const initial = senderName.charAt(0).toUpperCase()
   const dateFormatted = new Date(notification.createdAt).toLocaleString('fr-FR', {
@@ -77,7 +77,7 @@ export function InboxMessageView({
             </Button>
           )}
           <Badge variant="outline" className="text-xs font-normal">
-            {isInvitation ? 'Invitation organisation' : notification.type}
+            {isInvitation ? 'Invitation organisation' : (notification.resourceType ?? 'Notification')}
           </Badge>
         </div>
 

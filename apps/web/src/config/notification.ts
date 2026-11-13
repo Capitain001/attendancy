@@ -1,5 +1,5 @@
 // src/config/notification.ts
-import { NotificationType } from "@/generated/prisma/client";
+import type { Resource } from "@/generated/prisma/browser";
 
 // src/config/notification.ts
 export const NOTIFICATION_CONFIG = {
@@ -37,12 +37,15 @@ export const NOTIFICATION_CONFIG = {
 export const PUSH_SUBSCRIPTION_DURATION =
   365 * 24 * 60 * 60 * 1000 // en millisecondes
   
-export const NOTIFICATION_TITLES: Record<NotificationType, string> = {
-  ABSENCE:         "Absence signalée",
-  COURSE_CHANGE:   "Changement de cours",
-  NEW_COURSE:      "Nouveau cours",
-  SCHEDULE_UPDATE: "Planning modifié",
-  GENERAL:         "Notification",
+export const NOTIFICATION_TITLES: Partial<Record<Resource, string>> & Record<string, string> = {
+  ATTENDANCE: "Présence / Assiduité",
+  COURSE: "Cours",
+  SCHEDULE: "Planning / Séance",
+
+
+
+
+
   MESSAGE:         "Nouveau message",
   INVITATION:      "Invitation",
 };
