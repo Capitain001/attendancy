@@ -1,0 +1,170 @@
+src\modules
+├───audit
+│       CLAUDE.md
+│       index.ts
+│       logger.ts
+│       queries.ts
+│       usage.ts
+│
+├───auth
+│   │   auth.ts
+│   │   CLAUDE.md
+│   │   constants.ts
+│   │   index.ts
+│   │   providers.ts
+│   │   supabase.ts
+│   │   types.ts
+│   │   unused-fn-supabase.ts
+│   │   utils.ts
+│   │   validation.ts
+│   │
+│   ├───.api
+│   │       createOrgResponsableDB.json
+│   │       index.json
+│   │       login.json
+│   │       logoutAction.json
+│   │       logOutUser.json
+│   │       logOutUserForm.json
+│   │
+│   ├───actions
+│   │       index.ts
+│   │       login.ts
+│   │       logout.ts
+│   │       reset-password.ts
+│   │       signup.ts
+│   │
+│   ├───database
+│   │       index.ts
+│   │       user.mutations.ts
+│   │
+│   ├───members
+│   │       actions.ts
+│   │       complete-signup.ts
+│   │       inbox-invitation.ts
+│   │       utils.ts
+│   │       utils.unit.test.ts
+│   │       validation.ts
+│   │
+│   ├───persmission
+│   │       acces.ts
+│   │       autorization.ts
+│   │       config.ts
+│   │       constants.ts
+│   │       event.ts
+│   │       exemple.ts
+│   │       helpers.ts
+│   │       index.ts
+│   │       types.ts
+│   │       usage.ts
+│   │       utils.ts
+│   │
+│   ├───profile
+│   │       index.ts
+│   │       user.ts
+│   │
+│   ├───responsable
+│   │       signup.ts
+│   │
+│   └───rpc
+│           actions.ts
+│           utils.ts
+│
+├───invitation
+│   │   actions.ts
+│   │   CLAUDE.md
+│   │   constants.ts
+│   │   database.ts
+│   │   database.unit.test.ts
+│   │   errors.ts
+│   │   index.ts
+│   │   invitation.ts
+│   │   message.ts
+│   │   metadata.ts
+│   │   notifications.ts
+│   │   policy.ts
+│   │   policy.unit.test.ts
+│   │   server.ts
+│   │   status.ts
+│   │   supabase.ts
+│   │   token.ts
+│   │   user.ts
+│   │   validation.ts
+│   │
+│   ├───__tests__
+│   │       invitation-message.unit.test.ts
+│   │
+│   ├───direction
+│   │       actions.ts
+│   │       database.ts
+│   │       index.ts
+│   │       types.ts
+│   │       validation.ts
+│   │
+│   ├───student
+│   │       actions.ts
+│   │       database.ts
+│   │       index.ts
+│   │       types.ts
+│   │       validation.ts
+│   │
+│   └───teacher
+│           invite.ts
+│
+├───notification
+│   │   action.ts
+│   │   database.ts
+│   │   helper.ts
+│   │   index.ts
+│   │   permission.ts
+│   │   push.ts
+│   │   server.ts
+│   │   service-worker.ts
+│   │   subscription.ts
+│   │   types.ts
+│   │   user.ts
+│   │   utils.ts
+│   │   validation.ts
+│   │
+│   └───subscriptions
+│           action.ts
+│           database.ts
+│
+├───permission
+│       index.ts
+│       sync.ts
+│
+├───personal
+│       paths.ts
+│
+├───presence
+│       channel.ts
+│       index.ts
+│       subscribtion.ts
+│
+└───user
+    │   access.ts
+    │   avatar_url.ts
+    │   CLAUDE.md
+    │   constants.ts
+    │   helpers.ts
+    │   index.ts
+    │   lru-cache.ts
+    │   permissions.ts
+    │   profile.ts
+    │   server.ts
+    │   update.ts
+    │   userInfo.ts
+    │   utils.ts
+    │
+    ├───actions
+    │
+    ├───cache
+    │       action.ts
+    │       operations.ts
+    │
+    ├───permissions.early.test
+    │       getUserSession.unit.test.ts
+    │
+    └───usage
+            cache_invalidation.ts
+            cache-action.ts

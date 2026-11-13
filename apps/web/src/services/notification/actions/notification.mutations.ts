@@ -4,8 +4,11 @@ import * as v from 'valibot'
 import { authAccess } from '@/modules/auth'
 import { getUserInfo } from '@/modules/user'
 import { ERRORS } from '@/config'
-import { createNotificationSchema, markNotificationAsReadSchema } from '../validation'
-import type { CreateNotificationInput } from '../validation'
+import {
+  createAdminNotificationSchema,
+  markNotificationAsReadSchema,
+  type CreateAdminNotificationInput,
+} from '../validation'
 import {
   markNotificationRead,
   markAllNotificationsRead,
@@ -13,7 +16,7 @@ import {
   createNotificationForOrgUser,
   checkOrgMembership,
 } from '../database/notification.mutations'
-import { sendPushNotificationToUserById } from '../user'
+import { sendPushNotificationToUserById } from '../push'
 
 // ─── Boîte de réception (Inbox) ───────────────────────────────────────────────
 
@@ -49,9 +52,8 @@ export async function markAllInboxNotificationsAsReadAction() {
 // ─── Utilisateur (actions scope personnel) ──────────────────────────────────
 
 export async function markNotificationAsRead(notificationId: string) {
-  const auth = await authAccess()
-  if (!auth.data) return { error: auth.error }
-  const { user } = auth.data
+  const user = await getUserInfo()
+  if (!user?.id) return { error: 'Non authentifié' }
 
   try {
     await markNotificationRead({ notificationId, userId: user.id })
@@ -62,9 +64,8 @@ export async function markNotificationAsRead(notificationId: string) {
 }
 
 export async function markAllRead() {
-  const auth = await authAccess()
-  if (!auth.data) return { error: auth.error }
-  const { user } = auth.data
+  const user = await getUserInfo()
+  if (!user?.id) return { error: 'Non authentifié' }
 
   try {
     await markAllNotificationsRead(user.id)
@@ -75,9 +76,8 @@ export async function markAllRead() {
 }
 
 export async function deleteNotification(notificationId: string) {
-  const auth = await authAccess()
-  if (!auth.data) return { error: auth.error }
-  const { user } = auth.data
+  const user = await getUserInfo()
+  if (!user?.id) return { error: 'Non authentifié' }
 
   try {
     await removeNotification({ notificationId, userId: user.id })
@@ -87,14 +87,17 @@ export async function deleteNotification(notificationId: string) {
   }
 }
 
-// ─── Admin (scope organisation) ──────────────────────────────────────────────
+// ─── Direction / Admin (scope organisation) ──────────────────────────────────
 
-export async function createAdminNotification(userId: string, input: CreateNotificationInput) {
+export async function createNotificationAction(
+  userId: string,
+  input: CreateAdminNotificationInput,
+) {
   const auth = await authAccess({ requiredRole: 'DIRECTION' })
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
 
-  const parsed = v.safeParse(createNotificationSchema, input)
+  const parsed = v.safeParse(createAdminNotificationSchema, input)
   if (!parsed.success) {
     return { error: parsed.issues[0]?.message ?? 'Données invalides' }
   }
@@ -106,12 +109,15 @@ export async function createAdminNotification(userId: string, input: CreateNotif
   }
 }
 
-export async function sendAdminPushNotification(userId: string, input: CreateNotificationInput) {
+export async function sendAdminPushNotification(
+  userId: string,
+  input: CreateAdminNotificationInput,
+) {
   const auth = await authAccess({ requiredRole: 'DIRECTION' })
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
 
-  const parsed = v.safeParse(createNotificationSchema, input)
+  const parsed = v.safeParse(createAdminNotificationSchema, input)
   if (!parsed.success) {
     return { error: parsed.issues[0]?.message ?? 'Données invalides' }
   }
@@ -124,7 +130,7 @@ export async function sendAdminPushNotification(userId: string, input: CreateNot
   try {
     const result = await sendPushNotificationToUserById(userId, {
       ...parsed.output,
-      orgId, // en dernier : le token écrase toujours l'orgId du body
+      orgId,
     })
     return result.success ? { data: true as const } : { error: result.error ?? ERRORS.SERVER }
   } catch (e) {

@@ -2,8 +2,16 @@
 import { prisma } from "@/lib/prisma";
 import { NotificationEvent, Resource, Role } from "@/generated/prisma/browser";
 import { sendPushNotificationById } from "@/services/notification/server";
+import type { NotificationMetadataFor } from "@/services/notification/types";
 
 export type InvitationNotifyEvent = "CREATED" | "RESENT" | "LINK_GENERATED";
+
+// Le détail (renvoyée / lien généré) reste dans le texte du message.
+const EVENT_MAP: Record<InvitationNotifyEvent, NotificationEvent> = {
+  CREATED: NotificationEvent.CREATED,
+  RESENT: NotificationEvent.UPDATED,
+  LINK_GENERATED: NotificationEvent.UPDATED,
+};
 
 const DIRECTION_FUNCTION_NAMES = ["PRINCIPAL", "SECRETARY"] as const;
 
@@ -20,8 +28,6 @@ function buildMessage(
       return `Invitation étudiant renvoyée pour ${invitedEmail}${suffix}`;
     case "LINK_GENERATED":
       return `Lien d'invitation généré pour ${invitedEmail}${suffix}`;
-    default:
-      return `Mise à jour d'invitation pour ${invitedEmail}${suffix}`;
   }
 }
 
@@ -66,11 +72,12 @@ export async function notifyInvitationStakeholders(params: {
     }
 
     const message = buildMessage(event, invitedEmail, className);
-    const metadata = {
-      kind: "student_invitation" as const,
-      invitationId,
-      event,
-      ...(classId ? { classId } : {}),
+    const metadata: NotificationMetadataFor<"INVITATION"> = {
+      action: classId ? "JOIN_CLASS" : "JOIN_ORG",
+      role: "STUDENT",
+      ...(classId
+        ? { target: { type: Resource.CLASS, id: classId, name: className ?? undefined } }
+        : {}),
     };
 
     await Promise.allSettled(
@@ -80,13 +87,10 @@ export async function notifyInvitationStakeholders(params: {
           message,
           resourceType: Resource.INVITATION,
           resourceId: invitationId,
-          event:
-            event === "CREATED"
-              ? NotificationEvent.CREATED
-              : NotificationEvent.UPDATED,
+          event: EVENT_MAP[event],
           metadata,
-        })
-      )
+        }),
+      ),
     );
   } catch (error) {
     console.error("[notifyInvitationStakeholders]", error);

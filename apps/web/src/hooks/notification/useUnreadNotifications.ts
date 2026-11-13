@@ -3,12 +3,10 @@
 "use client"
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { 
-  getNotifications, 
-  markAllRead, 
-  markNotificationAsRead 
-} from '@/modules/notification/action'
+
+
 import { CACHE_KEYS } from '@/config/client_cache'
+import { getNotifications, markAllRead, markNotificationAsRead } from '@/services/notification'
 
 export function useNotifications() {
   const queryClient = useQueryClient()

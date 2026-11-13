@@ -7,7 +7,6 @@ import { getOrgsIdentities } from '@/services/organization/server'
 import { ERRORS } from '@/config'
 import {
   getInboxNotificationsSchema,
-  invitationMetadataSchema,
   type GetInboxNotificationsInput,
 } from '../validation'
 import {
@@ -45,16 +44,12 @@ export async function getInboxNotificationsAction(input?: GetInboxNotificationsI
       ? notifications[notifications.length - 1]?.id
       : undefined
 
-    // Extraction tolérante des orgIds des invitations
+    // Extraction directe des orgIds des invitations via la colonne orgId
     const orgIds = Array.from(
       new Set(
         notifications
-          .filter((n) => n.resourceType === 'INVITATION' && n.metadata)
-          .map((n) => {
-            const meta = v.safeParse(invitationMetadataSchema, n.metadata)
-            return meta.success ? meta.output.orgId : undefined
-          })
-          .filter((id): id is string => typeof id === 'string'),
+          .filter((n) => n.resourceType === 'INVITATION' && typeof n.orgId === 'string')
+          .map((n) => n.orgId as string),
       ),
     )
 
@@ -71,21 +66,18 @@ export async function getInboxNotificationsAction(input?: GetInboxNotificationsI
     const orgMap = new Map(orgs.map((o) => [o.id, o]))
 
     const enriched = notifications.map((n) => {
-      if (n.resourceType === 'INVITATION' && n.metadata) {
-        const meta = v.safeParse(invitationMetadataSchema, n.metadata)
-        if (meta.success && meta.output.orgId) {
-          const org = orgMap.get(meta.output.orgId)
-          if (org) {
-            return {
-              ...n,
-              metadata: {
-                ...(n.metadata as object),
-                orgLogo: org.logo ?? null,
-                orgName: org.name,
-                orgSlug: org.slug,
-                orgType: org.type,
-              },
-            }
+      if (n.resourceType === 'INVITATION' && n.orgId) {
+        const org = orgMap.get(n.orgId)
+        if (org) {
+          return {
+            ...n,
+            metadata: {
+              ...(typeof n.metadata === 'object' && n.metadata !== null ? n.metadata : {}),
+              orgLogo: org.logo ?? null,
+              orgName: org.name,
+              orgSlug: org.slug,
+              orgType: org.type,
+            },
           }
         }
       }

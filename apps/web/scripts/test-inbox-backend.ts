@@ -3,11 +3,11 @@
  * scripts/test-inbox-backend.ts
  *
  * Test d'intégration de bout en bout des Lots 1 et 2 (Backend Inbox & Invitations) :
- * 1. Création d'invitation avec notification interne (targetUserId + kind INVITATION_RECEIVED).
+ * 1. Création d'invitation avec notification interne (targetUserId, event CREATED).
  * 2. Consultation de l'inbox et comptage des non-lus (getInboxNotificationsForUser / getUnreadCountForUser).
  * 3. Marquage comme lu (markNotificationRead).
- * 4. Acceptation transactionnelle d'invitation + notification émetteur (INVITATION_ACCEPTED).
- * 5. Refus d'invitation + notification émetteur (INVITATION_DECLINED).
+ * 4. Acceptation transactionnelle d'invitation + notification émetteur (event CONFIRMED).
+ * 5. Refus d'invitation + notification émetteur (event REJECTED).
  * 6. Nettoyage des données de test.
  *
  * Usage :
@@ -26,12 +26,11 @@ import {
   setInvitationNotificationStatus,
   createInvitationNotification,
 } from '@/services/notification/database/notification.mutations'
-import { buildInvitationResponsePayload } from '@/modules/invitation'
+
 import { generateInvitationMetadata } from '@/modules/invitation/metadata'
-import { invitationMetadataSchema } from '@/services/notification/validation'
 import { getOrgsIdentities } from '@/services/organization/server'
-import * as v from 'valibot'
 import type { UserInfo } from '@/types/user'
+import { buildInvitationResponsePayload } from '@/services/notification/messages/invitation.messages'
 
 const C = {
   green: '\x1b[32m',
@@ -71,7 +70,7 @@ async function run() {
   try {
     // ── 0. Préparation des données de test ─────────────────────────────────────
     console.log(`${C.yellow}0. Préparation des entités de test...${C.reset}`)
-    
+
     const org = await prisma.organization.create({
       data: {
         name: `Org Test ${testSuffix}`,
@@ -105,7 +104,7 @@ async function run() {
 
     // ── 1. TEST LOT 1 : Émission d'invitation avec notification interne ───────
     console.log(`\n${C.yellow}1. Test Lot 1 : Flux réel de métadonnées (generateInvitationMetadata -> saveInvitationWithAudit)...${C.reset}`)
-    
+
     const token1 = `token_1_${testSuffix}`
     const expiresAt1 = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
 
@@ -131,7 +130,7 @@ async function run() {
       ],
     }
 
-    // 1. Appel de la VRAIE fonction de production qui génère les métadonnées lors d'une invitation
+    // Appel de la VRAIE fonction de production qui génère les métadonnées lors d'une invitation
     const productionMetadata1 = generateInvitationMetadata(
       {
         email: inviteeEmail,
@@ -167,24 +166,23 @@ async function run() {
     }
     notificationId1 = notifCreated.id
 
-    // 2. Validation stricte du schéma Valibot côté notification
-    const valibotResult = v.safeParse(invitationMetadataSchema, notifCreated.metadata)
-    if (!valibotResult.success) {
-      throw new Error(`Échec validation schéma Valibot notification metadata: ${JSON.stringify(valibotResult.issues)}`)
-    }
-    logPass(`Notification metadata validée strictement par invitationMetadataSchema Valibot`)
+    // Vérification des colonnes et métadonnées côté notification
+    if (notifCreated.orgId !== orgId) throw new Error(`orgId attendu '${orgId}', reçu: ${notifCreated.orgId}`)
+    if (notifCreated.resourceType !== 'INVITATION') throw new Error(`resourceType attendu 'INVITATION', reçu: ${notifCreated.resourceType}`)
+    if (notifCreated.resourceId !== invitationId1) throw new Error(`resourceId attendu '${invitationId1}', reçu: ${notifCreated.resourceId}`)
+    if (notifCreated.event !== 'CREATED') throw new Error(`event attendu 'CREATED', reçu: ${notifCreated.event}`)
+    logPass(`Notification colonnes validées (orgId, resourceType: INVITATION, resourceId: ${invitationId1}, event: CREATED)`)
 
-    const notifMeta = notifCreated.metadata as Record<string, unknown>
-    if (notifMeta.kind !== 'INVITATION_RECEIVED') throw new Error(`metadata.kind attendu 'INVITATION_RECEIVED'`)
-    if (notifMeta.invitationId !== invitationId1) throw new Error(`metadata.invitationId discordant`)
-    if (notifMeta.orgId !== orgId) throw new Error(`metadata.orgId discordant`)
-    if (notifMeta.orgName !== org.name) throw new Error(`metadata.orgName discordant`)
-    if (notifMeta.orgSlug !== orgSlug) throw new Error(`metadata.orgSlug discordant`)
+    const notifMeta = notifCreated.metadata as Record<string, any>
+    if (!notifMeta) throw new Error('metadata de notification manquante')
+    if (notifMeta.action !== 'JOIN_ORG') throw new Error(`metadata.action attendu 'JOIN_ORG', reçu: ${notifMeta.action}`)
     if (notifMeta.role !== 'TEACHER') throw new Error(`metadata.role discordant`)
-    if (notifMeta.senderName !== 'Émetteur Test') throw new Error(`metadata.senderName discordant`)
+    if (notifMeta.sendBy?.id !== inviterId) throw new Error(`metadata.sendBy.id attendu '${inviterId}', reçu: ${notifMeta.sendBy?.id}`)
+    if (notifMeta.sendBy?.name !== 'Émetteur Test') throw new Error(`metadata.sendBy.name discordant, reçu: ${notifMeta.sendBy?.name}`)
+    if (notifMeta.target !== undefined && notifMeta.target !== null) throw new Error(`metadata.target devrait être absent pour JOIN_ORG`)
     if (notifMeta.status !== 'PENDING') throw new Error(`metadata.status discordant`)
     if (!notifMeta.expiresAt) throw new Error(`metadata.expiresAt manquant`)
-    logPass(`Toutes les métadonnées (orgName, orgSlug, role, senderName, expiresAt, status) sont présentes et correctes`)
+    logPass(`Métadonnées (action, role, sendBy, expiresAt, status) présentes et correctes`)
 
     // ── 2. TEST LOT 2 : Consultation de la boîte de réception & enrichissement ───
     console.log(`\n${C.yellow}2. Test Lot 2 : getInboxNotificationsForUser & getOrgsIdentities...${C.reset}`)
@@ -195,7 +193,7 @@ async function run() {
     }
     logPass(`getInboxNotificationsForUser retourne la notification (${inboxList.length} item)`)
 
-    // Test de la résolution d'identité d'organisation (getOrgsIdentities)
+    // Résolution de l'identité de l'organisation via orgId (le nom n'est plus dans la metadata)
     const orgIdentities = await getOrgsIdentities([orgId])
     if (orgIdentities.length === 0 || orgIdentities[0]?.slug !== orgSlug) {
       throw new Error(`getOrgsIdentities a échoué pour orgId ${orgId}`)
@@ -256,10 +254,11 @@ async function run() {
       await createInvitationNotification(tx, {
         userId: inviterId,
         payload: buildInvitationResponsePayload({
+          event: 'CONFIRMED',
           invitationId: invitationId1,
           orgId,
           orgName: org.name,
-          kind: 'INVITATION_ACCEPTED',
+          action: 'JOIN_ORG',
           sender: {
             id: inviteeId,
             name: 'Invité Test',
@@ -285,20 +284,32 @@ async function run() {
     logPass(`UserOrganization créée avec rôle TEACHER (isMainOrg=${userOrg.isMainOrg})`)
 
     const notifInvitee = await prisma.notification.findUnique({ where: { id: notificationId1 } })
-    const metaInvitee = notifInvitee?.metadata as Record<string, unknown>
+    const metaInvitee = notifInvitee?.metadata as Record<string, any>
     if (metaInvitee?.status !== 'ACCEPTED') {
       throw new Error(`Notification invité attendue avec status=ACCEPTED, reçu: ${metaInvitee?.status}`)
     }
     logPass(`Notification invité mise à jour avec status=ACCEPTED`)
 
     const notifInviterAccepted = await prisma.notification.findFirst({
-      where: { userId: inviterId, resourceType: 'INVITATION' },
+      where: { userId: inviterId, resourceType: 'INVITATION', event: 'CONFIRMED' },
     })
-    const metaInviter = notifInviterAccepted?.metadata as Record<string, unknown>
-    if (metaInviter?.kind !== 'INVITATION_ACCEPTED') {
-      throw new Error(`Notification émetteur attendue avec kind=INVITATION_ACCEPTED, reçu: ${metaInviter?.kind}`)
+    if (!notifInviterAccepted) {
+      throw new Error(`Notification émetteur attendue avec event=CONFIRMED`)
     }
-    logPass(`Notification émetteur créée avec kind=INVITATION_ACCEPTED (id=${notifInviterAccepted?.id})`)
+    if (notifInviterAccepted.resourceId !== invitationId1) {
+      throw new Error(`resourceId émetteur attendu '${invitationId1}', reçu: ${notifInviterAccepted.resourceId}`)
+    }
+    const metaInviter = notifInviterAccepted.metadata as Record<string, any>
+    if (metaInviter?.action !== 'JOIN_ORG') {
+      throw new Error(`metadata.action attendu 'JOIN_ORG', reçu: ${metaInviter?.action}`)
+    }
+    if (metaInviter?.sendBy?.id !== inviteeId) {
+      throw new Error(`metadata.sendBy.id attendu '${inviteeId}', reçu: ${metaInviter?.sendBy?.id}`)
+    }
+    if (!notifInviterAccepted.message.includes('a accepté')) {
+      throw new Error(`Message d'acceptation inattendu: ${notifInviterAccepted.message}`)
+    }
+    logPass(`Notification émetteur créée avec event=CONFIRMED (id=${notifInviterAccepted.id})`)
 
     // ── 5. TEST LOT 2 : Refus d'invitation (2ème invitation) ──────────────────
     console.log(`\n${C.yellow}5. Test Lot 2 : Refus d'invitation & Notification émetteur...${C.reset}`)
@@ -325,8 +336,9 @@ async function run() {
     })
     invitationId2 = saveResult2.invitation.id
 
+    // Le lien notification <-> invitation passe désormais par la colonne resourceId
     const notif2 = await prisma.notification.findFirst({
-      where: { userId: inviteeId, metadata: { path: ['invitationId'], equals: invitationId2 } },
+      where: { userId: inviteeId, resourceType: 'INVITATION', resourceId: invitationId2 },
     })
     if (!notif2) throw new Error(`Notification 2 non trouvée`)
     notificationId2 = notif2.id
@@ -350,10 +362,11 @@ async function run() {
       await createInvitationNotification(tx, {
         userId: inviterId,
         payload: buildInvitationResponsePayload({
+          event: 'REJECTED',
           invitationId: invitationId2,
           orgId,
           orgName: org.name,
-          kind: 'INVITATION_DECLINED',
+          action: 'JOIN_ORG',
           sender: {
             id: inviteeId,
             name: 'Invité Test',
@@ -364,7 +377,7 @@ async function run() {
     })
 
     const notifInviteeDeclined = await prisma.notification.findUnique({ where: { id: notificationId2 } })
-    const metaDeclined = notifInviteeDeclined?.metadata as Record<string, unknown>
+    const metaDeclined = notifInviteeDeclined?.metadata as Record<string, any>
     if (metaDeclined?.status !== 'DECLINED') {
       throw new Error(`Notification attendue avec status=DECLINED, reçu: ${metaDeclined?.status}`)
     }
@@ -374,13 +387,17 @@ async function run() {
       where: {
         userId: inviterId,
         resourceType: 'INVITATION',
-        metadata: { path: ['kind'], equals: 'INVITATION_DECLINED' },
+        resourceId: invitationId2,
+        event: 'REJECTED',
       },
     })
     if (!notifInviterDeclined) {
-      throw new Error(`Notification émetteur INVITATION_DECLINED non trouvée`)
+      throw new Error(`Notification émetteur event=REJECTED non trouvée`)
     }
-    logPass(`Notification émetteur créée avec kind=INVITATION_DECLINED (id=${notifInviterDeclined.id})`)
+    if (!notifInviterDeclined.message.includes('a décliné')) {
+      throw new Error(`Message de refus inattendu: ${notifInviterDeclined.message}`)
+    }
+    logPass(`Notification émetteur créée avec event=REJECTED (id=${notifInviterDeclined.id})`)
 
     console.log(`\n${C.bold}${C.green}✓ TOUS LES TESTS DES LOTS 1 & 2 SONT PASSÉS AVEC SUCCÈS !${C.reset}\n`)
   } catch (error) {

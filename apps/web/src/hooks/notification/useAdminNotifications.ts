@@ -8,10 +8,10 @@ import {
   getAdminUnreadCount,
   getAdminNotificationStats,
   getAdminUserNotifications,
-  createAdminNotification
-} from '@/modules/notification/action'
+  createNotificationAction
+} from '@/services/notification'
 import { CACHE_KEYS } from '@/config/client_cache'
-import { CreateNotificationData } from '@/modules/notification/database'
+import { CreateAdminNotificationInput } from '@/services/notification/validation'
 
 export function useAdminNotifications(limit?: number) {
   const queryClient = useQueryClient()
@@ -50,8 +50,8 @@ export function useAdminNotifications(limit?: number) {
 
   // Mutation pour créer une notification
   const createNotificationMutation = useMutation({
-    mutationFn: ({ userId, data }: { userId: string; data: CreateNotificationData }) =>
-      createAdminNotification(userId, data),
+    mutationFn: ({ userId, data }: { userId: string; data: CreateAdminNotificationInput }) =>
+      createNotificationAction(userId, data),
     onSuccess: () => {
       // Invalider le cache pour recharger les notifications
       queryClient.invalidateQueries({ queryKey: [...CACHE_KEYS.NOTIFICATIONS.ALL, 'admin'] })

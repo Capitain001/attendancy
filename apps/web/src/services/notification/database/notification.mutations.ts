@@ -1,9 +1,9 @@
 // src/services/notification/database/notification.mutations.ts
 import { prisma } from '@/lib/prisma'
 import { invalidateEvent } from '@/cache/server/graph'
-import type { Resource, NotificationEvent } from '@/generated/prisma/browser'
 import type { Prisma } from '@/generated/prisma/client'
-import type { CreateNotificationOutput } from '../validation'
+import type { NotificationPayload } from '../types'
+import type { CreateAdminNotificationOutput } from '../validation'
 
 type Tx = Prisma.TransactionClient
 
@@ -11,7 +11,7 @@ type Tx = Prisma.TransactionClient
 
 export async function createUserNotification(params: {
   userId: string
-  data: CreateNotificationOutput
+  data: NotificationPayload
 }) {
   const result = await prisma.notification.create({
     data: {
@@ -83,20 +83,18 @@ export async function checkOrgMembership(
     where: { userId, orgId },
     select: { id: true },
   })
-  return !membership
+  return !!membership
 }
 
 export async function createNotificationForOrgUser(params: {
   orgId: string
   userId: string
-  data: CreateNotificationOutput
+  data: CreateAdminNotificationOutput
 }) {
-  const membership = await prisma.userOrganization.findFirst({
-    where: { userId: params.userId, orgId: params.orgId },
-    select: { id: true },
-  })
-  if (!membership)
+  const isMember = await checkOrgMembership(params.userId, params.orgId)
+  if (!isMember) {
     throw new Error("L'utilisateur n'appartient pas à cette organisation")
+  }
 
   const result = await prisma.notification.create({
     data: {
@@ -106,9 +104,6 @@ export async function createNotificationForOrgUser(params: {
       resourceType: params.data.resourceType ?? null,
       resourceId: params.data.resourceId ?? null,
       event: params.data.event ?? null,
-      metadata: params.data.metadata
-        ? JSON.parse(JSON.stringify(params.data.metadata))
-        : null,
     },
     select: {
       id: true,
@@ -127,15 +122,6 @@ export async function createNotificationForOrgUser(params: {
 }
 
 // ─── Notifications d'invitation (transactions cross-module) ────────────────────
-
-export type NotificationPayload = {
-  message: string
-  orgId?: string
-  resourceType?: Resource
-  resourceId?: string
-  event?: NotificationEvent
-  metadata: Prisma.InputJsonObject
-}
 
 const NOTIFICATION_SELECT = {
   id: true,
@@ -160,7 +146,9 @@ export async function createInvitationNotification(
       resourceType: params.payload.resourceType ?? 'INVITATION',
       resourceId: params.payload.resourceId ?? null,
       event: params.payload.event ?? 'CREATED',
-      metadata: params.payload.metadata,
+      metadata: params.payload.metadata
+        ? JSON.parse(JSON.stringify(params.payload.metadata))
+        : undefined,
     },
     select: NOTIFICATION_SELECT,
   })
@@ -186,7 +174,9 @@ export async function upsertInvitationNotification(
     data: {
       read: false,
       message: params.payload.message,
-      metadata: params.payload.metadata,
+      metadata: params.payload.metadata
+        ? JSON.parse(JSON.stringify(params.payload.metadata))
+        : undefined,
       event: params.payload.event ?? 'CREATED',
     },
     select: NOTIFICATION_SELECT,

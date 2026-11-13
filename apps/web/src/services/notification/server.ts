@@ -4,8 +4,9 @@ export {
   createInvitationNotification,
   upsertInvitationNotification,
   setInvitationNotificationStatus,
-  type NotificationPayload,
 } from "./database/notification.mutations";
+
+export { type NotificationPayload } from "./types";
 
 export {
   onScheduleEvent,
@@ -17,4 +18,4 @@ export {
 export {
   sendPushNotificationToUserById,
   sendPushNotificationToUserById as sendPushNotificationById,
-} from "./user";
+} from "./push";

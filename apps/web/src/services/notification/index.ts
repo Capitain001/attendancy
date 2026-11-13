@@ -11,10 +11,8 @@ export {
   subscribeUser,
   unsubscribeUser,
   unsubscribeUserDevice,
-  sendPushNotificationToUserById,
   sendNotificationToCurrentUser,
   debugUserSubscriptions,
-  debugPushStats,
 } from './user'
 
 // ─── Types métier ─────────────────────────────────────────────────────────────

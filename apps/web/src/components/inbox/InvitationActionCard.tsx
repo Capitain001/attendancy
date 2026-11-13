@@ -12,9 +12,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ROLE_LABELS } from '@/modules/user'
 import { getOrganizationRolePath } from '@/config/redirects'
 import { selectOrganizationProfileAction } from '@/services/organization'
-import { INVITATION_ACCEPT_LABELS, readInvitationContext } from '@/modules/invitation'
+
 import { useAcceptInvitation, useDeclineInvitation } from '@/hooks/inbox'
 import type { EnrichedInboxNotification } from './types'
+import UserIcon from '../users/UserIcon'
+import { INVITATION_ACCEPT_LABELS, readInvitationContext } from '@/modules/invitation/utils'
 
 interface InvitationActionCardProps {
   notification: EnrichedInboxNotification
@@ -24,23 +26,28 @@ export function InvitationActionCard({ notification }: InvitationActionCardProps
   const router = useRouter()
   const metadata = notification.metadata
   const { action } = readInvitationContext(metadata)
-  const invitationId = metadata?.invitationId
-  const kind = metadata?.kind ?? 'INVITATION_RECEIVED'
+  const invitationId = notification.resourceId
+  const isActionable =
+    notification.resourceType === 'INVITATION' &&
+    (notification.event === 'CREATED' || !notification.event)
   const rawStatus = metadata?.status ?? 'PENDING'
-  const role = metadata?.role ?? (metadata?.resourceType === 'CLASS' ? 'STUDENT' : undefined)
+  const role =
+    metadata?.role ??
+    (metadata?.target?.type === 'CLASS' ? 'STUDENT' : undefined)
   const roleKey = role as keyof typeof ROLE_LABELS | undefined
   const roleLabel = (roleKey && ROLE_LABELS[roleKey]) ? ROLE_LABELS[roleKey] : (role ?? 'Membre')
   const acceptedInvitationPath = typeof metadata?.orgSlug === 'string'
     ? roleKey
       ? getOrganizationRolePath(
-          { slug: metadata.orgSlug, type: metadata.orgType },
+          { slug: metadata.orgSlug, type: metadata.orgType as any },
           roleKey,
         )
       : `/${metadata.orgSlug}`
     : null
+  const orgId = notification.orgId
   const selectInvitedProfileAction =
-    typeof metadata?.orgId === 'string' && roleKey
-      ? selectOrganizationProfileAction.bind(null, metadata.orgId, roleKey)
+    typeof orgId === 'string' && roleKey
+      ? selectOrganizationProfileAction.bind(null, orgId, roleKey)
       : null
 
   const expiresAt = metadata?.expiresAt ? new Date(metadata.expiresAt) : null
@@ -84,12 +91,9 @@ export function InvitationActionCard({ notification }: InvitationActionCardProps
     <Card className="overflow-hidden border border-border/40 bg-card/60 backdrop-blur-md shadow-xs">
       <CardHeader className="flex flex-row items-start justify-between gap-4 border-b border-border/20 bg-muted/20 p-5">
         <div className="flex items-center gap-3.5">
-          <Avatar className="size-12 border border-border/40 shadow-xs">
-            {metadata?.orgLogo && <AvatarImage src={metadata.orgLogo} alt={metadata.orgName ?? 'Organisation'} />}
-            <AvatarFallback className="bg-primary/10 text-primary font-semibold text-base">
-              {orgInitial}
-            </AvatarFallback>
-          </Avatar>
+          <UserIcon
+          className="size-12 border border-border/40 shadow-xs"
+           avatarUrl={metadata?.orgLogo} name={orgInitial} />
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-base font-semibold text-foreground">
@@ -224,7 +228,7 @@ export function InvitationActionCard({ notification }: InvitationActionCardProps
       </CardContent>
 
       {/* Boutons d'action conditionnels */}
-      {kind === 'INVITATION_RECEIVED' && effectiveStatus === 'PENDING' && !localAcceptedPath && (
+      {isActionable && effectiveStatus === 'PENDING' && !localAcceptedPath && (
         <CardFooter className="flex items-center justify-end gap-2.5 border-t border-border/20 bg-muted/10 p-4">
           <Button
             variant="outline"

@@ -25,32 +25,19 @@ initVapid()
 // ─── Construction du payload ──────────────────────────────────────────────────
 
 export function buildPushPayload(params: {
-  message: string
-  userId?: string
-  resourceType?: Resource
-  resourceId?: string
-  event?: NotificationEvent
-  title?: string
+  title: string
+  body: string
+  icon: string
+  data: Record<string, unknown>
 }): string {
-  const resolvedTitle =
-    params.title ??
-    (params.resourceType && params.resourceType in NOTIFICATION_TITLES
-      ? NOTIFICATION_TITLES[params.resourceType as keyof typeof NOTIFICATION_TITLES]
-      : 'Notification 🔔')
-
   const payload: PushPayload = {
-    title: resolvedTitle,
-    body: params.message,
-    icon: NOTIFICATION_CONFIG.defaultIcon,
-    badge: NOTIFICATION_CONFIG.defaultIcon,
+    title: params.title,
+    body: params.body,
+    icon: params.icon,
+    badge: params.icon,
     tag: `notification-${Date.now()}`,
     timestamp: Date.now(),
-    data: {
-      userId: params.userId,
-      resourceType: params.resourceType,
-      resourceId: params.resourceId,
-      event: params.event,
-    },
+    data: params.data,
   }
   return JSON.stringify(payload)
 }

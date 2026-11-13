@@ -3,27 +3,19 @@
 import * as v from 'valibot'
 import { authAccess } from '@/services/auth'
 import { ERRORS } from '@/config'
-import {
-  isVapidConfigured,
-  buildPushPayload,
-  sendToDevice,
-  analyzeSendResults,
-} from '@/modules/notification/server'
+import { isVapidConfigured } from '@/modules/notification/server'
 import { subscribeSchema } from '@/modules/notification'
-import type { SerializedPushSubscription, SendDeviceResult } from '@/modules/notification/types'
+import type { SerializedPushSubscription } from '@/modules/notification/types'
 import {
   upsertPushSubscription,
   unsubscribeDevice,
   unsubscribeAllDevices,
-  markSubscriptionExpired,
 } from './database/push.mutations'
 import {
-  getActivePushSubscriptionsByUserId,
   getPushSubscriptionsByUserId,
   getPushSubscriptionStats,
 } from './database/push.queries'
-import { createUserNotification } from './database/notification.mutations'
-import type { CreateNotificationOutput } from './validation'
+import { sendPushNotificationToUserById } from './push'
 
 // ─── Abonnement push ──────────────────────────────────────────────────────────
 
@@ -75,52 +67,7 @@ export async function unsubscribeUserDevice(endpoint: string) {
   }
 }
 
-// ─── Envoi de notifications ───────────────────────────────────────────────────
-
-/**
- * Persiste la notification en base + envoie un push à tous les appareils actifs.
- * Le payload est le type Output du schéma : tout est inféré depuis validation.ts.
- */
-export async function sendPushNotificationToUserById(
-  userId: string,
-  payload: CreateNotificationOutput,
-) {
-  try {
-    if (!isVapidConfigured()) {
-      return { success: false, error: 'VAPID non configuré — vérifier NEXT_PUBLIC_VAPID_PUBLIC_KEY et VAPID_PRIVATE_KEY' }
-    }
-
-    await createUserNotification({ userId, data: payload })
-
-    const subscriptions = await getActivePushSubscriptionsByUserId(userId)
-    if (subscriptions.length === 0) {
-      return { success: false, error: 'Aucun appareil push actif pour cet utilisateur' }
-    }
-
-    const pushPayload = buildPushPayload({
-      message: payload.message,
-      userId,
-      resourceType: payload.resourceType,
-      resourceId: payload.resourceId,
-      event: payload.event,
-    })
-    const results = await Promise.allSettled(
-      subscriptions.map((sub) => sendToDevice(sub, pushPayload)),
-    )
-
-    // Nettoyage des abonnements révoqués (410 Gone) — fire-and-forget
-    results
-      .filter((r): r is PromiseFulfilledResult<SendDeviceResult> =>
-        r.status === 'fulfilled' && r.value.shouldMarkExpired,
-      )
-      .forEach((r) => markSubscriptionExpired(r.value.endpoint).catch(() => {}))
-
-    const { successful } = analyzeSendResults(results)
-    return { success: successful > 0 }
-  } catch (e) {
-    return { success: false, error: e instanceof Error ? e.message : ERRORS.SERVER }
-  }
-}
+// ─── Envoi utilisateur connecté ──────────────────────────────────────────────
 
 export async function sendNotificationToCurrentUser(payload: { message: string }) {
   const auth = await authAccess()
@@ -153,11 +100,3 @@ export async function debugUserSubscriptions() {
   }
 }
 
-export async function debugPushStats() {
-  try {
-    const stats = await getPushSubscriptionStats()
-    return { success: true, stats, vapidConfigured: isVapidConfigured() }
-  } catch (e) {
-    return { success: false, error: e instanceof Error ? e.message : ERRORS.SERVER }
-  }
-}

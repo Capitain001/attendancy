@@ -15,6 +15,7 @@ const NOTIFICATION_SELECT = {
   metadata: true,
   createdAt: true,
   updatedAt: true,
+  orgId:true,
 } as const satisfies Prisma.NotificationSelect
 
 // ─── Boîte de réception (Inbox) ───────────────────────────────────────────────
@@ -90,7 +91,7 @@ export async function getOrganizationNotifications(orgId: string, limit = 50) {
   return prisma.notification.findMany({
     where: { orgId },
     include: {
-      user: { select: { id: true, firstName: true, lastName: true, email: true } },
+      user: { select: { id: true, firstName: true, lastName: true, email: true , avatar_url:true, } },
     },
     orderBy: { createdAt: 'desc' },
     take: limit,

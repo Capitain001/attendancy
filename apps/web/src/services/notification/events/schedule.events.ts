@@ -1,6 +1,5 @@
-//apps\web\src\services\notification\events\schedule.events.ts
 import { NotificationEvent, Resource, type ScheduleStatus } from "@/generated/prisma/browser";
-import { sendPushNotificationToUserById as sendPushNotificationById } from "../user";
+
 import {
   claimScheduleAnnouncement,
   getScheduleForNotify,
@@ -14,6 +13,7 @@ import {
   resolveScheduleStudentAttendees,
   resolveScheduleTeacherRecipients,
 } from "../audiences";
+import { sendPushNotificationToUserById } from "../push";
 
 export type ScheduleNotifyBefore = {
   teacherId?: string;
@@ -21,6 +21,8 @@ export type ScheduleNotifyBefore = {
   status?: ScheduleStatus;
   teacherUserId?: string | null;
 };
+
+type ScheduleEvent = Extract<NotificationEvent, "CREATED" | "CONFIRMED" | "UPDATED" | "CANCELED">;
 
 export type ScheduleNotifyParams =
   | {
@@ -32,7 +34,7 @@ export type ScheduleNotifyParams =
   | {
       scheduleId: string;
       orgId: string;
-      event: "CONFIRMED" | "UPDATED" | "CANCELED";
+      event: Exclude<ScheduleEvent, "CREATED">;
       before: ScheduleNotifyBefore;
     };
 
@@ -80,7 +82,7 @@ export async function onScheduleEvent(
 
     // 1. Enseignants
     const teacherRecipients = resolveScheduleTeacherRecipients({
-      event: event as NotificationEvent,
+      event,
       courseName: schedule.course.name,
       day,
       audience: event === "CREATED" ? params.audience : undefined,
@@ -107,9 +109,8 @@ export async function onScheduleEvent(
 
     // 3. Élèves et parents
     if (isConfirmed && (!claimRequired || announced)) {
-      const scheduleEvent = event as NotificationEvent;
       const studentsMessage = getStudentsScheduleMessage(
-        scheduleEvent,
+        event,
         schedule.course.name,
         day,
       );
@@ -117,26 +118,24 @@ export async function onScheduleEvent(
       const { studentIds, userIds } =
         await resolveScheduleStudentAttendees(scheduleId);
       for (const userId of userIds) {
-        addRecipient(userId, studentsMessage, scheduleEvent);
+        addRecipient(userId, studentsMessage, event);
       }
 
       const parentUserIds = await resolveScheduleParents(studentIds, orgId);
       for (const userId of parentUserIds) {
-        addRecipient(userId, studentsMessage, scheduleEvent);
+        addRecipient(userId, studentsMessage, event);
       }
     }
 
     // 4. Émission best-effort
-    const metadata = { kind: "schedule", scheduleId, event };
     const results = await Promise.allSettled(
       notifications.map(({ userId, message, event: notifEvent }) =>
-        sendPushNotificationById(userId, {
+        sendPushNotificationToUserById(userId, {
           orgId,
           message,
           resourceType: Resource.SCHEDULE,
           resourceId: scheduleId,
           event: notifEvent,
-          metadata,
         }),
       ),
     );
@@ -152,4 +151,3 @@ export async function onScheduleEvent(
 
   return { announced };
 }
-

@@ -19,4 +19,4 @@ export { inviteTeacher } from "./teacher/invite";
 // Types partagés
 export type { InvitationListItem, InvitationStats } from "./database";
 
-export * from "./message";
+export * from "./utils";

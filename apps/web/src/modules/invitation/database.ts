@@ -6,7 +6,7 @@
 import { prisma } from "@/lib/prisma";
 import { invalidateEvent } from "@/cache/server/graph";
 import { createInvitationNotification } from "@/services/notification/server";
-import { buildInvitationNotificationPayload } from "./message";
+import { buildInvitationNotificationPayload } from "@/services/notification/messages";
 import { Prisma } from "@/generated/prisma/client";
 import {
   InvitationMetadata,
@@ -146,7 +146,10 @@ export async function saveInvitationWithAudit(params: SaveInvitationParams) {
               expiresAt: params.expiresAt,
               role: params.metadata.role,
               organization: { ...params.metadata.organization, id: orgId },
-              senderName: params.metadata.invited_by?.name,
+              sender: {
+                id: params.inviterUserId,
+                name: params.metadata.invited_by?.name,
+              },
               resourceId: params.resourceId,
               resourceType: params.resourceType,
               resourceName: params.resourceName,

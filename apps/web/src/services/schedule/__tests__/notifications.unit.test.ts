@@ -30,9 +30,7 @@ vi.mock("@/services/parent/server", () => ({
 vi.mock("@/services/notification/user", () => ({
   sendPushNotificationToUserById: mocks.sendPushNotificationById,
 }));
-vi.mock("@/modules/notification/action", () => ({
-  sendPushNotificationById: mocks.sendPushNotificationById,
-}));
+
 
 import { notifyScheduleStakeholders } from "../notifications";
 

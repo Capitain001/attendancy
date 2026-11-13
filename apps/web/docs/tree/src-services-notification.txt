@@ -1,0 +1,92 @@
+src\services\notification
+│   action.ts
+│   cache.ts
+│   CLAUDE.md
+│   constants.ts
+│   generated.types.ts
+│   index.ts
+│   permission.ts
+│   push.ts
+│   server.ts
+│   service-worker.ts
+│   types.ts
+│   user.ts
+│   utils.ts
+│   validation.ts
+│
+├───.api
+│       buildInvitationNotification.json
+│       checkOrgMembership.json
+│       cleanupExpiredSubscriptions.json
+│       countActiveDevicesForUser.json
+│       createAdminNotification.json
+│       createInvitationNotification.json
+│       createInvitationResponseNotification.json
+│       createNotificationForOrgUser.json
+│       createUserNotification.json
+│       deleteNotification.json
+│       findPushSubscriptionByEndpoint.json
+│       getActivePushSubscriptionsByUserId.json
+│       getAdminNotifications.json
+│       getAdminNotificationStats.json
+│       getAdminUnreadCount.json
+│       getAdminUnreadNotifications.json
+│       getAdminUserNotifications.json
+│       getInboxNotificationsAction.json
+│       getInboxNotificationsForUser.json
+│       getInboxUnreadCountAction.json
+│       getNotifications.json
+│       getNotificationsForUser.json
+│       getOrganizationNotifications.json
+│       getOrganizationNotificationStats.json
+│       getOrganizationUnreadCount.json
+│       getOrganizationUnreadNotifications.json
+│       getOrganizationUserNotifications.json
+│       getPushSubscriptionsByUserId.json
+│       getPushSubscriptionStats.json
+│       getUnread.json
+│       getUnreadCount.json
+│       getUnreadCountForUser.json
+│       getUnreadNotificationsForUser.json
+│       hasActiveSubscriptions.json
+│       index.json
+│       markAllInboxNotificationsAsReadAction.json
+│       markAllNotificationsRead.json
+│       markAllRead.json
+│       markInboxNotificationAsReadAction.json
+│       markNotificationAsRead.json
+│       markNotificationRead.json
+│       markSubscriptionExpired.json
+│       removeNotification.json
+│       sendAdminPushNotification.json
+│       setInvitationNotificationStatus.json
+│       unsubscribeAllDevices.json
+│       unsubscribeDevice.json
+│       upsertInvitationNotification.json
+│       upsertPushSubscription.json
+│
+├───actions
+│       index.ts
+│       notification.mutations.ts
+│       notification.queries.ts
+│
+├───audiences
+│       index.ts
+│       parent.audience.ts
+│       student.audience.ts
+│       teacher.audience.ts
+│
+├───database
+│       index.ts
+│       notification.mutations.ts
+│       notification.queries.ts
+│       push.mutations.ts
+│       push.queries.ts
+│
+├───events
+│       index.ts
+│       schedule.events.ts
+│
+└───messages
+        index.ts
+        schedule.messages.ts

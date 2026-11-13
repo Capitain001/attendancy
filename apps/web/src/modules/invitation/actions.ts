@@ -18,13 +18,14 @@ import { ERRORS } from "@/config";
 import { notifyInvitationStakeholders } from "./notifications";
 import type { DatabaseInvitationDetails } from "@/types/invitation";
 import { Role } from "@/generated/prisma/browser";
-import { buildInvitationNotificationPayload } from "./message";
+
 import { Prisma } from "@/generated/prisma/client";
 import {
   setInvitationNotificationStatus,
   upsertInvitationNotification,
 } from "@/services/notification/server";
 import { invalidateEvent } from "@/cache/server/graph";
+import { buildInvitationNotificationPayload } from "@/services/notification/messages/invitation.messages";
 
 function getStudentInvitationNotifyContext(
   invitation: Pick<InvitationListItem, "id" | "email" | "details">,

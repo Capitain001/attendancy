@@ -13,10 +13,7 @@ import { invalidateEvent } from '@/cache/server/graph'
 import { Action, Prisma, Resource, Role } from '@/generated/prisma/client'
 import { logAuditAsync } from '@/utils/server'
 import type { DatabaseInvitationDetails } from '@/types/invitation'
-import {
-  readInvitationContext,
-  buildInvitationResponsePayload,
-} from '@/modules/invitation'
+
 import {
   setInvitationNotificationStatus,
   createInvitationNotification,
@@ -30,6 +27,8 @@ import {
   assignMultipleFunctionsToUser,
   enrollStudentInClass,
 } from './utils'
+import { readInvitationContext } from '@/modules/invitation/utils'
+import { buildInvitationResponsePayload } from '@/services/notification/messages/invitation.messages'
 
 const invitationActionSchema = v.object({
   invitationId: v.pipe(v.string(), v.uuid("ID d'invitation invalide")),
@@ -117,13 +116,13 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
         const revokedInvitations =
           invitation.resourceId && invitation.resourceType
             ? await revokePendingInvitationsForResource(tx, {
-                orgId,
-                email: invitation.email,
-                resourceId: invitation.resourceId,
-                resourceType: invitation.resourceType,
-                acceptedInvitationId: invitation.id,
-                revokedAt: acceptedAt,
-              })
+              orgId,
+              email: invitation.email,
+              resourceId: invitation.resourceId,
+              resourceType: invitation.resourceType,
+              acceptedInvitationId: invitation.id,
+              revokedAt: acceptedAt,
+            })
             : []
 
         // B. Adhésion à l'org (idempotente ; isMainOrg posé par la DB)
@@ -182,12 +181,13 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
           await createInvitationNotification(tx, {
             userId: senderId,
             payload: buildInvitationResponsePayload({
-              kind: 'INVITATION_ACCEPTED',
+              event: 'CONFIRMED',
               invitationId: invitation.id,
               orgId: invitation.orgId,
               orgName: invitation.organization.name,
               sender: { id: userId, name: user.name, email: user.email },
               action,
+              resourceId: invitation.resourceId,
               resourceName,
             }),
           })
@@ -225,10 +225,10 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
         ...(hasActiveOrg
           ? {}
           : {
-              role,
-              function: details.function,
-              organization: orgData,
-            }),
+            role,
+            function: details.function,
+            organization: orgData,
+          }),
       })
     } catch (sessionErr) {
       console.error('[acceptInboxInvitationAction] Erreur setUserAccess non bloquante:', sessionErr)
@@ -272,12 +272,12 @@ export async function acceptInboxInvitationAction(input: { invitationId: string 
 
     const redirectPath = invitation.organization.slug
       ? getOrganizationRolePath(
-          {
-            slug: invitation.organization.slug,
-            type: invitation.organization.type,
-          },
-          role,
-        )
+        {
+          slug: invitation.organization.slug,
+          type: invitation.organization.type,
+        },
+        role,
+      )
       : '/'
 
     return {
@@ -324,6 +324,7 @@ export async function declineInboxInvitationAction(input: { invitationId: string
       select: {
         id: true,
         orgId: true,
+        resourceId: true,
         details: true,
         organization: { select: { name: true } },
       },
@@ -353,12 +354,13 @@ export async function declineInboxInvitationAction(input: { invitationId: string
           await createInvitationNotification(tx, {
             userId: senderId,
             payload: buildInvitationResponsePayload({
-              kind: 'INVITATION_DECLINED',
+              event: 'REJECTED',
               invitationId: invitation.id,
               orgId: invitation.orgId,
               orgName: invitation.organization?.name ?? 'l’organisation',
               sender: { id: userId, name: user.name, email: user.email },
               action,
+              resourceId: invitation.resourceId,
               resourceName,
             }),
           })
