@@ -6,6 +6,16 @@ import type { getPushSubscriptionsByUserId } from './database/push.queries'
 export type NotificationItem      = Awaited<ReturnType<typeof getNotificationsForUser>>[number]
 export type PushSubscriptionItem  = Awaited<ReturnType<typeof getPushSubscriptionsByUserId>>[number]
 
+// types.ts
+export * from './generated.types'
+
+import type { Prisma } from '@/generated/prisma/client'
+
+export type CreateNotificationData = Pick<
+  Prisma.NotificationUncheckedCreateInput,
+  'message' | 'orgId' | 'resourceType' | 'resourceId' | 'event' | 'metadata'
+>
+
 export type NotificationStats = {
   total: number
   unread: number
