@@ -19,6 +19,7 @@ export async function getPersonalCourses(orgId: string, classId?: string) {
     where: { orgId, deletedAt: null, ...(classId && { classId }) },
     select: {
       id: true,
+      classId: true,
       name: true,
       durationTotal: true,
       durationDone: true,

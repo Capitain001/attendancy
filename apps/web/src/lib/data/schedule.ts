@@ -1,7 +1,7 @@
 // src/lib/data/schedule.ts
 // apps/web/src/lib/data/schedule.ts
 export const scheduleCountdownMessages = {
-  upcoming: 'Cours suivant dans',
+  upcoming: 'Commence dans',
   awaiting: 'Pas encore démarré',
   running: 'En cours · fin dans',
 } as const

@@ -1,0 +1,86 @@
+/* Entier animable : sans @property, le navigateur interpole en continu au lieu de compter */
+@property --n {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: false;
+}
+
+/* Compte à rebours : de --total à 0 */
+@keyframes countdown-tick {
+  from { --n: var(--total); }
+  to   { --n: 0; }
+}
+
+/* L'anneau se vide : dashoffset 0 (plein) → 1 (vide), pathLength=1 */
+@keyframes countdown-ring {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: 1; }
+}
+
+.countdown-digits {
+  /* steps(--total) : un pas par seconde, sinon --n passerait par des valeurs intermédiaires */
+  animation: countdown-tick calc(var(--total) * 1s) steps(var(--total), end) forwards;
+  /* Délai négatif : l'animation démarre déjà avancée de (total - left) secondes.
+     Chargement de page à 6 min restantes → affiche directement 06:00. */
+  animation-delay: calc((var(--left) - var(--total)) * 1s);
+  /* Découpe --n en minutes et secondes pour counter() */
+  counter-reset:
+    m round(down, calc(var(--n) / 60), 1)
+    s mod(var(--n), 60);
+}
+.countdown-digits::before {
+  content: counter(m, decimal-leading-zero) ":" counter(s, decimal-leading-zero);
+}
+
+.countdown-ring {
+  animation: countdown-ring calc(var(--total) * 1s) linear forwards;
+  animation-delay: calc((var(--left) - var(--total)) * 1s); /* même rattrapage que les chiffres */
+}
+
+/* Anneau figé pour les utilisateurs sensibles au mouvement (les chiffres restent) */
+@media (prefers-reduced-motion: reduce) {
+  .countdown-ring { animation: none; }
+}
+
+
+
+/*  */
+
+/* Défilement d'une colonne : la bande remonte de sa propre hauteur, un cran par chiffre */
+@keyframes countdown-roll {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-100%); }
+}
+
+/* Fin du décompte : on masque, sinon les colonnes repartiraient de 9 */
+@keyframes countdown-end {
+  to { visibility: hidden; }
+}
+
+.countdown-display {
+  /* Durée 0 + délai = un interrupteur à l'instant `--left` (fill forwards : l'état reste) */
+  animation: countdown-end 0s linear forwards;
+  animation-delay: calc(var(--left) * 1s);
+}
+
+/* Fenêtre d'une ligne : seul le chiffre courant dépasse du overflow */
+.countdown-column {
+  display: block;
+  height: 1em;
+  width: 1ch;
+  overflow: hidden;
+  text-align: center;
+}
+
+.countdown-strip {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* Période = step × size ; steps(size) = un cran par chiffre ; boucle car 0 → 9 reprend la bande */
+  animation: countdown-roll calc(var(--step) * var(--size) * 1s) steps(var(--size), end) infinite;
+  /* Retard négatif : l'animation démarre déjà avancée de `--phase` secondes */
+  animation-delay: calc(var(--phase) * -1s);
+}
+.countdown-strip > li {
+  height: 1em;
+}

@@ -93,6 +93,9 @@ export interface SessionPolicy {
 // ─── Constantes de seuil (minutes) ───────────────────────────────────────────
 export const SESSION_THRESHOLDS = { checkIn: 15, checkOut: 15 } as const
 
+/** Fenêtre check-in : unique source pour l'horloge et le décompte. */
+export const CHECK_IN_WINDOW = SESSION_THRESHOLDS.checkIn * 60_000
+
 // ─── Fonctions pures ──────────────────────────────────────────────────────────
 
 function assertNeverSessionStatus(status: never): never {

@@ -1,10 +1,10 @@
 // src/components/personal/teacher/ui/StartSessionButton.tsx
-// components/personal/teacher/ui/StartSessionButton.tsx
 'use client'
 
 import Link from 'next/link'
 import { LogIn } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+import { rippleButtonClasses } from '@/components/ui/ripple-button'
 import { useSessionState, type DBSession } from '@/hooks/data/sessions/use-session-state'
 import { scheduleStartMessages as m } from '@/lib/data/schedule'
 
@@ -29,11 +29,16 @@ export function StartSessionButton({ schedule, href }: Props) {
   if (!canCheckIn) return null
 
   return (
-    <Button asChild size="lg" className="h-12 w-full rounded-md">
-      <Link href={href}>
-        <LogIn aria-hidden="true" className="size-4" />
-        {m.start}
-      </Link>
-    </Button>
+    <Link
+      href={href}
+      className={cn(
+        rippleButtonClasses,
+        // ce que `Button` apportait et que la classe ripple n'a pas
+        'inline-flex h-12 w-full items-center justify-center gap-2 whitespace-nowrap'
+      )}
+    >
+      <LogIn aria-hidden="true" className="size-4 shrink-0" />
+      {m.start}
+    </Link>
   )
 }

@@ -65,3 +65,12 @@ https://www.youtube.com/shorts/JeG2RLxowko
 
 
 https://www.youtube.com/shorts/3sUWOby3weM
+
+
+ui 
+https://www.youtube.com/shorts/HhpVgQUFTZc
+
+
+
+// motivation 
+https://www.youtube.com/watch?v=l1vtPmM_Pas

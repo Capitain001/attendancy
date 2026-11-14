@@ -1,5 +1,5 @@
 @import "./themes/index.css";
-
+@import "./utils/index.css";
 /* Dark mode = class-based (supports .dark on ancestor like <html>) */
 @custom-variant dark (:where(.dark, .dark *) &);
 
@@ -104,7 +104,7 @@
   --sidebar-accent: oklch(0.40 0.015 84);
 
   /* custom */
-  --glass: oklch(0.13 0 0)
+  --glass: oklch(0.13 0 0);
   
   /* ── Tokens shadcn — dérivés de notre palette dark ── */
   --sidebar-foreground: var(--foreground);

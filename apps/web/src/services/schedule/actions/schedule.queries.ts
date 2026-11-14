@@ -46,8 +46,8 @@ export async function getTeacherNextScheduleAction({ teacherId }: { teacherId: s
   const { orgId } = auth.data
 
   try {
-    return { data: await getTeacherNextSchedule(teacherId, orgId) }
-    // return {data: mockGetTeacherNextSchedule}
+    // return { data: await getTeacherNextSchedule(teacherId, orgId) }
+    return {data: mockGetTeacherNextSchedule}
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
   }
@@ -167,8 +167,8 @@ export async function getTeacherSchedulesAction(
   const { orgId } = auth.data
 
   try {
-    return { data: await getTeacherSchedules({ orgId, ...params }) }
-    // return { data: mockGetTeacherSchedules }
+    // return { data: await getTeacherSchedules({ orgId, ...params }) }
+    return { data: mockGetTeacherSchedules }
 
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
@@ -226,8 +226,8 @@ export async function getTeacherDailyScheduleAction(input?: GetTeacherDailySched
 
   try {
 
-    // return { data:mockGetTeacherDailySchedule}
-    return { data: await getTeacherDailySchedule(teacherId, orgId, dayKey) }
+    return { data:mockGetTeacherDailySchedule}
+    // return { data: await getTeacherDailySchedule(teacherId, orgId, dayKey) }
   } catch (e) {
     console.error('[getTeacherDailyScheduleAction]', e)
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }

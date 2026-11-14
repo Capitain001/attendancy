@@ -1,5 +1,4 @@
 // src/hooks/data/schedule/useTeacherDailyScheduleStats.ts
-// apps/web/src/hooks/data/schedule/useTeacherDailyScheduleStats.ts
 'use client'
 
 import { useMemo } from 'react'
@@ -25,6 +24,11 @@ export type TeacherDailyScheduleCount = {
   canceled: number
 }
 
+type StatsOptions = {
+  /** Avance de réveil avant `startTime` (ms), transmise à `useScheduleClock`. */
+  lead?: number
+}
+
 /**
  * Statistiques d'une journée de planning d'un enseignant.
  *
@@ -38,6 +42,9 @@ export type TeacherDailyScheduleCount = {
  * - `upcoming` : première séance au statut UI PENDING (pas encore commencée),
  *                sinon `null`. Les annulées et manquées sont ignorées.
  * - `count`    : voir {@link TeacherDailyScheduleCount}.
+ * - `now`      : horloge de `useScheduleClock`. Elle ne change qu'aux frontières
+ *                (start - lead, start, end) : stable entre deux frontières,
+ *                donc à ne pas utiliser comme « heure courante » précise.
  *
  * Attend des `schedules` triés par `startTime` (garanti par `useTeacherDailySchedule`) :
  * `ongoing` et `upcoming` prennent la première occurrence rencontrée.
@@ -45,19 +52,22 @@ export type TeacherDailyScheduleCount = {
  * Le générique `T` conserve le type complet de la séance (`class`, `room`, ...)
  * sur `ongoing` et `upcoming`.
  *
- * Réactivité : `useScheduleClock` réveille le hook aux frontières `startTime` / `endTime`
- * des séances DB PENDING, seules à dépendre du temps. Les statuts actés
+ * Réactivité : `useScheduleClock` réveille le hook aux frontières des séances
+ * DB PENDING, seules à dépendre du temps. Les statuts actés
  * (COMPLETED, CANCELED, MISSED) priment toujours sur le calcul temporel.
  *
  * @example
  * const { schedules } = useTeacherDailySchedule({ teacherId })
- * const { ongoing, upcoming, count } = useTeacherDailyScheduleStats(schedules)
+ * const { ongoing, upcoming, count, now } = useTeacherDailyScheduleStats(schedules, { lead })
  *
  * // Distinguer « journée libre » de « tout annulé » :
  * const allCanceled = count.total === 0 && count.canceled > 0
  */
-export function useTeacherDailyScheduleStats<T extends DBSchedule>(schedules: T[]) {
-  const now = useScheduleClock(schedules)
+export function useTeacherDailyScheduleStats<T extends DBSchedule>(
+  schedules: T[],
+  { lead }: StatsOptions = {},
+) {
+  const now = useScheduleClock(schedules, lead)
 
   return useMemo(() => {
     let ongoing: T | null = null
@@ -97,6 +107,6 @@ export function useTeacherDailyScheduleStats<T extends DBSchedule>(schedules: T[
       canceled,
     }
 
-    return { ongoing, upcoming, count }
+    return { ongoing, upcoming, count, now }
   }, [schedules, now])
 }
