@@ -1,0 +1,30 @@
+{
+  "name": "@attendancy/chat-offline",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./idb": "./src/idb-store.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "idb-keyval": "^6.2.1"
+  },
+  "peerDependenciesMeta": {
+    "idb-keyval": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/ws": "^8.5.12",
+    "idb-keyval": "^6.2.1",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0",
+    "ws": "^8.18.0"
+  }
+}
