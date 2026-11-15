@@ -12,7 +12,6 @@ export default async function HomePage() {
 
       <h1 className="text-2xl font-semibold">attendancy</h1>
               <BackgroundPattern pattern="pattern-noise" opacity={0.55} />
-    
       {/* NB:cette section sert temporairement a rendre accessible le lien de l ettablissement dispo dans le header pr ceux qui test la maquette */}
       {/* cette page est volontairement minimaliste */}
       <div className="flex flex-col items-center gap-4 ">

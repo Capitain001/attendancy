@@ -57,14 +57,14 @@ export const DAY_DECORATION_STYLES = {
   },
   /** Au moins un item récurrent (WEEKLY) s'applique ce jour. */
   weekly: {
-    ringClassName: "ring-2 ring-pink-400",
-    legendClassName: "ring-2 ring-pink-400",
+    ringClassName: "text-foreground/30 bg-muted grayscale",
+    legendClassName: "ring-2 ring-primary",
     legendLabel: "Récurrente (hebdo)",
   },
   /** Au moins un item ponctuel (DATE_RANGE — un jour ou une période) s'applique ce jour. */
   dateRange: {
-    fillClassName: "bg-blue-400/25",
-    legendClassName: "bg-blue-400/25 border border-border",
+    fillClassName: "bg-chart-secondary/80 text-foreground/60 grayscale",
+    legendClassName: "bg-chart-secondary/80",
     legendLabel: "Date ou période spécifique",
   },
 } as const;
@@ -262,19 +262,19 @@ export function UnavailabilityCalendar({
   const modeProps =
     pickerMode === "single"
       ? ({
-          mode: "single",
-          required: true,
-          selected: selectedDate ?? undefined,
-          onSelect: onDaySelect,
-        } as const)
+        mode: "single",
+        required: true,
+        selected: selectedDate ?? undefined,
+        onSelect: onDaySelect,
+      } as const)
       : ({
-          mode: "range",
-          selected: range,
-          onSelect: onRangeChange,
-        } as const);
+        mode: "range",
+        selected: range,
+        onSelect: onRangeChange,
+      } as const);
 
   return (
-  <div ref={containerRef} className="w-full h-full flex-1 flex flex-col justify-between p-1">
+    <div ref={containerRef} className="w-full h-full flex-1 flex flex-col justify-between p-1">
       <DayButtonContext.Provider value={contextValue}>
         <Calendar
           locale={fr}
@@ -295,23 +295,25 @@ export function UnavailabilityCalendar({
           toute la journée ; hachure + fond = période ponctuelle sur toute la
           journée). Un item à horaire partiel, non récurrent, n'affiche que le
           fond, sans hachure ni anneau. */}
-      <div className="flex flex-col items-center gap-2 border-t border-border pt-3 text-xs text-muted-foreground">
+      <div className="grid grid-cols-2 items-center gap-2 border-t border-border pt-3 px-4 text-xs text-muted-foreground">
         <div className="flex items-center gap-1.5">
           <span
-            className="size-3.5 rounded-full border border-border"
+            className="size-3.5 shrink-0 rounded-full border border-border"
             style={{
-              backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 3px, ${DAY_DECORATION_STYLES.fullDay.hatchColor} 3px, ${DAY_DECORATION_STYLES.fullDay.hatchColor} 6px)`,
+              backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 2.5px, ${DAY_DECORATION_STYLES.fullDay.hatchColor} 2.5px, ${DAY_DECORATION_STYLES.fullDay.hatchColor} 5px)`,
             }}
           />
           {DAY_DECORATION_STYLES.fullDay.legendLabel}
         </div>
+
+
         <div className="flex items-center gap-1.5">
-          <span className={cn("size-3.5 rounded-full", DAY_DECORATION_STYLES.weekly.legendClassName)} />
-          {DAY_DECORATION_STYLES.weekly.legendLabel}
+          <span className={cn("size-3.5 shrink-0 rounded-full", DAY_DECORATION_STYLES.dateRange.legendClassName)} />
+          {DAY_DECORATION_STYLES.dateRange.legendLabel}
         </div>
         <div className="flex items-center gap-1.5">
-          <span className={cn("size-3.5 rounded-full", DAY_DECORATION_STYLES.dateRange.legendClassName)} />
-          {DAY_DECORATION_STYLES.dateRange.legendLabel}
+          <span className={cn("size-3.5 shrink-0 rounded-full", DAY_DECORATION_STYLES.weekly.legendClassName)} />
+          {DAY_DECORATION_STYLES.weekly.legendLabel}
         </div>
       </div>
     </div>

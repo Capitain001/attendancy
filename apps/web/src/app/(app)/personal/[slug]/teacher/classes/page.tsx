@@ -50,7 +50,7 @@ export default async function PersonalTeacherClassesPage({
       <div className="mx-auto w-full max-w-5xl space-y-6">
         <header className="space-y-2">
           <h1 className="text-2xl font-bold tracking-tight">Mes classes</h1>
-          <p className="text-sm text-foreground/45">
+          <p className="text-sm text-foreground/75">
             {activeCount} classe{activeCount === 1 ? "" : "s"} active{activeCount === 1 ? "" : "s"}
             {quota?.maxClasses == null ? "" : ` sur ${quota.maxClasses}`}
           </p>
@@ -70,7 +70,7 @@ export default async function PersonalTeacherClassesPage({
         {canAddClass ? (
           <CreateClassTrigger />
         ) : !loadError ? (
-          <p className="rounded-md border border-foreground/10 px-4 py-3 text-sm text-foreground/50">
+          <p className="rounded-md border border-foreground/20 px-4 py-3 text-sm text-foreground/75">
             Vous avez atteint la limite de classes actives de votre espace.
           </p>
         ) : null}
@@ -80,9 +80,9 @@ export default async function PersonalTeacherClassesPage({
 
           return (
             <section key={type} className="space-y-3">
-              <h2 className="flex items-baseline gap-2 text-sm font-bold text-foreground/70">
+              <h2 className="flex items-baseline gap-2 text-sm font-bold text-foreground/90">
                 {title}
-                <span className="font-mono text-xs font-normal tabular-nums text-foreground/30">
+                <span className="font-mono text-xs font-normal tabular-nums text-foreground/60">
                   {group.length}
                 </span>
               </h2>

@@ -9,6 +9,7 @@ export const scheduleCountdownMessages = {
 export const scheduleListMessages = {
   title: 'Cours de la journée',
   empty: "Aucun cours aujourd'hui",
+  progress: (done: number, total: number) => `${done}/${total} terminés`,
 } as const
 
 export const scheduleStartMessages = {

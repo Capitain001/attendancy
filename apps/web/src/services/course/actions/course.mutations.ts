@@ -38,7 +38,7 @@ export async function updateCourseAction(input: UpdateCourseInput) {
 }
 
 export async function removeCourseAction(courseId: string) {
-  const auth = await authAccess({ requiredRole: 'DIRECTION' })
+  const auth = await authAccess({ requiredRole: 'DIRECTION', allowPersonalOrg: true })
   if (!auth.data) return { error: auth.error }
   const { orgId } = auth.data
 

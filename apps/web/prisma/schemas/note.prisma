@@ -1,0 +1,86 @@
+// ─── Notes ───────────────────────────────────────────────────────────────────
+// Deux axes indépendants :
+//   • le LIEN (resourceType + targetId sur Note) : de quoi parle la note ;
+//   • le PARTAGE (Share)                         : qui y a accès, et avec quels droits.
+// Une note sans aucune ligne Share est privée : la confidentialité se DÉDUIT de
+// l'absence de partage, il n'y a volontairement pas de booléen isPublic/isShared
+// (donnée dérivable, qui se désynchroniserait).
+
+// Note d'un utilisateur : existe sans rattachement (brouillon libre) et peut
+// être liée ensuite à UNE ressource (resourceType + targetId, tous deux null ou
+// tous deux renseignés — CHECK en post-migrate).
+// userId = auteur ET propriétaire : seul lui supprime, restaure et partage.
+// FK sur User (pas sur un profil) : la note est réutilisable par tous les
+// rôles. Le scope org repose sur orgId + vérification applicative à l'écriture.
+// ⚠️ Intégrité applicative : toute ÉCRITURE vérifie que (1) le user a une
+// UserOrganization active dans orgId, (2) targetId appartient bien à orgId
+// (pas de FK sur la ressource cible).
+// deletedAt = corbeille (réversible), purgée par job (90_note.sql) ; une note
+// en corbeille disparaît pour tous ses destinataires.
+model Note {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orgId        String    @db.Uuid
+  userId       String    @db.Uuid
+  name         String?
+  content      String
+  isPinned     Boolean   @default(false)
+
+  // Lien optionnel : null/null = note libre
+  resourceType Resource?
+  targetId     String?   @db.Uuid
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  shares       Share[]
+
+  // "Mes notes dans cette org", triées par dernière modification
+  @@index([userId, orgId, deletedAt, updatedAt(sort: Desc)])
+  // "Les notes liées à ce cours / cette séance / cet étudiant"
+  @@index([resourceType, targetId])
+  @@index([orgId])
+  @@schema("public")
+}
+
+// Partage d'une chose avec UNE audience (une ligne = une audience). Délier =
+// hard delete de la ligne, la chose partagée n'est jamais touchée.
+// Nommé Share (pas NoteShare) pour préparer le partage d'autres ressources :
+// le SEUL couplage avec Note est noteId (FK + cascade). Pour partager une autre
+// ressource, noteId deviendra nullable à côté d'une FK sœur (CHECK : une seule
+// renseignée) — le reste du modèle ne change pas.
+// Audience polymorphe, sans FK par cible (même contrat que Note.resourceType) :
+//   resourceType + targetId renseignés → les membres de la cible, résolus à la
+//     LECTURE (USER = la personne, CLASS/GROUP/COURSE = ses membres) ;
+//   targetId null → toute l'org, limitée à roles. targetId sans resourceType
+//     est interdit (CHECK en post-migrate).
+// roles = quels membres sont visés : avec une cible, vide = ses membres directs
+// (classe → étudiants), [PARENT] = leurs parents ; sans cible, rôles d'adhésion
+// (UserOrganization.role) de l'org. Sans cible ET sans rôle = personne : règle
+// du résolveur (jamais « toute l'org »), c'est un sujet d'UX, pas de contrainte DB.
+// access réutilise Action : seules READ et UPDATE sont valides en v1 (liste
+// fermée à la validation). Supprimer/restaurer/partager restent réservés au
+// propriétaire, quelle que soit la valeur.
+// ⚠️ Intégrité applicative : l'audience doit appartenir à l'org de la chose
+// partagée, et le partageur doit avoir le droit de la viser (policy par rôle).
+// Unicité (noteId, resourceType, targetId) en index NULLS NOT DISTINCT en
+// post-migrate : un @@unique Prisma laisserait passer les doublons org-wide
+// (NULLs distincts), comme pour Permission.
+model Share {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  noteId       String    @db.Uuid
+  access       Action    @default(READ)
+  resourceType Resource?
+  targetId     String?   @db.Uuid
+  roles        Role[]
+  createdAt    DateTime  @default(now())
+
+  note Note @relation(fields: [noteId], references: [id], onDelete: Cascade)
+
+  // "Choses partagées avec moi / ma classe / mon groupe"
+  @@index([resourceType, targetId])
+  @@index([noteId])
+  @@schema("public")
+}

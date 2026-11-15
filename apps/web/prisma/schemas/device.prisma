@@ -26,6 +26,8 @@ model UserDevice {
   firstSeenAt    DateTime  @default(now())
   lastSeenAt     DateTime  @default(now())
   lastIpAddress  String?
+    publicKey String? // Ed25519, enregistrée pendant que l'appareil est en ligne
+    
   // Révocation globale de l'appareil ("déconnecter partout sur ce device") —
   // désactivation, pas suppression : l'historique des sessions reste lisible.
   revokedAt      DateTime?

@@ -82,23 +82,25 @@ export default async function ClassCoursesPage({ params, searchParams }: ClassCo
             </div>
           </div>
         ) : (
+          // Liste des cours : flex + gap pour séparer les lignes sans prolonger le fond entre elles
           <div className="rounded-xl border border-foreground/10">
-            <div className="p-1 overflow-hidden rounded-2xl">
+            <div className="flex flex-col gap-1 overflow-hidden rounded-2xl p-1">
               {courses.map((course, index) => (
+                // rounded-lg dès le mobile : chaque fond bg-foreground/2 forme une pastille distincte
                 <Link
                   key={course.id}
                   href={`${coursesBaseHref}/${course.id}`}
-                  className="group/row flex h-14 items-center gap-3 px-3 text-sm transition-colors bg-foreground/2 sm:h-10 sm:rounded-lg sm:bg-transparent sm:hover:bg-foreground/5"
+                  className="group/row flex h-14 items-center gap-3 rounded-lg bg-[#f5f4f3] dark:bg-foreground/2 px-3 text-sm transition-colors sm:h-10 sm:bg-transparent sm:hover:bg-foreground/5"
                 >
-                  <span className="w-4 shrink-0 text-right font-mono text-[11px] tabular-nums text-foreground/25">
+                  <span className="w-4 shrink-0 text-right font-mono text-[11px] tabular-nums text-foreground/40">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <span className="h-px w-3 shrink-0 bg-foreground/10" />
-                  <span className="truncate text-foreground/70 group-hover/row:text-foreground">
+                  <span className="truncate text-foreground group-hover/row:text-foreground">
                     {course.name}
                   </span>
                   <span className="h-px flex-1 bg-foreground/10" />
-                  <span className="inline-flex shrink-0 items-center gap-1 font-mono text-xs tabular-nums text-foreground/30">
+                  <span className="inline-flex shrink-0 items-center gap-1 font-mono text-xs tabular-nums text-foreground/50">
                     <Clock aria-hidden="true" className="size-3" />
                     {course.durationTotal}h
                   </span>

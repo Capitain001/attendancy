@@ -63,6 +63,10 @@
   --chart-3: oklch(0.93 0.020 90.24);
   --chart-4: oklch(0.50 0.015 88);
   --chart-5: oklch(0.20 0.018 80);
+
+  /* ─── Charts ─── */
+  --chart-primary: oklch(0.58 0.13 250);
+  --chart-secondary: oklch(0.82 0.055 250);
 }
 
 .dark {
@@ -105,7 +109,7 @@
 
   /* custom */
   --glass: oklch(0.13 0 0);
-  
+
   /* ── Tokens shadcn — dérivés de notre palette dark ── */
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--primary);
@@ -119,6 +123,10 @@
   --chart-3: oklch(0.37 0.015 84);
   --chart-4: oklch(0.66 0.015 84);
   --chart-5: oklch(0.92 0.010 88);
+
+  /* ─── Charts dark ─── */
+  --chart-primary: oklch(0.72 0.12 250);
+  --chart-secondary: oklch(0.38 0.045 250);
 }
 
 /* ════════════════════════════════════════════ */
@@ -253,6 +261,10 @@
   --radius-3xl: calc(var(--radius) * 2.2);
 
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  --color-chart-primary: var(--chart-primary);
+  --color-chart-secondary: var(--chart-secondary);
+
 }
 
 /* ════════════════════════════════════════════ */

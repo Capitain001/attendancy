@@ -1,10 +1,8 @@
 // src/components/personal/teacher/section/TeacherDailyScheduleList.tsx
-// components/personal/teacher/section/TeacherDailyScheduleList.tsx
-import { ChevronsDown } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn, formatDuration, formatTime } from '@/lib/utils'
 import { scheduleListMessages as m } from '@/lib/data/schedule'
 import type { ScheduleUiStatus } from '@/services/schedule/policy'
-import { ScheduleCard, type ScheduleCardSchedule } from '@/components/personal/teacher/ui/ScheduleCard'
+import type { ScheduleCardSchedule } from '@/components/personal/teacher/ui/ScheduleCard'
 import { resolveScheduleIcon } from '@/components/personal/teacher/ui/ScheduleStatusIcon'
 
 type ListSchedule = ScheduleCardSchedule & {
@@ -29,68 +27,101 @@ export function TeacherDailyScheduleList<S extends ListSchedule>({
 }: Props<S>) {
   const nextIndex = items.findIndex(({ status }) => !PAST_STATUSES.has(status))
 
-  // Repliable seulement s'il y a des séances passées ET une prochaine séance
+  // Dépliable seulement s'il y a des séances passées ET une prochaine séance
   const hasToggle = nextIndex > 0
   const past = hasToggle ? items.slice(0, nextIndex) : []
   const rest = hasToggle ? items.slice(nextIndex) : items
 
-  const renderCard = ({ schedule, status }: Item<S>, isNext: boolean) => (
-    <li key={schedule.id} className="py-1">
-      <ScheduleCard
-        schedule={schedule}
-        icon={resolveScheduleIcon(status, schedule.session !== null)}
+  // Compteur : séances maintenues (hors annulées), dont celles dont le créneau est terminé
+  const total = items.filter(({ status }) => status !== 'CANCELED').length
+  const done = items.filter(({ status }) => status === 'COMPLETED' || status === 'MISSED').length
+
+  const renderRow = ({ schedule, status }: Item<S>, isNext: boolean) => {
+    // Règle centralisée : fenêtre en cours sans session = le cours devrait avoir commencé
+    const needsStart = resolveScheduleIcon(status, schedule.session !== null) === 'warning'
+
+    return (
+      <li
+        key={schedule.id}
         className={cn(
-          'border-0',
           PAST_STATUSES.has(status) && 'opacity-50',
-          isNext && 'bg-foreground/[0.08] hover:bg-foreground/12',
+          isNext && 'rounded-sm bg-foreground/[0.06] transition-colors hover:bg-foreground/10',
         )}
-        onClick={() => onScheduleClick?.(schedule)}
-      />
-    </li>
-  )
+      >
+        <button
+          type="button"
+          onClick={() => onScheduleClick?.(schedule)}
+          className={cn(
+            'flex w-full cursor-pointer items-baseline gap-4 px-3 py-5 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring',
+            status === 'CANCELED' && 'line-through',
+          )}
+        >
+          <span
+            className={cn(
+              'shrink-0 text-sm tabular-nums text-muted-foreground',
+              needsStart && 'font-medium text-destructive',
+            )}
+          >
+            {formatTime(schedule.startTime)}
+          </span>
+          <span className="min-w-0 flex-1 text-foreground">{schedule.course.name}</span>
+          <span className="shrink-0 text-sm tabular-nums text-muted-foreground">
+            {formatDuration(schedule.startTime, schedule.endTime)}
+          </span>
+        </button>
+      </li>
+    )
+  }
+
+  const progress = m.progress(done, total)
 
   return (
-    <section className="flex flex-1 flex-col gap-8 px-4 py-6 bg-background">
-      <h1 className="text-center text-2xl font-semibold text-foreground">{m.title}</h1>
+    <section className="group/past flex flex-1 flex-col gap-10 bg-background px-4 py-8">
+      <header className="flex flex-col items-center gap-2">
+        <h1 className="text-center text-2xl font-semibold text-foreground">{m.title}</h1>
+
+        {total > 0 &&
+          (hasToggle ? (
+            // Le compteur est le déclencheur : il déplie les séances passées
+            <label className="cursor-pointer text-sm tabular-nums text-muted-foreground  transition-colors hover:text-foreground has-[input:focus-visible]:text-foreground">
+              <input type="checkbox" className="sr-only" />
+              {progress}
+            </label>
+          ) : (
+            <p className="text-sm tabular-nums text-muted-foreground">{progress}</p>
+          ))}
+      </header>
 
       {items.length > 0 ? (
-        <div className="group flex flex-col">
+        // -mx-3 compense le px-3 des lignes : le texte reste aligné avec le titre
+        <div className="-mx-3 flex flex-col">
           {hasToggle && (
-            <>
-              {/* Séances passées : masquées quand le checkbox est décoché */}
-              {/* Séances passées : hauteur animée, sans JS */}
-              <div
-                className={cn(
-                  'grid grid-rows-[1fr] opacity-100 transition-[grid-template-rows,opacity,visibility] duration-300 ease-out motion-reduce:transition-none',
-                  'group-has-[input:not(:checked)]:invisible group-has-[input:not(:checked)]:grid-rows-[0fr] group-has-[input:not(:checked)]:opacity-0',
-                )}
-              >
-                <ul className="flex min-h-0 flex-col overflow-hidden">
-                  {past.map((item) => renderCard(item, false))}
-                </ul>
-              </div>
-
-              {/* Séparateur = bouton de repli, à sa place d'origine */}
-              <label
-                className="flex w-full cursor-pointer items-center justify-center py-4"
-                aria-label="Afficher ou masquer les séances passées"
-              >
-                <input type="checkbox" defaultChecked className="sr-only" />
-                <ChevronsDown
-                  size={24}
-                  strokeWidth={1.5}
-                  className="text-muted-foreground/40 transition-transform duration-200 group-has-[input:not(:checked)]:rotate-180"
-                />
-              </label>
-            </>
+            // Séances passées : masquées par défaut, hauteur animée, sans JS
+            <div
+              className={cn(
+                'invisible grid grid-rows-[0fr] opacity-0 transition-[grid-template-rows,opacity,visibility] duration-300 ease-out motion-reduce:transition-none',
+                'group-has-[input:checked]/past:visible group-has-[input:checked]/past:grid-rows-[1fr] group-has-[input:checked]/past:opacity-100',
+              )}
+            >
+              <ul className="flex min-h-0 flex-col divide-y divide-dashed overflow-hidden">
+                {past.map((item) => renderRow(item, false))}
+              </ul>
+            </div>
           )}
 
-          <ul className="flex flex-col">
-            {rest.map((item, i) => renderCard(item, nextIndex !== -1 && i === 0))}
+          <ul
+            className={cn(
+              'flex flex-col divide-y divide-dashed',
+              // Filet entre le bloc déplié et la première séance restante
+              hasToggle &&
+                'group-has-[input:checked]/past:border-t group-has-[input:checked]/past:border-dashed',
+            )}
+          >
+            {rest.map((item, i) => renderRow(item, nextIndex !== -1 && i === 0))}
           </ul>
         </div>
       ) : (
-        <p className="text-center text-sm text-muted-foreground">{m.empty}</p>
+        <p className="text-center text-2xl font-medium text-foreground">{m.empty}</p>
       )}
     </section>
   )

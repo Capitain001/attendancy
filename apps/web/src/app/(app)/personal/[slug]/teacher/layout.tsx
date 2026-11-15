@@ -19,7 +19,7 @@ export default async function PersonalTeacherLayout({ children, params }: Layout
     { heading: "Dashboard", href: teacherHome },
     { heading: "Mes classes", href: personal.classes(slug) },
     ...teacherRoutes
-      .filter((route) => route.id !== "dashboard")
+      .filter((route) => route.id !== "dashboard" && route.id !== "unavailabilities")
       .map((route) => ({
         heading: route.title,
         href: `${teacherHome}${route.link.replace("/teacher", "")}`,

@@ -4,16 +4,18 @@
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { input } from "@/styles/input";
 
+// Les noms de props restent identiques : aucun changement côté appelants
 interface EditPasswordDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -27,6 +29,8 @@ export function EditPasswordDialog({ open, onOpenChange }: EditPasswordDialogPro
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    // Garde-fou : la confirmation doit être identique au nouveau mot de passe
     if (newPassword !== confirmPassword) {
       toast.error("Erreur", { description: "Les mots de passe ne correspondent pas" });
       return;
@@ -35,6 +39,8 @@ export function EditPasswordDialog({ open, onOpenChange }: EditPasswordDialogPro
     startTransition(async () => {
       toast.success("Mot de passe mis à jour avec succès");
       onOpenChange(false);
+
+      // Réinitialisation des champs après fermeture
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
@@ -42,20 +48,24 @@ export function EditPasswordDialog({ open, onOpenChange }: EditPasswordDialogPro
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Changer le mot de passe</DialogTitle>
-          <DialogDescription>
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      {/* Panneau latéral droit : sm:max-w-md garde la même largeur que l'ancien dialog */}
+      <SheetContent side="right" className="w-full sm:max-w-md">
+        <SheetHeader>
+          <SheetTitle>Changer le mot de passe</SheetTitle>
+          <SheetDescription>
             Définissez un mot de passe sécurisé pour votre compte.
-          </DialogDescription>
-        </DialogHeader>
+          </SheetDescription>
+        </SheetHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+        {/* flex-1 + flex-col : le footer reste collé en bas du panneau */}
+        <form onSubmit={handleSubmit} className="flex flex-1 flex-col gap-4 px-4">
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-foreground">Mot de passe actuel</label>
+            {/* input.underline : pas de border/ring, seulement un soulignement */}
             <Input
               type="password"
+              className={input.underline}
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               required
@@ -66,6 +76,7 @@ export function EditPasswordDialog({ open, onOpenChange }: EditPasswordDialogPro
             <label className="text-xs font-semibold text-foreground">Nouveau mot de passe</label>
             <Input
               type="password"
+              className={input.underline}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               minLength={8}
@@ -77,6 +88,7 @@ export function EditPasswordDialog({ open, onOpenChange }: EditPasswordDialogPro
             <label className="text-xs font-semibold text-foreground">Confirmer le mot de passe</label>
             <Input
               type="password"
+              className={input.underline}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               minLength={8}
@@ -84,21 +96,24 @@ export function EditPasswordDialog({ open, onOpenChange }: EditPasswordDialogPro
             />
           </div>
 
-          <DialogFooter className="pt-2">
+          {/* flex-row : les deux boutons sur la même ligne (SheetFooter est en colonne par défaut) */}
+          {/* mt-auto pousse les boutons en bas ; px-0 car le form a déjà son padding */}
+          <SheetFooter className="mt-auto flex-row gap-2 px-0 pb-8">
             <Button
               type="button"
               variant="outline"
+              className="flex-1"
               onClick={() => onOpenChange(false)}
               disabled={isPending}
             >
               Annuler
             </Button>
-            <Button type="submit" disabled={isPending}>
+            <Button type="submit" className="flex-1" disabled={isPending}>
               {isPending ? "Mise à jour..." : "Enregistrer"}
             </Button>
-          </DialogFooter>
+          </SheetFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }

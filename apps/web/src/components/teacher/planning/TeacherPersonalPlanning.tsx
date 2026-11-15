@@ -42,7 +42,7 @@ const EMPTY_RESOURCES = { courses: [], rooms: [], groups: [] } as unknown as Res
 
 const HAS_SCHEDULE_DECORATION: DayDecoration = {
   fillClassName: "bg-primary/10",
-  ringClassName: "ring-2 ring-primary/80",
+  ringClassName: " bg-chart-secondary",
 };
 
 /**

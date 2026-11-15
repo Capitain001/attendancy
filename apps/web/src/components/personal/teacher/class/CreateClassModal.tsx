@@ -89,10 +89,10 @@ const content =
 const title = "text-2xl font-bold tracking-tight";
 
 const typeOption =
-  "grid cursor-pointer gap-0.5 rounded-md border border-foreground/10 p-3 transition-colors hover:border-primary/50 hover:bg-primary/5";
+  "grid cursor-pointer gap-0.5 rounded-md border border-foreground/25 p-3 transition-colors hover:border-primary/50 hover:bg-primary/5";
 
 const secondaryButton =
-  "h-10 cursor-pointer rounded-md px-4 text-sm font-medium text-foreground/50 transition-colors hover:text-foreground/80";
+  "h-10 cursor-pointer rounded-md px-4 text-sm font-medium text-foreground/80 transition-colors hover:text-foreground";
 
 // ═══ VUES (visuel pur : à améliorer librement) ══════════════════════════
 
@@ -104,7 +104,7 @@ function CloseButton({ modalId }: { modalId: string }) {
       popoverTarget={modalId}
       popoverTargetAction="hide"
       aria-label="Fermer"
-      className="absolute right-4 top-4 inline-flex size-10 items-center justify-center rounded-md text-foreground/40 transition-colors hover:bg-foreground/5 hover:text-foreground/70"
+      className="absolute right-4 top-4 inline-flex size-10 items-center justify-center rounded-md text-foreground/75 transition-colors hover:bg-foreground/5 hover:text-foreground"
     >
       <X aria-hidden="true" className="size-5" />
     </button>
@@ -120,7 +120,7 @@ function TypeStep({ modalId }: { modalId: string }) {
         {CLASS_TYPES.map((option) => (
           <label key={option.value} htmlFor={radioId(modalId, option.value)} className={typeOption}>
             <span className="text-sm font-medium">{option.label}</span>
-            <span className="text-xs text-foreground/45">{option.hint}</span>
+            <span className="text-xs text-foreground/75">{option.hint}</span>
           </label>
         ))}
       </div>
@@ -133,7 +133,7 @@ function TypeStep({ modalId }: { modalId: string }) {
 function NameStep({ modalId, type }: { modalId: string; type?: ClassType }) {
   return (
     <div className={`gap-12 ${showWhenChosen}`}>
-      <label className="grid gap-1.5 text-xs font-medium text-foreground/60">
+      <label className="grid gap-1.5 text-xs font-medium text-foreground/80">
         Nom de la classe
         <input
           name="name"
@@ -141,7 +141,7 @@ function NameStep({ modalId, type }: { modalId: string; type?: ClassType }) {
           maxLength={100}
           autoFocus
           placeholder="Ex. Terminale S1"
-          className="h-11 w-full rounded-md border border-foreground/10 bg-background px-3 text-sm text-foreground outline-none transition-colors placeholder:text-foreground/30 focus:border-primary/50"
+          className="h-11 w-full rounded-md border border-foreground/20 bg-background px-3 text-sm text-foreground outline-none transition-colors placeholder:text-foreground/50 focus:border-primary/50"
         />
       </label>
 

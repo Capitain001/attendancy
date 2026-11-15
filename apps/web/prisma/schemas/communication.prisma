@@ -56,6 +56,7 @@ model Message {
   deletedAt DateTime?
   channelId String    @db.Uuid
   parentId  String?   @db.Uuid
+  signature Bytes? // null = message en ligne ; non null = relayé hors ligne
   updatedAt DateTime  @updatedAt
   channel   Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
   parent    Message?  @relation("MessageReplies", fields: [parentId], references: [id])

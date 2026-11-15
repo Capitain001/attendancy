@@ -72,3 +72,5 @@ for (const [label, action, tok, expected] of cases) {
 }
 
 writeFileSync(join(__dirname, 'result.txt'), outputLines.join('\n'), 'utf-8')
+
+/* TEST_EMAIL=prof@test.com TEST_PASSWORD=... node --env-file=.env.local scripts/test-rpc.mjs */

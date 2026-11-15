@@ -1,6 +1,4 @@
 // src/services/course/database/course.mutations.ts
-//ici il s agt simplement de l existant dans un service normal 
-// src/services/course/database/course.mutations.ts
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
 import { invalidateEvent } from '@/cache/server/graph'
@@ -30,12 +28,12 @@ export async function createCourse(data: CreateCourseOutput & { orgId: string })
 
   const result = await tryConstraint(prisma.course.create({
     data: {
-      name:          data.name ?? ueCourse.name,
-      credits:       ueCourse.credits,
+      name: data.name ?? ueCourse.name,
+      credits: ueCourse.credits,
       durationTotal: ueCourse.duration,
-      ueCourseId:    data.ueCourseId,
-      classId:       data.classId,
-      orgId:         data.orgId,
+      ueCourseId: data.ueCourseId,
+      classId: data.classId,
+      orgId: data.orgId,
       ...(data.termId ? { termId: data.termId } : {}),
     },
     select: { id: true, name: true, credits: true },
@@ -50,33 +48,42 @@ export async function updateCourse(
   data: UpdateCourseDataOutput,
   orgId: string,
 ) {
-  const course = await prisma.course.findFirst({
-    where: { id: courseId, orgId, deletedAt: null },
-    select: { classId: true },
-  })
-  if (!course) throw new Error('Cours introuvable')
+  // Un seul aller-retour : le filtre tenant (orgId) et l'état (deletedAt: null)
+  // sont dans le where. Si rien ne correspond (inexistant, autre organisation,
+  // ou déjà supprimé), Prisma lève P2025 → tryConstraint le traduit en
+  // ERRORS.DB.NOT_FOUND.
+  // classId est sélectionné uniquement pour l'invalidation du cache.
 
-  const result = await prisma.course.update({
-    where: { id: courseId },
-    data,
-    select: { id: true, name: true, description: true },
-  })
-  await invalidateEvent('COURSE_UPDATED', orgId, course.classId)
+  // Avant : l'objet complet renvoyé par Prisma
+  // { id: 'abc', name: 'Algo', description: null, classId: 'xyz' }
+  const { classId, ...result } = await tryConstraint(
+    prisma.course.update({
+      where: { id: courseId, orgId, deletedAt: null },
+      data,
+      select: { id: true, name: true, description: true, classId: true },
+    }),
+  )
+
+  await invalidateEvent('COURSE_UPDATED', orgId, classId)
+  // result garde la forme { id, name, description } (classId retiré)
+  // classId → 'xyz' (extrait dans sa propre variable)
+  // result  → { id: 'abc', name: 'Algo', description: null } (tout le reste, sans classId)
   return result
 }
 
 export async function removeCourse(courseId: string, orgId: string) {
-  const course = await prisma.course.findFirst({
-    where: { id: courseId, orgId, deletedAt: null },
-    select: { classId: true },
-  })
-  if (!course) throw new Error('Cours introuvable')
+  // Soft delete en une seule requête : même principe que updateCourse
+  // (P2025 si introuvable / autre org / déjà supprimé).
+  // classId est sélectionné uniquement pour l'invalidation du cache.
+  const { classId } = await tryConstraint(
+    prisma.course.update({
+      where: { id: courseId, orgId, deletedAt: null },
+      data: { deletedAt: new Date() },
+      select: { classId: true },
+    }),
+  )
 
-  await prisma.course.update({
-    where: { id: courseId },
-    data: { deletedAt: new Date() },
-  })
-  await invalidateEvent('COURSE_REMOVED', orgId, course.classId)
+  await invalidateEvent('COURSE_REMOVED', orgId, classId)
 }
 
 
@@ -186,10 +193,10 @@ export async function generateCoursesFromProgram({
   const created = await tryConstraint(
     prisma.course.createManyAndReturn({
       data: toCreate.map((c) => ({
-        name:          c.name,
-        credits:       c.credits,
+        name: c.name,
+        credits: c.credits,
         durationTotal: c.duration,
-        ueCourseId:    c.id,
+        ueCourseId: c.id,
         classId,
         orgId,
         ...(termsBySemester?.[c.semester] ? { termId: termsBySemester[c.semester] } : {}),
@@ -211,6 +218,7 @@ export async function linkCoursesToTerm({
 }: LinkCoursesToTermOutput & { orgId: string }) {
   if (courseIds.length === 0) return { count: 0 }
 
+  // Lecture nécessaire : on récupère les classId pour l'invalidation ciblée
   const courses = await prisma.course.findMany({
     where: { id: { in: courseIds }, orgId, deletedAt: null },
     select: { id: true, classId: true },

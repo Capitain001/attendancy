@@ -51,6 +51,7 @@ model User {
   justificationsDeclared Justification[]    @relation("JustificationDeclaredBy")
   justificationsReviewed Justification[]    @relation("JustificationReviewedBy")
   messages               Message[]
+  notes                  Note[]
   notifications          Notification[]
   parent                 Parent[]
   assigned               Permission[]       @relation("PermissionAssigner")
@@ -122,6 +123,7 @@ model Organization {
   // invoices                Invoice[]
   // payments                Payment[]
   // feeWaivers              FeeWaiver[]
+  notes                   Note[]
   notifications           Notification[]
 
   // Un nom peut être réutilisé par les espaces personnels, mais pas par les institutions.
@@ -433,9 +435,11 @@ enum Resource {
   ATTENDANCE
   GRADE
   CLASS
+  GROUP
   MESSAGE
   JUSTIFICATION
   INVITATION
+  NOTE
 
   @@schema("public")
 }

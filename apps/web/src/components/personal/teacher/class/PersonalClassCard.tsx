@@ -11,14 +11,14 @@ type PersonalClassCardProps = {
 };
 
 const optionButton =
-  "flex w-full items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-medium text-foreground/60 transition-colors hover:bg-foreground/[0.06] hover:text-foreground/85";
+  "flex w-full items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-medium text-foreground/80 transition-colors hover:bg-foreground/[0.06] hover:text-foreground";
 
 // Pas de `display` ici : il rendrait le popover toujours visible.
 const modal =
   "m-auto w-[min(90vw,24rem)] rounded-md border border-foreground/15 bg-background p-0 text-foreground backdrop:bg-foreground/30";
 
 const cancelButton =
-  "h-9 rounded-md px-3 text-xs font-medium text-foreground/60 hover:text-foreground/85";
+  "h-9 rounded-md px-3 text-xs font-medium text-foreground/80 hover:text-foreground";
 
 export function PersonalClassCard({ class_, href }: PersonalClassCardProps) {
   const renameId = `rename-${class_.id}`;
@@ -30,14 +30,14 @@ export function PersonalClassCard({ class_, href }: PersonalClassCardProps) {
       {/* Zone principale : nom centré */}
       <Link href={href} className="flex min-h-40 flex-col items-center justify-center gap-2 px-5 py-6 text-center">
         <h2 className="line-clamp-2 text-lg font-semibold tracking-tight text-foreground/90">{class_.name}</h2>
-        <p className="text-xs text-foreground/45">
+        <p className="text-xs text-foreground/70">
           {class_._count.courses} cours · {students} étudiant{students === 1 ? "" : "s"}
         </p>
       </Link>
 
       {/* Zone options : dépliable pour éviter les clics involontaires */}
       <details className="group border-t border-foreground/20">
-        <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-2.5 text-xs text-foreground/55 transition-colors hover:text-foreground/80 [&::-webkit-details-marker]:hidden">
+        <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-2.5 text-xs text-foreground/80 transition-colors hover:text-foreground [&::-webkit-details-marker]:hidden">
           <span className="font-medium">Options</span>
           <ChevronDown aria-hidden="true" className="size-3.5 transition-transform group-open:rotate-180" />
         </summary>
@@ -57,7 +57,7 @@ export function PersonalClassCard({ class_, href }: PersonalClassCardProps) {
       <div id={renameId} popover="" className={modal}>
         <form action={updateClassFormAction} className="grid gap-4 p-5">
           <input type="hidden" name="classId" value={class_.id} />
-          <label className="grid gap-1.5 text-xs font-medium text-foreground/65">
+          <label className="grid gap-1.5 text-xs font-medium text-foreground/80">
             Nouveau nom
             <input
               name="data.name"
@@ -84,7 +84,7 @@ export function PersonalClassCard({ class_, href }: PersonalClassCardProps) {
           <input type="hidden" name="classId" value={class_.id} />
           <div className="grid gap-1">
             <p className="text-sm font-semibold text-foreground/90">Archiver « {class_.name} » ?</p>
-            <p className="text-xs text-foreground/55">La classe sera retirée de votre liste.</p>
+            <p className="text-xs text-foreground/75">La classe sera retirée de votre liste.</p>
           </div>
           <div className="flex justify-end gap-2">
             <button type="button" popoverTarget={archiveId} popoverTargetAction="hide" className={cancelButton}>

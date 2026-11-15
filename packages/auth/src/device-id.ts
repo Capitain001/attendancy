@@ -1,3 +1,4 @@
+//packages\auth\src\device-id.ts
 const DEVICE_ID_KEY = "attendancy-device-id";
 
 export function getDeviceId(): string {

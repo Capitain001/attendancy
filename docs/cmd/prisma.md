@@ -62,7 +62,7 @@ Créer une nouvelle migration :
 ```bash
 bunx prisma migrate dev --create-only --name update-teacher-unavailabilities-fields-types
 ```
-bunx prisma migrate dev --create-only --name add_notifications_resources 
+bunx prisma migrate dev --create-only --name add_note_model 
 
 Créer une nouvelle migration :
 

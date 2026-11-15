@@ -248,8 +248,8 @@ function CalendarDayButton({
         style={
           resolvedHatchColor
             ? {
-                backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 5px, ${resolvedHatchColor} 5px, ${resolvedHatchColor} 10px)`,
-              }
+              backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 2px, ${resolvedHatchColor} 2px, ${resolvedHatchColor} 4px)`,
+            }
             : undefined
         }
       >
