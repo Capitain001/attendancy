@@ -9,7 +9,7 @@ import { UI } from "./ui";
 
 export type ApiResponse<T> =
   | { data: T }
-  | { error: string }
+  | { error: string; code?: ErrorCode }
 
 
 export const ERRORS = {
