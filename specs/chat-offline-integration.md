@@ -16,7 +16,7 @@ Ce plan complète, sans les dupliquer, l’[analyse d’intégration](../docs/an
 |---|---|---|---|
 | `Message` | Oui, avec `id`, `createdAt`, `signature`, `channelId`, `parentId` | `chat` | Pas de migration requise pour l’outbox de l’auteur; utiliser l’UUID client comme `Message.id` et `sentAt` comme date proposée. |
 | `Channel` / `ChannelMember` | Oui | `chat` | Les lectures, participants et envois doivent vérifier l’adhésion au canal et l’organisation active. |
-| Outbox / inbox / états offline | Non, données locales | package `chat-offline` | Elles restent sur l’appareil; définir isolation, rétention et suppression au changement de compte. |
+| Outbox / inbox / états offline | Non, données locales | package `chat` | Elles restent sur l’appareil; définir isolation, rétention et suppression au changement de compte. |
 | Session de QR / identité cryptographique d’un appareil | Pas dans le contrat du prototype | à décider | Ne pas supposer que le `sessionId` du QR ou un `userId` envoyé par le client authentifie un pair. |
 
 1. **La donnée existe-t-elle déjà ?** Oui : `Message` et ses requêtes sont dans `apps/web/src/services/chat`. La requête actuelle prend les 50 plus anciens messages; la récupération offline devra charger les plus récents avec un ordre stable.
@@ -28,22 +28,27 @@ Ce plan complète, sans les dupliquer, l’[analyse d’intégration](../docs/an
 ### Package et transports
 
 ```text
-packages/chat-offline/
+packages/chat/
   package.json                    → package workspace et scripts reproductibles
   src/                            → outbox, inbox, fusion, sync, pairing et transport
-  src/idb.ts                      → store IndexedDB avec portée explicite
+  src/idb-store.ts                → store IndexedDB avec portée explicite
   tests/                          → tests unitaires et E2E adaptés au workspace
 
-packages/chat-hub/
+crates/chat-relay/
   Cargo.toml                      → crate Rust du relais LAN
-  src/                            → code actuellement dans _integrations/chat-offline/hub
+  src/                            → code du relais LAN
 
-Cargo.toml                        → déclarer chat-hub dans le workspace Cargo
-apps/teacher/src-tauri/Cargo.toml → dépendance locale chat-hub
+Cargo.toml                        → déclarer chat-relay dans le workspace Cargo
+apps/teacher/src-tauri/Cargo.toml → dépendance locale chat-relay
 apps/teacher/src-tauri/src/lib.rs → commandes start/stop et état Tauri géré
 ```
 
-Le contenu est déplacé depuis `_integrations/chat-offline/chat-offline` et `_integrations/chat-offline/hub`; conserver le dossier prototype jusqu’à validation des tests et du build. Déclarer `idb-keyval` comme dépendance réelle du package ou injecter le store; ne pas compter sur une dépendance transitive ou peer optionnelle absente des applications.
+Le code TypeScript et Rust a été déplacé vers `packages/chat` et
+`crates/chat-relay`; le prototype d’origine reste dans
+`_integrations/chat-offline/`. Le crate Rust et les applications ne sont pas
+encore reliés au workspace/aux dépendances Cargo. Déclarer `idb-keyval` comme
+dépendance réelle du package ou injecter le store; ne pas compter sur une
+dépendance transitive ou peer optionnelle absente des applications.
 
 ### Service chat
 
@@ -134,7 +139,7 @@ Valider avant d’activer le LAN en production :
 
 ## Phase 4 — Package offline et hook partagé
 
-- Déplacer le cœur TypeScript et ses tests dans `packages/chat-offline`; conserver les interfaces `KVStore` et les adapters testables, puis exposer des sous-chemins stables pour le cœur et IndexedDB.
+- Le cœur TypeScript et ses tests sont dans `packages/chat`; conserver les interfaces `KVStore` et les adapters testables, puis exposer des sous-chemins stables pour le cœur et IndexedDB.
 - Partitionner le stockage local : inbox au minimum par compte, organisation et canal/séance; outbox par compte et canal. Éviter qu’un changement de compte rende visibles ou confirmables les messages d’un autre utilisateur.
 - Traiter explicitement logout, purge/expiration, erreurs IndexedDB et fermeture de `BroadcastChannel`; ne pas avaler silencieusement les échecs de stockage.
 - Créer `useOfflineChat` sous `apps/web/src/hooks/chat`, avec imports RPC depuis `@/services/chat/actions`. Ce hook est source partagée compilée par les apps Tauri; ne pas l’utiliser pour ajouter un parcours offline à Next.js. Il compose le cache des messages persistés et les données locales, démarre/arrête le moteur, écoute le retour en ligne et expose `send`, `retry`, `discard` et l’état LAN.
@@ -143,7 +148,7 @@ Valider avant d’activer le LAN en production :
 
 ## Phase 5 — Hub Rust/Tauri, WebSocket natif et pairing
 
-- Ajouter `packages/chat-hub` au workspace Cargo racine et le référencer depuis `apps/teacher/src-tauri/Cargo.toml`.
+- Ajouter `crates/chat-relay` au workspace Cargo racine et le référencer depuis `apps/teacher/src-tauri/Cargo.toml`.
 - Adapter `start_chat_hub` / `stop_chat_hub` dans `apps/teacher/src-tauri/src/lib.rs`: état Tauri géré, démarrage unique, arrêt explicite, erreurs propagées; ne pas garder de verrou pendant un `await` et ne pas utiliser `unwrap()` sur un verrou.
 - Le front ne doit obtenir que les informations nécessaires pour afficher le QR; les membres transmis au hub ne remplacent jamais le contrôle d’accès serveur.
 - Ajouter et enregistrer le plugin officiel `@tauri-apps/plugin-websocket` dans les apps qui se connectent au hub; ajouter `tauri-plugin-websocket` à leur crate Rust et `websocket:default` à la capability de la fenêtre Tauri concernée.
@@ -182,12 +187,12 @@ bun --filter @attendancy/teacher check-types
 bun --filter @attendancy/teacher build
 bun --filter @attendancy/desktop check-types
 bun --filter @attendancy/desktop build
-cargo test -p chat-hub
+cargo test -p chat-relay
 cargo check --manifest-path apps/teacher/src-tauri/Cargo.toml
 cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml
 ```
 
-Ajouter puis exécuter les scripts de tests du package TypeScript et de ses E2E après son transfert; mettre à jour les chemins d’exécution du binaire vers le `target/` Cargo partagé. Construire l’APK Teacher (`bun run build:android` depuis `apps/teacher`) et l’APK Desktop si cette app est retenue comme client. Valider sur appareils réels : Wi-Fi avec isolation client, hotspot, permissions réseau, passage en arrière-plan/écran éteint, perte et retour d’Internet. Le build APK seul ne valide pas le réseau local.
+Ajouter puis exécuter les scripts de tests du package TypeScript et de ses E2E après son transfert; les chemins d’exécution du binaire utilisent le `target/` Cargo partagé après l’ajout au workspace. Construire l’APK Teacher (`bun run build:android` depuis `apps/teacher`) et l’APK Desktop si cette app est retenue comme client. Valider sur appareils réels : Wi-Fi avec isolation client, hotspot, permissions réseau, passage en arrière-plan/écran éteint, perte et retour d’Internet. Le build APK seul ne valide pas le réseau local.
 
 ## Risques / décisions
 

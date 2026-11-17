@@ -1,7 +1,7 @@
 // src/services/program-ue/database/program-ue.mutations.ts
 import { prisma } from "@/lib/prisma";
 import { invalidateCache } from '@/cache/server/graph';;
-import { tryUnique } from "@/utils/server";
+import { tryConstraint } from "@/utils/server";
 import { Prisma } from "@/generated/prisma/client";
 
 export async function addUEToProgram({
@@ -17,7 +17,7 @@ export async function addUEToProgram({
   order?: number;
   isOptional?: boolean;
 }) {
-  const result = await tryUnique(
+  const result = await tryConstraint(
     prisma.programUE.create({
       data: {
         programId,

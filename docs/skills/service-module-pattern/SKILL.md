@@ -202,7 +202,7 @@ Appelé **après** le retour de la mutation, avant le `return { data }`.
 // reçoit directement le type Output de validation.ts
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
-import { invalidateEvent } from '@/cache/server/key'
+import { invalidateEvent } from '@/cache/server/graph'
 import type { CreateEntityOutput } from '../validation'
 
 export async function createEntity(data: CreateEntityOutput & { orgId: string }) {

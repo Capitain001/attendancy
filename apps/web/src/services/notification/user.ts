@@ -75,6 +75,8 @@ export async function sendNotificationToCurrentUser(payload: { message: string }
   return sendPushNotificationToUserById(auth.data.user.id, payload)
 }
 
+
+
 // ─── Debug ────────────────────────────────────────────────────────────────────
 
 export async function debugUserSubscriptions() {

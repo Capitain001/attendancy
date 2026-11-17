@@ -8,7 +8,7 @@ import { createClient } from '@/utils/supabase/client'
 import { useCallback, useEffect, useState } from 'react'
 
 interface UseRealtimeChatProps {
-  roomName: string
+  channelId: string
   user?: PresenceUser 
 }
 
@@ -21,9 +21,11 @@ export interface ChatMessage {
   createdAt: string
 }
 
+type SendRealtimeMessageInput = Pick<ChatMessage, 'content' | 'id' | 'createdAt'>
+
 const EVENT_MESSAGE_TYPE = 'message'
 
-export function useRealtimeChat({ roomName, user}: UseRealtimeChatProps) {
+export function useRealtimeChat({ channelId, user}: UseRealtimeChatProps) {
   const supabase = createClient()
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [channel, setChannel] = useState<ReturnType<typeof supabase.channel> | null>(null)
@@ -36,7 +38,7 @@ export function useRealtimeChat({ roomName, user}: UseRealtimeChatProps) {
   useEffect(() => {
     if (!presenceKey) return
 
-    const newChannel = supabase.channel(roomName, {
+    const newChannel = supabase.channel(channelId, {
       config: {
         presence: {
           key: presenceKey,
@@ -119,19 +121,19 @@ export function useRealtimeChat({ roomName, user}: UseRealtimeChatProps) {
         supabase.removeChannel(newChannel)
       }
     }
-  }, [roomName, user, presenceKey, userName, supabase])
+  }, [channelId, user, presenceKey, userName, supabase])
 
   const sendMessage = useCallback(
-    async (content: string, id?:string) => {
+    async ({ content, id, createdAt }: SendRealtimeMessageInput) => {
       if (!channel || !isConnected) return
 
       const message: ChatMessage = {
-        id: id!,
+        id,
         content,
         user: {
           name: userName,
         },
-        createdAt: new Date().toISOString(),
+        createdAt,
       }
 
       // Update local state immediately for the sender

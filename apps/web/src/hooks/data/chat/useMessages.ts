@@ -5,36 +5,45 @@ import { useCrudEntity } from "@/hooks/entity/useCrudEntity";
 import { toFetchFn, toCreateFn, toUpdateFn, toDeleteFn } from "@/hooks/entity/actionHelpers";
 import {
   getMessagesAction,
-  sendMessageAction,
+  createMessageAction,
   updateMessageAction,
   removeMessageAction,
-} from "@/services/chat/actions";
-import type { ChatMessage } from "@/services/chat";
-import type { CreateMessageInput, UpdateMessageDataInput } from "@/services/chat/validation";
+} from "@/services/message/actions";
+import type { GetMessagesDto } from "@/services/message";
+import type { CreateMessageInput, UpdateMessageDataInput } from "@/services/message";
+import { messageEntityPatch } from "./utils";
 
 interface UseMessagesOptions {
-  roomName: string;
+  channelId: string;
   staleTime?: number;
   enabled?: boolean;
 }
 
 /**
- * Hook CRUD léger pour les messages de chat.
+ * Hook CRUD léger pour les messages du canal identifié par `channelId`.
  *
- * - fetch : liste des messages d'une room (`roomName`)
- * - create : envoi d'un message (userId résolu côté serveur)
+ * - fetch : récupère les messages du canal
+ * - create : envoie un message ; son `id` est fourni par le client pour
+ *   permettre les rejeux idempotents, tandis que l'utilisateur est résolu côté serveur
  * - update : modification du contenu d'un message (par id)
  * - delete : suppression logique d'un message (par id)
  *
  * @example
  * ```tsx
+ * const channelId = "channelId_uuid";
  * const { data, loading, create, update, delete: deleteMessage } = useMessages({
- *   roomName: "org-123:general",
+ *   channelId,
  *   staleTime: 30_000,
  * });
  *
  * // Créer un message
- * await create({ roomName: "org-123:general", content: "Hello team!" });
+ * const createdAt = new Date().toISOString();
+ * await create({
+ *   id: crypto.randomUUID(),
+ *   createdAt,
+ *   channelId,
+ *   content: "Hello team!",
+ * });
  *
  * // Mettre à jour un message existant
  * await update("message-id", { content: "Message édité" });
@@ -43,19 +52,21 @@ interface UseMessagesOptions {
  * deleteMessage("message-id");
  * ```
  */
-export function useMessages({ roomName, staleTime, enabled }: UseMessagesOptions) {
-  const fetchFn = toFetchFn(getMessagesAction, roomName);
-  const create = toCreateFn(sendMessageAction);
+export function useMessages({ channelId, staleTime, enabled }: UseMessagesOptions) {
+const fetchFn = toFetchFn(getMessagesAction, { channelId });
+  const create = toCreateFn(createMessageAction);
   const update = toUpdateFn(updateMessageAction, "messageId");
     const removeMessage = toDeleteFn(removeMessageAction);
 
-  return useCrudEntity<ChatMessage, CreateMessageInput, UpdateMessageDataInput>({
-    entityName: `messages:${roomName}`,
+  return useCrudEntity<GetMessagesDto[number], CreateMessageInput, UpdateMessageDataInput>({
+    entityName: "messages",
+    initialParams: { channelId },
     fetchFn,
     staleTime,
     enabled,
     crud: {
       create,
+      toEntityPatch: messageEntityPatch,
       update,
       delete: removeMessage,
       messages: {

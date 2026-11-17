@@ -14,5 +14,5 @@ rules:
     good: |
       // Tracer l'erreur depuis le point d'entrée jusqu'au module fautif.
       // Vérifier les exports et appelants réels; constater que RootLayout
-      // fournit déjà onSignOut={logout}; expliquer ces faits et la correction
+      //expliquer ces faits et la correction
       // ciblée, puis modifier le composant partagé et valider ses types/usages.

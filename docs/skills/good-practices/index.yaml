@@ -2,8 +2,8 @@
 domains:
   - id: cache
     file: rules/cache.yaml
-    applies_to: [query-hook, rsc-page, cache]
-    summary: "Factories de queries partagées serveur/client, partage des clés React Query pour les états dérivés (useMemo) et préchargement RSC via connection() + getQueryClient() + HydrationBoundary."
+    applies_to: [query-hook, mutation-hook, rsc-page, cache]
+    summary: "Factories de queries partagées serveur/client, complétion des entités créées dans le cache, partage des clés React Query pour les états dérivés (useMemo) et préchargement RSC via connection() + getQueryClient() + HydrationBoundary."
   - id: services
     file: rules/services.yaml
     applies_to: [orchestrator-service, server-action, ui-component, test]

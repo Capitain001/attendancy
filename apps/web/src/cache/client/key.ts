@@ -82,6 +82,10 @@ export const CACHE_KEYS = {
   STUDENT_ENROLLMENTS: {
     BY_CLASS: subKey("student-enrollments", "by-class"), // (classId) → ["student-enrollments", "by-class", classId]
   },
+  MESSAGES: {
+  ALL: ["messages"] as const,
+  BY_CHANNEL: (channelId: string) => ["messages", "by-channel", channelId] as const,
+},
 } as const;
 
 export type CacheKeys = typeof CACHE_KEYS;

@@ -1,6 +1,7 @@
 // src/hooks/chat/utils.ts
 import type { ChatMessage as RealtimeMessage } from "@/hooks/chat/use-realtime-chat";
 import type { ChatMessage as DbChatMessage } from "@/services/chat";
+import { GetMessagesDto } from "@/services/message";
 
 // const mapDBMessages = (messages: DbChatMessage[] = []): RealtimeMessage[] =>
 //   messages.map((m) => ({
@@ -15,7 +16,7 @@ import type { ChatMessage as DbChatMessage } from "@/services/chat";
 // export { mapDBMessages };
 
 
-export const mapMessages = (messages: DbChatMessage[] = []): RealtimeMessage[] =>
+export const mapMessages = (messages: GetMessagesDto = []): RealtimeMessage[] =>
   messages.map((message) => ({
     id: message.id,
     content: message.content,

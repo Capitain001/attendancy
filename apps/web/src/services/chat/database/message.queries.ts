@@ -18,7 +18,7 @@ export async function getRoomParticipants(channelId: string) {
   return prisma.channelMember.findMany({
     where: { channelId },
     select: {
-      userId: true, role: true, joinedAt: true,
+      role: true, joinedAt: true,
       user: { select: { id: true, firstName: true, lastName: true, avatar_url: true } },
     },
   })

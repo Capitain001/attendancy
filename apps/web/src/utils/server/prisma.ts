@@ -1,11 +1,15 @@
 // src/utils/server/prisma.ts
-// Traduction des erreurs Prisma/Postgres en messages métier lisibles.
+// Traduction des erreurs Prisma/Postgres en AppError (message + code).
 // Utilisé par les mutations database/ : wrapper l'appel Prisma dans
-// tryConstraint() pour convertir P2002/P2003/P2025 et les erreurs de trigger
-// en Error à message utilisateur (mappings dans src/config/constants.ts).
-import { CONSTRAINT_ERROR, ERRORS, TRIGGER_ERROR } from '@/config'
+// tryConstraint() pour convertir P2002/P2003/P2025, les erreurs de trigger
+// et les pannes de connexion (mappings dans src/config/constants.ts).
+// Le code est déduit du type d'erreur ; l'action le lit via buildError().
+import { CONSTRAINT_ERROR, ERRORS, ERROR_CODES, TRIGGER_ERROR } from '@/config'
+import type { ConstraintName } from '@/config'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client'
 import { debugPrismaError } from './debug'
+import { AppError } from './error'
+
 
 export function ScheduleConflict(error: any) {
   return (
@@ -45,36 +49,25 @@ function isConnectionError(error: unknown): boolean {
   )
 }
 
-export async function tryUnique<T>(promise: Promise<T>): Promise<T> {
-  try {
-    return await promise;
-  } catch (error) {
-    console.log("tryUnique error : ", error);
-    if (isConnectionError(error)) {
-      throw new Error(ERRORS.DB.UNREACHABLE)
-    }
-    uniqueError(error); // transforme les erreurs Prisma connues en erreurs UX
-    throw error;        // relance les autres erreurs
-  }
-}
-
-
+// Codes déduits du type d'erreur :
+//   base injoignable → UNAVAILABLE   (réessayer plus tard)
+//   P2002 / trigger  → CONFLICT      (ne pas réessayer tel quel)
+//   P2003            → BAD_REQUEST
+//   P2025            → NOT_FOUND
 export async function tryConstraint<T>(promise: Promise<T>): Promise<T> {
   try {
     return await promise
   } catch (error) {
-    // Panne d'infra (base injoignable) : à traiter AVANT tryTriggerError
-    // (qui fait un .includes() sur le message — pas concerné ici mais on
-    // court-circuite tôt) et avant le guard instanceof qui exclurait une
-    // PrismaClientInitializationError.
+    // Panne d'infra (base injoignable) : à traiter AVANT throwTriggerError
+    // et avant le guard instanceof qui exclurait une PrismaClientInitializationError.
     if (isConnectionError(error)) {
       if (process.env.NODE_ENV === "development") {
         void debugPrismaError(error as any);
       }
-      throw new Error(ERRORS.DB.UNREACHABLE)
+      throw new AppError({ message: ERRORS.DB.UNREACHABLE, code: ERROR_CODES.UNAVAILABLE })
     }
 
-    tryTriggerError(error)
+    throwTriggerError(error)
 
     if (!(error instanceof PrismaClientKnownRequestError)) {
       throw error
@@ -85,25 +78,23 @@ export async function tryConstraint<T>(promise: Promise<T>): Promise<T> {
       void debugPrismaError(error);
     }
 
+    const constraintName = resolveConstraintName(error)
 
     switch (error.code) {
       case 'P2002':
-        return uniqueError(error)
+        throw new AppError({
+          message: CONSTRAINT_ERROR[constraintName as ConstraintName] ?? ERRORS.UNIQUE.DEFAULT,
+          code: ERROR_CODES.CONFLICT,
+        })
 
-      case 'P2003': {
-        // Prisma 6 : meta.constraint était la string FK directe.
-        // Prisma 7 + pg adapter : meta.constraint absent — dans driverAdapterError.cause.constraint.index.
-        const constraint =
-          String(error.meta?.constraint ?? '') ||
-          extractDriverConstraint(error)
-        if (constraint && CONSTRAINT_ERROR[constraint]) {
-          throw new Error(CONSTRAINT_ERROR[constraint])
-        }
-        throw new Error(ERRORS.DB.FOREIGN_KEY)
-      }
+      case 'P2003':
+        throw new AppError({
+          message: CONSTRAINT_ERROR[constraintName as ConstraintName] ?? ERRORS.DB.FOREIGN_KEY,
+          code: ERROR_CODES.BAD_REQUEST,
+        })
 
       case 'P2025':
-        throw new Error(ERRORS.DB.NOT_FOUND)
+        throw new AppError({ message: ERRORS.DB.NOT_FOUND, code: ERROR_CODES.NOT_FOUND })
 
       default:
         throw error
@@ -111,19 +102,19 @@ export async function tryConstraint<T>(promise: Promise<T>): Promise<T> {
   }
 }
 
-function tryTriggerError(error: unknown): void {
-  const message = error instanceof Error ? error.message : String(error)
-  const key = Object.keys(TRIGGER_ERROR).find((k) => message.includes(k))
-  if (key) throw new Error(TRIGGER_ERROR[key])
+// Nom de la contrainte Postgres en cause (P2002 unique, P2003 clé étrangère), '' sinon.
+function resolveConstraintName(error: PrismaClientKnownRequestError): string {
+  if (error.code === 'P2002') return resolveUniqueConstraint(error)
+  // Prisma 6 : meta.constraint était la string FK directe.
+  // Prisma 7 + pg adapter : meta.constraint absent — dans driverAdapterError.cause.constraint.index.
+  if (error.code === 'P2003') return String(error.meta?.constraint ?? '') || extractDriverConstraint(error)
+  return ''
 }
 
-export function uniqueError(error: unknown): never {
-  if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
-    const target = resolveUniqueConstraint(error)
-    if (target && CONSTRAINT_ERROR[target]) throw new Error(CONSTRAINT_ERROR[target])
-    throw new Error(ERRORS.UNIQUE.DEFAULT)
-  }
-  throw error
+function throwTriggerError(error: unknown): void {
+  const message = error instanceof Error ? error.message : String(error)
+  const key = Object.keys(TRIGGER_ERROR).find((k) => message.includes(k))
+  if (key) throw new AppError({ message: TRIGGER_ERROR[key], code: ERROR_CODES.CONFLICT })
 }
 
 export function normalizeConstraintTarget(target?: string[]): string {

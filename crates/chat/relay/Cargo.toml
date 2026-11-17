@@ -1,0 +1,19 @@
+[package]
+name = "chat-relay"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "chat_relay"
+path = "src/lib.rs"
+
+[[bin]]
+name = "chat-relay"
+path = "src/main.rs"
+
+[dependencies]
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "net", "sync", "time", "signal"] }
+tokio-tungstenite = "0.21"
+futures-util = { version = "0.3", default-features = false, features = ["sink", "std"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

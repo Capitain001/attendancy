@@ -96,3 +96,11 @@ rules:
 
         useQuery(scheduleDaysQuery(input))
         queryClient.prefetchQuery(scheduleDaysQuery(input))
+
+  - id: CACHE-004
+    severity: advisory
+    applies_to: [mutation-hook, cache]
+    rule: "Quand la réponse d'une création est partielle, transmettre à la mutation les champs manquants requis par les consommateurs du cache et les convertir dans `toEntityPatch`."
+    why: "Évite d'insérer dans le cache une entité incomplète que ses consommateurs ne peuvent pas mapper ou afficher."
+    detect: ["toEntityPatch:", "persistMessage({"]
+    evidence: "apps/web/src/hooks/chat/useChat.ts:197, apps/web/src/hooks/data/chat/utils.ts:16"

@@ -4,6 +4,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useEntity } from "./useEntity";
+import type { EntityParams } from "./types";
 
 export type FlexiblePartial<T> = {
   [P in keyof T]?: T[P] extends Date ? Date | string : T[P] extends Date | null ? Date | string | null : T[P];
@@ -85,6 +86,7 @@ interface UseCrudEntityOptions<T, CreateInput = any, UpdateInput extends Flexibl
   transformFn?: (items: T[]) => any;
   staleTime?: number;
   enabled?: boolean;
+  initialParams?: EntityParams;
 }
 
 export function useCrudEntity<

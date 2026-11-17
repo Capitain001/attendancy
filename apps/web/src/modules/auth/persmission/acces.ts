@@ -5,8 +5,8 @@
 import { getUserInfo } from '@/modules/user';
 import { getAuthorization } from "./autorization";
 import { Role, Functions, AuthenticatedUser } from "@/types/user";
-import { ERRORS } from "@/config";
-import { hasPermission, permissionName } from '@/services/permission'
+import { ERROR_CODES, ERRORS } from "@/config";
+import { hasPermission } from '@/services/permission'
 import type { Action, Resource } from '@/generated/prisma/client'
 import type { OrganizationType } from '@/generated/prisma/browser'
 
@@ -54,14 +54,14 @@ type AuthAccessParams = {
 export async function authAccess(params: AuthAccessParams = {}) {
   try {
     const user = await getUserInfo()
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED }
+    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED, code: ERROR_CODES.UNAUTHORIZED }
 
     const orgId = user.organization?.id
-    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND }
+    if (!orgId) return { error: ERRORS.ORG.NOT_FOUND, code: ERROR_CODES.ORG_NOT_FOUND }
 
     // Le scope d'organisation s'applique aussi aux SUPER_ADMIN 
     if (params.requiredOrgType && user.organization?.type !== params.requiredOrgType) {
-      return { error: ERRORS.AUTH.FORBIDDEN }
+      return { error: ERRORS.AUTH.FORBIDDEN, code: ERROR_CODES.FORBIDDEN }
     }
 
     const authenticatedUser = user as AuthenticatedUser
@@ -70,7 +70,7 @@ export async function authAccess(params: AuthAccessParams = {}) {
       const auth = getAuthorization(authenticatedUser, params.requiredRole, params.requiredFunction, {
         allowPersonalOrg: params.allowPersonalOrg,
       })
-      if (auth.error) return { error: auth.error }
+      if (auth.error) return { error: auth.error, code: ERROR_CODES.FORBIDDEN }
     }
 
     // SUPER_ADMIN bypasse déjà via getAuthorization ; ici on ne re-vérifie
@@ -79,13 +79,13 @@ export async function authAccess(params: AuthAccessParams = {}) {
     if (params.requiredPermission) {
       const cached = authenticatedUser.organization?.permissions ?? []
       if (authenticatedUser.function !== 'SUPER_ADMIN' && !hasPermission(cached, params.requiredPermission)) {
-        return { error: `Permission ${permissionName(params.requiredPermission.action, params.requiredPermission.resource, params.requiredPermission.resourceId)} refusée` }
+        return { error: ERRORS.AUTH.FORBIDDEN, code: ERROR_CODES.FORBIDDEN }
       }
     }
 
     return { data: { user: authenticatedUser, orgId } }
   } catch (error) {
-    return { error: error instanceof Error ? error.message : ERRORS.SERVER }
+    return { error: error instanceof Error ? error.message : ERRORS.SERVER, code: ERROR_CODES.SERVER }
   }
 }
 

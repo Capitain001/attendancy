@@ -2,7 +2,7 @@
 // Constantes transverses : forme de réponse des actions + messages d'erreur.
 //
 // ApiResponse<T> est LE contrat de retour de toutes les server actions :
-//   succès → { data: T }   échec → { error: string }
+//   succès → { data: T }   échec → { error: string, code?: ErrorCode }
 // Jamais de throw vers le client, jamais de discriminated union { ok: ... }.
 
 import { UI } from "./ui";
@@ -10,7 +10,7 @@ import { UI } from "./ui";
 export type ApiResponse<T> =
   | { data: T }
   | { error: string; code?: ErrorCode }
-
+//code introduit recement pour permetre de specifier les erreur pr les clients externes 
 
 export const ERRORS = {
   // AUTH: "Not authenticated, please login first.",
@@ -34,6 +34,7 @@ export const ERRORS = {
     EMAIL: "Cet email est déjà utilisé",
     CODE: "Ce code existe déjà",
     NAME: "Ce nom est déjà utilisé",
+    ID: "Cet identifiant est déjà utilisé",
   },
 
   DB: {
@@ -61,9 +62,14 @@ export const ERROR_CODES = {
   BAD_REQUEST: 'BAD_REQUEST',
   SERVER: 'SERVER',
   ORG_NOT_FOUND: 'ORG_NOT_FOUND',
+  CONFLICT: 'CONFLICT',         // doublon, trigger, conflit d'id : ne pas réessayer tel quel
+  UNAVAILABLE: 'UNAVAILABLE',   // base injoignable : réessayer plus tard
+  VALIDATION: 'VALIDATION',     // entrée invalide : corriger puis renvoyer
 } as const satisfies Record<string, string>
 
 export type ErrorCode = (typeof ERROR_CODES)[keyof typeof ERROR_CODES]
+
+
 
 export const PRISMA_UNIQUE_MAP: Record<string, string> = {
   code: ERRORS.UNIQUE.CODE,
@@ -80,7 +86,7 @@ export const DB_CONSTRAINTS = {
 
 // Mapping contrainte DB → message utilisateur, consommé par tryConstraint()
 // (utils/server/prisma.ts). Clé = nom de la contrainte Postgres.
-export const CONSTRAINT_ERROR: Record<string, string> = {
+export const CONSTRAINT_ERROR = {
   // ── Utilisateurs / Organisations ────────────────────────────────────────────
   'User_email_key': 'Cet email est déjà utilisé',
   'User_phone_key': 'Ce numéro de téléphone est déjà utilisé',
@@ -131,10 +137,15 @@ export const CONSTRAINT_ERROR: Record<string, string> = {
   // ── Communication ─────────────────────────────────────────────────────────────
   'ChannelMember_channelId_userId_key': 'Cet utilisateur est déjà membre de ce canal',
   'EventParticipant_eventId_userId_key': 'Cet utilisateur participe déjà à cet événement',
+  'Message_channelId_fkey': 'Canal introuvable',
+  'Message_parentId_fkey': 'Message parent introuvable',
 
   // ── UEs optionnelles ──────────────────────────────────────────────────────────
   'OptionalUE_studentId_ueId_yearId_key': 'Cet étudiant a déjà inscrit cette UE en option pour cette année',
-}
+} as const satisfies Record<string, string>
+
+// Noms des contraintes connues : auto-suggestion et erreur de compilation sur une faute de frappe.
+export type ConstraintName = keyof typeof CONSTRAINT_ERROR
 
 // Mapping message de trigger SQL → message utilisateur, consommé par tryConstraint().
 // Clé = fragment du message levé par le trigger Postgres.

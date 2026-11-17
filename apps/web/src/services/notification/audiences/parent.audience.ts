@@ -4,7 +4,7 @@ import { getParentUserIds } from "@/services/parent/server";
 export async function resolveScheduleParents(
   studentIds: string[],
   orgId: string,
-): Promise<string[]> {
+) {
   if (studentIds.length === 0) return [];
   try {
     const settings = await getOrgParentalNotifications(orgId);

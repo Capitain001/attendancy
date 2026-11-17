@@ -12,9 +12,9 @@ Cette analyse porte sur le contenu présent dans `chat-offline/`; elle ne consti
 
 Le prototype sépare trois responsabilités :
 
-- [`chat-offline/src/outbox.ts`](../../chat-offline/chat-offline/src/outbox.ts) garde les messages rédigés localement en attente d’acceptation par le serveur.
-- [`chat-offline/src/inbox.ts`](../../chat-offline/chat-offline/src/inbox.ts) conserve temporairement les messages reçus d’un pair, explicitement non vérifiés.
-- [`chat-offline/src/engine.ts`](../../chat-offline/chat-offline/src/engine.ts) relaie les messages via un transport LAN et vide l’outbox quand l’action serveur accepte les messages.
+- [`outbox.ts`](../../_integrations/chat-offline/chat-offline/src/outbox.ts) garde les messages rédigés localement en attente d’acceptation par le serveur.
+- [`inbox.ts`](../../_integrations/chat-offline/chat-offline/src/inbox.ts) conserve temporairement les messages reçus d’un pair, explicitement non vérifiés.
+- [`engine.ts`](../../_integrations/chat-offline/chat-offline/src/engine.ts) relaie les messages via un transport LAN et vide l’outbox quand l’action serveur accepte les messages.
 
 Le hub Rust est un relais temporaire, non la source de vérité. Les messages envoyés par le hub restent en attente locale jusqu’à confirmation du serveur. À la réception de la version persistée, la copie LAN non vérifiée est supprimée. Le modèle évite donc de traiter une donnée relayée localement comme un message officiellement enregistré.
 
@@ -29,7 +29,9 @@ Le prototype devra toutefois suivre le workflow documenté :
 3. Vérifier la signature à argument unique `input`, l’allowlist RPC et le stub généré.
 4. Utiliser le type `NetworkError` du client RPC pour que React Query conserve son cache offline lors d’une coupure réseau.
 
-`@attendancy/chat-offline` a vocation à contenir la logique indépendante du framework (outbox, inbox, fusion, moteur de sync et transport), tandis que le hook React partagé l’adapte aux actions RPC et à l’UI.
+`@attendancy/chat` contient la logique indépendante du framework (outbox,
+inbox, fusion, moteur de sync et transport), tandis que le hook React partagé
+l’adaptera aux actions RPC et à l’UI.
 
 ## Points forts
 
@@ -75,9 +77,16 @@ Dans le moteur, une exception de `sendToServer` signifie « réseau indisponible
 
 ### 6. Compléter le cycle d’intégration du hook partagé
 
-L’exemple [`integration/5-useOfflineChat.ts`](../../chat-offline/integration/5-useOfflineChat.ts) appelle `sendMessageAction` depuis un chemin qui ne suit pas l’alias RPC prévu. Le contrat devra aussi vérifier que les actions sont exportées dans l’allowlist et que les stubs sont générés.
+L’exemple [`5-useOfflineChat.ts`](../../_integrations/chat-offline/integration/5-useOfflineChat.ts)
+appelle `sendMessageAction` depuis un chemin qui ne suit pas l’alias RPC prévu.
+Le contrat devra aussi vérifier que les actions sont exportées dans l’allowlist
+et que les stubs sont générés.
 
-Par ailleurs, `idb-keyval` est déclaré dans `apps/desktop`, mais pas dans `apps/web` d’après les manifests examinés. Si le hook partagé importe l’entrée `@attendancy/chat-offline/idb`, chaque application qui bundle ce hook doit pouvoir résoudre cette dépendance, ou le store IndexedDB doit être injecté depuis l’application hôte.
+Par ailleurs, `idb-keyval` est déclaré dans `apps/desktop`, mais pas dans
+`apps/web` d’après les manifests examinés. Si le hook partagé importe l’entrée
+`@attendancy/chat/idb`, chaque application qui bundle ce hook doit pouvoir
+résoudre cette dépendance, ou le store IndexedDB doit être injecté depuis
+l’application hôte.
 
 ### 7. Valider les contraintes Tauri et Android sur appareils réels
 
@@ -85,14 +94,11 @@ Le README identifie déjà les risques de `ws://` en WebView HTTPS, du cleartext
 
 ## Structure et validation du dépôt
 
-Le code est actuellement sous `chat-offline/chat-offline/` et `chat-offline/hub/`, plutôt que dans les workspaces `packages/*`. Le prototype n’est pas encore déclaré comme workspace Bun/Cargo. Le dossier `chat-offline/` apparaît non suivi par Git dans l’état du dépôt consulté.
-
-Les tests n’ont pas pu être confirmés dans cet environnement :
-
-- `npm test` dans le package TypeScript échoue car `vitest` n’est pas installé dans ce dossier.
-- `cargo test` dans `hub/` échoue car Cargo le détecte sous le workspace racine sans que ce package soit déclaré parmi ses membres ou exclusions.
-
-Ces échecs de lancement ne prouvent pas que les tests ou le code sont incorrects; ils indiquent que les commandes documentées ne sont pas exécutables depuis la structure actuelle du monorepo sans configuration ou installation supplémentaire.
+Le prototype d’origine reste archivé sous `_integrations/chat-offline/`. Le
+package TypeScript est maintenant dans `packages/chat` et le crate Rust dans
+`crates/chat-relay`. Ils ne sont toutefois pas encore intégrés aux applications:
+le crate n’est pas membre du workspace Cargo racine et aucun client Tauri ne le
+référence.
 
 ## Proposition de trajectoire, sans implémentation immédiate
 

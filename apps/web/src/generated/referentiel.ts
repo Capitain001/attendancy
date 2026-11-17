@@ -23,6 +23,7 @@ export type ServiceType = (typeof ServiceType)[keyof typeof ServiceType]
 export const MODEL_SERVICES = {
   'academic-year': { model: 'AcademicYear', path: '../services/academic-year' },
   'attendance': { model: 'Attendance', path: '../services/attendance' },
+  'channel-member': { model: 'ChannelMember', path: '../services/channel-member' },
   'class': { model: 'Class', path: '../services/class' },
   'course': { model: 'Course', path: '../services/course' },
   'course-teacher': { model: 'CourseTeacher', path: '../services/course-teacher' },
@@ -32,6 +33,7 @@ export const MODEL_SERVICES = {
   'event': { model: 'Event', path: '../services/event' },
   'function': { model: 'Function', path: '../services/function' },
   'group': { model: 'Group', path: '../services/group' },
+  'message': { model: 'Message', path: '../services/message' },
   'notification': { model: 'Notification', path: '../services/notification' },
   'organization': { model: 'Organization', path: '../services/organization' },
   'parent': { model: 'Parent', path: '../services/parent' },
@@ -82,6 +84,7 @@ export function getServiceType(folderName: string): ServiceType | null {
 // ts(6196) "declared but never used").
 export type AcademicYearServiceIndex = typeof import('../services/academic-year')
 export type AttendanceServiceIndex = typeof import('../services/attendance')
+export type ChannelMemberServiceIndex = typeof import('../services/channel-member')
 export type ChatServiceIndex = typeof import('../services/chat')
 export type ClassServiceIndex = typeof import('../services/class')
 export type CourseServiceIndex = typeof import('../services/course')
@@ -95,6 +98,7 @@ export type EvaluationServiceIndex = typeof import('../services/evaluation')
 export type EventServiceIndex = typeof import('../services/event')
 export type FunctionServiceIndex = typeof import('../services/function')
 export type GroupServiceIndex = typeof import('../services/group')
+export type MessageServiceIndex = typeof import('../services/message')
 export type NotificationServiceIndex = typeof import('../services/notification')
 export type OrganizationServiceIndex = typeof import('../services/organization')
 export type ParentServiceIndex = typeof import('../services/parent')
