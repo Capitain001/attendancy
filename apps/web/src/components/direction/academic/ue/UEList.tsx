@@ -2,7 +2,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { useLocalStorage } from "@/hooks/use-local-storage"
+import { useLocalStorage } from "@/hooks/utils/use-local-storage"
 import { LayoutGrid, List, LibraryBig, Download, Plus } from "lucide-react"
 import { card, typography } from "@/styles"
 import { cn } from "@/lib/utils"

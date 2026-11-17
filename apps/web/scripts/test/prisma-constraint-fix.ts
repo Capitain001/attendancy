@@ -12,7 +12,7 @@ const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! })
 const prisma  = new PrismaClient({ adapter })
 
 // Import du module fixé
-import { tryConstraint, uniqueError, normalizeConstraintTarget } from '@/utils/server/prisma'
+import { tryConstraint, normalizeConstraintTarget } from '@/utils/server/prisma'
 
 let pass = 0
 let fail = 0

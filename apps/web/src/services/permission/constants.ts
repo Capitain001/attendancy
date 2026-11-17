@@ -25,4 +25,6 @@ export const RESOURCE_LABELS: Record<Resource, string> = {
   MESSAGE: 'les messages',
   JUSTIFICATION: 'les justifications',
   INVITATION: 'les invitations',
+  GROUP: 'les groupes',
+  NOTE: 'les notes',
 }
