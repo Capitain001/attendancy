@@ -59,8 +59,13 @@ export async function createMessage({
 // Seul l'auteur peut modifier son message 
 export async function updateMessage(messageId: string, userId: string, data: UpdateMessageDataOutput) {
   return tryConstraint(prisma.message.update({
-    where: { id: messageId, userId },
-    data: { content: data.content, editedAt: new Date() },
+    // deletedAt: null : un message supprimé n'est plus modifiable
+    where: { id: messageId, userId, deletedAt: null },
+    data: {
+      content: data.content,
+      // Posé uniquement ici : c'est la version de référence des éditions
+      ...(data.content !== undefined && { editedAt: new Date() }),
+    },
     select: messageSelect,
   }))
 }

@@ -5,7 +5,7 @@ import { PresenceUser } from '@/types'
 import { createClient } from '@/utils/supabase/client'
 import type { GetMessagesDto } from '@/services/message'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ANONYMOUS_NAME } from './constants'
+import { ANONYMOUS_NAME, TYPING_EXPIRE_MS, TYPING_THROTTLE_MS } from './constants'
 
 interface UseRealtimeChatProps {
   channelId: string
@@ -45,6 +45,21 @@ type ReceivedMessage = Omit<RealtimeMessage, 'parentId' | 'editedAt' | 'user'> &
 const EVENT_MESSAGE_TYPE = 'message'
 const EVENT_UPDATE = 'message:update'
 const EVENT_DELETE = 'message:delete'
+const EVENT_TYPING = 'typing'
+
+type TypingEvent = { id: string; typing: boolean }
+
+const isTypingEvent = (payload: unknown): payload is TypingEvent => {
+  const e = payload as Partial<TypingEvent> | null
+  return typeof e?.id === 'string' && typeof e.typing === 'boolean'
+}
+
+const withoutId = (current: ReadonlySet<string>, id: string): ReadonlySet<string> => {
+  if (!current.has(id)) return current
+  const next = new Set(current)
+  next.delete(id)
+  return next
+}
 
 // Un broadcast vient d'un pair, donc non fiable : on vérifie la forme avant de l'appliquer.
 const isUpdateEvent = (payload: unknown): payload is MessageUpdateEvent => {
@@ -77,6 +92,12 @@ export function useRealtimeChat({ channelId, user }: UseRealtimeChatProps) {
   // coupure sont perdus, l'appelant resynchronise alors depuis le serveur.
   const [reconnectCount, setReconnectCount] = useState(0)
   const [connectedUsers, setConnectedUsers] = useState<Record<string, PresenceUser>>({})
+  // Ids des utilisateurs qui écrivent. Les noms sont résolus par l'appelant via la présence.
+  const [typingIds, setTypingIds] = useState<ReadonlySet<string>>(() => new Set())
+  // Un minuteur d'expiration par utilisateur : pas de polling, rendu seulement quand ça change
+  const typingTimers = useRef(new Map<string, ReturnType<typeof setTimeout>>())
+  // Ref et non state : le throttle ne doit pas provoquer de rendu
+  const lastTypingSentRef = useRef(0)
 
   const presenceKey = user?.id
   const userName = user?.name || ANONYMOUS_NAME
@@ -93,6 +114,15 @@ export function useRealtimeChat({ channelId, user }: UseRealtimeChatProps) {
     if (!presenceKey) return
 
     let wasSubscribed = false
+
+    const timers = typingTimers.current
+
+    const clearTyping = (id: string) => {
+      const timer = timers.get(id)
+      if (timer) clearTimeout(timer)
+      timers.delete(id)
+      setTypingIds((current) => withoutId(current, id))
+    }
 
     const newChannel = supabase.channel(channelId, {
       config: {
@@ -138,6 +168,7 @@ export function useRealtimeChat({ channelId, user }: UseRealtimeChatProps) {
       .on('broadcast', { event: EVENT_MESSAGE_TYPE }, ({ payload }) => {
         // Le payload vient d'un pair : on normalise pour respecter le type
         const received = payload as ReceivedMessage
+        if (received.user?.id) clearTyping(received.user.id)
         setMessages((current) => [
           ...current,
           {
@@ -156,6 +187,17 @@ export function useRealtimeChat({ channelId, user }: UseRealtimeChatProps) {
       })
       .on('broadcast', { event: EVENT_DELETE }, ({ payload }) => {
         if (isDeleteEvent(payload)) setDeletedIds((current) => withDeleted(current, payload.id))
+      })
+      .on('broadcast', { event: EVENT_TYPING }, ({ payload }) => {
+        if (!isTypingEvent(payload) || payload.id === presenceKey) return
+        const { id, typing } = payload
+
+        if (!typing) return clearTyping(id)
+
+        const previous = timers.get(id)
+        if (previous) clearTimeout(previous)
+        setTypingIds((current) => (current.has(id) ? current : new Set(current).add(id)))
+        timers.set(id, setTimeout(() => clearTyping(id), TYPING_EXPIRE_MS))
       })
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
@@ -198,6 +240,10 @@ export function useRealtimeChat({ channelId, user }: UseRealtimeChatProps) {
       setMessages([])
       setPatches({})
       setDeletedIds(new Set())
+      timers.forEach(clearTimeout)
+      timers.clear()
+      lastTypingSentRef.current = 0
+      setTypingIds(new Set())
       setConnectedUsers({})
     }
   }, [channelId, presenceKey, supabase])
@@ -258,10 +304,37 @@ export function useRealtimeChat({ channelId, user }: UseRealtimeChatProps) {
     [channel, isConnected]
   )
 
+  // typing: true est limité à un envoi toutes les TYPING_THROTTLE_MS ; typing: false (envoi du
+  // message, champ vidé) part tout de suite, mais seulement si un « écrit » avait été annoncé.
+  const notifyTyping = useCallback(
+    (typing: boolean) => {
+      if (!channel || !isConnected || !presenceKey) return
+
+      if (typing) {
+        const now = Date.now()
+        if (now - lastTypingSentRef.current < TYPING_THROTTLE_MS) return
+        lastTypingSentRef.current = now
+      } else {
+        if (lastTypingSentRef.current === 0) return
+        lastTypingSentRef.current = 0
+      }
+
+      // Éphémère : un échec n'a aucune conséquence, on ne le remonte pas
+      void channel.send({
+        type: 'broadcast',
+        event: EVENT_TYPING,
+        payload: { id: presenceKey, typing } satisfies TypingEvent,
+      })
+    },
+    [channel, isConnected, presenceKey]
+  )
+
   return {
     messages,
     patches,
     deletedIds,
+    typingIds,
+    notifyTyping,
     sendMessage,
     publishEdit,
     publishDelete,

@@ -29,7 +29,8 @@ export default function Header({ user }: HeaderProps) {
           <span className="text-sm font-medium text-text-primary">{orgLabel}</span>
         </Link>
         <div className="flex items-center gap-1">
-          <ModeToggle />
+          <ModeToggle className="hidden md:inline-flex" />
+
           {user && (
             <>
               <InboxHeaderButton />

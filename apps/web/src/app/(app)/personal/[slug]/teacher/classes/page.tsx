@@ -45,7 +45,7 @@ export default async function PersonalTeacherClassesPage({
   const activeCount = quota?.activeCount ?? 0;
 
   return (
-    <main className="min-h-screen bg-background px-4 py-8 sm:px-6">
+    <main className="border-4 px-4 py-8 sm:px-6">
     
       <div className="mx-auto w-full max-w-5xl space-y-6">
         <header className="space-y-2">
@@ -55,7 +55,6 @@ export default async function PersonalTeacherClassesPage({
             {quota?.maxClasses == null ? "" : ` sur ${quota.maxClasses}`}
           </p>
         </header>
-
         {loadError && (
           <p
             role="alert"

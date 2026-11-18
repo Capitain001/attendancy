@@ -59,6 +59,8 @@ export const useChat = ({
     isConnected,
     reconnectCount,
     connectedUsers,
+    typingIds,
+    notifyTyping,
   } = useRealtimeChat({ channelId, user })
 
   // Après une reconnexion, les éditions / suppressions émises pendant la coupure sont perdues :
@@ -115,6 +117,26 @@ export const useChat = ({
       (connectedUser) => connectedUser.id && connectedUser.id !== user.id
     )
   }, [connectedUsers, user?.id])
+
+  // Chaque modification du champ annonce (ou retire) « en train d'écrire »
+  const updateNewMessage = useCallback(
+    (value: React.SetStateAction<string>) => {
+      setNewMessage((prev) => {
+        const next = typeof value === 'function' ? value(prev) : value
+        notifyTyping(next.trim().length > 0)
+        return next
+      })
+    },
+    [notifyTyping]
+  )
+
+  const typingUsers = useMemo(
+    () =>
+      [...typingIds]
+        .map((id) => connectedUsers[id])
+        .filter((u): u is PresenceUser => !!u),
+    [typingIds, connectedUsers]
+  )
 
   // Notifications push : le serveur résout les destinataires (membres du canal,
   // mentions comprises) à partir du seul channelId ; le client ne les connaît pas.
@@ -182,9 +204,10 @@ export const useChat = ({
       })
 
       setNewMessage('')
+      notifyTyping(false)
       setReplyToId(null)
     },
-    [newMessage, isConnected, persist, channelId, replyToId]
+    [newMessage, isConnected, persist, channelId, replyToId, notifyTyping]
   )
 
   // Rejeu d'un envoi échoué : même id, donc sans doublon côté serveur
@@ -253,12 +276,13 @@ export const useChat = ({
     // État
     messages,
     newMessage,
-    setNewMessage,
+    setNewMessage: updateNewMessage,
     replyToId,
     setReplyToId,
     isConnected,
     loading,
     connectedUsers,
+    typingUsers,
     otherUsers,
 
     // Historique

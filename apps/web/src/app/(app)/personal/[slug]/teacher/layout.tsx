@@ -27,7 +27,7 @@ export default async function PersonalTeacherLayout({ children, params }: Layout
   ];
 
   return (
-    <div className="theme-teacher flex flex-1 flex-col min-h-full">
+    <div className="theme-teacher flex flex-1 flex-col min-h-full bg-background">
       <MobileNavMenu navItems={navItems} />
       <div className="flex flex-1 flex-col pb-8 min-h-0">
         {children}
