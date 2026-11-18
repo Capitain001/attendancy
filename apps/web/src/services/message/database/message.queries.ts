@@ -4,17 +4,43 @@ import { Prisma } from '@/generated/prisma/browser'
 import { prisma } from '@/lib/prisma'
 import { cacheLife, cacheTag } from 'next/cache'
 import { MESSAGES_PAGE_SIZE } from '../constants'
+import { truncatePreview } from '../preview'
 
 export const messageSelect = {
   id: true,
   content: true,
   createdAt: true,
-  editedAt:true,
+  editedAt: true,
   updatedAt: true,
   channelId: true,
-  parentId: true, // on traitera le message parent apres
+  parentId: true,
   user: { select: { id: true, firstName: true, lastName: true, avatar_url: true } },
+  parent: {
+    select: {
+      id: true,
+      content: true,
+      deletedAt: true,
+      user: { select: { id: true, firstName: true, lastName: true } },
+    },
+  },
 } as const satisfies Prisma.MessageSelect
+
+export type MessageRow = Prisma.MessageGetPayload<{ select: typeof messageSelect }>
+
+// Le contenu d'un parent supprimé ne sort jamais du serveur ; le reste est tronqué.
+export function toMessageDto({ parent, ...message }: MessageRow) {
+  return {
+    ...message,
+    parent: parent
+      ? {
+          id: parent.id,
+          deleted: parent.deletedAt !== null,
+          content: parent.deletedAt ? null : truncatePreview(parent.content),
+          user: parent.user,
+        }
+      : null,
+  }
+}
 
 // Curseur composite : createdAt seul sauterait les messages de même date.
 export type MessageCursor = { createdAt: Date; id: string }
@@ -30,7 +56,7 @@ export async function getMessages(channelId: string, orgId: string, limit = MESS
     orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
     take: limit,
   })
-  return rows.reverse()
+  return rows.reverse().map(toMessageDto)
 }
 
 // Page de messages STRICTEMENT antérieurs au curseur, rendus du plus ancien au plus récent.
@@ -57,7 +83,7 @@ export async function getOlderMessages(
     orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
     take: limit + 1, // +1 : détecte la page suivante sans count(*)
   })
-  return { items: rows.slice(0, limit).reverse(), hasMore: rows.length > limit }
+  return { items: rows.slice(0, limit).reverse().map(toMessageDto), hasMore: rows.length > limit }
 }
 
 // Lectures de vérification avant écriture : volontairement SANS "use cache".
@@ -67,4 +93,7 @@ export async function getOlderMessages(
 // pris, où que ce soit (la PK est globale). Le résultat n'est jamais exposé tel
 // quel : policy R1/R2 le compare au canal et à l'auteur déjà validés.
 export const getMessageById = (messageId: string) =>
-  prisma.message.findUnique({ where: { id: messageId }, select: messageSelect })
+  prisma.message.findUnique({
+    where: { id: messageId },
+    select: { id: true, channelId: true, parentId: true, user: { select: { id: true } } },
+  })

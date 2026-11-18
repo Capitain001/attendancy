@@ -52,6 +52,7 @@ function createMsg(id: string, dateIso: string): Dto {
     editedAt: null,
     channelId: 'channel-1',
     parentId: null,
+    parent: null,
     user: { id: 'u1', firstName: 'Alice', lastName: null, avatar_url: null },
   }
 }

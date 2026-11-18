@@ -5,7 +5,8 @@ import { AppError } from '@/utils/server/error'
 import { invalidateEvent } from '@/cache/server/graph'
 import { ERRORS, ERROR_CODES } from '@/config'
 import type { CreateMessageOutput, UpdateMessageDataOutput } from '../validation'
-import { messageSelect } from './message.queries'
+import { messageSelect, toMessageDto } from './message.queries'
+import { MESSAGE_ERRORS } from '../error'
 
 // Enregistre un message de façon idempotente.
 //
@@ -38,6 +39,25 @@ export async function createMessage({
   orgId,
   ...data
 }: CreateMessageOutput & { userId: string; orgId: string }) {
+  // Réponse : le parent doit exister dans le MÊME canal (donc la même organisation) et ne pas
+  // être supprimé. Un rejeu légitime passe d'abord : sinon le retry d'une réponse dont le parent
+  // a été supprimé entre-temps serait rejeté alors que le message est déjà en base.
+  if (data.parentId) {
+    const parentCount = await prisma.message.count({
+      where: { id: data.parentId, channelId: data.channelId, deletedAt: null },
+    })
+    if (parentCount === 0) {
+      const alreadyCreated = await prisma.message.count({
+        where: { id: data.id, userId: data.userId, channelId: data.channelId },
+      })
+      if (alreadyCreated > 0) return { id: data.id, created: false }
+      throw new AppError({
+        message: MESSAGE_ERRORS.PARENT_NOT_FOUND.message,
+        code: MESSAGE_ERRORS.PARENT_NOT_FOUND.code,
+      })
+    }
+  }
+
   const { count } = await tryConstraint(
     prisma.message.createMany({ data: [data], skipDuplicates: true }),
   )
@@ -58,16 +78,19 @@ export async function createMessage({
 
 // Seul l'auteur peut modifier son message 
 export async function updateMessage(messageId: string, userId: string, data: UpdateMessageDataOutput) {
-  return tryConstraint(prisma.message.update({
-    // deletedAt: null : un message supprimé n'est plus modifiable
-    where: { id: messageId, userId, deletedAt: null },
-    data: {
-      content: data.content,
-      // Posé uniquement ici : c'est la version de référence des éditions
-      ...(data.content !== undefined && { editedAt: new Date() }),
-    },
-    select: messageSelect,
-  }))
+  const row = await tryConstraint(
+    prisma.message.update({
+      // deletedAt: null : un message supprimé n'est plus modifiable
+      where: { id: messageId, userId, deletedAt: null },
+      data: {
+        content: data.content,
+        // Posé uniquement ici : c'est la version de référence des éditions
+        ...(data.content !== undefined && { editedAt: new Date() }),
+      },
+      select: messageSelect,
+    })
+  )
+  return toMessageDto(row)
 }
 
 // Soft delete

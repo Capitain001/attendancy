@@ -2,12 +2,14 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { toast } from 'sonner'
 import { useRealtimeChat, type RealtimeMessage } from '@/hooks/chat/use-realtime-chat'
 import { ANONYMOUS_NAME } from '@/hooks/chat/constants'
 import { useChannelMute } from '@/hooks/chat/useChannelMute'
-import type { ChatMessage, OutboxDraft, OutboxEntry } from '@/hooks/chat/types'
+import type { ChatMessage, OutboxDraft, OutboxEntry, ReplyPreview } from '@/hooks/chat/types'
 import { useMessages } from '@/hooks/data/messages/useMessages'
-import { mapMessages } from '@/hooks/chat/utils'
+import { mapMessages, mapReplySnapshots, resolveReplyTo } from '@/hooks/chat/utils'
+import { truncatePreview } from '@/services/message/preview'
 import { PresenceUser } from '@/types'
 import { sendParticipantNotificationsAction } from '@/services/notification/domains/chat'
 
@@ -23,8 +25,11 @@ export const useChat = ({
   onMessage,
 }: UseChatProps) => {
   const [newMessage, setNewMessage] = useState('')
-  // Message auquel on répond (null = message racine)
-  const [replyToId, setReplyToId] = useState<string | null>(null)
+  // Le canal est mémorisé : une réponse commencée dans un autre
+  // canal est ignorée et ne part jamais avec un parent étranger.
+  const [replyTarget, setReplyTarget] = useState<{ id: string; channelId: string } | null>(null)
+  const replyToId = replyTarget?.channelId === channelId ? replyTarget.id : null
+
   // Envois locaux non confirmés (sending / failed), indexés par id de message
   const [outbox, setOutbox] = useState<Record<string, OutboxEntry>>({})
 
@@ -41,6 +46,7 @@ export const useChat = ({
     loading,
     hasMore,
     loadOlder,
+    loadUntil,
     isLoadingOlder,
   } = useMessages({
     channelId,
@@ -91,24 +97,61 @@ export const useChat = ({
       if (!merged.has(message.id)) merged.set(message.id, message)
     }
 
-    return [...merged.values()]
+    const snapshots = mapReplySnapshots(data?.items)
+
+    // Éditions appliquées AVANT le filtre : un parent supprimé garde ainsi son auteur connu
+    const patched = [...merged.values()].map((message) => {
+      const patch = patches[message.id]
+      return patch && (!message.editedAt || message.editedAt < patch.editedAt)
+        ? { ...message, content: patch.content, editedAt: patch.editedAt }
+        : message
+    })
+    const loadedById = new Map(patched.map((message) => [message.id, message]))
+
+    return patched
       .filter((message) => !deletedIds.has(message.id))
       .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
-      .map((message) => {
-        const patch = patches[message.id]
-        // La surcouche ne s'applique que si elle est plus récente que la version déjà affichée
-        const current =
-          patch && (!message.editedAt || message.editedAt < patch.editedAt)
-            ? { ...message, content: patch.content, editedAt: patch.editedAt }
-            : message
-
-        return {
-          ...current,
-          isOwn: !!user?.id && current.user.id === user.id,
-          status: outbox[current.id]?.status ?? 'sent',
-        }
-      })
+      .map((message) => ({
+        ...message,
+        isOwn: !!user?.id && message.user.id === user.id,
+        status: outbox[message.id]?.status ?? 'sent',
+        replyTo: resolveReplyTo(message.parentId, loadedById, snapshots, deletedIds),
+      }))
   }, [data?.items, realtimeMessages, patches, deletedIds, outbox, channelId, user?.id, user?.name])
+
+  // Aperçu du bandeau : dérivé des messages affichés, donc à jour si le parent est édité
+  const replyingTo = useMemo<ReplyPreview | null>(() => {
+    const target = replyToId ? messages.find((m) => m.id === replyToId) : undefined
+    return target
+      ? {
+          id: target.id,
+          authorName: target.user.name,
+          content: truncatePreview(target.content),
+          state: 'available',
+        }
+      : null
+  }, [replyToId, messages])
+
+  const startReply = useCallback(
+    (messageId: string) => {
+      // Seul un message confirmé en base peut être cité : le serveur refuse un parent inexistant
+      if (messages.find((m) => m.id === messageId)?.status !== 'sent') return
+      setReplyTarget({ id: messageId, channelId })
+    },
+    [messages, channelId]
+  )
+
+  const cancelReply = useCallback(() => setReplyTarget(null), [])
+
+  // Parent supprimé pendant la rédaction : on abandonne la réponse plutôt que de la laisser échouer
+  useEffect(() => {
+    if (!replyTarget) return
+    if (replyTarget.channelId !== channelId) return setReplyTarget(null) // changement de canal : silencieux
+    if (!messages.some((m) => m.id === replyTarget.id)) {
+      setReplyTarget(null)
+      toast.info("Le message auquel vous répondiez n'est plus disponible")
+    }
+  }, [replyTarget, channelId, messages])
 
   // Filtrer les autres utilisateurs (exclure l'utilisateur actuel)
   const otherUsers = useMemo(() => {
@@ -205,7 +248,7 @@ export const useChat = ({
 
       setNewMessage('')
       notifyTyping(false)
-      setReplyToId(null)
+      setReplyTarget(null)
     },
     [newMessage, isConnected, persist, channelId, replyToId, notifyTyping]
   )
@@ -277,8 +320,9 @@ export const useChat = ({
     messages,
     newMessage,
     setNewMessage: updateNewMessage,
-    replyToId,
-    setReplyToId,
+    replyingTo,
+    startReply,
+    cancelReply,
     isConnected,
     loading,
     connectedUsers,
@@ -288,6 +332,7 @@ export const useChat = ({
     // Historique
     hasMore,
     loadOlderMessages: loadOlder,
+    jumpToMessage: loadUntil,
     isLoadingOlder,
 
     // Actions

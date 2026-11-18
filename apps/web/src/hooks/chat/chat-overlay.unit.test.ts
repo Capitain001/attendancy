@@ -53,6 +53,7 @@ function mergeChatMessages({
         ...current,
         isOwn: !!userId && current.user.id === userId,
         status: outbox[current.id]?.status ?? 'sent',
+        replyTo: null,
       }
     })
 }

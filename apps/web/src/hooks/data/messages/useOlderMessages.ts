@@ -9,7 +9,6 @@ import { MESSAGES_PAGE_SIZE } from '@/services/message/constants'
 import type { GetMessagesDto } from '@/services/message'
 import { findOldestMessage } from '@/hooks/chat/reconcile'
 
-
 type Dto = GetMessagesDto[number]
 
 interface UseOlderMessagesProps {
@@ -33,38 +32,67 @@ export function useOlderMessages({ channelId, items, updateItems }: UseOlderMess
   // ancien change et hasMore redevient vrai, sans effet de reset.
   const hasMore = items.length >= MESSAGES_PAGE_SIZE && oldest?.id !== exhaustedAt
 
-  const loadOlder = useCallback(async () => {
-    if (loadingRef.current || !hasMore || !oldest) return
-    loadingRef.current = true
-    setIsLoadingOlder(true)
-
-    try {
+  // Charge UNE page antérieure au curseur et l'injecte dans le cache. null si rien n'a été ajouté.
+  const fetchPage = useCallback(
+    async (cursor: Dto) => {
       const res = await getOlderMessagesAction({
         channelId,
-        before: { createdAt: new Date(oldest.createdAt).toISOString(), id: oldest.id },
+        before: { createdAt: new Date(cursor.createdAt).toISOString(), id: cursor.id },
       })
-
       if (!('data' in res) || !res.data) {
         toast.error(('error' in res && res.error) || 'Impossible de charger les messages précédents')
-        return
+        return null
       }
-
-      const { items: olderItems, hasMore: moreAvailable } = res.data
+      const { items: older, hasMore: more } = res.data
       let applied = false as boolean
       updateItems((current) => {
-        // Curseur disparu (refetch avec réinitialisation entre-temps) : ajouter cette page
-        // créerait un trou, on l'ignore.
-        applied = current.some((m) => m.id === oldest.id)
-        // Le cache courant passe en second : sa version, plus fraîche, l'emporte.
-        return applied ? mergeItemsById(olderItems, current) : current
+        applied = current.some((m) => m.id === cursor.id) // curseur disparu : page ignorée, pas de trou
+        return applied ? mergeItemsById(older, current) : current
       })
+      if (!applied) return null
+      if (!more) setExhaustedAt(older[0]?.id ?? cursor.id)
+      return res.data
+    },
+    [channelId, updateItems]
+  )
 
-      if (applied && !moreAvailable) setExhaustedAt(olderItems[0]?.id ?? oldest.id)
+  // Une seule opération de chargement à la fois
+  const run = useCallback(async <R>(task: () => Promise<R>, fallback: R): Promise<R> => {
+    if (loadingRef.current) return fallback
+    loadingRef.current = true
+    setIsLoadingOlder(true)
+    try {
+      return await task()
     } finally {
       loadingRef.current = false
       setIsLoadingOlder(false)
     }
-  }, [channelId, hasMore, oldest, updateItems])
+  }, [])
 
-  return { hasMore, loadOlder, isLoadingOlder }
+  const loadOlder = useCallback(async () => {
+    if (!hasMore || !oldest) return
+    await run(() => fetchPage(oldest), null)
+  }, [hasMore, oldest, run, fetchPage])
+
+  // true = le message est maintenant en cache. 5 pages au plus (250 messages) : au-delà, « trop ancien ».
+  const loadUntil = useCallback(
+    async (messageId: string, maxPages = 5): Promise<boolean> => {
+      if (items.some((m) => m.id === messageId)) return true
+      if (!hasMore || !oldest) return false
+      return run(async () => {
+        let cursor: Dto = oldest
+        for (let page = 0; page < maxPages; page++) {
+          const result = await fetchPage(cursor)
+          if (!result) return false
+          if (result.items.some((m) => m.id === messageId)) return true
+          if (!result.hasMore || !result.items[0]) return false
+          cursor = result.items[0]
+        }
+        return false
+      }, false)
+    },
+    [items, hasMore, oldest, run, fetchPage]
+  )
+
+  return { hasMore, loadOlder, loadUntil, isLoadingOlder }
 }
