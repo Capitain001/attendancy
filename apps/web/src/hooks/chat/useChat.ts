@@ -35,6 +35,9 @@ export const useChat = ({
   const {
     data,
     create: persistMessage,
+    update: updateMessageEntity,
+    delete: deleteMessageEntity,
+    refetch: refetchMessages,
     loading,
     hasMore,
     loadOlder,
@@ -48,13 +51,25 @@ export const useChat = ({
   // Communication en temps réel
   const {
     messages: realtimeMessages,
+    patches,
+    deletedIds,
     sendMessage: sendRealtimeMessage,
+    publishEdit,
+    publishDelete,
     isConnected,
+    reconnectCount,
     connectedUsers,
   } = useRealtimeChat({ channelId, user })
 
+  // Après une reconnexion, les éditions / suppressions émises pendant la coupure sont perdues :
+  // on resynchronise la fenêtre récente depuis le serveur (reconcileMessages préserve l'historique).
+  useEffect(() => {
+    if (reconnectCount > 0) void refetchMessages()
+  }, [reconnectCount, refetchMessages])
+
   // Fusion : persisté > temps réel > outbox (le premier rencontré gagne, par id).
   // Pendant 'sending', l'outbox est la seule trace du message : on diffuse après la base.
+  // Les pierres tombales et les éditions s'appliquent ensuite à toutes les sources.
   const messages = useMemo<ChatMessage[]>(() => {
     const persisted = data?.items ? mapMessages(data.items) : []
 
@@ -65,6 +80,7 @@ export const useChat = ({
         content: entry.content,
         parentId: entry.parentId,
         createdAt: entry.createdAt,
+        editedAt: null,
         user: { id: user?.id ?? null, name: user?.name || ANONYMOUS_NAME },
       }))
 
@@ -74,13 +90,23 @@ export const useChat = ({
     }
 
     return [...merged.values()]
+      .filter((message) => !deletedIds.has(message.id))
       .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
-      .map((message) => ({
-        ...message,
-        isOwn: !!user?.id && message.user.id === user.id,
-        status: outbox[message.id]?.status ?? 'sent',
-      }))
-  }, [data?.items, realtimeMessages, outbox, channelId, user?.id, user?.name])
+      .map((message) => {
+        const patch = patches[message.id]
+        // La surcouche ne s'applique que si elle est plus récente que la version déjà affichée
+        const current =
+          patch && (!message.editedAt || message.editedAt < patch.editedAt)
+            ? { ...message, content: patch.content, editedAt: patch.editedAt }
+            : message
+
+        return {
+          ...current,
+          isOwn: !!user?.id && current.user.id === user.id,
+          status: outbox[current.id]?.status ?? 'sent',
+        }
+      })
+  }, [data?.items, realtimeMessages, patches, deletedIds, outbox, channelId, user?.id, user?.name])
 
   // Filtrer les autres utilisateurs (exclure l'utilisateur actuel)
   const otherUsers = useMemo(() => {
@@ -173,6 +199,49 @@ export const useChat = ({
     [outbox, persist]
   )
 
+  // Édition : le serveur d'abord (seul l'auteur est autorisé, contrôlé côté serveur),
+  // puis diffusion aux autres. isOwn ne sert qu'à afficher ou non le bouton.
+  // Retourne false en cas d'échec (le toast d'erreur est déjà affiché par useCrudEntity).
+  const editMessage = useCallback(
+    async (id: string, content: string) => {
+      try {
+        // useCrudEntity expose mutateAsync : un seul objet { id, data }
+        const updated = await updateMessageEntity?.({ id, data: { content } })
+        if (!updated) return false
+
+        // editedAt posé par le serveur : référence pour départager deux éditions croisées.
+        // Absent = rien n'a changé côté serveur, rien à diffuser.
+        if (updated.editedAt) {
+          publishEdit({
+            id,
+            content: updated.content ?? content, // texte validé (trim) par le serveur
+            editedAt: new Date(updated.editedAt).toISOString(),
+          }).catch((error) => console.error('Erreur lors de la diffusion de l\'édition:', error))
+        }
+        return true
+      } catch {
+        return false
+      }
+    },
+    [updateMessageEntity, publishEdit]
+  )
+
+  const deleteMessage = useCallback(
+    async (id: string) => {
+      try {
+        await deleteMessageEntity?.(id)
+      } catch {
+        return false
+      }
+
+      publishDelete(id).catch((error) =>
+        console.error('Erreur lors de la diffusion de la suppression:', error)
+      )
+      return true
+    },
+    [deleteMessageEntity, publishDelete]
+  )
+
   // Notifier le parent lorsque les messages changent
   useEffect(() => {
     if (onMessage) {
@@ -200,6 +269,8 @@ export const useChat = ({
     // Actions
     sendMessage,
     retryMessage,
+    editMessage,
+    deleteMessage,
 
     // Utilitaires
     userName: user?.name || ANONYMOUS_NAME,

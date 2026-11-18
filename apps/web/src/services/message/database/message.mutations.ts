@@ -60,7 +60,7 @@ export async function createMessage({
 export async function updateMessage(messageId: string, userId: string, data: UpdateMessageDataOutput) {
   return tryConstraint(prisma.message.update({
     where: { id: messageId, userId },
-    data: { content: data.content },
+    data: { content: data.content, editedAt: new Date() },
     select: messageSelect,
   }))
 }

@@ -15,32 +15,67 @@ interface UseRealtimeChatProps {
 type PersistedMessage = GetMessagesDto[number]
 
 // Les champs communs sont dérivés du DTO (Pick = liste blanche de ce qui transite en broadcast).
-// createdAt est redéfini : Date côté base, chaîne ISO sur le canal temps réel (JSON).
+// createdAt / editedAt sont redéfinis : Date côté base, chaîne ISO sur le canal temps réel (JSON).
 // user est redéfini : le broadcast ne porte que l'id et le nom d'affichage.
 // user.id est affirmé par l'émetteur : à utiliser pour la mise en page uniquement
 // (alignement, regroupement), jamais pour un contrôle d'accès. null = auteur inconnu.
 export type RealtimeMessage = Pick<PersistedMessage, 'id' | 'content' | 'parentId'> & {
   createdAt: string
+  // Posé par le serveur à chaque édition (null = jamais modifié). Sert aussi de version.
+  editedAt: string | null
   user: { id: string | null; name: string }
 }
+
+// Édition reçue ou émise : surcouche d'affichage par-dessus le message (cache / temps réel)
+export type MessagePatch = { content: string; editedAt: string }
+type MessageUpdateEvent = MessagePatch & { id: string }
+type MessageDeleteEvent = { id: string }
 
 // parentId optionnel à l'envoi : un message racine n'a pas à le passer
 type SendRealtimeMessageInput = Pick<RealtimeMessage, 'content' | 'id' | 'createdAt'> &
   Partial<Pick<RealtimeMessage, 'parentId'>>
 
-// Payload tel que reçu : un client pas encore à jour peut omettre parentId / user.id
-type ReceivedMessage = Omit<RealtimeMessage, 'parentId' | 'user'> & {
+// Payload tel que reçu : un client pas encore à jour peut omettre parentId / editedAt / user.id
+type ReceivedMessage = Omit<RealtimeMessage, 'parentId' | 'editedAt' | 'user'> & {
   parentId?: string | null
+  editedAt?: string | null
   user?: { id?: string | null; name?: string }
 }
 
 const EVENT_MESSAGE_TYPE = 'message'
+const EVENT_UPDATE = 'message:update'
+const EVENT_DELETE = 'message:delete'
+
+// Un broadcast vient d'un pair, donc non fiable : on vérifie la forme avant de l'appliquer.
+const isUpdateEvent = (payload: unknown): payload is MessageUpdateEvent => {
+  const e = payload as Partial<MessageUpdateEvent> | null
+  return typeof e?.id === 'string' && typeof e.content === 'string' && typeof e.editedAt === 'string'
+}
+const isDeleteEvent = (payload: unknown): payload is MessageDeleteEvent =>
+  typeof (payload as Partial<MessageDeleteEvent> | null)?.id === 'string'
+
+// L'édition la plus récente gagne (ISO 8601 : l'ordre lexicographique est l'ordre chronologique)
+const withPatch = (
+  current: Record<string, MessagePatch>,
+  { id, ...patch }: MessageUpdateEvent
+): Record<string, MessagePatch> =>
+  !current[id] || current[id].editedAt < patch.editedAt ? { ...current, [id]: patch } : current
+
+const withDeleted = (current: ReadonlySet<string>, id: string): ReadonlySet<string> =>
+  current.has(id) ? current : new Set(current).add(id)
 
 export function useRealtimeChat({ channelId, user }: UseRealtimeChatProps) {
-  const supabase = createClient()
+  // Instance stable : supabase figure dans les deps de l'effet d'abonnement
+  const [supabase] = useState(() => createClient())
   const [messages, setMessages] = useState<RealtimeMessage[]>([])
+  // Surcouches d'édition et pierres tombales : valables pour toutes les sources de messages
+  const [patches, setPatches] = useState<Record<string, MessagePatch>>({})
+  const [deletedIds, setDeletedIds] = useState<ReadonlySet<string>>(() => new Set())
   const [channel, setChannel] = useState<ReturnType<typeof supabase.channel> | null>(null)
   const [isConnected, setIsConnected] = useState(false)
+  // Incrémenté à chaque RE-connexion (pas la première) : les événements émis pendant la
+  // coupure sont perdus, l'appelant resynchronise alors depuis le serveur.
+  const [reconnectCount, setReconnectCount] = useState(0)
   const [connectedUsers, setConnectedUsers] = useState<Record<string, PresenceUser>>({})
 
   const presenceKey = user?.id
@@ -56,6 +91,8 @@ export function useRealtimeChat({ channelId, user }: UseRealtimeChatProps) {
 
   useEffect(() => {
     if (!presenceKey) return
+
+    let wasSubscribed = false
 
     const newChannel = supabase.channel(channelId, {
       config: {
@@ -106,6 +143,7 @@ export function useRealtimeChat({ channelId, user }: UseRealtimeChatProps) {
           {
             ...received,
             parentId: received.parentId ?? null,
+            editedAt: received.editedAt ?? null,
             user: {
               id: received.user?.id ?? null,
               name: received.user?.name || ANONYMOUS_NAME,
@@ -113,9 +151,17 @@ export function useRealtimeChat({ channelId, user }: UseRealtimeChatProps) {
           },
         ])
       })
+      .on('broadcast', { event: EVENT_UPDATE }, ({ payload }) => {
+        if (isUpdateEvent(payload)) setPatches((current) => withPatch(current, payload))
+      })
+      .on('broadcast', { event: EVENT_DELETE }, ({ payload }) => {
+        if (isDeleteEvent(payload)) setDeletedIds((current) => withDeleted(current, payload.id))
+      })
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
           setIsConnected(true)
+          if (wasSubscribed) setReconnectCount((count) => count + 1)
+          wasSubscribed = true
 
           const current = userRef.current
           // Si user est fourni, tracker avec toutes les données de PresenceUser
@@ -148,7 +194,10 @@ export function useRealtimeChat({ channelId, user }: UseRealtimeChatProps) {
       // Reset au changement de canal (ou démontage) : rien de l'ancien canal ne subsiste
       setChannel(null)
       setIsConnected(false)
+      setReconnectCount(0)
       setMessages([])
+      setPatches({})
+      setDeletedIds(new Set())
       setConnectedUsers({})
     }
   }, [channelId, presenceKey, supabase])
@@ -161,6 +210,7 @@ export function useRealtimeChat({ channelId, user }: UseRealtimeChatProps) {
         id,
         content,
         parentId: parentId ?? null,
+        editedAt: null,
         user: {
           id: presenceKey,
           name: userName,
@@ -182,5 +232,41 @@ export function useRealtimeChat({ channelId, user }: UseRealtimeChatProps) {
     [channel, isConnected, presenceKey, userName]
   )
 
-  return { messages, sendMessage, isConnected, connectedUsers }
+  // À appeler APRÈS le succès serveur : personne ne voit une modification absente de la base.
+  // La surcouche locale s'applique toujours (la base est déjà à jour) ; seule la diffusion
+  // dépend de la connexion. Nécessaire aussi pour l'auteur : un message qu'il a envoyé vit
+  // encore dans `messages` (copie temps réel) et ne doit pas réapparaître avec l'ancien texte.
+  const publishEdit = useCallback(
+    async (event: MessageUpdateEvent) => {
+      setPatches((current) => withPatch(current, event))
+      if (!channel || !isConnected) return
+      await channel.send({ type: 'broadcast', event: EVENT_UPDATE, payload: event })
+    },
+    [channel, isConnected]
+  )
+
+  const publishDelete = useCallback(
+    async (id: string) => {
+      setDeletedIds((current) => withDeleted(current, id))
+      if (!channel || !isConnected) return
+      await channel.send({
+        type: 'broadcast',
+        event: EVENT_DELETE,
+        payload: { id } satisfies MessageDeleteEvent,
+      })
+    },
+    [channel, isConnected]
+  )
+
+  return {
+    messages,
+    patches,
+    deletedIds,
+    sendMessage,
+    publishEdit,
+    publishDelete,
+    isConnected,
+    reconnectCount,
+    connectedUsers,
+  }
 }
