@@ -6,7 +6,7 @@ import { useRealtimeChat, type RealtimeMessage } from '@/hooks/chat/use-realtime
 import { ANONYMOUS_NAME } from '@/hooks/chat/constants'
 import { useChannelMute } from '@/hooks/chat/useChannelMute'
 import type { ChatMessage, OutboxDraft, OutboxEntry } from '@/hooks/chat/types'
-import { useMessages } from '@/hooks/data/chat/useMessages'
+import { useMessages } from '@/hooks/data/messages/useMessages'
 import { mapMessages } from '@/hooks/chat/utils'
 import { PresenceUser } from '@/types'
 import { sendParticipantNotificationsAction } from '@/services/notification/domains/chat'
@@ -32,7 +32,14 @@ export const useChat = ({
   const { isMuted, toggleMute } = useChannelMute(channelId)
 
   // Données persistées depuis la base de données
-  const { data, create: persistMessage, loading } = useMessages({
+  const {
+    data,
+    create: persistMessage,
+    loading,
+    hasMore,
+    loadOlder,
+    isLoadingOlder,
+  } = useMessages({
     channelId,
     user, // identité de l'expéditeur, pour reconstruire le message dans le cache
     staleTime: 30_000,
@@ -184,6 +191,11 @@ export const useChat = ({
     loading,
     connectedUsers,
     otherUsers,
+
+    // Historique
+    hasMore,
+    loadOlderMessages: loadOlder,
+    isLoadingOlder,
 
     // Actions
     sendMessage,

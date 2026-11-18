@@ -38,6 +38,8 @@ export interface UseEntityOptions<T> {
   initialParams?: EntityParams;
   staleTime?: number;
   revalidateMode?: "patch" | "invalidate";
+  /** Réconcilie le cache avec le résultat frais d'un refetch. Défaut : le frais remplace tout. */
+  reconcileOnRefetch?: (existing: T[], fresh: T[]) => T[];
 }
 
 // Types de retour
@@ -51,6 +53,7 @@ export interface BaseEntityResult<T> {
   refetch: () => Promise<any>;
   refetchWithParams: (newParams: EntityParams) => Promise<T[]>;
   queryClient: any;
+  updateItems: (updater: (items: T[]) => T[]) => void;
 }
 
 export interface EntityResultWithCRUD<T> extends BaseEntityResult<T> {
@@ -77,6 +80,7 @@ export function useEntity<T extends { id: string }>(
     initialParams,
     staleTime = 1000 * 60 * 5,
     revalidateMode,
+    reconcileOnRefetch,
   } = options;
 
   const queryClient = useQueryClient();
@@ -95,7 +99,14 @@ export function useEntity<T extends { id: string }>(
     refetch,
   } = useQuery<T[], Error, any>({
     queryKey,
-    queryFn: fetchFn ? () => fetchFn(initialParams) : (() => Promise.resolve([]) as Promise<T[]>),
+    queryFn: async () => {
+      if (!fetchFn) return [] as T[];
+      const fresh = await fetchFn(initialParams);
+      if (!reconcileOnRefetch) return fresh;
+      // Lu APRÈS l'await : les pages chargées pendant le fetch sont prises en compte
+      const existing = queryClient.getQueryData<T[]>(queryKey);
+      return existing?.length ? reconcileOnRefetch(existing, fresh) : fresh;
+    },
     staleTime,
     refetchOnWindowFocus: false,
     enabled: queryEnabled,
@@ -201,6 +212,9 @@ export function useEntity<T extends { id: string }>(
     });
   };
 
+  const updateItems = (updater: (items: T[]) => T[]) =>
+    queryClient.setQueryData<T[]>(queryKey, (old) => (old ? updater(old) : old));
+
   return {
     data: data || { items: [], byId: {} },
     loading: isLoading,
@@ -212,23 +226,15 @@ export function useEntity<T extends { id: string }>(
     refetchWithParams,
     queryClient,
     applyPayload,
+    updateItems,
   };
 }
 
 // Helpers pour la manipulation des données et la fusion
-function mergeItemsById<T extends { id: string }>(oldItems: T[], newItems: T[]): T[] {
-  const result = [...oldItems];
-
-  newItems.forEach(newItem => {
-    const index = result.findIndex(item => item.id === newItem.id);
-    if (index >= 0) {
-      result[index] = newItem;
-    } else {
-      result.push(newItem);
-    }
-  });
-
-  return result;
+export function mergeItemsById<T extends { id: string }>(oldItems: T[], newItems: T[]): T[] {
+  const byId = new Map(oldItems.map((item) => [item.id, item]));
+  for (const item of newItems) byId.set(item.id, item);
+  return [...byId.values()];
 }
 
 /**

@@ -81,7 +81,12 @@ interface UseCrudEntityOptions<T, CreateInput = any, UpdateInput extends Flexibl
   entityName: string;
   fetchFn: () => Promise<T[]>;
   crud?: CrudConfig<T, CreateInput, UpdateInput>;
-
+  
+    /**
+   * Réconcilie le cache existant avec le résultat frais d'un refetch.
+   * Par défaut, le frais remplace tout. Pour les flux cumulatifs (historique paginé).
+   */
+  reconcileOnRefetch?: (existing: T[], fresh: T[]) => T[];
   // Options useEntity standard
   transformFn?: (items: T[]) => any;
   staleTime?: number;

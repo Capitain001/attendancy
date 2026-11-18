@@ -20,6 +20,14 @@ vi.mock("@/services/message/actions", () => ({
   removeMessageAction: vi.fn(),
 }));
 
+vi.mock("./useOlderMessages", () => ({
+  useOlderMessages: vi.fn(() => ({
+    hasMore: false,
+    loadOlder: vi.fn(),
+    isLoadingOlder: false,
+  })),
+}));
+
 import { useMessages } from "./useMessages";
 
 interface CapturedCrudOptions {

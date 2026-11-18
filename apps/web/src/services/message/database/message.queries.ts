@@ -1,21 +1,26 @@
-//apps\web\src\services\message\database\message.queries.ts
+// apps/web/src/services/message/database/message.queries.ts
 import { CACHE } from '@/cache/server/key'
 import { Prisma } from '@/generated/prisma/browser'
 import { prisma } from '@/lib/prisma'
 import { cacheLife, cacheTag } from 'next/cache'
+import { MESSAGES_PAGE_SIZE } from '../constants'
 
 export const messageSelect = {
   id: true,
   content: true,
   createdAt: true,
+  editedAt:true,
   updatedAt: true,
   channelId: true,
-  parentId: true, // on traitera le message parent apres 
+  parentId: true, // on traitera le message parent apres
   user: { select: { id: true, firstName: true, lastName: true, avatar_url: true } },
 } as const satisfies Prisma.MessageSelect
 
-// Les 50 plus RÉCENTS, rendus du plus ancien au plus récent.
-export async function getMessages(channelId: string, orgId: string, limit = 50) {
+// Curseur composite : createdAt seul sauterait les messages de même date.
+export type MessageCursor = { createdAt: Date; id: string }
+
+// Les plus RÉCENTS, rendus du plus ancien au plus récent.
+export async function getMessages(channelId: string, orgId: string, limit = MESSAGES_PAGE_SIZE) {
   'use cache'
   cacheTag(CACHE.MESSAGE(orgId, channelId))
   cacheLife('seconds')
@@ -28,10 +33,35 @@ export async function getMessages(channelId: string, orgId: string, limit = 50) 
   return rows.reverse()
 }
 
+// Page de messages STRICTEMENT antérieurs au curseur, rendus du plus ancien au plus récent.
+// Volontairement SANS "use cache" : chaque curseur crée une entrée qui sert rarement deux
+// fois, et une page ancienne ne doit pas contenir un message tout juste supprimé.
+// Index conseillé : @@index([channelId, createdAt(sort: Desc), id(sort: Desc)])
+export async function getOlderMessages(
+  channelId: string,
+  orgId: string,
+  before: MessageCursor,
+  limit = MESSAGES_PAGE_SIZE,
+) {
+  const rows = await prisma.message.findMany({
+    where: {
+      channelId,
+      deletedAt: null,
+      channel: { orgId },
+      OR: [
+        { createdAt: { lt: before.createdAt } },
+        { createdAt: before.createdAt, id: { lt: before.id } },
+      ],
+    },
+    select: messageSelect,
+    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+    take: limit + 1, // +1 : détecte la page suivante sans count(*)
+  })
+  return { items: rows.slice(0, limit).reverse(), hasMore: rows.length > limit }
+}
 
 // Lectures de vérification avant écriture : volontairement SANS "use cache".
 // Un cache périmé ferait rater un doublon ou valider un parent disparu.
-
 
 // Exception assumée au scoping orgId : on cherche justement si un id est DÉJÀ
 // pris, où que ce soit (la PK est globale). Le résultat n'est jamais exposé tel

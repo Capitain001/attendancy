@@ -67,3 +67,21 @@ export const getMessagesSchema = v.object({
 
 export type GetMessagesInput = v.InferInput<typeof getMessagesSchema>
 export type GetMessagesOutput = v.InferOutput<typeof getMessagesSchema>
+
+
+export const getOlderMessagesSchema = v.object({
+  channelId: v.pipe(v.string(), v.uuid('ID de canal invalide')),
+  // Curseur composite (createdAt, id) : le message le plus ancien déjà chargé
+  before: v.object({
+    createdAt: v.pipe(
+      v.string(),
+      v.isoTimestamp('Date de curseur invalide'),
+      v.transform((s) => new Date(s)),
+      v.check((d) => !Number.isNaN(d.getTime()), 'Date de curseur invalide'),
+    ),
+    id: v.pipe(v.string(), v.uuid('ID de curseur invalide')),
+  }),
+})
+
+export type GetOlderMessagesInput = v.InferInput<typeof getOlderMessagesSchema>
+export type GetOlderMessagesOutput = v.InferOutput<typeof getOlderMessagesSchema>

@@ -16,6 +16,8 @@ import {
   mapMessageUser,
   type MessageUser,
 } from "./utils";
+import { useOlderMessages } from "./useOlderMessages";
+import { reconcileMessages } from "@/hooks/chat/reconcile";
 
 export type { MessageUser } from "./utils";
 
@@ -67,12 +69,13 @@ export function useMessages({ channelId, user, staleTime, enabled }: UseMessages
 
   const createDefaults = mapMessageUser(user);
 
-  return useCrudEntity<GetMessagesDto[number], CreateMessageInput, UpdateMessageDataInput>({
+  const entity = useCrudEntity<GetMessagesDto[number], CreateMessageInput, UpdateMessageDataInput>({
     entityName: "messages",
     initialParams: { channelId },
     fetchFn,
     staleTime,
     enabled,
+    reconcileOnRefetch: reconcileMessages,
     crud: {
       create,
       createDefaults,
@@ -87,4 +90,12 @@ export function useMessages({ channelId, user, staleTime, enabled }: UseMessages
       },
     },
   });
+
+  const older = useOlderMessages({
+    channelId,
+    items: entity.data?.items ?? [],
+    updateItems: entity.updateItems,
+  });
+
+  return { ...entity, ...older };
 }
