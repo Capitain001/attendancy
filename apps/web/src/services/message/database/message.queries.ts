@@ -1,3 +1,4 @@
+//apps\web\src\services\message\database\message.queries.ts
 import { CACHE } from '@/cache/server/key'
 import { Prisma } from '@/generated/prisma/browser'
 import { prisma } from '@/lib/prisma'
@@ -9,7 +10,7 @@ export const messageSelect = {
   createdAt: true,
   updatedAt: true,
   channelId: true,
-  parentId: true,
+  parentId: true, // on traitera le message parent apres 
   user: { select: { id: true, firstName: true, lastName: true, avatar_url: true } },
 } as const satisfies Prisma.MessageSelect
 

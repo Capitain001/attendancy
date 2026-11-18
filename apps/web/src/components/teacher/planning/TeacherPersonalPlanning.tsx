@@ -97,7 +97,7 @@ export function buildDraftEvent(
       roomId: resources.rooms.length === 1 ? resources.rooms[0].id : undefined,
       groupId: undefined,
       status: "PENDING",
-      confirmed: true,
+      confirmed: false,
       isLocked: false,
     },
   };

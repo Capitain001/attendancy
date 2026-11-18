@@ -26,6 +26,7 @@ interface CapturedCrudOptions {
   entityName: string;
   initialParams: { channelId: string };
   crud: {
+    createDefaults?: Partial<GetMessagesDto[number]>;
     toEntityPatch: (
       input: CreateMessageInput | UpdateMessageDataInput,
     ) => Partial<GetMessagesDto[number]>;
@@ -69,6 +70,74 @@ describe("useMessages", () => {
 
     expect(options.crud.toEntityPatch({ content: "Message modifié" })).toEqual({
       content: "Message modifié",
+    });
+  });
+
+  it("construit createDefaults avec l'utilisateur connecté (name -> firstName)", () => {
+    const options = useMessages({
+      channelId: "channel-1",
+      user: {
+        id: "user-123",
+        name: "Alice Martin",
+        avatar_url: "https://avatar.png",
+      },
+    }) as unknown as CapturedCrudOptions;
+
+    expect(options.crud.createDefaults).toEqual({
+      user: {
+        id: "user-123",
+        firstName: "Alice Martin",
+        lastName: null,
+        avatar_url: "https://avatar.png",
+      },
+    });
+  });
+
+  it("laisse createDefaults à undefined si aucun user n'est fourni", () => {
+    const withoutUser = useMessages({
+      channelId: "channel-1",
+    }) as unknown as CapturedCrudOptions;
+
+    expect(withoutUser.crud.createDefaults).toBeUndefined();
+  });
+
+  it("garantit que le merge (createDefaults + toEntityPatch + newItem) conserve user et les champs du message", () => {
+    const options = useMessages({
+      channelId: "channel-1",
+      user: {
+        id: "user-123",
+        name: "Alice",
+        avatar_url: "https://avatar.png",
+      },
+    }) as unknown as CapturedCrudOptions;
+
+    const variables: CreateMessageInput = {
+      id: "msg-1",
+      channelId: "channel-1",
+      content: "Hello",
+      createdAt: "2026-11-18T09:00:00.000Z",
+    };
+    const newItem = { id: "msg-1", created: true };
+
+    const merged = {
+      ...(options.crud.createDefaults ?? {}),
+      ...(options.crud.toEntityPatch(variables) ?? {}),
+      ...newItem,
+    };
+
+    expect(merged).toEqual({
+      id: "msg-1",
+      channelId: "channel-1",
+      content: "Hello",
+      parentId: null,
+      createdAt: new Date("2026-11-18T09:00:00.000Z"),
+      created: true,
+      user: {
+        id: "user-123",
+        firstName: "Alice",
+        lastName: null,
+        avatar_url: "https://avatar.png",
+      },
     });
   });
 });

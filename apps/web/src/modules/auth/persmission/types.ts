@@ -30,6 +30,8 @@ export const ResourceLabels: Record<Resource, string> = {
   MESSAGE: "message",
   JUSTIFICATION: "justification",
   INVITATION: "invitation",
+  GROUP: "group",
+  NOTE: "note",
 };
 
 /**

@@ -11,10 +11,17 @@ import {
 } from "@/services/message/actions";
 import type { GetMessagesDto } from "@/services/message";
 import type { CreateMessageInput, UpdateMessageDataInput } from "@/services/message";
-import { messageEntityPatch } from "./utils";
+import {
+  messageEntityPatch,
+  mapMessageUser,
+  type MessageUser,
+} from "./utils";
+
+export type { MessageUser } from "./utils";
 
 interface UseMessagesOptions {
   channelId: string;
+  user?: MessageUser;
   staleTime?: number;
   enabled?: boolean;
 }
@@ -52,11 +59,13 @@ interface UseMessagesOptions {
  * deleteMessage("message-id");
  * ```
  */
-export function useMessages({ channelId, staleTime, enabled }: UseMessagesOptions) {
-const fetchFn = toFetchFn(getMessagesAction, { channelId });
+export function useMessages({ channelId, user, staleTime, enabled }: UseMessagesOptions) {
+  const fetchFn = toFetchFn(getMessagesAction, { channelId });
   const create = toCreateFn(createMessageAction);
   const update = toUpdateFn(updateMessageAction, "messageId");
-    const removeMessage = toDeleteFn(removeMessageAction);
+  const removeMessage = toDeleteFn(removeMessageAction);
+
+  const createDefaults = mapMessageUser(user);
 
   return useCrudEntity<GetMessagesDto[number], CreateMessageInput, UpdateMessageDataInput>({
     entityName: "messages",
@@ -66,6 +75,7 @@ const fetchFn = toFetchFn(getMessagesAction, { channelId });
     enabled,
     crud: {
       create,
+      createDefaults,
       toEntityPatch: messageEntityPatch,
       update,
       delete: removeMessage,
@@ -78,4 +88,3 @@ const fetchFn = toFetchFn(getMessagesAction, { channelId });
     },
   });
 }
-

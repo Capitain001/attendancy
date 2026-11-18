@@ -27,7 +27,7 @@ vi.mock("@/services/organization/server", () => ({
 vi.mock("@/services/parent/server", () => ({
   getParentUserIds: mocks.getParentUserIds,
 }));
-vi.mock("@/services/notification/user", () => ({
+vi.mock("@/services/notification/push", () => ({
   sendPushNotificationToUserById: mocks.sendPushNotificationById,
 }));
 

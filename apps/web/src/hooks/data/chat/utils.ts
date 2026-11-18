@@ -4,6 +4,30 @@ import type {
   UpdateMessageDataInput,
 } from "@/services/message";
 
+export type MessageUser = {
+  id: string;
+  name?: string | null;
+  avatar_url?: string | null;
+};
+
+/* : Partial<GetMessagesDto[number]> | undefined  */
+export function mapMessageUser(
+  user?: MessageUser,
+){
+  if (!user) return undefined;
+
+  const { id, name, avatar_url } = user;
+
+  return {
+    user: {
+      id,
+      firstName: name ?? null,
+      lastName: null,
+      avatar_url: avatar_url ?? null,
+    },
+  };
+}
+
 export function messageEntityPatch(
   input: CreateMessageInput | UpdateMessageDataInput,
 ): Partial<GetMessagesDto[number]> {

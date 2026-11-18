@@ -163,7 +163,7 @@ export async function getTeacherNextSchedule(teacherId: string, orgId: string) {
 }
 
 
-// src/services/session/database/session.queries.ts — remplace ma version précédente
+// src/services/session/database/session.queries.ts 
 export const PAST_SESSIONS_PAGE_SIZE = 20
 
 export async function getTeacherPastSessions(

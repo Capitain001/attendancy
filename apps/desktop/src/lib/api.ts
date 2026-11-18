@@ -5,6 +5,8 @@ import { getToken } from "./auth/session";
 import { supabase } from "./supabase";
 import { NetworkError } from "./error";
 
+export { NetworkError };
+
 const ISO = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/;
 const reviver = (_: string, v: unknown) =>
   typeof v === "string" && ISO.test(v) ? new Date(v) : v;

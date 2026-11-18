@@ -116,7 +116,7 @@ export const USER_METADATA_KEYS = [
  * jamais écrits dans les metadata, aucun code ne les parcourt.
  */
 export interface AuthMetadata {
-  id?: string
+  id: string
   email?: string
   email_verified?: boolean // dérivé de user.email_confirmed_at
   phone_verified?: boolean // dérivé de user.phone_confirmed_at
