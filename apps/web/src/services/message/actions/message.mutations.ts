@@ -13,7 +13,7 @@ import { createMessage, removeMessage, updateMessage } from '../database'
 // session, jamais de l'entrée.
 export async function createMessageAction(input: CreateMessageInput) {
   const auth = await authAccess()
-  if (!auth.data) return { error: auth.error }
+  if (!auth.data) return { error: auth.error, code: auth.code }
   const { user, orgId } = auth.data
 
   const parsed = v.safeParse(createMessageSchema, input)

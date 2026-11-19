@@ -10,12 +10,18 @@ import { ERROR_CODES, type ErrorCode } from '@/config'
 // Refus métier : une entrée = la réponse complète de l'action ({ error, code })
 // ─────────────────────────────────────────────────────────────────────────────
 
-export type MessageRefusal = 'NOT_MEMBER' | 'PARENT_MISSING' | 'PARENT_WRONG_CHANNEL' | 'ID_TAKEN'
+export type MessageRefusal =
+  | 'NOT_MEMBER'
+  | 'PARENT_MISSING'
+  | 'PARENT_WRONG_CHANNEL'
+  | 'PARENT_DELETED'
+  | 'ID_TAKEN'
 
 const ERRORS = {
   NOT_MEMBER: { error: 'Accès refusé au canal', code: ERROR_CODES.FORBIDDEN },
   PARENT_MISSING: { error: 'Message parent introuvable', code: ERROR_CODES.NOT_FOUND },
   PARENT_WRONG_CHANNEL: { error: 'Message parent invalide', code: ERROR_CODES.BAD_REQUEST },
+  PARENT_DELETED: { error: 'Message parent supprimé', code: ERROR_CODES.BAD_REQUEST },
   ID_TAKEN: { error: 'Identifiant déjà utilisé', code: ERROR_CODES.BAD_REQUEST },
 } as const satisfies Record<MessageRefusal, { error: string; code: ErrorCode }>
 
@@ -34,11 +40,13 @@ export const MESSAGE = {
 // LAN a vu et qui n'est pas encore synchronisé.
 
 export function checkParent(
-  parent: { channelId: string } | null,
+  parent: { channelId: string; deletedAt: Date | null } | null,
   channelId: string,
 ): MessageRefusal | null {
   if (!parent) return 'PARENT_MISSING'
-  return parent.channelId === channelId ? null : 'PARENT_WRONG_CHANNEL'
+  // Canal avant suppression : n'indique pas l'état d'un message d'un autre canal
+  if (parent.channelId !== channelId) return 'PARENT_WRONG_CHANNEL'
+  return parent.deletedAt ? 'PARENT_DELETED' : null
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

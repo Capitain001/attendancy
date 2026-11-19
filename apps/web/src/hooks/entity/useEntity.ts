@@ -53,7 +53,13 @@ export interface BaseEntityResult<T> {
   refetch: () => Promise<any>;
   refetchWithParams: (newParams: EntityParams) => Promise<T[]>;
   queryClient: any;
+  queryKey: readonly unknown[];
   updateItems: (updater: (items: T[]) => T[]) => void;
+}
+
+// Fonction pure constructrice de la clé de requête useEntity
+export function getEntityQueryKey(entityName: string, initialParams?: unknown): readonly unknown[] {
+  return [entityName, initialParams].filter(Boolean);
 }
 
 export interface EntityResultWithCRUD<T> extends BaseEntityResult<T> {
@@ -84,7 +90,7 @@ export function useEntity<T extends { id: string }>(
   } = options;
 
   const queryClient = useQueryClient();
-  const queryKey = [entityName, initialParams].filter(Boolean);
+  const queryKey = getEntityQueryKey(entityName, initialParams);
 
   // Fetch conditionnel - seulement si fetchFn fourni
   const queryEnabled = !!fetchFn && enabled;
@@ -225,6 +231,7 @@ export function useEntity<T extends { id: string }>(
     refetch,
     refetchWithParams,
     queryClient,
+    queryKey,
     applyPayload,
     updateItems,
   };

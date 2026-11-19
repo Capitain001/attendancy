@@ -6,12 +6,12 @@ import { toast } from 'sonner'
 import { useRealtimeChat, type RealtimeMessage } from '@/hooks/chat/use-realtime-chat'
 import { ANONYMOUS_NAME } from '@/hooks/chat/constants'
 import { useChannelMute } from '@/hooks/chat/useChannelMute'
-import type { ChatMessage, OutboxDraft, OutboxEntry, ReplyPreview } from '@/hooks/chat/types'
+import type { ChatMessage, MessageStatus, ReplyPreview } from '@/hooks/chat/types'
 import { useMessages } from '@/hooks/data/messages/useMessages'
 import { mapMessages, mapReplySnapshots, resolveReplyTo } from '@/hooks/chat/utils'
 import { truncatePreview } from '@/services/message/preview'
-import { PresenceUser } from '@/types'
-import { notifyChannelMembersAction } from '@/services/notification/domains/chat'
+import type { PresenceUser } from '@/types'
+import { useChatSync, useChatSyncState, registerRealtimeSender } from '@/modules/chat'
 
 interface UseChatProps {
   channelId: string
@@ -30,16 +30,16 @@ export const useChat = ({
   const [replyTarget, setReplyTarget] = useState<{ id: string; channelId: string } | null>(null)
   const replyToId = replyTarget?.channelId === channelId ? replyTarget.id : null
 
-  // Envois locaux non confirmés (sending / failed), indexés par id de message
-  const [outbox, setOutbox] = useState<Record<string, OutboxEntry>>({})
-
   // Sourdine des notifications push, mémorisée par canal sur cet appareil
   const { isMuted, toggleMute } = useChannelMute(channelId)
+
+  // Synchronisation offline / LAN
+  const sync = useChatSync()
+  const { outbox: outboxItems, inbox: inboxEnvelopes } = useChatSyncState(channelId)
 
   // Données persistées depuis la base de données
   const {
     data,
-    create: persistMessage,
     update: updateMessageEntity,
     delete: deleteMessageEntity,
     refetch: refetchMessages,
@@ -69,33 +69,67 @@ export const useChat = ({
     notifyTyping,
   } = useRealtimeChat({ channelId, user })
 
+  // Le moteur (hors React) diffuse via le hook temps réel de CE canal
+  useEffect(() => registerRealtimeSender(channelId, sendRealtimeMessage), [channelId, sendRealtimeMessage])
+
+  // Un message de pair déjà confirmé par le serveur n'a plus besoin de sa copie « non vérifiée »
+  useEffect(() => {
+    if (!sync || inboxEnvelopes.length === 0 || !data?.items?.length) return
+    const persistedIds = new Set(data.items.map((m) => m.id))
+    const done = inboxEnvelopes.filter((e) => persistedIds.has(e.id)).map((e) => e.id)
+    if (done.length) void sync.confirm(done)
+  }, [sync, inboxEnvelopes, data?.items])
+
   // Après une reconnexion, les éditions / suppressions émises pendant la coupure sont perdues :
   // on resynchronise la fenêtre récente depuis le serveur (reconcileMessages préserve l'historique).
   useEffect(() => {
     if (reconnectCount > 0) void refetchMessages()
   }, [reconnectCount, refetchMessages])
 
-  // Fusion : persisté > temps réel > outbox (le premier rencontré gagne, par id).
-  // Pendant 'sending', l'outbox est la seule trace du message : on diffuse après la base.
+  // Fusion : persisté > temps réel > pair non vérifié > envoi local (le premier rencontré gagne, par id).
   // Les pierres tombales et les éditions s'appliquent ensuite à toutes les sources.
   const messages = useMemo<ChatMessage[]>(() => {
     const persisted = data?.items ? mapMessages(data.items) : []
 
-    const pending: RealtimeMessage[] = Object.entries(outbox)
-      .filter(([, entry]) => entry.channelId === channelId)
-      .map(([id, entry]) => ({
-        id,
-        content: entry.content,
-        parentId: entry.parentId,
-        createdAt: entry.createdAt,
+    const pending: RealtimeMessage[] = outboxItems
+      .filter((item) => item.channelId === channelId)
+      .map((item) => ({
+        id: item.id,
+        content: item.content,
+        parentId: item.parentId,
+        createdAt: item.createdAt,
         editedAt: null,
         user: { id: user?.id ?? null, name: user?.name || ANONYMOUS_NAME },
       }))
 
+    // Messages de pairs (LAN) pas encore confirmés par le serveur
+    const unverified: RealtimeMessage[] = inboxEnvelopes
+      .filter((env) => env.channelId === channelId)
+      .map((env) => ({
+        id: env.id,
+        content: env.content,
+        parentId: env.parentId ?? null,
+        createdAt: env.createdAt,
+        editedAt: null,
+        user: { id: env.authorId, name: env.authorName || ANONYMOUS_NAME },
+      }))
+
+    // Priorité par id : persisté > temps réel > pair non vérifié > envoi local
+    type Source = 'persisted' | 'realtime' | 'inbox' | 'outbox'
     const merged = new Map<string, RealtimeMessage>()
-    for (const message of [...persisted, ...realtimeMessages, ...pending]) {
-      if (!merged.has(message.id)) merged.set(message.id, message)
+    const sources = new Map<string, Source>()
+    const add = (list: RealtimeMessage[], source: Source) => {
+      for (const message of list) {
+        if (merged.has(message.id)) continue
+        merged.set(message.id, message)
+        sources.set(message.id, source)
+      }
     }
+    add(persisted, 'persisted')
+    add(realtimeMessages, 'realtime')
+    add(unverified, 'inbox')
+    add(pending, 'outbox')
+    const failedIds = new Set(outboxItems.filter((i) => i.status === 'failed').map((i) => i.id))
 
     const snapshots = mapReplySnapshots(data?.items)
 
@@ -111,13 +145,25 @@ export const useChat = ({
     return patched
       .filter((message) => !deletedIds.has(message.id))
       .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
-      .map((message) => ({
-        ...message,
-        isOwn: !!user?.id && message.user.id === user.id,
-        status: outbox[message.id]?.status ?? 'sent',
-        replyTo: resolveReplyTo(message.parentId, loadedById, snapshots, deletedIds),
-      }))
-  }, [data?.items, realtimeMessages, patches, deletedIds, outbox, channelId, user?.id, user?.name])
+      .map((message) => {
+        const source = sources.get(message.id)
+        const status: MessageStatus =
+          source === 'outbox'
+            ? failedIds.has(message.id)
+              ? 'failed'
+              : 'sending'
+            : source === 'inbox'
+            ? 'unverified'
+            : 'sent'
+
+        return {
+          ...message,
+          isOwn: !!user?.id && message.user.id === user.id,
+          status,
+          replyTo: resolveReplyTo(message.parentId, loadedById, snapshots, deletedIds),
+        }
+      })
+  }, [data?.items, realtimeMessages, outboxItems, inboxEnvelopes, patches, deletedIds, channelId, user?.id, user?.name])
 
   // Aperçu du bandeau : dérivé des messages affichés, donc à jour si le parent est édité
   const replyingTo = useMemo<ReplyPreview | null>(() => {
@@ -134,8 +180,8 @@ export const useChat = ({
 
   const startReply = useCallback(
     (messageId: string) => {
-      // Seul un message confirmé en base peut être cité : le serveur refuse un parent inexistant
-      if (messages.find((m) => m.id === messageId)?.status !== 'sent') return
+      const target = messages.find((m) => m.id === messageId)
+      if (!target || target.status === 'failed') return
       setReplyTarget({ id: messageId, channelId })
     },
     [messages, channelId]
@@ -181,89 +227,28 @@ export const useChat = ({
     [typingIds, connectedUsers]
   )
 
-  // Notifications push : le serveur résout les destinataires (membres du canal,
-  // mentions comprises) à partir du seul channelId ; le client ne les connaît pas.
-  // Le canal est passé en paramètre : un retry ne doit pas dépendre du canal courant.
-
-  const sendNotifications = useCallback(
-    (targetChannelId: string, messageId: string) => {
-      // Plus de `if (isMuted) return` : la sourdine de l'expéditeur ne concerne que ses propres
-      // notifications, le serveur filtre selon celle de chaque destinataire.
-      notifyChannelMembersAction({ channelId: targetChannelId, messageId })
-        .then((res) => { if (res && 'error' in res) console.error('Notifications push refusées:', res.error) })
-        .catch((error) => console.error('Erreur lors de l\'envoi des notifications push:', error))
-    },
-    []
-  )
-
-
-  // Persistance seule dans le try : si le broadcast ou le push échoue, le message n'est
-  // pas marqué 'failed' (il est en base) et un retry ne le republie pas à tort.
-  const persist = useCallback(
-    async (id: string, draft: OutboxDraft) => {
-      setOutbox((current) => ({ ...current, [id]: { ...draft, status: 'sending' } }))
-
-      try {
-        await persistMessage?.({ id, ...draft })
-      } catch {
-        // Le toast d'erreur est déjà affiché par useCrudEntity
-        setOutbox((current) => ({ ...current, [id]: { ...draft, status: 'failed' } }))
-        return
-      }
-
-      // Invariant : une entrée d'outbox = jamais diffusée. On diffuse donc ici, y compris
-      // pour un retry (la base est idempotente, la diffusion le devient par cet invariant).
-      sendRealtimeMessage({
-        id,
-        content: draft.content,
-        createdAt: draft.createdAt,
-        parentId: draft.parentId,
-      }).catch((error) => console.error('Erreur lors de la diffusion temps réel:', error))
-      sendNotifications(draft.channelId, id)
-
-      setOutbox(({ [id]: _done, ...rest }) => rest)
-    },
-    [persistMessage, sendRealtimeMessage, sendNotifications]
-  )
-
-  // Envoi d'un message : affichage immédiat via l'outbox, puis persistance,
-  // puis diffusion + notifications une fois le message sécurisé en base.
   const sendMessage = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault()
-
       const content = newMessage.trim()
-      if (!content || !isConnected) return
-
-      // Même id pour la persistance et la diffusion : clé d'idempotence côté
-      // serveur, et déduplication côté affichage.
-      const messageId = crypto.randomUUID()
-
-      void persist(messageId, {
-        channelId,
-        content,
-        createdAt: new Date().toISOString(),
-        parentId: replyToId,
-      })
+      // Plus de garde `isConnected` : l'envoi marche hors ligne, l'outbox est persistante
+      if (!content || !sync) return
 
       setNewMessage('')
       notifyTyping(false)
       setReplyTarget(null)
+      await sync.engine.send({ channelId, content, parentId: replyToId })
     },
-    [newMessage, isConnected, persist, channelId, replyToId, notifyTyping]
+    [newMessage, sync, channelId, replyToId, notifyTyping]
   )
 
-  // Rejeu d'un envoi échoué : même id, donc sans doublon côté serveur
   const retryMessage = useCallback(
-    (id: string) => {
-      const entry = outbox[id]
-      if (entry?.status !== 'failed') return
-
-      const { channelId: entryChannelId, content, createdAt, parentId } = entry
-      void persist(id, { channelId: entryChannelId, content, createdAt, parentId })
-    },
-    [outbox, persist]
+    (id: string, { withoutReply = false }: { withoutReply?: boolean } = {}) =>
+      sync?.engine.retry(id, withoutReply ? { parentId: null } : undefined),
+    [sync]
   )
+
+  const discardMessage = useCallback((id: string) => sync?.engine.discard(id), [sync])
 
   // Édition : le serveur d'abord (seul l'auteur est autorisé, contrôlé côté serveur),
   // puis diffusion aux autres. isOwn ne sert qu'à afficher ou non le bouton.
@@ -338,6 +323,7 @@ export const useChat = ({
     // Actions
     sendMessage,
     retryMessage,
+    discardMessage,
     editMessage,
     deleteMessage,
 

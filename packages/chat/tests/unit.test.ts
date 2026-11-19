@@ -136,6 +136,13 @@ describe('outbox + flush', () => {
     const r2 = await sync.flush()
     expect(r2.failed).toBe(1)
     expect((await outbox.list())[0]?.status).toBe('failed')
+
+    // Retry avec réinitialisation de la date et correction de parent (ex: withoutReply -> parentId: null)
+    nowTime = NOW
+    await sync.retry(uid(1), { parentId: null })
+    const [retried] = await outbox.list()
+    expect(retried?.parentId).toBeNull()
+    expect(retried?.status).toBe('pending')
   })
 
   it('onSent : déclenché après succès serveur', async () => {
@@ -177,6 +184,50 @@ describe('outbox + flush', () => {
     expect(await b.list()).toEqual([])
     await b.remove(uid(1))
     expect(await a.list()).toHaveLength(1)
+  })
+
+  it('attach : attache et détache dynamiquement un transport', async () => {
+    const { sync, inbox } = setup('u1')
+    let receiveCb: ((e: Envelope) => void) | undefined
+    let started = false
+    const mockTransport: any = {
+      name: 'dynamic',
+      start: () => {
+        started = true
+      },
+      stop: () => {
+        started = false
+      },
+      status: () => (started ? 'connected' : 'idle'),
+      send: async () => {},
+      onReceive: (cb: (e: Envelope) => void) => {
+        receiveCb = cb
+        return () => {
+          receiveCb = undefined
+        }
+      },
+      onStatus: () => () => {},
+    }
+
+    sync.start()
+    const detach = sync.attach(mockTransport)
+    expect(started).toBe(true)
+
+    // Simulation réception
+    receiveCb?.({
+      v: 1,
+      id: uid(50),
+      channelId: CHANNEL_ID,
+      authorId: 'autre',
+      content: 'via dynamique',
+      createdAt: NOW.toISOString(),
+    })
+    await new Promise((r) => setTimeout(r, 20))
+    expect((await inbox.list()).map((e) => e.id)).toContain(uid(50))
+
+    detach()
+    expect(started).toBe(false)
+    sync.stop()
   })
 
   it('ignore les messages vides', async () => {

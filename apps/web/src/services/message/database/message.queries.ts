@@ -113,3 +113,6 @@ export async function getMessageForNotification(messageId: string) {
     },
   })
 }
+
+export const findOwn = ({ id, userId, channelId }: { id: string; userId: string; channelId: string }) =>
+  prisma.message.findFirst({ where: { id, userId, channelId }, select: { createdAt: true } })

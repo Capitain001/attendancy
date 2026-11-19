@@ -5,8 +5,8 @@ import { AppError } from '@/utils/server/error'
 import { invalidateEvent } from '@/cache/server/graph'
 import { ERRORS, ERROR_CODES } from '@/config'
 import type { CreateMessageOutput, UpdateMessageDataOutput } from '../validation'
-import { messageSelect, toMessageDto } from './message.queries'
-import { MESSAGE_ERRORS } from '../error'
+import { findOwn, messageSelect, toMessageDto } from './message.queries'
+import { checkParent, isTrustedCreatedAt, MESSAGE } from '../policy'
 
 // Enregistre un message de façon idempotente.
 //
@@ -16,11 +16,11 @@ import { MESSAGE_ERRORS } from '../error'
 // avec created: false. Le contenu et la date du rejeu sont ignorés : la ligne
 // d'origine fait foi.
 //
-// Le client connaît déjà son message et son auteur : on ne renvoie que l'id
-// et created, pas de relecture complète ni de jointure user.
+// Le client connaît déjà son message et son auteur : on renvoie l'id, created
+// et createdAt (pour aligner le cache et la diffusion temps réel sur l'heure retenue).
 //
-//   { id, created: true }  -> nouvelle insertion, cache invalidé
-//   { id, created: false } -> déjà existant, no-op côté serveur
+//   { id, created: true, createdAt }  -> nouvelle insertion, cache invalidé
+//   { id, created: false, createdAt } -> déjà existant, date d'origine retournée
 //
 // L'id est fourni par le client (obligatoire, validé en amont).
 // userId et orgId viennent de la session, jamais de l'entrée client.
@@ -30,50 +30,41 @@ import { MESSAGE_ERRORS } from '../error'
 //
 // Cache : invalidé seulement si une ligne a réellement été insérée. Un rejeu
 // ne change rien au contenu du canal.
-//
-// Sécurité : count === 0 peut venir d'un rejeu légitime ou d'un id déjà pris
-// par un autre auteur ou un autre canal. Le count filtré sur
-// (id, userId, channelId) les distingue : 0 -> CONFLICT, sinon rejeu.
-// La policy isReplay reste une défense en profondeur.
 export async function createMessage({
   orgId,
   ...data
 }: CreateMessageOutput & { userId: string; orgId: string }) {
-  // Réponse : le parent doit exister dans le MÊME canal (donc la même organisation) et ne pas
-  // être supprimé. Un rejeu légitime passe d'abord : sinon le retry d'une réponse dont le parent
-  // a été supprimé entre-temps serait rejeté alors que le message est déjà en base.
+  const now = new Date()
+  // R3 : la date du client n'est retenue que si elle est plausible, sinon heure du serveur
+  const createdAt = data.createdAt && isTrustedCreatedAt(data.createdAt, now) ? data.createdAt : now
+
   if (data.parentId) {
-    const parentCount = await prisma.message.count({
-      where: { id: data.parentId, channelId: data.channelId, deletedAt: null },
+    const parent = await prisma.message.findUnique({
+      where: { id: data.parentId },
+      select: { channelId: true, deletedAt: true },
     })
-    if (parentCount === 0) {
-      const alreadyCreated = await prisma.message.count({
-        where: { id: data.id, userId: data.userId, channelId: data.channelId },
-      })
-      if (alreadyCreated > 0) return { id: data.id, created: false }
-      throw new AppError({
-        message: MESSAGE_ERRORS.PARENT_NOT_FOUND.message,
-        code: MESSAGE_ERRORS.PARENT_NOT_FOUND.code,
-      })
+    const refusal = checkParent(parent, data.channelId)
+    if (refusal) {
+      // Un rejeu légitime passe d'abord (ack perdu, parent supprimé entre-temps)
+      const own = await findOwn(data)
+      if (own) return { id: data.id, created: false, createdAt: own.createdAt }
+      const e = MESSAGE.ERRORS[refusal]
+      throw new AppError({ message: e.error, code: e.code })
     }
   }
 
   const { count } = await tryConstraint(
-    prisma.message.createMany({ data: [data], skipDuplicates: true }),
+    prisma.message.createMany({ data: [{ ...data, createdAt }], skipDuplicates: true }),
   )
   if (count > 0) {
     await invalidateEvent('MESSAGE_CREATED', orgId, data.channelId)
-    return { id: data.id, created: true }
+    return { id: data.id, created: true, createdAt }
   }
 
-  const ownedCount = await prisma.message.count({
-    where: { id: data.id, userId: data.userId, channelId: data.channelId },
-  })
-  if (ownedCount === 0) {
-    throw new AppError({ message: ERRORS.UNIQUE.ID, code: ERROR_CODES.CONFLICT })
-  }
-
-  return { id: data.id, created: false }
+  // Rejeu : la ligne d'origine fait foi, date comprise
+  const own = await findOwn(data)
+  if (!own) throw new AppError({ message: ERRORS.UNIQUE.ID, code: ERROR_CODES.CONFLICT })
+  return { id: data.id, created: false, createdAt: own.createdAt }
 }
 
 // Seul l'auteur peut modifier son message 

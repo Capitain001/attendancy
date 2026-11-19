@@ -62,7 +62,8 @@ export function createOutbox({
     add,
     remove,
     markFailed: (id: string, error: string) => patch(id, { status: 'failed', error }),
-    retry: (id: string) => patch(id, { status: 'pending', error: undefined }),
+    retry: (id: string, change?: Partial<Pick<OutboxItem, 'parentId'>>) =>
+      patch(id, { status: 'pending', error: undefined, ...change }),
     subscribe(listener: () => void) {
       listeners.add(listener)
       return () => void listeners.delete(listener)

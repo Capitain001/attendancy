@@ -39,6 +39,8 @@ export type ChatSyncDeps = {
   acceptsChannel?: (channelId: string) => boolean
 }
 
+export type ChatSync = ReturnType<typeof createChatSync>
+
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const isUuid = (x: unknown): x is string => typeof x === 'string' && UUID.test(x)
 
@@ -50,7 +52,6 @@ export function createChatSync(deps: ChatSyncDeps) {
     inbox,
     sendToServer,
     probe,
-    transports = [],
     now = () => new Date(),
     newId = () => crypto.randomUUID(),
     onChange,
@@ -60,6 +61,7 @@ export function createChatSync(deps: ChatSyncDeps) {
     acceptsChannel,
   } = deps
 
+  const transports = [...(deps.transports ?? [])]
   let started = false
   let timer: ReturnType<typeof setInterval> | undefined
   const unsubs: (() => void)[] = []
@@ -238,14 +240,32 @@ export function createChatSync(deps: ChatSyncDeps) {
     transports.forEach((t) => t.stop())
   }
 
+  function attach(t: ChatTransport) {
+    const offs = [
+      t.onReceive((env) => void receive(env)),
+      t.onStatus((s) => {
+        if (s === 'connected') void resendPending(t)
+      }),
+    ]
+    if (!transports.includes(t)) transports.push(t)
+    if (started) t.start()
+    return () => {
+      offs.forEach((off) => off())
+      t.stop()
+      const i = transports.indexOf(t)
+      if (i >= 0) transports.splice(i, 1)
+    }
+  }
+
   return {
     send,
     flush,
     receive,
     start,
     stop,
-    retry: async (id: string) => {
-      await outbox.retry(id)
+    attach,
+    retry: async (id: string, change?: { parentId: string | null }) => {
+      await outbox.retry(id, change)
       return flush()
     },
     discard: (id: string) => outbox.remove(id),
