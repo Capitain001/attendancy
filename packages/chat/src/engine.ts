@@ -1,6 +1,7 @@
 import type { Inbox } from './inbox'
 import type { Outbox } from './outbox'
 import type { Envelope, OutboxItem, SendResult } from './types'
+import { MAX_BACKDATE_MS, MAX_CONTENT_LENGTH } from './limits'
 
 export type TransportStatus = 'idle' | 'connecting' | 'connected' | 'closed'
 
@@ -30,7 +31,16 @@ export type ChatSyncDeps = {
   newId?: () => string
   onChange?: () => void
   flushIntervalMs?: number
+  sendTimeoutMs?: number
+  // Appelé une fois par message confirmé par le serveur, après retrait de l'outbox.
+  // C'est ici que l'app diffuse en temps réel et notifie. Best-effort : une erreur est ignorée.
+  onSent?: (item: OutboxItem, data: unknown) => void | Promise<void>
+  // Canaux acceptés depuis les pairs. Sans lui, tout canal est accepté : à fournir.
+  acceptsChannel?: (channelId: string) => boolean
 }
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+const isUuid = (x: unknown): x is string => typeof x === 'string' && UUID.test(x)
 
 export function createChatSync(deps: ChatSyncDeps) {
   const {
@@ -45,9 +55,12 @@ export function createChatSync(deps: ChatSyncDeps) {
     newId = () => crypto.randomUUID(),
     onChange,
     flushIntervalMs = 15_000,
+    sendTimeoutMs = 20_000,
+    onSent,
+    acceptsChannel,
   } = deps
 
-  let flushing = false
+  let started = false
   let timer: ReturnType<typeof setInterval> | undefined
   const unsubs: (() => void)[] = []
 
@@ -59,7 +72,7 @@ export function createChatSync(deps: ChatSyncDeps) {
     authorName: userName,
     content: i.content,
     parentId: i.parentId,
-    sentAt: i.sentAt,
+    createdAt: i.createdAt,
   })
 
   async function pushTo(t: ChatTransport, items: OutboxItem[]) {
@@ -88,9 +101,9 @@ export function createChatSync(deps: ChatSyncDeps) {
       channelId,
       content: text,
       parentId,
-      sentAt: now().toISOString(),
+      createdAt: now().toISOString(),
     })
-    await Promise.allSettled(
+    void Promise.allSettled(
       transports.filter((t) => t.status() === 'connected').map((t) => pushTo(t, [item])),
     )
     void flush()
@@ -110,16 +123,24 @@ export function createChatSync(deps: ChatSyncDeps) {
     for (const item of pending) {
       let result: SendResult
       try {
-        result = await sendToServer(item)
+        const timeoutPromise = new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('sendToServer timeout')), sendTimeoutMs),
+        )
+        result = await Promise.race([sendToServer(item), timeoutPromise])
       } catch {
         return { sent, failed, offline: true }
       }
       if ('error' in result) {
+        // Refus transitoire (ex. parent pas encore synchronisé) : on garde pending, jusqu'à la limite de date
+        const expired = now().getTime() - Date.parse(item.createdAt) > MAX_BACKDATE_MS
+        if (result.retryable && !expired) continue
         await outbox.markFailed(item.id, result.error)
         failed++
       } else {
         await outbox.remove(item.id)
         sent++
+        const { data } = result
+        if (onSent) void Promise.resolve().then(() => onSent(item, data)).catch(() => {})
       }
     }
     return { sent, failed, offline: false }
@@ -139,6 +160,12 @@ export function createChatSync(deps: ChatSyncDeps) {
     return total
   }
 
+  async function withFlushLock<T>(task: () => Promise<T>): Promise<T> {
+    const locks = typeof navigator !== 'undefined' ? navigator.locks : undefined
+    if (!locks) return task()
+    return locks.request(`attendancy-chat-flush:${userId}`, () => task())
+  }
+
   // Un seul envoi à la fois. Un appel pendant un envoi en cours rejoint la
   // même exécution, qui repasse une fois de plus pour les messages ajoutés entre-temps.
   function flush(): Promise<FlushResult> {
@@ -146,17 +173,36 @@ export function createChatSync(deps: ChatSyncDeps) {
       again = true
       return running
     }
-    running = run().finally(() => {
+    running = withFlushLock(run).finally(() => {
       running = null
     })
     return running
   }
 
   async function receive(env: Envelope) {
-    if (env.v !== 1 || !env.id || !env.channelId || !env.authorId) return
-    if (typeof env.content !== 'string' || !env.content.trim()) return
+    if (!env || env.v !== 1) return
+    if (!isUuid(env.id) || !isUuid(env.channelId)) return
+    if (typeof env.authorId !== 'string' || !env.authorId || env.authorId.length > 64) return
     if (env.authorId === userId) return
-    if (await inbox.put(env)) onChange?.()
+    if (acceptsChannel && !acceptsChannel(env.channelId)) return
+    if (typeof env.content !== 'string' || !env.content.trim()) return
+    if (Array.from(env.content).length > MAX_CONTENT_LENGTH) return
+    if (env.parentId != null && !isUuid(env.parentId)) return
+    if (typeof env.createdAt !== 'string' || Number.isNaN(Date.parse(env.createdAt))) return
+
+    // Reconstruit l'enveloppe : aucun champ inconnu d'un pair n'entre dans IndexedDB
+    const clean: Envelope = {
+      v: 1,
+      id: env.id,
+      channelId: env.channelId,
+      authorId: env.authorId,
+      authorName: typeof env.authorName === 'string' ? env.authorName.slice(0, 100) : null,
+      content: env.content,
+      parentId: env.parentId ?? null,
+      createdAt: env.createdAt,
+      sig: typeof env.sig === 'string' ? env.sig : null,
+    }
+    if (await inbox.put(clean)) onChange?.()
   }
 
   async function resendPending(t: ChatTransport) {
@@ -165,6 +211,8 @@ export function createChatSync(deps: ChatSyncDeps) {
   }
 
   function start() {
+    if (started) return
+    started = true
     for (const t of transports) {
       unsubs.push(t.onReceive((env) => void receive(env)))
       unsubs.push(
@@ -175,10 +223,17 @@ export function createChatSync(deps: ChatSyncDeps) {
       t.start()
     }
     timer = setInterval(() => void flush(), flushIntervalMs)
+    void inbox.purge().catch(() => {})
+    void flush() // envoie ce qui attendait avant la fermeture de l'app
   }
 
   function stop() {
-    if (timer) clearInterval(timer)
+    if (!started) return
+    started = false
+    if (timer) {
+      clearInterval(timer)
+      timer = undefined
+    }
     unsubs.splice(0).forEach((u) => u())
     transports.forEach((t) => t.stop())
   }

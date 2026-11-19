@@ -1,8 +1,8 @@
 import type { KVStore } from './store'
 import type { OutboxItem } from './types'
 
-export const bySentAt = (a: { sentAt: string; id: string }, b: { sentAt: string; id: string }) =>
-  Date.parse(a.sentAt) - Date.parse(b.sentAt) || a.id.localeCompare(b.id)
+export const byCreatedAt = (a: { createdAt: string; id: string }, b: { createdAt: string; id: string }) =>
+  Date.parse(a.createdAt) - Date.parse(b.createdAt) || a.id.localeCompare(b.id)
 
 export type Outbox = ReturnType<typeof createOutbox>
 
@@ -33,7 +33,7 @@ export function createOutbox({
     const all = (await store.entries())
       .map(([, v]) => v)
       .filter((i) => i.userId === userId && (!channelId || i.channelId === channelId))
-    return all.sort(bySentAt)
+    return all.sort(byCreatedAt)
   }
 
   async function add(item: Omit<OutboxItem, 'status' | 'userId'>) {

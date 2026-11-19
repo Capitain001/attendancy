@@ -24,7 +24,7 @@ export function mergeMessages({
       authorName: userName,
       content: i.content,
       parentId: i.parentId,
-      createdAt: i.sentAt,
+      createdAt: i.createdAt,
       status: i.status,
     })
   }
@@ -36,7 +36,7 @@ export function mergeMessages({
       authorName: e.authorName ?? null,
       content: e.content,
       parentId: e.parentId ?? null,
-      createdAt: e.sentAt,
+      createdAt: e.createdAt,
       status: 'unverified',
     })
   }

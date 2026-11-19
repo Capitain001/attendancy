@@ -1,5 +1,5 @@
 [workspace]
-members = ["apps/*/src-tauri"]
+members = ["apps/*/src-tauri", "crates/chat/relay"]
 resolver = "2"
 
 [workspace.package]

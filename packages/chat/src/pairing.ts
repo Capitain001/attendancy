@@ -10,7 +10,13 @@ export function isLocalHost(host: string) {
   if (!m) return false
   const [a, b] = [Number(m[1]), Number(m[2])]
   if ([1, 2, 3, 4].some((i) => Number(m[i]) > 255)) return false
-  return a === 10 || a === 127 || (a === 192 && b === 168) || (a === 172 && b >= 16 && b <= 31)
+  return (
+    a === 10 ||
+    a === 127 ||
+    (a === 192 && b === 168) ||
+    (a === 172 && b >= 16 && b <= 31) ||
+    (a === 169 && b === 254)
+  )
 }
 
 export function encodePairing(p: Omit<Pairing, 'url'>) {

@@ -14,7 +14,7 @@ pub struct Envelope {
     pub content: String,
     #[serde(default)]
     pub parent_id: Option<String>,
-    pub sent_at: String,
+    pub created_at: String,
     #[serde(default)]
     pub sig: Option<String>,
 }

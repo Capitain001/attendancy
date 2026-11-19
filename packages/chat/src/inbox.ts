@@ -1,16 +1,25 @@
 import type { KVStore } from './store'
 import type { Envelope } from './types'
-import { bySentAt } from './outbox'
+import { isTrustedCreatedAt, MAX_BACKDATE_MS } from './limits'
+import { byCreatedAt } from './outbox'
 
 export type InboxEntry = { env: Envelope; receivedAt: string }
 
 export type Inbox = ReturnType<typeof createInbox>
 
+// Date du pair si plausible AU MOMENT DE LA RÉCEPTION, sinon la date de réception.
+// Évaluée contre receivedAt (et non « maintenant ») pour rester stable dans le temps.
+// L'enveloppe stockée n'est jamais modifiée : la future signature porte sur l'original.
+const displayed = ({ env, receivedAt }: InboxEntry): Envelope =>
+  isTrustedCreatedAt(new Date(env.createdAt), new Date(receivedAt))
+    ? env
+    : { ...env, createdAt: receivedAt }
+
 // Messages reçus d'un pair (hub LAN, BLE) : NON VÉRIFIÉS tant que la version
 // du serveur n'est pas arrivée. Ils sont retirés par confirm() ou purgés.
 export function createInbox({
   store,
-  maxAgeMs = 7 * 86_400_000,
+  maxAgeMs = MAX_BACKDATE_MS,
   now = () => new Date(),
 }: {
   store: KVStore<InboxEntry>
@@ -25,9 +34,9 @@ export function createInbox({
 
   async function list(channelId?: string) {
     return (await store.entries())
-      .map(([, v]) => v.env)
+      .map(([, v]) => displayed(v))
       .filter((e) => !channelId || e.channelId === channelId)
-      .sort(bySentAt)
+      .sort(byCreatedAt)
   }
 
   async function confirm(ids: string[]) {

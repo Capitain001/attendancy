@@ -41,7 +41,7 @@ fn hello(token: &str, user: &str, known: Vec<&str>) -> Value {
 
 fn env(id: &str, author: &str, content: &str) -> Value {
     json!({"t":"msg","env":{"v":1,"id":id,"channelId":"c1","authorId":author,
-        "content":content,"sentAt":"2026-10-26T10:00:00.000Z"}})
+        "content":content,"createdAt":"2026-10-26T10:00:00.000Z"}})
 }
 
 async fn join(h: &HubHandle, user: &str) -> Ws {

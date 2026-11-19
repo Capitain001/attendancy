@@ -19,6 +19,7 @@ const BIN = resolve(
   process.platform === "win32" ? "chat-relay.exe" : "chat-relay",
 );
 const WS = WebSocket as unknown as WebSocketCtor;
+const TEST_CHANNEL = "11111111-1111-4111-8111-111111111111";
 
 let hub: ChildProcess;
 let url = "";
@@ -57,9 +58,9 @@ function client(userId: string, token = "tok") {
     token,
     userId,
     name: userId,
-    channels: ["c1"],
+    channels: [TEST_CHANNEL],
     WebSocketImpl: WS,
-    known: () => inbox.knownIds(["c1"]),
+    known: () => inbox.knownIds([TEST_CHANNEL]),
     backoff: { minMs: 50, maxMs: 200 },
   });
   const server: string[] = [];
@@ -85,7 +86,7 @@ describe("chat de bout en bout (relais Rust réel)", () => {
 
     // alice écrit AVANT d'être connectée à quoi que ce soit
     const item = await a.sync.send({
-      channelId: "c1",
+      channelId: TEST_CHANNEL,
       content: "cours déplacé en B12",
     });
     expect((await a.outbox.list())[0]?.status).toBe("pending");
@@ -124,8 +125,8 @@ describe("chat de bout en bout (relais Rust réel)", () => {
     const a = client("alice2");
     a.sync.start();
     await waitFor(() => a.lan.status() === "connected");
-    await a.sync.send({ channelId: "c1", content: "m1" });
-    await a.sync.send({ channelId: "c1", content: "m2" });
+    await a.sync.send({ channelId: TEST_CHANNEL, content: "m1" });
+    await a.sync.send({ channelId: TEST_CHANNEL, content: "m2" });
 
     const late = client("carol");
     late.sync.start();
@@ -179,7 +180,7 @@ describe("chat de bout en bout (relais Rust réel)", () => {
 
     first.proc.kill();
     await waitFor(() => a.lan.status() !== "connected");
-    await a.sync.send({ channelId: "c1", content: "écrit pendant la coupure" });
+    await a.sync.send({ channelId: TEST_CHANNEL, content: "écrit pendant la coupure" });
 
     const second = await spawnHub(first.port);
     await waitFor(

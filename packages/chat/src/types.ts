@@ -6,7 +6,7 @@ export type Envelope = {
   authorName?: string | null
   content: string
   parentId?: string | null
-  sentAt: string
+  createdAt: string
   sig?: string | null
 }
 
@@ -16,7 +16,7 @@ export type OutboxItem = {
   channelId: string
   content: string
   parentId: string | null
-  sentAt: string
+  createdAt: string
   status: 'pending' | 'failed'
   error?: string
 }
@@ -36,4 +36,4 @@ export type ChatMessage = {
 
 export type PersistedMessage = Omit<ChatMessage, 'status'>
 
-export type SendResult = { data: unknown } | { error: string }
+export type SendResult = { data: unknown } | { error: string; retryable?: boolean }

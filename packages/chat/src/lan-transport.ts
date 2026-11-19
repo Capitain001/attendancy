@@ -21,6 +21,7 @@ export type LanOptions = {
   WebSocketImpl?: WebSocketCtor
   ackTimeoutMs?: number
   backoff?: { minMs: number; maxMs: number }
+  pingIntervalMs?: number
 }
 
 const FATAL = new Set(['bad_token', 'not_member', 'bad_hello'])
@@ -29,6 +30,7 @@ export function createLanTransport(opts: LanOptions): ChatTransport {
   const Impl = opts.WebSocketImpl ?? (globalThis as { WebSocket?: WebSocketCtor }).WebSocket
   const ackTimeoutMs = opts.ackTimeoutMs ?? 5000
   const backoff = opts.backoff ?? { minMs: 500, maxMs: 15_000 }
+  const pingMs = opts.pingIntervalMs ?? 20_000
 
   let ws: WebSocketLike | null = null
   let state: TransportStatus = 'idle'
@@ -36,6 +38,8 @@ export function createLanTransport(opts: LanOptions): ChatTransport {
   let fatal = false
   let attempt = 0
   let retryTimer: ReturnType<typeof setTimeout> | undefined
+  let pingTimer: ReturnType<typeof setInterval> | undefined
+  let lastSeen = 0
 
   const recvCbs = new Set<(e: Envelope) => void>()
   const statusCbs = new Set<(s: TransportStatus) => void>()
@@ -50,6 +54,13 @@ export function createLanTransport(opts: LanOptions): ChatTransport {
     statusCbs.forEach((cb) => cb(s))
   }
 
+  const stopPing = () => {
+    if (pingTimer) {
+      clearInterval(pingTimer)
+      pingTimer = undefined
+    }
+  }
+
   function settle(id: string, err?: Error) {
     const a = acks.get(id)
     if (!a) return
@@ -60,6 +71,42 @@ export function createLanTransport(opts: LanOptions): ChatTransport {
 
   function failAll(err: Error) {
     for (const id of [...acks.keys()]) settle(id, err)
+  }
+
+  // Fermeture traitée UNE fois, qu'elle vienne de onclose ou de la détection de silence.
+  // Une socket remplacée ou arrêtée par stop() (ws !== sock) est ignorée.
+  function dropped(sock: WebSocketLike) {
+    if (ws !== sock) return
+    ws = null
+    stopPing()
+    failAll(new Error('closed'))
+    if (stopped || fatal) return setState('closed')
+    setState('connecting')
+    const delay = Math.min(backoff.maxMs, backoff.minMs * 2 ** attempt++)
+    retryTimer = setTimeout(() => void connect(), delay)
+  }
+
+  function startPing(sock: WebSocketLike) {
+    stopPing()
+    lastSeen = Date.now()
+    pingTimer = setInterval(() => {
+      if (ws !== sock) return stopPing()
+      // Silence prolongé : on n'attend pas le close (qui peut tarder), on reconnecte
+      if (Date.now() - lastSeen > pingMs * 2.5) {
+        sock.onclose = null
+        try {
+          sock.close()
+        } catch {
+          /* déjà mort */
+        }
+        return dropped(sock)
+      }
+      try {
+        sock.send('{"t":"ping"}')
+      } catch {
+        /* le prochain tour tranchera */
+      }
+    }, pingMs)
   }
 
   async function connect() {
@@ -84,6 +131,7 @@ export function createLanTransport(opts: LanOptions): ChatTransport {
       )
 
     sock.onmessage = (ev) => {
+      lastSeen = Date.now() // toute trame prouve que le hub est vivant
       let f: { t?: string; [k: string]: unknown }
       try {
         f = JSON.parse(String(ev.data))
@@ -92,6 +140,7 @@ export function createLanTransport(opts: LanOptions): ChatTransport {
       }
       if (f.t === 'welcome') {
         attempt = 0
+        startPing(sock)
         for (const env of (f.backlog as Envelope[] | undefined) ?? []) recvCbs.forEach((cb) => cb(env))
         setState('connected')
       } else if (f.t === 'msg') {
@@ -100,22 +149,17 @@ export function createLanTransport(opts: LanOptions): ChatTransport {
         settle(String(f.id))
       } else if (f.t === 'reject') {
         if (f.id) settle(String(f.id), new Error(String(f.reason)))
-        else {
-          fatal = FATAL.has(String(f.reason))
+        // Un rejet sans id ne ferme que s'il est fatal : un simple bad_frame ne doit pas
+        // provoquer une boucle de reconnexion
+        else if (FATAL.has(String(f.reason))) {
+          fatal = true
           sock.close()
         }
       }
     }
 
     sock.onerror = () => {}
-    sock.onclose = () => {
-      if (ws === sock) ws = null
-      failAll(new Error('closed'))
-      if (stopped || fatal) return setState('closed')
-      setState('connecting')
-      const delay = Math.min(backoff.maxMs, backoff.minMs * 2 ** attempt++)
-      retryTimer = setTimeout(() => void connect(), delay)
-    }
+    sock.onclose = () => dropped(sock)
   }
 
   return {
@@ -125,10 +169,12 @@ export function createLanTransport(opts: LanOptions): ChatTransport {
       if (!stopped) return
       stopped = false
       fatal = false
+      attempt = 0
       void connect()
     },
     stop() {
       stopped = true
+      stopPing()
       clearTimeout(retryTimer)
       const sock = ws
       ws = null

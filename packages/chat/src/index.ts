@@ -1,5 +1,5 @@
 export * from './types'
-export * from './time'
+export * from './limits'
 export * from './store'
 export * from './outbox'
 export * from './inbox'

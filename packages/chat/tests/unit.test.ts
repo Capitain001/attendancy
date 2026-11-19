@@ -1,19 +1,24 @@
 import { describe, expect, it } from 'vitest'
 import {
-  clampSentAt,
   createChatSync,
   createInbox,
   createOutbox,
   decodePairing,
   encodePairing,
-  mergeMessages,
+  isTrustedCreatedAt,
+  MAX_BACKDATE_MS,
+  MAX_CONTENT_LENGTH,
   memoryStore,
+  mergeMessages,
   type Envelope,
   type OutboxItem,
   type SendResult,
 } from '../src'
 
 const NOW = new Date('2026-10-26T12:00:00.000Z')
+const CHANNEL_ID = '11111111-1111-4111-8111-111111111111'
+const CHANNEL_ID_2 = '22222222-2222-4222-8222-222222222222'
+const uid = (n: number) => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`
 
 function setup(userId = 'u1', send?: (i: OutboxItem) => Promise<SendResult>) {
   const outboxStore = memoryStore<OutboxItem>()
@@ -26,7 +31,7 @@ function setup(userId = 'u1', send?: (i: OutboxItem) => Promise<SendResult>) {
     outbox,
     inbox,
     now: () => NOW,
-    newId: () => `id-${++n}`,
+    newId: () => uid(++n),
     sendToServer:
       send ??
       (async (i) => {
@@ -37,31 +42,39 @@ function setup(userId = 'u1', send?: (i: OutboxItem) => Promise<SendResult>) {
   return { sync, outbox, inbox, outboxStore, calls }
 }
 
-describe('clampSentAt', () => {
-  it('garde l\'heure d\'écriture hors ligne', () => {
-    const t = new Date('2026-10-26T10:00:00.000Z')
-    expect(clampSentAt({ sentAt: t.toISOString(), now: NOW }).getTime()).toBe(t.getTime())
+describe('limits', () => {
+  it('accepte une date passée récente dans la limite', () => {
+    const past = new Date(NOW.getTime() - 2 * 86_400_000)
+    expect(isTrustedCreatedAt(past, NOW)).toBe(true)
   })
-  it('refuse le futur', () => {
-    expect(clampSentAt({ sentAt: '2027-01-01T00:00:00Z', now: NOW }).getTime()).toBe(NOW.getTime())
+
+  it('refuse une date future', () => {
+    const future = new Date(NOW.getTime() + 60_000)
+    expect(isTrustedCreatedAt(future, NOW)).toBe(false)
   })
-  it('plafonne à 7 jours en arrière', () => {
-    const r = clampSentAt({ sentAt: '2026-09-01T00:00:00Z', now: NOW })
-    expect(r.getTime()).toBe(NOW.getTime() - 7 * 86_400_000)
+
+  it('refuse une date plus vieille que MAX_BACKDATE_MS (7 jours)', () => {
+    const tooOld = new Date(NOW.getTime() - MAX_BACKDATE_MS - 1000)
+    expect(isTrustedCreatedAt(tooOld, NOW)).toBe(false)
   })
-  it('date invalide ou absente = now', () => {
-    expect(clampSentAt({ sentAt: 'nimporte', now: NOW })).toBe(NOW)
-    expect(clampSentAt({ now: NOW })).toBe(NOW)
+
+  it('refuse une date invalide (NaN)', () => {
+    expect(isTrustedCreatedAt(new Date('invalid'), NOW)).toBe(false)
+  })
+
+  it('constantes conformes', () => {
+    expect(MAX_BACKDATE_MS).toBe(7 * 86_400_000)
+    expect(MAX_CONTENT_LENGTH).toBe(4000)
   })
 })
 
 describe('outbox + flush', () => {
   it('envoie dans l\'ordre d\'écriture et vide l\'outbox', async () => {
     const { sync, outbox, calls } = setup()
-    await sync.send({ channelId: 'c', content: 'un' })
-    await sync.send({ channelId: 'c', content: 'deux' })
+    await sync.send({ channelId: CHANNEL_ID, content: 'un' })
+    await sync.send({ channelId: CHANNEL_ID, content: 'deux' })
     await sync.flush()
-    expect(calls).toEqual(['id-1', 'id-2'])
+    expect(calls).toEqual([uid(1), uid(2)])
     expect(await outbox.list()).toEqual([])
   })
 
@@ -73,28 +86,75 @@ describe('outbox + flush', () => {
       sent.push(i.id)
       return { data: 1 }
     })
-    await sync.send({ channelId: 'c', content: 'hors ligne' })
+    await sync.send({ channelId: CHANNEL_ID, content: 'hors ligne' })
     await sync.flush()
     expect((await outbox.list())[0]?.status).toBe('pending')
     online = true
     const r = await sync.flush()
     expect(r.sent).toBe(1)
-    expect(sent).toEqual(['id-1'])
+    expect(sent).toEqual([uid(1)])
     expect(await outbox.list()).toEqual([])
   })
 
   it('refus serveur : failed, pas de retry auto, retry manuel', async () => {
     let ok = false
     const { sync, outbox } = setup('u1', async () => (ok ? { data: 1 } : { error: 'Accès refusé' }))
-    await sync.send({ channelId: 'c', content: 'x' })
+    await sync.send({ channelId: CHANNEL_ID, content: 'x' })
     await sync.flush()
     const [item] = await outbox.list()
     expect(item).toMatchObject({ status: 'failed', error: 'Accès refusé' })
     await sync.flush()
     expect((await outbox.list())[0]?.status).toBe('failed')
     ok = true
-    await sync.retry('id-1')
+    await sync.retry(uid(1))
     expect(await outbox.list()).toEqual([])
+  })
+
+  it('refus transitoire (retryable) : reste pending puis failed après expiration', async () => {
+    let attempts = 0
+    let nowTime = NOW
+    const outbox = createOutbox({ store: memoryStore(), userId: 'u1' })
+    const sync = createChatSync({
+      userId: 'u1',
+      outbox,
+      inbox: createInbox({ store: memoryStore() }),
+      now: () => nowTime,
+      newId: () => uid(1),
+      sendToServer: async () => {
+        attempts++
+        return { error: 'Parent introuvable', retryable: true }
+      },
+    })
+    await sync.send({ channelId: CHANNEL_ID, content: 'attente parent' })
+    const r1 = await sync.flush()
+    expect(r1.failed).toBe(0)
+    expect((await outbox.list())[0]?.status).toBe('pending')
+    expect(attempts).toBeGreaterThanOrEqual(1)
+
+    // Avance le temps au-delà de 7 jours : le prochain flush doit marquer failed
+    nowTime = new Date(NOW.getTime() + MAX_BACKDATE_MS + 1000)
+    const r2 = await sync.flush()
+    expect(r2.failed).toBe(1)
+    expect((await outbox.list())[0]?.status).toBe('failed')
+  })
+
+  it('onSent : déclenché après succès serveur', async () => {
+    let resolveSent!: (item: OutboxItem) => void
+    const sentPromise = new Promise<OutboxItem>((resolve) => {
+      resolveSent = resolve
+    })
+    const outbox = createOutbox({ store: memoryStore(), userId: 'u' })
+    const sync = createChatSync({
+      userId: 'u',
+      outbox,
+      inbox: createInbox({ store: memoryStore() }),
+      sendToServer: async () => ({ data: { confirmed: true } }),
+      onSent: (item) => resolveSent(item),
+    })
+    await sync.send({ channelId: CHANNEL_ID, content: 'notif test' })
+    await sync.flush()
+    const sentItem = await sentPromise
+    expect(sentItem.content).toBe('notif test')
   })
 
   it('un seul flush à la fois : pas de doublon d\'envoi', async () => {
@@ -104,7 +164,7 @@ describe('outbox + flush', () => {
       await new Promise((r) => setTimeout(r, 20))
       return { data: 1 }
     })
-    await sync.send({ channelId: 'c', content: 'x' })
+    await sync.send({ channelId: CHANNEL_ID, content: 'x' })
     await Promise.all([sync.flush(), sync.flush(), sync.flush()])
     expect(calls).toBe(1)
   })
@@ -113,15 +173,15 @@ describe('outbox + flush', () => {
     const shared = memoryStore<OutboxItem>()
     const a = createOutbox({ store: shared, userId: 'a' })
     const b = createOutbox({ store: shared, userId: 'b' })
-    await a.add({ id: 'm1', channelId: 'c', content: 'x', parentId: null, sentAt: NOW.toISOString() })
+    await a.add({ id: uid(1), channelId: CHANNEL_ID, content: 'x', parentId: null, createdAt: NOW.toISOString() })
     expect(await b.list()).toEqual([])
-    await b.remove('m1')
+    await b.remove(uid(1))
     expect(await a.list()).toHaveLength(1)
   })
 
   it('ignore les messages vides', async () => {
     const { sync, outbox } = setup()
-    expect(await sync.send({ channelId: 'c', content: '   ' })).toBeNull()
+    expect(await sync.send({ channelId: CHANNEL_ID, content: '   ' })).toBeNull()
     expect(await outbox.list()).toEqual([])
   })
 
@@ -135,7 +195,7 @@ describe('outbox + flush', () => {
       probe: async () => false,
       sendToServer: async () => ((called = true), { data: 1 }),
     })
-    await sync.send({ channelId: 'c', content: 'x' })
+    await sync.send({ channelId: CHANNEL_ID, content: 'x' })
     const r = await sync.flush()
     expect(r.offline).toBe(true)
     expect(called).toBe(false)
@@ -144,41 +204,76 @@ describe('outbox + flush', () => {
 
 describe('inbox', () => {
   const env = (id: string, over: Partial<Envelope> = {}): Envelope => ({
-    v: 1, id, channelId: 'c', authorId: 'autre', content: 'salut', sentAt: NOW.toISOString(), ...over,
+    v: 1,
+    id,
+    channelId: CHANNEL_ID,
+    authorId: 'autre',
+    content: 'salut',
+    createdAt: NOW.toISOString(),
+    ...over,
   })
 
   it('dédoublonne, ignore ses propres messages, confirme', async () => {
     const { sync, inbox } = setup('moi')
-    await sync.receive(env('e1'))
-    await sync.receive(env('e1'))
-    await sync.receive(env('e2', { authorId: 'moi' }))
-    expect((await inbox.list()).map((e) => e.id)).toEqual(['e1'])
-    await sync.confirm(['e1'])
+    await sync.receive(env(uid(1)))
+    await sync.receive(env(uid(1)))
+    await sync.receive(env(uid(2), { authorId: 'moi' }))
+    expect((await inbox.list()).map((e) => e.id)).toEqual([uid(1)])
+    await sync.confirm([uid(1)])
     expect(await inbox.list()).toEqual([])
   })
 
-  it('rejette les enveloppes malformées', async () => {
+  it('rejette les enveloppes malformées ou non-UUID', async () => {
     const { sync, inbox } = setup()
-    await sync.receive({ ...env('x'), v: 2 } as unknown as Envelope)
-    await sync.receive(env('y', { content: '  ' }))
-    await sync.receive(env('', {}))
+    await sync.receive({ ...env(uid(1)), v: 2 } as unknown as Envelope)
+    await sync.receive(env(uid(2), { content: '  ' }))
+    await sync.receive(env('pas-un-uuid', {}))
+    await sync.receive(env(uid(3), { channelId: 'non-uuid' }))
     expect(await inbox.list()).toEqual([])
+  })
+
+  it('filtre par acceptsChannel', async () => {
+    const outbox = createOutbox({ store: memoryStore(), userId: 'u' })
+    const inbox = createInbox({ store: memoryStore() })
+    const sync = createChatSync({
+      userId: 'u',
+      outbox,
+      inbox,
+      sendToServer: async () => ({ data: 1 }),
+      acceptsChannel: (cid) => cid === CHANNEL_ID,
+    })
+    await sync.receive(env(uid(1), { channelId: CHANNEL_ID }))
+    await sync.receive(env(uid(2), { channelId: CHANNEL_ID_2 }))
+    expect((await inbox.list()).map((e) => e.id)).toEqual([uid(1)])
   })
 
   it('purge les messages trop vieux', async () => {
     let t = NOW
     const inbox = createInbox({ store: memoryStore(), maxAgeMs: 1000, now: () => t })
-    await inbox.put(env('e1'))
+    await inbox.put(env(uid(1)))
     t = new Date(NOW.getTime() + 5000)
     await inbox.purge()
     expect(await inbox.list()).toEqual([])
   })
 
+  it('displayed : date du pair si plausible, sinon receivedAt', async () => {
+    const inbox = createInbox({ store: memoryStore(), now: () => NOW })
+    // Date future = non plausible
+    await inbox.put(env(uid(1), { createdAt: '2027-01-01T00:00:00Z' }))
+    // Date plausible
+    const plausible = new Date(NOW.getTime() - 3600_000).toISOString()
+    await inbox.put(env(uid(2), { createdAt: plausible }))
+
+    const list = await inbox.list()
+    expect(list.find((e) => e.id === uid(1))?.createdAt).toBe(NOW.toISOString())
+    expect(list.find((e) => e.id === uid(2))?.createdAt).toBe(plausible)
+  })
+
   it('knownIds : limité aux canaux demandés', async () => {
     const inbox = createInbox({ store: memoryStore() })
-    await inbox.put(env('a', { channelId: 'c1' }))
-    await inbox.put(env('b', { channelId: 'c2' }))
-    expect(await inbox.knownIds(['c1'])).toEqual(['a'])
+    await inbox.put(env(uid(1), { channelId: CHANNEL_ID }))
+    await inbox.put(env(uid(2), { channelId: CHANNEL_ID_2 }))
+    expect(await inbox.knownIds([CHANNEL_ID])).toEqual([uid(1)])
   })
 })
 
@@ -187,20 +282,38 @@ describe('mergeMessages', () => {
     const t = (m: number) => new Date(NOW.getTime() + m * 1000).toISOString()
     const out = mergeMessages({
       userId: 'moi',
-      persisted: [{ id: 'a', channelId: 'c', authorId: 'x', content: 'serveur', parentId: null, createdAt: t(2) }],
+      persisted: [
+        { id: uid(1), channelId: CHANNEL_ID, authorId: 'x', content: 'serveur', parentId: null, createdAt: t(2) },
+      ],
       inbox: [
-        { v: 1, id: 'a', channelId: 'c', authorId: 'x', content: 'pair', sentAt: t(1) },
-        { v: 1, id: 'b', channelId: 'c', authorId: 'y', content: 'pair b', sentAt: t(1) },
+        { v: 1, id: uid(1), channelId: CHANNEL_ID, authorId: 'x', content: 'pair', createdAt: t(1) },
+        { v: 1, id: uid(2), channelId: CHANNEL_ID, authorId: 'y', content: 'pair b', createdAt: t(1) },
       ],
       outbox: [
-        { id: 'b', userId: 'moi', channelId: 'c', content: 'local b', parentId: null, sentAt: t(0), status: 'pending' },
-        { id: 'c', userId: 'moi', channelId: 'c', content: 'local c', parentId: null, sentAt: t(3), status: 'failed' },
+        {
+          id: uid(2),
+          userId: 'moi',
+          channelId: CHANNEL_ID,
+          content: 'local b',
+          parentId: null,
+          createdAt: t(0),
+          status: 'pending',
+        },
+        {
+          id: uid(3),
+          userId: 'moi',
+          channelId: CHANNEL_ID,
+          content: 'local c',
+          parentId: null,
+          createdAt: t(3),
+          status: 'failed',
+        },
       ],
     })
     expect(out.map((m) => [m.id, m.status, m.content])).toEqual([
-      ['b', 'unverified', 'pair b'],
-      ['a', 'sent', 'serveur'],
-      ['c', 'failed', 'local c'],
+      [uid(2), 'unverified', 'pair b'],
+      [uid(1), 'sent', 'serveur'],
+      [uid(3), 'failed', 'local c'],
     ])
   })
 })
@@ -217,8 +330,8 @@ describe('pairing', () => {
     expect(decodePairing('attendancy://chat?h=10.0.0.1&p=99999&t=a&s=b')).toBeNull()
     expect(decodePairing('pas une url')).toBeNull()
   })
-  it('accepte les réseaux privés', () => {
-    for (const host of ['10.1.2.3', '172.16.0.1', '172.31.9.9', '192.168.0.5', 'prof.local'])
+  it('accepte les réseaux privés et link-local', () => {
+    for (const host of ['10.1.2.3', '172.16.0.1', '172.31.9.9', '192.168.0.5', '169.254.1.20', 'prof.local'])
       expect(decodePairing(encodePairing({ ...p, host }))).not.toBeNull()
     expect(decodePairing(encodePairing({ ...p, host: '172.32.0.1' }))).toBeNull()
   })
