@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import TeacherDailyScreen from "@/components/teacher/personal/screen/TeacherDailyScreen";
+import TeacherDailyScreen from "@/components/personal/teacher/screen/TeacherDailyScreen";
 
 export const Route = createFileRoute("/_app/home")({
   component: TeacherHomePage,
