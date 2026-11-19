@@ -1,0 +1,1 @@
+export {getMessageForNotification} from "./database"

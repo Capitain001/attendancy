@@ -1,1 +1,5 @@
-export { isChannelMember, getChannelMemberIds } from './database/channel-member.queries'
+export {
+  isChannelMember,
+  getChannelMemberIds,
+  getChannelRecipients,
+} from './database/channel-member.queries'

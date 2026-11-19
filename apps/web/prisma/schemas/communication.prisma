@@ -37,6 +37,7 @@ model ChannelMember {
   role       ParticipantRole @default(MEMBER)
   joinedAt   DateTime        @default(now())
   lastReadAt DateTime?
+  mutedAt    DateTime? // null = notifications actives
   channel    Channel         @relation(fields: [channelId], references: [id], onDelete: Cascade)
   user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 

@@ -11,7 +11,7 @@ import { useMessages } from '@/hooks/data/messages/useMessages'
 import { mapMessages, mapReplySnapshots, resolveReplyTo } from '@/hooks/chat/utils'
 import { truncatePreview } from '@/services/message/preview'
 import { PresenceUser } from '@/types'
-import { sendParticipantNotificationsAction } from '@/services/notification/domains/chat'
+import { notifyChannelMembersAction } from '@/services/notification/domains/chat'
 
 interface UseChatProps {
   channelId: string
@@ -124,11 +124,11 @@ export const useChat = ({
     const target = replyToId ? messages.find((m) => m.id === replyToId) : undefined
     return target
       ? {
-          id: target.id,
-          authorName: target.user.name,
-          content: truncatePreview(target.content),
-          state: 'available',
-        }
+        id: target.id,
+        authorName: target.user.name,
+        content: truncatePreview(target.content),
+        state: 'available',
+      }
       : null
   }, [replyToId, messages])
 
@@ -184,18 +184,18 @@ export const useChat = ({
   // Notifications push : le serveur résout les destinataires (membres du canal,
   // mentions comprises) à partir du seul channelId ; le client ne les connaît pas.
   // Le canal est passé en paramètre : un retry ne doit pas dépendre du canal courant.
-  const sendNotifications = useCallback(
-    (targetChannelId: string, messageId: string, content: string) => {
-      if (isMuted) return
 
-      sendParticipantNotificationsAction({ channelId: targetChannelId, messageId, content }).catch(
-        (error) => {
-          console.error('Erreur lors de l\'envoi des notifications push:', error)
-        }
-      )
+  const sendNotifications = useCallback(
+    (targetChannelId: string, messageId: string) => {
+      // Plus de `if (isMuted) return` : la sourdine de l'expéditeur ne concerne que ses propres
+      // notifications, le serveur filtre selon celle de chaque destinataire.
+      notifyChannelMembersAction({ channelId: targetChannelId, messageId })
+        .then((res) => { if (res && 'error' in res) console.error('Notifications push refusées:', res.error) })
+        .catch((error) => console.error('Erreur lors de l\'envoi des notifications push:', error))
     },
-    [isMuted]
+    []
   )
+
 
   // Persistance seule dans le try : si le broadcast ou le push échoue, le message n'est
   // pas marqué 'failed' (il est en base) et un retry ne le republie pas à tort.
@@ -219,7 +219,7 @@ export const useChat = ({
         createdAt: draft.createdAt,
         parentId: draft.parentId,
       }).catch((error) => console.error('Erreur lors de la diffusion temps réel:', error))
-      sendNotifications(draft.channelId, id, draft.content)
+      sendNotifications(draft.channelId, id)
 
       setOutbox(({ [id]: _done, ...rest }) => rest)
     },

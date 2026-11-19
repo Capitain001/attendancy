@@ -97,3 +97,19 @@ export const getMessageById = (messageId: string) =>
     where: { id: messageId },
     select: { id: true, channelId: true, parentId: true, user: { select: { id: true } } },
   })
+
+  
+// Lecture de vérification : volontairement sans "use cache" (l'état doit être frais).
+// Un message supprimé n'est pas retrouvé : l'appelant le traite comme inexistant.
+// Exposée aux autres services via server.ts (export * de database/).
+export async function getMessageForNotification(messageId: string) {
+  return prisma.message.findUnique({
+    where: { id: messageId, deletedAt: null },
+    select: {
+      content: true,
+      channelId: true,
+      userId: true,
+      parent: { select: { userId: true, deletedAt: true } },
+    },
+  })
+}
