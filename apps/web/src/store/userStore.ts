@@ -10,7 +10,7 @@ interface UserState {
   isLoading: boolean
   error: string | null
   
-  setUser: (user: Partial<UserInfo> | null) => void
+  setUser: (user: UserInfo | null) => void
   setLoading: (loading: boolean) => void
   setError: (error: string | null) => void
   clear: () => void

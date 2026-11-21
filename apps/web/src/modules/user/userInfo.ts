@@ -114,7 +114,7 @@ const fetchUserFromSupabase = cache(async (userId: string) => {
 const getUserInfoWithCache = cache(async (
   userId: string,
   options: GetUserInfoOptions = {}
-): Promise<Partial<UserInfo> | null> => {
+): Promise<UserInfo | null> => {
   const { cache: useCache = true, refresh = false } = options
 
   // CAS 1: Cache LRU désactivé - aller directement à Supabase
@@ -196,7 +196,7 @@ const getUserInfoWithCache = cache(async (
  */
 export async function getUserInfo(
   options: GetUserInfoOptions = {}
-): Promise<Partial<UserInfo> | null> {
+): Promise<UserInfo | null> {
   // Récupérer l'userId AVANT d'utiliser le cache
   const userId = await getUserId()
   if (!userId) return null

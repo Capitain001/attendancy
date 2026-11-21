@@ -38,7 +38,7 @@ import type { UserInfo } from '@/types/user'
  * - max: 1000 - Nombre maximum d'utilisateurs en cache
  * - ttl: 600000ms (10 minutes) - Durée de vie des entrées
  */
-const cache = new LRUCache<string, Partial<UserInfo>>({
+const cache = new LRUCache<string, UserInfo>({
   max: 1000,              // Limite: 1000 utilisateurs max
   ttl: 10 * 60 * 1000,    // TTL: 10 minutes en millisecondes
 })
@@ -57,7 +57,7 @@ const cache = new LRUCache<string, Partial<UserInfo>>({
  * }
  * ```
  */
-export function getUser(userId: string): Partial<UserInfo> | null {
+export function getUser(userId: string): UserInfo | null {
   return cache.get(userId) || null
 }
 
@@ -77,7 +77,7 @@ export function getUser(userId: string): Partial<UserInfo> | null {
  * })
  * ```
  */
-export function setUser(userId: string, userInfo: Partial<UserInfo>): void {
+export function setUser(userId: string, userInfo: UserInfo): void {
   cache.set(userId, userInfo)
 }
 

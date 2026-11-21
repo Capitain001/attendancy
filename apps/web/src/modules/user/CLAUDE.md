@@ -24,7 +24,7 @@ Les types, les clés et les schémas Valibot sont dérivés des mêmes définiti
 ## Entrée principale
 
 ```ts
-getUserInfo(options?: { cache?: boolean; refresh?: boolean }): Promise<Partial<UserInfo> | null>
+getUserInfo(options?: { cache?: boolean; refresh?: boolean }): Promise<UserInfo | null>
 ```
 
 Voir [userInfo.ts](userInfo.ts).
