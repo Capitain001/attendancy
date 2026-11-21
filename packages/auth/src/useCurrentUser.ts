@@ -1,3 +1,4 @@
+//packages\auth\src\useCurrentUser.ts
 import { useQuery } from "@tanstack/react-query";
 import type { UserInfo } from "@attendancy/types";
 import { useAuth } from "./AuthProvider";

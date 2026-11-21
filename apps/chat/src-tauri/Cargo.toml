@@ -1,0 +1,16 @@
+[package]
+name = "attendancy-chat"
+version.workspace = true
+description = "Attendancy Chat app"
+authors = []
+edition.workspace = true
+
+[lib]
+name = "attendancy_chat_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { workspace = true }
+
+[dependencies]
+tauri = { workspace = true }

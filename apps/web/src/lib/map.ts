@@ -9,3 +9,12 @@ export function withName<
     name: getFullName(user.firstName, user.lastName) || null,
   };
 }
+
+
+/** Rend toutes les clés optionnelles sauf celles listées dans K. */
+export type PartialExcept<T, K extends keyof T> = Partial<Omit<T, K>> & Pick<T, K>
+
+
+export function hasId<T extends { id?: string }>(u: T | null | undefined): u is T & { id: string } {
+  return !!u?.id
+}

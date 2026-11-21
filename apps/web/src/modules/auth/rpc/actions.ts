@@ -4,13 +4,13 @@
 import { getUserInfo } from "@/modules/user";
 import { ERRORS } from "@/config";
 import { mapUserRpc } from "./utils";
+import { hasId } from "@/lib/map";
 
 export async function getCurrentUserAction() {
   try {
     const user = await getUserInfo();
-    if (!user?.id) return { error: ERRORS.AUTH.UNAUTHORIZED };
-    // filtre les donner serveur critique et non utile au client et renvoie le reste au client 
-    return { data: mapUserRpc(user) };
+    if (!hasId(user)) return { error: ERRORS.AUTH.UNAUTHORIZED };
+    return { data: mapUserRpc(user) }; // user: Partial<UserInfo> & { id: string }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER };
   }

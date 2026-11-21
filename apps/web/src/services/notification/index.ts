@@ -3,8 +3,8 @@
 export * from '@/modules/notification'
 
 // ─── Server actions notifications ────────────────────────────────────────────
-export * from './actions/notification.queries'
-export * from './actions/notification.mutations'
+export * from './actions'
+export { notifyChannelMembersAction } from './domains/chat'
 
 // ─── Server actions push ──────────────────────────────────────────────────────
 export {
@@ -14,6 +14,7 @@ export {
   sendNotificationToCurrentUser,
   debugUserSubscriptions,
 } from './user'
+
 
 // ─── Types métier ─────────────────────────────────────────────────────────────
 export type {
