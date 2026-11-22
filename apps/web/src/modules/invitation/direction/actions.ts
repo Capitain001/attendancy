@@ -22,7 +22,7 @@ import { FunctionName, MAIN_FUNCTIONS } from "@/config/data";
  *   email: "directeur@example.com",
  *   name: "Jean Dupont",
  *   functions: ["PRINCIPAL", "SECRETARY"],
- *   permissions: ["READ:STUDENT", "UPDATE:STUDENT"]
+
  * });
  * ```
  */
@@ -41,7 +41,7 @@ export async function inviteDirection(
       };
     }
 
-    const { email, name, functions, permissions = [] } = validationResult.output;
+    const { email, name, functions } = validationResult.output;
 
     // 2. Vérifier qu'au moins une fonction est spécifiée
     if (!functions || functions.length === 0) {
@@ -104,7 +104,7 @@ export async function inviteDirection(
       name,
       role: "DIRECTION",
       adminFunction: primaryFunction?.name || primaryFunctionName, // On passe le nom de la fonction
-      permissions,
+
       deliveryMethod: params.deliveryMethod,
     });
 

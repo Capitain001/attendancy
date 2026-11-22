@@ -230,24 +230,24 @@ model UserFunction {
 // Permission atomique, portée par un user OU une function (l'un des deux).
 // resource/resourceId nullable = permission large (toute la ressource / toute l'org).
 model Permission {
-  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId       String?       @db.Uuid
-  functionId   String?       @db.Uuid
-  assignedById String?       @db.Uuid
-  action       Action        @default(READ)
+  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String?      @db.Uuid
+  functionId   String?      @db.Uuid
+  assignedById String?      @db.Uuid
+  action       Action       @default(READ)
   resource     Resource?
   resourceId   String?
   description  String?
-  isActive     Boolean       @default(true)
+  isActive     Boolean      @default(true)
   expiresAt    DateTime?
   details      Json?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  orgId        String?       @db.Uuid
-  assignedBy   User?         @relation("PermissionAssigner", fields: [assignedById], references: [id], onDelete: Cascade)
-  function     Function?     @relation(fields: [functionId], references: [id])
-  organization Organization? @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  user         User?         @relation("PermissionReceiver", fields: [userId], references: [id])
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  orgId        String       @db.Uuid
+  assignedBy   User?        @relation("PermissionAssigner", fields: [assignedById], references: [id], onDelete: Cascade)
+  function     Function?    @relation(fields: [functionId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  user         User?        @relation("PermissionReceiver", fields: [userId], references: [id])
 
   // Unicités gérées par index UNIQUE NULLS NOT DISTINCT (PG15+) en post-migrate
   // (permission_user_scope_unique_idx / permission_function_scope_unique_idx) :

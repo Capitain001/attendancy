@@ -62,7 +62,7 @@ Créer une nouvelle migration :
 ```bash
 bunx prisma migrate dev --create-only --name update-teacher-unavailabilities-fields-types
 ```
-bunx prisma migrate dev --create-only --name add_channel-member_mutedAt  
+bunx prisma migrate dev --create-only --name add_permission_requiered_orgId  
 
 Créer une nouvelle migration :
 

@@ -62,7 +62,7 @@ export async function assignFunctionToUser(params: {
     update: {},
     select: { id: true, userId: true, functionId: true },
   })
-  await invalidateEvent('FUNCTION_ASSIGNED', params.orgId)
+  await invalidateEvent('FUNCTION_ASSIGNED', params.orgId, params.userId)
   return result
 }
 
@@ -74,7 +74,7 @@ export async function deleteFunctionFromUser(params: {
   await prisma.userFunction.delete({
     where: { userId_functionId: { userId: params.userId, functionId: params.functionId } },
   })
-  await invalidateEvent('FUNCTION_UNASSIGNED', params.orgId)
+  await invalidateEvent('FUNCTION_UNASSIGNED', params.orgId, params.userId)
 }
 
 export async function removeFunctionFromUser(params: {

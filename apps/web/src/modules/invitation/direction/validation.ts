@@ -16,7 +16,7 @@ export const inviteDirectionSchema = v.object({
     v.string(),
     "Au moins une fonction doit être spécifiée"
   ),
-  permissions: v.optional(v.array(v.string())),
+
   deliveryMethod: v.optional(
     v.picklist(DELIVERY_METHODS, "Le mode de remise doit être 'email' ou 'link'")
   ),

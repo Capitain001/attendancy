@@ -7,7 +7,7 @@ import { ERRORS } from '@/config'
 import { grantPermissionSchema, revokePermissionSchema } from '../validation'
 import type { GrantPermissionInput, RevokePermissionInput } from '../validation'
 import { grantPermission, revokePermission } from '../database'
-import { syncPermissionsMetadataFor } from '@/modules/permission'
+
 
 
 export async function grantPermissionAction(input: GrantPermissionInput) {
@@ -19,7 +19,7 @@ export async function grantPermissionAction(input: GrantPermissionInput) {
   try {
     const permission = await grantPermission({ ...parsed.output, orgId, assignedById: user.id })
     
-    await syncPermissionsMetadataFor({ orgId, userId: permission.userId, functionId: permission.functionId })
+
     return { data: permission }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }
@@ -34,7 +34,7 @@ export async function revokePermissionAction(input: RevokePermissionInput) {
   if (!parsed.success) return { error: parsed.issues[0]?.message ?? 'Données invalides' }
   try {
     const permission = await revokePermission(parsed.output.permissionId, orgId)
-    await syncPermissionsMetadataFor({ orgId, userId: permission.userId, functionId: permission.functionId })
+
     return { data: permission }
   } catch (e) {
     return { error: e instanceof Error ? e.message : ERRORS.SERVER }

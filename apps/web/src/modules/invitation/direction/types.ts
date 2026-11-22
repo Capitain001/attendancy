@@ -9,7 +9,7 @@ export interface InviteDirectionParams {
   email: string;
   name?: string;
   functions: string[]; // Noms des fonctions à assigner (ex: ["PRINCIPAL", "SECRETARY"])
-  permissions?: string[]; // Permissions personnalisées (optionnel)
+
   deliveryMethod?: "email" | "link";
 }
 

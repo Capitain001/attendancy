@@ -9,7 +9,7 @@ type InviteTeacherParams = {
   email: string;
   name?: string;
   resources?: TeacherResources
-  permissions?: string[];
+
   deliveryMethod?: "email" | "link";
 };
 
@@ -20,7 +20,7 @@ export type TeacherResources= {
 export async function inviteTeacher({
   email,
   name,
-  permissions = [],
+
   resources,
   deliveryMethod
 }: InviteTeacherParams) {
@@ -29,7 +29,7 @@ export async function inviteTeacher({
       email,
       name,
       role: "TEACHER",
-      permissions,
+
       resources,
       deliveryMethod,
     });

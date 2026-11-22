@@ -1,4 +1,8 @@
 // scripts/database/db-post-migrate.ts
+// Usage :
+//   bun --filter @attendancy/web db:post-migrate   (depuis la racine — inclut db:sync-types)
+//   bun run db:post-migrate                        (depuis apps/web/)
+//   tsx --env-file=.env scripts/database/db-post-migrate.ts  (script seul)
 import { execSync } from 'child_process';
 import { join } from 'path';
 import { listSqlFilesRecursively } from './list-sql-files';

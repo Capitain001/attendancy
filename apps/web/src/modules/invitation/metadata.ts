@@ -20,7 +20,6 @@ interface MetadataParams {
   name?: string;
   role: Role;
   function?: Functions;
-  permissions?: string[];
   departmentId?: string;
   resources?: { courses?: string[]; classes?: string[] };
   details?: {
@@ -40,7 +39,6 @@ export function generateInvitationMetadata(
     name: user.organization?.name!,
     slug: user.organization?.slug || "",
     logo: user.organization?.logo || "",
-    permissions: params.permissions || [],
     departmentId: params.departmentId,
   };
 

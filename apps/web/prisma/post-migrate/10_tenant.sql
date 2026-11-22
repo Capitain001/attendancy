@@ -37,3 +37,10 @@ BEGIN
   END IF;
 END
 $$;
+
+-- ─── Model Permission ──────────────────────────────────────────────
+ALTER TABLE "public"."Permission"
+  DROP CONSTRAINT IF EXISTS "permission_resource_id_requires_resource";
+ALTER TABLE "public"."Permission"
+  ADD CONSTRAINT "permission_resource_id_requires_resource"
+  CHECK ("resourceId" IS NULL OR "resource" IS NOT NULL);

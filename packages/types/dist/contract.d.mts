@@ -614,7 +614,6 @@ interface Organization {
     slug?: string;
     logo?: string;
     type?: OrganizationType;
-    permissions?: string[];
     responsable?: boolean;
     departmentId?: string;
     studentId?: string;
@@ -670,7 +669,7 @@ interface UserInfo extends AppMetadata, UserMetadata, AuthMetadata {
  * Ne doivent jamais atteindre un composant client.
  */
 declare const SENSITIVE_USER_KEYS: readonly ["organizations", "invited_by", "invitationType"];
-declare const SENSITIVE_ORGANIZATION_KEYS: readonly ["permissions", "responsable", "departmentId", "studentId", "teacherId", "parentId", "directionId"];
+declare const SENSITIVE_ORGANIZATION_KEYS: readonly ["responsable", "departmentId", "studentId", "teacherId", "parentId", "directionId"];
 type PublicOrganization = Omit<Organization, (typeof SENSITIVE_ORGANIZATION_KEYS)[number]>;
 /**
  * UserInfo sans les champs critiques : le type à utiliser dans tous les composants client.

@@ -1,13 +1,14 @@
 // src/modules/auth/persmission/acces.ts
 "use server";
 
+import { cache } from 'react'
 import { getUserInfo } from '@/modules/user';
 import { getAuthorization } from "./autorization";
 import { Role, Functions, AuthenticatedUser } from "@/types/user";
 import { ERROR_CODES, ERRORS } from "@/config";
 import { hasPermission } from '@/services/permission'
-import type { Action, Resource } from '@/generated/prisma/client'
-import type { OrganizationType } from '@/generated/prisma/browser'
+import { getEffectivePermissionNames } from '@/services/permission/server'
+import type { OrganizationType, Action, Resource } from '@/generated/prisma/browser'
 
 type AuthAccessParams = {
   requiredRole?: Role | Role[]
@@ -17,6 +18,13 @@ type AuthAccessParams = {
   allowPersonalOrg?: boolean
 }
 
+// Permissions effectives de l'utilisateur dans l'organisation (directes + via ses fonctions),
+// lues en base derrière le cache invalidé par graphe. Dédupliquées par requête : authAccess
+// peut être appelé plusieurs fois dans le même rendu. Non exportée : ce fichier est
+// "use server", il n'expose que des fonctions async appelables.
+const getGrantedPermissions = cache((userId: string, orgId: string) =>
+  getEffectivePermissionNames(userId, orgId)
+)
 
 /**
  * Vérifie l'authentification et les permissions de l'utilisateur
@@ -25,6 +33,7 @@ type AuthAccessParams = {
  * @param params - Paramètres de vérification d'autorisation
  * @param params.requiredRole - Rôle requis (optionnel)
  * @param params.requiredFunction - Fonction requise (optionnel)
+ * @param params.requiredPermission - Permission fine requise, lue en base (optionnel)
  * @param params.requiredOrgType - Type d'organisation active requis (optionnel)
  *
  * @example
@@ -42,6 +51,11 @@ type AuthAccessParams = {
  * const auth = await authAccess({
  *   requiredRole: "ADMIN",
  *   requiredFunction: "PRINCIPAL"
+ * });
+ *
+ * // Vérification d'une permission fine
+ * const auth = await authAccess({
+ *   requiredPermission: { action: "UPDATE", resource: "STUDENT" }
  * });
  *
  * if (auth.error) {
@@ -75,9 +89,11 @@ export async function authAccess(params: AuthAccessParams = {}) {
     // SUPER_ADMIN bypasse déjà via getAuthorization ; ici on ne re-vérifie
     // la permission fine que si un rôle/fonction insuffisant ne l'a pas
     // déjà rejetée — évite un check redondant sur le chemin ADMIN.
-    if (params.requiredPermission) {
-      const cached = authenticatedUser.organization?.permissions ?? []
-      if (authenticatedUser.function !== 'SUPER_ADMIN' && !hasPermission(cached, params.requiredPermission)) {
+    // La lecture en base n'a lieu que si une permission est exigée : les actions
+    // sans droit fin ne paient rien, ni le SUPER_ADMIN.
+    if (params.requiredPermission && authenticatedUser.function !== 'SUPER_ADMIN') {
+      const granted = await getGrantedPermissions(authenticatedUser.id, orgId)
+      if (!hasPermission(granted, params.requiredPermission)) {
         return { error: ERRORS.AUTH.FORBIDDEN, code: ERROR_CODES.FORBIDDEN }
       }
     }

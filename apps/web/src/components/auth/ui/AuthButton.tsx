@@ -17,7 +17,7 @@ function toClientUser(user: UserInfo): UserInfo {
     avatar_url: user.avatar_url,
     updated_at: user.updated_at,
     organization: user.organization
-      ? { id: user.organization.id, slug: user.organization.slug, name: user.organization.name, logo: user.organization.logo, permissions: [] }
+      ? { id: user.organization.id, slug: user.organization.slug, name: user.organization.name, logo: user.organization.logo }
       : undefined,
   };
 }

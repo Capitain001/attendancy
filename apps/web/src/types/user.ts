@@ -51,7 +51,6 @@ export interface Organization {
   slug?: string
   logo?: string
   type?: OrganizationType
-  permissions?: string[]
   responsable?: boolean
   departmentId?: string
   studentId?: string
@@ -174,14 +173,13 @@ export type AppMetadataPatch = Patch<AppMetadata>
  * Ne doivent jamais atteindre un composant client.
  */
 export const SENSITIVE_USER_KEYS = [
-  'organizations',    // chaque entrée porte permissions et ids de profils
+  'organizations',    // chaque entrée porte les ids de profils
   'invited_by',
   // 'invitationToken', // token est safe et est utiliser
   'invitationType',
 ] as const satisfies readonly (keyof UserInfo)[]
 
 export const SENSITIVE_ORGANIZATION_KEYS = [
-  'permissions',
   'responsable',
   'departmentId',
   'studentId',

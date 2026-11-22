@@ -18,6 +18,8 @@ export async function assignFunctionsToMember(params: {
     await assignMultipleFunctionsToUser(tx, params.userId, params.orgId, params.functionNames, params.assignedBy ?? null)
   })
   await invalidateEvent('DIRECTION_UPDATED', params.orgId)
+  // userFunction a changé : ses droits effectifs aussi
+  await invalidateEvent('USER_FUNCTIONS_UPDATED', params.orgId, params.userId)
 }
 
 export async function revokeFunctionsFromMember(params: {
@@ -38,6 +40,7 @@ export async function revokeFunctionsFromMember(params: {
     },
   })
   await invalidateEvent('DIRECTION_UPDATED', params.orgId)
+  await invalidateEvent('USER_FUNCTIONS_UPDATED', params.orgId, params.userId)
 }
 
 export async function updateMemberFunctions(params: {
@@ -60,6 +63,7 @@ export async function updateMemberFunctions(params: {
     }
   })
   await invalidateEvent('DIRECTION_UPDATED', params.orgId)
+  await invalidateEvent('USER_FUNCTIONS_UPDATED', params.orgId, params.userId)
 }
 
 export async function removeDirectionMember(directionId: string, orgId: string) {

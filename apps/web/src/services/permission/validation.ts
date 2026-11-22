@@ -15,7 +15,11 @@ export const grantPermissionSchema = v.pipe(
   } satisfies Record<keyof Omit<CreatePermissionData, 'orgId' | 'assignedById'>, unknown>),
   // XOR applicatif — la contrainte DB post-migrate l'impose déjà en base,
   // ceci évite un aller-retour DB juste pour une erreur triviale.
-  v.check((d) => Boolean(d.userId) !== Boolean(d.functionId), 'Fournir exactement userId OU functionId, jamais les deux')
+  v.check((d) => Boolean(d.userId) !== Boolean(d.functionId), 'Fournir exactement userId OU functionId, jamais les deux'),
+  // Un resourceId sans ressource se lirait comme un droit sur TOUTES les ressources
+  // (permissionName ignore le resourceId quand resource est vide) : escalade silencieuse.
+  // Même règle que la contrainte DB permission_resource_id_requires_resource.
+  v.check((d) => !d.resourceId || Boolean(d.resource), 'Un resourceId exige une ressource')
 )
 
 export type GrantPermissionInput = v.InferInput<typeof grantPermissionSchema>
@@ -36,4 +40,4 @@ export const getFunctionPermissionsSchema = v.object({
   functionId: v.pipe(v.string(), v.uuid('ID fonction invalide')),
 })
 export type GetFunctionPermissionsInput = v.InferInput<typeof getFunctionPermissionsSchema>
-export type GetFunctionPermissionsOutput = v.InferOutput<typeof getFunctionPermissionsSchema>
+export type GetFunctionPermissionsOutput = v.InferOutput<typeof getFunctionPermissionsSchema>
