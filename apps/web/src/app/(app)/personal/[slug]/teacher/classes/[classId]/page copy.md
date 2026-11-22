@@ -1,120 +1,272 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { connection } from "next/server";
-import { addMonths, endOfMonth, startOfMonth, subMonths } from "date-fns";
-import { ArrowLeft, BookOpen, GraduationCap, Users } from "lucide-react";
+// ─── Tenant & identité ───────────────────────────────────────────────────────
+// Cœur multi-tenant : Organization est la racine de scope de TOUTES les données
+// métier (orgId partout, dénormalisé sur les tables chaudes). User est global
+// (un compte peut appartenir à plusieurs organisations via UserOrganization) ;
+// les profils par rôle (Teacher, Student…) vivent dans profile.prisma.
 
-import { ClassInvitationsPage } from "@/components/invitation/ClassInvitationsPage";
-import { ClassPlanning } from "@/components/planning";
-import { personal } from "@/modules/personal/paths";
-import { getClassAction } from "@/services/class";
-import { getGroupsByClassAction } from "@/services/group";
-import { getClassSchedulesAction } from "@/services/schedule";
-import { getPlanningResourcesAction } from "@/services/planning";
+// Compte global, partagé entre organisations. deletedAt = désactivation du
+// compte entier ; l'appartenance à UNE org se coupe via UserOrganization.status.
+model User {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firstName   String?
+  lastName    String?
+  email       String    @unique
+  sex         Sex       @default(MALE)
+  phone       String?   @unique
+  avatar_url  String?
+  // @db.Date : date pure sans heure/fuseau
+  dateOfBirth DateTime? @db.Date
+  //phase 2 : identiter
+  nationality String?
+  address     String?
 
-export const metadata: Metadata = {
-  title: "Classe | Attendancy",
-  robots: { index: false, follow: false },
-};
+  isConnected            Boolean            @default(false)
+  status                 UserStatus         @default(ACTIVE)
+  details                Json?
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+  deletedAt              DateTime?
+  admin                  Admin?
+  approvalRequested      ApprovalRequest[]  @relation("ApprovalRequestedBy")
+  approvalReviewed       ApprovalRequest[]  @relation("ApprovalReviewedBy")
+  auditLog               AuditLog[]
+  channelMemberships     ChannelMember[]
+  moderatedComments      Comment[]          @relation("CommentDeletedBy")
+  comments               Comment[]          @relation("CommentAuthor")
+  direction              Direction[]
+  uploadedDocuments      Document[]         @relation("DocumentUploader")
+  createdEvents          Event[]            @relation("CreatedEvents")
+  eventParticipations    EventParticipant[]
+  invitations            Invitation[]
+  justificationsDeclared Justification[]    @relation("JustificationDeclaredBy")
+  justificationsReviewed Justification[]    @relation("JustificationReviewedBy")
+  messages               Message[]
+  notes                  Note[]
+  notifications          Notification[]
+  parent                 Parent[]
+  assigned               Permission[]       @relation("PermissionAssigner")
+  permissions            Permission[]       @relation("PermissionReceiver")
+  pushSubscription       PushSubscription[]
+  qrScans                QRScan[]
+  student                Student[]
+  teacher                Teacher[]
+  assignedFunctions      UserFunction[]     @relation("UserFunctionAssigner")
+  functions              UserFunction[]
+  userOrganizations      UserOrganization[]
+  // devices
+  devices                UserDevice[]
+  sessions               UserSession[]
+  // payments               Payment[]
+  // feeWaivers             FeeWaiver[]
 
-interface PageProps {
-  params: Promise<{ slug: string; id: string }>;
+  @@schema("public")
 }
 
-export default async function PersonalTeacherClassPage({ params }: PageProps) {
-  await connection();
-  const { slug, id } = await params;
-  const now = new Date();
-  const rangeStart = startOfMonth(subMonths(now, 1));
-  const rangeEnd = endOfMonth(addMonths(now, 1));
+// Racine du tenant. Les back-relations listent tout ce qui est scopé org —
+// c'est volontairement exhaustif : la purge RGPD d'une org part d'ici.
+model Organization {
+  id                      String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                    String
+  email                   String?                 @unique
+  slug                    String?                 @unique
+  logo                    String?
+  domain                  String?                 @unique
+  details                 Json?
+  type                    OrganizationType        @default(INSTITUTION)
+  createdAt               DateTime                @default(now())
+  updatedAt               DateTime                @updatedAt
+  isActive                Boolean                 @default(true)
+  deletedAt               DateTime?
+  subscription            Subscription?
+  academicYears           AcademicYear[]
+  approvalRequests        ApprovalRequest[]
+  attendances             Attendance[]
+  auditLog                AuditLog[]
+  evaluations             Evaluation[]
+  channels                Channel[]
+  comments                Comment[]
+  justifications          Justification[]
+  courses                 Course[]
+  departments             Department[]
+  documents               Document[]
+  events                  Event[]
+  functions               Function[]
+  invitations             Invitation[]
+  locations               Location[]
+  parentRelations         ParentRelation[]
+  settings                OrganizationSettings?
+  usage                   OrganizationUsage?
+  permissions             Permission[]
+  programs                Program[]
+  programTracks           ProgramTrack[]
+  rooms                   Room[]
+  schedules               Schedule[]
+  ues                     UE[]
+  ueCourses               UECourse[]
+  userOrganizations       UserOrganization[]
+  weekRecurences          WeekRecurence[]
+  weeklyTemplates         WeeklyTemplate[]
+  teacherUnavailabilities TeacherUnavailability[]
+  userSessions            UserSession[]
+  teacherCourseHours      TeacherCourseHours[]
+  // feeStructures           FeeStructure[]
+  // invoices                Invoice[]
+  // payments                Payment[]
+  // feeWaivers              FeeWaiver[]
+  notes                   Note[]
+  notifications           Notification[]
 
-  const [classResult, groupsResult, schedulesResult, resourcesResult] = await Promise.all([
-    getClassAction({ classId: id }),
-    getGroupsByClassAction(id),
-    getClassSchedulesAction(id, rangeStart, rangeEnd),
-    getPlanningResourcesAction(id),
-  ]);
-
-  const classData = "data" in classResult ? classResult.data : null;
-  if (!classData) notFound();
-
-  const groups = "data" in groupsResult ? groupsResult.data ?? [] : [];
-  const studentCount = classData._count.studentEnrollments;
-
-  return (
-    <main className="min-h-screen bg-background px-4 py-6">
-      <div className="space-y-6">
-        <header className="space-y-3">
-          {/* Header avec ArrowLeft à gauche et nom de classe à droite */}
-          <div className="flex items-center justify-between gap-4">
-            <Link
-              href={personal.classes(slug)}
-              className="inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <ArrowLeft aria-hidden="true" className="size-4" />
-              <span>Retour</span>
-            </Link>
-
-            <h1 className="text-xl font-bold tracking-tight">{classData.name}</h1>
-          </div>
-
-          {/* Badges / Infos de la classe */}
-          <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-            <span className="inline-flex items-center gap-1.5">
-              <Users aria-hidden="true" className="size-3.5" />
-              {studentCount} étudiant{studentCount > 1 ? "s" : ""}
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <BookOpen aria-hidden="true" className="size-3.5" />
-              {classData._count.courses} cours
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <GraduationCap aria-hidden="true" className="size-3.5" />
-              {classData.level}
-            </span>
-          </div>
-        </header>
-
-        {"error" in groupsResult && (
-          <p role="alert" className="rounded-md border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm text-destructive">
-            Impossible de charger les groupes de cette classe.
-          </p>
-        )}
-
-        <ClassInvitationsPage
-          classId={classData.id}
-          className={classData.name}
-          groups={groups.map(({ id, name }) => ({ id, name }))}
-          title={false}
-        />
-
-        <section className="space-y-3 border-t border-border pt-5">
-          <h2 className="text-lg font-semibold">Planning de la classe</h2>
-          {"error" in schedulesResult ? (
-            <p role="alert" className="text-sm text-destructive">{schedulesResult.error}</p>
-          ) : "error" in resourcesResult || !resourcesResult.data ? (
-            <p role="alert" className="text-sm text-destructive">
-              {"error" in resourcesResult ? resourcesResult.error : "Ressources de planning introuvables."}
-            </p>
-          ) : (
-            <>
-              {(resourcesResult.data.courses.length === 0 || resourcesResult.data.rooms.length === 0) && (
-                <p className="rounded-md border border-border px-3 py-2 text-sm text-muted-foreground">
-                  Il faut au moins un cours et une salle pour créer des séances.
-                </p>
-              )}
-              <ClassPlanning
-                slug={slug}
-                classId={classData.id}
-                classHref={`${personal.classes(slug)}/${encodeURIComponent(classData.id)}`}
-                resources={resourcesResult.data}
-                schedules={schedulesResult.data}
-              />
-            </>
-          )}
-        </section>
-      </div>
-    </main>
-  );
+  // Un nom peut être réutilisé par les espaces personnels, mais pas par les institutions.
+  @@unique([name], where: { type: "INSTITUTION" }, map: "organization_institution_name_unique")
+  @@schema("public")
 }
+
+
+// Appartenance User ↔ Org + rôle principal. status coupe l'accès à CETTE org
+// sans toucher au compte global ni aux autres appartenances.
+model UserOrganization {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId        String       @db.Uuid
+  orgId         String       @db.Uuid
+  isMainOrg     Boolean      @default(false)
+  role          Role         @default(TEACHER)
+  status        UserStatus   @default(ACTIVE)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  isResponsable Boolean      @default(false)
+  departmentId  String?      @db.Uuid
+  department    Department?  @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  organization  Organization @relation(fields: [orgId], references: [id])
+  user          User         @relation(fields: [userId], references: [id])
+
+  @@unique([userId, orgId])
+  @@index([orgId])
+  @@index([orgId, status]) // filtre "membres actifs" fréquent
+  @@schema("public")
+}
+
+// RBAC fin : une Function regroupe des permissions (ex. "Scolarité",
+// "Surveillant") et s'assigne aux users — complète le rôle grossier de
+// UserOrganization.role.
+model Function {
+  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name         String
+  description  String?
+  orgId        String         @db.Uuid
+  isMain       Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  icon         String?
+  organization Organization   @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  permissions  Permission[]
+  users        UserFunction[]
+
+  @@unique([name, orgId])
+  @@schema("public")
+}
+
+model UserFunction {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String   @db.Uuid
+  functionId     String   @db.Uuid
+  assignedAt     DateTime @default(now())
+  assignedBy     String?  @db.Uuid
+  function       Function @relation(fields: [functionId], references: [id], onDelete: Cascade)
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignedByUser User?    @relation("UserFunctionAssigner", fields: [assignedBy], references: [id], onDelete: SetNull)
+
+  @@unique([userId, functionId])
+  @@schema("public")
+}
+
+// Permission atomique, portée par un user OU une function (l'un des deux).
+// resource/resourceId nullable = permission large (toute la ressource / toute l'org).
+model Permission {
+  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String?       @db.Uuid
+  functionId   String?       @db.Uuid
+  assignedById String?       @db.Uuid
+  action       Action        @default(READ)
+  resource     Resource?
+  resourceId   String?
+  description  String?
+  isActive     Boolean       @default(true)
+  expiresAt    DateTime?
+  details      Json?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  orgId        String?       @db.Uuid
+  assignedBy   User?         @relation("PermissionAssigner", fields: [assignedById], references: [id], onDelete: Cascade)
+  function     Function?     @relation(fields: [functionId], references: [id])
+  organization Organization? @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  user         User?         @relation("PermissionReceiver", fields: [userId], references: [id])
+
+  // Unicités gérées par index UNIQUE NULLS NOT DISTINCT (PG15+) en post-migrate
+  // (permission_user_scope_unique_idx / permission_function_scope_unique_idx) :
+  // un @@unique Prisma laisserait passer des doublons sur les permissions
+  // globales (userId/functionId NULL — NULLs distincts en SQL standard).
+  // Les composites ci-dessous servent les lookups (préfixes userId / functionId
+  // couverts — pas d'index simples redondants).
+  @@index([userId, action, resource, resourceId, orgId])
+  @@index([functionId, action, resource, resourceId, orgId])
+  @@index([orgId])
+  @@schema("public")
+}
+
+
+// ─── Enums transverses ───────────────────────────────────────────────────────
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  ON_LEAVE
+  PENDING
+
+  @@schema("public")
+}
+
+enum Role {
+  ADMIN
+  TEACHER
+  STUDENT
+  PARENT
+  DIRECTION
+
+  @@schema("public")
+}
+
+enum Action {
+  CREATE
+  READ
+  UPDATE
+  DELETE
+  CRUD
+
+  @@schema("public")
+}
+
+// Ressources métier attachables (permissions, documents, commentaires,
+// invitations) — domaine connu, borné. L'audit, lui, reste en String.
+enum Resource {
+  COURSE
+  SCHEDULE
+  USER
+  STUDENT
+  TEACHER
+  ROOM
+  LOCATION
+  PROGRAM
+  FILIERE
+  ATTENDANCE
+  GRADE
+  CLASS
+  GROUP
+  MESSAGE
+  JUSTIFICATION
+  INVITATION
+  NOTE
+
+  @@schema("public")
+}
+
