@@ -20,7 +20,7 @@ import { updateUserProfileAction } from "@/services/user/actions/user.mutations"
 interface EditNameDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  user: Partial<UserInfo>;
+  user: UserInfo;
 }
 
 export function EditNameDialog({ open, onOpenChange, user }: EditNameDialogProps) {

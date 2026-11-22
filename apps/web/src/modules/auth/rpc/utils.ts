@@ -1,4 +1,5 @@
 // src/modules/auth/rpc/utils.ts
+import { pickKeys } from '@/lib/map'
 import { APP_METADATA_KEYS, USER_METADATA_KEYS } from '@/types/user'
 import type { UserInfo } from '@/types/user'
 
@@ -23,7 +24,6 @@ export const RPC_USER_KEYS = [
 export type RpcUser = Pick<UserInfo, (typeof RPC_USER_KEYS)[number] | 'id'>
 
 export function mapUserRpc(user: UserInfo): RpcUser {
-  // `id` toujours inclus : le cast est vrai par construction.
-  const picked = new Set<keyof UserInfo>([...RPC_USER_KEYS, 'id'])
-  return Object.fromEntries([...picked].map((key) => [key, user[key]])) as RpcUser
+  // `id` toujours inclus, même si quelqu'un le retire de la liste
+  return pickKeys(user, [...RPC_USER_KEYS, 'id'])
 }

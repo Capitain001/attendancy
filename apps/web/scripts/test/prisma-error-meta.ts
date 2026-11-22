@@ -25,7 +25,7 @@ function section(title: string) {
 
 function dump(label: string, value: unknown) {
   console.log(`\n[${label}]`)
-  console.dir(value, { depth: null })
+  console.log(JSON.stringify(value, (_k, v) => (v instanceof Error ? { ...v, name: v.name } : v), 2))
 }
 
 // ── P2002 — Violation de contrainte unique ────────────────────────────────────
@@ -47,6 +47,7 @@ async function testP2002_singleField() {
       dump('error instanceof', (err as any)?.constructor?.name)
       dump('error.code',       (err as any)?.code)
       dump('error.meta',       (err as any)?.meta)
+    dump('cause',            (err as any)?.meta?.driverAdapterError?.cause)
       dump('error.message (extrait)', (err as any)?.message?.slice(0, 300))
     } finally {
       await prisma.organization.delete({ where: { id: org.id } })
@@ -86,6 +87,7 @@ async function testP2002_compositeField() {
       dump('error instanceof', (err as any)?.constructor?.name)
       dump('error.code',       (err as any)?.code)
       dump('error.meta',       (err as any)?.meta)
+    dump('cause',            (err as any)?.meta?.driverAdapterError?.cause)
       dump('typeof meta.target', typeof (err as any)?.meta?.target)
       dump('Array.isArray(meta.target)', Array.isArray((err as any)?.meta?.target))
       dump('error.message (extrait)', (err as any)?.message?.slice(0, 300))
@@ -121,6 +123,7 @@ async function testP2003() {
     dump('error instanceof', (err as any)?.constructor?.name)
     dump('error.code',       (err as any)?.code)
     dump('error.meta',       (err as any)?.meta)
+    dump('cause',            (err as any)?.meta?.driverAdapterError?.cause)
     dump('error.message (extrait)', (err as any)?.message?.slice(0, 300))
   }
 }
@@ -139,6 +142,7 @@ async function testP2025() {
     dump('error instanceof', (err as any)?.constructor?.name)
     dump('error.code',       (err as any)?.code)
     dump('error.meta',       (err as any)?.meta)
+    dump('cause',            (err as any)?.meta?.driverAdapterError?.cause)
     dump('error.message (extrait)', (err as any)?.message?.slice(0, 300))
   }
 }

@@ -24,7 +24,7 @@ export function SettingsSidebar({
   user,
   slug,
 }: {
-  user: Partial<UserInfo>;
+  user: UserInfo;
   slug: string;
 }) {
   const pathname = usePathname();

@@ -8,7 +8,7 @@ import { OrgLogoUploader } from "./OrgLogoUploader";
 import { PersonalOrganizationNameRow } from "./PersonalOrganizationNameRow";
 import { EditOrgEmailDialog } from "./EditOrgEmailDialog";
 
-export function WorkspaceTabContent({ user }: { user: Partial<UserInfo> }) {
+export function WorkspaceTabContent({ user }: { user: UserInfo }) {
   const [isEditEmailOpen, setIsEditEmailOpen] = useState(false);
 
   const org = user.organization;

@@ -1,26 +1,11 @@
 // scripts/database/db-post-migrate.ts
 import { execSync } from 'child_process';
-import { readdirSync, statSync } from 'fs';
 import { join } from 'path';
+import { listSqlFilesRecursively } from './list-sql-files';
 
 const postMigrateDir = join(__dirname, '../../prisma/post-migrate');
 
-function getSqlFiles(dir: string): string[] {
-  let results: string[] = [];
-  const list = readdirSync(dir);
-  for (const file of list) {
-    const filePath = join(dir, file);
-    const stat = statSync(filePath);
-    if (stat && stat.isDirectory()) {
-      results = results.concat(getSqlFiles(filePath));
-    } else if (file.endsWith('.sql')) {
-      results.push(filePath);
-    }
-  }
-  return results;
-}
-
-const files = getSqlFiles(postMigrateDir);
+const files = listSqlFilesRecursively(postMigrateDir);
 
 // Optionnel: Trier les fichiers pour assurer un ordre d'exécution (ex: 00_extensions.sql d'abord)
 files.sort();

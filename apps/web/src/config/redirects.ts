@@ -54,7 +54,7 @@ export function getOrganizationRolePath(
  * - Espace personnel + TEACHER → /personal/{orgSlug}/teacher
  * - Sinon → /{orgSlug}/{rolePath} (aucune distinction pour GUEST)
  */
-export function redirectUser(user: Partial<UserInfo>): string {
+export function redirectUser(user: UserInfo): string {
   const { organization: org, role } = user;
 
   if (!org?.slug) {

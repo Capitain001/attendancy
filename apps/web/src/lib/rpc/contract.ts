@@ -20,6 +20,7 @@ import type {
 } from '@/services/notification/types'
 import type { resourceTypeSchema, notificationEventSchema } from '@/services/notification/validation'
 import type { UserInfo, UserStatus, PublicUserInfo, PublicOrganization } from '@/types/user'
+import type { RpcUser } from '@/modules/auth/rpc/utils'
 import type * as v from 'valibot'
 
 export type ResourceType = v.InferOutput<typeof resourceTypeSchema>
@@ -30,6 +31,7 @@ export type {
   UserStatus,
   PublicUserInfo,
   PublicOrganization,
+  RpcUser,
   CreateScheduleInput,
   UpdateScheduleDataInput,
   GetSchedulesDto,

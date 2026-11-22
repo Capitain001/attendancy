@@ -2,14 +2,7 @@
 
 import { prisma } from '@/lib/prisma'
 import { PrismaClient, Prisma } from '@/generated/prisma/client'
-
-// Noms des contraintes GiST Postgres (définis dans prisma/post-migrate/).
-const DB_CONSTRAINTS = {
-  ROOM_OVERLAP:    'no_room_overlap',
-  TEACHER_OVERLAP: 'no_teacher_overlap',
-  CLASS_OVERLAP:   'no_class_overlap_global',
-  GROUP_OVERLAP:   'no_group_overlap',
-} as const
+import { DB_CONSTRAINTS } from '@/config/constants'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -71,12 +64,14 @@ type OccupyingRow = ConflictReport['conflicts'][number]['conflictsWith']
 
 // ── Maps ──────────────────────────────────────────────────────────────────────
 
-const REASON_TO_CONSTRAINT: Record<ConflictReason, string> = {
-  ROOM_OVERLAP:    DB_CONSTRAINTS.ROOM_OVERLAP,
-  TEACHER_OVERLAP: DB_CONSTRAINTS.TEACHER_OVERLAP,
-  CLASS_OVERLAP:   DB_CONSTRAINTS.CLASS_OVERLAP,
-  GROUP_OVERLAP:   DB_CONSTRAINTS.GROUP_OVERLAP,
-}
+const REASON_TO_CONSTRAINT = {
+  ROOM_OVERLAP:    DB_CONSTRAINTS.NO_ROOM_OVERLAP,
+  TEACHER_OVERLAP: DB_CONSTRAINTS.NO_TEACHER_OVERLAP,
+  CLASS_OVERLAP:   DB_CONSTRAINTS.NO_CLASS_OVERLAP_GLOBAL,
+  GROUP_OVERLAP:   DB_CONSTRAINTS.NO_GROUP_OVERLAP,
+} as const satisfies Record<ConflictReason, string>
+
+const CONFLICT_REASONS = Object.keys(REASON_TO_CONSTRAINT) as ConflictReason[]
 
 const REASON_TO_MESSAGE: Record<ConflictReason, string> = {
   ROOM_OVERLAP:    'Conflit salle : la salle est déjà occupée sur ce créneau.',
@@ -100,10 +95,7 @@ export function isDbConstraintViolation(error: unknown): boolean {
     parsed.code === 'P2010' ||
     parsed.cause?.code === '23P01' ||
     message.includes('23P01') ||
-    message.includes(DB_CONSTRAINTS.ROOM_OVERLAP) ||
-    message.includes(DB_CONSTRAINTS.TEACHER_OVERLAP) ||
-    message.includes(DB_CONSTRAINTS.CLASS_OVERLAP) ||
-    message.includes(DB_CONSTRAINTS.GROUP_OVERLAP)
+    detectConflictReason(message) !== null
   )
 }
 
@@ -113,11 +105,7 @@ export function extractDbErrorMessage(error: unknown): string {
 }
 
 export function detectConflictReason(message: string): ConflictReason | null {
-  if (message.includes(DB_CONSTRAINTS.ROOM_OVERLAP))    return 'ROOM_OVERLAP'
-  if (message.includes(DB_CONSTRAINTS.TEACHER_OVERLAP)) return 'TEACHER_OVERLAP'
-  if (message.includes(DB_CONSTRAINTS.CLASS_OVERLAP))   return 'CLASS_OVERLAP'
-  if (message.includes(DB_CONSTRAINTS.GROUP_OVERLAP))   return 'GROUP_OVERLAP'
-  return null
+  return CONFLICT_REASONS.find((reason) => message.includes(REASON_TO_CONSTRAINT[reason])) ?? null
 }
 
 export function getConflictMeta(reason: ConflictReason): { dbConstraint: string; message: string } {

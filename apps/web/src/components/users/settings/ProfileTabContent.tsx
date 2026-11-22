@@ -11,7 +11,7 @@ import { EditPasswordDialog } from "./EditPasswordDialog";
 import { EditEmailDialog } from "./EditEmailDialog";
 import { toast } from "sonner";
 
-export function ProfileTabContent({ user }: { user: Partial<UserInfo> }) {
+export function ProfileTabContent({ user }: { user: UserInfo }) {
   const [supportAccess, setSupportAccess] = useState(true);
   const [isEditNameOpen, setIsEditNameOpen] = useState(false);
   const [isEditEmailOpen, setIsEditEmailOpen] = useState(false);

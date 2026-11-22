@@ -1,10 +1,10 @@
 import * as __generated_prisma_enums from '@/generated/prisma/enums';
-import { Schedule, Level, OrganizationType } from '@/generated/prisma/browser';
+import { Schedule, Level, OrganizationType, AttendanceStatus } from '@/generated/prisma/browser';
 import * as v from 'valibot';
 import { InferOutput, InferInput } from 'valibot';
 import * as src from 'src';
 import * as _prisma_client_runtime_client from '@prisma/client/runtime/client';
-import { Level as Level$1, AttendanceStatus } from '@/generated/prisma/client';
+import { Level as Level$1, AttendanceStatus as AttendanceStatus$1 } from '@/generated/prisma/client';
 
 type ScheduleFilterParams = Partial<Pick<Schedule, 'classId' | 'groupId' | 'teacherId' | 'roomId' | 'weekRecurrenceId' | 'status' | 'confirmed'>> & {
     orgId: string;
@@ -180,6 +180,50 @@ declare const getTeacherDailyScheduleSchema: v.ObjectSchema<{
 }, undefined>;
 type GetTeacherDailyScheduleInput = v.InferInput<typeof getTeacherDailyScheduleSchema>;
 
+declare function getTeacherNextScheduleAction({ teacherId }: {
+    teacherId: string;
+}): Promise<{
+    error: string;
+    data?: undefined;
+} | {
+    data: {
+        id: string;
+        status: __generated_prisma_enums.ScheduleStatus;
+        notes: string | null;
+        endTime: Date;
+        startTime: Date;
+        confirmed: boolean;
+        group: {
+            name: string;
+            _count: {
+                studentGroups: number;
+            };
+        } | null;
+        session: {
+            id: string;
+            status: __generated_prisma_enums.SessionStatus;
+            checkIn: Date | null;
+        } | null;
+        room: {
+            locationId: string | null;
+            name: string;
+        };
+        class: {
+            name: string;
+            level: __generated_prisma_enums.Level;
+            _count: {
+                studentEnrollments: number;
+            };
+        };
+        course: {
+            name: string;
+            ueCourse: {
+                code: string | null;
+            };
+        };
+    } | null;
+    error?: undefined;
+}>;
 declare function getSchedulesAction(params: Omit<ScheduleFilterParams, 'orgId'>): Promise<{
     error: string;
     data?: undefined;
@@ -233,50 +277,6 @@ declare function getSchedulesAction(params: Omit<ScheduleFilterParams, 'orgId'>)
     })[];
     error?: undefined;
 }>;
-declare function getTeacherNextScheduleAction({ teacherId }: {
-    teacherId: string;
-}): Promise<{
-    error: string;
-    data?: undefined;
-} | {
-    data: {
-        id: string;
-        status: __generated_prisma_enums.ScheduleStatus;
-        notes: string | null;
-        endTime: Date;
-        startTime: Date;
-        confirmed: boolean;
-        group: {
-            name: string;
-            _count: {
-                studentGroups: number;
-            };
-        } | null;
-        session: {
-            id: string;
-            status: __generated_prisma_enums.SessionStatus;
-            checkIn: Date | null;
-        } | null;
-        room: {
-            locationId: string | null;
-            name: string;
-        };
-        class: {
-            name: string;
-            level: __generated_prisma_enums.Level;
-            _count: {
-                studentEnrollments: number;
-            };
-        };
-        course: {
-            name: string;
-            ueCourse: {
-                code: string | null;
-            };
-        };
-    } | null;
-    error?: undefined;
-}>;
 declare function getTeacherDailyScheduleAction(input?: GetTeacherDailyScheduleInput): Promise<{
     error: string;
     data?: undefined;
@@ -328,7 +328,9 @@ declare function createScheduleAction(data: CreateScheduleOutput): Promise<{
         } | null;
         teacher: {
             id: string;
+            userId: string;
             user: {
+                id: string;
                 avatar_url: string | null;
                 firstName: string | null;
                 lastName: string | null;
@@ -382,7 +384,9 @@ declare function updateScheduleAction(input: UpdateScheduleInput): Promise<{
         } | null;
         teacher: {
             id: string;
+            userId: string;
             user: {
+                id: string;
                 avatar_url: string | null;
                 firstName: string | null;
                 lastName: string | null;
@@ -650,7 +654,7 @@ interface UserMetadata {
  * jamais écrits dans les metadata, aucun code ne les parcourt.
  */
 interface AuthMetadata {
-    id?: string;
+    id: string;
     email?: string;
     email_verified?: boolean;
     phone_verified?: boolean;
@@ -677,28 +681,57 @@ type PublicUserInfo = Omit<UserInfo, (typeof SENSITIVE_USER_KEYS)[number] | 'org
 };
 
 declare function getCurrentUserAction(): Promise<{
-    data: src.UserInfo;
+    data: src.RpcUser;
     error?: undefined;
 } | {
     error: string;
     data?: undefined;
 }>;
 
-declare const notificationTypeSchema: v.PicklistSchema<["ABSENCE", "COURSE_CHANGE", "NEW_COURSE", "SCHEDULE_UPDATE", "GENERAL", "MESSAGE", "INVITATION"], undefined>;
+declare const resourceTypeSchema: v.EnumSchema<{
+    readonly COURSE: "COURSE";
+    readonly SCHEDULE: "SCHEDULE";
+    readonly USER: "USER";
+    readonly STUDENT: "STUDENT";
+    readonly TEACHER: "TEACHER";
+    readonly ROOM: "ROOM";
+    readonly LOCATION: "LOCATION";
+    readonly PROGRAM: "PROGRAM";
+    readonly FILIERE: "FILIERE";
+    readonly ATTENDANCE: "ATTENDANCE";
+    readonly GRADE: "GRADE";
+    readonly CLASS: "CLASS";
+    readonly GROUP: "GROUP";
+    readonly MESSAGE: "MESSAGE";
+    readonly JUSTIFICATION: "JUSTIFICATION";
+    readonly INVITATION: "INVITATION";
+    readonly NOTE: "NOTE";
+}, undefined>;
+declare const notificationEventSchema: v.EnumSchema<{
+    readonly CREATED: "CREATED";
+    readonly UPDATED: "UPDATED";
+    readonly REJECTED: "REJECTED";
+    readonly CANCELED: "CANCELED";
+    readonly CONFIRMED: "CONFIRMED";
+    readonly ASSIGNED: "ASSIGNED";
+    readonly UNASSIGNED: "UNASSIGNED";
+}, undefined>;
 
 declare function getNotifications(limit?: number): Promise<{
     error: string;
     data?: undefined;
 } | {
     data: {
-        type: __generated_prisma_enums.NotificationType;
         metadata: _prisma_client_runtime_client.JsonValue;
         message: string;
+        orgId: string | null;
         id: string;
-        scheduleId: string | null;
         createdAt: Date;
         updatedAt: Date;
+        resourceId: string | null;
+        resourceType: __generated_prisma_enums.Resource | null;
         read: boolean;
+        event: __generated_prisma_enums.NotificationEvent | null;
     }[];
     error?: undefined;
 }>;
@@ -707,14 +740,16 @@ declare function getUnread(limit?: number): Promise<{
     data?: undefined;
 } | {
     data: {
-        type: __generated_prisma_enums.NotificationType;
         metadata: _prisma_client_runtime_client.JsonValue;
         message: string;
+        orgId: string | null;
         id: string;
-        scheduleId: string | null;
         createdAt: Date;
         updatedAt: Date;
+        resourceId: string | null;
+        resourceType: __generated_prisma_enums.Resource | null;
         read: boolean;
+        event: __generated_prisma_enums.NotificationEvent | null;
     }[];
     error?: undefined;
 }>;
@@ -749,24 +784,28 @@ declare function deleteNotification(notificationId: string): Promise<{
 }>;
 
 declare function getNotificationsForUser(userId: string, limit?: number): Promise<{
-    type: __generated_prisma_enums.NotificationType;
     metadata: _prisma_client_runtime_client.JsonValue;
     message: string;
+    orgId: string | null;
     id: string;
-    scheduleId: string | null;
     createdAt: Date;
     updatedAt: Date;
+    resourceId: string | null;
+    resourceType: __generated_prisma_enums.Resource | null;
     read: boolean;
+    event: __generated_prisma_enums.NotificationEvent | null;
 }[]>;
 declare function getUnreadNotificationsForUser(userId: string, limit?: number): Promise<{
-    type: __generated_prisma_enums.NotificationType;
     metadata: _prisma_client_runtime_client.JsonValue;
     message: string;
+    orgId: string | null;
     id: string;
-    scheduleId: string | null;
     createdAt: Date;
     updatedAt: Date;
+    resourceId: string | null;
+    resourceType: __generated_prisma_enums.Resource | null;
     read: boolean;
+    event: __generated_prisma_enums.NotificationEvent | null;
 }[]>;
 declare function getUnreadCountForUser(userId: string): Promise<number>;
 
@@ -874,7 +913,7 @@ declare function confirmAllAttendancesAction({ scheduleId }: {
 
 declare function getScheduleAttendances(scheduleId: string): Promise<{
     id: string;
-    status: AttendanceStatus;
+    status: AttendanceStatus$1;
     recordedAt: Date;
     student: {
         user: {
@@ -914,7 +953,19 @@ declare const ACTIONS: {
     readonly confirmAllAttendancesAction: typeof confirmAllAttendancesAction;
 };
 
-type NotificationType = v.InferOutput<typeof notificationTypeSchema>;
+/**
+ * Clés de UserInfo exposées au client RPC, et SEULE source du type que le client reçoit.
+ * Volontairement complète tant que les besoins côté client ne sont pas arrêtés :
+ * pour restreindre, retirer des clés ici, la compilation signale alors chaque usage
+ * côté client d'un champ qui n'est plus envoyé.
+ * `id` est toujours ajouté par mapUserRpc, inutile de le lister.
+ */
+declare const RPC_USER_KEYS: readonly ["role", "function", "status", "organization", "organizations", "name", "avatar_url", "phone", "isConnected", "invited_by", "invitationToken", "invitationType", "email", "email_verified", "phone_verified", "online_at", "updated_at"];
+/** Ce que reçoit le client : UserInfo réduit aux clés de RPC_USER_KEYS, plus `id`. */
+type RpcUser = Pick<UserInfo, (typeof RPC_USER_KEYS)[number] | 'id'>;
+
+type ResourceType = v.InferOutput<typeof resourceTypeSchema>;
+type NotificationEvent = v.InferOutput<typeof notificationEventSchema>;
 
 type Actions = typeof ACTIONS;
 type ApiClient = {
@@ -925,4 +976,4 @@ type ApiInput<K extends ApiAction> = Parameters<ApiClient[K]>[0];
 type ApiOutput<K extends ApiAction> = Awaited<ReturnType<ApiClient[K]>>;
 type StartSessionInput = ApiInput<'startSessionAction'>;
 
-export { type ApiAction, type ApiClient, type ApiInput, type ApiOutput, type CreateScheduleInput, type GetClassesDto, type GetNotificationsForUserDto, type GetScheduleAttendancesDto, type GetSchedulesDto, type GetTeacherDailyScheduleDto, type GetTeacherNextScheduleDto, type GetUnreadCountForUserDto, type GetUnreadNotificationsForUserDto, type NotificationItem, type NotificationType, type PublicOrganization, type PublicUserInfo, type StartSessionInput, type UpdateScheduleDataInput, type UserInfo, UserStatus };
+export { type ApiAction, type ApiClient, type ApiInput, type ApiOutput, type CreateScheduleInput, type GetClassesDto, type GetNotificationsForUserDto, type GetScheduleAttendancesDto, type GetSchedulesDto, type GetTeacherDailyScheduleDto, type GetTeacherNextScheduleDto, type GetUnreadCountForUserDto, type GetUnreadNotificationsForUserDto, type NotificationEvent, type NotificationItem, type PublicOrganization, type PublicUserInfo, type ResourceType, type RpcUser, type StartSessionInput, type UpdateScheduleDataInput, type UserInfo, UserStatus };

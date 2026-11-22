@@ -14,3 +14,7 @@ TEST_EMAIL=prof@test.com TEST_PASSWORD=... node --env-file=.env.local scripts/te
 
 delete protected filles
 https://claude.ai/chat/8cecbc60-a301-4b6d-bded-8d9e466c1315
+
+
+## regenerer les contracts :
+bun --filter @attendancy/types build:types

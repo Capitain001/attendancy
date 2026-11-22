@@ -61,7 +61,7 @@ import { ERRORS } from "@/config";
  */
 
 export function getAuthorization(
-  user: Partial<UserInfo>,
+  user: Pick<UserInfo, 'role' | 'function' | 'organization'>,
   requiredRole?: Role | Role[],
   requiredFunction?: Functions | Functions[],
   options?: {   allowPersonalOrg?: boolean } // ← nouveau, opt-in, défaut false

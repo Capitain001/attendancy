@@ -14,6 +14,7 @@
     "build": "prisma generate && turbo build",
     "lint": "turbo lint",
     "check-types": "turbo check-types",
+    "check:contracts": "bun --filter @attendancy/web db:check-types && bun --filter @attendancy/types build:types && bun --filter @attendancy/web ts:check && bun --filter @attendancy/auth check-types",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "clean": "turbo clean"
   },

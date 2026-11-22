@@ -1,8 +1,10 @@
-//packages\auth\src\useCurrentUser.ts
+// packages/auth/src/useCurrentUser.ts
 import { useQuery } from "@tanstack/react-query";
-import type { UserInfo } from "@attendancy/types";
 import { useAuth } from "./AuthProvider";
 import { api } from "./api";
+import { AUTH_CACHE_KEYS } from "./config";
+
+
 
 export function useCurrentUser() {
   const auth = useAuth();
@@ -25,13 +27,13 @@ export function useCurrentUser() {
     // L'identifiant dans la clé garantit qu'on ne lit jamais les données d'un autre
     // utilisateur. Hors ligne, c'est la même clé qu'avant la perte de session,
     // donc les données persistées sont retrouvées.
-    queryKey: ["currentUser", userId],
-    queryFn: async (): Promise<UserInfo | null> => {
+    queryKey: AUTH_CACHE_KEYS.CURRENT_USER(userId),
+    queryFn: async () => {
       const res = await api.getCurrentUserAction();
       if ("error" in res && res.error) {
         throw new Error(res.error);
       }
-      return (res.data as UserInfo) ?? null;
+      return res.data ?? null;
     },
     // Aucun appel sans token valide : avec une session périmée la requête est
     // désactivée, mais elle renvoie quand même les données déjà présentes dans le cache.

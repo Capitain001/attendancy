@@ -20,7 +20,7 @@ conflict/
 - `during` est une colonne `tstzrange` Postgres — utiliser `tstzrange(...)` jamais `tsrange(...)`.
 - `checkConflicts` utilise un `$transaction` + `SAVEPOINT`/`ROLLBACK TO SAVEPOINT` : aucune ligne n'est committée — la transaction est toujours rollbackée via `throw new Error('SIMULATION_ROLLBACK')`.
 - `checkAvailability` prend un `prismaClient` injecté (testable). `checkAvailabilityAction` injecte `prisma` de `@/lib/db`.
-- `DB_CONSTRAINTS` défini localement dans `conflicts.ts` — noms des contraintes GiST du schéma (définis dans `prisma/post-migrate/`).
+- `DB_CONSTRAINTS` importé depuis `@/config/constants` (noms des contraintes GiST générés depuis `prisma/post-migrate/`).
 - Validation auth-guard-first : `getUserInfo()` + `orgId` extraits AVANT le `try`.
 - `uidSchema` de `./validation` — jamais Zod.
 
