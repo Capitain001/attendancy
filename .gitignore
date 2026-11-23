@@ -24,7 +24,11 @@ next-env.d.ts
 
 # prisma — client généré (recréé par `prisma generate`)
 #reference type service
-/apps/web/src/generated/
+/apps/web/src/generated/*
+!/apps/web/src/generated/db-objects.ts
+!/apps/web/src/generated/db-constraints.ts
+!/apps/web/src/generated/referentiel.ts
+!/apps/web/src/generated/themes.ts
 /packages/db/src/generated/
 
 # Generated service API indexes
