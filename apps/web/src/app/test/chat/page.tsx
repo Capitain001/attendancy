@@ -11,10 +11,9 @@ import {
   AlertTriangle,
   RotateCcw,
 } from 'lucide-react'
-import { ChatView } from '@/components/chat/ChatView'
+import { ChatView } from '@/components/chat-test/ChatView'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Card } from '@/components/ui/card'
 import type { ChatMessage, ReplyPreview } from '@/hooks/chat/types'
 
 const INITIAL_MESSAGES: ChatMessage[] = [
