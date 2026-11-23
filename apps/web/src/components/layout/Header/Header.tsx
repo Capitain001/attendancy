@@ -1,7 +1,7 @@
 // src/components/layout/Header/Header.tsx
 import Link from 'next/link'
 import { ModeToggle } from './ModeToggle'
-import { UserInfo } from '@/types/user'
+import { UserInfo } from '@attendancy/user'
 import { orgPath } from '@/config'
 import AuthButton from '@/components/auth/ui/AuthButton'
 import { NotificationsPopover } from '../sidebar/ui/NotificationsPopover'

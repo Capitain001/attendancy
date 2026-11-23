@@ -3,7 +3,7 @@
 
 import { getUserInfo } from "@/modules/user/userInfo";
 import { PERSONAL_ROUTE_SEGMENT, ROLE_PATHS } from "@/config/redirects";
-import { UserRoles } from "@/types/user";
+import { UserRoles } from "@attendancy/user";
 
 // ── Chemins du parcours perso : réutilise PERSONAL_ROUTE_SEGMENT et
 // ROLE_PATHS (config/redirects.ts) plutôt que de redupliquer "personal" et

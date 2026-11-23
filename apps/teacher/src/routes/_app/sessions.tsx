@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import TeacherSessionPage from "@/components/session/TeacherSessionPage";
-import { useCurrentUser } from "@attendancy/auth";
+import { useAuthUser } from "@attendancy/auth";
 import { CircleDashed } from "lucide-react";
 
 export const Route = createFileRoute("/_app/sessions")({
@@ -8,16 +8,8 @@ export const Route = createFileRoute("/_app/sessions")({
 });
 
 function SessionsPage() {
-  const { data: user, isLoading } = useCurrentUser();
+  const user = useAuthUser();
   const teacherId = user?.organization?.teacherId;
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-dvh items-center justify-center">
-        <CircleDashed className="size-8 animate-spin text-muted-foreground" />
-      </div>
-    );
-  }
 
   if (!teacherId) {
     return (

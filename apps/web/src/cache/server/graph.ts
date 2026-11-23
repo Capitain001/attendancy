@@ -66,6 +66,7 @@ import { TEACHER_COURSE_HOURS_GRAPH } from "@/services/teacher-course-hours/cach
 import { EVALUATION_GRAPH } from "@/services/evaluation/cache";
 import { MESSAGE_GRAPH } from "@/services/message/cache";
 import { CHANNEL_MEMBER_GRAPH } from "@/services/channel-member/cache";
+import { CHANNEL_GRAPH } from "@/services/channel/cache";
 // ⚠ À ÉTENDRE PAR PROJET — un import par service à données cachées :
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -111,6 +112,7 @@ export const CACHE_GRAPH = {
   ...EVALUATION_GRAPH,
   ...MESSAGE_GRAPH,
   ...CHANNEL_MEMBER_GRAPH,
+  ...CHANNEL_GRAPH,
 // ⚠ À ÉTENDRE PAR PROJET — spreader chaque <SERVICE>_GRAPH importé :
 } as const;
 

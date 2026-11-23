@@ -1,7 +1,7 @@
 // src/config/redirects.ts
 //apps\web\src\config\redirects.ts
-import type { Organization, Role, UserInfo } from "@/types/user";
-import { UserRoles } from "@/types/user";
+import type { Organization, Role, UserInfo } from "@attendancy/user";
+import { UserRoles } from "@attendancy/user";
 
 // Mapping des chemins par rôle
 export const ROLE_PATHS: Record<Role, string> = {

@@ -65,13 +65,7 @@ export interface FileRouteTypes {
   fullPaths: '/' | '/auth' | '/rooms' | '/auth/login'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/auth' | '/rooms' | '/auth/login'
-  id:
-    | '__root__'
-    | '/'
-    | '/_app'
-    | '/auth'
-    | '/_app/rooms'
-    | '/auth/login'
+  id: '__root__' | '/' | '/_app' | '/auth' | '/_app/rooms' | '/auth/login'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {

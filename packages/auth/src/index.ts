@@ -1,5 +1,6 @@
+//packages\auth\src\index.ts
 export { AuthProvider, useAuth } from "./AuthProvider";
-export { useCurrentUser } from "./useCurrentUser";
+export { useAuthUser } from "./useAuthUser";
 export {
   getSessionState,
   getToken,
@@ -12,4 +13,4 @@ export { api } from "./api";
 export { login, logout, signupPersonal } from "./actions";
 
 export { useIsOffline } from "./hooks";
-export { AUTH_CACHE_KEYS } from "./config";
+export { AUTH_CACHE_KEYS } from "./cache";

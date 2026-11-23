@@ -2,7 +2,7 @@
 "use client"
 import { LiveAvatars } from '@/components/users/avatars/LiveAvatars'
 // import { useUser } from '@/contexts/UserContext'
-import { UserRoles, type Role } from '@/types/user'
+import { UserRoles, type Role } from '@attendancy/user'
 import { cn } from '@/lib/utils';
 
 type RoleLiveBarProps = {

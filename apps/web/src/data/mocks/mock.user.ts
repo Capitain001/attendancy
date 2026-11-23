@@ -1,5 +1,5 @@
 // src/data/mocks/mock.user.ts
-import type { UserInfo } from '@/types/user'
+import type { UserInfo } from '@attendancy/user'
 
 export const mockUser: UserInfo = {
   id: 'usr_mock_001',

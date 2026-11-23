@@ -1,6 +1,6 @@
 // src/modules/auth/persmission/config.ts
 //src/services/auth/persmission/config.ts
-import { Role } from "@/types";
+import { Role } from "@attendancy/user";
 
 export const ROLE_HIERARCHY: Record<Role, Role[]> = {
     ADMIN: ["ADMIN"],

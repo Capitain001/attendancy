@@ -3,7 +3,7 @@ import * as React from "react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import UserIcon from "../UserIcon"
-import { UserInfo } from "@/types/user" 
+import { UserInfo } from "@attendancy/user" 
 import LogOutForm from "@/components/auth/ui/LogOutForm"
 import { ORG_INFO_URL } from "@/config"
 

@@ -4,7 +4,7 @@ import { Prisma } from '@/generated/prisma/browser'
 import { prisma } from '@/lib/prisma'
 import { cacheLife, cacheTag } from 'next/cache'
 import { MESSAGES_PAGE_SIZE } from '../constants'
-import { truncatePreview } from '../preview'
+import { truncatePreview } from '../utils'
 
 export const messageSelect = {
   id: true,
@@ -33,11 +33,11 @@ export function toMessageDto({ parent, ...message }: MessageRow) {
     ...message,
     parent: parent
       ? {
-          id: parent.id,
-          deleted: parent.deletedAt !== null,
-          content: parent.deletedAt ? null : truncatePreview(parent.content),
-          user: parent.user,
-        }
+        id: parent.id,
+        deleted: parent.deletedAt !== null,
+        content: parent.deletedAt ? null : truncatePreview(parent.content),
+        user: parent.user,
+      }
       : null,
   }
 }
@@ -98,7 +98,7 @@ export const getMessageById = (messageId: string) =>
     select: { id: true, channelId: true, parentId: true, user: { select: { id: true } } },
   })
 
-  
+
 // Lecture de vérification : volontairement sans "use cache" (l'état doit être frais).
 // Un message supprimé n'est pas retrouvé : l'appelant le traite comme inexistant.
 // Exposée aux autres services via server.ts (export * de database/).

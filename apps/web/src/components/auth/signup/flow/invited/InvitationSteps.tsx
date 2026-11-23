@@ -13,7 +13,7 @@ import {
 } from 'lucide-react'
 import { TextShimmer } from '@/components/ui/text-shimmer'
 import UserIcon from '@/components/users/UserIcon'
-import type { UserInfo } from '@/types/user'
+import type { UserInfo } from '@attendancy/user'
 import { typography } from '@/styles'
 import { cn } from '@/lib/utils'
 

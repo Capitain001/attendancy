@@ -1,5 +1,5 @@
 // src/modules/auth/persmission/autorization.ts
-import { UserInfo, Role, Functions } from "@/types/user";
+import { UserInfo, Role, Functions } from "@attendancy/user";
 import { getUserInfo } from '@/modules/user';
 import { ROLE_HIERARCHY } from "./config";
 import { ERRORS } from "@/config";

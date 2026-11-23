@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import type { UserInfo } from "@/types/user";
+import type { UserInfo } from "@attendancy/user";
 import { UserProfileCard } from "./UserProfileCard";
 import { EditProfileForm } from "./EditProfileForm";
 

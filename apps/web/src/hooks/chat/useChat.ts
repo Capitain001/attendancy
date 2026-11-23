@@ -9,8 +9,8 @@ import { useChannelMute } from '@/hooks/chat/useChannelMute'
 import type { ChatMessage, MessageStatus, ReplyPreview } from '@/hooks/chat/types'
 import { useMessages } from '@/hooks/data/messages/useMessages'
 import { mapMessages, mapReplySnapshots, resolveReplyTo } from '@/hooks/chat/utils'
-import { truncatePreview } from '@/services/message/preview'
-import type { PresenceUser } from '@/types'
+import { truncatePreview } from '@/services/message/utils'
+import type { PresenceUser } from '@attendancy/user'
 import { useChatSync, useChatSyncState, registerRealtimeSender } from '@/modules/chat'
 
 interface UseChatProps {
@@ -153,8 +153,8 @@ export const useChat = ({
               ? 'failed'
               : 'sending'
             : source === 'inbox'
-            ? 'unverified'
-            : 'sent'
+              ? 'unverified'
+              : 'sent'
 
         return {
           ...message,

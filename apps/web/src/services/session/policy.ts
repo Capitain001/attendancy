@@ -1,7 +1,7 @@
 // src/services/session/policy.ts
 // Logique pure de cycle de vie d'une session enseignant.
 // Pas de React, pas de DB — testable en isolation.
-import type { Session } from '@/generated/prisma/client'
+import type { Session } from '@/generated/prisma/browser'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

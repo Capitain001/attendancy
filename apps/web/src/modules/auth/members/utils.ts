@@ -3,7 +3,7 @@
 import 'server-only'
 
 import { PrismaClient, Role } from "@/generated/prisma/client";
-import { Functions } from "@/types/user";
+import { Functions } from "@attendancy/user";
 import { createStudentEnrollmentRaw } from '@/services/student-enrollment/database';
 // import { ensureMainFunctions } from "@/services/fonctions/main/database";
 // import { Functions } from "@/types/user";

@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
-import type { UserInfo } from "@/types/user";
+import type { UserInfo } from "@attendancy/user";
 import { OrgLogoUploader } from "./OrgLogoUploader";
 import { PersonalOrganizationNameRow } from "./PersonalOrganizationNameRow";
 import { EditOrgEmailDialog } from "./EditOrgEmailDialog";

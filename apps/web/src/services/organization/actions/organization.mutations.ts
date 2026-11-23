@@ -11,7 +11,7 @@ import { getRoleProfileKey, getUserInfo } from '@/modules/user'
 import { setUserAccess } from '@/modules/user/access'
 import { logAuditAsync } from '@/services/audit'
 import { authAccess } from '@/services/auth'
-import type { Role } from '@/types/user'
+import type { Role } from '@attendancy/user'
 import {
   createOrgWithDefaults,
   setMemberStatusWithAudit,

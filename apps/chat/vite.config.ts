@@ -26,7 +26,15 @@ export default defineConfig({
         replacement: path.resolve(__dirname, "./src/lib/next-navigation.ts"),
       },
       {
-        find: /^@\/services\/(message\/policy|message\/preview|message\/constants|schedule\/policy|schedule\/queries|session\/policy)$/,
+        find: "@/utils/supabase/client",
+        replacement: path.resolve(__dirname, "./src/lib/supabase-client.ts"),
+      },
+      {
+        find: "@/generated/prisma/browser",
+        replacement: path.resolve(__dirname, "../../packages/db/src/generated/browser.ts"),
+      },
+      {
+        find: /^@\/services\/(message\/policy|message\/utils|message\/constants|schedule\/policy|schedule\/queries|session\/policy)$/,
         replacement: path.resolve(__dirname, "../web/src/services/$1"),
       },
       {

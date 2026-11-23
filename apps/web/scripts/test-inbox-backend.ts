@@ -29,7 +29,7 @@ import {
 
 import { generateInvitationMetadata } from '@/modules/invitation/metadata'
 import { getOrgsIdentities } from '@/services/organization/server'
-import type { UserInfo } from '@/types/user'
+import type { UserInfo } from '@attendancy/user'
 import { buildInvitationResponsePayload } from '@/services/notification/messages/invitation.messages'
 
 const C = {

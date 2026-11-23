@@ -1,8 +1,10 @@
 import * as __generated_prisma_enums from '@/generated/prisma/enums';
-import { Schedule, Level, OrganizationType, AttendanceStatus } from '@/generated/prisma/browser';
+import { Schedule, Level, AttendanceStatus } from '@/generated/prisma/browser';
 import * as v from 'valibot';
 import { InferOutput, InferInput } from 'valibot';
-import * as src from 'src';
+import * as _attendancy_user from '@attendancy/user';
+import { Organization, UserInfo } from '@attendancy/user';
+export { UserStatus } from '@attendancy/user';
 import * as _prisma_client_runtime_client from '@prisma/client/runtime/client';
 import { Level as Level$1, AttendanceStatus as AttendanceStatus$1 } from '@/generated/prisma/client';
 
@@ -14,10 +16,6 @@ type ScheduleFilterParams = Partial<Pick<Schedule, 'classId' | 'groupId' | 'teac
     groupIds?: string[];
 };
 declare function getSchedules(params: ScheduleFilterParams): Promise<({
-    group: {
-        id: string;
-        name: string;
-    } | null;
     teacher: {
         id: string;
         user: {
@@ -34,6 +32,10 @@ declare function getSchedules(params: ScheduleFilterParams): Promise<({
         id: string;
         name: string;
     };
+    group: {
+        id: string;
+        name: string;
+    } | null;
     course: {
         id: string;
         name: string;
@@ -67,12 +69,6 @@ declare function getTeacherNextSchedule(teacherId: string, orgId: string): Promi
     endTime: Date;
     startTime: Date;
     confirmed: boolean;
-    group: {
-        name: string;
-        _count: {
-            studentGroups: number;
-        };
-    } | null;
     session: {
         id: string;
         status: __generated_prisma_enums.SessionStatus;
@@ -89,6 +85,12 @@ declare function getTeacherNextSchedule(teacherId: string, orgId: string): Promi
             studentEnrollments: number;
         };
     };
+    group: {
+        name: string;
+        _count: {
+            studentGroups: number;
+        };
+    } | null;
     course: {
         name: string;
         ueCourse: {
@@ -103,12 +105,6 @@ declare function getTeacherDailySchedule(teacherId: string, orgId: string, dayKe
     endTime: Date;
     startTime: Date;
     confirmed: boolean;
-    group: {
-        name: string;
-        _count: {
-            studentGroups: number;
-        };
-    } | null;
     session: {
         id: string;
         status: __generated_prisma_enums.SessionStatus;
@@ -125,6 +121,12 @@ declare function getTeacherDailySchedule(teacherId: string, orgId: string, dayKe
             studentEnrollments: number;
         };
     };
+    group: {
+        name: string;
+        _count: {
+            studentGroups: number;
+        };
+    } | null;
     course: {
         name: string;
     };
@@ -193,12 +195,6 @@ declare function getTeacherNextScheduleAction({ teacherId }: {
         endTime: Date;
         startTime: Date;
         confirmed: boolean;
-        group: {
-            name: string;
-            _count: {
-                studentGroups: number;
-            };
-        } | null;
         session: {
             id: string;
             status: __generated_prisma_enums.SessionStatus;
@@ -215,6 +211,12 @@ declare function getTeacherNextScheduleAction({ teacherId }: {
                 studentEnrollments: number;
             };
         };
+        group: {
+            name: string;
+            _count: {
+                studentGroups: number;
+            };
+        } | null;
         course: {
             name: string;
             ueCourse: {
@@ -229,10 +231,6 @@ declare function getSchedulesAction(params: Omit<ScheduleFilterParams, 'orgId'>)
     data?: undefined;
 } | {
     data: ({
-        group: {
-            id: string;
-            name: string;
-        } | null;
         teacher: {
             id: string;
             user: {
@@ -249,6 +247,10 @@ declare function getSchedulesAction(params: Omit<ScheduleFilterParams, 'orgId'>)
             id: string;
             name: string;
         };
+        group: {
+            id: string;
+            name: string;
+        } | null;
         course: {
             id: string;
             name: string;
@@ -288,12 +290,6 @@ declare function getTeacherDailyScheduleAction(input?: GetTeacherDailyScheduleIn
         endTime: Date;
         startTime: Date;
         confirmed: boolean;
-        group: {
-            name: string;
-            _count: {
-                studentGroups: number;
-            };
-        } | null;
         session: {
             id: string;
             status: __generated_prisma_enums.SessionStatus;
@@ -310,6 +306,12 @@ declare function getTeacherDailyScheduleAction(input?: GetTeacherDailyScheduleIn
                 studentEnrollments: number;
             };
         };
+        group: {
+            name: string;
+            _count: {
+                studentGroups: number;
+            };
+        } | null;
         course: {
             name: string;
         };
@@ -322,10 +324,6 @@ declare function createScheduleAction(data: CreateScheduleOutput): Promise<{
     data?: undefined;
 } | {
     data: {
-        group: {
-            id: string;
-            name: string;
-        } | null;
         teacher: {
             id: string;
             userId: string;
@@ -344,6 +342,10 @@ declare function createScheduleAction(data: CreateScheduleOutput): Promise<{
             id: string;
             name: string;
         };
+        group: {
+            id: string;
+            name: string;
+        } | null;
         course: {
             id: string;
             name: string;
@@ -378,10 +380,6 @@ declare function updateScheduleAction(input: UpdateScheduleInput): Promise<{
     data?: undefined;
 } | {
     data: {
-        group: {
-            id: string;
-            name: string;
-        } | null;
         teacher: {
             id: string;
             userId: string;
@@ -400,6 +398,10 @@ declare function updateScheduleAction(input: UpdateScheduleInput): Promise<{
             id: string;
             name: string;
         };
+        group: {
+            id: string;
+            name: string;
+        } | null;
         course: {
             id: string;
             name: string;
@@ -546,141 +548,8 @@ declare function signupPersonalDesktopAction(input: SignupPersonalInput): Promis
     error?: undefined;
 }>;
 
-/**
- * Fonctions principales du système
- * Source unique de vérité
- */
-declare const MAIN_FUNCTIONS: readonly [{
-    readonly name: "PRINCIPAL";
-    readonly description: "Chef d'établissement, responsable de la gestion globale de l'institution et de la supervision du personnel.";
-    readonly icon: "principal.svg";
-}, {
-    readonly name: "SECRETARY";
-    readonly description: "Secrétaire administratif, gestion des dossiers, de la correspondance et des tâches administratives courantes.";
-    readonly icon: "secretary.svg";
-}, {
-    readonly name: "ASSISTANT";
-    readonly description: "Assistant administratif, support opérationnel des tâches déléguées par les responsables.";
-    readonly icon: "assistant.svg";
-}, {
-    readonly name: "DELEGATE";
-    readonly description: "Délégué de classe, représente des élèves en liaison avec l'administration.";
-    readonly icon: "delegate.svg";
-}, {
-    readonly name: "COORDINATOR";
-    readonly description: "Coordinateur pédagogique ou Responsable de discipline";
-    readonly icon: "coordinator.svg";
-}, {
-    readonly name: "MEMBER";
-    readonly description: "Membre de l'administration pédagogique";
-    readonly icon: "member.svg";
-}];
-/**
- * Type sécurisé dérivé automatiquement
- * inclue SUPER_ADMIN (admin principal) + les fonctions principales pedagogiques
- */
-type FunctionName = (typeof MAIN_FUNCTIONS)[number]["name"] | "SUPER_ADMIN";
-
-/** Rôles applicatifs : rôles DB + GUEST. */
-declare const UserRoles: {
-    readonly ADMIN: "ADMIN";
-    readonly TEACHER: "TEACHER";
-    readonly STUDENT: "STUDENT";
-    readonly PARENT: "PARENT";
-    readonly DIRECTION: "DIRECTION";
-    readonly GUEST: "GUEST";
-};
-type Role = (typeof UserRoles)[keyof typeof UserRoles];
-declare const Functions: Record<FunctionName, FunctionName>;
-type Functions = (typeof Functions)[keyof typeof Functions];
-declare const UserStatus: {
-    readonly ACTIVE: "ACTIVE";
-    readonly INACTIVE: "INACTIVE";
-    readonly SUSPENDED: "SUSPENDED";
-    readonly ON_LEAVE: "ON_LEAVE";
-    readonly PENDING: "PENDING";
-    readonly NEW: "NEW";
-    readonly INVITED: "INVITED";
-};
-type UserStatus = (typeof UserStatus)[keyof typeof UserStatus];
-interface InvitedBy {
-    id?: string;
-    name?: string;
-    email?: string;
-}
-interface Organization {
-    id?: string;
-    name?: string;
-    slug?: string;
-    logo?: string;
-    type?: OrganizationType;
-    responsable?: boolean;
-    departmentId?: string;
-    studentId?: string;
-    teacherId?: string;
-    parentId?: string;
-    directionId?: string;
-}
-/**
- * app_metadata : tout ce qui sert à autoriser.
- * Écriture réservée au serveur (service role) via `setUserAccess` / `updateUserAccess`.
- * Lecture : sans repli sur `user_metadata`, une clé absente donne la valeur la plus restrictive.
- */
-interface AppMetadata {
-    role?: Role;
-    function?: Functions;
-    status?: UserStatus;
-    organization?: Organization;
-    organizations?: Organization[];
-}
-/**
- * user_metadata : données de profil.
- * Modifiables par le client (API Auth + clé publique) → ne JAMAIS s'en servir
- * pour autoriser une action.
- * Écriture : `setUserInfo` (utilisateur courant) ou `updateUserMetadata` (utilisateur cible).
- */
-interface UserMetadata {
-    name?: string;
-    avatar_url?: string;
-    phone?: string;
-    isConnected?: boolean;
-    invited_by?: InvitedBy;
-    invitationToken?: string;
-    invitationType?: string;
-}
-/**
- * Champs fournis par Supabase Auth ou calculés à l'exécution :
- * jamais écrits dans les metadata, aucun code ne les parcourt.
- */
-interface AuthMetadata {
-    id: string;
-    email?: string;
-    email_verified?: boolean;
-    phone_verified?: boolean;
-    online_at?: string;
-    /** Fourni par Supabase Auth (user.updated_at), mis à jour à chaque updateUser/updateUserById. */
-    updated_at?: string;
-}
-/** Vue unifiée : l'appelant ne sait pas de quel magasin vient un champ. */
-interface UserInfo extends AppMetadata, UserMetadata, AuthMetadata {
-}
-/**
- * Champs critiques : servent à autoriser ou à rejouer une invitation.
- * Ne doivent jamais atteindre un composant client.
- */
-declare const SENSITIVE_USER_KEYS: readonly ["organizations", "invited_by", "invitationType"];
-declare const SENSITIVE_ORGANIZATION_KEYS: readonly ["responsable", "departmentId", "studentId", "teacherId", "parentId", "directionId"];
-type PublicOrganization = Omit<Organization, (typeof SENSITIVE_ORGANIZATION_KEYS)[number]>;
-/**
- * UserInfo sans les champs critiques : le type à utiliser dans tous les composants client.
- * Pour un besoin ponctuel : `PublicUserInfo & { phone_verified: boolean }`.
- */
-type PublicUserInfo = Omit<UserInfo, (typeof SENSITIVE_USER_KEYS)[number] | 'organization'> & {
-    organization?: PublicOrganization;
-};
-
 declare function getCurrentUserAction(): Promise<{
-    data: src.RpcUser;
+    data: _attendancy_user.ClientUser;
     error?: undefined;
 } | {
     error: string;
@@ -782,6 +651,28 @@ declare function deleteNotification(notificationId: string): Promise<{
     error?: undefined;
 }>;
 
+declare const notifyChannelMembersSchema: v.ObjectSchema<{
+    readonly channelId: v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.UuidAction<string, "ID de canal invalide">]>;
+    readonly messageId: v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.UuidAction<string, "ID de message invalide">]>;
+    readonly excludedIds: v.OptionalSchema<v.SchemaWithPipe<readonly [v.ArraySchema<v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.UuidAction<string, undefined>]>, undefined>, v.MaxLengthAction<string[], 500, undefined>]>, readonly []>;
+}, undefined>;
+type NotifyChannelMembersInput = v.InferInput<typeof notifyChannelMembersSchema>;
+
+/**
+ * Notifie les membres d'un canal d'un nouveau message (en ligne ou non).
+ * L'expéditeur et son organisation viennent de la session, jamais du client, et
+ * le contenu vient de la base : un push ne peut annoncer qu'un message réel,
+ * écrit par l'expéditeur, dans ce canal, et non supprimé.
+ * `excludedIds` ne peut que réduire la liste des destinataires, jamais l'élargir.
+ */
+declare function notifyChannelMembersAction(input: NotifyChannelMembersInput): Promise<{
+    error: string;
+    data?: undefined;
+} | {
+    data: true;
+    error?: undefined;
+}>;
+
 declare function getNotificationsForUser(userId: string, limit?: number): Promise<{
     metadata: _prisma_client_runtime_client.JsonValue;
     message: string;
@@ -813,6 +704,217 @@ type GetUnreadNotificationsForUserDto = Awaited<ReturnType<typeof getUnreadNotif
 type GetUnreadCountForUserDto = Awaited<ReturnType<typeof getUnreadCountForUser>>;
 
 type NotificationItem = Awaited<ReturnType<typeof getNotificationsForUser>>[number];
+
+declare const createMessageSchema: v.ObjectSchema<{
+    id: v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.UuidAction<string, "ID de message invalide">]>;
+    createdAt: v.OptionalSchema<v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.IsoTimestampAction<string, "Date invalide">, v.TransformAction<string, Date>, v.CheckAction<Date, "Date invalide">]>, undefined>;
+    content: v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.TrimAction, v.MinLengthAction<string, 1, "Le message ne peut pas être vide">, v.MaxLengthAction<string, 4000, "Message trop long">]>;
+    channelId: v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.UuidAction<string, "ID de canal invalide">]>;
+    parentId: v.OptionalSchema<v.NullableSchema<v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.UuidAction<string, "ID parent invalide">]>, undefined>, undefined>;
+}, undefined>;
+type CreateMessageInput = v.InferInput<typeof createMessageSchema>;
+declare const updateMessageDataSchema: v.ObjectSchema<{
+    content: v.OptionalSchema<v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.TrimAction, v.MinLengthAction<string, 1, "Le message ne peut pas être vide">, v.MaxLengthAction<string, 4000, "Message trop long">]>, undefined>;
+}, undefined>;
+type UpdateMessageDataInput = v.InferInput<typeof updateMessageDataSchema>;
+declare const updateMessageSchema: v.ObjectSchema<Record<"messageId", v.SchemaWithPipe<[v.StringSchema<undefined>, v.UuidAction<string, undefined>]>> & {
+    data: v.ObjectSchema<{
+        content: v.OptionalSchema<v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.TrimAction, v.MinLengthAction<string, 1, "Le message ne peut pas être vide">, v.MaxLengthAction<string, 4000, "Message trop long">]>, undefined>;
+    }, undefined>;
+}, undefined>;
+type UpdateMessageInput = v.InferInput<typeof updateMessageSchema>;
+declare const getMessagesSchema: v.ObjectSchema<{
+    readonly channelId: v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.UuidAction<string, "ID de canal invalide">]>;
+}, undefined>;
+type GetMessagesInput = v.InferInput<typeof getMessagesSchema>;
+declare const getOlderMessagesSchema: v.ObjectSchema<{
+    readonly channelId: v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.UuidAction<string, "ID de canal invalide">]>;
+    readonly before: v.ObjectSchema<{
+        readonly createdAt: v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.IsoTimestampAction<string, "Date de curseur invalide">, v.TransformAction<string, Date>, v.CheckAction<Date, "Date de curseur invalide">]>;
+        readonly id: v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.UuidAction<string, "ID de curseur invalide">]>;
+    }, undefined>;
+}, undefined>;
+type GetOlderMessagesInput = v.InferInput<typeof getOlderMessagesSchema>;
+
+declare function getMessagesAction(input: GetMessagesInput): Promise<{
+    readonly error: "Accès refusé au canal";
+    readonly code: "FORBIDDEN";
+} | {
+    error: string;
+    code: "UNAUTHORIZED" | "FORBIDDEN" | "SERVER" | "ORG_NOT_FOUND";
+    data?: undefined;
+} | {
+    error: string;
+    code?: undefined;
+    data?: undefined;
+} | {
+    data: {
+        parent: {
+            id: string;
+            deleted: boolean;
+            content: string | null;
+            user: {
+                id: string;
+                firstName: string | null;
+                lastName: string | null;
+            } | null;
+        } | null;
+        id: string;
+        channelId: string;
+        parentId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+        content: string;
+        editedAt: Date | null;
+        user: {
+            id: string;
+            avatar_url: string | null;
+            firstName: string | null;
+            lastName: string | null;
+        } | null;
+    }[];
+    error?: undefined;
+    code?: undefined;
+}>;
+/**
+ * Page de messages antérieurs au curseur `before` (le plus ancien message déjà chargé).
+ * La taille de page est fixée côté serveur : le client ne la choisit pas.
+ */
+declare function getOlderMessagesAction(input: GetOlderMessagesInput): Promise<{
+    readonly error: "Accès refusé au canal";
+    readonly code: "FORBIDDEN";
+} | {
+    error: string;
+    code: "UNAUTHORIZED" | "FORBIDDEN" | "SERVER" | "ORG_NOT_FOUND";
+    data?: undefined;
+} | {
+    error: string;
+    code?: undefined;
+    data?: undefined;
+} | {
+    data: {
+        items: {
+            parent: {
+                id: string;
+                deleted: boolean;
+                content: string | null;
+                user: {
+                    id: string;
+                    firstName: string | null;
+                    lastName: string | null;
+                } | null;
+            } | null;
+            id: string;
+            channelId: string;
+            parentId: string | null;
+            createdAt: Date;
+            updatedAt: Date;
+            content: string;
+            editedAt: Date | null;
+            user: {
+                id: string;
+                avatar_url: string | null;
+                firstName: string | null;
+                lastName: string | null;
+            } | null;
+        }[];
+        hasMore: boolean;
+    };
+    error?: undefined;
+    code?: undefined;
+}>;
+
+declare const ERROR_CODES: {
+    readonly UNAUTHORIZED: "UNAUTHORIZED";
+    readonly FORBIDDEN: "FORBIDDEN";
+    readonly NOT_FOUND: "NOT_FOUND";
+    readonly BAD_REQUEST: "BAD_REQUEST";
+    readonly SERVER: "SERVER";
+    readonly ORG_NOT_FOUND: "ORG_NOT_FOUND";
+    readonly CONFLICT: "CONFLICT";
+    readonly UNAVAILABLE: "UNAVAILABLE";
+    readonly VALIDATION: "VALIDATION";
+};
+type ErrorCode = (typeof ERROR_CODES)[keyof typeof ERROR_CODES];
+
+declare function createMessageAction(input: CreateMessageInput): Promise<{
+    error: string;
+    code: ErrorCode;
+} | {
+    data: {
+        id: string;
+        created: boolean;
+        createdAt: Date;
+    };
+}>;
+declare function updateMessageAction(input: UpdateMessageInput): Promise<{
+    error: string;
+    data?: undefined;
+} | {
+    data: {
+        parent: {
+            id: string;
+            deleted: boolean;
+            content: string | null;
+            user: {
+                id: string;
+                firstName: string | null;
+                lastName: string | null;
+            } | null;
+        } | null;
+        id: string;
+        channelId: string;
+        parentId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+        content: string;
+        editedAt: Date | null;
+        user: {
+            id: string;
+            avatar_url: string | null;
+            firstName: string | null;
+            lastName: string | null;
+        } | null;
+    };
+    error?: undefined;
+}>;
+declare function removeMessageAction(messageId: string): Promise<{
+    error: string;
+    data?: undefined;
+} | {
+    data: {
+        id: string;
+    };
+    error?: undefined;
+}>;
+
+declare function getMessages(channelId: string, orgId: string, limit?: number): Promise<{
+    parent: {
+        id: string;
+        deleted: boolean;
+        content: string | null;
+        user: {
+            id: string;
+            firstName: string | null;
+            lastName: string | null;
+        } | null;
+    } | null;
+    id: string;
+    channelId: string;
+    parentId: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+    content: string;
+    editedAt: Date | null;
+    user: {
+        id: string;
+        avatar_url: string | null;
+        firstName: string | null;
+        lastName: string | null;
+    } | null;
+}[]>;
+
+type GetMessagesDto = Awaited<ReturnType<typeof getMessages>>;
 
 type StartSessionInput$1 = {
     scheduleId: string;
@@ -926,6 +1028,49 @@ declare function getScheduleAttendances(scheduleId: string): Promise<{
 
 type GetScheduleAttendancesDto = Awaited<ReturnType<typeof getScheduleAttendances>>;
 
+declare const getChannelMuteByUserSchema: v.ObjectSchema<{
+    readonly channelId: v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.UuidAction<string, "ID de canal invalide">]>;
+}, undefined>;
+type GetChannelMuteByUserInput = v.InferInput<typeof getChannelMuteByUserSchema>;
+declare const updateChannelMuteSchema: v.ObjectSchema<Record<"channelId", v.SchemaWithPipe<[v.StringSchema<undefined>, v.UuidAction<string, undefined>]>> & {
+    data: v.ObjectSchema<{
+        readonly muted: v.BooleanSchema<undefined>;
+    }, undefined>;
+}, undefined>;
+type UpdateChannelMuteInput = v.InferInput<typeof updateChannelMuteSchema>;
+
+declare function getChannelMuteByUserAction(input: GetChannelMuteByUserInput): Promise<{
+    error: string;
+    code: "UNAUTHORIZED" | "FORBIDDEN" | "SERVER" | "ORG_NOT_FOUND";
+    data?: undefined;
+} | {
+    error: string;
+    code?: undefined;
+    data?: undefined;
+} | {
+    data: {
+        muted: boolean;
+    };
+    error?: undefined;
+    code?: undefined;
+}>;
+
+declare function updateChannelMuteByUserAction(input: UpdateChannelMuteInput): Promise<{
+    error: string;
+    code: "UNAUTHORIZED" | "FORBIDDEN" | "SERVER" | "ORG_NOT_FOUND";
+    data?: undefined;
+} | {
+    error: string;
+    code?: undefined;
+    data?: undefined;
+} | {
+    data: {
+        muted: boolean;
+    };
+    error?: undefined;
+    code?: undefined;
+}>;
+
 declare const ACTIONS: {
     readonly getSchedulesAction: typeof getSchedulesAction;
     readonly createScheduleAction: typeof createScheduleAction;
@@ -944,24 +1089,36 @@ declare const ACTIONS: {
     readonly markNotificationAsRead: typeof markNotificationAsRead;
     readonly markAllRead: typeof markAllRead;
     readonly deleteNotification: typeof deleteNotification;
+    readonly notifyChannelMembersAction: typeof notifyChannelMembersAction;
+    readonly getMessagesAction: typeof getMessagesAction;
+    readonly getOlderMessagesAction: typeof getOlderMessagesAction;
+    readonly createMessageAction: typeof createMessageAction;
+    readonly updateMessageAction: typeof updateMessageAction;
+    readonly removeMessageAction: typeof removeMessageAction;
     readonly startSessionAction: typeof startSessionAction;
     readonly completeSessionAction: typeof completeSessionAction;
     readonly generateTokenAction: typeof generateTokenAction;
     readonly getScheduleAttendancesAction: typeof getScheduleAttendancesAction;
     readonly confirmAttendanceAction: typeof confirmAttendanceAction;
     readonly confirmAllAttendancesAction: typeof confirmAllAttendancesAction;
+    readonly getChannelMuteByUserAction: typeof getChannelMuteByUserAction;
+    readonly updateChannelMuteByUserAction: typeof updateChannelMuteByUserAction;
 };
 
 /**
- * Clés de UserInfo exposées au client RPC, et SEULE source du type que le client reçoit.
- * Volontairement complète tant que les besoins côté client ne sont pas arrêtés :
- * pour restreindre, retirer des clés ici, la compilation signale alors chaque usage
- * côté client d'un champ qui n'est plus envoyé.
- * `id` est toujours ajouté par mapUserRpc, inutile de le lister.
+ * Champs critiques : servent à autoriser ou à rejouer une invitation.
+ * Ne doivent jamais atteindre un composant client.
  */
-declare const RPC_USER_KEYS: readonly ["role", "function", "status", "organization", "organizations", "name", "avatar_url", "phone", "isConnected", "invited_by", "invitationToken", "invitationType", "email", "email_verified", "phone_verified", "online_at", "updated_at"];
-/** Ce que reçoit le client : UserInfo réduit aux clés de RPC_USER_KEYS, plus `id`. */
-type RpcUser = Pick<UserInfo, (typeof RPC_USER_KEYS)[number] | 'id'>;
+declare const SENSITIVE_USER_KEYS: readonly ["organizations", "invited_by", "invitationType"];
+declare const SENSITIVE_ORGANIZATION_KEYS: readonly ["responsable", "departmentId", "studentId", "teacherId", "parentId", "directionId"];
+type PublicOrganization = Omit<Organization, (typeof SENSITIVE_ORGANIZATION_KEYS)[number]>;
+/**
+ * UserInfo sans les champs critiques : le type à utiliser dans tous les composants client.
+ * Pour un besoin ponctuel : `PublicUserInfo & { phone_verified: boolean }`.
+ */
+type PublicUserInfo = Omit<UserInfo, (typeof SENSITIVE_USER_KEYS)[number] | 'organization'> & {
+    organization?: PublicOrganization;
+};
 
 type ResourceType = v.InferOutput<typeof resourceTypeSchema>;
 type NotificationEvent = v.InferOutput<typeof notificationEventSchema>;
@@ -975,4 +1132,4 @@ type ApiInput<K extends ApiAction> = Parameters<ApiClient[K]>[0];
 type ApiOutput<K extends ApiAction> = Awaited<ReturnType<ApiClient[K]>>;
 type StartSessionInput = ApiInput<'startSessionAction'>;
 
-export { type ApiAction, type ApiClient, type ApiInput, type ApiOutput, type CreateScheduleInput, type GetClassesDto, type GetNotificationsForUserDto, type GetScheduleAttendancesDto, type GetSchedulesDto, type GetTeacherDailyScheduleDto, type GetTeacherNextScheduleDto, type GetUnreadCountForUserDto, type GetUnreadNotificationsForUserDto, type NotificationEvent, type NotificationItem, type PublicOrganization, type PublicUserInfo, type ResourceType, type RpcUser, type StartSessionInput, type UpdateScheduleDataInput, type UserInfo, UserStatus };
+export type { ApiAction, ApiClient, ApiInput, ApiOutput, CreateMessageInput, CreateScheduleInput, GetClassesDto, GetMessagesDto, GetNotificationsForUserDto, GetScheduleAttendancesDto, GetSchedulesDto, GetTeacherDailyScheduleDto, GetTeacherNextScheduleDto, GetUnreadCountForUserDto, GetUnreadNotificationsForUserDto, NotificationEvent, NotificationItem, PublicOrganization, PublicUserInfo, ResourceType, StartSessionInput, UpdateMessageDataInput, UpdateScheduleDataInput };

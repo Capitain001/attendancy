@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 // import Logo from "@/components/organization/ux/Logo";
 import { NotificationsPopover } from "../ui/NotificationsPopover";
-import { Role } from "@/services/user";
+import { Role } from "@attendancy/user";
 // import { Role } from "@/types";
 
 interface UserSidebarHeaderProps {

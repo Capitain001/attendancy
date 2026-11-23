@@ -11,7 +11,7 @@ import { completeSignup } from './complete-signup'
 import type { AuthActionResult } from '../types'
 
 import { redirectUser } from '@/config/redirects'
-import { UserStatus } from '@/types/user'
+import { UserStatus } from '@attendancy/user'
 import { getUserInfo } from '@/modules/user'
 
 

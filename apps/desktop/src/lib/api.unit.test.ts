@@ -133,6 +133,7 @@ describe("desktop RPC transport", () => {
       error: new Error("refresh failed"),
     });
 
+    // TODO(migration): getCurrentUserAction conservé tant que apps/desktop n'est pas migré vers useAuthUser.
     await expect(api.getCurrentUserAction()).resolves.toEqual({
       error: "Not authenticated",
     });

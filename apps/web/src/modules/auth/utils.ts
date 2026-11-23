@@ -1,5 +1,5 @@
 // src/modules/auth/utils.ts
-import { UserInfo } from "@/types";
+import { UserInfo } from "@attendancy/user";
 import { getUserInfo } from '@/modules/user';
 
 

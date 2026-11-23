@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { truncatePreview } from '@/services/message/preview'
+import { truncatePreview } from '@/services/message/utils'
 import { mapReplySnapshots, resolveReplyTo } from './utils'
 import type { RealtimeMessage } from './use-realtime-chat'
 import type { ReplyPreview } from './types'

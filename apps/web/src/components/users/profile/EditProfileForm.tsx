@@ -24,7 +24,7 @@ import AvatarUploader from "@/components/users/AvatarUploader";
 import { updateUserProfileAction } from "@/services/user/actions/user.mutations";
 import { updateUserDataSchema } from "@/services/user/validation";
 import type { UpdateCurrentUserInput } from "@/services/user/validation";
-import type { UserInfo } from "@/types/user";
+import type { UserInfo } from "@attendancy/user";
 
 interface EditProfileFormProps {
   user: UserInfo;

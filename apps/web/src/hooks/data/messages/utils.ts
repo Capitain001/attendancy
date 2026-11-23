@@ -1,8 +1,8 @@
-import type { GetMessagesDto } from "@/services/message";
 import type {
+  GetMessagesDto,
   CreateMessageInput,
   UpdateMessageDataInput,
-} from "@/services/message";
+} from "@attendancy/types";
 
 export type MessageUser = {
   id: string;

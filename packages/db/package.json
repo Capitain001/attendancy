@@ -1,5 +1,10 @@
 {
   "name": "@attendancy/db",
   "private": true,
-  "dependencies": { "@prisma/client": "^7.8.0" }
+  "exports": {
+    "./browser": "./src/generated/browser.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.8.0"
+  }
 }

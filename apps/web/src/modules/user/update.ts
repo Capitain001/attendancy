@@ -4,11 +4,8 @@
 
 import "server-only";
 
-import {
-  USER_METADATA_KEYS,
-  type UserMetadata,
-  type UserMetadataPatch,
-} from "@/types/user";
+import { type UserMetadataPatch } from "@/types/user";
+import { USER_METADATA_KEYS, type UserMetadata } from "@attendancy/user";
 import { createClient } from "@/utils/supabase/server";
 
 import { getUserInfo } from "./userInfo";

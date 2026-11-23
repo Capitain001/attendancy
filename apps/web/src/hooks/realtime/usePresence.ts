@@ -3,7 +3,7 @@
 'use client'
 
 import { generateUserInfo } from '@/modules/user'
-import { UserInfo } from '@/types'
+import { UserInfo } from '@attendancy/user'
 import { supabase } from '@/utils/supabase/client'
 import { REALTIME_SUBSCRIBE_STATES } from '@supabase/supabase-js'
 import { useEffect, useState } from 'react'

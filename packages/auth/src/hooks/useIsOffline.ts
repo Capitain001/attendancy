@@ -1,3 +1,4 @@
+//packages\auth\src\hooks\useIsOffline.ts
 import { useSyncExternalStore } from "react";
 import { onlineManager } from "@tanstack/react-query";
 import { useAuth } from "../AuthProvider";
@@ -13,8 +14,8 @@ export function useIsOffline() {
   const isDeviceOffline = !useSyncExternalStore(subscribe, getSnapshot);
 
   // L'appareil se croit en ligne, mais le renouvellement de session a échoué
-  // faute de réseau (Wi-Fi sans internet, serveur injoignable). Dans cet état la
-  // requête currentUser est désactivée : cette ligne est alors le seul signal.
+  // faute de réseau (Wi-Fi sans internet, serveur injoignable). Aucune requête
+  // n'est lancée pour l'utilisateur courant : cette ligne est le seul signal.
   const isSessionStale = useAuth()?.status === "offline-stale";
 
   return isDeviceOffline || isSessionStale;

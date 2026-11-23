@@ -1,5 +1,9 @@
+//apps\chat\src\routes\_app\route.tsx
+import { useMemo } from "react";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { requireAuth } from "@attendancy/auth";
+import { requireAuth, useAuthUser } from "@attendancy/auth";
+import { toPresenceUser } from "@attendancy/user";
+import { ChatSyncProvider } from "@/modules/chat";
 
 export const Route = createFileRoute("/_app")({
   beforeLoad: requireAuth,
@@ -7,11 +11,21 @@ export const Route = createFileRoute("/_app")({
 });
 
 function AppLayout() {
+  const user = useAuthUser();
+  // Même identité tant que l'utilisateur ne change pas : ChatSyncProvider ne relance rien
+  const presenceUser = useMemo(
+    () => (user ? toPresenceUser(user) : null),
+    [user],
+  );
+
+  // Local et immédiat : seulement le temps que la session se résolve, jamais le réseau
+  if (!presenceUser) return null;
+
   return (
-    <div className="flex min-h-screen flex-col">
-      <div className="flex-1">
+    <ChatSyncProvider user={presenceUser} channelIds={[]}>
+      <div className="flex flex-1 flex-col">
         <Outlet />
       </div>
-    </div>
+    </ChatSyncProvider>
   );
 }

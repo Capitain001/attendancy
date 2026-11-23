@@ -6,7 +6,8 @@ import { createContext, useContext, useEffect, useMemo } from "react"
 import { useUserStore } from "@/store/userStore"
 import { usePresenceStore } from "@/store/presenceStore"
 import { usePresence } from "@/hooks/realtime/usePresence"
-import { getUserInfo, PresenceUser, UserInfo } from "@/services/user"
+import { getUserInfo } from "@/services/user"
+import { PresenceUser, UserInfo } from "@attendancy/user"
 
 
 interface UserContextType {

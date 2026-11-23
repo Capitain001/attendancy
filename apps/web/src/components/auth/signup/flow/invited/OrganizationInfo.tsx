@@ -5,7 +5,7 @@
 
 import { TextShimmer } from '@/components/ui/text-shimmer'
 import UserIcon from '@/components/users/UserIcon'
-import { UserInfo } from '@/types/user'
+import { UserInfo } from '@attendancy/user'
 
 interface OrganizationInfoProps {
   user: UserInfo

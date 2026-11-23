@@ -1,6 +1,6 @@
 // src/store/organizationStore.ts
 "use client"
-import { Organization, UserInfo } from "@/services/user";
+import { Organization, UserInfo } from "@attendancy/user";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 // import { Organization, UserInfo } from "@/types/user";

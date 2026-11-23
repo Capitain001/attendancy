@@ -15,7 +15,7 @@ import { SidebarSwitcher } from "../ui/sidebar-switcher";
 import { SIDEBAR_VIEWS, DEFAULT_SIDEBAR_VIEWS } from "../views/registry";
 import { useSidebarViews } from "../hooks/use-sidebar-views";
 import { useMemo } from "react";
-import { UserInfo } from "@/types";
+import { UserInfo } from "@attendancy/user";
 import { SubRoute, Route, SidebarView } from "../types";
 import { FooterMenu } from "../ui/footer-menu";
 

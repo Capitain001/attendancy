@@ -2,10 +2,13 @@
 import { Outlet } from "@tanstack/react-router";
 import { NuqsAdapter } from "nuqs/adapters/tanstack-router";
 import { AppProvider, MainLayout, Header } from "@attendancy/ui";
-import { useCurrentUser, logout } from "@attendancy/auth";
+import { useAuthUser, useIsOffline, logout } from "@attendancy/auth";
 
 export function RootLayout() {
-  const { data: user, isOffline } = useCurrentUser();
+  // Session locale : immédiate, sans réseau. L'en-tête a toujours un utilisateur (donc le
+  // menu et le bouton de déconnexion), même serveur éteint ou hors ligne.
+  const user = useAuthUser();
+  const isOffline = useIsOffline();
 
   return (
     <NuqsAdapter>

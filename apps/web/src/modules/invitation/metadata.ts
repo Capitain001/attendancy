@@ -12,7 +12,7 @@
  * );
  */
 
-import { Functions, Organization, Role, UserInfo, UserStatus } from "@/types";
+import { Functions, Organization, Role, UserInfo, UserStatus } from "@attendancy/user";
 import { InvitationMetadata } from "@/types/invitation";
 
 interface MetadataParams {

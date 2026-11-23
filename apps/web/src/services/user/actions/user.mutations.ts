@@ -11,7 +11,7 @@ import { logAuditAsync } from "@/services/audit";
 import { setUserInfo } from "@/modules/user/server";
 import { tryCatch } from "@/utils/server";
 import { getFullName } from "@/lib/utils";
-import { UserMetadata } from "@/types";
+import { UserMetadata } from "@attendancy/user";
 
 export async function updateUserProfileAction(input: UpdateCurrentUserInput) {
   const parsed = v.safeParse(updateUserDataSchema, input);

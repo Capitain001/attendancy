@@ -3,7 +3,7 @@
 
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
-import type { UserInfo } from "@/modules/user"
+import type { UserInfo } from "@attendancy/user"
 
 interface UserState {
   user: UserInfo | null

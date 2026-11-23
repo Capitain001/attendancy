@@ -21,7 +21,15 @@ import {
   markNotificationAsRead,
   markAllRead,
   deleteNotification,
+  notifyChannelMembersAction,
 } from "@/services/notification";
+import {
+  getMessagesAction,
+  getOlderMessagesAction,
+  createMessageAction,
+  updateMessageAction,
+  removeMessageAction,
+} from "@/services/message";
 import {
   startSessionAction,
   completeSessionAction,
@@ -32,6 +40,10 @@ import {
   confirmAttendanceAction,
   confirmAllAttendancesAction,
 } from "@/services/attendance";
+import {
+  getChannelMuteByUserAction,
+  updateChannelMuteByUserAction,
+} from "@/services/channel-member";
 
 // les server action sont réexportées côté frontend sous une couche d'API,
 // on conserve le même typage et la même syntaxe bien que le moteur fasse un appel réseau
@@ -55,10 +67,18 @@ export const ACTIONS = {
   markNotificationAsRead,
   markAllRead,
   deleteNotification,
+  notifyChannelMembersAction,
+  getMessagesAction,
+  getOlderMessagesAction,
+  createMessageAction,
+  updateMessageAction,
+  removeMessageAction,
   startSessionAction,
   completeSessionAction,
   generateTokenAction,
   getScheduleAttendancesAction,
   confirmAttendanceAction,
   confirmAllAttendancesAction,
+  getChannelMuteByUserAction,
+  updateChannelMuteByUserAction,
 } as const;

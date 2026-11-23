@@ -1,6 +1,6 @@
 //apps\web\src\modules\invitation\utils.ts
 import { Resource } from '@/generated/prisma/browser'
-import type { Role } from '@/types/user'
+import type { Role } from '@attendancy/user'
 import { ROLE_LABELS } from '@/modules/user/constants'
 import { InvitationAction } from '@/modules/invitation/constants'
 

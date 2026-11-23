@@ -1,3 +1,4 @@
+//packages\cache\src\index.ts
 export { queryClient } from "./client";
 export { queryPersister } from "./persister";
 export { clearLocalData, claimLocalData , getCacheOwner  } from "./clear";

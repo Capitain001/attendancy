@@ -5,7 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { MirrorHover } from "@/components/design";
 import UserIcon from "@/components/users/UserIcon";
 import { AuthMenu } from "@/components/users/UserButton/AuthMenu";
-import { UserInfo } from "@/types/user";
+import { UserInfo } from "@attendancy/user";
 import { cn, getUserInitials } from "@/lib/utils";
 import { getInitials } from "@/components/classes/direction/section/ui";
 

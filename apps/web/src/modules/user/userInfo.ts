@@ -3,10 +3,9 @@
 "use server"
 import { cache } from "react"
 import { createClient } from "@/utils/supabase/server"
-import { UserMetadata, type UserInfo } from "@/types/user"
+import { mapUserInfo, type UserInfo, type UserMetadata } from "@attendancy/user"
 import { jwtDecode } from "jwt-decode"
 import { getUser, setUser, removeUser } from "./lru-cache"
-import { mapUserInfo } from "./utils"
 import { headers } from "next/headers"
 import { createBearerClient } from "@/utils/supabase/bearer"
 

@@ -9,7 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { UserInfo } from "@/types";
+import { UserInfo } from "@attendancy/user";
 
 
 

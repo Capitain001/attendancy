@@ -37,3 +37,26 @@ bun run test:unit -- src/services/permission/utils.unit.test.ts
 bun run test:unit -- src/modules/auth/persmission/acces.unit.test.ts
 
 bun run test:unit -- src/services/function/cache.unit.test.ts
+
+cd apps/chat
+
+# Build production (utilise VITE_API_URL de apps/chat/.env)
+# → génère apps/chat/artifacts/Attendancy-Chat.exe
+bun run build:desktop
+
+# Build de test local (pointe sur http://localhost:3000 par défaut)
+# → génère apps/chat/artifacts/Attendancy-Chat-dev.exe
+bun run build:desktop dev
+
+# Avec URL API personnalisée ou installeur NSIS :
+bun run build:desktop dev -api:http://192.168.1.20:3000
+bun run build:desktop --installer
+
+bun --filter @attendancy/chat run build:desktop dev
+
+
+# 1. Générer les stubs RPC (packages/rpc/src/generated/*.ts)
+bun --filter @attendancy/rpc gen
+
+# 2. Régénérer le contrat de types ApiClient (packages/types/dist/contract.d.mts)
+bun --filter @attendancy/types build:types

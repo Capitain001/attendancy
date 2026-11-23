@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import type { ApiOutput } from '@attendancy/types'
 import { api } from '../lib/api'
 
+// TODO(migration): remplacer getCurrentUserAction par useAuthUser (@attendancy/auth) lors de la migration de apps/desktop.
 type CurrentUser = Extract<ApiOutput<'getCurrentUserAction'>, { data: unknown }>['data']
 
 export function useMe(enabled: boolean) {

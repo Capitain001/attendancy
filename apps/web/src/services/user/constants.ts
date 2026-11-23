@@ -1,5 +1,5 @@
 // src/services/user/constants.ts
-import type { UserInfo, UserStatus } from "@/types/user";
+import type { UserInfo, UserStatus } from "@attendancy/user";
 
 export const STATUS_LABEL: Record<UserStatus, string> = {
   ACTIVE: "Actif",

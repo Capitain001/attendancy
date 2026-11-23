@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { PresenceUser } from '@/types'
+import type { PresenceUser } from '@attendancy/user'
 import type { Envelope, OutboxItem } from '@attendancy/chat'
 
 // --- Mock React hooks pour environnement Node ---

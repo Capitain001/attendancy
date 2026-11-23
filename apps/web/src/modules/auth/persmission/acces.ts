@@ -4,7 +4,7 @@
 import { cache } from 'react'
 import { getUserInfo } from '@/modules/user';
 import { getAuthorization } from "./autorization";
-import { Role, Functions, AuthenticatedUser } from "@/types/user";
+import { Role, Functions, AuthenticatedUser } from "@attendancy/user";
 import { ERROR_CODES, ERRORS } from "@/config";
 import { hasPermission } from '@/services/permission'
 import { getEffectivePermissionNames } from '@/services/permission/server'

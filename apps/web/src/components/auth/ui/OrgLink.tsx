@@ -1,6 +1,6 @@
 // src/components/auth/ui/OrgLink.tsx
 import { orgPath, redirectUser } from '@/config'
-import { UserInfo } from '@/types'
+import { UserInfo } from '@attendancy/user'
 import Link from 'next/link'
 import React from 'react'
 

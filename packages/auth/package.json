@@ -15,6 +15,7 @@
     "@attendancy/cache": "workspace:*",
     "@attendancy/rpc": "workspace:*",
     "@attendancy/types": "workspace:*",
+    "@attendancy/user": "workspace:*",
     "@supabase/supabase-js": "^2.110.7"
   },
   "peerDependencies": {

@@ -3,7 +3,7 @@
 
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
-import { PresenceUser } from "@/services/user"
+import { PresenceUser } from "@attendancy/user"
 
 interface PresenceState {
   onlineUsers: Record<string, PresenceUser>

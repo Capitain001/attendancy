@@ -1,8 +1,7 @@
 // src/modules/invitation/teacher/invite.ts
 "use server";
 
-
-import { InvitationResult } from "@/types/invitation";
+import { TeacherResources } from "@/types";
 import { inviteUser } from "../user";
 
 type InviteTeacherParams = {
@@ -13,10 +12,7 @@ type InviteTeacherParams = {
   deliveryMethod?: "email" | "link";
 };
 
-export type TeacherResources= {
-    courses?: string[];
-    classes?: string[];
-}
+
 export async function inviteTeacher({
   email,
   name,

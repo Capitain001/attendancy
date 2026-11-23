@@ -19,6 +19,7 @@
     "@attendancy/rpc": "workspace:*",
     "@attendancy/types": "workspace:*",
     "@attendancy/ui": "workspace:*",
+    "@attendancy/user": "workspace:*",
     "@tanstack/react-query": "^5.104.1",
     "@tanstack/react-query-persist-client": "^5.104.1",
     "@tanstack/react-router": "^1.170.41",

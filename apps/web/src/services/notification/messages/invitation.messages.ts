@@ -1,5 +1,5 @@
 import { Resource, NotificationEvent } from '@/generated/prisma/browser'
-import type { Role } from '@/types/user'
+import type { Role } from '@attendancy/user'
 import { ROLE_LABELS } from '@/modules/user/constants'
 import type { InvitationAction } from '@/modules/invitation/constants'
 

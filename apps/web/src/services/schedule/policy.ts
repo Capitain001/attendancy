@@ -1,6 +1,6 @@
 // src/services/schedule/policy.ts
 
-import type { Schedule } from "@/generated/prisma/client";
+import type { Schedule } from "@/generated/prisma/browser";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

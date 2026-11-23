@@ -1,5 +1,5 @@
 // src/modules/user/constants.ts
-import type { Role } from '@/types/user'
+import type { Role } from '@attendancy/user'
 
 export const ROLE_LABELS = {
   ADMIN: 'administrateur',

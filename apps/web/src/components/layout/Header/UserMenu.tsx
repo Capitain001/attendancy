@@ -1,6 +1,6 @@
 // src/components/layout/Header/UserMenu.tsx
 import { logoutAction, logoutActionForm } from '@/modules/auth'
-import type { UserInfo } from '@/types/user'
+import type { UserInfo } from '@attendancy/user'
 import Link from 'next/link'
 import { LogOut, Settings } from 'lucide-react'
 import { cn } from '@/lib/utils'

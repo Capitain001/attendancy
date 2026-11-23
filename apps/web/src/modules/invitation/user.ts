@@ -16,7 +16,7 @@ import { Action } from "@/generated/prisma/browser";
 import { getAuthorization } from "../auth/persmission";
 import { prisma } from "@/lib/prisma";
 import { isOrgMember } from "@/services/user-organization/server";
-import { UserStatus } from "@/types";
+import { UserStatus } from "@attendancy/user";
 // : Promise<InvitationResult>
 
 export async function inviteUser(params: InvitationParams) {

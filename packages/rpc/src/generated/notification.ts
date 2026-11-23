@@ -7,3 +7,4 @@ export const getUnreadCount = api.getUnreadCount
 export const markNotificationAsRead = api.markNotificationAsRead
 export const markAllRead = api.markAllRead
 export const deleteNotification = api.deleteNotification
+export const notifyChannelMembersAction = api.notifyChannelMembersAction

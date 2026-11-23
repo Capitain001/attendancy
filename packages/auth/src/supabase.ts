@@ -1,3 +1,5 @@
+// packages\auth\src\supabase.ts
+
 /// <reference types="vite/client" />
 import { createClient } from "@supabase/supabase-js";
 

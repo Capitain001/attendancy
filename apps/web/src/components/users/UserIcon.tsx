@@ -2,7 +2,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { getRefreshUrl } from "@/lib/url";
-import { UserStatus } from "@/types";
+import { UserStatus } from "@attendancy/user";
 import { BadgeCheckIcon } from "lucide-react";
 
 type UserInfo = {

@@ -1,7 +1,7 @@
 // src/modules/user/profile.ts
 // src/services/user/profile.ts
 
-import type { Organization ,UserInfo} from "@/types/user";
+import type { Organization, UserInfo } from "@attendancy/user";
 import { Role } from "@/generated/prisma/client";
 
 /* =========================

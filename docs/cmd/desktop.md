@@ -82,7 +82,7 @@ Pour créer un exécutable de test qui appelle un serveur local :
 ```powershell
 cd apps/teacher
 bun run build:desktop dev
-```
+```le  run dev
 
 Le mode `dev` utilise `http://localhost:3000` par défaut. L'URL peut être
 remplacée dans les deux modes avec `-api:<url>` :

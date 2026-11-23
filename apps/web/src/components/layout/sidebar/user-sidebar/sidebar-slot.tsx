@@ -7,7 +7,7 @@ import {
   DEFAULT_SIDEBAR_VIEWS,
   PLANNING_SIDEBAR_VIEWS,
 } from "../views/registry";
-import type { UserInfo } from "@/types";
+import type { UserInfo } from "@attendancy/user";
 import type { Route, SidebarView } from "../types";
 
 // Une seule source pour le mapping segment -> vues.

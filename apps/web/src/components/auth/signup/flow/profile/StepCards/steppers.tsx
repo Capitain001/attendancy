@@ -1,6 +1,6 @@
 // src/components/auth/signup/flow/profile/StepCards/steppers.tsx
 import { Stepper, StepperContent, StepperDescription, StepperIndicator, StepperItem, StepperNav, StepperPanel, StepperSeparator, StepperTitle, StepperTrigger } from '@/components/ui/stepper'
-import { Role } from '@/types'
+import { Role } from '@attendancy/user'
 import { AnimatePresence } from 'framer-motion'
 import { Check, LoaderCircleIcon } from 'lucide-react'
 import React, { useState } from 'react'

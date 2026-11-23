@@ -1,7 +1,7 @@
 // src/hooks/chat/use-realtime-chat.ts
 'use client'
 
-import { PresenceUser } from '@/types'
+import { PresenceUser } from '@attendancy/user'
 import { createClient } from '@/utils/supabase/client'
 import type { GetMessagesDto } from '@/services/message'
 import { useCallback, useEffect, useRef, useState } from 'react'

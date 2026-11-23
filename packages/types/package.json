@@ -13,6 +13,9 @@
     "build:types": "tsup",
     "check-types": "tsc --noEmit"
   },
+  "dependencies": {
+    "@attendancy/user": "workspace:*"
+  },
   "devDependencies": {
     "@prisma/client": "^7.8.0",
     "tsup": "^8",

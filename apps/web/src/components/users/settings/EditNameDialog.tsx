@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import type { UserInfo } from "@/types/user";
+import type { UserInfo } from "@attendancy/user";
 import { updateUserProfileAction } from "@/services/user/actions/user.mutations";
 
 interface EditNameDialogProps {

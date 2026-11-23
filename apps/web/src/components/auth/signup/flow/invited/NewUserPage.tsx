@@ -2,7 +2,7 @@
 'use client'
 
 import { useState } from 'react'
-import { UserInfo, UserStatus } from '@/types/user'
+import { UserInfo, UserStatus } from '@attendancy/user'
 import InvitationFlow, { type StepDef, type ConfirmDef } from './InvitationFlow'
 import { WelcomeStep, InvitationStep, RoleStep, ConfirmStep } from './InvitationSteps'
 

@@ -1,6 +1,6 @@
 // src/modules/presence/channel.ts
 // services/presence/channel.ts
-import { UserInfo } from "@/types/user"
+import { UserInfo } from "@attendancy/user"
 import { supabase } from "@/utils/supabase/client"
 
 

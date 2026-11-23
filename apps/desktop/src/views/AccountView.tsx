@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { ApiOutput } from '@attendancy/types'
 import { logout } from "../lib/auth/actions";
 
+// TODO(migration): remplacer getCurrentUserAction par ClientUser / useAuthUser lors de la migration de apps/desktop.
 type CurrentUser = Extract<ApiOutput<'getCurrentUserAction'>, { data: unknown }>['data']
 
 export function AccountView({ user }: { user: CurrentUser }) {

@@ -1,7 +1,7 @@
 // src/components/layout/sidebar/ui/footer-menu.tsx
 "use client";
 
-import type { UserInfo } from "@/modules/user";
+import type { UserInfo } from "@attendancy/user";
 import {
   DropdownMenu,
   DropdownMenuContent,

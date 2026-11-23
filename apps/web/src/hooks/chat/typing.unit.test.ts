@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import type { PresenceUser } from '@/types'
+import type { PresenceUser } from '@attendancy/user'
 import { TYPING_EXPIRE_MS, TYPING_THROTTLE_MS } from './constants'
 
 describe('Indicateur de frappe (typing indicator - version iswriting)', () => {

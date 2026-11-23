@@ -16,7 +16,7 @@ import {
   BadgeCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { UserInfo, UserStatus } from "@/types/user";
+import type { UserInfo, UserStatus } from "@attendancy/user";
 import UserIcon from "../UserIcon";
 import AvatarUploader from "../AvatarUploader";
 import { getStatusLabel } from "@/services/user";

@@ -1,16 +1,13 @@
 // src/types/invitation.ts
 // types/invitation.ts
 import type { User as SupabaseUser } from '@supabase/supabase-js'
-import type {
-  AppMetadata,
-  Functions,
-  InvitedBy,
-  Organization,
-  Role,
-  UserMetadata,
-} from '@/types/user'
-import type { Resource } from '@/generated/prisma/client'
-import type { TeacherResources } from '@/modules/invitation/teacher/invite'
+import type { AppMetadata, Functions, InvitedBy, Organization, Role, UserMetadata } from '@attendancy/user'
+import type { Resource } from '@/generated/prisma/browser'
+
+export type TeacherResources= {
+    courses?: string[];
+    classes?: string[];
+}
 
 // Défini dans types/user.ts (déduit de InvitedBySchema) ; réexporté pour les imports existants
 export type { InvitedBy }

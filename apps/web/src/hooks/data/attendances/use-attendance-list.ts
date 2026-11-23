@@ -17,7 +17,7 @@ import {
 } from "@/services/attendance";
 
 import type { GetScheduleAttendancesDto as ScheduleAttendanceDTO } from "@attendancy/types";
-import type { $Enums } from "@/generated/prisma/client";
+
 
 import {
   CACHE_KEYS,
@@ -57,7 +57,7 @@ export const useAttendanceList = ({
           acc[key] = [...(acc[key] ?? []), a] as AttendanceItem[];
           return acc;
         },
-        {} as Partial<Record<$Enums.AttendanceStatus, AttendanceItem[]>>
+        {} as Partial<Record<AttendanceItem["status"], AttendanceItem[]>>
       ),
     [attendances]
   );

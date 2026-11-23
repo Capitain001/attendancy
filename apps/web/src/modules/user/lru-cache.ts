@@ -29,7 +29,7 @@
  */
 
 import { LRUCache } from 'lru-cache'
-import type { UserInfo } from '@/types/user'
+import type { UserInfo } from '@attendancy/user'
 
 /**
  * Instance du cache LRU configurée pour les utilisateurs

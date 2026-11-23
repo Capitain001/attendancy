@@ -8,7 +8,7 @@ import { InviteDirectionParams } from "./types";
 import { checkFunctionsExist } from "./database";
 import { inviteDirectionSchema } from "./validation";
 import { safeParse } from "valibot";
-import { FunctionName, MAIN_FUNCTIONS } from "@/config/data";
+import { FunctionName, MAIN_FUNCTIONS } from "@attendancy/user";
 //a auditer apres [aaa]
 /**
  * Invite un membre de la direction académique

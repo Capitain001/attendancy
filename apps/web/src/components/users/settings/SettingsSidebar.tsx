@@ -18,7 +18,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { UserInfo } from "@/types/user";
+import type { UserInfo } from "@attendancy/user";
 
 export function SettingsSidebar({
   user,

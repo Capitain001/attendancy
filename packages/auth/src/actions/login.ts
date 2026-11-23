@@ -1,6 +1,8 @@
+//packages\auth\src\actions\login.ts
 import { supabase } from "../supabase";
 import { api } from "../api";
 import { getDeviceId } from "../device-id";
+import { AUTH_CACHE_KEYS } from "../cache";
 import { claimLocalData, queryClient } from "@attendancy/cache";
 
 export async function login({
@@ -9,8 +11,8 @@ export async function login({
 }: {
   email: string;
   password: string;
-}): Promise<string | null> {
-  queryClient.removeQueries({ queryKey: ["me"] });
+}) {
+  queryClient.removeQueries({ queryKey: AUTH_CACHE_KEYS.CURRENT_USER_ROOT });
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,

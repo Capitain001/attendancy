@@ -1,3 +1,4 @@
+//packages\auth\src\api.ts
 import type { ApiClient } from "@attendancy/types";
 import { NetworkError } from "@attendancy/rpc/error";
 import { getToken } from "./session";

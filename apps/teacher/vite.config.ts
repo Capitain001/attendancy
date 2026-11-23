@@ -37,6 +37,10 @@ export default defineConfig({
         find: /^@\/services\/([^/]+)(\/actions)?$/,
         replacement: path.resolve(__dirname, "../../packages/rpc/src/generated/$1.ts"),
       },
+      {
+        find: "@/generated/prisma/browser",
+        replacement: path.resolve(__dirname, "../../packages/db/src/generated/browser.ts"),
+      },
       { find: "@rpc-api", replacement: path.resolve(__dirname, "src/lib/api.ts") },
       { find: "@ui", replacement: path.resolve(__dirname, "../../packages/ui/src") },
       { find: "@", replacement: path.resolve(__dirname, "../web/src") },

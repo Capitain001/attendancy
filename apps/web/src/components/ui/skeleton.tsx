@@ -1,6 +1,6 @@
 // src/components/ui/skeleton.tsx
 import { cn } from "@/lib/utils"
-import type { AcademicYear } from "@/generated/prisma/client"
+import type { AcademicYear } from "@/generated/prisma/browser"
 
 function Loader1({ className }: { className?: string }) {
   return <div className={cn("rounded-full border-2 border-current border-t-transparent animate-spin", className)} />

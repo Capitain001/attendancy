@@ -8,7 +8,8 @@ import "server-only";
 
 import { createClient, createAdminClient } from '@/utils/supabase/server';
 import { CALL_BACK, SITE_URL } from '@/config/url';
-import { Functions, UserStatus, UserInfo, AppMetadataPatch } from '@/types/user';
+import { AppMetadataPatch } from '@/types/user';
+import { Functions, UserStatus, UserInfo } from '@attendancy/user';
 import { Role } from '@/generated/prisma/browser';
 import { updateUserAccess } from '@/modules/user/access';
 

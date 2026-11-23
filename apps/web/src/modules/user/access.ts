@@ -7,7 +7,8 @@
 import "server-only";
 
 import type { Role } from "@/generated/prisma/browser";
-import type { AppMetadataPatch, UserStatus } from "@/types/user";
+import type { AppMetadataPatch } from "@/types/user";
+import type { UserStatus } from "@attendancy/user";
 import { createClient } from "@/utils/supabase/server";
 
 import { getUserInfo } from "./userInfo";

@@ -14,7 +14,7 @@ import {
 } from 'lucide-react'
 import { getUserInfo } from '@/modules/user'
 import { ORG_PROFILE_URL } from '@/config'
-import type { Organization, Role } from '@/types/user'
+import type { Organization, Role } from '@attendancy/user'
 
 type OrganizationProfilePresentation = {
   label: string

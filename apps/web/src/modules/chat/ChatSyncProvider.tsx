@@ -25,10 +25,10 @@ import {
 import { idbStore } from '@attendancy/chat/idb'
 import { createMessageAction } from '@/services/message/actions'
 import { MESSAGE } from '@/services/message/policy'
-import { ERROR_CODES } from '@/config'
-import { notifyChannelMembersAction } from '@/services/notification/domains/chat'
+import { ERROR_CODES } from '@/config/constants'
+import { notifyChannelMembersAction } from '@/services/notification'
 import { messageEntityPatch, mapMessageUser } from '@/hooks/data/messages/utils'
-import type { PresenceUser } from '@/types'
+import type { PresenceUser } from '@attendancy/user'
 import { insertMessage } from './cache'
 import { broadcastSent } from './realtime-registry'
 

@@ -4,7 +4,7 @@
 // Le serveur les applique ; l'adaptateur offline (modules/chat) en lit les codes.
 // Ce fichier grandit au fil des règles rencontrées — pas d'inventaire exhaustif.
 
-import { ERROR_CODES, type ErrorCode } from '@/config'
+import { ERROR_CODES, type ErrorCode } from '@/config/constants'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Refus métier : une entrée = la réponse complète de l'action ({ error, code })

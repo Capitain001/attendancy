@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
-import type { UserInfo } from "@/types/user";
+import type { UserInfo } from "@attendancy/user";
 import { Switch } from "@/components/ui/switch";
 import AvatarUploader from "../AvatarUploader";
 import { EditNameDialog } from "./EditNameDialog";
