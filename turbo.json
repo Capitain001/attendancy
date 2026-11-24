@@ -30,7 +30,7 @@
     "@attendancy/teacher#dev": { "dependsOn": ["@attendancy/types#build:types"] },
     "@attendancy/teacher#build": { "dependsOn": ["@attendancy/types#build:types"] },
     "@attendancy/web#build": {
-      "dependsOn": ["@attendancy/web#db:generate"],
+      "dependsOn": ["@attendancy/web#db:generate", "@attendancy/types#build:types"],
       "env": [
         "SUPABASE_SERVICE_ROLE_KEY",
         "DATABASE_URL",
@@ -43,7 +43,8 @@
         "STRIPE_SECRET_KEY",
         "STRIPE_WEBHOOK_SECRET",
         "STRIPE_ENDPOINT_SECRET",
-        "VAPID_PRIVATE_KEY"
+        "VAPID_PRIVATE_KEY",
+        "RPC_ALLOWED_ORIGINS"
       ]
     },
     "dev": {
