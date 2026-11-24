@@ -6,7 +6,7 @@ import { MetricCard } from '@/components/stats/ui/MetricCard'
 import { SectionHeader } from '@/components/direction/SectionHeader'
 import { ProgramList } from '@/components/direction/academic/ProgramList'
 import { ProgramCreateButton } from '@/components/direction/academic/ProgramForm'
-import { typography } from '@/styles'
+import { typography } from '@attendancy/ui/styles'
 
 import Link from 'next/link'
 import { BookOpen } from 'lucide-react'

@@ -1,7 +1,7 @@
 // src/app/(app)/[slug]/direction/academic/ues/templates/[id]/page.tsx
 import { connection } from 'next/server'
 import { getReferentialAction } from '@/services/ue-template'
-import { typography } from '@/styles'
+import { typography } from '@attendancy/ui/styles'
 import { notFound } from 'next/navigation'
 import { ReferentialViewer } from '@/components/direction/academic/ReferentialViewer'
 import Link from 'next/link'

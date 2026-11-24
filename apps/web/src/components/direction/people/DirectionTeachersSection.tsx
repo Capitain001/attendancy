@@ -6,7 +6,7 @@ import { SectionHeader } from '@/components/direction/SectionHeader'
 import { TeacherList } from './TeacherList'
 import { InviteTeacherDialog } from './InviteTeacherDialog'
 import { useOrgInvitations } from '@/hooks/data/invitation/use-org-invitations'
-import { typography } from '@/styles'
+import { typography } from '@attendancy/ui/styles'
 import InviteUserPlaceholder from '@/components/invitation/InviteUserPlaceholder'
 import type { GetTeachersDto } from '@/services/teacher'
 

@@ -8,7 +8,7 @@ import { isRedirectError } from 'next/dist/client/components/redirect-error'
 
 import type { ConfirmStatus } from './InvitationSteps'
 import type { AuthActionResult } from '@/modules/auth/types'
-import { button, card, layout } from '@/styles'
+import { button, card, layout } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]

@@ -14,7 +14,7 @@ import {
 import { TextShimmer } from '@/components/ui/text-shimmer'
 import UserIcon from '@/components/users/UserIcon'
 import type { UserInfo } from '@attendancy/user'
-import { typography } from '@/styles'
+import { typography } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 
 export const ROLE_LABELS: Record<string, string> = {

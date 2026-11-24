@@ -17,6 +17,11 @@ import type {
   CreateMessageInput,
   UpdateMessageDataInput,
 } from '@/services/message/validation'
+import type { GetChannelsDto, GetChannelDto } from '@/services/channel/types'
+import type {
+  CreateChannelInput,
+  UpdateChannelDataInput,
+} from '@/services/channel/validation'
 import type {
   NotificationItem,
   GetNotificationsForUserDto,
@@ -45,6 +50,10 @@ export type {
   GetMessagesDto,
   CreateMessageInput,
   UpdateMessageDataInput,
+  GetChannelsDto,
+  GetChannelDto,
+  CreateChannelInput,
+  UpdateChannelDataInput,
   NotificationItem,
   GetNotificationsForUserDto,
   GetUnreadNotificationsForUserDto,

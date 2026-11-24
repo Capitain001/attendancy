@@ -76,3 +76,25 @@ export {
   clearThemeColorCache,
 } from "./components/theme/utils";
 export { cn, truncateText } from "./lib/utils";
+export {
+  ChatThread,
+  MessageList,
+  MessageBubble,
+  Composer,
+  DEFAULT_ANONYMOUS_NAME,
+  DEFAULT_MESSAGE_MAX_LENGTH,
+  GROUP_WINDOW_MS,
+  dayLabel,
+  formatTime,
+  isSameDay,
+  startsGroup,
+  typingLabel,
+  type ChatMessage,
+  type ChatThreadProps,
+  type ComposerProps,
+  type MessageActions,
+  type MessageBubbleProps,
+  type MessageListProps,
+  type MessageStatus,
+  type ReplyPreview,
+} from "./components/chat";

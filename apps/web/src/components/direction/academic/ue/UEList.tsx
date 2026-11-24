@@ -4,7 +4,7 @@
 import { useState, useMemo } from "react"
 import { useLocalStorage } from "@/hooks/utils/use-local-storage"
 import { LayoutGrid, List, LibraryBig, Download, Plus } from "lucide-react"
-import { card, typography } from "@/styles"
+import { card, typography } from "@attendancy/ui/styles"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { UEFilter } from "./UEFilter"

@@ -5,7 +5,7 @@ import { MetricCard } from '@/components/stats/ui/MetricCard'
 import { SectionHeader } from '@/components/direction/SectionHeader'
 import { RoomList } from '@/components/direction/rooms/RoomList'
 import { RoomCreateButton } from '@/components/direction/rooms/RoomForm'
-import { typography } from '@/styles'
+import { typography } from '@attendancy/ui/styles'
 
 export default async function RoomsPage() {
   await connection()

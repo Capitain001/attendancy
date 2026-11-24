@@ -4,7 +4,7 @@
 import { AlertCircle, Calendar, Clock, Edit, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { card, typography } from "@/styles";
+import { card, typography } from "@attendancy/ui/styles";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import type { TeacherUnavailabilityItem } from "@/services/teacher-unavailability/types";

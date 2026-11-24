@@ -1,6 +1,6 @@
 // src/components/direction/dashboard/OrgMetricsCard.tsx
 import { BookOpen, Building2, GraduationCap, LayoutGrid, Users } from 'lucide-react'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 
 type Counts = {

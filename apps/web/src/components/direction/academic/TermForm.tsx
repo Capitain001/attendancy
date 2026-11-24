@@ -5,7 +5,7 @@ import { useRef } from 'react'
 import { Plus } from 'lucide-react'
 
 import { useTerms } from '@/hooks/data/term/useTerms'
-import { input } from '@/styles/input'
+import { input } from '@attendancy/ui/styles/ui/input'
 import { cn } from '@/lib/utils'
 
 import { Button } from '@/components/ui/button'

@@ -5,7 +5,7 @@ import { useMemo } from 'react'
 import { useOrgInvitations } from '@/hooks/data/invitation/use-org-invitations'
 import { InvitationTable } from '@/components/invitation/InvitationTable'
 import { InviteTeacherDialog } from './InviteTeacherDialog'
-import { typography, card } from '@/styles'
+import { typography, card } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 import { CollapseSection } from '@/components/layout/CollapseSection'
 

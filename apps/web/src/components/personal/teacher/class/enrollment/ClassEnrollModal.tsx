@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useClassEnrollForm } from "@/hooks/data/student-enrollments/useClassEnrollForm";
 import { cn } from "@/lib/utils";
 import { StudentAvatar } from "../../student/StudentAvatar";
-import { input } from "@/styles";
+import { input } from "@attendancy/ui/styles";
 import { RippleButton } from "@/components/ui/ripple-button";
 
 interface Props {

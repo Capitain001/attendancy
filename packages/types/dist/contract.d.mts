@@ -1071,6 +1071,138 @@ declare function updateChannelMuteByUserAction(input: UpdateChannelMuteInput): P
     code?: undefined;
 }>;
 
+declare function getChannelsAction(): Promise<{
+    error: string;
+    data?: undefined;
+} | {
+    data: {
+        type: __generated_prisma_enums.ChannelType;
+        id: string;
+        classId: string | null;
+        groupId: string | null;
+        name: string | null;
+        createdAt: Date;
+        isPrivate: boolean;
+    }[];
+    error?: undefined;
+}>;
+declare function getChannelAction(channelId: string): Promise<{
+    error: string;
+    data?: undefined;
+} | {
+    data: {
+        type: __generated_prisma_enums.ChannelType;
+        id: string;
+        classId: string | null;
+        groupId: string | null;
+        name: string | null;
+        createdAt: Date;
+        isPrivate: boolean;
+    } | null;
+    error?: undefined;
+}>;
+
+declare const createChannelSchema: v.SchemaWithPipe<readonly [v.ObjectSchema<{
+    type: v.PicklistSchema<readonly ["CLASS", "GROUP", "ORG", "DM"], "Type de channel invalide">;
+    name: v.OptionalSchema<v.NullableSchema<v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.TrimAction, v.MinLengthAction<string, 1, "Nom requis">, v.MaxLengthAction<string, 100, undefined>]>, undefined>, undefined>;
+    isPrivate: v.OptionalSchema<v.BooleanSchema<undefined>, undefined>;
+    classId: v.OptionalSchema<v.NullableSchema<v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.UuidAction<string, "ID invalide">]>, undefined>, undefined>;
+    groupId: v.OptionalSchema<v.NullableSchema<v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.UuidAction<string, "ID invalide">]>, undefined>, undefined>;
+}, undefined>, v.CheckAction<{
+    type: "CLASS" | "GROUP" | "ORG" | "DM";
+    name?: string | null | undefined;
+    isPrivate?: boolean | undefined;
+    classId?: string | null | undefined;
+    groupId?: string | null | undefined;
+}, "classId requis pour un channel CLASS">, v.CheckAction<{
+    type: "CLASS" | "GROUP" | "ORG" | "DM";
+    name?: string | null | undefined;
+    isPrivate?: boolean | undefined;
+    classId?: string | null | undefined;
+    groupId?: string | null | undefined;
+}, "groupId requis pour un channel GROUP">, v.CheckAction<{
+    type: "CLASS" | "GROUP" | "ORG" | "DM";
+    name?: string | null | undefined;
+    isPrivate?: boolean | undefined;
+    classId?: string | null | undefined;
+    groupId?: string | null | undefined;
+}, "Un channel ne peut cibler à la fois une classe et un groupe">]>;
+type CreateChannelInput = v.InferInput<typeof createChannelSchema>;
+declare const updateChannelDataSchema: v.ObjectSchema<{
+    name: v.OptionalSchema<v.NullableSchema<v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.TrimAction, v.MinLengthAction<string, 1, "Nom requis">, v.MaxLengthAction<string, 100, undefined>]>, undefined>, undefined>;
+    isPrivate: v.OptionalSchema<v.BooleanSchema<undefined>, undefined>;
+}, undefined>;
+type UpdateChannelDataInput = v.InferInput<typeof updateChannelDataSchema>;
+declare const updateChannelSchema: v.ObjectSchema<Record<"channelId", v.SchemaWithPipe<[v.StringSchema<undefined>, v.UuidAction<string, undefined>]>> & {
+    data: v.ObjectSchema<{
+        name: v.OptionalSchema<v.NullableSchema<v.SchemaWithPipe<readonly [v.StringSchema<undefined>, v.TrimAction, v.MinLengthAction<string, 1, "Nom requis">, v.MaxLengthAction<string, 100, undefined>]>, undefined>, undefined>;
+        isPrivate: v.OptionalSchema<v.BooleanSchema<undefined>, undefined>;
+    }, undefined>;
+}, undefined>;
+type UpdateChannelInput = v.InferInput<typeof updateChannelSchema>;
+
+declare function createChannelAction(input: CreateChannelInput): Promise<{
+    error: string;
+    data?: undefined;
+} | {
+    data: {
+        type: __generated_prisma_enums.ChannelType;
+        id: string;
+        classId: string | null;
+        groupId: string | null;
+        name: string | null;
+        createdAt: Date;
+        isPrivate: boolean;
+    };
+    error?: undefined;
+}>;
+declare function updateChannelAction(input: UpdateChannelInput): Promise<{
+    error: string;
+    data?: undefined;
+} | {
+    data: {
+        type: __generated_prisma_enums.ChannelType;
+        id: string;
+        classId: string | null;
+        groupId: string | null;
+        name: string | null;
+        createdAt: Date;
+        isPrivate: boolean;
+    };
+    error?: undefined;
+}>;
+declare function removeChannelAction(channelId: string): Promise<{
+    error: string;
+    data?: undefined;
+} | {
+    data: {
+        id: string;
+    };
+    error?: undefined;
+}>;
+
+declare function getChannels(orgId: string): Promise<{
+    type: __generated_prisma_enums.ChannelType;
+    id: string;
+    classId: string | null;
+    groupId: string | null;
+    name: string | null;
+    createdAt: Date;
+    isPrivate: boolean;
+}[]>;
+declare function getChannel(channelId: string, orgId: string): Promise<{
+    type: __generated_prisma_enums.ChannelType;
+    id: string;
+    classId: string | null;
+    groupId: string | null;
+    name: string | null;
+    createdAt: Date;
+    isPrivate: boolean;
+} | null>;
+
+type GetChannelsDto = Awaited<ReturnType<typeof getChannels>>;
+type GetChannelDto = Awaited<ReturnType<typeof getChannel>>;
+
 declare const ACTIONS: {
     readonly getSchedulesAction: typeof getSchedulesAction;
     readonly createScheduleAction: typeof createScheduleAction;
@@ -1103,6 +1235,11 @@ declare const ACTIONS: {
     readonly confirmAllAttendancesAction: typeof confirmAllAttendancesAction;
     readonly getChannelMuteByUserAction: typeof getChannelMuteByUserAction;
     readonly updateChannelMuteByUserAction: typeof updateChannelMuteByUserAction;
+    readonly getChannelsAction: typeof getChannelsAction;
+    readonly getChannelAction: typeof getChannelAction;
+    readonly createChannelAction: typeof createChannelAction;
+    readonly updateChannelAction: typeof updateChannelAction;
+    readonly removeChannelAction: typeof removeChannelAction;
 };
 
 /**
@@ -1132,4 +1269,4 @@ type ApiInput<K extends ApiAction> = Parameters<ApiClient[K]>[0];
 type ApiOutput<K extends ApiAction> = Awaited<ReturnType<ApiClient[K]>>;
 type StartSessionInput = ApiInput<'startSessionAction'>;
 
-export type { ApiAction, ApiClient, ApiInput, ApiOutput, CreateMessageInput, CreateScheduleInput, GetClassesDto, GetMessagesDto, GetNotificationsForUserDto, GetScheduleAttendancesDto, GetSchedulesDto, GetTeacherDailyScheduleDto, GetTeacherNextScheduleDto, GetUnreadCountForUserDto, GetUnreadNotificationsForUserDto, NotificationEvent, NotificationItem, PublicOrganization, PublicUserInfo, ResourceType, StartSessionInput, UpdateMessageDataInput, UpdateScheduleDataInput };
+export type { ApiAction, ApiClient, ApiInput, ApiOutput, CreateChannelInput, CreateMessageInput, CreateScheduleInput, GetChannelDto, GetChannelsDto, GetClassesDto, GetMessagesDto, GetNotificationsForUserDto, GetScheduleAttendancesDto, GetSchedulesDto, GetTeacherDailyScheduleDto, GetTeacherNextScheduleDto, GetUnreadCountForUserDto, GetUnreadNotificationsForUserDto, NotificationEvent, NotificationItem, PublicOrganization, PublicUserInfo, ResourceType, StartSessionInput, UpdateChannelDataInput, UpdateMessageDataInput, UpdateScheduleDataInput };

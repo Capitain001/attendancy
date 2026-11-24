@@ -6,7 +6,7 @@ import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Clock, MapPin, User 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 import type { OrgDaySessionRow } from '@/services/session'
 import type { ClassItem } from '@/services/class'
 import { resolveScheduleUiStatus, SCHEDULE_UI_STATUS_LABEL, type ScheduleUiStatus } from '@/services/schedule/policy'

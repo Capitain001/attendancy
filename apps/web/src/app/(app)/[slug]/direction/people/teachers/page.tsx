@@ -2,7 +2,7 @@
 import { connection } from 'next/server'
 import { getTeachersAction } from '@/services/teacher'
 import { Suspense } from 'react'
-import { typography } from '@/styles'
+import { typography } from '@attendancy/ui/styles'
 import { DirectionTeachersSection } from '@/components/direction/people/DirectionTeachersSection'
 
 export default async function TeachersPage({ params }: { params: Promise<{ slug: string }> }) {

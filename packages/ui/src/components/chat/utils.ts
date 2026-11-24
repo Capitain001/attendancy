@@ -1,6 +1,5 @@
-// src/modules/chat/ui/format.ts
 // Fonctions pures de présentation (testables sans React ni DOM).
-import type { ChatMessage } from '@/hooks/chat/types'
+import type { ChatMessage } from './types'
 
 const timeFormat = new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', minute: '2-digit' })
 const dayFormat = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })

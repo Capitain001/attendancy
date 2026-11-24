@@ -5,7 +5,7 @@ import { CollapseSection } from '@/components/layout/CollapseSection'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { Button } from '@/components/ui/button'
 import { useRooms } from '@/hooks/data/rooms/useRooms'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 
 type RoomItem = {

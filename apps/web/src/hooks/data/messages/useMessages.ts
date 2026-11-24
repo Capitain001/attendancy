@@ -9,8 +9,11 @@ import {
   updateMessageAction,
   removeMessageAction,
 } from "@/services/message/actions";
-import type { GetMessagesDto } from "@/services/message";
-import type { CreateMessageInput, UpdateMessageDataInput } from "@/services/message";
+import type {
+  GetMessagesDto,
+  CreateMessageInput,
+  UpdateMessageDataInput,
+} from "@attendancy/types";
 import {
   messageEntityPatch,
   mapMessageUser,

@@ -5,7 +5,7 @@ import type { FormEvent } from 'react'
 import Link from 'next/link'
 import { Check, Loader2, MailWarning } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { button, card, input, layout, typography } from '@/styles'
+import { button, card, input, layout, typography } from '@attendancy/ui/styles'
 import { resendSignupEmailAction } from '@/modules/auth'
 
 export function LinkExpired() {

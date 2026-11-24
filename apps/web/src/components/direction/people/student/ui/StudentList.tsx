@@ -2,7 +2,7 @@
 import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { GraduationCap } from 'lucide-react'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 import UserIcon from '@/components/users/UserIcon'
 

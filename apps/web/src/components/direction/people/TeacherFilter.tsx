@@ -1,6 +1,6 @@
 // src/components/direction/people/TeacherFilter.tsx
 import { Search, X } from "lucide-react";
-import { input } from "@/styles";
+import { input } from "@attendancy/ui/styles";
 import { Button } from "@/components/ui/button";
 
 export const STATUS_MAP: Record<string, { label: string; cls: string }> = {

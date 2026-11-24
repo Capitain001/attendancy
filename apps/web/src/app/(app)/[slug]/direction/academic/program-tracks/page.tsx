@@ -6,7 +6,7 @@ import { MetricCard } from '@/components/stats/ui/MetricCard'
 import { SectionHeader } from '@/components/direction/SectionHeader'
 import { ProgramTrackList } from '@/components/direction/academic/ProgramTrackList'
 import { ProgramTrackCreateButton } from '@/components/direction/academic/ProgramTrackForm'
-import { typography } from '@/styles'
+import { typography } from '@attendancy/ui/styles'
 
 export default async function ProgramTracksPage() {
   await connection()

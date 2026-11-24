@@ -4,7 +4,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import { BarChart3, TrendingDown, TrendingUp, Minus } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 import type { getAttendanceReportAction } from '@/services/attendance'
 import type { ClassItem } from '@/services/class'
 

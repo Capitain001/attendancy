@@ -15,7 +15,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { button } from "@/styles";
+import { button } from "@attendancy/ui/styles";
 import { generateCoursesFromProgramAction } from "@/services/course";
 
 interface GenerateProgramCoursesButtonProps {

@@ -7,7 +7,7 @@ import { StudentList, StudentFilter } from "../ui";
 import { useStudentsFilter } from "../hooks";
 import { InviteStudentDialog } from "@/components/invitation/InviteStudentDialog";
 import InviteUserPlaceholder from "@/components/invitation/InviteUserPlaceholder";
-import { typography } from "@/styles";
+import { typography } from "@attendancy/ui/styles";
 import type { GetEnrolledStudentsDto } from "@/services/student";
 import type { GetClassesDto } from "@/services/class";
 import type { GetGroupsByClassDto } from "@/services/group";

@@ -14,12 +14,15 @@ interface HeaderProps {
  */
 export function Header({ user }: HeaderProps) {
   return (
-    <SharedHeader
-     onSignOut={()=>{}}
-      user={user}
-      brandHref={user ? orgPath(user) : undefined}
-      notifications={user ? <NotificationsPopover /> : undefined}
-    />
+    <div>
+      
+    </div>
+    // <SharedHeader
+    //  onSignOut={()=>{}}
+    //   user={user}
+    //   brandHref={user ? orgPath(user) : undefined}
+    //   notifications={user ? <NotificationsPopover /> : undefined}
+    // />
   );
 }
 

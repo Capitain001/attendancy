@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTerms } from "@/hooks/data/term/useTerms";
-import { input } from "@/styles/input";
+import { input } from "@attendancy/ui/styles/ui/input";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import {

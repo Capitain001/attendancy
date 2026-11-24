@@ -2,7 +2,7 @@
 import { getDirectionSessionsAction } from '@/services/session'
 import { Card } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 import { Clock, MapPin, Radio, User } from 'lucide-react'
 
 function formatTime(d: Date) {

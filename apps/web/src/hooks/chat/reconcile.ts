@@ -1,5 +1,5 @@
 // src/hooks/data/chat/reconcile.ts
-import type { GetMessagesDto } from '@/services/message'
+import type { GetMessagesDto } from '@attendancy/types'
 import { MESSAGES_PAGE_SIZE } from '@/services/message/constants'
 
 type Dto = GetMessagesDto[number]

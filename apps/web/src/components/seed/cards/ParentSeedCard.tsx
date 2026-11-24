@@ -7,7 +7,7 @@ import { useSeedAction } from '@/hooks/data/seed'
 import { ButtonX } from '@/components/design/ButtonX'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 import { HeartHandshake, Loader2, CheckCircle2, XCircle } from 'lucide-react'
 

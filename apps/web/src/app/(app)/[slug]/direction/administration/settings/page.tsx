@@ -1,7 +1,7 @@
 // src/app/(app)/[slug]/direction/administration/settings/page.tsx
 import { connection } from 'next/server'
 import { getOrgIdentityAction, getOrgDetailsAction } from '@/services/organization'
-import { typography } from '@/styles'
+import { typography } from '@attendancy/ui/styles'
 import { OrgIdentityForm } from '@/components/organization/settings/OrgIdentityForm'
 import { OrgSitesForm } from '@/components/organization/settings/OrgSitesForm'
 

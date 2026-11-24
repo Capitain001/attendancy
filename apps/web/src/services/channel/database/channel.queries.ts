@@ -1,5 +1,3 @@
-import 'server-only'
-
 import { prisma } from '@/lib/prisma'
 import { CACHE } from '@/cache/server/key'
 import { cacheTag , cacheLife} from 'next/cache'

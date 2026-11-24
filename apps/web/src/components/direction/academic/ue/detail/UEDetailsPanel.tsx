@@ -1,5 +1,5 @@
 // src/components/direction/academic/ue/detail/UEDetailsPanel.tsx
-import { card } from "@/styles"
+import { card } from "@attendancy/ui/styles"
 import { cn } from "@/lib/utils"
 import type { GetUEByIdDto } from "@/services/ue"
 

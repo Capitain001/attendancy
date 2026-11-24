@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { card, typography } from "@/styles"
+import { card, typography } from "@attendancy/ui/styles"
 import { cn } from "@/lib/utils"
 import {
   DropdownMenu,

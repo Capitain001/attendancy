@@ -7,7 +7,7 @@
 // qui n'a pas besoin de cette action compose directement <TermsList /> sans
 // passer par ici (ex. vue lecture seule enseignant/étudiant).
 
-import { card, typography } from "@/styles"
+import { card, typography } from "@attendancy/ui/styles"
 import type { GetTermsDto } from "@/services/term"
 import { TermsList } from "./TermsList"
 import { GenerateTermsButton } from "./Generatetermsbutton"

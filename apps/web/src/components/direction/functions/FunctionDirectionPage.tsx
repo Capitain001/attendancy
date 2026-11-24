@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { typography } from '@/styles'
+import { typography } from '@attendancy/ui/styles'
 import { useFonctions } from '@/hooks/data/functions/useFonctions'
 import { useCheckMainFunctions } from '@/hooks/data/functions'
 import type { FunctionItem } from '@/services/function'

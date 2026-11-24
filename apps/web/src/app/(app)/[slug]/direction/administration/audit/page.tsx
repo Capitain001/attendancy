@@ -1,7 +1,7 @@
 // src/app/(app)/[slug]/direction/administration/audit/page.tsx
 import { connection } from 'next/server'
 import { getOrgAuditLogsAction } from '@/services/audit'
-import { typography, card } from '@/styles'
+import { typography, card } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 import { ScrollText } from 'lucide-react'
 

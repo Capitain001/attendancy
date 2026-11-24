@@ -1,7 +1,7 @@
 // src/components/direction/academic/ue/UETableView.tsx
 import Link from "next/link"
 import { cn } from "@/lib/utils"
-import { typography } from "@/styles"
+import { typography } from "@attendancy/ui/styles"
 import type { GetUEsDto } from "@/services/ue"
 
 type UEItem = GetUEsDto[number]

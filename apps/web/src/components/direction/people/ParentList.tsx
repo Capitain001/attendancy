@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { UsersRound } from 'lucide-react'
 import UserIcon from '@/components/users/UserIcon'
 import { ParentFilter, type SortKey } from './ParentFilter'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 import type { GetParentsForDirectionDto } from '@/services/student'
 

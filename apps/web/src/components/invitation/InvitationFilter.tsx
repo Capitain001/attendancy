@@ -1,6 +1,6 @@
 // src/components/invitation/InvitationFilter.tsx
 import { Search, X } from "lucide-react";
-import { input } from "@/styles";
+import { input } from "@attendancy/ui/styles";
 import { Button } from "@/components/ui/button";
 import { Role } from "@/generated/prisma/client";
 import type { InvitationUiStatus } from "@/modules/invitation/policy";

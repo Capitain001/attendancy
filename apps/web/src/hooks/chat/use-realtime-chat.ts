@@ -3,7 +3,7 @@
 
 import { PresenceUser } from '@attendancy/user'
 import { createClient } from '@/utils/supabase/client'
-import type { GetMessagesDto } from '@/services/message'
+import type { GetMessagesDto } from '@attendancy/types'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ANONYMOUS_NAME, TYPING_EXPIRE_MS, TYPING_THROTTLE_MS } from './constants'
 

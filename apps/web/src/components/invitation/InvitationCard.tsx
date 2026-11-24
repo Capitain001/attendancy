@@ -1,6 +1,6 @@
 // src/components/invitation/InvitationCard.tsx
 import { cn } from '@/lib/utils'
-import { card } from '@/styles'
+import { card } from '@attendancy/ui/styles'
 import React from 'react'
 
 export default function InvitationCard() {

@@ -5,7 +5,7 @@ import { CollapseSection } from '@/components/layout/CollapseSection'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { Button } from '@/components/ui/button'
 import { useUEs } from '@/hooks/data/ue/useUEs'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 import { GetUEsDto } from '@/services/ue'
 

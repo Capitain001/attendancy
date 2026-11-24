@@ -1,6 +1,6 @@
 // src/components/direction/people/teacher/sections/TeacherCoursesSection.tsx
 import { BookOpen } from 'lucide-react'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 import type { TeacherCoursesItem } from '@/services/course-teacher'
 

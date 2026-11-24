@@ -4,7 +4,7 @@ import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { AlertCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { button, card, layout, typography } from '@/styles'
+import { button, card, layout, typography } from '@attendancy/ui/styles'
 
 const ERROR_MESSAGES: Record<string, string> = {
   access_denied:     "Accès refusé. Vous n'avez pas les permissions nécessaires.",

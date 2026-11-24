@@ -4,7 +4,7 @@ import { useActionState, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createOrgAction } from '@/services/organization'
 import type { CreateOrgResult } from '@/services/organization'
-import { input } from "@/styles/input";
+import { input } from "@attendancy/ui/styles/ui/input";
 import { cn } from "@/lib/utils";
 import { REDIRECT_URL } from '@/config'
 

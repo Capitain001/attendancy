@@ -6,7 +6,7 @@ import { DeviceRevokeButton } from "./DeviceRevokeButton";
 import { DeviceLabelInput } from "./DeviceLabelInput";
 import { DeviceTrustToggle } from "./DeviceTrustToggle";
 import { Monitor, Smartphone, Tablet, MonitorSmartphone, ShieldCheck } from "lucide-react";
-import { card } from "@/styles";
+import { card } from "@attendancy/ui/styles";
 import { cn } from "@/lib/utils";
 
 function DeviceIcon({ type }: { type: string }) {

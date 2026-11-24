@@ -1,6 +1,6 @@
 // src/components/direction/SectionHeader.tsx
 import type { ReactNode } from 'react'
-import { typography } from '@/styles'
+import { typography } from '@attendancy/ui/styles'
 
 interface SectionHeaderProps {
   title: string

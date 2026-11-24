@@ -1,6 +1,6 @@
 // src/app/(app)/[slug]/direction/schedule/events/page.tsx
 import { connection } from 'next/server'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 import { CalendarCheck2 } from 'lucide-react'
 

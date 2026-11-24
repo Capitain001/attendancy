@@ -2,7 +2,7 @@
 'use client'
 import { useRef } from 'react'
 import { useClasses } from '@/hooks/data/classes/useClasses'
-import { input } from '@/styles/input'
+import { input } from '@attendancy/ui/styles/ui/input'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { FormDialog } from '@/components/ui/FormDialog'

@@ -1,7 +1,7 @@
 // src/components/direction/functions/FunctionList.tsx
 'use client'
 import { Settings2 } from 'lucide-react'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 import type { FunctionItem } from '@/services/function'
 import { FunctionCard } from './FunctionCard'

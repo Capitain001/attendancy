@@ -6,7 +6,7 @@ import { MetricCard } from '@/components/stats/ui/MetricCard'
 import { SectionHeader } from '@/components/direction/SectionHeader'
 import { UEList } from '@/components/direction/academic/UEList'
 import { UECreateButton } from '@/components/direction/academic/UEForm'
-import { typography } from '@/styles'
+import { typography } from '@attendancy/ui/styles'
 import { UECard } from '@/components/direction/academic/ue/UeCard'
 import { div } from 'motion/react-client'
 

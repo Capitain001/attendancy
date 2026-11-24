@@ -8,7 +8,7 @@
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 // import { Label } from '@/components/ui/label'
 // import { useUETemplates, useUETemplateImports, useUEReferentials } from '@/hooks/data/ue-template/useUETemplates'
-// import { card, typography } from '@/styles'
+// import { card, typography } from '@attendancy/ui/styles'
 // import { cn } from '@/lib/utils'
 // import type { GetReferentialsDto, GetUETemplatesDto } from '@/services/ue-template'
 // import type { GetProgramsDto } from '@/services/program'

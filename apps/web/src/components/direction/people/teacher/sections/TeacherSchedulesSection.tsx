@@ -1,6 +1,6 @@
 // src/components/direction/people/teacher/sections/TeacherSchedulesSection.tsx
 import { Calendar, Clock } from 'lucide-react'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 import type { GetTeacherSchedulesDto } from '@/services/teacher'
 

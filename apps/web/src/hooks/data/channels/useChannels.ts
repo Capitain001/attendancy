@@ -9,11 +9,11 @@ import {
   updateChannelAction,
   removeChannelAction,
 } from "@/services/channel/actions";
-import type { GetChannelsDto } from "@/services/channel/types";
 import type {
+  GetChannelsDto,
   CreateChannelInput,
   UpdateChannelDataInput,
-} from "@/services/channel/validation";
+} from "@attendancy/types";
 
 interface UseChannelsOptions {
   staleTime?: number;

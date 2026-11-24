@@ -8,7 +8,7 @@ import { getProgramByIdAction } from '@/services/program'
 import { getUEsAction } from '@/services/ue'
 import { getOrgDetailsAction } from '@/services/organization'
 import { DirectionProgramPage } from '@/components/programs/program/DirectionProgramPage'
-import { typography } from '@/styles'
+import { typography } from '@attendancy/ui/styles'
 import { validateUUID } from '@/utils/server/validation'
 
 export default async function ProgramDetailPage({

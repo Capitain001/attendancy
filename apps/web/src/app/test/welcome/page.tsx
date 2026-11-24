@@ -1,6 +1,6 @@
 // src/app/test/welcome/page.tsx
 import Link from 'next/link'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 import { getUserInfo } from '@/modules/user'
 import { getInvitationsByUser } from '@/modules/invitation/supabase'

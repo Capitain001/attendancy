@@ -4,7 +4,7 @@ import { getSchedulesAction } from '@/services/schedule'
 import { DirectionCalendar } from '@/components/direction/schedule/DirectionCalendar'
 import type { ScheduleEvent } from '@/components/event-calendar/types'
 import { startOfWeek, endOfWeek } from 'date-fns'
-import { typography } from '@/styles'
+import { typography } from '@attendancy/ui/styles'
 import { mapScheduleToEvent } from '@/components/planning/utils'
 
 export default async function CalendarPage() {

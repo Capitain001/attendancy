@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { card } from '@/styles'
+import { card } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 
 import type { GetTeacherDto, GetTeacherSchedulesDto } from '@/services/teacher'

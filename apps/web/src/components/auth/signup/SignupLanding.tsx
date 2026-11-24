@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { button, card, layout, typography } from '@/styles'
+import { button, card, layout, typography } from '@attendancy/ui/styles'
 
 export function SignupLanding() {
   return (

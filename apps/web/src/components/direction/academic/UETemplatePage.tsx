@@ -4,7 +4,7 @@
 // import { Button } from '@/components/ui/button'
 // import { Checkbox } from '@/components/ui/checkbox'
 // import { cn } from '@/lib/utils'
-// import { typography } from '@/styles'
+// import { typography } from '@attendancy/ui/styles'
 // import { useUETemplateImports } from '@/hooks/data/ue-template/useUETemplates'
 // import { useManagePrograms } from '@/hooks/data/program/useManagePrograms'
 // import { useManageProgramTracks } from '@/hooks/data/program-track/useManageProgramTracks'

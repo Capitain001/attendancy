@@ -1,6 +1,6 @@
 // src/components/direction/people/teacher/ui/TeacherProfileHeader.tsx
 import UserIcon from '@/components/users/UserIcon'
-import { card } from '@/styles'
+import { card } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 import { Mail, Phone, Building2 } from 'lucide-react'
 import type { GetTeacherNotNull } from '@/services/teacher'

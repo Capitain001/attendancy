@@ -2,7 +2,7 @@
 import { cn } from "@/lib/utils"
 import { Mail, Phone, Building2 } from "lucide-react"
 import UserIcon from "@/components/users/UserIcon"
-import { card } from "@/styles"
+import { card } from "@attendancy/ui/styles"
 import { BackgroundPattern } from "@/components/design/BackgroundPattern"
 import type { GetTeacherDto, GetTeacherStatsDto } from "@/services/teacher"
 

@@ -44,6 +44,13 @@ import {
   getChannelMuteByUserAction,
   updateChannelMuteByUserAction,
 } from "@/services/channel-member";
+import {
+  getChannelsAction,
+  getChannelAction,
+  createChannelAction,
+  updateChannelAction,
+  removeChannelAction,
+} from "@/services/channel";
 
 // les server action sont réexportées côté frontend sous une couche d'API,
 // on conserve le même typage et la même syntaxe bien que le moteur fasse un appel réseau
@@ -81,4 +88,9 @@ export const ACTIONS = {
   confirmAllAttendancesAction,
   getChannelMuteByUserAction,
   updateChannelMuteByUserAction,
+  getChannelsAction,
+  getChannelAction,
+  createChannelAction,
+  updateChannelAction,
+  removeChannelAction,
 } as const;

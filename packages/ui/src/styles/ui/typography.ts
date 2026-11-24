@@ -1,5 +1,5 @@
-// src/styles/typography.ts
-import { cn } from "@/lib/utils";
+// packages/ui/src/styles/ui/typography.ts
+import { cn } from "../../lib/utils";
 
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 

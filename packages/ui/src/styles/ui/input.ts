@@ -1,5 +1,5 @@
-// src/styles/input.ts
-import { cn } from "@/lib/utils";
+// packages/ui/src/styles/ui/input.ts
+import { cn } from "../../lib/utils";
 
 export const input = {
   base: cn(

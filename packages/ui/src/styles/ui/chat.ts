@@ -1,8 +1,8 @@
-// packages\ui\src\styles\ui\chat.ts
+
 // Classes propres au chat, construites uniquement avec les tokens sémantiques du design system
 // (jamais de couleur en dur). Les états ne reposent pas sur la couleur seule : bordure
 // pointillée, point creux, libellé texte.
-import { cn } from '@/lib/utils'
+import { cn } from '../../lib/utils'
 
 const focus = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
 

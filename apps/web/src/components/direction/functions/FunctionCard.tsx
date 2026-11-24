@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Pencil, Trash2, Settings2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 import type { FunctionItem } from '@/services/function'
 

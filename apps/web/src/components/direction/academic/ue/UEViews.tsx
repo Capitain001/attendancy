@@ -2,7 +2,7 @@
 import { CollapseSection } from "@/components/layout/CollapseSection"
 import { UECard } from "./UeCard"
 import { UETableView } from "./UETableView"
-import { card, typography } from "@/styles"
+import { card, typography } from "@attendancy/ui/styles"
 import { cn } from "@/lib/utils"
 import type { GetUEsDto } from "@/services/ue"
 

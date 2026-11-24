@@ -9,7 +9,7 @@ import { UEDetailsPanel } from '@/components/direction/academic/ue/detail/UEDeta
 import { UEEditButton } from '@/components/direction/academic/ue/detail/UEEditForm'
 import { UECoursesList } from '@/components/direction/academic/ue/detail/UECoursesList'
 import { getDepartmentsAction } from '@/services/department'
-import { typography } from '@/styles'
+import { typography } from '@attendancy/ui/styles'
 
 interface PageProps {
   params: Promise<{ ueId: string; slug: string }>

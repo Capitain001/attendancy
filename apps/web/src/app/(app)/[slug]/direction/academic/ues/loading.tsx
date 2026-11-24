@@ -1,7 +1,7 @@
 // src/app/(app)/[slug]/direction/academic/ues/loading.tsx
 import { Skeleton } from "@/components/ui/skeleton"
 import { SectionHeader } from '@/components/direction/SectionHeader'
-import { card } from "@/styles"
+import { card } from "@attendancy/ui/styles"
 import { cn } from "@/lib/utils"
 
 export default function UEsLoading() {

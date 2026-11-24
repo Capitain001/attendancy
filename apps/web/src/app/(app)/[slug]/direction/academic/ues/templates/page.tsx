@@ -2,7 +2,7 @@
 import { connection } from 'next/server'
 import { getReferentialsAction } from '@/services/ue-template'
 import { SectionHeader } from '@/components/direction/SectionHeader'
-import { typography } from '@/styles'
+import { typography } from '@attendancy/ui/styles'
 import Link from 'next/link'
 import { FileText, ChevronRight } from 'lucide-react'
 

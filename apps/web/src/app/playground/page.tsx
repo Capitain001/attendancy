@@ -1,10 +1,10 @@
 // src/app/playground/page.tsx
 // import { ThemeToggle } from "@/components/ThemeToggle";
-import { button } from "@/styles/button";
-import { card } from "@/styles/card";
-import { input } from "@/styles/input";
-import { layout } from "@/styles/layout";
-import { typography } from "@/styles/typography";
+import { button } from "@attendancy/ui/styles/ui/button";
+import { card } from "@attendancy/ui/styles/ui/card";
+import { input } from "@attendancy/ui/styles/ui/input";
+import { layout } from "@attendancy/ui/styles/ui/layout";
+import { typography } from "@attendancy/ui/styles/ui/typography";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (

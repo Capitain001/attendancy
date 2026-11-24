@@ -1,6 +1,6 @@
 // src/styles/card.ts
 //src/styles/card.ts
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 
 export const card = {
   base: cn(

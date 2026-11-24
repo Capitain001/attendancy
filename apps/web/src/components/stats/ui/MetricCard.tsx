@@ -1,7 +1,7 @@
 // src/components/stats/ui/MetricCard.tsx
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 
 export interface MetricCardProps {
   label: string

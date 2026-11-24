@@ -6,7 +6,7 @@ import { toast } from 'sonner'
 import { mergeItemsById } from '@/hooks/entity/useEntity'
 import { getOlderMessagesAction } from '@/services/message/actions'
 import { MESSAGES_PAGE_SIZE } from '@/services/message/constants'
-import type { GetMessagesDto } from '@/services/message'
+import type { GetMessagesDto } from '@attendancy/types'
 import { findOldestMessage } from '@/hooks/chat/reconcile'
 
 type Dto = GetMessagesDto[number]

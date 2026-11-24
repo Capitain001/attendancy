@@ -1,6 +1,6 @@
 // src/components/direction/people/teacher/sections/TeacherUnavailabilitiesSection.tsx
 import { AlertCircle } from 'lucide-react'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 import type { GetTeacherUnavailabilitiesDto } from '@/services/teacher-unavailability'
 

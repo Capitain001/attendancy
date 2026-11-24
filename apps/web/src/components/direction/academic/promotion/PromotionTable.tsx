@@ -21,7 +21,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useClasses } from '@/hooks/data/classes/useClasses'
-import { typography } from '@/styles'
+import { typography } from '@attendancy/ui/styles'
 import { LEVEL_LABEL } from '@/services/class/constants'
 import { GetClassesDto } from '@/services/class'
 

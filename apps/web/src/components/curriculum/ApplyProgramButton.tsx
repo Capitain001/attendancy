@@ -28,7 +28,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { button, typography } from "@/styles"
+import { button, typography } from "@attendancy/ui/styles"
 import { applyProgramToClassAction } from "@/services/curriculum"
 import type { ApplyProgramToClassDto } from "@/services/curriculum"
 import { cn } from "@/lib/utils"

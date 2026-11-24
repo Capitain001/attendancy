@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { Plus, PlusCircleIcon } from "lucide-react";
-import { button } from "@/styles";
+import { button } from "@attendancy/ui/styles";
 import {
   Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";

@@ -8,7 +8,7 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { Button } from '@/components/ui/button'
 import { useManageAcademicYears } from '@/hooks/data/academic-year/useManageAcademicYears'
 import { cn } from '@/lib/utils'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 
 type YearItem = {
   id: string

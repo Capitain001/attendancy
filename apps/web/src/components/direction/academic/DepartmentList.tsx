@@ -6,7 +6,7 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { DepartmentEditButton } from '@/components/direction/academic/DepartmentForm'
 import { Button } from '@/components/ui/button'
 import { useDepartments } from '@/hooks/data/departments/useDepartments'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 
 type Department = {

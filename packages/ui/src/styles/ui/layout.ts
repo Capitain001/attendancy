@@ -1,5 +1,5 @@
-// src/styles/layout.ts
-import { cn } from "@/lib/utils";
+// packages/ui/src/styles/ui/layout.ts
+import { cn } from "../../lib/utils";
 
 export const layout = {
   // Marketing container (max-w large, em padding)

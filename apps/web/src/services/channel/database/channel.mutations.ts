@@ -1,4 +1,3 @@
-import 'server-only'
 import { prisma } from '@/lib/prisma'
 import { tryConstraint } from '@/utils/server/prisma'
 import type { CreateChannelOutput, UpdateChannelDataOutput } from '../validation'

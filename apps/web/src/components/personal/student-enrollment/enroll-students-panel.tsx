@@ -1,7 +1,7 @@
 // src/components/personal/student-enrollment/enroll-students-panel.tsx
 "use client";
 
-import { button, input, typography } from "@/styles";
+import { button, input, typography } from "@attendancy/ui/styles";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DialogFooter } from "@/components/ui/dialog";

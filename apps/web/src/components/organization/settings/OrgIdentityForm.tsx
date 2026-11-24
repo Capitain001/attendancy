@@ -22,7 +22,7 @@ import {
 import { useLogoUpload } from '@/hooks/pratical/useLogoUpload'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 
 interface OrgIdentityFormProps {

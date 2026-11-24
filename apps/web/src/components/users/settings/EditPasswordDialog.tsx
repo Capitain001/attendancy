@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { input } from "@/styles/input";
+import { input } from "@attendancy/ui/styles/ui/input";
 
 // Les noms de props restent identiques : aucun changement côté appelants
 interface EditPasswordDialogProps {

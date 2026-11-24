@@ -10,7 +10,7 @@ export function MainLayout({
   return (
     <div className="flex h-screen flex-col">
       {header}
-      <main className="flex flex-1 flex-col overflow-y-auto">{children}</main>
+      <main className="flex min-h-0 flex-1 flex-col overflow-y-auto">{children}</main>
     </div>
   );
 }

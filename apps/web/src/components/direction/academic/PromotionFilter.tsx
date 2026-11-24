@@ -1,6 +1,6 @@
 // src/components/direction/academic/PromotionFilter.tsx
 import { Search, X } from 'lucide-react'
-import { input } from '@/styles'
+import { input } from '@attendancy/ui/styles'
 import { LEVEL_LABEL } from '@/services/class/constants'
 import { SelectYear } from './year/SelectYear'
 import { Button } from '@/components/ui/button'

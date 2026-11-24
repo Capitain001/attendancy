@@ -11,7 +11,7 @@ import type { OrgDetails, OrgContactSite } from '@/services/organization/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 
 interface OrgSitesFormProps {

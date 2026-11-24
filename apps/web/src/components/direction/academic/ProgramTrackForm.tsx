@@ -2,7 +2,7 @@
 'use client'
 import { useRef, useState } from 'react'
 import { useManageProgramTracks } from '@/hooks/data/program-track/useManageProgramTracks'
-import { input } from '@/styles/input'
+import { input } from '@attendancy/ui/styles/ui/input'
 import { Button } from '@/components/ui/button'
 import { Plus, Pencil } from 'lucide-react'
 import { FormDialog } from '@/components/ui/FormDialog'

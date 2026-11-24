@@ -11,7 +11,7 @@
 import { CalendarRange, Lock } from "lucide-react"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
-import { card, typography} from "@/styles"
+import { card, typography} from "@attendancy/ui/styles"
 import type { GetTermsDto } from "@/services/term"
 import { cn } from "@/lib/utils"
 

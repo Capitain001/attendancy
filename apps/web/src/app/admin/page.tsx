@@ -9,7 +9,7 @@ import {
 import { OrgMetricsCard } from '@/components/direction/dashboard/OrgMetricsCard'
 import { DailyMetricsCard } from '@/components/direction/dashboard/DailyMetricsCard'
 import { PrismaErrorPanel } from '@/components/server/PrismaErrorPanel'
-import { card, typography } from '@/styles'
+import { card, typography } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
 import { ButtonX } from '@/components/design/ButtonX'
 import { Database, HardDrive, Users, BookOpen, Sprout } from 'lucide-react'

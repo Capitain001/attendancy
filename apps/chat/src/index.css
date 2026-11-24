@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "@attendancy/ui/styles.css";
-@import "../../../apps/web/src/styles/utilities.css";
 
 @source "./";
 @source "../../../apps/web/src";
