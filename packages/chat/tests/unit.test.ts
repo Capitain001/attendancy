@@ -1,3 +1,4 @@
+//packages\chat\tests\unit.test.ts
 import { describe, expect, it } from 'vitest'
 import {
   createChatSync,

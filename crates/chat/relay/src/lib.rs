@@ -1,3 +1,4 @@
+//crates\chat\relay\src\lib.rs
 pub mod hub;
 pub mod protocol;
 

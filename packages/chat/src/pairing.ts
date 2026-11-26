@@ -1,3 +1,4 @@
+//packages\chat\src\limits.ts
 // Contenu du QR code affiché par l'enseignant : attendancy://chat?h=..&p=..&t=..&s=..
 export type Pairing = { host: string; port: number; token: string; sessionId: string; url: string }
 

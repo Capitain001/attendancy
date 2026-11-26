@@ -1,3 +1,4 @@
+//packages\chat\src\lan-transport.ts
 import type { ChatTransport, TransportStatus } from './engine'
 import type { Envelope } from './types'
 
@@ -36,6 +37,7 @@ export function createLanTransport(opts: LanOptions): ChatTransport {
   let state: TransportStatus = 'idle'
   let stopped = true
   let fatal = false
+  let failure: string | null = null
   let attempt = 0
   let retryTimer: ReturnType<typeof setTimeout> | undefined
   let pingTimer: ReturnType<typeof setInterval> | undefined
@@ -110,12 +112,25 @@ export function createLanTransport(opts: LanOptions): ChatTransport {
   }
 
   async function connect() {
-    if (stopped || !Impl) return
+    if (stopped) return
+    if (!Impl) {
+      failure = 'unsupported'
+      fatal = true
+      return setState('closed')
+    }
     setState('connecting')
     const known = opts.known ? await opts.known().catch(() => []) : []
     if (stopped) return
 
-    const sock = new Impl(opts.url)
+    let sock: WebSocketLike
+    try {
+      sock = new Impl(opts.url)
+    } catch {
+      // Page https qui ouvre ws:// : le navigateur refuse immédiatement
+      failure = 'insecure_context'
+      fatal = true
+      return setState('closed')
+    }
     ws = sock
 
     sock.onopen = () =>
@@ -153,6 +168,7 @@ export function createLanTransport(opts: LanOptions): ChatTransport {
         // provoquer une boucle de reconnexion
         else if (FATAL.has(String(f.reason))) {
           fatal = true
+          failure = String(f.reason)
           sock.close()
         }
       }
@@ -165,10 +181,12 @@ export function createLanTransport(opts: LanOptions): ChatTransport {
   return {
     name: 'lan',
     status: () => state,
+    failure: () => failure,
     start() {
       if (!stopped) return
       stopped = false
       fatal = false
+      failure = null
       attempt = 0
       void connect()
     },

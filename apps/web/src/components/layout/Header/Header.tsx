@@ -33,7 +33,7 @@ export default function Header({ user }: HeaderProps) {
 
           {user && (
             <>
-              <InboxHeaderButton />
+              <InboxHeaderButton fallbackHref={orgHref} />
               <NotificationsPopover />
             </>
           )}

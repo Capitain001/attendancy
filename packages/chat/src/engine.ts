@@ -1,3 +1,4 @@
+///packages\chat\src\engine.ts
 import type { Inbox } from './inbox'
 import type { Outbox } from './outbox'
 import type { Envelope, OutboxItem, SendResult } from './types'
@@ -12,6 +13,7 @@ export interface ChatTransport {
   start(): void
   stop(): void
   status(): TransportStatus
+  failure?(): string | null
   send(env: Envelope): Promise<void>
   onReceive(cb: (env: Envelope) => void): () => void
   onStatus(cb: (s: TransportStatus) => void): () => void

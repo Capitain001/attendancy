@@ -1,4 +1,5 @@
-Les fichiers de l'étape LAN sont écrits : LanPanel, JoinLan, HostLan, QrScanner, lan-status, useSyncCounts, useDelayedFlag et la route /local. 
+details :
+Les fichiers de l'étape LAN : LanPanel, JoinLan, HostLan, QrScanner, lan-status, useSyncCounts, useDelayedFlag et la route /local. 
 
 1. lan-transport.ts : raison du refus et page https
 

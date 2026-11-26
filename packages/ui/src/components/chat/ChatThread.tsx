@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useRef } from 'react'
 import { cn } from '../../lib/utils'
 import { typography } from '../../styles/ui'
 import { chat } from '../../styles/ui/chat'
@@ -11,22 +11,8 @@ import {
   DEFAULT_MESSAGE_MAX_LENGTH,
   type ChatThreadProps,
 } from './types'
+import { useDelayedFlag } from './useDelayedFlag'
 import { typingLabel } from './utils'
-
-// Vrai seulement si `flag` dure au moins `ms` : évite d'annoncer « Hors ligne » pendant
-// les quelques centaines de ms de la connexion initiale.
-function useDelayedFlag(flag: boolean, ms: number) {
-  const [elapsed, setElapsed] = useState(false)
-  useEffect(() => {
-    if (!flag) return
-    const timer = setTimeout(() => setElapsed(true), ms)
-    return () => {
-      clearTimeout(timer)
-      setElapsed(false)
-    }
-  }, [flag, ms])
-  return flag && elapsed
-}
 
 // À monter avec key={channelId} : un changement de canal repart d'un état vierge
 // (défilement, saisie, édition en cours).

@@ -10,6 +10,7 @@ import {
   getOrgStudentAttendanceRates,
   getAttendanceReport,
 } from "../database";
+import { mockGetScheduleAttendances } from "@/data/mocks/mock.attendance";
 
 /** Historique de présence de l'étudiant courant (lecture de son propre dossier). */
 export async function getStudentAttendancesAction() {
@@ -87,8 +88,9 @@ export async function getScheduleAttendancesAction({ scheduleId }: { scheduleId:
     const auth = await authAccess({ requiredRole: ["TEACHER", "DIRECTION"] });
     if (!auth.data) return { error: auth.error };
 
-    const data = await getScheduleAttendances(scheduleId);
-    return { data };
+    return {data: mockGetScheduleAttendances}
+    // const data = await getScheduleAttendances(scheduleId);
+    // return { data };
   } catch (error) {
     console.error("[getScheduleAttendancesAction]", error);
     return { error: error instanceof Error ? error.message : ERRORS.SERVER };

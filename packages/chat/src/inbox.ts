@@ -1,3 +1,4 @@
+//packages\chat\src\idb-store.ts
 import type { KVStore } from './store'
 import type { Envelope } from './types'
 import { isTrustedCreatedAt, MAX_BACKDATE_MS } from './limits'

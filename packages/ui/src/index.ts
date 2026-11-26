@@ -24,6 +24,15 @@ export { MainLayout } from "./MainLayout";
 export { Header, type HeaderProps } from "./Header";
 export { ModeToggle } from "./components/layout/Header/ModeToggle";
 export {
+  InboxButton,
+  type InboxButtonProps,
+  type InboxLinkProps,
+} from "./components/layout/Header/InboxButton";
+export {
+  useInboxReturnPath,
+  isInboxPath,
+} from "./hooks/useInboxReturnPath";
+export {
   MobileNavMenu,
   type MobileNavItem,
   type MobileNavLinkProps,
@@ -81,6 +90,15 @@ export {
   MessageList,
   MessageBubble,
   Composer,
+  useDelayedFlag,
+  HostLan,
+  JoinLan,
+  QrScanner,
+  canScanQr,
+  describeLan,
+  parsePairingInput,
+  plural,
+  randomToken,
   DEFAULT_ANONYMOUS_NAME,
   DEFAULT_MESSAGE_MAX_LENGTH,
   GROUP_WINDOW_MS,
@@ -92,6 +110,9 @@ export {
   type ChatMessage,
   type ChatThreadProps,
   type ComposerProps,
+  type HubController,
+  type LanTone,
+  type LanView,
   type MessageActions,
   type MessageBubbleProps,
   type MessageListProps,

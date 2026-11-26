@@ -1,3 +1,4 @@
+//crates\chat\relay\src\main.rs
 use std::collections::{HashMap, HashSet};
 
 use chat_relay::{start, HubConfig};

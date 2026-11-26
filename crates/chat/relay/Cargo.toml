@@ -1,3 +1,4 @@
+//crates\chat\relay\Cargo.toml
 [package]
 name = "chat-relay"
 version = "0.1.0"

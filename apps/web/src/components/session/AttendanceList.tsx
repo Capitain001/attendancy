@@ -101,12 +101,12 @@ export function AttendanceList({ scheduleId, className }: AttendanceListProps) {
               <Button
                 size="sm"
                 variant="outline"
-                className="h-7 gap-1.5 text-[11px] font-medium text-muted-foreground"
+                className="h-7 gap-1.5 text-[11px] font-medium text-muted-foreground border-none rounded-xs shadow-none"
                 onClick={confirmAll}
                 disabled={isPending.any}
               >
-                <CheckCheck className="size-3" />
-                {isPending.all ? "Validation…" : `Tout valider (${pending.length})`}
+                <CheckCheck className="size-4" />
+                {isPending.all ? "Validation…" : ` (${pending.length})`}
               </Button>
             </motion.div>
           )}

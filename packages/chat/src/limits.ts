@@ -1,3 +1,4 @@
+//packages\chat\src\limits.ts
 // Règles partagées : le serveur (policy), l'inbox et la réception d'un pair appliquent les mêmes.
 export const MAX_BACKDATE_MS = 7 * 86_400_000
 export const MAX_CONTENT_LENGTH = 4000 // en caractères Unicode (le hub compte pareil)

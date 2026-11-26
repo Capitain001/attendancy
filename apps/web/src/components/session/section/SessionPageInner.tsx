@@ -141,7 +141,7 @@ export default function SessionPageInner({
   const ActionIcon = actionBtn.Icon;
 
   return (
-    <div className="min-h-dvh bg-background">
+    <div className="">
       <header className="text-center pt-8 pb-2 px-5">
         <h1 className="text-xl font-semibold leading-tight">{schedule.course.name}</h1>
       </header>

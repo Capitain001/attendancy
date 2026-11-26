@@ -1,3 +1,4 @@
+//packages\chat\src\idb-store.ts
 // Entrée séparée : importe idb-keyval, donc à n'utiliser que côté navigateur/Tauri.
 // Chaque store est une base IndexedDB à part : le queryPersister et
 // clearLocalData() n'y touchent pas.

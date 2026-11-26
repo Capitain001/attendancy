@@ -19,7 +19,7 @@ export default async function Page() {
     queryKey: CACHE_KEYS.SCHEDULES.NEXT(teacherId),
     queryFn: () => getTeacherNextScheduleAction({ teacherId }),
   });
-
+  
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <TeacherSessionPage teacherId={teacherId} />

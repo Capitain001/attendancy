@@ -1,3 +1,4 @@
+//packages\chat\tests\e2e-relay.test.ts
 import { type ChildProcess, spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";

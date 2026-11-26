@@ -1,3 +1,4 @@
+//packages\chat\src\limits.ts
 import type { ChatMessage, Envelope, OutboxItem, PersistedMessage } from './types'
 
 // Priorité à l'id : serveur > pair (non vérifié) > en attente locale.

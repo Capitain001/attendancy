@@ -23,6 +23,7 @@ export type ServiceType = (typeof ServiceType)[keyof typeof ServiceType]
 export const MODEL_SERVICES = {
   'academic-year': { model: 'AcademicYear', path: '../services/academic-year' },
   'attendance': { model: 'Attendance', path: '../services/attendance' },
+  'channel': { model: 'Channel', path: '../services/channel' },
   'channel-member': { model: 'ChannelMember', path: '../services/channel-member' },
   'class': { model: 'Class', path: '../services/class' },
   'course': { model: 'Course', path: '../services/course' },
@@ -84,6 +85,7 @@ export function getServiceType(folderName: string): ServiceType | null {
 // ts(6196) "declared but never used").
 export type AcademicYearServiceIndex = typeof import('../services/academic-year')
 export type AttendanceServiceIndex = typeof import('../services/attendance')
+export type ChannelServiceIndex = typeof import('../services/channel')
 export type ChannelMemberServiceIndex = typeof import('../services/channel-member')
 export type ChatServiceIndex = typeof import('../services/chat')
 export type ClassServiceIndex = typeof import('../services/class')

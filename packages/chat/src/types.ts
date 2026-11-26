@@ -1,3 +1,4 @@
+//packages\chat\src\types.ts
 export type Envelope = {
   v: 1
   id: string

@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as AppChannelsRouteImport } from './routes/_app/channels'
+import { Route as AppLocalRouteImport } from './routes/_app/local'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AppChannelsIndexRouteImport } from './routes/_app/channels.index'
 import { Route as AppChannelsChannelIdRouteImport } from './routes/_app/channels.$channelId'
@@ -36,6 +37,11 @@ const AppChannelsRoute = AppChannelsRouteImport.update({
   path: '/channels',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppLocalRoute = AppLocalRouteImport.update({
+  id: '/local',
+  path: '/local',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -56,6 +62,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
   '/channels': typeof AppChannelsRouteWithChildren
+  '/local': typeof AppLocalRoute
   '/auth/login': typeof AuthLoginRoute
   '/channels/$channelId': typeof AppChannelsChannelIdRoute
   '/channels/': typeof AppChannelsIndexRoute
@@ -63,6 +70,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
+  '/local': typeof AppLocalRoute
   '/auth/login': typeof AuthLoginRoute
   '/channels/$channelId': typeof AppChannelsChannelIdRoute
   '/channels': typeof AppChannelsIndexRoute
@@ -73,6 +81,7 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
   '/_app/channels': typeof AppChannelsRouteWithChildren
+  '/_app/local': typeof AppLocalRoute
   '/auth/login': typeof AuthLoginRoute
   '/_app/channels/$channelId': typeof AppChannelsChannelIdRoute
   '/_app/channels/': typeof AppChannelsIndexRoute
@@ -83,17 +92,25 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/channels'
+    | '/local'
     | '/auth/login'
     | '/channels/$channelId'
     | '/channels/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/auth/login' | '/channels/$channelId' | '/channels'
+  to:
+    | '/'
+    | '/auth'
+    | '/local'
+    | '/auth/login'
+    | '/channels/$channelId'
+    | '/channels'
   id:
     | '__root__'
     | '/'
     | '/_app'
     | '/auth'
     | '/_app/channels'
+    | '/_app/local'
     | '/auth/login'
     | '/_app/channels/$channelId'
     | '/_app/channels/'
@@ -133,6 +150,13 @@ declare module '@tanstack/react-router' {
       path: '/channels'
       fullPath: '/channels'
       preLoaderRoute: typeof AppChannelsRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/local': {
+      id: '/_app/local'
+      path: '/local'
+      fullPath: '/local'
+      preLoaderRoute: typeof AppLocalRouteImport
       parentRoute: typeof AppRouteRoute
     }
     '/auth/login': {
@@ -175,10 +199,12 @@ const AppChannelsRouteWithChildren = AppChannelsRoute._addFileChildren(
 
 interface AppRouteRouteChildren {
   AppChannelsRoute: typeof AppChannelsRouteWithChildren
+  AppLocalRoute: typeof AppLocalRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppChannelsRoute: AppChannelsRouteWithChildren,
+  AppLocalRoute: AppLocalRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(

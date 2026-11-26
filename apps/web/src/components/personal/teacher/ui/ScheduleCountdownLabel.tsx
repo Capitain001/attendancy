@@ -17,7 +17,7 @@ export function ScheduleCountdownLabel({ schedule, isOngoing }: Props) {
   if (!countdown) return null
 
   return (
-    <p className="flex flex-wrap justify-center gap-1 text-sm text-muted-foreground">
+    <p className="flex flex-wrap justify-center gap-1 text-base text-muted-foreground">
       <span>{countdown.message}</span>
       {countdown.time && (
         <span className="font-medium text-foreground">{countdown.time}</span>

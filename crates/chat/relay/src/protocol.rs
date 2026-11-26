@@ -1,3 +1,4 @@
+//crates\chat\relay\src\protocol.rs
 use serde::{Deserialize, Serialize};
 
 /// Enveloppe d'un message. Même forme côté TypeScript (`Envelope`).

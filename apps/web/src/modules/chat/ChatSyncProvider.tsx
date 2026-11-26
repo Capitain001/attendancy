@@ -14,6 +14,8 @@ import {
   createInbox,
   createLanTransport,
   createOutbox,
+  decodePairing,
+  encodePairing,
   type ChatSync,
   type Envelope,
   type Inbox,
@@ -21,6 +23,7 @@ import {
   type OutboxItem,
   type Pairing,
   type SendResult,
+  type TransportStatus,
 } from '@attendancy/chat'
 import { idbStore } from '@attendancy/chat/idb'
 import { createMessageAction } from '@/services/message/actions'
@@ -32,11 +35,16 @@ import type { PresenceUser } from '@attendancy/user'
 import { insertMessage } from './cache'
 import { broadcastSent } from './realtime-registry'
 
+const LAN_KEY = 'attendancy-chat-lan'
+export type LanState = { status: TransportStatus; failure: string | null; pairing: Pairing | null }
+const LAN_IDLE: LanState = { status: 'idle', failure: null, pairing: null }
+
 type Ctx = {
   engine: ChatSync
   outbox: Outbox
   inbox: Inbox
   version: number // incrémenté à chaque changement d'outbox ou d'inbox
+  lan: LanState
   confirm: (ids: string[]) => Promise<void>
   connectLan: (p: Pairing) => void
   disconnectLan: () => void
@@ -71,7 +79,8 @@ export function ChatSyncProvider({
 }) {
   const queryClient = useQueryClient()
   const [version, setVersion] = useState(0)
-  const [ctx, setCtx] = useState<Omit<Ctx, 'version'> | null>(null)
+  const [lan, setLan] = useState<LanState>(LAN_IDLE)
+  const [ctx, setCtx] = useState<Omit<Ctx, 'version' | 'lan'> | null>(null)
   const userRef = useRef(user)
   const channelsRef = useRef(channelIds)
   useEffect(() => {
@@ -146,19 +155,49 @@ export function ChatSyncProvider({
       },
     })
 
+    const forget = () => {
+      try {
+        sessionStorage.removeItem(LAN_KEY)
+      } catch {
+        /* indisponible */
+      }
+    }
+
     let detachLan: (() => void) | undefined
     const connectLan = (p: Pairing) => {
       detachLan?.()
-      detachLan = engine.attach(
-        createLanTransport({
-          url: p.url,
-          token: p.token,
-          userId: user.id,
-          name: userRef.current.name,
-          channels: channelsRef.current,
-          known: () => inbox.knownIds(channelsRef.current),
-        })
-      )
+      const transport = createLanTransport({
+        url: p.url,
+        token: p.token,
+        userId: user.id,
+        name: userRef.current.name,
+        channels: channelsRef.current,
+        known: () => inbox.knownIds(channelsRef.current),
+      })
+      // Abonné AVANT attach : le premier « connecting » n'est pas manqué
+      const offStatus = transport.onStatus((status) => {
+        const failure = transport.failure?.() ?? null
+        if (failure) forget() // un code refusé ne doit pas être rejoué au rechargement
+        setLan({ status, failure, pairing: p })
+      })
+      const detach = engine.attach(transport)
+      detachLan = () => {
+        offStatus()
+        detach()
+      }
+      setLan({ status: transport.status(), failure: null, pairing: p })
+      try {
+        sessionStorage.setItem(LAN_KEY, encodePairing(p))
+      } catch {
+        /* indisponible */
+      }
+    }
+
+    const disconnectLan = () => {
+      detachLan?.()
+      detachLan = undefined
+      forget()
+      setLan(LAN_IDLE)
     }
 
     const offOutbox = outbox.subscribe(bump)
@@ -166,15 +205,21 @@ export function ChatSyncProvider({
     window.addEventListener('online', onOnline)
     engine.start() // envoie aussi ce qui attendait avant la fermeture de l'app
 
+    // Reprise après rechargement. decodePairing revalide format et hôte local.
+    try {
+      const saved = sessionStorage.getItem(LAN_KEY)
+      const pairing = saved ? decodePairing(saved) : null
+      if (pairing) connectLan(pairing)
+    } catch {
+      /* rien à reprendre */
+    }
+
     setCtx({
       engine,
       outbox,
       inbox,
       connectLan,
-      disconnectLan: () => {
-        detachLan?.()
-        detachLan = undefined
-      },
+      disconnectLan,
       confirm: async (ids) => {
         await inbox.confirm(ids)
         bump()
@@ -186,12 +231,13 @@ export function ChatSyncProvider({
       detachLan?.()
       engine.stop()
       outbox.close()
+      setLan(LAN_IDLE)
       setCtx(null)
     }
   }, [user.id, queryClient]) // userRef/channelsRef : valeurs courantes, sans recréer le moteur
 
   return (
-    <ChatSyncContext.Provider value={ctx ? { ...ctx, version } : null}>
+    <ChatSyncContext.Provider value={ctx ? { ...ctx, version, lan } : null}>
       {children}
     </ChatSyncContext.Provider>
   )

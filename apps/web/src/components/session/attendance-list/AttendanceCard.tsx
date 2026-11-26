@@ -20,7 +20,7 @@ interface AttendanceCardProps {
   disabled?: boolean;
 }
 
-function Initials({ name }: { name: string }) {
+function Initials({ name, className }: { name: string; className?: string }) {
   const parts = name.trim().split(" ");
   const letters = (
     parts.length >= 2
@@ -30,8 +30,10 @@ function Initials({ name }: { name: string }) {
 
   return (
     <div
-      className="size-6 rounded-full flex items-center justify-center shrink-0 text-xs font-semibold text-white"
-      style={{ backgroundColor: getNameColor(name) }}
+      className={cn(
+        "size-6 rounded-full flex items-center justify-center bg-muted shrink-0 text-[10px] font-semibold",
+        className
+      )}
       aria-hidden="true"
     >
       {letters}
@@ -75,7 +77,9 @@ export function AttendanceCard({
         />
       )}
 
-      <Initials name={fullName || "?"} />
+      <Initials name={fullName || "?"}
+        className={cn(!isSelected && "text-foreground/50")}
+      />
 
       <div className="flex flex-1 items-baseline justify-between gap-2 min-w-0">
         <span className="text-[13px] text-foreground truncate">{fullName}</span>
@@ -86,14 +90,19 @@ export function AttendanceCard({
 
       {variant === "pending" ? (
         <Button
-          size="sm"
-          variant="outline"
-          className="h-6 px-2.5 text-[11px] font-medium text-muted-foreground shrink-0"
+          size="icon"
+          variant="ghost"
+          className="size-6  text-muted-foreground hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400"
           onClick={onConfirm}
           disabled={disabled || isConfirming}
           aria-label={`Confirmer la présence de ${fullName}`}
+          title="Confirmer"
         >
-          {isConfirming ? <Loader2 className="size-3 animate-spin" /> : "Confirmer"}
+          {isConfirming ? (
+            <Loader2 className="size-3.5 animate-spin" />
+          ) : (
+            <CheckCheck className="size-3.5" />
+          )}
         </Button>
       ) : (
         <CheckCheck
