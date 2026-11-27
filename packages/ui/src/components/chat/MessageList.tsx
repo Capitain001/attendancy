@@ -1,3 +1,5 @@
+// packages/ui/src/components/chat/MessageList.tsx
+//packages\ui\src\components\chat\MessageList.tsx
 'use client'
 
 import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'

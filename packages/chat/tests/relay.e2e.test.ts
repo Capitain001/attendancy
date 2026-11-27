@@ -1,7 +1,4 @@
-//packages\chat\tests\e2e-relay.test.ts
-import { type ChildProcess, spawn } from "node:child_process";
-import { existsSync } from "node:fs";
-import { resolve } from "node:path";
+//packages\chat\tests\relay.e2e.test.ts
 import WebSocket from "ws";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import {
@@ -13,33 +10,18 @@ import {
   type OutboxItem,
   type WebSocketCtor,
 } from "../src";
+import { createRelayHost, RelayHostError, type RelayHost } from "../src/relay-host";
 
-const BIN = resolve(
-  __dirname,
-  "../../../target/debug",
-  process.platform === "win32" ? "chat-relay.exe" : "chat-relay",
-);
 const WS = WebSocket as unknown as WebSocketCtor;
 const TEST_CHANNEL = "11111111-1111-4111-8111-111111111111";
 
-let hub: ChildProcess;
+const hub = createRelayHost();
 let url = "";
 
 beforeAll(async () => {
-  if (!existsSync(BIN))
-    throw new Error(
-      `binaire absent: ${BIN} (lance "cargo build -p chat-relay" à la racine)`,
-    );
-  hub = spawn(BIN, ["--token", "tok", "--bind", "127.0.0.1", "--port", "0"]);
-  url = await new Promise<string>((ok, ko) => {
-    hub.stdout!.on("data", (d) => {
-      const m = /LISTENING (\S+)/.exec(String(d));
-      if (m) ok(`ws://${m[1]}`);
-    });
-    setTimeout(() => ko(new Error("hub muet")), 5000);
-  });
+  url = (await hub.start({ token: "tok" })).url;
 });
-afterAll(() => hub?.kill());
+afterAll(() => hub.stop());
 
 async function waitFor(cond: () => Promise<boolean> | boolean, ms = 4000) {
   const end = Date.now() + ms;
@@ -48,6 +30,18 @@ async function waitFor(cond: () => Promise<boolean> | boolean, ms = 4000) {
     await new Promise((r) => setTimeout(r, 25));
   }
   throw new Error("waitFor: délai dépassé");
+}
+
+async function startOn(host: RelayHost, port: number) {
+  for (let i = 0; ; i++) {
+    try {
+      return await host.start({ token: "tok", port });
+    } catch (e) {
+      const busy = e instanceof RelayHostError && e.code === "PortInUse";
+      if (!busy || i >= 2) throw e;
+      await new Promise((r) => setTimeout(r, 100));
+    }
+  }
 }
 
 function client(userId: string, token = "tok") {
@@ -150,26 +144,10 @@ describe("chat de bout en bout (relais Rust réel)", () => {
   });
 
   it("le hub tombe puis revient : reconnexion automatique et renvoi des messages en attente", async () => {
-    const spawnHub = (port: string) => {
-      const p = spawn(BIN, [
-        "--token",
-        "tok",
-        "--bind",
-        "127.0.0.1",
-        "--port",
-        port,
-      ]);
-      return new Promise<{ proc: ChildProcess; port: string }>((ok, ko) => {
-        p.stdout!.on("data", (d) => {
-          const m = /LISTENING \S+:(\d+)/.exec(String(d));
-          if (m) ok({ proc: p, port: m[1]! });
-        });
-        setTimeout(() => ko(new Error("hub muet")), 5000);
-      });
-    };
-    const first = await spawnHub("0");
+    const host = createRelayHost();
+    const first = await host.start({ token: "tok" });
     const saved = url;
-    url = `ws://127.0.0.1:${first.port}`;
+    url = first.url;
     const a = client("dave");
     const watcher = client("erin");
     a.sync.start();
@@ -179,11 +157,11 @@ describe("chat de bout en bout (relais Rust réel)", () => {
         a.lan.status() === "connected" && watcher.lan.status() === "connected",
     );
 
-    first.proc.kill();
+    await host.stop();
     await waitFor(() => a.lan.status() !== "connected");
     await a.sync.send({ channelId: TEST_CHANNEL, content: "écrit pendant la coupure" });
 
-    const second = await spawnHub(first.port);
+    await startOn(host, first.port);
     await waitFor(
       () =>
         a.lan.status() === "connected" && watcher.lan.status() === "connected",
@@ -196,7 +174,7 @@ describe("chat de bout en bout (relais Rust réel)", () => {
 
     a.sync.stop();
     watcher.sync.stop();
-    second.proc.kill();
+    await host.stop();
     url = saved;
   });
 });

@@ -1,4 +1,4 @@
-//packages\ui\src\AppProvider.tsx
+// packages/ui/src/AppProvider.tsx
 "use client"; // ignoré par Vite, nécessaire quand le web (Next) importe ce fichier
 
 import type { ReactNode } from "react";

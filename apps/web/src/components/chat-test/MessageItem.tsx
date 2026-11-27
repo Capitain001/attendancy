@@ -62,7 +62,7 @@ export function MessageItem({
   const [copied, setCopied] = React.useState(false)
   const isOwn = message.isOwn
   const isFailed = message.status === 'failed'
-  const isSending = message.status === 'sending'
+  const isSending = message.status === 'pending'
   const isUnverified = message.status === 'unverified'
   const isSent = message.status === 'sent'
 

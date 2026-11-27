@@ -1,4 +1,4 @@
-//packages\ui\src\Header.tsx
+// packages/ui/src/Header.tsx
 "use client";
 
 import type { ReactNode } from "react";

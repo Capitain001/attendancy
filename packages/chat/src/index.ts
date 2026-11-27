@@ -1,4 +1,4 @@
-//packages\chat\src\idb-store.ts
+//packages\chat\src\index.ts
 export * from './types'
 export * from './limits'
 export * from './store'
@@ -8,3 +8,8 @@ export * from './merge'
 export * from './engine'
 export * from './pairing'
 export * from './lan-transport'
+export { createTauriWebSocketCtor } from './tauri-websocket'
+export type { TauriConnection, TauriMessage, TauriWebSocketPlugin } from './tauri-websocket'
+export { createLocalHostTransport } from './local-host-transport'
+export type { HostBridge, LocalHostOptions } from './local-host-transport'
+export type { WebSocketCtor } from './lan-transport'

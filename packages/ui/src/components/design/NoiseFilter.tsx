@@ -1,3 +1,4 @@
+// packages/ui/src/components/design/NoiseFilter.tsx
 import type { CSSProperties } from "react";
 
 export type NoiseFilterProps = {

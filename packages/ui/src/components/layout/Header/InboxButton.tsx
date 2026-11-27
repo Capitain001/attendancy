@@ -1,3 +1,4 @@
+// packages/ui/src/components/layout/Header/InboxButton.tsx
 "use client";
 
 import type { ComponentType } from "react";

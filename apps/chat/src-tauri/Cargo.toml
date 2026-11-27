@@ -14,3 +14,4 @@ tauri-build = { workspace = true }
 
 [dependencies]
 tauri = { workspace = true }
+tauri-plugin-websocket = "2"

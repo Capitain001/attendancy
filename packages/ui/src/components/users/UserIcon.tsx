@@ -1,3 +1,4 @@
+// packages/ui/src/components/users/UserIcon.tsx
 import * as React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { cn } from "../../lib/utils";

@@ -1,3 +1,4 @@
+// packages/ui/src/lib/url.ts
 /**
  * Ajoute un paramètre de version à une URL pour forcer le navigateur/CDN
  * à la recharger — utile quand le chemin d'une ressource reste fixe

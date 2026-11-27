@@ -22,9 +22,15 @@ export type OutboxItem = {
   error?: string
 }
 
-export type MessageStatus = 'sent' | 'unverified' | 'pending' | 'failed'
+// Statut de livraison d'un message dans le flux de synchronisation.
+// Volontairement dupliqué dans @attendancy/ui (le package reste sans dépendance) :
+// les deux unions doivent rester identiques. Toute divergence est détectée
+// à la compilation dans useChat, où le statut est assigné sans conversion.
+export type MessageStatus = 'pending' | 'sent' | 'failed' | 'unverified'
 
-export type ChatMessage = {
+// Message normalisé issu de la fusion serveur + outbox + inbox
+// (distinct du ChatMessage de @attendancy/ui, qui est un type de vue)
+export type SyncMessage = {
   id: string
   channelId: string
   authorId: string
@@ -35,6 +41,7 @@ export type ChatMessage = {
   status: MessageStatus
 }
 
-export type PersistedMessage = Omit<ChatMessage, 'status'>
+// Message tel que persisté localement, sans statut de livraison
+export type PersistedMessage = Omit<SyncMessage, 'status'>
 
 export type SendResult = { data: unknown } | { error: string; retryable?: boolean }

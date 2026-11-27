@@ -151,7 +151,7 @@ export const useChat = ({
           source === 'outbox'
             ? failedIds.has(message.id)
               ? 'failed'
-              : 'sending'
+              : 'pending'
             : source === 'inbox'
               ? 'unverified'
               : 'sent'

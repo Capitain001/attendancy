@@ -79,7 +79,7 @@ function mergeChatMessages({
         source === 'outbox'
           ? failedIds.has(message.id)
             ? 'failed'
-            : 'sending'
+            : 'pending'
           : source === 'inbox'
           ? 'unverified'
           : 'sent'
@@ -278,7 +278,7 @@ describe('chat-overlay (logique de fusion et surcouche de useChat)', () => {
       userId,
     })
 
-    expect(result.find((m) => m.id === 'msg-sending')?.status).toBe('sending')
+    expect(result.find((m) => m.id === 'msg-sending')?.status).toBe('pending')
     expect(result.find((m) => m.id === 'msg-failed')?.status).toBe('failed')
   })
 

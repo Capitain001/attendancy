@@ -1,3 +1,4 @@
+// packages/ui/src/components/ui/avatar.tsx
 "use client";
 
 import * as React from "react";

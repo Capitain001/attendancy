@@ -1,3 +1,4 @@
+// packages/ui/src/components/notification/cardstack/NotificationCard.tsx
 "use client"
 
 import { motion, type PanInfo } from "framer-motion"

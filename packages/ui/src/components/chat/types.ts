@@ -1,9 +1,11 @@
+// packages/ui/src/components/chat/types.ts
+//packages\ui\src\components\chat\types.ts
 import type { FormEvent, ReactNode } from 'react'
 
 export const DEFAULT_MESSAGE_MAX_LENGTH = 4000
 export const DEFAULT_ANONYMOUS_NAME = 'Anonyme'
 
-export type MessageStatus = 'sending' | 'sent' | 'failed' | 'unverified'
+export type MessageStatus = 'pending' | 'sent' | 'failed' | 'unverified'
 
 export type ReplyPreview = {
   id: string

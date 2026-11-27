@@ -1,3 +1,5 @@
+// packages/ui/src/components/chat/MessageBubble.tsx
+//packages\ui\src\components\chat\MessageBubble.tsx
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
@@ -125,7 +127,7 @@ export function MessageBubble({
         className={cn(
           chat.bubble,
           own ? chat.bubbleOwn : chat.bubbleOther,
-          status === 'sending' && chat.bubbleSending,
+          status === 'pending' && chat.bubbleSending,
           status === 'failed' && chat.bubbleFailed,
           status === 'unverified' && chat.bubbleUnverified,
           highlighted && chat.highlight,
@@ -152,14 +154,16 @@ export function MessageBubble({
       <div className={cn(typography.xsmall, chat.meta, own && 'justify-end')}>
         <time dateTime={message.createdAt}>{formatTime(message.createdAt)}</time>
         {message.editedAt && <span title={`Modifié à ${formatTime(message.editedAt)}`}>modifié</span>}
-        {status === 'sending' && <span>Envoi en cours…</span>}
+        {status === 'pending' && <span>Envoi en cours…</span>}
         {status === 'failed' && (
           <span role="alert" className="text-destructive">
             Échec de l&apos;envoi
           </span>
         )}
         {status === 'unverified' && (
-          <span title="Ce message n'a pas encore été confirmé par le serveur">Reçu en local, non confirmé</span>
+          <span title="Reçu d'un appareil du réseau local : l'expéditeur est déclaré, pas vérifié, et le serveur n'a pas encore confirmé ce message">
+            Reçu en local, non confirmé
+          </span>
         )}
 
         {confirmed && !editing && (

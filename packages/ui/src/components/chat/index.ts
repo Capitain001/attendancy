@@ -1,13 +1,20 @@
+// packages/ui/src/components/chat/index.ts
+//packages\ui\src\components\chat\index.ts
 export { ChatThread } from './ChatThread'
 export { MessageList, type MessageListProps } from './MessageList'
 export { MessageBubble, type MessageBubbleProps } from './MessageBubble'
 export { Composer, type ComposerProps } from './Composer'
 export { useDelayedFlag } from './useDelayedFlag'
-export { HostLan, type HubController } from './lan/HostLan'
-export { JoinLan } from './lan/JoinLan'
-export { QrScanner, canScanQr } from './lan/QrScanner'
+export {
+  HostLan,
+  type HubController,
+  type HubInfo,
+  type HubStartOptions,
+} from './lan/HostLan'
+export { JoinLan, type PairingScannerProps } from './lan/JoinLan'
 export {
   describeLan,
+  describeOmitted,
   parsePairingInput,
   plural,
   randomToken,

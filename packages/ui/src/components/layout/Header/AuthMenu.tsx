@@ -1,3 +1,4 @@
+// packages/ui/src/components/layout/Header/AuthMenu.tsx
 "use client";
 
 import * as React from "react";

@@ -1,3 +1,4 @@
+// packages/ui/src/components/theme/themes.ts
 export type ThemeDefinition = { name: string; label: string };
 
 export const DEFAULT_THEME = "default";

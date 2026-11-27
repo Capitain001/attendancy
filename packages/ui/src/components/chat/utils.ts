@@ -1,3 +1,4 @@
+// packages/ui/src/components/chat/utils.ts
 // Fonctions pures de présentation (testables sans React ni DOM).
 import type { ChatMessage } from './types'
 

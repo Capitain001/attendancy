@@ -1,3 +1,4 @@
+// packages/ui/src/components/auth/signup/signup-page.tsx
 "use client"
 import { useState } from "react";
 import { SignupForm, type SignupCredentials } from "./signup-form";

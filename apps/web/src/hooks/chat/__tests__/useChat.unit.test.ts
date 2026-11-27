@@ -283,7 +283,7 @@ describe('useChat (avec moteur de synchronisation déporté)', () => {
       ]
 
       let chat = runHook(() => useChat({ channelId, user }))
-      expect(chat.messages.find((m) => m.id === 'outbox-msg')?.status).toBe('sending')
+      expect(chat.messages.find((m) => m.id === 'outbox-msg')?.status).toBe('pending')
 
       chat.startReply('outbox-msg')
       chat = runHook(() => useChat({ channelId, user }))

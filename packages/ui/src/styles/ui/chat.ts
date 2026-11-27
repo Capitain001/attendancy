@@ -1,3 +1,4 @@
+// packages/ui/src/styles/ui/chat.ts
 
 // Classes propres au chat, construites uniquement avec les tokens sémantiques du design system
 // (jamais de couleur en dur). Les états ne reposent pas sur la couleur seule : bordure

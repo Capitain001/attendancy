@@ -60,3 +60,6 @@ bun --filter @attendancy/rpc gen
 
 # 2. Régénérer le contrat de types ApiClient (packages/types/dist/contract.d.mts)
 bun --filter @attendancy/types build:types
+
+##path depuis un package ex: ui
+bunx tsx apps/web/scripts/generate/path/comment.ts packages/ui/src

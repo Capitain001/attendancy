@@ -3,5 +3,5 @@
   "identifier": "default",
   "description": "Permissions par défaut de Attendancy Chat",
   "windows": ["main"],
-  "permissions": ["core:default"]
+  "permissions": ["core:default", "websocket:default"]
 }

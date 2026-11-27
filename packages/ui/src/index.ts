@@ -1,3 +1,4 @@
+// packages/ui/src/index.ts
 export { Button, buttonVariants } from "./components/ui/button";
 export {
   Card,
@@ -93,9 +94,8 @@ export {
   useDelayedFlag,
   HostLan,
   JoinLan,
-  QrScanner,
-  canScanQr,
   describeLan,
+  describeOmitted,
   parsePairingInput,
   plural,
   randomToken,
@@ -111,11 +111,14 @@ export {
   type ChatThreadProps,
   type ComposerProps,
   type HubController,
+  type HubInfo,
+  type HubStartOptions,
   type LanTone,
   type LanView,
   type MessageActions,
   type MessageBubbleProps,
   type MessageListProps,
   type MessageStatus,
+  type PairingScannerProps,
   type ReplyPreview,
 } from "./components/chat";

@@ -1,3 +1,4 @@
+// packages/ui/src/lib/get-strict-context.tsx
 import * as React from 'react';
 
 function getStrictContext<T>(

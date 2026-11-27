@@ -1,3 +1,4 @@
+// packages/ui/src/components/chat/ChatThread.tsx
 'use client'
 
 import { useCallback, useRef } from 'react'

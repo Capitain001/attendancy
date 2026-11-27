@@ -14,6 +14,8 @@ export interface ChatTransport {
   stop(): void
   status(): TransportStatus
   failure?(): string | null
+  // Messages plus anciens que le relais n'a pas pu joindre au dernier `welcome` (0 = historique complet)
+  omitted?(): number
   send(env: Envelope): Promise<void>
   onReceive(cb: (env: Envelope) => void): () => void
   onStatus(cb: (s: TransportStatus) => void): () => void
@@ -37,7 +39,8 @@ export type ChatSyncDeps = {
   // Appelé une fois par message confirmé par le serveur, après retrait de l'outbox.
   // C'est ici que l'app diffuse en temps réel et notifie. Best-effort : une erreur est ignorée.
   onSent?: (item: OutboxItem, data: unknown) => void | Promise<void>
-  // Canaux acceptés depuis les pairs. Sans lui, tout canal est accepté : à fournir.
+  // Canaux acceptés depuis les pairs ET envoyés aux pairs (c'est la liste du `hello`).
+  // Sans lui, tout canal est accepté : à fournir.
   acceptsChannel?: (channelId: string) => boolean
 }
 
@@ -45,6 +48,12 @@ export type ChatSync = ReturnType<typeof createChatSync>
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const isUuid = (x: unknown): x is string => typeof x === 'string' && UUID.test(x)
+
+// Erreurs d'un transport qui touchent la CONNEXION : la suite de la file échouerait de même,
+// inutile d'insister. `rate_limited` : le transport a déjà épuisé ses renvois.
+// Toute autre erreur (not_member, bad_content, channel_limit...) ne concerne que CE message :
+// on passe au suivant.
+const CONNECTION_ERRORS = new Set(['closed', 'stopped', 'not_connected', 'ack_timeout', 'rate_limited'])
 
 export function createChatSync(deps: ChatSyncDeps) {
   const {
@@ -81,10 +90,14 @@ export function createChatSync(deps: ChatSyncDeps) {
 
   async function pushTo(t: ChatTransport, items: OutboxItem[]) {
     for (const item of items) {
+      // Hors des canaux annoncés au pair : il le refuserait (not_member), inutile de l'envoyer
+      if (acceptsChannel && !acceptsChannel(item.channelId)) continue
       try {
         await t.send(toEnvelope(item))
-      } catch {
-        return
+      } catch (e) {
+        const reason = e instanceof Error ? e.message : ''
+        // Erreur inconnue : par prudence on s'arrête, comme pour une erreur de connexion
+        if (!reason || CONNECTION_ERRORS.has(reason)) return
       }
     }
   }

@@ -79,7 +79,7 @@ const INITIAL_MESSAGES: ChatMessage[] = [
     editedAt: null,
     user: { id: 'user-alice', name: 'Alice' },
     isOwn: true,
-    status: 'sending', // En attente de synchronisation
+    status: 'pending', // En attente de synchronisation
     replyTo: null,
   },
   {
@@ -118,7 +118,7 @@ export default function ChatTestPage() {
       editedAt: null,
       user: { id: 'user-alice', name: 'Alice' },
       isOwn: true,
-      status: connectionState === 'offline' ? 'sending' : 'sending',
+      status: connectionState === 'offline' ? 'pending' : 'pending',
       replyTo: replyTarget
         ? {
           id: replyTarget.id,
@@ -150,7 +150,7 @@ export default function ChatTestPage() {
         if (m.id === id) {
           return {
             ...m,
-            status: 'sending',
+            status: 'pending',
             parentId: options?.withoutReply ? null : m.parentId,
             replyTo: options?.withoutReply ? null : m.replyTo,
           }

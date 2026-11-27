@@ -1,3 +1,4 @@
+// packages/ui/src/components/auth/signup/signup-form.tsx
 //packages\ui\src\components\signup-form.tsx
 import type { FormEvent } from "react";
 

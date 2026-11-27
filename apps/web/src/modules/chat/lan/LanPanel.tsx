@@ -1,12 +1,15 @@
+//apps\web\src\modules\chat\lan\LanPanel.tsx
 'use client'
 
 import {
   describeLan,
+  describeOmitted,
   HostLan,
   JoinLan,
   plural,
   useDelayedFlag,
   type HubController,
+  type HubStartOptions,
 } from '@attendancy/ui'
 import { button, card, typography } from '@attendancy/ui/styles'
 import { cn } from '@/lib/utils'
@@ -14,14 +17,29 @@ import { useChatSync } from '@/modules/chat'
 import { useSyncCounts } from './useSyncCounts'
 
 interface LanPanelProps {
-  // Présent seulement sur l'appareil de l'enseignant (couche native disponible)
+  // Présent seulement sur l'appareil de l'hôte (couche native disponible)
   hub?: HubController
   sessionId?: string
+  // Réglages du relais calculés par l'app (profil métier) : transmis tels quels à HostLan
+  hostStartOptions?: Omit<HubStartOptions, 'token'>
+  // Relais ouvert (ou retrouvé au retour sur la page) / fermé : l'app attache et détache le
+  // transport local de l'hôte. onHostStarted doit être idempotent.
+  onHostStarted?: (info: { host: string; port: number }) => void
+  onHostStopped?: () => void
+  // Canaux imposés par le profil métier (classe, salle…) : priment sur ceux du provider
+  channels?: string[]
 }
 
 const chat_dot = 'inline-block size-2.5 shrink-0 rounded-full border-2'
 
-export function LanPanel({ hub, sessionId }: LanPanelProps) {
+export function LanPanel({
+  hub,
+  sessionId,
+  hostStartOptions,
+  onHostStarted,
+  onHostStopped,
+  channels,
+}: LanPanelProps) {
   const sync = useChatSync()
   const counts = useSyncCounts()
   const connecting = sync?.lan.status === 'connecting' && !sync.lan.failure
@@ -37,6 +55,7 @@ export function LanPanel({ hub, sessionId }: LanPanelProps) {
 
   const { lan } = sync
   const view = describeLan(lan.status, lan.failure)
+  const partial = lan.status === 'connected' ? describeOmitted(lan.omitted) : null
   const active = lan.status === 'connected' || connecting
 
   return (
@@ -64,9 +83,19 @@ export function LanPanel({ hub, sessionId }: LanPanelProps) {
             {view.detail}
           </p>
         )}
+        {partial && (
+          <p role="status" className={cn(typography.small, 'text-foreground/70')}>
+            {partial}
+          </p>
+        )}
+        {lan.status === 'connected' && (
+          <p className={cn(typography.xsmall, 'text-foreground/60')}>
+            Les noms affichés sont déclarés par chaque appareil : ils ne sont pas vérifiés.
+          </p>
+        )}
         {slow && (
           <p role="status" className={cn(typography.small, 'text-foreground/70')}>
-            La connexion tarde. Vérifiez que vous êtes sur le même réseau Wi-Fi que l&apos;enseignant.
+            La connexion tarde. Vérifiez que vous êtes sur le même réseau Wi-Fi que l&apos;hôte.
           </p>
         )}
         {lan.pairing && active && (
@@ -104,7 +133,7 @@ export function LanPanel({ hub, sessionId }: LanPanelProps) {
           <h2 id="lan-join" className={typography.h6}>
             Rejoindre une séance
           </h2>
-          <JoinLan onJoin={sync.connectLan} />
+          <JoinLan onJoin={(p) => sync.connectLan(p, { channels })} />
         </section>
       )}
 
@@ -113,7 +142,17 @@ export function LanPanel({ hub, sessionId }: LanPanelProps) {
           <h2 id="lan-host" className={typography.h6}>
             Ouvrir une séance
           </h2>
-          <HostLan hub={hub} sessionId={sessionId} onStarted={sync.connectLan} onStopped={sync.disconnectLan} />
+          <HostLan
+            hub={hub}
+            sessionId={sessionId}
+            startOptions={hostStartOptions}
+            onStarted={onHostStarted}
+            // Le transport local est détaché d'abord, puis la connexion LAN cliente est coupée
+            onStopped={() => {
+              onHostStopped?.()
+              sync.disconnectLan()
+            }}
+          />
         </section>
       )}
     </div>

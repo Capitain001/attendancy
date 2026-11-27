@@ -1,5 +1,5 @@
-//packages\chat\src\limits.ts
-import type { ChatMessage, Envelope, OutboxItem, PersistedMessage } from './types'
+//packages\chat\src\merge.ts
+import type { Envelope, OutboxItem, PersistedMessage, SyncMessage } from './types'
 
 // Priorité à l'id : serveur > pair (non vérifié) > en attente locale.
 export function mergeMessages({
@@ -15,7 +15,7 @@ export function mergeMessages({
   userId: string
   userName?: string | null
 }) {
-  const byId = new Map<string, ChatMessage>()
+  const byId = new Map<string, SyncMessage>()
 
   for (const i of outbox) {
     byId.set(i.id, {

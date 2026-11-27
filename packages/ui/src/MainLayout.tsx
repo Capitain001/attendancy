@@ -1,3 +1,4 @@
+// packages/ui/src/MainLayout.tsx
 import type { ReactNode } from "react";
 
 export function MainLayout({

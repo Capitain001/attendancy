@@ -1,4 +1,4 @@
-//packages\chat\src\limits.ts
+//packages\chat\src\outbox.ts
 import type { KVStore } from './store'
 import type { OutboxItem } from './types'
 

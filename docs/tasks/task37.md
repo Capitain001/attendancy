@@ -1,178 +1,29 @@
-packages/auth/
-├── package.json
-├── tsconfig.json
-├── index.ts
-├── supabase.ts
-├── session.ts
-├── AuthProvider.tsx
-└── guards.ts
-package.json
-json
-{
-  "name": "@attendancy/auth",
-  "version": "0.0.0",
-  "private": true,
-  "type": "module",
-  "main": "./index.ts",
-  "types": "./index.ts",
-  "exports": {
-    ".": "./index.ts"
-  },
-  "dependencies": {
-    "@attendancy/cache": "workspace:*"
-  },
-  "peerDependencies": {
-    "@tanstack/react-router": "*",
-    "react": "*"
-  }
-}
+Décisions actées
+omitted sur le welcome : ignoré pour l'instant, sans indicateur « historique partiel » (le serveur central fournit l'historique complet au retour d'Internet). Garde-fous notés pour un éventuel rattrapage futur : un ensemble d'IDs en mémoire borné et vidé à stop(), ainsi que --max-welcome-bytes dans KNOWN_OPTIONS pour le test E2E.
 
-react et le routeur sont en peerDependencies pour que le package utilise la copie de l’app, et pas une seconde copie qui casserait les contextes. Complète avec :
+Commentaire de relay-host.ts : corrigé pour refléter la solution retenue (bibliothèque, et non « sidecar Tauri »).
 
-powershell
-pnpm --filter @attendancy/auth add @supabase/supabase-js
-pnpm --filter @attendancy/auth add -D typescript vite @types/react react @tanstack/react-router
-pnpm install
-tsconfig.json
-json
-{
-  "compilerOptions": {
-    "target": "ES2022",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "jsx": "react-jsx",
-    "strict": true,
-    "skipLibCheck": true,
-    "noEmit": true,
-    "types": ["vite/client"]
-  },
-  "include": ["."]
-}
-supabase.ts
+Vocabulaire et périmètre métier : abandon des termes « élève » et « enseignant » au profit d'un vocabulaire neutre (réseau local, hôte, appareil, lien d'appairage) selon l'usage métier ; Pairing.sessionId conservé tel quel ; renderQr retenu sous l'angle de la capacité d'hébergement.
 
-Copie ton apps/desktop/src/lib/supabase.ts. Si tu préfères repartir de zéro, adapte les noms de variables :
+Canaux au hello : signature connectLan(pairing, { channels? }) validée, les canaux imposés par le profil métier primant sur la liste du provider utilisée en repli.
 
-ts
-/// <reference types="vite/client" />
-import { createClient } from "@supabase/supabase-js";
+Relecture hors ligne de useChannels (queryPersister) : actée comme tâche distincte à prendre en compte.
 
-export const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY,
-  {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: false,
-    },
-  },
-);
-session.ts
-ts
-import {
-  isAuthRetryableFetchError,
-  type Session,
-} from "@supabase/supabase-js";
-import { supabase } from "./supabase";
+Contrainte Web http:// / ws:// et saisie du lien : confirmé par l'essai sur [http://192.168.1.71:8080](http://192.168.1.71:8080) avec URL ws:// pré-remplie (le passage par https:// poserait un conflit entre caméra sécurisée et ws:// en contenu mixte). Le scanner basé sur BarcodeDetector est retiré de la brique 6 au profit de la saisie/collage du lien, avec un scanner injectable optionnel réservé à l'app native (brique 7).
 
-export type SessionState =
-  | { status: "signed-in"; session: Session }
-  // Connecté localement, mais le renouvellement du token a échoué faute de réseau.
-  | { status: "offline-stale" }
-  | { status: "signed-out" };
+Identité déclarée à l'écran : validée via un avis dans LanPanel et une info-bulle sur les messages non confirmés dans MessageBubble.tsx.
 
-export async function getSessionState(): Promise<SessionState> {
-  const { data, error } = await supabase.auth.getSession();
-  if (data.session) return { status: "signed-in", session: data.session };
-  if (error && isAuthRetryableFetchError(error)) return { status: "offline-stale" };
-  return { status: "signed-out" };
-}
+dans le code actuel :
 
-export async function getToken(): Promise<string | null> {
-  const { data } = await supabase.auth.getSession();
-  return data.session?.access_token ?? null;
-}
+1. **`connectLan(pairing)` sans `{ channels? }` :**
+   * Dans [ChatSyncProvider.tsx](file:///c:/PROJECTS/PROJECT/PRODUCTIONS/attendancy/apps/web/src/modules/chat/ChatSyncProvider.tsx#L49-L176), `connectLan(p: Pairing)` ne prend pas d'options et utilise uniquement `channelsRef.current` (y compris pour `inbox.knownIds`). Il faudra passer à `connectLan(p: Pairing, opts?: { channels?: string[] })` (et penser à la reprise après rechargement dans `sessionStorage` si `channels` est imposé).
 
-// null = chargement. Remplace les comparaisons répétées de l'ancien router.
-export function isAuthenticated(state: SessionState | null | undefined): boolean {
-  return state?.status === "signed-in" || state?.status === "offline-stale";
-}
-AuthProvider.tsx
-tsx
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
-import { claimLocalData } from "@attendancy/cache";
-import { supabase } from "./supabase";
-import { getSessionState, type SessionState } from "./session";
+2. **Démarrage à froid hors-ligne (`channelIds` = `[]`) :**
+   * `acceptsChannel` ([ligne 139](file:///c:/PROJECTS/PROJECT/PRODUCTIONS/attendancy/apps/web/src/modules/chat/ChatSyncProvider.tsx#L139)) et `connectLan` ([ligne 174](file:///c:/PROJECTS/PROJECT/PRODUCTIONS/attendancy/apps/web/src/modules/chat/ChatSyncProvider.tsx#L174)) lisent `channelsRef.current` alimenté par `useChannels` dans [route.tsx](file:///c:/PROJECTS/PROJECT/PRODUCTIONS/attendancy/apps/chat/src/routes/_app/route.tsx#L21-L31).
+   * Sans persistance locale (`queryPersister`) pour `useChannels` (ou `opts.channels`), un démarrage à froid hors-ligne part avec `[]` → refus `not_member` du relais et rejet par `acceptsChannel`.
 
-// undefined = pas de Provider, null = chargement
-const AuthContext = createContext<SessionState | null | undefined>(undefined);
+3. **Compteur « non confirmés » dans [useSyncCounts.ts](file:///c:/PROJECTS/PROJECT/PRODUCTIONS/attendancy/apps/web/src/modules/chat/lan/useSyncCounts.ts#L19) :**
+   * Aujourd'hui il fait simplement `unverified: inbox.length`, sans exclure les IDs déjà confirmés/persistés.
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<SessionState | null>(null);
-
-  useEffect(() => {
-    getSessionState().then(setState);
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(() => {
-      getSessionState().then(setState);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    if (state?.status === "signed-in") {
-      void claimLocalData(state.session.user.id);
-    }
-  }, [state]);
-
-  return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>;
-}
-
-export function useAuth() {
-  const state = useContext(AuthContext);
-  if (state === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return state;
-}
-guards.ts
-ts
-import { redirect } from "@tanstack/react-router";
-import type { SessionState } from "./session";
-
-export type AuthRouterContext = {
-  auth: SessionState & { isAuthenticated: boolean };
-};
-
-// Pour le layout des pages protégées (_app/route.tsx)
-export function requireAuth({ context }: { context: AuthRouterContext }) {
-  if (!context.auth.isAuthenticated) throw redirect({ to: "/" });
-}
-
-// Pour le layout des pages publiques (auth/route.tsx)
-export function requireGuest({ context }: { context: AuthRouterContext }) {
-  if (context.auth.isAuthenticated) throw redirect({ to: "/" });
-}
-index.ts
-ts
-export { AuthProvider, useAuth } from "./AuthProvider";
-export {
-  getSessionState,
-  getToken,
-  isAuthenticated,
-  type SessionState,
-} from "./session";
-export { requireAuth, requireGuest, type AuthRouterContext } from "./guards";
-export { supabase } from "./supabase";
-
-Test
-powershell ( a adapter pr utiliser bun)
-pnpm --filter @attendancy/auth exec tsc --noEmit
+4. **Collision de noms `ChatMessage` / `MessageStatus` :**
+   * [packages/chat/src/types.ts](file:///c:/PROJECTS/PROJECT/PRODUCTIONS/attendancy/packages/chat/src/types.ts#L25-L36) exporte `ChatMessage` et `MessageStatus`, alors que [MessageBubble.tsx](file:///c:/PROJECTS/PROJECT/PRODUCTIONS/attendancy/packages/ui/src/components/chat/MessageBubble.tsx#L9) utilise déjà le `ChatMessage` applicatif — d'où un risque de collision à l'import si on les mélange sans alias ou renommage.

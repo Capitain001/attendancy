@@ -1,4 +1,4 @@
-// src/components/scroll-navigator.tsx
+// packages/ui/src/components/navigation/scroll-navigator.tsx
 // Composant serveur : aucun JS client, le swipe vertical est géré par le navigateur (scroll-snap)
 
 import type { ReactNode } from "react"

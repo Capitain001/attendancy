@@ -1,7 +1,7 @@
 // src/hooks/chat/types.ts
 import type { RealtimeMessage } from './use-realtime-chat'
 
-export type MessageStatus = 'sending' | 'sent' | 'failed' | 'unverified'
+export type MessageStatus = 'pending' | 'sent' | 'failed' | 'unverified'
 
 export type ReplyPreview = {
   id: string

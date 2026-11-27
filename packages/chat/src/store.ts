@@ -1,4 +1,4 @@
-//packages\chat\src\limits.ts
+//packages\chat\src\store.ts
 export type KVStore<T> = {
   get(key: string): Promise<T | undefined>
   set(key: string, value: T): Promise<void>

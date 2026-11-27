@@ -1,3 +1,4 @@
+// packages/ui/src/components/chat/Composer.tsx
 'use client'
 
 import { useLayoutEffect, type FormEvent, type KeyboardEvent, type RefObject } from 'react'
